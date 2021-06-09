@@ -1,0 +1,49 @@
+{
+  "name": "backend",
+  "version": "0.0.0",
+  "main": "dist/index.cjs.js",
+  "types": "src/index.ts",
+  "private": true,
+  "engines": {
+    "node": "12 || 14"
+  },
+  "scripts": {
+    "build": "backstage-cli backend:bundle",
+    "build-image": "docker build ../.. -f Dockerfile --tag backstage",
+    "start": "backstage-cli backend:dev",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "clean": "backstage-cli clean",
+    "migrate:create": "knex migrate:make -x ts"
+  },
+  "dependencies": {
+    "app": "0.0.0",
+    "@backstage/backend-common": "^0.8.1",
+    "@backstage/catalog-model": "^0.8.1",
+    "@backstage/catalog-client": "^0.3.12",
+    "@backstage/config": "^0.1.5",
+    "@backstage/plugin-app-backend": "^0.3.13",
+    "@backstage/plugin-auth-backend": "^0.3.12",
+    "@backstage/plugin-catalog-backend": "^0.10.1",
+    "@backstage/plugin-proxy-backend": "^0.2.8",
+    "@backstage/plugin-scaffolder-backend": "^0.11.5",
+    "@backstage/plugin-techdocs-backend": "^0.8.2",
+    "@gitbeaker/node": "^29.2.0",
+    "@octokit/rest": "^18.5.3",
+    "dockerode": "^3.2.1",
+    "express": "^4.17.1",
+    "express-promise-router": "^4.1.0",
+    "knex": "^0.21.6",
+    "sqlite3": "^5.0.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.6.14",
+    "@types/dockerode": "^3.2.1",
+    "@types/express": "^4.17.6",
+    "@types/express-serve-static-core": "^4.17.5"
+  },
+  "files": [
+    "dist"
+  ]
+}
