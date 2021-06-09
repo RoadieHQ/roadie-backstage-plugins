@@ -8,5 +8,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Run weekly
-        run: |
-          yarn backstage-cli versions:bump
+      run: yarn backstage-cli versions:bump
