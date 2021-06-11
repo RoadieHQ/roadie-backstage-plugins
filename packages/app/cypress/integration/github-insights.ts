@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 /// <reference types="cypress" />
+// eslint-disable-next-line no-restricted-imports
 import 'os';
 
 describe('GithubInsights', () => {
