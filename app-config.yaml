@@ -49,7 +49,12 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  providers: 
+    github:
+      development:
+        clientId: 0d71b11378f74dddf9b7
+        clientSecret: 0c9914628f1e790f93742e9f4fea86f525937c5b
+        enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
 
 scaffolder:
   github:
