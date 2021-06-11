@@ -21,7 +21,7 @@ jobs:
           fetch-depth: '0'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Lint
         run: yarn lint
@@ -29,7 +29,7 @@ jobs:
       - name: Build static site
         run: yarn build
 
-      - name: Run dev test
+      - name: Run dev 
         run: yarn dev
 
       - name: Cypress run
