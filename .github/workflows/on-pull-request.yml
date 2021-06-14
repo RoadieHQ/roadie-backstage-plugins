@@ -33,13 +33,13 @@ jobs:
       - name: Run tsc
         run: yarn tsc
 
-      - name: Build static site
-        run: yarn build
+      # - name: Build static site
+      #   run: yarn build
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start
+          start: yarn dev
           wait-on: 'http://localhost:3000'
           project: ./packages/app
         env:
