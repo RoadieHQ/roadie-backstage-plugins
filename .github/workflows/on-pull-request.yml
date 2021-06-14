@@ -33,9 +33,6 @@ jobs:
       - name: Run tsc
         run: yarn tsc
 
-      # - name: Build static site
-      #   run: yarn build
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
