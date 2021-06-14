@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Spotify AB
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,14 @@
 /// <reference types="cypress" />
 // eslint-disable-next-line no-restricted-imports
 import 'os';
-import { API_BASE_URL } from '../settings';
 
 describe('Catalog', () => {
   describe('default entities', () => {
-    it('import and look for sample servide', () => {
+    it('import and look for sample service', () => {
       cy.loginAsGuest();
-      cy.request('POST', `${API_BASE_URL}/api/catalog/locations`, {
-        target: 'https://github.com/RoadieHQ/sample-service/blob/main/catalog-info-5.yaml',
-        type: 'url',
-      });
-
       cy.visit('/catalog');
       cy.get('[data-testid="user-picker-all"]').click();
-      cy.contains('sample-service-5');
+      cy.contains('sample-service-4');
     });
   });
 });

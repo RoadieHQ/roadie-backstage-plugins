@@ -18,6 +18,7 @@ node_modules/
 # dotenv environment variables file
 .env
 .env.test
+.env.json
 
 # Build output
 dist

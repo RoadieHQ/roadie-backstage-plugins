@@ -2,9 +2,8 @@
   "baseUrl": "http://localhost:3000",
   "fixturesFolder": "./cypress/fixtures",
   "integrationFolder": "./cypress/integration",
-  "pluginsFolder": "./cypress/plugins",
   "defaultCommandTimeout": 10000,
   "viewportHeight": 900,
   "viewportWidth": 1440,
-  "pluginsFile": false
+  "pluginsFile": "./cypress/plugins"
 }

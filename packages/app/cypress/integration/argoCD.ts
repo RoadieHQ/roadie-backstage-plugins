@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2020 Spotify AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 /// <reference types="cypress" />
+// eslint-disable-next-line no-restricted-imports
+import 'os';
 
-Cypress.Commands.add('loginAsGuest', () => {
-    cy.visit('/', {
-      onLoad: (win: Window) =>
-        win.localStorage.setItem('@backstage/core:SignInPage:provider', 'guest'),
-    });
+describe('ArgoCDPlugin', () => {
+  beforeEach(() => {
+    cy.saveGithubToken();
+  })
 });
-
-Cypress.Commands.add('saveGithubToken', () => {
-  cy.visit('/', {
-      onLoad: (win: Window) =>
-       win.localStorage.setItem('githubSession', Cypress.env('githubSession')),
-    });
-});
-
-  export {};

@@ -7,6 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x]
+
     env:
       CI: true
       NODE_ENV: test
@@ -17,8 +21,13 @@ jobs:
         run: node --version
 
       - uses: actions/checkout@v2
-        with:
+         with:
           fetch-depth: '0'
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: yarn install

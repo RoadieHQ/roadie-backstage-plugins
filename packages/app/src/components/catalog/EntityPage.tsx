@@ -57,8 +57,29 @@ import {
   EntityGithubInsightsReleasesCard,
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubPullRequestsContent, EntityGithubPullRequestsOverviewCard } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityDatadogContent,
+  EntityDatadogGraphCard,
+  isDatadogGraphAvailable
+} from '@roadiehq/backstage-plugin-datadog';
+// import {
+//   AWSLambdaOverviewWidget,
+//   isAWSLambdaAvailable
+// } from '@roadiehq/backstage-plugin-aws-lambda';
+import {
+  EntityTravisCIContent,
+  isTravisciAvailable,
+} from '@roadiehq/backstage-plugin-travis-ci';
+import {
+  EntityArgoCDHistoryCard,
+  isArgocdAvailable
+} from '@roadiehq/backstage-plugin-argo-cd';
+import { EntityFirebaseFunctionsContent, isFirebaseFunctionsAvailable, EntityFirebaseFunctionsCard } from '@roadiehq/backstage-plugin-firebase-functions';
+import { EntityJiraOverviewCard, isJiraAvailable } from '@roadiehq/backstage-plugin-jira';
 
 const cicdContent = (
+  <Grid container spacing={3} alignItems="stretch">
   // This is an example of how you can implement your company's logic in entity page.
   // You can for example enforce that all components of type 'service' should use GitHubActions
   <EntitySwitch>
@@ -83,6 +104,12 @@ const cicdContent = (
       />
     </EntitySwitch.Case>
   </EntitySwitch>
+  <EntitySwitch>
+    <EntitySwitch.Case if={isTravisciAvailable}>
+      <EntityTravisCIContent />
+    </EntitySwitch.Case>
+  </EntitySwitch>
+  </Grid>
 );
 
 const overviewContent = (
@@ -100,6 +127,44 @@ const overviewContent = (
           <EntityGithubInsightsReadmeCard maxHeight={350} />
         </Grid>
       </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isDatadogGraphAvailable}>
+        <Grid item>
+         <EntityDatadogGraphCard/>
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isJiraAvailable}>
+        <Grid item md={6}>
+          <EntityJiraOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <Grid item md={6}>
+      <EntityGithubPullRequestsOverviewCard />
+    </Grid>
+    {/* <EntitySwitch>
+      <EntitySwitch.Case if={isAWSLambdaAvailable}>
+        <Grid item md={6}>
+          <AWSLambdaOverviewWidget />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch> */}
+    <EntitySwitch>
+      <EntitySwitch.Case if={isFirebaseFunctionsAvailable}>
+        <Grid item md={6}>
+          <EntityFirebaseFunctionsCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+        <Grid item sm={6}>
+          <EntityArgoCDHistoryCard />
+        </Grid> 
+      </EntitySwitch.Case> 
     </EntitySwitch>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
@@ -133,6 +198,18 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+      <EntityGithubPullRequestsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/datadog" title="Datadog">
+      <EntityDatadogContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/firebase-functions" title="Firebase Functions">
+      <EntityFirebaseFunctionsContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">

@@ -18,28 +18,15 @@
 import 'os';
 
 describe('GithubInsights', () => {
+  beforeEach(() => {
+    cy.saveGithubToken();
+  })
+  
   describe('Navigating to GitHub Insights', () => {
     it('should show GitHub Insights Releases widget in Overview tab', () => {
       cy.visit('/catalog/default/component/sample-service-5')
-      cy.get('button').click()
+      cy.saveGithubToken();
       cy.contains('Releases');
     });
-
-    it('should show GitHub Insights Read me widget in Overview tab', () => {
-      cy.visit('/catalog/default/component/sample-service-5')
-      cy.get('button').click()
-      cy.contains('Read Me');
-    });
-
-    it('should show GitHub Insights Languages widget in Overview tab', () => {
-      cy.visit('/catalog/default/component/sample-service-5')
-      cy.get('button').click()
-      cy.contains('Languages');
-    });
-
-    it('should navigate to the  Github Insights page from the URL', () => {
-      cy.visit('/component/sample-service-5/code-insights');
-      cy.contains('GitHub Insights');
-    });
-  });
+   });
 });
