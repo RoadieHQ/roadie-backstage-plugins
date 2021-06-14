@@ -18,7 +18,6 @@ node_modules/
 # dotenv environment variables file
 .env
 .env.test
-.env.json
 
 # Build output
 dist
@@ -32,6 +31,9 @@ site
 
 # Local configuration files
 *.local.yaml
+*.env.json
+
 
 # Sensitive credentials
 *-credentials.yaml
+
