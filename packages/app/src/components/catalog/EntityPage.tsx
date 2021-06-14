@@ -58,11 +58,11 @@ import {
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
 import { EntityGithubPullRequestsContent, EntityGithubPullRequestsOverviewCard } from '@roadiehq/backstage-plugin-github-pull-requests';
-import {
-  EntityDatadogContent,
-  EntityDatadogGraphCard,
-  isDatadogGraphAvailable
-} from '@roadiehq/backstage-plugin-datadog';
+// import {
+//   EntityDatadogContent,
+//   EntityDatadogGraphCard,
+//   isDatadogGraphAvailable
+// } from '@roadiehq/backstage-plugin-datadog';
 // import {
 //   AWSLambdaOverviewWidget,
 //   isAWSLambdaAvailable
@@ -202,9 +202,9 @@ const serviceEntityPage = (
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
 
-    <EntityLayout.Route path="/datadog" title="Datadog">
+    {/* <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
-    </EntityLayout.Route>
+    </EntityLayout.Route> */}
 
     <EntityLayout.Route path="/firebase-functions" title="Firebase Functions">
       <EntityFirebaseFunctionsContent />

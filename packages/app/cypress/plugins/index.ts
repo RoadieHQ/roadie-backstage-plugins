@@ -16,6 +16,6 @@
  * @type {Cypress.PluginConfig}
  */
 
-module.exports = (on, config) => {
+export default function loadConfig(_:any ,config:any) {
   return config
 };
