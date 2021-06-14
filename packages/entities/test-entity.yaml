@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service
+  description: |
+    A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
+  annotations:
+    github.com/project-slug: roadiehq/sample-service
+    jenkins.io/github-folder: 'roadie/sample-service'
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
+    sentry.io/project-slug: sample-service
+    argocd/app-name: guestbook
+    backstage.io/techdocs-ref: https://github.com/RoadieHQ/sample-service/tree/main
+    jira/project-key: TEST
+    jira/component: COMP
+    snyk.io/org-name: roadie
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service
