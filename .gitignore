@@ -31,7 +31,6 @@ site
 
 # Local configuration files
 *.local.yaml
-*.env.json
 
 
 # Sensitive credentials
