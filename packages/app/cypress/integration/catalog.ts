@@ -23,7 +23,7 @@ describe('Catalog', () => {
       cy.loginAsGuest();
       cy.visit('/catalog');
       cy.get('[data-testid="user-picker-all"]').click();
-      cy.contains('sample-service-4');
+      cy.contains('sample-service');
     });
   });
 });

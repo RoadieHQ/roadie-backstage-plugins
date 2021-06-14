@@ -24,8 +24,7 @@ describe('GithubInsights', () => {
   
   describe('Navigating to GitHub Insights', () => {
     it('should show GitHub Insights Releases widget in Overview tab', () => {
-      cy.visit('/catalog/default/component/sample-service-5')
-      cy.saveGithubToken();
+      cy.visit('/catalog/default/component/sample-service')
       cy.contains('Releases');
     });
    });

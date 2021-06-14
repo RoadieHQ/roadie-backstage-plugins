@@ -24,11 +24,6 @@ jobs:
         with:
          fetch-depth: '0'
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
       - name: Install dependencies
         run: yarn install
 
@@ -38,12 +33,11 @@ jobs:
       - name: Build static site
         run: yarn build
 
-      - name: Run dev 
-        run: yarn dev
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          start: yarn start
+          wait-on: 'http://localhost:3000'
           project: ./packages/app
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
