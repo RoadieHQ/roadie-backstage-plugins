@@ -1,10 +1,6 @@
 name: E2E Test On PR
 
 on:
-  workflow_run:
-    workflows: ["Bump versions"]
-    types:
-      - completed
   [push]
 
 jobs:
