@@ -1,4 +1,4 @@
-name: Weekly check upstream versions
+name: Bump versions
 on:
   schedule:
   - cron: "0 6 * * 5"
