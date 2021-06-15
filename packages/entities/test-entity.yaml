@@ -6,14 +6,13 @@ metadata:
     A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
   annotations:
     github.com/project-slug: organisation/github-project-slug
-    # jenkins.io/github-folder: 'roadie/sample-service'
+    jira/project-key: TEST
+    jira/component: COMP
     # aws.com/lambda-function-name: HelloWorld
     # aws.com/lambda-region: eu-west-1
+    # # jenkins.io/github-folder: 'roadiehq/sample-service'
     # sentry.io/project-slug: sample-service
     # argocd/app-name: guestbook
-    # backstage.io/techdocs-ref: https://github.com/RoadieHQ/sample-service/tree/main
-    # jira/project-key: TEST
-    # jira/component: COMP
     # snyk.io/org-name: roadie
 spec:
   type: service

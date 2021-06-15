@@ -16,3 +16,18 @@
 /// <reference types="cypress" />
 // eslint-disable-next-line no-restricted-imports
 import 'os';
+
+describe('Jira plugin', () => {
+    beforeEach(() => {
+        cy.saveGithubToken()
+        cy.intercept('GET', 'http://localhost:7000/api/proxy/jira/api/rest/api/latest/project/TEST', { fixture: 'jira/project.json' })
+        cy.intercept('GET', ' http://localhost:7000/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic', { fixture: 'jira/activitystream.xml' })
+        cy.visit('/catalog/default/component/sample-service')
+    })
+
+    describe('Navigating to Jira Overview', () => {
+        it('should show Jira in Overview tab', () => {
+            cy.contains('Activity stream');
+        });
+    });
+});
