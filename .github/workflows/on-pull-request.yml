@@ -28,9 +28,6 @@ jobs:
         with:
          fetch-depth: '0'
       
-      - name: Check updates in dependencies
-        run: yarn backstage-cli versions:check --fix
-
       - name: Install dependencies
         run: yarn install
 
@@ -39,6 +36,9 @@ jobs:
 
       - name: Run tsc
         run: yarn tsc
+        
+      - name: Check updates in dependencies
+        run: yarn backstage-cli versions:bump
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
