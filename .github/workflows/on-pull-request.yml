@@ -43,7 +43,6 @@ jobs:
           start: yarn dev
           wait-on: 'http://localhost:3000'
           project: ./packages/app
-          record: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
   package-update:
