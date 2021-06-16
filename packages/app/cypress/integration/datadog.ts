@@ -17,17 +17,24 @@
 // eslint-disable-next-line no-restricted-imports
 import 'os';
 
-describe('AWS Lambda', () => {
+describe('Datadog', () => {
     beforeEach(() => {
         cy.saveGithubToken();
-        cy.intercept('GET', 'http://localhost:7000/api/aws/credentials', { fixture: 'AWSLambda/credentials.json' })
-        cy.intercept('GET', 'https://lambda.us-east-1.amazonaws.com/functions/HelloWorld', { fixture: 'AWSLambda/AWSLambdaResponse.json' })
+        cy.intercept('GET', 'https://p.datadoghq.eu/sb/test-datadog-link', { fixture: 'Datadog/datadogdashboard.json' })
+        cy.intercept('GET', 'https://app.datadoghq.eu/graph/embed?token=qwertytoken1234&height=300&width=600&legend=true', { fixture: 'Datadog/dashboard.html' })
         cy.visit('/catalog/default/component/sample-service')
     })
 
-    describe('Navigating to AWS', () => {
-        it('should show AWS', () => {
-            cy.contains('AWS Lambda');
+    describe('Navigate to datadog dashboard', () => {
+        it('should show Datadog dashboard', () => {
+            cy.visit('/catalog/default/component/sample-service/datadog')
+            cy.contains('Datadog dashboard');
         });
+
+        it('should show Datadog graph', () => {
+            cy.visit('/catalog/default/component/sample-service')
+            cy.contains('Datadog');
+        });
+
     });
 });

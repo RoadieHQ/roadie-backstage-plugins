@@ -21,6 +21,7 @@ import {
 import { Config } from '@backstage/config';
 import app from './plugins/app';
 import auth from './plugins/auth';
+import aws from './plugins/aws';
 import catalog from './plugins/catalog';
 import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
@@ -58,6 +59,7 @@ async function main() {
   const proxyEnv = useHotMemoize(module, () => createEnv('proxy'));
   const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
+  const awsEnv = useHotMemoize(module, () => createEnv('aws'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -65,6 +67,7 @@ async function main() {
   apiRouter.use('/auth', await auth(authEnv));
   apiRouter.use('/techdocs', await techdocs(techdocsEnv));
   apiRouter.use('/proxy', await proxy(proxyEnv));
+  apiRouter.use('/aws', await aws(awsEnv));
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)

@@ -1,0 +1,60 @@
+{
+    "Configuration": {
+      "Description": "",
+      "TracingConfig": { "Mode": "PassThrough" },
+      "VpcConfig": null,
+      "SigningJobArn": null,
+      "RevisionId": "0abcd3ea-f2d1-4630-a221-11234667890",
+      "LastModified": "2021-06-11T06:20:50.057+0000",
+      "FileSystemConfigs": null,
+      "FunctionName": "openfraksl-dev-graphql",
+      "Runtime": "nodejs14.x",
+      "Version": "$LATEST",
+      "PackageType": "Zip",
+      "LastUpdateStatus": "Successful",
+      "Layers": null,
+      "FunctionArn":
+        "arn:aws:lambda:us-east-1:function:openfraksl-dev-graphql",
+      "KMSKeyArn": null,
+      "MemorySize": 1024,
+      "ImageConfigResponse": null,
+      "LastUpdateStatusReason": null,
+      "DeadLetterConfig": null,
+      "Timeout": 6,
+      "Handler": "dist/graphql.handler",
+      "CodeSha256": "RABQVua9V3ByCvaBkdr111111111111=",
+      "Role": "arn:aws:iam:role/openfraksl-dev-us-east-1-lambdaRole",
+      "SigningProfileVersionArn": null,
+      "MasterArn": null,
+      "CodeSize": 53213316,
+      "State": "Active",
+      "StateReason": null,
+      "Environment": {
+        "Variables": {
+          "S3_BUCKET": "openfraksl-dev-fractalimagesbucket-1dfzxpf6bkcen",
+          "S3_REGION": "us-east-1",
+          "USER_TABLE": "openfraksl-users-dev",
+          "SAVED_FRACTALS_TABLE": "openfraksl-saved-fractals-dev"
+        },
+        "Error": null
+      },
+      "StateReasonCode": null,
+      "LastUpdateStatusReasonCode": null
+    },
+    "Concurrency": null,
+    "Code": {
+      "ResolvedImageUri": null,
+      "RepositoryType": "S3",
+      "ImageUri": null,
+      "Location":
+        "https://s3.us-east-1.amazonaws.com/snapshots/openfraksl-dev-graphql-903f68d6cfbc?versionId=NYJOHG7I9Iz&X-Amz-Security-Token=IQoJ99ce"
+    },
+    "Tags": {
+      "aws:cloudformation:stack-name": "openfraksl-dev",
+      "aws:cloudformation:stack-id":
+        "arn:aws:cloudformation:us-east-1:stack/openfraksl-dev",
+      "STAGE": "dev",
+      "aws:cloudformation:logical-id": "GraphqlLambdaFunction"
+    }
+  }
+  

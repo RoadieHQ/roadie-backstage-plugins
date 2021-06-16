@@ -1,0 +1,75 @@
+{
+    "last_modified":1612398409000,
+    "responses":{
+       "7693542087256666":[
+          {
+             "status":"ok",
+             "resp_version":3,
+             "series":[
+                
+             ],
+             "to_date":1623825612000,
+             "timing":"0.0392000675201",
+             "query":"avg:system.cpu.user{*}",
+             "message":"",
+             "res_type":"time_series",
+             "times":[
+                
+             ],
+             "from_date":1623822012000,
+             "group_by":[
+                
+             ],
+             "values":[
+                
+             ]
+          }
+       ],
+       "569203091204321112":[
+          {
+             "status":"ok",
+             "resp_version":2,
+             "series":[
+                
+             ],
+             "to_date":1623825612000,
+             "timing":"0.054151058197",
+             "query":"avg:system.cpu.user{*}",
+             "message":"",
+             "res_type":"time_series",
+             "times":[
+                
+             ],
+             "from_date":1623822012000,
+             "group_by":[
+                
+             ],
+             "values":[
+                
+             ]
+          },
+          {
+             "status":"ok",
+             "resp_version":2,
+             "series":[
+                
+             ],
+             "to_date":1623825612000,
+             "timing":"0.0408189296722",
+             "query":"avg:system.cpu.user{*}",
+             "message":"",
+             "res_type":"time_series",
+             "times":[
+                
+             ],
+             "from_date":1623822012000,
+             "group_by":[
+                
+             ],
+             "values":[
+                
+             ]
+          }
+       ]
+    }
+ }

@@ -4,6 +4,10 @@ import {
 import {
   ScmIntegrationsApi, scmIntegrationsApiRef
 } from '@backstage/integration-react';
+import {
+  awsLambdaApiRef,
+  AwsLambdaClient,
+} from '@roadiehq/backstage-plugin-aws-lambda'
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -11,4 +15,5 @@ export const apis: AnyApiFactory[] = [
     deps: { configApi: configApiRef },
     factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
   }),
+  createApiFactory(awsLambdaApiRef, new AwsLambdaClient()),
 ];

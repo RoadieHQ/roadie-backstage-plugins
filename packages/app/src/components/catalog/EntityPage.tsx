@@ -57,16 +57,18 @@ import {
   EntityGithubInsightsReleasesCard,
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
-import { EntityGithubPullRequestsContent, EntityGithubPullRequestsOverviewCard } from '@roadiehq/backstage-plugin-github-pull-requests';
-// import {
-//   EntityDatadogContent,
-//   EntityDatadogGraphCard,
-//   isDatadogGraphAvailable
-// } from '@roadiehq/backstage-plugin-datadog';
-// import {
-//   AWSLambdaOverviewWidget,
-//   isAWSLambdaAvailable
-// } from '@roadiehq/backstage-plugin-aws-lambda';
+import { EntityGithubPullRequestsContent,
+   EntityGithubPullRequestsOverviewCard 
+  } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityDatadogContent,
+  EntityDatadogGraphCard,
+  isDatadogGraphAvailable
+} from '@roadiehq/backstage-plugin-datadog';
+import {
+  AWSLambdaOverviewWidget,
+  isAWSLambdaAvailable
+} from '@roadiehq/backstage-plugin-aws-lambda';
 import {
   EntityTravisCIContent,
   isTravisciAvailable,
@@ -126,13 +128,13 @@ const overviewContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
-    {/* <EntitySwitch>
+    <EntitySwitch>
       <EntitySwitch.Case if={isDatadogGraphAvailable}>
         <Grid item>
          <EntityDatadogGraphCard/>
         </Grid>
       </EntitySwitch.Case>
-    </EntitySwitch> */}
+    </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={isJiraAvailable}>
         <Grid item md={6}>
@@ -143,13 +145,13 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityGithubPullRequestsOverviewCard />
     </Grid>
-    {/* <EntitySwitch>
-      <EntitySwitch.Case if={isAWSLambdaAvailable}>
+     <EntitySwitch>
+      <EntitySwitch.Case  if={e => Boolean(isAWSLambdaAvailable(e))}>
         <Grid item md={6}>
-          <AWSLambdaOverviewWidget />
+          <AWSLambdaOverviewWidget/>
         </Grid>
       </EntitySwitch.Case>
-    </EntitySwitch> */}
+    </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={isFirebaseFunctionsAvailable}>
         <Grid item md={6}>
@@ -202,9 +204,9 @@ const serviceEntityPage = (
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
 
-    {/* <EntityLayout.Route path="/datadog" title="Datadog">
+    <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
-    </EntityLayout.Route> */}
+    </EntityLayout.Route>
 
     <EntityLayout.Route path="/firebase-functions" title="Firebase Functions">
       <EntityFirebaseFunctionsContent />
