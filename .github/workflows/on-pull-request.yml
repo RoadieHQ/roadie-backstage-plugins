@@ -44,7 +44,7 @@ jobs:
           wait-on: 'http://localhost:3000'
           project: ./packages/app
         env:
-          GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   package-update:
     needs: build
     runs-on: ubuntu-latest
