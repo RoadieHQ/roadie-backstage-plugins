@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Update npm packages
-       uses: technote-space/create-pr-action@v2
-       with:
+      uses: technote-space/create-pr-action@v2
+      with:
          EXECUTE_COMMANDS: |
            npx npm-check-updates -u --packageFile package.json
            yarn install
