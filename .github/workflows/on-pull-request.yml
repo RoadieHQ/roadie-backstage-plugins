@@ -18,7 +18,7 @@ jobs:
     env:
       CI: true
       NODE_ENV: test
-      GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     steps:
       - name: Log node version
@@ -43,6 +43,7 @@ jobs:
           start: yarn dev
           wait-on: 'http://localhost:3000'
           project: ./packages/app
+          record: true
         env:
           GITHUB_TOKEN: ${{ secrets.WORKFLOW_GITHUB_TOKEN }}
   package-update:
