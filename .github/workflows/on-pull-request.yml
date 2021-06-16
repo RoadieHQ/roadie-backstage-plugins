@@ -49,14 +49,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: set remote url
-      run: git remote set-url --push origin https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-    - name: package-update
-      uses: taichi/actions-package-update@master
-      env:
-        EXECUTE: "true"
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        LOG_LEVEL: debug
-      with:
-        args: -u --packageFile package.json --loglevel verbose
+    - name: Update npm packages
+       uses: technote-space/create-pr-action@v2
+       with:
+         EXECUTE_COMMANDS: |
+           npx npm-check-updates -u --packageFile package.json
+           yarn install
+           yarn upgrade
+           yarn audit
+         COMMIT_MESSAGE: 'chore: update npm dependencies'
+         COMMIT_NAME: 'GitHub Actions'
+         COMMIT_EMAIL: 'roadie@roadie.io'
+         PR_BRANCH_NAME: 'chore-npm-update-${PR_ID}'
+         PR_TITLE: 'chore: update npm dependencies'
