@@ -49,6 +49,9 @@ import {
   EntityMembersListCard,
   EntityOwnershipCard,
 } from '@backstage/plugin-org';
+import { EntityGithubPullRequestsContent,
+  EntityGithubPullRequestsOverviewCard 
+} from '@roadiehq/backstage-plugin-github-pull-requests';
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 
 const cicdContent = (
@@ -86,6 +89,9 @@ const overviewContent = (
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
     </Grid>
+    <Grid item md={6}>
+      <EntityGithubPullRequestsOverviewCard />
+    </Grid>
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
@@ -111,6 +117,10 @@ const serviceEntityPage = (
           <EntityConsumedApisCard />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+      <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">

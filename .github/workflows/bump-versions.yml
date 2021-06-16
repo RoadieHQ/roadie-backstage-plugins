@@ -1,0 +1,11 @@
+name: Bump versions
+on:
+  schedule:
+  - cron: "0 6 * * 5"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run weekly
+      run: yarn backstage-cli versions:bump
