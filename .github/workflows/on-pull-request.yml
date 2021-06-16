@@ -5,7 +5,7 @@ on:
     workflows: ["Bump versions"]
     types:
       - completed
-  [push]:
+  push:
 
 jobs:
   build:
