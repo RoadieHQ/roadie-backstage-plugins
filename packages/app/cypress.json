@@ -5,6 +5,6 @@
   "defaultCommandTimeout": 10000,
   "viewportHeight": 900,
   "viewportWidth": 1440,
-  "pluginsFile": "./cypress/plugins",
-  "supportFile":"./cypress/support"
+  "supportFile":"./cypress/support",
+  "pluginsFile": "./cypress/plugins"
 }

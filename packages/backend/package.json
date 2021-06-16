@@ -17,10 +17,9 @@
     "migrate:create": "knex migrate:make -x ts"
   },
   "dependencies": {
-    "app": "0.0.0",
     "@backstage/backend-common": "^0.8.1",
-    "@backstage/catalog-model": "^0.8.1",
     "@backstage/catalog-client": "^0.3.12",
+    "@backstage/catalog-model": "^0.8.1",
     "@backstage/config": "^0.1.5",
     "@backstage/plugin-app-backend": "^0.3.13",
     "@backstage/plugin-auth-backend": "^0.3.12",
@@ -30,6 +29,8 @@
     "@backstage/plugin-techdocs-backend": "^0.8.2",
     "@gitbeaker/node": "^29.2.0",
     "@octokit/rest": "^18.5.3",
+    "@roadiehq/backstage-plugin-aws-auth": "^0.2.2",
+    "app": "0.0.0",
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
