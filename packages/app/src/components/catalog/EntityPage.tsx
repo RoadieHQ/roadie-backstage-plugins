@@ -65,10 +65,10 @@ import {
   EntityDatadogGraphCard,
   isDatadogGraphAvailable
 } from '@roadiehq/backstage-plugin-datadog';
-import {
-  AWSLambdaOverviewWidget,
-  isAWSLambdaAvailable
-} from '@roadiehq/backstage-plugin-aws-lambda';
+// import {
+//   AWSLambdaOverviewWidget,
+//   isAWSLambdaAvailable
+// } from '@roadiehq/backstage-plugin-aws-lambda';
 import {
   EntityTravisCIContent,
   isTravisciAvailable,
@@ -145,13 +145,13 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityGithubPullRequestsOverviewCard />
     </Grid>
-     <EntitySwitch>
+     {/* <EntitySwitch>
       <EntitySwitch.Case  if={e => Boolean(isAWSLambdaAvailable(e))}>
         <Grid item md={6}>
           <AWSLambdaOverviewWidget/>
         </Grid>
       </EntitySwitch.Case>
-    </EntitySwitch>
+    </EntitySwitch> */}
     <EntitySwitch>
       <EntitySwitch.Case if={isFirebaseFunctionsAvailable}>
         <Grid item md={6}>
