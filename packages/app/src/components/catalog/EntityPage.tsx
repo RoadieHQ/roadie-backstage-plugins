@@ -50,10 +50,12 @@ import {
   EntityOwnershipCard,
 } from '@backstage/plugin-org';
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
+import { EntityGithubPullRequestsContent,
+   EntityGithubPullRequestsOverviewCard 
+  } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 const cicdContent = (
-  // This is an example of how you can implement your company's logic in entity page.
-  // You can for example enforce that all components of type 'service' should use GitHubActions
+  <Grid container spacing={3} alignItems="stretch">
   <EntitySwitch>
     <EntitySwitch.Case if={isGithubActionsAvailable}>
       <EntityGithubActionsContent />
@@ -76,6 +78,7 @@ const cicdContent = (
       />
     </EntitySwitch.Case>
   </EntitySwitch>
+  </Grid>
 );
 
 const overviewContent = (
@@ -83,8 +86,14 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+    <Grid item md={6}>
+      <EntityGithubPullRequestsOverviewCard />
+    </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
+    </Grid>
+    <Grid item md={6}>
+      <EntityGithubPullRequestsOverviewCard />
     </Grid>
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
@@ -111,6 +120,10 @@ const serviceEntityPage = (
           <EntityConsumedApisCard />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+      <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">

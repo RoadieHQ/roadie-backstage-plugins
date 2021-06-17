@@ -1,0 +1,14 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service
+  description: |
+    A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
+  annotations:
+    github.com/project-slug: organisation/github-project-slug
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service

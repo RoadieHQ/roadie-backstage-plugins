@@ -60,6 +60,10 @@ catalog:
   rules:
     - allow: [Component, System, API, Group, User, Resource, Location]
   locations:
+    # File used for testing purposes
+    - type: file
+      target: ../entities/test-entity.yaml
+      
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml

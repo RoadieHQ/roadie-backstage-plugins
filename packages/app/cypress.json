@@ -1,5 +1,10 @@
 {
-  "baseUrl": "http://localhost:3001",
-  "fixturesFolder": false,
-  "pluginsFile": false
+  "baseUrl": "http://localhost:3000",
+  "fixturesFolder": "./cypress/fixtures",
+  "integrationFolder": "./cypress/integration",
+  "defaultCommandTimeout": 10000,
+  "viewportHeight": 900,
+  "viewportWidth": 1440,
+  "supportFile":"./cypress/support",
+  "pluginsFile": "./cypress/plugins"
 }
