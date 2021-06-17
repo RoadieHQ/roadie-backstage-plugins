@@ -57,6 +57,7 @@ jobs:
       with:
          EXECUTE_COMMANDS: |
            npx npm-check-updates -u --packageFile package.json
+           yarn backstage-cli versions:bump
            yarn install
            yarn upgrade
            yarn audit
