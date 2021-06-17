@@ -61,7 +61,6 @@ jobs:
            npx npm-check-updates -u --packageFile package.json
            yarn install
            yarn upgrade
-           yarn audit
          COMMIT_MESSAGE: 'chore: update npm dependencies'
          COMMIT_NAME: 'GitHub Actions'
          COMMIT_EMAIL: 'roadie@roadie.io'
