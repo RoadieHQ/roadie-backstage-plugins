@@ -60,6 +60,7 @@ jobs:
          EXECUTE_COMMANDS: |
            npx npm-check-updates -u --packageFile package.json
            yarn install
+           yarn backstage-cli versions:bump
            yarn upgrade
          COMMIT_MESSAGE: 'chore: update npm dependencies'
          COMMIT_NAME: 'GitHub Actions'
