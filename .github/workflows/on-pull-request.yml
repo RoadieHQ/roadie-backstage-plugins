@@ -38,10 +38,7 @@ jobs:
 
       - name: Run tsc
         run: yarn tsc
-        
-      - name: Check updates in dependencies
-        run: yarn backstage-cli versions:bump
-
+      
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
@@ -64,6 +61,6 @@ jobs:
            yarn upgrade
          COMMIT_MESSAGE: 'chore: update npm dependencies'
          COMMIT_NAME: 'GitHub Actions'
-         COMMIT_EMAIL: 'roadie@roadie.io'
+         COMMIT_EMAIL: 'bot@roadie.io'
          PR_BRANCH_NAME: 'chore-npm-update-${PR_ID}'
          PR_TITLE: 'chore: update npm dependencies'
