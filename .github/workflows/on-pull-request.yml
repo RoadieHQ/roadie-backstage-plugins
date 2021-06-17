@@ -6,6 +6,8 @@ on:
     types:
       - completed
   push:
+  pull_request:
+   types: [opened, synchronize, reopened, closed]
 
 jobs:
   build:
