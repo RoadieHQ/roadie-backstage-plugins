@@ -15,18 +15,25 @@ jobs:
         node-version: [14.x]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+     - uses: actions/checkout@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn run tsc
-      - run: yarn run lint
-      - run: yarn run build
-      - run: yarn test
-        env:
-          CI: true
+         fetch-depth: '0'
+      
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Run tsc
+        run: yarn tsc
+
+      - name: Run build
+        run: yarn run build
+
+      - name: Run test
+        run: yarn test
+
   publish-packages:
     runs-on: ubuntu-latest
     needs: build
