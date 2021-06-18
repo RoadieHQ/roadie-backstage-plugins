@@ -5,6 +5,8 @@ on:
     workflows: ["Bump versions"]
     types:
       - completed
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -46,6 +48,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   package-update:
     needs: build
+    if: github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
     steps:
     - name: Update npm packages
