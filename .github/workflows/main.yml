@@ -16,7 +16,7 @@ jobs:
 
     steps:
      - uses: actions/checkout@v2
-        with:
+       with:
          fetch-depth: '0'
       
       - name: Install dependencies
