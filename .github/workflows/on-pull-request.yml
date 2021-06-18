@@ -54,7 +54,6 @@ jobs:
          EXECUTE_COMMANDS: |
            yarn install
            yarn backstage-cli versions:bump
-           yarn upgrade
          COMMIT_MESSAGE: 'Update dependencies'
          COMMIT_NAME: 'GitHub Actions'
          COMMIT_EMAIL: 'bot@roadie.io'
