@@ -3,15 +3,10 @@
 ![a list of pull requests in the GitHub Pull Requests](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-github-pull-requests/main/docs/list-of-pull-requests-and-stats-tab-view.png)
 
 
-## Notice
+## Repository migration notice
 
-If you have previously used this plugin you will be noticing some changes. In order to increase usability of our plugins and make testing and integration process straightforward and easy we are currently working on re-structuring and re-organising our plugins workflows and architecture.
-
-We have decided to gather all of our plugins repositories in one place, so it is easier to find everything you need, which will boost the usage and hopefully give better overview of everything you can achieve with Backstage.
-
-From now on, this plugin will be contained inside https://github.com/RoadieHQ/backstage-roadie-plugins repository, which will gather all of the plugins we, at Roadie, have worked on.
-
-Updated instructions could be found below:
+In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/backstage-roadie-plugins.
+The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
 
 ## Plugin Configuration Requirements
 
