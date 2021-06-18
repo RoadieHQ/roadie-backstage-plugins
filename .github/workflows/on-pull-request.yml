@@ -5,9 +5,6 @@ on:
     workflows: ["Bump versions"]
     types:
       - completed
-  push:
-  pull_request:
-   types: [opened, synchronize, reopened, closed]
 
 jobs:
   build:
@@ -55,11 +52,10 @@ jobs:
       uses: technote-space/create-pr-action@v2
       with:
          EXECUTE_COMMANDS: |
-           npx npm-check-updates -u --packageFile package.json
            yarn install
            yarn backstage-cli versions:bump
            yarn upgrade
-         COMMIT_MESSAGE: 'chore: update npm dependencies'
+         COMMIT_MESSAGE: 'Update dependencies'
          COMMIT_NAME: 'GitHub Actions'
          COMMIT_EMAIL: 'bot@roadie.io'
          PR_BRANCH_NAME: 'chore-npm-update-${PR_ID}'
