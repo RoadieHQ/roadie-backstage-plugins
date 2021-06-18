@@ -15,8 +15,8 @@ jobs:
         node-version: [14.x]
 
     steps:
-     - uses: actions/checkout@v2
-       with:
+      - uses: actions/checkout@v2
+        with:
          fetch-depth: '0'
       
       - name: Install dependencies
