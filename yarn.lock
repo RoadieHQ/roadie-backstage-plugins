@@ -5406,9 +5406,9 @@ autolinker@^3.11.0:
     tslib "^1.9.3"
 
 aws-sdk@^2.382.0, aws-sdk@^2.840.0, aws-sdk@^2.891.0:
-  version "2.930.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.930.0.tgz#f98871a790ffdbfae5439e50db99f6d4635afe19"
-  integrity sha512-g8fPOy7Skh2Pqpz2SaDI+M9re2rjTWBQUirAMgtUD/6I/Lf6CR1Q0amsjtQU8WqRQH06kNGwuLtc8Tt6wAux3Q==
+  version "2.931.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.931.0.tgz#7fdc886fa7697095203fe7de16bc948a8b1c8daa"
+  integrity sha512-Db97/aJq8zYl8mHzY6dNO6m9S89TqN4HEUUc2aCYQCTyMb/eNrjf+uZTnutnQbJkClqHzxFcWc3aqe5VlTac/A==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -19205,9 +19205,9 @@ typescript-json-schema@^0.50.1:
     yargs "^16.2.0"
 
 typescript@^4.0.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.3.tgz#5401db69bd3203daf1851a1a74d199cb3112c11a"
-  integrity sha512-rUvLW0WtF7PF2b9yenwWUi9Da9euvDRhmH7BLyBG4DCFfOJ850LGNknmRpp8Z8kXNUPObdZQEfKOiHtXuQHHKA==
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.4.tgz#3f85b986945bcf31071decdd96cf8bfa65f9dcbc"
+  integrity sha512-uauPG7XZn9F/mo+7MrsRjyvbxFpzemRjKEZXS4AK83oP2KKOJPvb+9cO/gmnv8arWZvhnjVOXz7B49m1l0e9Ew==
 
 typescript@~4.2.3:
   version "4.2.4"
