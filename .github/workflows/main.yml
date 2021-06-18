@@ -33,7 +33,9 @@ jobs:
     steps:
     - name: Publish packages
       uses: actions/checkout@v2
-    - run: lerna publish
+    - run: |
+        lerna run build --since origin/main
+        lerna publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
