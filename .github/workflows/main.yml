@@ -33,6 +33,8 @@ jobs:
     steps:
     - name: Publish packages
       uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
     - run: |
         lerna run build --since origin/main
         lerna publish
