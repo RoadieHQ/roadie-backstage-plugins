@@ -2,7 +2,7 @@ name: E2E Test On PR
 
 on:
   workflow_run:
-    workflows: ["Bump versions"]
+    workflows: ["Check bump versions"]
     types:
       - completed
   pull_request:
