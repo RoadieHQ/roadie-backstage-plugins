@@ -10,7 +10,7 @@ git clone https://github.com/RoadieHQ/roadie-backstage-plugins.git
 cd roadie-backstage-plugins
 ```
 
-# Fetch dependencies and run an initial build
+# Fetch dependencies and run an initial build from root directory
 
 ```bash
 yarn install
