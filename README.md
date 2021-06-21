@@ -1,4 +1,4 @@
-This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here](https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on [npmjs]https://npmjs.com.
+This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here](https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on [npmjs](https://npmjs.com).
 
 
 ## Getting Started
