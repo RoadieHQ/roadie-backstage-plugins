@@ -51,13 +51,13 @@ jobs:
     if: github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
     steps:
-    - name: Update npm packages
+    - name: Update packages
       uses: technote-space/create-pr-action@v2
       with:
          EXECUTE_COMMANDS: |
            yarn install
            yarn backstage-cli versions:bump
-         COMMIT_MESSAGE: 'Update dependencies'
+         COMMIT_MESSAGE: 'Automated commit from ${PR_TITLE} '
          COMMIT_NAME: 'GitHub Actions'
          COMMIT_EMAIL: 'bot@roadie.io'
          PR_BRANCH_NAME: 'chore-npm-update-${PR_ID}'
