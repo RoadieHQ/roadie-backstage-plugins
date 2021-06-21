@@ -6,9 +6,12 @@ labels: enhancement
 
 <!--- Provide a general summary of the feature request in the Title above -->
 
+## Name of the plugin (in case you are reporting plugin bug)
+
+<!--- If you are proposing improvement/feature for particular plugin let us know which one it is. If not, feel free to leave out this information. -->
+
 ## Feature Suggestion
 
-<!--- If you're looking for help, please see https://backstage.io/ --->
 <!--- Tell us how we could improve your experience -->
 
 ## Possible Implementation
