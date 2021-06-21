@@ -11492,9 +11492,9 @@ isomorphic-form-data@~2.0.0:
     form-data "^2.3.2"
 
 isomorphic-git@^1.8.0:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/isomorphic-git/-/isomorphic-git-1.8.2.tgz#a246068c7d8edb5618a1b9f9304118b231cb46f7"
-  integrity sha512-wp3on2Kks1sE/tLUmGLPV7EEAj+JRK8WoL2ZSfJHVQfWzRqMRv96bqzDjyYpC6COGKlDQnhTNCucRf83S3cuMw==
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/isomorphic-git/-/isomorphic-git-1.8.3.tgz#7109b2e5237b65ce87e66a70e5dd51201ca3e2f7"
+  integrity sha512-VFiX6Xf1o3w3HqVW/GOw/mCADQdhWeW5SqjkXpclG4Fyh1yr2/G9dkwINezQ5hsvyKpImCX7xJCGmpH+56WLzw==
   dependencies:
     async-lock "^1.1.0"
     clean-git-ref "^2.0.1"
