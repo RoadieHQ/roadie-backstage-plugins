@@ -4,23 +4,27 @@ We want to create strong community of contributors -- all working together to cr
 
 Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given. ❤️
 
-The Backstage GitHub Pull Requests plugin is released under the Apache 2.0 License, and original creations contributed to this repo are accepted under the same license.
-
-We aim to stick as closely as possible to the [contribution guidelines which apply to the Backstage project](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md). If something is not covered in this document, please assume that the appropriate Backstage guideline will apply. 
+In general, we aim to stick as closely as possible to the [contribution guidelines which apply to the Backstage project](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md). If something is not covered in this document, please assume that the appropriate Backstage guideline will apply. 
 
 ## Types of Contributions
 
+This repository will gather the plugins we have worked on, so contribution is more than welcome both in this repository, and in a scope of a particular plugin.
+
 ### Report bugs
 
-No one likes bugs. Report bugs as an issue [here](https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/issues/new?assignees=&labels=bug&template=bug_template.md).
+No one likes bugs. Report bugs as an issue [here](https://github.com/RoadieHQ/roadie-backstage-plugins/issues/new?assignees=&labels=bug&template=bug_template.md).
 
 ### Fix bugs or build new features
 
 Look through the GitHub issues for bugs or problems that other users are having. If you're having a problem yourself, feel free to contribute a fix for us to review.
 
+### Add e2e test to monorepo
+
+We would like to prevent all the bugs from happening, but it is impossible. However, we can build strong e2e test which will make sure we are well aware of the problems and functionalities keep on working as expected. As we integrate more and more plugins, more and more tests will be needed. Contribute by writing some following guidelines in [E2E Tests](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/E2E.md).
+
 ### Submit feedback
 
-The best way to send feedback is to file [an issue](https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/issues/new).
+The best way to send feedback is to file [an issue](https://github.com/RoadieHQ/roadie-backstage-plugins/issues/new).
 
 If you are proposing a feature:
 
@@ -31,19 +35,17 @@ If you are proposing a feature:
 
 ### Add your company to ADOPTERS
 
-Have you started using the Backstage GitHub Pull Requests plugin. Adding your company to [ADOPTERS](https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/blob/main/ADOPTERS.md) really helps the project.
+Have you started using any/some/all of our plugins? Adding your company to [ADOPTERS](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/ADOPTERS.md) really helps the project.
 
 ## Get Started!
 
 So...feel ready to jump in? Let's do this. 💯 👏
 
-Start by reading the plugin README to get set up for local development. If you need help, just jump into [our Discord chatroom](https://discord.gg/W3qEMhmx4f).
+Start by reading repository README to get set up for local development. If you need help, just jump into [our Discord chatroom](https://discord.gg/W3qEMhmx4f).
 
 ## Coding Guidelines
 
-We use the backstage-cli to build, serve, lint, test and package this plugin, just like the plugins which live within the Backstage monorepo in the `/plugins` directory. 
-
-Also, the `tsconfig.json` simply extends the upstream `@backstage/cli/config/tsconfig.json`.
+We use the backstage-cli to build, serve, lint, test and package all the plugins.
 
 As such, the [same coding guidelines mostly apply](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md#coding-guidelines).
 
