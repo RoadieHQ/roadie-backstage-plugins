@@ -1,19 +1,43 @@
-This monorepo contains all the plugins we have worked on up until now. It is done in a form of Backstage scaffolded application with all plugins placed under backstage-roadie-plugins/plugins folder. 
+This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here] (https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on https://npmjs.com.
 
-Application integrates following plugins: 
-
-- [Github Pull Requests](https://github.com/RoadieHQ/backstage-plugin-github-pull-requests)
-
-You can find all of our plugins on Roadie(https://roadie.io)
 
 ## Getting Started
 
-Check out [the documentation](https://backstage.io/docs/getting-started) on how to start using Backstage.
+To get up and running with this repistory, you will need to clone it off of GitHub and run an initial build.
 
+```bash
+git clone https://github.com/RoadieHQ/roadie-backstage-plugins.git
+cd roadie-backstage-plugins
+```
+
+# Fetch dependencies and run an initial build
+
+```bash
+yarn install
+yarn tsc
+yarn build
+```
+
+You will be able to see plugins which are already integrated and installed in package.json inside
+
+```bash
+cd packages/app
+```
+
+folder. For now you will be able to see 
+
+ - [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
+
+ However, you can easily add other plugins by running 
+
+```bash
+// packages/app
+yarn add @roadiehq/<<plugin-name>>
+```
 ## Community
 
 - [Discord chatroom](https://discord.gg/3S4xrW7B) - Get support 
-- [Contributing](https://github.com/RoadieHQ/backstage-roadie-plugins/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
+- [Contributing](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
 - Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
 
 ## License
