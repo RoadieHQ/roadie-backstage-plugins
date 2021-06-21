@@ -56,9 +56,25 @@ yarn dev
 
 This repository, as mentioned above, will be a place where all of the plugins we have developed will be integrated under `/plugins` folder. This way it will be easy and straightforward to use and/or modify them by following steps below:
  
-### Select plugin you wish to modify
+### Plugins container
 
 Navigate to 
+
+```bash
+cd roadie-backstage-plugin/plugins
+cd selected-plugin
+```
+
+Plugin folders will consist separate unit tests per every plugin, while general e2e tests are written under 
+
+```bash
+cd roadie-backstage-plugin/packages/app/cypress/integration
+```
+folder.
+
+### Sample service
+
+In order to make e2e testing isolated from real entities, we have created `test-entity.yaml` under `packages/entitites`, which will be shown as sample-service entity when you start the app. This is used only for testing purposes and can be modified accordingly.
 
 ```bash
 cd roadie-backstage-plugin/plugins
