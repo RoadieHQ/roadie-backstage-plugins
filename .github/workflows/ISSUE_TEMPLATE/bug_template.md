@@ -6,6 +6,10 @@ labels: bug
 
 <!--- Provide a general summary of the issue in the Title above --> 
 
+## Name of the plugin (in case you are reporting plugin bug)
+
+<!--- If you are experiencing issues with particular plugin let us know which one it is. If not, feel free to leave out this information. -->
+
 ## Expected Behavior
 
 <!--- Tell us what should happen -->
@@ -37,7 +41,7 @@ labels: bug
 ## Your Environment
 
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-<!--- In particular the version of this plugin and the version of backstage you were using  -->
+<!--- In particular the version the plugins and the version of backstage you were using  -->
 <!--- when you encountered the bug will help us to reproduce your issue. -->
 
 - Version (version of this software e.g. v0.4.3):
