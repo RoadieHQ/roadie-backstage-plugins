@@ -18,10 +18,6 @@ No one likes bugs. Report bugs as an issue [here](https://github.com/RoadieHQ/ro
 
 Look through the GitHub issues for bugs or problems that other users are having. If you're having a problem yourself, feel free to contribute a fix for us to review.
 
-### Add e2e test to monorepo
-
-We would like to prevent all the bugs from happening, but it is impossible. However, we can build strong e2e test which will make sure we are well aware of the problems and functionalities keep on working as expected. As we integrate more and more plugins, more and more tests will be needed. Contribute by writing some following guidelines in [E2E Tests](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/E2E.md).
-
 ### Submit feedback
 
 The best way to send feedback is to file [an issue](https://github.com/RoadieHQ/roadie-backstage-plugins/issues/new).
@@ -41,7 +37,7 @@ Have you started using any/some/all of our plugins? Adding your company to [ADOP
 
 So...feel ready to jump in? Let's do this. 💯 👏
 
-Start by reading repository README to get set up for local development. If you need help, just jump into [our Discord chatroom](https://discord.gg/W3qEMhmx4f).
+Start by reading repository README to get set up for local development. If you need help, just jump into [our Discord chatroom](https://discord.gg/3S4xrW7B).
 
 ## Coding Guidelines
 
