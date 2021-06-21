@@ -33,7 +33,7 @@ If you are proposing a feature:
 
 As the number of plugins included in this repository increases, so does importance of good e2e tests which will make sure everything runs as it is expected. In order to contribute to this, very important aspect, of this repository, we urge you to follow guidelines below: 
 
-E2E are integrated under `/packages/app/cypress` folder where you will find specific e2e test for every plugin under `/packages/app/cypress/integrations`. This means you should follow that pattern and add tests in appropriate plugin test files. We would also encourage you to add more fixtures under  `/packages/app/cypress/fixtures`. For testing purposes you can use `test-entity.yaml` file which can be found under `/packages/entities`, which we have created especially for this purpose.
+E2E tests are integrated under `/packages/app/cypress` folder where you will find specific e2e test for every plugin under `/packages/app/cypress/integrations`. This means you should follow that pattern and add tests in appropriate plugin test files. We would also encourage you to add more fixtures under  `/packages/app/cypress/fixtures`. For testing purposes you can use `test-entity.yaml` file which can be found under `/packages/entities`, which we have created especially for this purpose.
 
 ### Add your company to ADOPTERS
 
