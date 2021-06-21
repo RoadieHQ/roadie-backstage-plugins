@@ -1,9 +1,9 @@
-This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here] (https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on https://npmjs.com.
+This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here](https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on [npmjs]https://npmjs.com.
 
 
 ## Getting Started
 
-To get up and running with this repistory, you will need to clone it off of GitHub and run an initial build.
+To get up and running with this repository, you will need to clone it off of GitHub and run an initial build.
 
 ```bash
 git clone https://github.com/RoadieHQ/roadie-backstage-plugins.git
@@ -24,16 +24,33 @@ You will be able to see plugins which are already integrated and installed in pa
 cd packages/app
 ```
 
-folder. For now you will be able to see 
+folder. For now, you will be able to see Github Pull Requests plugin and others will be added in the future.
 
- - [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
-
- However, you can easily add other plugins by running 
+ However, you can add other plugins by running 
 
 ```bash
 // packages/app
-yarn add @roadiehq/<<plugin-name>>
+yarn add <<plugin>>
 ```
+
+followed by 
+
+```bash
+// packages/app
+yarn install
+```
+and running same command in root directory.
+
+You should be able to run application from root directory, by running
+
+```bash
+yarn dev
+```
+
+ More informations about Github Pull Requests plugin, together with installation instructions, can be found on the link below
+
+ [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
+
 ## Community
 
 - [Discord chatroom](https://discord.gg/3S4xrW7B) - Get support 
