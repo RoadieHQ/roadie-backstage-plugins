@@ -63,4 +63,4 @@ If you experience or witness unacceptable behaviorâ€”or have any other concernsâ
 
 ## Security Issues?
 
-See [SECURITY.md](https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/blob/main/SECURITY.md)
+See [SECURITY.md](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/SECURITY.md)
