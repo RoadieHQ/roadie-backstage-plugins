@@ -43,7 +43,7 @@ Start by reading repository README to get set up for local development. If you n
 
 We use the backstage-cli to build, serve, lint, test and package all the plugins.
 
-As such, the [same coding guidelines mostly apply](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md#coding-guidelines).
+As such, the [same coding guidelines as in Backstage repository mostly apply](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md#coding-guidelines).
 
 ## Merging to main
 
