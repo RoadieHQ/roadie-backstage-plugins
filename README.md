@@ -74,14 +74,14 @@ folder.
 
 ### Sample service
 
-In order to make e2e testing isolated from real entities, we have created `test-entity.yaml` under `packages/entitites`, which will be shown as sample-service entity when you start the app. This is used only for testing purposes and can be modified accordingly.
+In order to make E2E testing isolated from real entities, we have created `test-entity.yaml` under `packages/entitites`, which will be shown as sample-service entity when you start the app. This is used only for testing purposes and can be modified accordingly.
 
 ```bash
 cd roadie-backstage-plugin/plugins
 cd selected-plugin
 ```
 
-Plugin folders will consist separate unit tests per every plugin, while general e2e tests are written under 
+Plugin folders will consist separate unit tests per every plugin, while general E2E tests are written under 
 
 ```bash
 cd roadie-backstage-plugin/packages/app/cypress/integration

@@ -8,7 +8,7 @@ In general, we aim to stick as closely as possible to the [contribution guidelin
 
 ## Types of Contributions
 
-This repository will gather the plugins we have worked on, so contribution is more than welcome both in this repository, and in a scope of a particular plugin.
+This repository will gather the plugins we have worked on, so contribution is more than welcome both in this repository in general, and in a scope of a particular plugin.
 
 ### Report bugs
 
@@ -29,11 +29,11 @@ If you are proposing a feature:
 - Keep the scope as narrow as possible, to make it easier to implement.
 - Remember that this is a volunteer-driven project, and that contributions are welcome :)
 
-### Write e2e tests
+### Write E2E tests
 
-As the number of plugins included in this repository increases, so does importance of good e2e tests which will make sure everything runs as it is expected. In order to contribute to this, very important aspect, of this repository, we urge you to follow guidelines below: 
+As the number of plugins included in this repository increases, so does importance of good E2E tests which will make sure everything runs as it is expected. In order to contribute to this, very important aspect, of this repository, we urge you to follow guidelines below: 
 
-E2E tests are integrated under `/packages/app/cypress` folder where you will find specific e2e test for every plugin under `/packages/app/cypress/integrations`. This means you should follow that pattern and add tests in appropriate plugin test files. We would also encourage you to add more fixtures under  `/packages/app/cypress/fixtures`. For testing purposes you can use `test-entity.yaml` file which can be found under `/packages/entities`, which we have created especially for this purpose.
+E2E tests are integrated under `/packages/app/cypress` folder where you will find specific E2E test for every plugin under `/packages/app/cypress/integrations`. This means you should follow that pattern and add tests in appropriate plugin test files. We would also encourage you to add more fixtures under  `/packages/app/cypress/fixtures`. For testing purposes you can use `test-entity.yaml` file which can be found under `/packages/entities`, which we have created especially for this purpose.
 
 ### Add your company to ADOPTERS
 
