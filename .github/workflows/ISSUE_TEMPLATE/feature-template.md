@@ -6,7 +6,7 @@ labels: enhancement
 
 <!--- Provide a general summary of the feature request in the Title above -->
 
-## Name of the plugin (in case you are reporting plugin bug)
+## Name of the plugin (in case you are suggesting plugin feature)
 
 <!--- If you are proposing improvement/feature for particular plugin let us know which one it is. If not, feel free to leave out this information. -->
 
