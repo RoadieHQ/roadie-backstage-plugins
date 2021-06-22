@@ -38,6 +38,8 @@ jobs:
       with:
         fetch-depth: '0'
     - run: |
+        git config --global user.email "bot@roadie.io"
+        git config --global user.name "roadiebot"
         lerna version patch --yes
         lerna publish --yes
       env:
