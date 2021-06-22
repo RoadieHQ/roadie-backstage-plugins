@@ -38,7 +38,7 @@ jobs:
       with:
         fetch-depth: '0'
     - run: |
-        lerna version patch
+        lerna version patch --yes
         lerna publish --yes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
