@@ -15,6 +15,9 @@ jobs:
         run: |
           yarn install
           yarn backstage-cli versions:bump
+      
+      - name: Get current date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
       - name: Create Pull Request
         id: cpr
@@ -25,9 +28,9 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: update-dependecies
+          branch: update-dependencies-${{ steps.date.outputs.date }}
           delete-branch: true
-          title: 'Update dependecies'
+          title: 'Update dependencies'
           base: main
           body: |
             Update backstage dependencies
