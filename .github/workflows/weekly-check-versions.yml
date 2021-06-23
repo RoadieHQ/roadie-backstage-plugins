@@ -18,7 +18,6 @@ jobs:
           yarn backstage-cli versions:bump
       - name: Get current date
         run: echo '::set-output name=date::$(date +'%Y-%m-%d')'
-        steps:
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
