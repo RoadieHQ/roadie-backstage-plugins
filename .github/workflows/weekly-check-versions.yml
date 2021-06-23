@@ -2,8 +2,6 @@ name: Check bump versions
 on:
   schedule:
   - cron: "0 6 * * 5"
-  # this will be removed
-  push:
 
 jobs:
   create-pull-request:
