@@ -41,7 +41,7 @@ jobs:
         git config --global user.email "bot@roadie.io"
         git config --global user.name "roadiebot"
         lerna version patch --yes
-        lerna publish --yes
+        lerna publish from-package --yes
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
