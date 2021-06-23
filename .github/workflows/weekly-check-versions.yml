@@ -41,8 +41,4 @@ jobs:
             dependency
             update
             automated pr
-          team-reviewers: |
-            owners
-            maintainers
-          milestone: 1
           draft: false
