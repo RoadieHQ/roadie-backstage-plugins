@@ -16,22 +16,11 @@ jobs:
         run: |
           yarn install
           yarn backstage-cli versions:bump
-      - name: Get current date
-        run: echo '::set-output name=date::$(date +'%Y-%m-%d')'
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
         with:
-          format: YYYYMMDD-HH
-          utcOffset: "+08:00"
-      - name: Use current time
-        env:
-          TIME: "${{ steps.current-time.outputs.time }}"
-          R_TIME: "${{ steps.current-time.outputs.readableTime }}"
-          F_TIME: "${{ steps.current-time.outputs.formattedTime }}"
-          YEAR: "${{ steps.current-time.outputs.year }}"
-          DAY: "${{ steps.current-time.outputs.day }}"
-        run: echo $TIME $R_TIME $F_TIME $YEAR $DAY
+          format: YYYYMMDD-HH-MM
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
