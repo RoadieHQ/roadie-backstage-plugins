@@ -16,10 +16,8 @@ jobs:
         run: |
           yarn install
           yarn backstage-cli versions:bump
-      
       - name: Get current date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
+        run: echo '::set-output name=date::$(date +'%Y-%m-%d')'
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
