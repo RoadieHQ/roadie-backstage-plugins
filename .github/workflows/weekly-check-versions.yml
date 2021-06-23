@@ -3,8 +3,7 @@ on:
   schedule:
   - cron: "0 6 * * 5"
   # this will be removed
-  pull_request:
-    branches: [main]
+  push:
 
 jobs:
   create-pull-request:
@@ -31,6 +30,7 @@ jobs:
           branch: update-dependecies
           delete-branch: true
           title: 'Update dependecies'
+          base: main
           body: |
             Update backstage dependencies
             - Updated using backstage-cli versions:bump
