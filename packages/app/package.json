@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "bundled": true,
   "dependencies": {
@@ -23,8 +23,8 @@
     "@backstage/theme": "^0.2.8",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@roadiehq/backstage-plugin-github-insights": "^1.1.12",
     "@roadiehq/backstage-plugin-github-pull-requests": "^1.0.6",
-    "@roadiehq/backstage-plugin-github-insights": "^1.1.11",
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
