@@ -1,0 +1,61 @@
+{
+  "name": "@roadiehq/backstage-plugin-github-insights",
+  "version": "1.1.11",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "license": "Apache-2.0",
+  "homepage": "https://roadie.io/backstage/plugins/github-insights/",
+  "bugs": {
+    "url": "https://github.com/RoadieHQ/backstage-plugin-github-insights/issues",
+    "email": "support@roadie.io"
+  },
+  "repository": "github:RoadieHQ/backstage-plugin-github-insights",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.esm.js",
+    "types": "dist/index.d.ts"
+  },
+  "scripts": {
+    "build": "backstage-cli plugin:build",
+    "start": "backstage-cli plugin:serve",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "diff": "backstage-cli plugin:diff",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@backstage/catalog-model": "^0.8.0",
+    "@backstage/core": "^0.7.11",
+    "@backstage/plugin-catalog-react": "^0.2.0",
+    "@backstage/theme": "^0.2.7",
+    "@date-io/core": "2.10.7",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "4.0.0-alpha.45",
+    "@octokit/rest": "^18.5.3",
+    "@octokit/types": "^6.14.2",
+    "history": "^5.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router": "^6.0.0-beta.0",
+    "react-use": "^17.2.4"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.6.12",
+    "@backstage/dev-utils": "^0.1.17",
+    "@backstage/test-utils": "^0.1.12",
+    "@testing-library/dom": "^7.31.0",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.6",
+    "cross-fetch": "^3.1.4",
+    "esbuild": "^0.8.56",
+    "msw": "^0.28.2",
+    "react-test-renderer": "^16.14.0",
+    "typescript": "^4.2.4"
+  },
+  "files": [
+    "dist"
+  ]
+}

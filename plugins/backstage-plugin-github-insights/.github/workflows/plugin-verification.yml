@@ -1,0 +1,35 @@
+name: Check PR against plugins-verification repository
+
+on:
+  pull_request:
+    branches: [main]
+  repository_dispatch:
+
+jobs:
+  check-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set environment  variables
+        run: |
+          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
+          echo "GIT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          echo "GIT_REPO=${GITHUB_REPOSITORY#*}" >> $GITHUB_ENV
+      - name: Use environment variables
+        run: |
+          echo "GIT_SHA=${GIT_SHA}"
+          echo "GIT_BRANCH=${GIT_BRANCH}"
+          echo "GIT_REPO=${GIT_REPO}"
+      - name: Dispatch initiating repository event
+        if: github.event.action != 'response'
+        run: |
+          echo "Call plugin-verification repository" && \
+          curl -X POST https://api.github.com/repos/RoadieHQ/plugins-verification/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.ACCESS_TOKEN }} \
+          --data '{"event_type": "call", "client_payload": { "repository": "'${{ github.event.repository.name }}'", "sha":"'${GIT_SHA}'", "branch":"'${GIT_BRANCH}'" }}'
+      - name: Merge if response recieved
+        if: github.event.action == 'response'
+        uses: ridedott/merge-me-action@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRESET: DEPENDABOT_MINOR
