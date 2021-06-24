@@ -24,7 +24,7 @@ You will be able to see plugins which are already integrated and installed in pa
 cd packages/app
 ```
 
-folder. For now, you will be able to see Github Pull Requests plugin and others will be added in the future.
+folder. For now, you will be able to see Github Pull Requests and Github Insights plugins and others will be added in the future.
 
 Inside this repository you can add other plugins by running 
 
@@ -48,9 +48,11 @@ You should be able to run application from root directory, by running
 yarn dev
 ```
 
- More informations about Github Pull Requests plugin, together with installation instructions, can be found on the link below
+ More informations about Github Pull Requests and Github Insights plugisn, together with installation instructions, can be found on the link below
 
  [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
+ 
+ [Github Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights).
  
 ## Structure of the repository.
 
