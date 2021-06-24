@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-github-insights
+  description: |
+    Backstage plugin to provide Readmes, Top Contributors and other widgets.
+  annotations:
+    github.com/project-slug: roadiehq/backstage-plugin-github-insights
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production
