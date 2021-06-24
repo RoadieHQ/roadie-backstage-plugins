@@ -48,7 +48,7 @@ You should be able to run application from root directory, by running
 yarn dev
 ```
 
- More informations about Github Pull Requests and Github Insights plugisn, together with installation instructions, can be found on the link below
+ More informations about Github Pull Requests and Github Insights plugins, together with installation instructions, can be found on the link below
 
  [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
  
