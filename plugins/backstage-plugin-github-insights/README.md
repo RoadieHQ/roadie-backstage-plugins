@@ -9,7 +9,7 @@ The plugins will still be published to the same place on NPM and will have the s
 
 ## Plugin Setup
 
-1. Install the plugin
+1. Install the plugin:
 
 ```bash
 cd packages/app
