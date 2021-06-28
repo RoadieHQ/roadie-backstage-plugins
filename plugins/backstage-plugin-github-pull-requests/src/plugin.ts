@@ -15,12 +15,13 @@
  */
 
 import {
-  createApiFactory,
-  createComponentExtension,
   createPlugin,
-  createRoutableExtension,
+  createApiFactory,
   createRouteRef,
-} from '@backstage/core';
+  createRoutableExtension,
+  createComponentExtension,
+} from '@backstage/core-plugin-api';
+
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
 export const entityContentRouteRef = createRouteRef({

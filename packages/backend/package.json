@@ -17,7 +17,7 @@
     "migrate:create": "knex migrate:make -x ts"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.8.1",
+    "@backstage/backend-common": "^0.8.3",
     "@backstage/catalog-client": "^0.3.12",
     "@backstage/catalog-model": "^0.8.1",
     "@backstage/config": "^0.1.5",
