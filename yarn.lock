@@ -1203,7 +1203,7 @@
     unzipper "^0.10.11"
     winston "^3.2.1"
 
-"@backstage/backend-common@^0.8.1", "@backstage/backend-common@^0.8.2", "@backstage/backend-common@^0.8.3":
+"@backstage/backend-common@^0.8.2", "@backstage/backend-common@^0.8.3":
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.8.3.tgz#e5873f8d947777dffe5bc456202b0128367821f5"
   integrity sha512-5nZz4xyA/LaHo6XbhF1n8J8Vjxk5wjy6OjcHIfkCMiMXXT34mFPBytW7r8+1ubp6WdPqo3UYCMSZcBth8Z8V4g==
@@ -1839,7 +1839,7 @@
     yn "^4.0.0"
     yup "^0.29.3"
 
-"@backstage/plugin-catalog-import@^0.5.8":
+"@backstage/plugin-catalog-import@^0.5.11":
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-import/-/plugin-catalog-import-0.5.11.tgz#3d9a1afda441685660e3f3cb8e77da8e50cac091"
   integrity sha512-E6MxX7ymxsHBr38oGa7TdRddWYni4RuMjiOvNYHqLHuHZLa8o96LdU+TOmVtvFmwBhYHvX6zeACn7pftsvrN1w==
@@ -1888,7 +1888,7 @@
     react-router-dom "6.0.0-beta.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-catalog@^0.6.1", "@backstage/plugin-catalog@^0.6.4":
+"@backstage/plugin-catalog@^0.6.4":
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog/-/plugin-catalog-0.6.4.tgz#814161e58352428619f7a1913149ea25e0792937"
   integrity sha512-1tqoE1PzTDCiL99iZRoIyu6JAvSHq8KJS/3NrThdZdIRRtEGpzFLO9EQYiQpuYbejZuYz5H/CMtu97+epuFUAQ==
@@ -1916,7 +1916,7 @@
     react-router-dom "6.0.0-beta.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-github-actions@^0.4.8":
+"@backstage/plugin-github-actions@^0.4.10":
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-github-actions/-/plugin-github-actions-0.4.10.tgz#901dd405d092b4b8ff61e42922ea3fa9662d1754"
   integrity sha512-zNw03pRQs3NFrBx5uzwMqCF+pSv0GZnz2gdx2JHk5c0x6jixQ120UxvNhwWoQdOB5Ovs5zeBjdGB0NiS6855BA==
@@ -1939,7 +1939,7 @@
     react-router-dom "6.0.0-beta.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-org@^0.3.14":
+"@backstage/plugin-org@^0.3.15":
   version "0.3.15"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-org/-/plugin-org-0.3.15.tgz#d80c83e6698dc9122513ded14135c64a81429742"
   integrity sha512-ERb1LqYx7kAlZ2uy1x1a9Hgrml5yO2V7crD5W0dXoI7pPZ0Vb81Q0qn4PjhE6u9PpHMaKBL2pfHIsr12NFcLoQ==
@@ -2015,7 +2015,7 @@
     winston "^3.2.1"
     yaml "^1.10.0"
 
-"@backstage/plugin-scaffolder@^0.9.7":
+"@backstage/plugin-scaffolder@^0.9.9":
   version "0.9.9"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder/-/plugin-scaffolder-0.9.9.tgz#71b9b7748cf584577b69a8c9158cc2c97053d432"
   integrity sha512-TVL8elCueZgulaBqih4tMBRh8BTpdRJwx5geOQzGUMAdv9K6OVxqrULUdFhW5RbN+fhuzrUMSI4PGsLm/sltpw==
@@ -2061,7 +2061,7 @@
     lunr "^2.3.9"
     winston "^3.2.1"
 
-"@backstage/plugin-search@^0.4.0":
+"@backstage/plugin-search@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-search/-/plugin-search-0.4.1.tgz#af4a8e9084898027d323af047ca1ac5fcbe57198"
   integrity sha512-Klf8XVXWJ9FDKU/76q92WLcUAmAgcRJkHBzONzxT55gJa9jVBwfGcxDwKFbyhDV0q1Z4yXM/D5KmczuknMMCAg==
@@ -2084,7 +2084,7 @@
     react-router-dom "6.0.0-beta.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-tech-radar@^0.4.0":
+"@backstage/plugin-tech-radar@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-tech-radar/-/plugin-tech-radar-0.4.1.tgz#b2d9295d7ba7709227c6743cf376245e507535a2"
   integrity sha512-oBa6299I4zFUn8WbW2rU6y23hklDAnrd2mFDAXRzuVqGlkDGiaYlXzrBXeUm+/anM1tsEzx6YZve8Eve4MflKg==
@@ -2121,7 +2121,7 @@
     knex "^0.95.1"
     winston "^3.2.1"
 
-"@backstage/plugin-techdocs@^0.9.5":
+"@backstage/plugin-techdocs@^0.9.7":
   version "0.9.7"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs/-/plugin-techdocs-0.9.7.tgz#7061194b8dd66950095727ded2f4f27d5ddb1f0b"
   integrity sha512-MBDM8+qeGFTB9b+8ZxtBQW3vmg/wG+ILoTh5XOAyYyZ2Jf8LepGQ7kn1VGHtbfRAgGIpoH/EudlpbltvbG7qQQ==
@@ -2146,7 +2146,7 @@
     react-use "^17.2.4"
     sanitize-html "^2.3.2"
 
-"@backstage/plugin-user-settings@^0.2.10":
+"@backstage/plugin-user-settings@^0.2.12":
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-user-settings/-/plugin-user-settings-0.2.12.tgz#6e27be38aceea03c9c204d154ecd7c378b12c60f"
   integrity sha512-DB+Qan2hQHb9RS3Usf41TCPt4GhYXy2d8EpLzHzq66Ky+CDp/4MUt0uSvS7C2NfIlDIP/3n/yk84iMedUcl5vw==
@@ -2351,7 +2351,7 @@
   dependencies:
     yaml-ast-parser "0.0.43"
 
-"@gitbeaker/core@29.2.4", "@gitbeaker/core@^29.2.4", "@gitbeaker/core@^30.2.0":
+"@gitbeaker/core@^29.2.4":
   version "29.2.4"
   resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-29.2.4.tgz#aedad4551d3c54270ce962a4e52116885d67e469"
   integrity sha512-tsgF3TmnEBdLQKN79ud8BWiSRGsQ26ksRG1ZVdsYEIVLXx2IYxr2V5VtyIcvbkOVgT/h/3jlNrmkLy54O7Jviw==
@@ -2361,7 +2361,18 @@
     li "^1.3.0"
     xcase "^2.0.1"
 
-"@gitbeaker/node@29.2.4", "@gitbeaker/node@^29.2.0", "@gitbeaker/node@^30.2.0":
+"@gitbeaker/core@^30.2.0", "@gitbeaker/core@^30.5.0":
+  version "30.5.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/core/-/core-30.5.0.tgz#e420daf5de94de29e656d9f259840a950d8962a6"
+  integrity sha512-3H4uSfFoogIIXz9ht1SQhw2FO43uzqtqKIY0gNJVwXDjYFNIhRfzPYUZLrB33iaGtZ9MP9U9H7i1ineHGqCg6w==
+  dependencies:
+    "@gitbeaker/requester-utils" "^30.5.0"
+    form-data "^4.0.0"
+    li "^1.3.0"
+    query-string "^7.0.0"
+    xcase "^2.0.1"
+
+"@gitbeaker/node@^29.2.0":
   version "29.2.4"
   resolved "https://registry.yarnpkg.com/@gitbeaker/node/-/node-29.2.4.tgz#679a08034b598e6f384a3d3b2cd038a12d80da14"
   integrity sha512-Ftn1pAlYDcEenzK8D+cHkwcEdfQ96h/34mRUNlB3lUOn3y/FTpuOIfwWjw77zdDmLpWeZCT6GoCN8hirtVxXcw==
@@ -2371,10 +2382,30 @@
     got "^11.8.2"
     xcase "^2.0.1"
 
-"@gitbeaker/requester-utils@29.2.4", "@gitbeaker/requester-utils@^29.2.4":
+"@gitbeaker/node@^30.2.0":
+  version "30.5.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/node/-/node-30.5.0.tgz#e00c4d1e4e7a29039daa70b9ba8d15050c106469"
+  integrity sha512-OEk5I+jww9r/L9zmJCH89nvMSpPSOdQq9l+6KKwK1zavaRjO+WBfD2+4fYQ3BgLcKzLVqFNF04PBi/zfKnGrug==
+  dependencies:
+    "@gitbeaker/core" "^30.5.0"
+    "@gitbeaker/requester-utils" "^30.5.0"
+    delay "^5.0.0"
+    got "^11.8.2"
+    xcase "^2.0.1"
+
+"@gitbeaker/requester-utils@^29.2.4":
   version "29.2.4"
   resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-29.2.4.tgz#c06b969c1d6f2c6252403472bf570b354829620b"
   integrity sha512-bXm1zNkLs5h9mscqo0bP8p6uDfHATp/4jPDZ4xCgX4+Q9lmpC0RIhhqRr595cgKT1WEIZakJgjokacKu+pmHKg==
+  dependencies:
+    form-data "^4.0.0"
+    query-string "^7.0.0"
+    xcase "^2.0.1"
+
+"@gitbeaker/requester-utils@^30.5.0":
+  version "30.5.0"
+  resolved "https://registry.yarnpkg.com/@gitbeaker/requester-utils/-/requester-utils-30.5.0.tgz#4b0039a4340edbc06fe0b7751b871a91d617728d"
+  integrity sha512-MtDne1QRGHTprgDsFjySXgOmu9zUPUS2L8qS74kJm9Wnz4RY/+d/n5HRl6i34shidkQJWRqAOiAwn8zDFqhovA==
   dependencies:
     form-data "^4.0.0"
     query-string "^7.0.0"
@@ -4021,10 +4052,10 @@
   resolved "https://registry.yarnpkg.com/@spotify/eslint-config-typescript/-/eslint-config-typescript-9.0.0.tgz#be68cfaf212599f0bfeb6536c7c58ec05d2b6fba"
   integrity sha512-ZsXTwMA68ZCz943U4N8XwprdWcc7ErOO/IW8PewLK5lycCZtLnmRkOvAbae7O5qNJPD8b/l0iUMTLaZuwjXWwg==
 
-"@spotify/prettier-config@^10.0.0":
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/@spotify/prettier-config/-/prettier-config-10.0.0.tgz#fa076d98d2e7e6c53dd3d86a696307a7010bd056"
-  integrity sha512-VYOdo8P7lIScAkl02nB9KpUAuOYMManryBIBuKJkAw5D3aVtLobfmdIKvdV6MqEmGMEQPbn7w/UpnjJYhUH+IA==
+"@spotify/prettier-config@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@spotify/prettier-config/-/prettier-config-7.0.0.tgz#47750979d1282197295108b6958360660a955c16"
+  integrity sha512-lIMcx/2oDqTtW84iHKkRJe+8U6HK6GPwWH5sJp9UEHcDpdXomOQYvwcGXy2I2zwPQQ14gYYE6nEJuSnnYqsYRw==
 
 "@sucrase/jest-plugin@^2.1.0":
   version "2.1.0"
@@ -7094,7 +7125,7 @@ concat-with-sourcemaps@^1.1.0:
   dependencies:
     source-map "^0.6.1"
 
-concurrently@^6.2.0:
+concurrently@^6.0.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-6.2.0.tgz#587e2cb8afca7234172d8ea55176088632c4c56d"
   integrity sha512-v9I4Y3wFoXCSY2L73yYgwA9ESrQMpRn80jMcqMgHx720Hecz2GZAvTI6bREVST6lkddNypDKRN22qhK0X8Y00g==
@@ -7753,11 +7784,6 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress-localstorage-commands@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/cypress-localstorage-commands/-/cypress-localstorage-commands-1.4.5.tgz#7e97f82c144314655ab7ecb4ce0e273c70d1e569"
-  integrity sha512-mr86nv74GvOE4zOFwoMrksFCykNSbRh57Pg7xUGpm2ax+wfHhqwBA56Sn5dhHV73gzz7C6B1kfNpMrjMH/hgyg==
-
 cypress@^7.3.0:
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-7.5.0.tgz#72dd342e3b45f54b63cd46819f38d126feff5954"
@@ -8148,6 +8174,11 @@ del@^4.1.1:
     p-map "^2.0.0"
     pify "^4.0.1"
     rimraf "^2.6.3"
+
+delay@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/delay/-/delay-5.0.0.tgz#137045ef1b96e5071060dd5be60bf9334436bd1d"
+  integrity sha512-ReEBKkIfe4ya47wlPYf/gu5ib6yUG0/Aez0JQZQz94kiWtRQvZIQbTiehsnwHvLSWJnQdhVeqYue7Id1dKr0qw==
 
 delayed-stream@~1.0.0:
   version "1.0.0"
@@ -16114,10 +16145,10 @@ prepend-http@^1.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
 
-prettier@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.1.tgz#76903c3f8c4449bc9ac597acefa24dc5ad4cbea6"
-  integrity sha512-p+vNbgpLjif/+D+DwAZAbndtRrR0md0MwfmOVN9N+2RgyACMT+7tfaRnT+WDPkqnuVwleyuBIG2XBxKDme3hPA==
+prettier@^1.19.1:
+  version "1.19.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
+  integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
 
 pretty-bytes@^5.6.0:
   version "5.6.0"
