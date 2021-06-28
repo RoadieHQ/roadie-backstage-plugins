@@ -1,0 +1,27 @@
+name: publish
+on:
+  push:
+    branches:
+      - main
+jobs:
+  npm-publish:
+    name: npm-publish
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@main
+    - name: Set up Node.js
+      uses: actions/setup-node@main
+      with:
+        node-version: 12.18.3
+    - run: yarn install
+    - run: yarn tsc
+    - run: yarn build
+    - run: |
+        git config --global user.email "bot@roadie.io"
+        git config --global user.name "roadie-bot"
+        lerna publish from-package --yes --no-verify-access
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
