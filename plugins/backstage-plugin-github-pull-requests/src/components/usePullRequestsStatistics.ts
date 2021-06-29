@@ -15,7 +15,7 @@
  */
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
-import { useApi, githubAuthApiRef } from '@backstage/core';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
 import { useBaseUrl } from './useBaseUrl';

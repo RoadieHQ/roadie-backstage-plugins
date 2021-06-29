@@ -16,7 +16,7 @@
 import React, { FC, useState } from 'react';
 import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Table, TableColumn } from '@backstage/core';
+import { Table, TableColumn } from '@backstage/core-components';
 import { useProjectName } from '../useProjectName';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
