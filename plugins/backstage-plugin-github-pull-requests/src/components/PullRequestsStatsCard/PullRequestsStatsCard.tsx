@@ -19,7 +19,7 @@ import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable
-} from '@backstage/core';
+} from '@backstage/core-components';
 import { useProjectName } from '../useProjectName';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
 import {
