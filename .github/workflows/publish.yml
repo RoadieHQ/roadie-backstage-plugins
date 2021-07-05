@@ -28,10 +28,10 @@ jobs:
         git config --global user.email "bot@roadie.io"
 
     - name: Build up packages and bump versions
-    - run: yarn install
-    - run: yarn tsc
-    - run: yarn build
     - run: |
+        yarn install
+        yarn tsc
+        yarn build
         yarn version:ci
         yarn publish:ci
       env:
