@@ -24,7 +24,7 @@ import {
   Box,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { Progress } from '@backstage/core';
+import { Progress } from '@backstage/core-components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { useUrl } from '../../../../../hooks/useUrl';
 import { useContributor } from '../../../../../hooks/useContributor';

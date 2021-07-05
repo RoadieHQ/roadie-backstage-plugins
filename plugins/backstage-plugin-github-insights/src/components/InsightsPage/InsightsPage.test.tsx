@@ -22,12 +22,16 @@ import { wrapInTestApp } from '@backstage/test-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 import {
+  configApiRef,
+  githubAuthApiRef
+} from '@backstage/core-plugin-api';
+
+import {
   ApiProvider,
   ApiRegistry,
-  configApiRef,
   GithubAuth,
-  githubAuthApiRef,
-} from '@backstage/core';
+} from '@backstage/core-app-api';
+
 
 const getSession = jest
   .fn()

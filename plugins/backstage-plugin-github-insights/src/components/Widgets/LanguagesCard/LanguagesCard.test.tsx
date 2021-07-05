@@ -17,11 +17,13 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import {
-  ApiRegistry,
-  ApiProvider,
   configApiRef,
-  githubAuthApiRef,
-} from '@backstage/core';
+  githubAuthApiRef
+} from '@backstage/core-plugin-api';
+import {
+  ApiRegistry,
+  ApiProvider
+} from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';

@@ -16,7 +16,7 @@
 import React from 'react';
 import { Box, List, ListItem } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, StructuredMetadataTable } from '@backstage/core';
+import { InfoCard, Progress, StructuredMetadataTable } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import {
   useProtectedBranches,
