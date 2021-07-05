@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useApi, configApiRef } from '@backstage/core';
+import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
 export const useUrl = () => {
   const config = useApi(configApiRef);

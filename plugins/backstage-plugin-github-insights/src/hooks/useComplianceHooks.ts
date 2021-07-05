@@ -1,5 +1,5 @@
 import { Entity } from '@backstage/catalog-model';
-import { useApi, githubAuthApiRef } from '@backstage/core';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
 import { useAsync } from 'react-use';

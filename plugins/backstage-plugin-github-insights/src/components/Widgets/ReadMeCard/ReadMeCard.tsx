@@ -16,7 +16,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MarkdownContent } from '@backstage/core';
+import { InfoCard, Progress, MarkdownContent } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { useUrl } from '../../../hooks/useUrl';

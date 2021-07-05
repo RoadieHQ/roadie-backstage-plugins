@@ -15,7 +15,7 @@
  */
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { Page, Content, ContentHeader, SupportButton } from '@backstage/core';
+import { Page, Content, ContentHeader, SupportButton } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import {
   ComplianceCard,

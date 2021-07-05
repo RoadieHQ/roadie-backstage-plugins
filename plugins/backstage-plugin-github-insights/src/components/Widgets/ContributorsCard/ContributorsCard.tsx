@@ -16,7 +16,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress } from '@backstage/core';
+import { InfoCard, Progress } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import ContributorsList from './components/ContributorsList';
 import { useRequest } from '../../../hooks/useRequest';

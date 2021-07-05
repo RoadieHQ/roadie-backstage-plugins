@@ -17,10 +17,11 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { Route, Routes } from 'react-router';
+import { Route } from 'react-router';
+import { FlatRoutes } from '@backstage/core-app-api';
 import InsightsPage from './InsightsPage';
 import { GITHUB_INSIGHTS_ANNOTATION } from '../hooks/useProjectName';
-import { MissingAnnotationEmptyState } from '@backstage/core';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 
 export const isGithubInsightsAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION]);
@@ -35,9 +36,9 @@ export const Router = (_props: Props) =>{
   return   !isGithubInsightsAvailable(entity) ? (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
   ) : (
-      <Routes>
+      <FlatRoutes>
         <Route path="/" element={<InsightsPage entity={entity} />} />
-      </Routes>
+      </FlatRoutes>
   );
 
 }

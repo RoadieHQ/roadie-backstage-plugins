@@ -15,7 +15,7 @@
  */
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
-import { useApi, githubAuthApiRef } from '@backstage/core';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useUrl } from './useUrl';
 import { ContributorData } from '../components/types';
 
