@@ -13,7 +13,8 @@
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
-    "types": "dist/index.d.ts"
+    "types": "dist/index.d.ts",
+    "registry": "https://registry.npmjs.org/" 
   },
   "scripts": {
     "build": "backstage-cli plugin:build",
