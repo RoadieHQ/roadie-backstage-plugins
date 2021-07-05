@@ -4,23 +4,36 @@ on:
     branches:
       - main
 jobs:
-  npm-publish:
+  publish:
     name: npm-publish
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@main
-    - name: Set up Node.js
-      uses: actions/setup-node@main
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+  
+    - uses: actions/setup-node@v1
       with:
         node-version: 14.x
+        registry-url: 'https://npm.pkg.github.com/'
+    
+    - name: Ensure access
+      run: npm whoami --registry https://npm.pkg.github.com/
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Config git user
+      run: |
+        git config --global user.name "roadie-bot"
+        git config --global user.email "bot@roadie.io"
+
+    - name: Build up packages and bump versions
     - run: yarn install
     - run: yarn tsc
     - run: yarn build
     - run: |
-        git config --global user.email "bot@roadie.io"
-        git config --global user.name "roadie-bot"
-        lerna publish from-package --yes --no-verify-access
+        yarn version:ci
+        yarn publish:ci
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
