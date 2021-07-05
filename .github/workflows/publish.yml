@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   publish:
-    name: npm-publish
+    name: publish
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
         git config --global user.email "bot@roadie.io"
 
     - name: Build up packages and bump versions
-    - run: |
+      run: |
         yarn install
         yarn tsc
         yarn build
