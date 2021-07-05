@@ -17,10 +17,12 @@ jobs:
     - run: yarn install
     - run: yarn tsc
     - run: yarn build
-    - run: |
+    
+    - name: Run publish
+      run: |
         git config --global user.email "bot@roadie.io"
         git config --global user.name "roadie-bot"
         lerna publish from-package --yes --no-verify-access
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
