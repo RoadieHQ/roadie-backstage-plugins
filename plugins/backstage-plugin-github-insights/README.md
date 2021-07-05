@@ -32,6 +32,7 @@ const serviceEntityPage = (
       title="Code Insights">
       <EntityGithubInsightsContent />
     </EntityLayout.Route>
+    ...
   </EntityLayoutWrapper>
 );
 ```
