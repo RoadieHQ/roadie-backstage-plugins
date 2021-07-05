@@ -22,7 +22,7 @@ jobs:
       run: |
         git config --global user.email "bot@roadie.io"
         git config --global user.name "roadie-bot"
-        lerna publish  --registry=https://registry.npmjs.org/ from-package --yes --no-verify-access
+        lerna publish from-package --yes --no-verify-access
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
