@@ -1268,7 +1268,7 @@
   resolved "https://registry.yarnpkg.com/@backstage/cli-common/-/cli-common-0.1.2.tgz#391ae00a58a1bd813952d854c9f7cc2bf5254b14"
   integrity sha512-oP6GL6jet3Qh2kyQkjgRVf/vQRhpJTmbL+YsH9QGQSLLv7lZQcK11QrN8+uH2VgZI8yiVU+bPkLBLsdeM1rySg==
 
-"@backstage/cli@^0.7.1", "@backstage/cli@^0.7.2":
+"@backstage/cli@^0.7.4":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.7.4.tgz#c8a42e661aaf133bb5b63a3be61be2ca25865d94"
   integrity sha512-cAe5caL+n4sfRBLreRy26vwd6YIM+4/SdiZydOHEz0XYV0wq+KvYsKMr0ud01Aui9Xc1q20ooAmMcrMYcsvAtQ==
