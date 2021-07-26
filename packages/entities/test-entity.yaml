@@ -6,6 +6,8 @@ metadata:
     A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
   annotations:
     github.com/project-slug: organisation/github-project-slug
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
 spec:
   type: service
   owner: roadie

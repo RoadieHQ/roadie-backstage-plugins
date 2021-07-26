@@ -55,6 +55,10 @@ import {
   EntityGithubPullRequestsOverviewCard
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
+  isAWSLambdaAvailable,
+  EntityAWSLambdaOverviewCard
+} from '@roadiehq/backstage-plugin-aws-lambda';
+import {
   EntityGithubInsightsContent,
   EntityGithubInsightsLanguagesCard,
   EntityGithubInsightsReadmeCard,
@@ -102,6 +106,13 @@ const overviewContent = (
         </Grid>
         <Grid item md={6}>
           <EntityGithubInsightsReadmeCard maxHeight={350} />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isAWSLambdaAvailable(e))}>
+        <Grid item md={6}>
+          <EntityAWSLambdaOverviewCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
