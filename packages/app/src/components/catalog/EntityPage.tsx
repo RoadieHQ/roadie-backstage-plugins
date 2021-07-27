@@ -65,6 +65,9 @@ import {
   EntityGithubInsightsReleasesCard,
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
+import {
+  EntityJiraOverviewCard, isJiraAvailable
+} from '@roadiehq/backstage-plugin-jira';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -116,14 +119,18 @@ const overviewContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
+    <EntitySwitch>
+    <EntitySwitch.Case if={isJiraAvailable}>
+        <Grid item md={6}>
+          <EntityJiraOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     <Grid item md={6}>
       <EntityGithubPullRequestsOverviewCard />
     </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />
-    </Grid>
-    <Grid item md={6}>
-      <EntityGithubPullRequestsOverviewCard />
     </Grid>
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />

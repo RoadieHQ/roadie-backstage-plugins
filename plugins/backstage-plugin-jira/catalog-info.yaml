@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-jira
+  description: |
+    Backstage plugin to view and interact with JIRA
+  annotations:
+    github.com/project-slug: roadiehq/backstage-plugin-jira
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/backstage-plugin-jira/tree/main
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production

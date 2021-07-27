@@ -36,6 +36,15 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
+  '/jira/api':
+    target: 'https://roadie-dev.atlassian.net'
+    headers:
+      Authorization: 'Basic ${JIRA_API_TOKEN}'
+      Accept: 'application/json'
+      Content-Type: 'application/json'
+      X-Atlassian-Token: 'no-check'
+      User-Agent: 'Roadie-Backstage'
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
