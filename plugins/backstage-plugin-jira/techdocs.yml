@@ -1,0 +1,8 @@
+site_name: 'backstage-plugin-jira'
+
+nav:
+  - Home: index.md
+  - Releasing: releasing.md
+
+plugins:
+  - techdocs-core
