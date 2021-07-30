@@ -68,6 +68,11 @@ import {
 import {
   EntityJiraOverviewCard, isJiraAvailable
 } from '@roadiehq/backstage-plugin-jira';
+import {
+  EntityDatadogContent,
+  EntityDatadogGraphCard,
+  isDatadogGraphAvailable
+} from '@roadiehq/backstage-plugin-datadog';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -126,6 +131,13 @@ const overviewContent = (
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isDatadogGraphAvailable}>
+        <Grid item>
+         <EntityDatadogGraphCard/>
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     <Grid item md={6}>
       <EntityGithubPullRequestsOverviewCard />
     </Grid>
@@ -165,6 +177,10 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/datadog" title="Datadog">
+      <EntityDatadogContent />
     </EntityLayout.Route>
 
     <EntityLayout.Route path="/dependencies" title="Dependencies">

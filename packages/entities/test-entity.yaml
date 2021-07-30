@@ -10,6 +10,8 @@ metadata:
     aws.com/lambda-region: eu-west-1
     jira/project-key: TEST
     jira/component: COMP
+    datadoghq.com/dashboard-url: https://p.datadoghq.eu/sb/test-datadog-link
+    datadoghq.com/graph-token: qwertytoken1234
 spec:
   type: service
   owner: roadie
