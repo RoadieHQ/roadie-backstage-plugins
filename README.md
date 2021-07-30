@@ -56,6 +56,10 @@ yarn dev
 
  [AWS Lambda](https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda). 
  
+ [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira). 
+ 
+ [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog). 
+
 ## Structure of the repository.
 
 This repository, as mentioned above, will be a place where all of the plugins we have developed will be integrated under `/plugins` folder. This way it will be easy and straightforward to use and/or modify them by following steps below:
