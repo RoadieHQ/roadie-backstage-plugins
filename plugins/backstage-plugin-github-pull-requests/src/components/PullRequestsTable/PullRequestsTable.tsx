@@ -122,8 +122,8 @@ export const PullRequestsTableView: FC<Props> = ({
       page={page}
       actions={[]}
       data={prData ?? []}
-      onChangePage={onChangePage}
-      onChangeRowsPerPage={onChangePageSize}
+      onPageChange={onChangePage}
+      onRowsPerPageChange={onChangePageSize}
       title={
         <>
           <Box display="flex" alignItems="center">
