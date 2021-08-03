@@ -31,11 +31,7 @@ const generatedColumns: TableColumn[] = [
     width: '150px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.url!}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={row.url!}>
           #{row.number}
         </a>
       </Box>
@@ -47,7 +43,10 @@ const generatedColumns: TableColumn[] = [
     highlight: true,
     render: (row: Partial<PullRequest>) => (
       <Typography variant="body2" noWrap>
-        {getStatusIconType(row as PullRequest)} <Box ml={1} component="span">{row.title}</Box>
+        {getStatusIconType(row as PullRequest)}{' '}
+        <Box ml={1} component="span">
+          {row.title}
+        </Box>
       </Typography>
     ),
   },
@@ -122,8 +121,8 @@ export const PullRequestsTableView: FC<Props> = ({
       page={page}
       actions={[]}
       data={prData ?? []}
-      onChangePage={onChangePage}
-      onChangeRowsPerPage={onChangePageSize}
+      onPageChange={onChangePage}
+      onRowsPerPageChange={onChangePageSize}
       title={
         <>
           <Box display="flex" alignItems="center">
