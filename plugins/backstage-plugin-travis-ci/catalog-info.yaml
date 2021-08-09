@@ -1,0 +1,18 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-travis-ci
+  description: |
+    Backstage plugin to show Travis CI builds on the CI/CD tab and widget.
+  annotations:
+    github.com/project-slug: roadiehq/backstage-plugin-travis-ci
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production
