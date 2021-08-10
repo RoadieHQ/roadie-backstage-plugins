@@ -17,7 +17,7 @@
 // eslint-disable-next-line no-restricted-imports
 import 'os';
 
-describe('Travis CI', () => {
+describe('Buildkite', () => {
   beforeEach(() => {
     cy.saveGithubToken();
     cy.intercept('GET', 'http://localhost:7000/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5 ', { fixture: 'buildkite/builds.json' })
