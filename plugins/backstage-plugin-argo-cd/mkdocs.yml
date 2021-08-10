@@ -1,0 +1,8 @@
+site_name: 'backstage-plugin-argo-cd'
+
+nav:
+  - Home: index.md
+  - Releasing: releasing.md
+
+plugins:
+  - techdocs-core
