@@ -1,8 +1,8 @@
 # GitHub Security Insights Plugin for Backstage
 
-![a list of security alerts](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-security-insights/main/docs/roadie-backstage-security-plugin.jpg)
+![a list of security alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/docs/roadie-backstage-security-plugin.jpg)
 
-![a list of dependabot alerts](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-security-insights/main/docs/roadie-backstage-dependabot-alerts.png)
+![a list of dependabot alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/docs/roadie-backstage-dependabot-alerts.png)
 
 ## Plugin Setup
 
@@ -56,7 +56,7 @@ const serviceEntityPage = (
 
 ## Widget setup
 
-![a list of security alert](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-security-insights/main/docs/backstage-plugin-security-widget-1.png)
+![a list of security alert](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/docs/backstage-plugin-security-widget-1.png)
 
 1. You must install plugin by following the steps above to add widgets to your Overview.
 
