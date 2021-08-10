@@ -1,0 +1,4 @@
+# Stub app config needed to run with yarn start
+app:
+  title: backstage example app
+  baseUrl: http://localhost:3000
