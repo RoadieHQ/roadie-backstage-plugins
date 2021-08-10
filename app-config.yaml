@@ -52,6 +52,12 @@ proxy:
       Authorization: 'token ${TRAVISCI_AUTH_TOKEN}'
       travis-api-version: '3'
 
+  '/buildkite/api':
+    target: https://api.buildkite.com/v2/
+    headers:
+      Authorization:
+        $env: BUILDKITE_TOKEN
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.

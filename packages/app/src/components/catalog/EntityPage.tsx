@@ -78,6 +78,10 @@ import {
   EntityTravisCIOverviewCard,
   isTravisciAvailable
 } from "@roadiehq/backstage-plugin-travis-ci";
+import {
+  EntityBuildkiteContent,
+  isBuildkiteAvailable
+} from "@roadiehq/backstage-plugin-buildkite";
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -88,6 +92,10 @@ const cicdContent = (
 
       <EntitySwitch.Case if={isTravisciAvailable}>
         <EntityTravisCIContent />
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isBuildkiteAvailable}>
+        <EntityBuildkiteContent />
       </EntitySwitch.Case>
 
       <EntitySwitch.Case>

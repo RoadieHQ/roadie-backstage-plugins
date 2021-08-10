@@ -1,0 +1,17 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-buildkite
+  annotations:
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production

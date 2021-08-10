@@ -62,6 +62,8 @@ yarn dev
 
  [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci). 
 
+ [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite). 
+
 ## Structure of the repository.
 
 This repository, as mentioned above, will be a place where all of the plugins we have developed will be integrated under `/plugins` folder. This way it will be easy and straightforward to use and/or modify them by following steps below:
