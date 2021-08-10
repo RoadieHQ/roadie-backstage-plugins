@@ -48,7 +48,7 @@ You should be able to run application from root directory, by running
 yarn dev
 ```
 
- More informations about plugins, together with installation instructions, can be found on the link below
+ More information about plugins, together with installation instructions, can be found on the link below
 
  [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
  
@@ -59,6 +59,8 @@ yarn dev
  [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira). 
  
  [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog). 
+
+ [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci). 
 
 ## Structure of the repository.
 

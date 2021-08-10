@@ -73,12 +73,21 @@ import {
   EntityDatadogGraphCard,
   isDatadogGraphAvailable
 } from '@roadiehq/backstage-plugin-datadog';
+import {
+  EntityTravisCIContent,
+  EntityTravisCIOverviewCard,
+  isTravisciAvailable
+} from "@roadiehq/backstage-plugin-travis-ci";
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
       <EntitySwitch.Case if={isGithubActionsAvailable}>
         <EntityGithubActionsContent />
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isTravisciAvailable}>
+        <EntityTravisCIContent />
       </EntitySwitch.Case>
 
       <EntitySwitch.Case>
@@ -135,6 +144,13 @@ const overviewContent = (
       <EntitySwitch.Case if={isDatadogGraphAvailable}>
         <Grid item>
          <EntityDatadogGraphCard/>
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isTravisciAvailable}>
+        <Grid item>
+         <EntityTravisCIOverviewCard/>
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>

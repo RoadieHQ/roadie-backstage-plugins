@@ -30,6 +30,7 @@
     "@roadiehq/backstage-plugin-aws-lambda": "^1.0.7",
     "@roadiehq/backstage-plugin-jira": "^1.0.9",
     "@roadiehq/backstage-plugin-datadog": "^1.1.8",
+    "@roadiehq/backstage-plugin-travis-ci": "^1.0.11",
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

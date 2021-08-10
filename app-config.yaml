@@ -45,6 +45,13 @@ proxy:
       X-Atlassian-Token: 'no-check'
       User-Agent: 'Roadie-Backstage'
 
+  '/travisci/api':
+    target: https://api.travis-ci.com
+    changeOrigin: true
+    headers:
+      Authorization: 'token ${TRAVISCI_AUTH_TOKEN}'
+      travis-api-version: '3'
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -72,7 +79,7 @@ catalog:
     # File used for testing purposes
     - type: file
       target: ../entities/test-entity.yaml
-      
+
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
