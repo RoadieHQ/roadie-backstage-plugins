@@ -5,8 +5,8 @@ metadata:
   description: |
     Backstage plugin to view and interact with Argo CD.
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-argo-cd
-    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/backstage-plugin-argo-cd/tree/main
+    github.com/project-slug: roadiehq/roadie-backstage-plugins
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/backstage-plugin-argo-cd
   tags:
     - plugin
     - oss

@@ -85,7 +85,7 @@ The Argo CD plugin is a part of the Backstage sample app. To start using it for 
     ```
     **Note:** You can only use one of the options per component.
 
-1. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
+2. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
     ```
     ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
     ```
@@ -123,13 +123,13 @@ argocd/proxy-url: '/argocd/api2'
 
 ## Develop plugin locally
 
-You can clone the plugin repo into the `plugins/` directory:
+You can run the application by running `yarn dev` at the root of this monorepo.
 
-```sh
-git clone https://github.com/RoadieHQ/backstage-plugin-argo-cd.git argo-cd
-```
+You will need to perform the steps in the "How to use Argo-cd plugin in Backstage" section above.
 
-and run `yarn` in the root backstage directory - it will create a symbolic link so the dependency will be provided from the source code instead of node_modules package.
+You may also need to update the proxy target. The configuration in this repo defaults to localhost:8080.
+
+To run the integration tests locally `yarn workspace app cy:dev` (assuming you have the application running).
 
 ## Links
 
