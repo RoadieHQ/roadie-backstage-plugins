@@ -58,7 +58,7 @@ const HistoryTable = ({
         })
         .flat()
     : [];
-  console.log('baseUrl', baseUrl);
+
   const columns: TableColumn[] = [
     {
       title: 'Name',
