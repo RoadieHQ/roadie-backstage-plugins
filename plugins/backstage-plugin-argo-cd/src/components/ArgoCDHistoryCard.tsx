@@ -22,54 +22,76 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import {
-  configApiRef,
-  useApi,
-} from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { LinearProgress, Tooltip, Link } from '@material-ui/core';
 import React from 'react';
 import { isArgocdAvailable } from '../Router';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
-import { ARGOCD_ANNOTATION_APP_NAME, useArgoCDAppData } from './useArgoCDAppData';
+import {
+  ARGOCD_ANNOTATION_APP_NAME,
+  useArgoCDAppData,
+} from './useArgoCDAppData';
 import SyncIcon from '@material-ui/icons/Sync';
 import moment from 'moment';
 
-const HistoryTable = ({data, retry}: {data: ArgoCDAppList, retry: () => void}) => {
+const HistoryTable = ({
+  data,
+  retry,
+}: {
+  data: ArgoCDAppList;
+  retry: () => void;
+}) => {
   const configApi = useApi(configApiRef);
-  const baseUrl = configApi.getOptionalString('argocd.baseUrl')
+  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
 
   const history = data.items
-  ? data.items
-      .map(app => {
-        return app.status.history.map(entry => {
-          return {
-            app: app.metadata.name,
-            ...entry,
-          };
-        });
-      })
-      .flat()
-  : [];
-
+    ? data.items
+        .map(app => {
+          return app.status.history.map(entry => {
+            return {
+              app: app.metadata.name,
+              ...entry,
+            };
+          });
+        })
+        .flat()
+    : [];
+  console.log('baseUrl', baseUrl);
   const columns: TableColumn[] = [
     {
       title: 'Name',
       field: 'name',
-      render: (row: any): React.ReactNode => (
-        baseUrl ? <Link href={`${baseUrl}/applications/${row.app}`} target="_blank" rel="noopener">{row.app}</Link> : row.app
-      ),
+      render: (row: any): React.ReactNode =>
+        baseUrl ? (
+          <Link
+            href={`${baseUrl}/applications/${row.app}`}
+            target="_blank"
+            rel="noopener"
+          >
+            {row.app}
+          </Link>
+        ) : (
+          row.app
+        ),
       highlight: true,
     },
     {
       title: 'Deploy Started',
       field: 'deployStartedAt',
       render: (row: any) => (
-        <Tooltip title={row.deployStartedAt ? row.deployStartedAt : "Deploy started at"} placement="left">
-          <div>{row.deployStartedAt? moment(row.deployStartedAt).fromNow(): "-"}</div>
+        <Tooltip
+          title={
+            row.deployStartedAt ? row.deployStartedAt : 'Deploy started at'
+          }
+          placement="left"
+        >
+          <div>
+            {row.deployStartedAt ? moment(row.deployStartedAt).fromNow() : '-'}
+          </div>
         </Tooltip>
-      )
+      ),
     },
     {
       title: 'Deployed At',
@@ -78,13 +100,14 @@ const HistoryTable = ({data, retry}: {data: ArgoCDAppList, retry: () => void}) =
         <Tooltip title={row.deployedAt} placement="left">
           <div>{moment(row.deployedAt).fromNow()}</div>
         </Tooltip>
-      )
+      ),
     },
     {
       title: 'Deploy duration',
-      render: (row: any): React.ReactNode => (
-        moment.duration(moment(row.deployStartedAt).diff(moment(row.deployedAt))).humanize()
-      ),
+      render: (row: any): React.ReactNode =>
+        moment
+          .duration(moment(row.deployStartedAt).diff(moment(row.deployedAt)))
+          .humanize(),
       sorting: false,
     },
     {
@@ -117,7 +140,7 @@ const HistoryTable = ({data, retry}: {data: ArgoCDAppList, retry: () => void}) =
   );
 };
 
-const ArgoCDHistory = ({entity}: {entity: Entity}) => {
+const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
   const { url, appName, appSelector, projectName } = useArgoCDAppData({
     entity,
   });

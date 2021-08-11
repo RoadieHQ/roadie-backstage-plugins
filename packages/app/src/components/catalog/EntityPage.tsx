@@ -52,11 +52,11 @@ import {
 import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import {
   EntityGithubPullRequestsContent,
-  EntityGithubPullRequestsOverviewCard
+  EntityGithubPullRequestsOverviewCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   isAWSLambdaAvailable,
-  EntityAWSLambdaOverviewCard
+  EntityAWSLambdaOverviewCard,
 } from '@roadiehq/backstage-plugin-aws-lambda';
 import {
   EntityGithubInsightsContent,
@@ -66,18 +66,19 @@ import {
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
 import {
-  EntityJiraOverviewCard, isJiraAvailable
+  EntityJiraOverviewCard,
+  isJiraAvailable,
 } from '@roadiehq/backstage-plugin-jira';
 import {
   EntityDatadogContent,
   EntityDatadogGraphCard,
-  isDatadogGraphAvailable
+  isDatadogGraphAvailable,
 } from '@roadiehq/backstage-plugin-datadog';
 import {
   EntityTravisCIContent,
   EntityTravisCIOverviewCard,
-  isTravisciAvailable
-} from "@roadiehq/backstage-plugin-travis-ci";
+  isTravisciAvailable,
+} from '@roadiehq/backstage-plugin-travis-ci';
 import {
   EntityBuildkiteContent,
   isBuildkiteAvailable
@@ -88,6 +89,12 @@ import {
     SecurityInsightsWidget,
     isSecurityInsightsAvailable
 } from '@roadiehq/backstage-plugin-security-insights';
+import {
+  EntityArgoCDHistoryCard,
+  EntityArgoCDOverviewCard,
+  EntityArgoCDContent,
+  isArgocdAvailable,
+} from '@roadiehq/backstage-plugin-argo-cd';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -132,7 +139,7 @@ const overviewContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
         <Grid item md={6}>
-          <SecurityInsightsWidget/>
+          <SecurityInsightsWidget />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -155,7 +162,7 @@ const overviewContent = (
       </EntitySwitch.Case>
     </EntitySwitch>
     <EntitySwitch>
-    <EntitySwitch.Case if={isJiraAvailable}>
+      <EntitySwitch.Case if={isJiraAvailable}>
         <Grid item md={6}>
           <EntityJiraOverviewCard />
         </Grid>
@@ -164,14 +171,24 @@ const overviewContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isDatadogGraphAvailable}>
         <Grid item>
-         <EntityDatadogGraphCard/>
+          <EntityDatadogGraphCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={isTravisciAvailable}>
         <Grid item>
-         <EntityTravisCIOverviewCard/>
+          <EntityTravisCIOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+        <Grid item sm={6}>
+          <EntityArgoCDHistoryCard />
+        </Grid>
+        <Grid item sm={6}>
+          <EntityArgoCDOverviewCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -192,11 +209,9 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/" title="Overview">
       {overviewContent}
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/ci-cd" title="CI/CD">
       {cicdContent}
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/api" title="API">
       <Grid container spacing={3} alignItems="stretch">
         <Grid item md={6}>
@@ -207,19 +222,15 @@ const serviceEntityPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/pull-requests" title="Pull Requests">
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/dependencies" title="Dependencies">
       <Grid container spacing={3} alignItems="stretch">
         <Grid item md={6}>
@@ -230,19 +241,17 @@ const serviceEntityPage = (
         </Grid>
       </Grid>
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
     </EntityLayout.Route>
-
-    <EntityLayout.Route
-      path="/security-insights"
-      title="Security Insights">
+    <EntityLayout.Route path="/security-insights" title="Security Insights">
       <EntitySecurityInsightsContent />
     </EntityLayout.Route>
-
     <EntityLayout.Route path="/dependabot" title="Dependabot">
-      <EntityGithubDependabotContent/>
+      <EntityGithubDependabotContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/argocd" title="Argo CD">
+      <EntityArgoCDContent />
     </EntityLayout.Route>
   </EntityLayout>
 );
