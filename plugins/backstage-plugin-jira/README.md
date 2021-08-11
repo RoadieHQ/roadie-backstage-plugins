@@ -14,9 +14,10 @@ The plugins will still be published to the same place on NPM and will have the s
 
 ## How to add Jira project dependency to Backstage app
 
-1. If you have standalone app (you didn't clone this repo), then do
+1. If you have standalone app (i.e., you didn't clone this repo), then do
 
 ```bash
+cd packages/app
 yarn add @roadiehq/backstage-plugin-jira
 ```
 
@@ -33,12 +34,13 @@ proxy:
       Accept: 'application/json'
       Content-Type: 'application/json'
       X-Atlassian-Token: 'no-check'
-      User-Agent: "MY-UA-STRING"
+      # This is a workaround since Jira APIs reject browser origin requests. Any dummy string without whitespace works.
+      User-Agent: "AnyRandomString"
 ```
 
 3. Set img-src in Content Security Policy
 
-```
+```yaml
 // app-config.yaml
 backend:
   # ...
@@ -83,7 +85,7 @@ metadata:
 ```
 
 2. Get and provide `JIRA_TOKEN` as env variable:
-   1. Obtain you personal token from jira: https://id.atlassian.com/manage-profile/security/api-tokens
+   1. Obtain your personal token from Jira: https://id.atlassian.com/manage-profile/security/api-tokens
    2. Create a base64-encoded string by converting "<your-atlassian-account-mail>:<your-jira-token>", for example `jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F` converts to `amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg==`
    3.  Save the environmental variable `JIRA_TOKEN` with `Basic ` prefix, eg: `JIRA_TOKEN='Basic amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg=='`
 
