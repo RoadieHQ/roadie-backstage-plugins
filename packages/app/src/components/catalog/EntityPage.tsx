@@ -82,6 +82,12 @@ import {
   EntityBuildkiteContent,
   isBuildkiteAvailable
 } from "@roadiehq/backstage-plugin-buildkite";
+import {
+    EntitySecurityInsightsContent,
+    EntityGithubDependabotContent,
+    SecurityInsightsWidget,
+    isSecurityInsightsAvailable
+} from '@roadiehq/backstage-plugin-security-insights';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -123,6 +129,13 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isSecurityInsightsAvailable}>
+        <Grid item md={6}>
+          <SecurityInsightsWidget/>
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
         <Grid item md={6}>
@@ -220,6 +233,16 @@ const serviceEntityPage = (
 
     <EntityLayout.Route path="/docs" title="Docs">
       <EntityTechdocsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route
+      path="/security-insights"
+      title="Security Insights">
+      <EntitySecurityInsightsContent />
+    </EntityLayout.Route>
+
+    <EntityLayout.Route path="/dependabot" title="Dependabot">
+      <EntityGithubDependabotContent/>
     </EntityLayout.Route>
   </EntityLayout>
 );
