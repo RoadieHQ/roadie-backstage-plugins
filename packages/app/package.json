@@ -32,6 +32,7 @@
     "@roadiehq/backstage-plugin-jira": "^1.0.9",
     "@roadiehq/backstage-plugin-security-insights": "^1.1.6",
     "@roadiehq/backstage-plugin-travis-ci": "^1.0.11",
+    "@roadiehq/backstage-plugin-buildkite": "1.0.8",
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

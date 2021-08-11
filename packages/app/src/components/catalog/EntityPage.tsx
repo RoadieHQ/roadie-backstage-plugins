@@ -79,6 +79,10 @@ import {
   isTravisciAvailable
 } from "@roadiehq/backstage-plugin-travis-ci";
 import {
+  EntityBuildkiteContent,
+  isBuildkiteAvailable
+} from "@roadiehq/backstage-plugin-buildkite";
+import {
     EntitySecurityInsightsContent,
     EntityGithubDependabotContent,
     SecurityInsightsWidget,
@@ -94,6 +98,10 @@ const cicdContent = (
 
       <EntitySwitch.Case if={isTravisciAvailable}>
         <EntityTravisCIContent />
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isBuildkiteAvailable}>
+        <EntityBuildkiteContent />
       </EntitySwitch.Case>
 
       <EntitySwitch.Case>
