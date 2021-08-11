@@ -1,0 +1,1 @@
+export { FirebaseFunctionsPageTable } from './FirebaseFunctionsPageTable';
