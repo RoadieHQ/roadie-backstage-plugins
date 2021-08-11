@@ -60,7 +60,9 @@ yarn dev
  
  [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog). 
 
- [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci). 
+ [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci).
+
+ [Security Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights).
 
 ## Structure of the repository.
 
