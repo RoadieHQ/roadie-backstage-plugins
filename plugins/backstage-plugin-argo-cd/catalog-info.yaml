@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-argo-cd
+  description: |
+    Backstage plugin to view and interact with Argo CD.
+  annotations:
+    github.com/project-slug: roadiehq/roadie-backstage-plugins
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/backstage-plugin-argo-cd
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production
