@@ -1,8 +1,8 @@
 # Firebase Functions Plugin for Backstage
 
-![details in the Firebase Functions plugin for Backstage](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-firebase-functions/master/docs/firebase-function-details.png)
+![details in the Firebase Functions plugin for Backstage](./docs/firebase-function-details.png)
 
-[https://roadie.io/backstage/plugins/firebase-functions](https://roadie.io/backstage/plugins/firebase-functions)
+[https://roadie.io/backstage/plugins/firebase-functions](https://roadie.io/backstage/   plugins/firebase-functions)
 
 ## Features
 
@@ -83,14 +83,9 @@ cloud.google.com/function-ids: projects/<project-name>/locations/<region-name>/f
 
 ## Develop plugin locally
 
-You can clone the plugin repo into the `backstage/plugins/` directory:
+To start the application run `yarn install` then `yarn dev`
 
-
-```sh
-git clone https://github.com/RoadieHQ/backstage-plugin-firebase-functions.git firebase-functions
-```
-
-and run `yarn install` in the root backstage directory - it will create a symbolic link so the dependency will be provided from the source code instead of `node_modules` package.
+To run the tests `yarn workspace app cy:dev`
 
 ## Links
 
