@@ -40,7 +40,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn dev
+          start: concurrently "http-server --port 3000 --proxy http://localhost:3000? packages/app/dist" "yarn start-backend"
           wait-on: 'http://localhost:3000'
           project: ./packages/app
         env:

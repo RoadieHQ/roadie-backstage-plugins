@@ -27,13 +27,13 @@
     "@material-ui/icons": "^4.9.1",
     "@roadiehq/backstage-plugin-argo-cd": "^1.0.9",
     "@roadiehq/backstage-plugin-aws-lambda": "^1.0.7",
+    "@roadiehq/backstage-plugin-buildkite": "1.0.8",
     "@roadiehq/backstage-plugin-datadog": "^1.1.8",
     "@roadiehq/backstage-plugin-github-insights": "^1.1.21",
     "@roadiehq/backstage-plugin-github-pull-requests": "^1.0.11",
     "@roadiehq/backstage-plugin-jira": "^1.0.9",
     "@roadiehq/backstage-plugin-security-insights": "^1.1.6",
     "@roadiehq/backstage-plugin-travis-ci": "^1.0.11",
-    "@roadiehq/backstage-plugin-buildkite": "1.0.8",
     "history": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -51,6 +51,7 @@
     "cross-env": "^7.0.0",
     "cypress": "^7.3.0",
     "eslint-plugin-cypress": "^2.10.3",
+    "http-server": "^13.0.0",
     "start-server-and-test": "^1.10.11"
   },
   "scripts": {
