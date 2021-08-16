@@ -40,7 +40,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: 'yarn start:ci'
+          start: yarn dev:ci
           wait-on: 'http://localhost:3000'
           project: ./packages/app
         env:
