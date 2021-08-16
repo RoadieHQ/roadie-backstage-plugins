@@ -10,6 +10,8 @@
     "dev:ci": "concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
+    "start-backend:ci": "yarn workspace backend backstage-cli build && node packages/backend",
+    "start:ci": "concurrently \"yarn start\" \"yarn start-backend:ci\"",
     "build": "lerna run build",
     "build-image": "yarn workspace backend build-image",
     "tsc": "tsc",
