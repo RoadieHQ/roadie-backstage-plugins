@@ -104,7 +104,7 @@ folder.
 
 ## Community
 
-- [Discord chatroom](https://discord.gg/3S4xrW7B) - Get support 
+- [Discord chatroom](https://discord.gg/W3qEMhmx4f) - Get support 
 - [Contributing](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
 - Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
 
