@@ -79,17 +79,8 @@ techdocs:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
 auth:
-  environment: development
-  ### Providing an auth.session.secret will enable session support in the auth-backend
-  # session:
-  #   secret: custom session secret
-  providers:
-    github:
-      development:
-        clientId: ${AUTH_GITHUB_CLIENT_ID}
-        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
-        enterpriseInstanceUrl: ${AUTH_GITHUB_ENTERPRISE_INSTANCE_URL}
-
+  # see https://backstage.io/docs/auth/ to learn about auth providers
+  providers: {}
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}
