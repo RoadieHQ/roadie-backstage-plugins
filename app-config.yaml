@@ -81,7 +81,6 @@ techdocs:
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   providers: {}
-
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}

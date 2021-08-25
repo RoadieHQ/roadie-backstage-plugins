@@ -31,6 +31,7 @@ import { useProjectEntity } from '../useProjectEntity';
 type Node = {
   createdAt: string;
   dismissedAt: string;
+  vulnerableManifestPath: string;
   securityVulnerability: {
     package: {
       name: string;
@@ -67,9 +68,9 @@ const capitalize = (s: string) => {
   return s.charAt(0).toLocaleUpperCase() + s.slice(1);
 };
 
-const getDetailsUrl = (packageName: string, detailsUrl: DetailsUrl, dismissedAt: string) => {
+const getDetailsUrl = (packageName: string, detailsUrl: DetailsUrl, dismissedAt: string, vulnerableManifestPath: string ) => {
   const status = dismissedAt ? "closed" : "open";
-  const url = `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot/yarn.lock/${packageName}/${status}`
+  const url = `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot/${vulnerableManifestPath}/${packageName}/${status}`
   return <Link to={url}>{packageName}</Link>
 };
 
@@ -103,7 +104,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
     return {
       createdAt: DateTime.fromISO(node.createdAt).toLocaleString(),
       state: node.dismissedAt ? 'Dismissed' : 'Open',
-      name: getDetailsUrl(node.securityVulnerability.package.name, detailsUrl, node.dismissedAt),
+      name: getDetailsUrl(node.securityVulnerability.package.name, detailsUrl, node.dismissedAt, node.vulnerableManifestPath),
       severity: capitalize((node.securityVulnerability.severity).toLowerCase()),
       patched_version: node.securityVulnerability.firstPatchedVersion.identifier
     };
@@ -162,6 +163,7 @@ export const DependabotAlertsTable: FC<{}> = () => {
           createdAt
           id
           dismissedAt
+          vulnerableManifestPath
           securityVulnerability {
             vulnerableVersionRange
             package {

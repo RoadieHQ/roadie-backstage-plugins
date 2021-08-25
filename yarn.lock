@@ -1630,10 +1630,10 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-auth-backend@^0.3.12":
-  version "0.3.21"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.3.21.tgz#c2cc715d6a3129a1453931e9c5a3d5add4d84f37"
-  integrity sha512-2JzWaMTRwXm+yhMmtM7vCZ1xkHe4cChkxqL+xwc4FirWuIm2wtKyns0YzbrB3kLD9KkLrE0/ipmecmA/D3o6hw==
+"@backstage/plugin-auth-backend@^0.3.22":
+  version "0.3.22"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.3.22.tgz#3890c4112391ed0f0aa774ceed717718109b22e5"
+  integrity sha512-VXv1gO9DlqZIhqg57S9hIjokR0wd10uhTNXiBetEGogw2md8C+4JsxaLuFbod955O3CyvWuMyGVKLN0RrN8ICg==
   dependencies:
     "@backstage/backend-common" "^0.8.10"
     "@backstage/catalog-client" "^0.3.18"
@@ -1674,10 +1674,10 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-catalog-backend@^0.13.0":
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.13.3.tgz#68e885156ae43107d788a9271a54281cfb342aab"
-  integrity sha512-nrD5+mvTLN2r+ySg4kuBZgD4oNfxKp+yle7ZYPMeoCqo7BKwdKnGYGtoXHlLsHQ5los8PwJhaKWusrsGVFGFlg==
+"@backstage/plugin-catalog-backend@^0.13.4":
+  version "0.13.4"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.13.4.tgz#2601c007f10e546ad068188d4515ab3ffb61edff"
+  integrity sha512-ijgZB3sP6PIhj07e2kh3dGBEqpJXNJQQm4DzH0apWqUgi8HT7gzZvGs2uiZPZ72w3a6h1XKS7btREI6Gu2Zn/w==
   dependencies:
     "@backstage/backend-common" "^0.8.10"
     "@backstage/catalog-client" "^0.3.18"
@@ -1871,6 +1871,47 @@
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.0.tgz#b7ccf48ffae5cd395be2b0d76e8d787d0766802e"
   integrity sha512-fWEYJ4CLSGMZhIvHplqcSHPb3jkntg56+H1esdxl1/hri8e4CvdGWRxyqvb2Ng/b7pVM5mYIdJJMe8ejXZrQEg==
+  dependencies:
+    "@backstage/backend-common" "^0.8.9"
+    "@backstage/catalog-client" "^0.3.17"
+    "@backstage/catalog-model" "^0.9.0"
+    "@backstage/config" "^0.1.6"
+    "@backstage/errors" "^0.1.1"
+    "@backstage/integration" "^0.6.0"
+    "@backstage/plugin-scaffolder-backend-module-cookiecutter" "^0.1.1"
+    "@gitbeaker/core" "^30.2.0"
+    "@gitbeaker/node" "^30.2.0"
+    "@octokit/rest" "^18.5.3"
+    "@types/express" "^4.17.6"
+    azure-devops-node-api "^10.2.2"
+    command-exists "^1.2.9"
+    compression "^1.7.4"
+    cors "^2.8.5"
+    cross-fetch "^3.0.6"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    fs-extra "10.0.0"
+    git-url-parse "~11.4.4"
+    globby "^11.0.0"
+    handlebars "^4.7.6"
+    helmet "^4.0.0"
+    isbinaryfile "^4.0.8"
+    isomorphic-git "^1.8.0"
+    jsonschema "^1.2.6"
+    knex "^0.95.1"
+    lodash "^4.17.21"
+    luxon "^2.0.2"
+    morgan "^1.10.0"
+    nunjucks "^3.2.3"
+    octokit-plugin-create-pull-request "^3.9.3"
+    uuid "^8.2.0"
+    winston "^3.2.1"
+    yaml "^1.10.0"
+
+"@backstage/plugin-scaffolder-backend@^0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.1.tgz#d20452bff54c71c74d5cc19c45f3992b28ad23d0"
+  integrity sha512-7dvta+e4APPviWAhALn3LW3e4F+5eBj6fsqr74vIJSXmYGQH8u3k1v1Rn2XzfGQHcHt69JWqeTCCGsene7yZnw==
   dependencies:
     "@backstage/backend-common" "^0.8.9"
     "@backstage/catalog-client" "^0.3.17"
@@ -10535,7 +10576,7 @@ graphlib@^2.1.8:
   dependencies:
     lodash "^4.17.15"
 
-graphql-language-service-interface@2.8.2, graphql-language-service-interface@^2.8.2:
+graphql-language-service-interface@^2.8.2:
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.2.tgz#b3bb2aef7eaf0dff0b4ea419fa412c5f66fa268b"
   integrity sha512-otbOQmhgkAJU1QJgQkMztNku6SbJLu/uodoFOYOOtJsizTjrMs93vkYaHCcYnLA3oi1Goj27XcHjMnRCYQOZXQ==
@@ -10545,7 +10586,7 @@ graphql-language-service-interface@2.8.2, graphql-language-service-interface@^2.
     graphql-language-service-utils "^2.5.1"
     vscode-languageserver-types "^3.15.1"
 
-graphql-language-service-parser@1.9.0, graphql-language-service-parser@^1.9.0:
+graphql-language-service-parser@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.9.0.tgz#79af21294119a0a7e81b6b994a1af36833bab724"
   integrity sha512-B5xPZLbBmIp0kHvpY1Z35I5DtPoDK9wGxQVRDIzcBaiIvAmlTrDvjo3bu7vKREdjFbYKvWNgrEWENuprMbF17Q==
@@ -16763,6 +16804,11 @@ react-markdown@^5.0.2:
     unified "^9.0.0"
     unist-util-visit "^2.0.0"
     xtend "^4.0.1"
+
+react-minimal-pie-chart@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/react-minimal-pie-chart/-/react-minimal-pie-chart-8.2.0.tgz#22b53af2363f040d818331721658dfa7a1ea847a"
+  integrity sha512-RhrHzprJt3KfBe4L3sE0Ha6fj4kYcwQtesQgscnld9Umf64+nZnxxInycnbimKsbIjxJONv77JIZp+qRbJD+bA==
 
 react-motion@^0.5.2:
   version "0.5.2"
