@@ -10,7 +10,7 @@ export const argoCDAppDetails = t.type({
       status: t.string,
     }),
     operationState: t.type({
-      finishedAt: t.string,
+      finishedAt: t.union([t.string, t.undefined]),
     }),
     history: t.array(t.type({
       id: t.number,
