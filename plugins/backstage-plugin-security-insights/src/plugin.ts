@@ -60,3 +60,14 @@ export const EntitySecurityInsightsCard = securityInsightsPlugin.provide(
     },
   })
 );
+
+export const EntityDependabotAlertsCard = securityInsightsPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/DependabotAlertsWidget').then(
+          (m) => m.DependabotAlertsWidget
+        ),
+    },
+  })
+);

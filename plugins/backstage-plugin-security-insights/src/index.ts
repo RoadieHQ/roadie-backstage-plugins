@@ -23,6 +23,7 @@ export {
   EntitySecurityInsightsContent,
   EntityGithubDependabotContent,
   EntitySecurityInsightsCard,
+  EntityDependabotAlertsCard,
 } from './plugin';
 export {
   /**
@@ -30,6 +31,9 @@ export {
    */
   SecurityInsightsWidget,
 } from './components/SecurityInsightsWidget';
+export {
+  DependabotAlertsWidget,
+} from './components/DependabotAlertsWidget';
 export {
   /**
    * @deprecated From 0.2.0 composability API should be used
