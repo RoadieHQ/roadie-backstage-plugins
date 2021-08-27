@@ -87,6 +87,7 @@ import {
     EntitySecurityInsightsContent,
     EntityGithubDependabotContent,
     SecurityInsightsWidget,
+    DependabotAlertsWidget,
     isSecurityInsightsAvailable
 } from '@roadiehq/backstage-plugin-security-insights';
 import {
@@ -140,6 +141,9 @@ const overviewContent = (
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
         <Grid item md={6}>
           <SecurityInsightsWidget />
+        </Grid>
+        <Grid item md={6}>
+          <DependabotAlertsWidget />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
