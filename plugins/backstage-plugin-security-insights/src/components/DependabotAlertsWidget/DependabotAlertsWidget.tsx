@@ -89,8 +89,7 @@ type DependabotAlertsProps = {
 export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({ repository, detailsUrl }) => {
   const classes = useStyles();
   const configApi = useApi(configApiRef);
-  const configSeverityLevel = configApi.getOptionalConfigArray('dependabotAlertsConfiguration.alerts') ?? [];
-  const minimumConfiguredSeverities = configSeverityLevel.map(c => c?.getOptionalString('severity')) ?? ['all'];
+  const minimumConfiguredSeverities = configApi?.getOptionalStringArray('dependabotAlertsConfiguration.severity') ?? ['all'];
 
   // Filter issues so only open issues are taken into cosideration
   const all = repository.vulnerabilityAlerts.nodes.filter((entry) => entry.dismissedAt === null) || null;
