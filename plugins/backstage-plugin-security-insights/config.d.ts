@@ -21,12 +21,10 @@ export interface Config {
          *
          * @visibility frontend
          */
-        alerts?: Array<{
-            /**
-             * 
-             * @visibility frontend
-             */
-            severity: string;
-        }>;
+        /**
+         *
+         * @items.visibility frontend
+         */
+        severity: string[]
     };
 }
