@@ -7,10 +7,10 @@
   "private": false,
   "homepage": "https://roadie.io/backstage/plugins/aws-lambda/",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-plugin-aws-lambda/issues",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "github:RoadieHQ/backstage-plugin-aws-lambda",
+  "repository": "github:RoadieHQ/roadie-backstage-plugins",
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",

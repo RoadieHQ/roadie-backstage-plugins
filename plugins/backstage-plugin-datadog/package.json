@@ -9,6 +9,11 @@
     "main": "dist/index.esm.js",
     "types": "dist/index.d.ts"
   },
+  "bugs": {
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
+    "email": "support@roadie.io"
+  },
+  "repository": "github:RoadieHQ/roadie-backstage-plugins",
   "scripts": {
     "build": "backstage-cli plugin:build",
     "start": "backstage-cli plugin:serve",

@@ -7,10 +7,10 @@
   "private": false,
   "homepage": "https://roadie.io/backstage/plugins/github-pull-requests/",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/issues",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "github:RoadieHQ/backstage-plugin-github-pull-requests",
+  "repository": "github:RoadieHQ/roadie-backstage-plugins",
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
