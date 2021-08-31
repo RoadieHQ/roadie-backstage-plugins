@@ -222,14 +222,14 @@ export const getEmptyResponseStub = {
     resourceVersion: '7277391'
   },
   items: null
-}
+};
 
 export class ArgoCDApiMock implements ArgoCDApi {
   // @ts-ignore
   // constructor(_: Options) {}
 
   // @ts-ignore
-  async listApps(_: { url: string; appSelector: string }) {
+  async listApps(_: { url: string; appSelector: string; }) {
     return {
       items: [
         {
@@ -244,6 +244,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
               status: 'Healthy',
             },
             operationState: {
+              startedAt: '2020-11-18T16:47:03Z',
               finishedAt: '2020-11-18T16:47:04Z',
             },
           },
@@ -260,6 +261,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
               status: 'Healthy',
             },
             operationState: {
+              startedAt: '2020-11-18T16:47:03Z',
               finishedAt: '2020-11-18T16:47:04Z',
             },
           },
@@ -269,7 +271,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
   }
 
   // @ts-ignore
-  async getAppDetails(_: { appName: string }) {
+  async getAppDetails(_: { appName: string; }) {
     return {
       metadata: {
         name: 'guestbook',
@@ -282,6 +284,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
           status: 'Healthy',
         },
         operationState: {
+          startedAt: '2020-11-18T16:47:03Z',
           finishedAt: '2020-11-18T16:47:04Z',
         },
       },
