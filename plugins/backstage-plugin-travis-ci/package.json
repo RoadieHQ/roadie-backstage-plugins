@@ -6,10 +6,10 @@
   "license": "Apache-2.0",
   "homepage": "https://roadie.io/backstage/plugins/travis-ci/",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-plugin-travis-ci/issues",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "github:RoadieHQ/backstage-plugin-travis-ci",
+  "repository": "github:RoadieHQ/roadie-backstage-plugins",
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
