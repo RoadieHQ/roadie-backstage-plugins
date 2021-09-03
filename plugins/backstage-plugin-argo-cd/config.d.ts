@@ -16,11 +16,6 @@ export interface Config {
        * @visibility frontend
        */
       enabled?: boolean;
-      /**
-       * The base url of the ArgoCD instance.
-       * @visibility frontend
-       */
-      pattern?: string;
     };
   };
 }

@@ -49,7 +49,6 @@ const apis = ApiRegistry.from([
       argocd: {
         perCluster: {
           enabled: true,
-          pattern: 'https://argocd-CLUSTER.test.com',
         },
       },
       kubernetes: {
@@ -152,7 +151,6 @@ describe('argo-cd', () => {
             baseUrl: 'www.example-argocd-url.com',
             perCluster: {
               enabled: true,
-              pattern: 'https://argocd-CLUSTER.test.com',
             },
           },
           kubernetes: {
