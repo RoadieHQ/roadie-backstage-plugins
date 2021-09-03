@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { errorApiRef, useApi } from '@backstage/core-plugin-api';
+import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useAsyncRetry } from 'react-use';
 import { argoCDApiRef } from '../api';
 
@@ -30,11 +31,37 @@ export const useAppDetails = ({
 }) => {
   const api = useApi(argoCDApiRef);
   const errorApi = useApi(errorApiRef);
+  const { entity } = useEntity();
+  const configApi = useApi(configApiRef);
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {
     try {
       if (appName) {
-        return await api.getAppDetails({ url, appName });
+        if (configApi.getBoolean('argocd.perCluster.enabled') !== true) {
+          return await api.getAppDetails({ url, appName });
+        }
+        const kubeInfo = await api.kubernetesServiceLocator(
+          appName as string,
+          entity,
+        );
+        const promises = kubeInfo.map(async (cluster: string) => {
+          const apiOut = await api.getAppDetails({ url, appName, cluster });
+          if (!apiOut.metadata) {
+            return {
+              status: {
+                history: [],
+                sync: { status: 'Missing' },
+                health: { status: 'Missing' },
+                operationState: {},
+              },
+              metadata: { name: appName, cluster: cluster },
+            };
+          }
+          apiOut.metadata.cluster = cluster;
+          return apiOut;
+        });
+        const output = await Promise.all(promises);
+        return output;
       }
       if (appSelector || projectName) {
         return await api.listApps({ url, appSelector, projectName });

@@ -1,4 +1,7 @@
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  createApiRef,
+  DiscoveryApi,
+} from '@backstage/core-plugin-api';
 import {
   argoCDAppDetails,
   ArgoCDAppDetails,
@@ -6,8 +9,12 @@ import {
   ArgoCDAppList,
 } from '../types';
 import { Type as tsType } from 'io-ts';
-import { decode as tsDecode, isDecodeError as tsIsDecodeError } from 'io-ts-promise';
+import {
+  decode as tsDecode,
+  isDecodeError as tsIsDecodeError,
+} from 'io-ts-promise';
 import reporter from 'io-ts-reporters';
+import { Entity } from '@backstage/catalog-model';
 
 export interface ArgoCDApi {
   listApps(options: {
@@ -18,7 +25,12 @@ export interface ArgoCDApi {
   getAppDetails(options: {
     url: string;
     appName: string;
+    cluster?: string;
   }): Promise<ArgoCDAppDetails>;
+  kubernetesServiceLocator(
+    serviceName: string,
+    entity: Entity,
+  ): Promise<Array<string>>;
 }
 
 export const argoCDApiRef = createApiRef<ArgoCDApi>({
@@ -28,17 +40,26 @@ export const argoCDApiRef = createApiRef<ArgoCDApi>({
 
 export type Options = {
   discoveryApi: DiscoveryApi;
+  backendBaseUrl: string;
+  perCluster: boolean;
   proxyPath?: string;
 };
 
 export class ArgoCDApiClient implements ArgoCDApi {
   private readonly discoveryApi: DiscoveryApi;
+  private readonly backendBaseUrl: string;
+  private readonly perCluster: boolean;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
+    this.backendBaseUrl = options.backendBaseUrl;
+    this.perCluster = options.perCluster;
   }
 
-  private async getProxyUrl() {
+  private async getBaseUrl() {
+    if (this.perCluster === true) {
+      return `${this.backendBaseUrl}/api/argocd`;
+    }
     return await this.discoveryApi.getBaseUrl('proxy');
   }
 
@@ -70,7 +91,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     appSelector?: string;
     projectName?: string;
   }) {
-    const proxyUrl = await this.getProxyUrl();
+    const proxyUrl = await this.getBaseUrl();
     const params: { [key: string]: string | undefined } = {
       selector: options.appSelector,
       project: options.projectName,
@@ -88,11 +109,45 @@ export class ArgoCDApiClient implements ArgoCDApi {
     );
   }
 
-  async getAppDetails(options: { url: string; appName: string }) {
-    const proxyUrl = await this.getProxyUrl();
+  async getAppDetails(options: {
+    url: string;
+    appName: string;
+    cluster?: string;
+  }) {
+    const proxyUrl = await this.getBaseUrl();
+    if (this.perCluster === true) {
+      return await this.fetchDecode(
+        `${proxyUrl}/clusters/${options.cluster}/applications/${options.appName}`,
+        argoCDAppDetails,
+      );
+    }
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications/${options.appName}`,
       argoCDAppDetails,
     );
+  }
+
+  async kubernetesServiceLocator(serviceName: string, entity: Entity) {
+    const entityString = JSON.stringify(entity);
+    return fetch(
+      `${this.backendBaseUrl}/api/kubernetes/services/${serviceName}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: `\{\"entity\": ${entityString} \}`,
+      },
+    )
+      .then(async response => {
+        const resp = await response.json();
+        return resp.items.map((element: any) => {
+          return element.cluster.name;
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        throw new Error('Cannot get clusters for service');
+      });
   }
 }

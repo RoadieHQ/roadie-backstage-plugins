@@ -136,4 +136,8 @@ catalog:
       rules:
         - allow: [Template]
 argocd:
-  baseUrl: https://localhost:8080
+  # baseUrl: https://localhost:8080
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  perCluster:
+    enabled: true

@@ -52,6 +52,7 @@ const HistoryTable = ({
           return app.status.history.map(entry => {
             return {
               app: app.metadata.name,
+              cluster: app.metadata.cluster,
               ...entry,
             };
           });
@@ -78,8 +79,13 @@ const HistoryTable = ({
       highlight: true,
     },
     {
+      title: 'Cluster',
+      render: (row: any): React.ReactNode => row.cluster,
+    },
+    {
       title: 'Deploy Started',
       field: 'deployStartedAt',
+      defaultSort: 'desc',
       render: (row: any) => (
         <Tooltip
           title={
@@ -125,6 +131,7 @@ const HistoryTable = ({
         search: false,
         draggable: false,
         padding: 'dense',
+        sorting: true,
       }}
       data={history}
       columns={columns}
@@ -168,6 +175,12 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
       return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
+    }
+    if (value as Array<ArgoCDAppDetails>) {
+      const wrapped: ArgoCDAppList = {
+        items: value as Array<ArgoCDAppDetails>,
+      };
+      return <HistoryTable data={wrapped} retry={retry} />;
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],
