@@ -16,7 +16,7 @@
 
 import React, { FC } from 'react';
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles, Box, Typography } from '@material-ui/core';
+import { makeStyles, Box, Typography, Theme } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
 import {
   useApi,
@@ -29,7 +29,7 @@ import { useUrl } from '../useUrl';
 import { useEntity } from "@backstage/plugin-catalog-react";
 import { InfoCard, Progress } from '@backstage/core-components';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
     marginBottom: theme.spacing(3),
   },
@@ -37,16 +37,16 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
   },
   critical: {
-    color: '#ff0707',
+    color: theme.palette.type === 'dark' ? '#f85149' : '#cf222e',
   },
   high: {
-    color: '#FF3C38',
+    color: theme.palette.type === 'dark' ? '#db6d28' : '#bc4c00',
   },
   medium: {
-    color: '#FF8C42',
+    color: theme.palette.type === 'dark' ? '#d29922' : '#bf8600',
   },
   low: {
-    color: '#FFF275',
+    color: theme.palette.type === 'dark' ? '#c9d1d9' : '#24292f',
   }
 }));
 
