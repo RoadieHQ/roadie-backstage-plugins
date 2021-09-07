@@ -94,9 +94,9 @@ The Argo CD plugin is a part of the Backstage sample app. To start using it for 
    ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
    ```
 
-## Support for multiple ArgoCD instances - Option 1
+## Support for multiple Argo CD instances - Option 1
 
-If you want to create multiple components that fetch data from different argoCD instances, you have to add a proxy config for each instance:
+If you want to create multiple components that fetch data from different Argo CD instances, you have to add a proxy config for each instance:
 
 ```yml
 proxy:
@@ -129,11 +129,11 @@ argocd/proxy-url: '/argocd/api2'
 
 `argocd/proxy-url` annotation defaults to '/argocd/api' so it's not needed if there is only one proxy config.
 
-## Support for multiple ArgoCD instances - Option 2 - Kubernetes Plugin
+## Support for multiple Argo CD instances - Option 2 - Kubernetes Plugin
 
-If you want to create multiple components that fetch data from different argoCD instances, you can dynamically set the ArgoCD instance url by adding the following to your app-config.yaml files.
+If you want to create multiple components that fetch data from different Argo CD instances, you can dynamically set the Argo CD instance url by adding the following to your app-config.yaml files.
 
-Ensure you are using the Kubernetes backstage plugins. The Argo plugin will fetch the clusters an app is deployed to and use the argocd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
+Ensure you are using the Kubernetes backstage plugins. The Argo CD plugin will fetch the clusters an app is deployed to and use the argocd-backend plugin to reach out to each Argo CD instance based on the mapping mentioned below.
 
 ```yml
 argocd:
@@ -145,9 +145,9 @@ argocd:
 
 Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD`.
 
-You can also use an argo session token as mentioned above in the Kubernetes cluster object as shown below. If omitted, we will use the argo username and password from the code block above.
+You can also use an Argo CD session token as mentioned above in the Kubernetes cluster object as shown below. If omitted, we will use the argo username and password from the code block above.
 
-You must set the argoUrl
+You must set the argoUrl.
 
 ```yaml
 kubernetes:
