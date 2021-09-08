@@ -155,8 +155,9 @@ export const DependabotAlertsTable: FC<{}> = () => {
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
 
-  const query = `{ 
-    repository(name: "${repo}", owner: "${owner}") {
+  const query = `
+  query GetDependabotAlerts($name: String!, $owner: String!) {
+    repository(name: $name, owner: $owner) {
       vulnerabilityAlerts(first: 100) {
         totalCount
         nodes {
@@ -180,7 +181,7 @@ export const DependabotAlertsTable: FC<{}> = () => {
         }
       }
     }
-    }`;
+  }`;
 
   const { value, loading, error } =
     useAsync(async (): Promise<any> => {
@@ -190,13 +191,18 @@ export const DependabotAlertsTable: FC<{}> = () => {
           authorization: `token ${token}`,
         },
       });
-      const { repository } = await gqlEndpoint(query);
+
+      const { repository } = await gqlEndpoint(query,{
+        name: repo,
+        owner: owner
+      });
       return repository;
     }, []);
+
 
   const detailsUrl = { hostname, owner, repo };
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
-  return (value && value.vulnerabilityAlerts) ? <DenseTable repository={value} detailsUrl={detailsUrl} /> : null;
+   return (value && value.vulnerabilityAlerts) ? <DenseTable repository={value} detailsUrl={detailsUrl} /> : null;
 };

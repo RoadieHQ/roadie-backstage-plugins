@@ -48,7 +48,7 @@ const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
 ]);
 
-describe('PullRequestsCard', () => {
+describe('Security Insights Card', () => {
   const worker = setupServer();
   msw.setupDefaultHandlers(worker);
 
