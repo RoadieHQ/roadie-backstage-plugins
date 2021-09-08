@@ -90,10 +90,8 @@ export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({ reposit
   const classes = useStyles();
   const configApi = useApi(configApiRef);
   const minimumConfiguredSeverities = configApi?.getOptionalStringArray('dependabotAlertsConfiguration.severity') ?? ['all'];
-
   // Filter issues so only open issues are taken into cosideration
   const all = repository.vulnerabilityAlerts.nodes.filter((entry) => entry.dismissedAt === null) || null;
-
   const criticalCount = all.filter(node => node.securityVulnerability.severity === 'CRITICAL').length;
   const highCount = all.filter(node => node.securityVulnerability.severity === 'HIGH').length;
   const mediumCount = all.filter(node => node.securityVulnerability.severity === 'MODERATE').length;
@@ -112,27 +110,27 @@ export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({ reposit
         },
       }}
     >
-      <Box display="flex">
+      <Box data-testid="severitiesContainer" display="flex">
         {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('critical') || minimumConfiguredSeverities.includes('all')) &&
-          <Box ml={2} mr={2} display="flex" className={classes.critical} justifyContent="center" flexDirection="column">
+          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.critical} justifyContent="center" flexDirection="column">
             <Typography className={classes.alertsCount} variant="h1">{criticalCount}</Typography>
             <Typography> Critical severity </Typography>
           </Box>
         }
         {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('high') || minimumConfiguredSeverities.includes('all')) &&
-          <Box ml={2} mr={2} display="flex" className={classes.high} justifyContent="center" flexDirection="column">
+          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.high} justifyContent="center" flexDirection="column">
             <Typography className={classes.alertsCount} variant="h1">{highCount}</Typography>
             <Typography> High severity </Typography>
           </Box>
         }
         {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('medium') || minimumConfiguredSeverities.includes('all')) &&
-          <Box ml={2} mr={2} display="flex" className={classes.medium} justifyContent="center" flexDirection="column">
+          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.medium} justifyContent="center" flexDirection="column">
             <Typography className={classes.alertsCount} variant="h1">{mediumCount}</Typography>
             <Typography> Medium severity </Typography>
           </Box>
         }
         {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('low') || minimumConfiguredSeverities.includes('all')) &&
-          <Box ml={2} mr={2} display="flex" className={classes.low} justifyContent="center" flexDirection="column">
+          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.low} justifyContent="center" flexDirection="column">
             <Typography className={classes.alertsCount} variant="h1">{lowCount}</Typography>
             <Typography> Low severity </Typography>
           </Box>
@@ -149,32 +147,33 @@ export const DependabotAlertsWidget = () => {
   const auth = useApi(githubAuthApiRef);
   const { hostname } = useUrl();
 
-  const query = `{
-          repository(name: "${repo}", owner: "${owner}") {
-          vulnerabilityAlerts(first: 100) {
-          totalCount
+  const query = `
+  query GetDependabotAlertsWidget($name: String!, $owner: String!) {
+    repository(name: $name, owner: $owner) {
+      vulnerabilityAlerts(first: 100) {
+        totalCount
         nodes {
           createdAt
           id
-        dismissedAt
-        vulnerableManifestPath
-        securityVulnerability {
-          vulnerableVersionRange
+          dismissedAt
+          vulnerableManifestPath
+          securityVulnerability {
+            vulnerableVersionRange
             package {
-          name
-        }
-        firstPatchedVersion {
-          identifier
-        }
-        severity
-        advisory {
-          description
-        }
+              name
+            }
+            firstPatchedVersion {
+              identifier
+            }
+            severity
+            advisory {
+              description
+            }
           }
         }
       }
     }
-    }`;
+  }`;
 
   const { value, loading, error } =
     useAsync(async (): Promise<any> => {
@@ -184,7 +183,10 @@ export const DependabotAlertsWidget = () => {
           authorization: `token ${token}`,
         },
       });
-      const { repository } = await gqlEndpoint(query);
+      const { repository } = await gqlEndpoint(query,{
+        name: repo,
+        owner: owner
+      });
       return repository;
     }, []);
 

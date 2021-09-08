@@ -15,15 +15,14 @@
  */
 
 import React from 'react';
+import { Entity } from '@backstage/catalog-model';
 import { render } from '@testing-library/react';
-import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { securityInsightsPlugin } from '../../plugin';
 import {
-  entityMock,
+  entityStub,
   dependabotAlertsResponseMock,
 } from '../../mocks/mocks';
 import { graphql } from 'msw';
-import { msw } from '@backstage/test-utils';
+import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { DependabotAlertsTable } from './DependabotAlertsTable';
 import {
@@ -33,7 +32,30 @@ import {
 import {
   configApiRef,
   githubAuthApiRef
-} from '@backstage/core-plugin-api';
+}
+  from '@backstage/core-plugin-api';
+import { securityInsightsPlugin } from '../../plugin';
+
+let entity: { entity: Entity };
+
+jest.mock('@backstage/plugin-catalog-react', () => ({
+  useEntity: () => {
+    return entity;
+  },
+}));
+
+jest.mock('@octokit/graphql', () => ({
+  graphql: {
+    defaults: () => {
+      const gqlEndpoint = (_query: string, _params: object) => {
+        return new Promise((resolve) => {
+          resolve(dependabotAlertsResponseMock);
+        });
+      }
+      return gqlEndpoint;
+    }
+  }
+}));
 
 const GRAPHQL_GITHUB_API = graphql.link('https://api.github.com/graphql');
 
@@ -52,69 +74,43 @@ const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
 ]);
 
-const dependabotAlertsQuery = `
-  query GetDependabotAlerts($repository: String!, $owner: String!) {
-    repository(name: $repo, owner: $owner}) {
-      vulnerabilityAlerts(first: 100) {
-        totalCount
-        nodes {
-          createdAt
-          id
-          dismissedAt
-          vulnerableManifestPath
-          securityVulnerability {
-            vulnerableVersionRange
-            package {
-              name
-            }
-            firstPatchedVersion {
-              identifier
-            }
-            severity
-            advisory {
-              description
-            }
-          }
-        }
-      }
-    }
-`;
-
-describe('dependabot-alerts', () => {
+describe('Dependabot alerts overview', () => {
   const worker = setupServer();
   msw.setupDefaultHandlers(worker);
 
   beforeEach(() => {
-    worker.use(
-      GRAPHQL_GITHUB_API.query(dependabotAlertsQuery, (_, res, ctx) =>
-          res(ctx.data(dependabotAlertsResponseMock)),
-        )
-    );
+    worker.resetHandlers();
+    jest.resetAllMocks();
   });
-  
-  describe('export-plugin', () => {
+
+  describe('export-security-insights-plugin', () => {
     it('should export plugin', () => {
       expect(securityInsightsPlugin).toBeDefined();
     });
   });
 
-  describe('GithubDependabotAlertsTable', () => {
-    it('displays dependabot alerts in table', async () => {
-      worker.use(
-        GRAPHQL_GITHUB_API.query(dependabotAlertsQuery, (_, res, ctx) =>
-          res(ctx.data(dependabotAlertsResponseMock)),
-        ),
-      );
-    
-      const rendered = render(
-          <ApiProvider apis={apis}>
-            <EntityProvider entity={entityMock}>
-              <DependabotAlertsTable />
-            </EntityProvider>
-          </ApiProvider>
-      );
-      expect(await rendered.findByText('browserslist')).toBeInTheDocument();
-      });
 
+  describe('GithubDependabotAlertsTable', () => {
+    beforeEach(() => {
+      entity = entityStub;
+    });
+
+    it('check if mocked data is shown in the dependabot alerts table', async () => {
+      worker.use(
+        GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
+          res(ctx.data(dependabotAlertsResponseMock))
+        }),
+      );
+
+      const rendered = render(
+        wrapInTestApp(
+          <ApiProvider apis={apis}>
+            <DependabotAlertsTable />
+          </ApiProvider>
+        )
+      );
+      expect(
+        await rendered.findByText('serialize-javascript')).toBeInTheDocument();
+    });
   });
 });
