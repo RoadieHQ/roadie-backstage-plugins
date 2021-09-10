@@ -48,96 +48,98 @@ const HistoryTable = ({
 
   const history = data.items
     ? data.items
-        .map(app => {
+      .map(app => {
+        if (typeof app.status.history !== 'undefined') {
           return app.status.history.map(entry => {
             return {
               app: app.metadata.name,
-              ...entry,
+              ...entry
             };
           });
-        })
-        .flat()
+        }
+        return {};
+      }).flat()
     : [];
 
-  const columns: TableColumn[] = [
-    {
-      title: 'Name',
-      field: 'name',
-      render: (row: any): React.ReactNode =>
-        baseUrl ? (
-          <Link
-            href={`${baseUrl}/applications/${row.app}`}
-            target="_blank"
-            rel="noopener"
-          >
-            {row.app}
-          </Link>
-        ) : (
-          row.app
-        ),
-      highlight: true,
-    },
-    {
-      title: 'Deploy Started',
-      field: 'deployStartedAt',
-      render: (row: any) => (
-        <Tooltip
-          title={
-            row.deployStartedAt ? row.deployStartedAt : 'Deploy started at'
-          }
-          placement="left"
+const columns: TableColumn[] = [
+  {
+    title: 'Name',
+    field: 'name',
+    render: (row: any): React.ReactNode =>
+      baseUrl ? (
+        <Link
+          href={`${baseUrl}/applications/${row.app}`}
+          target="_blank"
+          rel="noopener"
         >
-          <div>
-            {row.deployStartedAt ? moment(row.deployStartedAt).fromNow() : '-'}
-          </div>
-        </Tooltip>
+          {row.app}
+        </Link>
+      ) : (
+        row.app
       ),
-    },
-    {
-      title: 'Deployed At',
-      field: 'deployedAt',
-      render: (row: any) => (
-        <Tooltip title={row.deployedAt} placement="left">
-          <div>{moment(row.deployedAt).fromNow()}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      title: 'Deploy duration',
-      render: (row: any): React.ReactNode =>
-        moment
-          .duration(moment(row.deployStartedAt).diff(moment(row.deployedAt)))
-          .humanize(),
-      sorting: false,
-    },
-    {
-      title: 'Revision',
-      field: 'revision',
-      sorting: false,
-    },
-  ];
+    highlight: true,
+  },
+  {
+    title: 'Deploy Started',
+    field: 'deployStartedAt',
+    render: (row: any) => (
+      <Tooltip
+        title={
+          row.deployStartedAt ? row.deployStartedAt : 'Deploy started at'
+        }
+        placement="left"
+      >
+        <div>
+          {row.deployStartedAt ? moment(row.deployStartedAt).fromNow() : '-'}
+        </div>
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Deployed At',
+    field: 'deployedAt',
+    render: (row: any) => (
+      <Tooltip title={row.deployedAt} placement="left">
+        <div>{moment(row.deployedAt).fromNow()}</div>
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Deploy duration',
+    render: (row: any): React.ReactNode =>
+      moment
+        .duration(moment(row.deployStartedAt).diff(moment(row.deployedAt)))
+        .humanize(),
+    sorting: false,
+  },
+  {
+    title: 'Revision',
+    field: 'revision',
+    sorting: false,
+  },
+];
 
-  return (
-    <Table
-      title="ArgoCD history"
-      options={{
-        paging: false,
-        search: false,
-        draggable: false,
-        padding: 'dense',
-      }}
-      data={history}
-      columns={columns}
-      actions={[
-        {
-          icon: () => <SyncIcon />,
-          tooltip: 'Refresh',
-          isFreeAction: true,
-          onClick: () => retry(),
-        },
-      ]}
-    />
-  );
+return (
+  <Table
+    title="ArgoCD history"
+    options={{
+      paging: false,
+      search: false,
+      draggable: false,
+      padding: 'dense',
+    }}
+    data={history}
+    columns={columns}
+    actions={[
+      {
+        icon: () => <SyncIcon />,
+        tooltip: 'Refresh',
+        isFreeAction: true,
+        onClick: () => retry(),
+      },
+    ]}
+  />
+);
 };
 
 const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
