@@ -48,15 +48,18 @@ const HistoryTable = ({
 
   const history = data.items
     ? data.items
-        .map(app => {
+      .map(app => {
+        if (typeof app.status.history !== 'undefined') {
           return app.status.history.map(entry => {
             return {
               app: app.metadata.name,
-              ...entry,
+              ...entry
             };
           });
-        })
-        .flat()
+        }
+        return {};
+      }).filter(value => Object.keys(value).length !== 0)
+      .flat()
     : [];
 
   const columns: TableColumn[] = [

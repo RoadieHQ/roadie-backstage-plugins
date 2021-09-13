@@ -13,12 +13,12 @@ export const argoCDAppDetails = t.type({
       startedAt: t.string,
       finishedAt: t.union([t.string, t.undefined]),
     }),
-    history: t.array(t.type({
-      id: t.number,
-      revision: t.string,
+    history: t.union([t.array(t.type({
+      id: t.union([t.number,t.undefined]),
+      revision: t.union([t.string, t.undefined]),
       deployStartedAt: t.union([t.string, t.undefined]),
       deployedAt: t.union([t.string, t.undefined]),
-    })),
+    })), t.undefined]),
   }),
 });
 
