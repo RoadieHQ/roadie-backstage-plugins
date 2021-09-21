@@ -31,10 +31,10 @@ import {
 import { useApi } from '@backstage/core-plugin-api';
 import { bugsnagApiRef } from '../..';
 import { ErrorsTable } from '../ErrorsTableComponent';
-import { BUGSNAG_ANNOTATIONS, useBugsnagData } from '../../hooks/useBugsnagData';
+import { BUGSNAG_ANNOTATION, useBugsnagData } from '../../hooks/useBugsnagData';
 
 export const isBugsnagAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[BUGSNAG_ANNOTATIONS]);
+  return Boolean(entity?.metadata.annotations?.[BUGSNAG_ANNOTATION]);
 }
 
 export const ErrorsOverview = () => {
@@ -48,10 +48,10 @@ export const ErrorsOverview = () => {
   const { value, loading, error } = useAsync(
     async () => {
       const organisations = await api.fetchOrganisations();
-      const organisation = organisations.filter(org => org.name.includes(organisationName))[0];
-      setOrganisationSlug(organisation.slug);
-      const projects = await api.fetchProjects(organisation.id);
-      const filteredProject = projects.filter(proj => proj.api_key.includes(projectApiKey))[0];
+      const organisation = organisations.find(org => org.name.includes(organisationName));
+      setOrganisationSlug(organisation?.slug || '');
+      const projects = await api.fetchProjects(organisation?.id || '');
+      const filteredProject = projects.find(proj => proj.api_key.includes(projectApiKey));
       return filteredProject;
     }
   );
@@ -78,6 +78,6 @@ export const ErrorsOverview = () => {
       </Content>
     </Page>
   ) : (
-    <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATIONS} />
+    <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />
   )
 };

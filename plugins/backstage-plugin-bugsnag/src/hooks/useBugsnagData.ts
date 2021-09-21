@@ -16,11 +16,11 @@
 
 import { useEntity } from "@backstage/plugin-catalog-react";
 
-export const BUGSNAG_ANNOTATIONS = 'bugsnag.com/project-key';
+export const BUGSNAG_ANNOTATION = 'bugsnag.com/project-key';
 
 export const useBugsnagData = () => {
   const { entity } = useEntity();
-  const bugsnagSlug = entity?.metadata.annotations?.[BUGSNAG_ANNOTATIONS] ?? '';
+  const bugsnagSlug = entity?.metadata.annotations?.[BUGSNAG_ANNOTATION] ?? '';
   if (!bugsnagSlug) {
     throw new Error("'bugsnag.com/project-key' annotation is missing");
   }
