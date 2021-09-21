@@ -119,7 +119,7 @@ metadata:
   description: |
     A sample service
   annotations:
-    datadoghq.com/dashboard-url: <<DATADOGURL>>
+    datadoghq.com/dashboard-url: datadoghq.com
 ```
 
 ## Embed a datadog graph in Backstage
