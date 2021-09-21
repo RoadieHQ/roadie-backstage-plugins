@@ -1231,7 +1231,7 @@
     unzipper "^0.10.11"
     winston "^3.2.1"
 
-"@backstage/backend-common@^0.9.0", "@backstage/backend-common@^0.9.1", "@backstage/backend-common@^0.9.3":
+"@backstage/backend-common@^0.9.0", "@backstage/backend-common@^0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.9.3.tgz#70f7b4063ab2133bfd0f93cd5f1d778b1a2cc516"
   integrity sha512-0rhsQTbwMpl3ISfOBHRq2mz/ZS/byH1myDUYoU3+Sf44nvTiqcT95b6Oog/Ir9bqIGqaUbvtnQ2mboMAhMns3Q==
@@ -1305,7 +1305,7 @@
   resolved "https://registry.yarnpkg.com/@backstage/cli-common/-/cli-common-0.1.3.tgz#6fc6f42548fd36a20d5d1809653d6c890591c48f"
   integrity sha512-PY4L2KwoYvwZEXZ2F6BGESfzEGsHaNEqOm2+WuWL3iLACmpR2UlhqkqPxwXxWnVhudOn13O3aeiIn/6HocPU2w==
 
-"@backstage/cli@^0.7.11", "@backstage/cli@^0.7.4":
+"@backstage/cli@^0.7.4":
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.7.12.tgz#b9d0057198250ef51a6ec3294aeca5f51c5ede2e"
   integrity sha512-+wYH5MYjiu3qnme+/k9b7XyP4TBJhTLQOVZfVcQunzxuB8EHD5TtH6h++ZcuyMvofl1Jq0eo41qwWf62oNYO+Q==
@@ -1666,12 +1666,12 @@
     winston "^3.2.1"
     yn "^4.0.0"
 
-"@backstage/plugin-auth-backend@^0.3.22":
-  version "0.3.24"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.3.24.tgz#c4d86330e71cdcf29b8263c97b79ebf2eeba8c9e"
-  integrity sha512-kr7Y4niTZSGpV3EcFxCFQYh+ogpzpRRgburzDgarXBQX+J121cJm9Gjz5XjuLObe7BwaNYDY2EVOXntz3ZxLiQ==
+"@backstage/plugin-auth-backend@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.4.0.tgz#6604934e2ca1858535f762ad3a3c9f4698e14036"
+  integrity sha512-YhpdqQBzFfKZT/aWk7EZifnnEcU4cC7hvwIyQqNXeyuIJQZUUYvw3/7N7OjBlezI356autdKr3op0Pxp3QGuLQ==
   dependencies:
-    "@backstage/backend-common" "^0.9.1"
+    "@backstage/backend-common" "^0.9.3"
     "@backstage/catalog-client" "^0.3.18"
     "@backstage/catalog-model" "^0.9.1"
     "@backstage/config" "^0.1.8"
@@ -1706,7 +1706,7 @@
     passport-oauth2 "^1.5.0"
     passport-okta-oauth "^0.0.1"
     passport-onelogin-oauth "^0.0.1"
-    passport-saml "^2.0.0"
+    passport-saml "^3.1.2"
     uuid "^8.0.0"
     winston "^3.2.1"
     yn "^4.0.0"
@@ -5085,7 +5085,7 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@xmldom/xmldom@^0.7.0":
+"@xmldom/xmldom@^0.7.0", "@xmldom/xmldom@^0.7.2":
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.7.5.tgz#09fa51e356d07d0be200642b0e4f91d8e6dd408d"
   integrity sha512-V3BIhmY36fXZ1OtVcI9W+FxQqxVLsPKcNjWigIaa81dLC9IolJl5Mt4Cvhmr0flUnjSpTdrbMTSbXqYqV5dT6A==
@@ -9722,6 +9722,13 @@ git-url-parse@~11.4.4:
   version "11.4.4"
   resolved "https://registry.yarnpkg.com/git-url-parse/-/git-url-parse-11.4.4.tgz#5d747debc2469c17bc385719f7d0427802d83d77"
   integrity sha512-Y4o9o7vQngQDIU9IjyCmRJBin5iYjI5u9ZITnddRZpD7dcCFQj2sL2XuMNbLRE4b4B/4ENPsp2Q8P44fjAZ0Pw==
+  dependencies:
+    git-up "^4.0.0"
+
+git-url-parse@^11.6.0:
+  version "11.6.0"
+  resolved "https://registry.yarnpkg.com/git-url-parse/-/git-url-parse-11.6.0.tgz#c634b8de7faa66498a2b88932df31702c67df605"
+  integrity sha512-WWUxvJs5HsyHL6L08wOusa/IXYtMuCAhrMmnTjQPpBU0TTHyDhnOATNH3xNQz7YOQUsqIIPTGr4xiVti1Hsk5g==
   dependencies:
     git-up "^4.0.0"
 
@@ -14694,20 +14701,20 @@ passport-onelogin-oauth@^0.0.1:
     pkginfo "0.2.x"
     uid2 "0.0.3"
 
-passport-saml@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/passport-saml/-/passport-saml-2.2.0.tgz#dbea6743cf06644cfb3f0d486e43d3c8812b150a"
-  integrity sha512-Qkr9WbhGY1AAAgslJ4yFn7ObQp/cLu2L1bubwXvl8vsvXQujPemKYhD3SwdilEIllZ/EPTlHgld+4wiPRYxd8Q==
+passport-saml@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/passport-saml/-/passport-saml-3.1.2.tgz#34a0c2c423d729ce102e69fea9c22040910e6d43"
+  integrity sha512-EhD3/ofiz1vu7R72i4RskXk/dQG9GyDmXPdHJf5LYB+93B5kvKv5p+5lpZgO3z+Wf3eN0h/tGdGd6noyYdjY6g==
   dependencies:
+    "@xmldom/xmldom" "^0.7.2"
     debug "^4.3.1"
-    passport-strategy "*"
-    xml-crypto "^2.1.1"
-    xml-encryption "^1.2.3"
+    passport-strategy "^1.0.0"
+    xml-crypto "^2.1.3"
+    xml-encryption "^1.3.0"
     xml2js "^0.4.23"
     xmlbuilder "^15.1.1"
-    xmldom "0.5.x"
 
-passport-strategy@*, passport-strategy@1.x.x:
+passport-strategy@1.x.x, passport-strategy@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
@@ -18815,7 +18822,7 @@ url-join@^2.0.5:
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-2.0.5.tgz#5af22f18c052a000a48d7b82c5e9c2e2feeda728"
   integrity sha1-WvIvGMBSoACkjXuCxenC4v7tpyg=
 
-url-parse@^1.5.2:
+url-parse@^1.5.1:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.3.tgz#71c1303d38fb6639ade183c2992c8cc0686df862"
   integrity sha512-IIORyIQD9rvj0A4CLWsHkBBJuNqWpFQe224b6j9t/ABmquIS0qDU2pY6kl6AuOrL5OkCXHMCFNe1jBcuAggjvQ==
@@ -19504,11 +19511,6 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
-
-xmldom@0.5.x:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.5.0.tgz#193cb96b84aa3486127ea6272c4596354cb4962e"
-  integrity sha512-Foaj5FXVzgn7xFzsKeNIde9g6aFBxTPi37iwsno8QvApmtg7KYrr+OPyRHcJF7dud2a5nGRBXK3n0dL62Gf7PA==
 
 xmldom@^0.6.0:
   version "0.6.0"
