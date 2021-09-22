@@ -1,3 +1,4 @@
+// eslint-disable-next-line notice/notice
 import { DockerContainerRunner } from '@backstage/backend-common';
 import {
   createRouter,

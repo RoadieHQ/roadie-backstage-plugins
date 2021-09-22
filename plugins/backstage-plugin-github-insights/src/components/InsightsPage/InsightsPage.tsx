@@ -15,8 +15,9 @@
  */
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { Page, Content, ContentHeader, SupportButton } from '@backstage/core-components';
+import { Page, Content, ContentHeader, SupportButton, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
+import { GITHUB_INSIGHTS_ANNOTATION } from '../../hooks/useProjectName';
 import {
   ComplianceCard,
   ContributorsCard,
@@ -26,16 +27,14 @@ import {
 } from '../Widgets';
 import { useEntity } from "@backstage/plugin-catalog-react";
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
+export const isGithubInsightsAvailable = (entity: Entity) => {
+  return Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION]);
+}
 
-const InsightsPage = (_props: Props) => {
+export const InsightsPage = () => {
   const { entity } = useEntity();
-  const projectSlug = entity.metadata?.annotations?.['github.com/project-slug'];
 
-  return projectSlug ? (
+  return isGithubInsightsAvailable(entity) ? (
     <Page themeId="tool">
       <Content>
         <ContentHeader title="GitHub Insights">
@@ -54,6 +53,7 @@ const InsightsPage = (_props: Props) => {
         </Grid>
       </Content>
     </Page>
-  ) : null;
+  ) : (
+    <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  );
 };
-export default InsightsPage;
