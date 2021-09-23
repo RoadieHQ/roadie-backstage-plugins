@@ -27,6 +27,7 @@
     "@material-ui/icons": "^4.9.1",
     "@roadiehq/backstage-plugin-argo-cd": "^1.0.9",
     "@roadiehq/backstage-plugin-aws-lambda": "^1.0.7",
+    "@roadiehq/backstage-plugin-bugsnag": "^1.0.0",
     "@roadiehq/backstage-plugin-buildkite": "1.0.8",
     "@roadiehq/backstage-plugin-datadog": "^1.1.8",
     "@roadiehq/backstage-plugin-github-insights": "^1.1.21",
