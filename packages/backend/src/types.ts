@@ -1,3 +1,4 @@
+// eslint-disable-next-line notice/notice
 import { Logger } from 'winston';
 import { Config } from '@backstage/config';
 import {

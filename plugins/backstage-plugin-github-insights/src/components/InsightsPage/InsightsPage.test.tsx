@@ -15,7 +15,7 @@
  */
 import React from 'react';
 import { render, RenderResult, act, waitFor } from '@testing-library/react';
-import InsightsPage from './InsightsPage';
+import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { wrapInTestApp } from '@backstage/test-utils';
@@ -46,7 +46,7 @@ const supportConfig = {
     return null;
   },
 
-  getConfigArray: (_:string) => {
+  getConfigArray: (_: string) => {
     return [];
   },
 };
@@ -56,7 +56,7 @@ const config = {
     { getOptionalString: (_2: string) => undefined },
   ],
 
-  getOptionalConfig: (_:string) => {
+  getOptionalConfig: (_: string) => {
     return supportConfig;
   },
 };
@@ -85,7 +85,7 @@ describe('Insights Page', () => {
                 },
               },
             }}>
-            <InsightsPage />
+              <InsightsPage />
             </EntityProvider>
           </ThemeProvider>
         </ApiProvider>

@@ -1,3 +1,4 @@
+// eslint-disable-next-line notice/notice
 import { createRouter } from '@roadiehq/backstage-plugin-aws-auth';
 import type { PluginEnvironment } from '../types';
 

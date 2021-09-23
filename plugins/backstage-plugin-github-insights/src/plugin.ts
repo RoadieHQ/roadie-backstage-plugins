@@ -17,25 +17,21 @@
 import {
   createComponentExtension,
   createPlugin,
-  createRoutableExtension,
-  createRouteRef,
+  createRoutableExtension
 } from '@backstage/core-plugin-api';
-
-export const entityContentRouteRef = createRouteRef({
-  title: 'githubInsights Entity Content',
-});
+import { rootRouteRef } from './routes';
 
 export const githubInsightsPlugin = createPlugin({
   id: 'code-insights',
   routes: {
-    entityContent: entityContentRouteRef,
+    root: rootRouteRef,
   },
 });
 
 export const EntityGithubInsightsContent = githubInsightsPlugin.provide(
   createRoutableExtension({
-    component: () => import('./components/Router').then((m) => m.Router),
-    mountPoint: entityContentRouteRef,
+    component: () => import('./components/InsightsPage').then(m => m.InsightsPage),
+    mountPoint: rootRouteRef,
   })
 );
 

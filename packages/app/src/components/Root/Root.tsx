@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// eslint-disable-next-line notice/notice
 import React, { useContext, PropsWithChildren } from 'react';
 import { Link, makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';

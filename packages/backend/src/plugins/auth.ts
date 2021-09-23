@@ -1,3 +1,4 @@
+// eslint-disable-next-line notice/notice
 import { createRouter } from '@backstage/plugin-auth-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';

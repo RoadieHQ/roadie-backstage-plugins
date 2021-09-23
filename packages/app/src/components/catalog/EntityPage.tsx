@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// eslint-disable-next-line notice/notice
 import React from 'react';
 import { Button, Grid } from '@material-ui/core';
 import { EmptyState } from '@backstage/core-components';
