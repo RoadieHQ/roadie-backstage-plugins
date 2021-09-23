@@ -97,6 +97,9 @@ import {
   EntityArgoCDContent,
   isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
+import {
+  EntityBugsnagErrorsOverviewTable
+} from '@roadiehq/backstage-plugin-bugsnag';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -257,6 +260,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/argocd" title="Argo CD">
       <EntityArgoCDContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/bugsnag" title="Bugsnag">
+      <EntityBugsnagErrorsOverviewTable />
     </EntityLayout.Route>
   </EntityLayout>
 );
