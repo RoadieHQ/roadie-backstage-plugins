@@ -32,6 +32,7 @@
     "@roadiehq/backstage-plugin-github-insights": "^1.1.21",
     "@roadiehq/backstage-plugin-github-pull-requests": "^1.0.11",
     "@roadiehq/backstage-plugin-jira": "^1.0.9",
+    "@roadiehq/backstage-plugin-bugsnag": "^1.0.0",
     "@roadiehq/backstage-plugin-security-insights": "^1.1.6",
     "@roadiehq/backstage-plugin-travis-ci": "^1.0.11",
     "history": "^5.0.0",
