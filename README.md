@@ -66,7 +66,7 @@ yarn dev
 
  [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite). 
 
-  [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag). 
+ [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag). 
 
 ## Structure of the repository.
 
