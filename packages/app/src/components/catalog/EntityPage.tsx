@@ -85,11 +85,11 @@ import {
   isBuildkiteAvailable
 } from "@roadiehq/backstage-plugin-buildkite";
 import {
-    EntitySecurityInsightsContent,
-    EntityGithubDependabotContent,
-    SecurityInsightsWidget,
-    DependabotAlertsWidget,
-    isSecurityInsightsAvailable
+  EntitySecurityInsightsContent,
+  EntityGithubDependabotContent,
+  SecurityInsightsWidget,
+  DependabotAlertsWidget,
+  isSecurityInsightsAvailable
 } from '@roadiehq/backstage-plugin-security-insights';
 import {
   EntityArgoCDHistoryCard,

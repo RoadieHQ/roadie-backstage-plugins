@@ -1557,7 +1557,7 @@
     react-use "^17.2.4"
     zen-observable "^0.8.15"
 
-"@backstage/dev-utils@^0.2.0", "@backstage/dev-utils@^0.2.2", "@backstage/dev-utils@^0.2.4":
+"@backstage/dev-utils@^0.2.0", "@backstage/dev-utils@^0.2.2", "@backstage/dev-utils@^0.2.4", "@backstage/dev-utils@^0.2.9":
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/@backstage/dev-utils/-/dev-utils-0.2.9.tgz#c58c0a219a1123d2fdb95e6901b1eb19108f4b45"
   integrity sha512-QzBNLuThQiUti60c/27A+QI/JDZrYVZQlxReSe2kx+ykbZFZZaQ0UqOtzXMiutuHTdbqiwFUL0Jx3tiWenfIJQ==
