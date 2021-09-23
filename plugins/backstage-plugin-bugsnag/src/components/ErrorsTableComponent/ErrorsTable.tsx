@@ -88,7 +88,6 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
 };
 
 export const ErrorsTable = ({ organisationName, project }: { organisationName: string, project: Project }) => {
-
   const api = useApi(bugsnagApiRef);
   const { value, loading, error } = useAsync(
     async () =>
