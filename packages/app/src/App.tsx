@@ -6,11 +6,11 @@ import {
   CatalogIndexPage,
   catalogPlugin,
 } from '@backstage/plugin-catalog';
-import {CatalogImportPage, catalogImportPlugin} from '@backstage/plugin-catalog-import';
-import { 
-  ScaffolderPage, 
-  scaffolderPlugin 
-} from '@backstage/plugin-scaffolder';
+import {
+  CatalogImportPage,
+  catalogImportPlugin,
+} from '@backstage/plugin-catalog-import';
+import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { SearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
 import { TechdocsPage } from '@backstage/plugin-techdocs';
@@ -21,6 +21,7 @@ import { Root } from './components/Root';
 
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { createApp, FlatRoutes } from '@backstage/core-app-api';
+import { BackstagePluginPrometheusPage } from '@roadiehq/plugin-backstage-plugin-prometheus';
 
 const app = createApp({
   apis,
@@ -60,6 +61,10 @@ const routes = (
     <Route path="/catalog-import" element={<CatalogImportPage />} />
     <Route path="/search" element={<SearchPage />} />
     <Route path="/settings" element={<UserSettingsPage />} />
+    <Route
+      path="/backstage-plugin-prometheus"
+      element={<BackstagePluginPrometheusPage />}
+    />
   </FlatRoutes>
 );
 
