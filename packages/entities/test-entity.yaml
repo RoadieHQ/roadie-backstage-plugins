@@ -14,7 +14,6 @@ metadata:
     datadoghq.com/graph-token: qwertytoken1234
     argocd/app-name: test-app
     bugsnag.com/project-key: RoadieHQTest/qwerty12345
-
 spec:
   type: service
   owner: roadie

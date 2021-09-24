@@ -32,7 +32,7 @@ describe('Bugsnag', () => {
 
         it('should show Bugsnag when navigating to Bugsnag tab', () => {
             cy.visit('/catalog/default/component/sample-service/bugsnag')
-            cy.contains('Errors Overview');
+            cy.contains('Errors overview');
           });
     });
 });
