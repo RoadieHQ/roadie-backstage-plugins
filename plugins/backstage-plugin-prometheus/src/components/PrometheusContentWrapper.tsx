@@ -19,34 +19,71 @@ import { Grid } from '@material-ui/core';
 import {
   Content,
   ContentHeader,
-  Page,
+  MissingAnnotationEmptyState,
   SupportButton,
 } from '@backstage/core-components';
-import { PrometheusGraph } from './ExampleFetchComponent';
+import { PrometheusGraph } from './PrometheusGraph';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  isPrometheusAlertAvailable,
+  isPrometheusGraphAvailable,
+  PROMETHEUS_ALERT_ANNOTATION,
+  PROMETHEUS_RULE_ANNOTATION,
+} from './util';
+import { PrometheusAlertStatus } from './PrometheusAlertStatus';
 
 const PrometheusContentWrapper = () => {
-  const entity = useEntity();
-  console.log(entity);
+  const { entity } = useEntity();
+  const graphContent = isPrometheusGraphAvailable(entity);
+  const alertContent = isPrometheusAlertAvailable(entity);
+  if (!graphContent && !alertContent) {
+    return (
+      <MissingAnnotationEmptyState
+        annotation={`${PROMETHEUS_RULE_ANNOTATION} or ${PROMETHEUS_ALERT_ANNOTATION}`}
+      />
+    );
+  }
+  const ruleTuples = graphContent
+    ? entity.metadata
+        .annotations!![PROMETHEUS_RULE_ANNOTATION].split(',')
+        .map(it => it.split('|'))
+    : [];
+
+  const alerts = alertContent
+    ? entity.metadata.annotations!![PROMETHEUS_ALERT_ANNOTATION].split(',')
+    : [];
+
   return (
-    <Page themeId="tool">
+    ruleTuples && (
       <Content>
         <ContentHeader title="Prometheus">
           <SupportButton>
-            Plugin to show a project's pull requests on GitHub
+            Plugin to show Prometheus graphs and alerts for the project
           </SupportButton>
         </ContentHeader>
-        <Grid container spacing={3} direction="column">
-          <Grid item>
-            <PrometheusGraph
-              query="node_memory_Active_byte"
-              range={{ hours: 1 }}
-              step={14}
-            />
+        {alertContent && (
+          <Grid container spacing={3} direction="column">
+            <Grid item>
+              <PrometheusAlertStatus alerts={alerts} />
+            </Grid>
           </Grid>
-        </Grid>
+        )}{' '}
+        {graphContent && (
+          <Grid container spacing={3} direction="column">
+            {ruleTuples.map(([query, dimension]) => (
+              <Grid item key={query}>
+                <PrometheusGraph
+                  dimension={dimension}
+                  query={query}
+                  range={{ hours: 1 }}
+                  step={14}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Content>
-    </Page>
+    )
   );
 };
 

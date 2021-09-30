@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export {
-  backstagePluginPrometheusPlugin,
-  BackstagePrometheusContent,
-} from './plugin';
+import { Entity } from '@backstage/catalog-model';
+
+export const PROMETHEUS_RULE_ANNOTATION = 'prometheus/rule';
+export const PROMETHEUS_ALERT_ANNOTATION = 'prometheus/alert';
+
+export const isPrometheusGraphAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[PROMETHEUS_RULE_ANNOTATION]);
+
+export const isPrometheusAlertAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[PROMETHEUS_ALERT_ANNOTATION]);

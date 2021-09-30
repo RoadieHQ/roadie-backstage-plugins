@@ -137,3 +137,6 @@ catalog:
         - allow: [Template]
 argocd:
   baseUrl: https://localhost:8080
+
+prometheus:
+  baseUrl: http://localhost:9090

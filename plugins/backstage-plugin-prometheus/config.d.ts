@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export {
-  backstagePluginPrometheusPlugin,
-  BackstagePrometheusContent,
-} from './plugin';
+
+/** Configuration for the Prometheus plugin */
+export interface Config {
+  /**
+   * @visibility frontend
+   */
+  prometheus?: {
+    /**
+     * The base url of the Prometheus.
+     * Should be used
+     * @visibility frontend
+     */
+    baseUrl?: string;
+
+    /**
+     * The proxy path for Prometheus.
+     * Should be used if proxy is in use
+     * @visibility frontend
+     */
+    proxyPath?: string;
+  };
+}

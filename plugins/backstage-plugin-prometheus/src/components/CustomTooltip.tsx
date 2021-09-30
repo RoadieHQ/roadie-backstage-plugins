@@ -15,35 +15,42 @@
  */
 
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, Paper, Box } from '@material-ui/core';
+import { TooltipProps } from 'recharts';
+
+type ExtraTooltipProps = {
+  collector: {
+    collect: Function;
+    maxAndMin: Function;
+  };
+  metrics: { [k: string]: any };
+};
 
 export const CustomTooltip = ({
   active,
   payload,
-  unit,
   label,
   coordinate,
-  tickCollector,
+  collector,
   metrics,
-}) => {
+}: TooltipProps & ExtraTooltipProps) => {
   if (payload === null) return null;
 
   if (active) {
-    const { min, max } = tickCollector.maxAndMin();
+    const { min, max } = collector.maxAndMin();
     const threshold = min.value / 30;
     const deltaY = max.y - min.y;
     const deltaValue = max.value - min.value;
     const cursorValue =
-      min.value - deltaValue * ((min.y - coordinate.y) / deltaY);
-    const points = payload.map(p => {
-      const { color, stroke, dataKey, fill, name, payload } = p;
+      min.value - deltaValue * ((min.y - coordinate!!.y) / deltaY);
+    const points = payload!!.map(p => {
+      const { color, dataKey, fill, name, payload: vals } = p;
       return {
         color,
-        stroke,
         dataKey,
         fill,
-        name: name,
-        value: payload[dataKey],
+        name,
+        value: vals[dataKey as string],
       };
     });
     const nearestPointIndexes = points.reduce(
@@ -65,28 +72,33 @@ export const CustomTooltip = ({
     if (nearestPointIndexes.length === 0) return null;
     const nearestPoints = nearestPointIndexes.map(({ index }) => points[index]);
     return (
-      <div>
-        {nearestPoints.map((nearestPoint, index) => {
-          const metricForItem = metrics[nearestPoint.name];
-          return (
-            <>
-              <div key={`nearestPoint_${index}`}>
-                <p>{`${nearestPoint.name}: ${label}`}</p>
-              </div>
-              {Object.entries(metricForItem).map(([key, val]) => (
-                <Typography
-                  key={key}
-                  variant="caption"
-                  display="block"
-                  gutterBottom
-                >
-                  {`${key}: ${val}`}
-                </Typography>
-              ))}
-            </>
-          );
-        })}
-      </div>
+      <Box margin={3}>
+        <Paper>
+          <Box padding={2} display="flex" flexDirection="row">
+            {nearestPoints.map((nearestPoint, index) => {
+              const metricForItem = metrics[nearestPoint.name];
+              return (
+                <Box key={`nearestPoint_${index}`}>
+                  <Box>
+                    <Typography variant="h6">{nearestPoint.name}</Typography>
+                    <Typography variant="subtitle1">{label}</Typography>
+                  </Box>
+                  {Object.entries(metricForItem).map(([key, val]) => (
+                    <Typography
+                      key={key}
+                      variant="caption"
+                      display="block"
+                      gutterBottom
+                    >
+                      {`${key}: ${val}`}
+                    </Typography>
+                  ))}
+                </Box>
+              );
+            })}
+          </Box>
+        </Paper>
+      </Box>
     );
   }
   return null;

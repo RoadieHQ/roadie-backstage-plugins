@@ -18,15 +18,13 @@ import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
 import {
   backstagePluginPrometheusPlugin,
-  BackstagePluginPrometheusPage,
-} from '../src/plugin';
+  BackstagePrometheusContent,
+} from '../src';
 
 createDevApp()
   .registerPlugin(backstagePluginPrometheusPlugin)
   .addPage({
-    element: (
-      <BackstagePluginPrometheusPage step={2} query="q" range={{ hours: 1 }} />
-    ),
+    element: <BackstagePrometheusContent />,
     title: 'Root Page',
     path: '/backstage-plugin-prometheus',
   })
