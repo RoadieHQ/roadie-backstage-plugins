@@ -18,13 +18,13 @@ import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
 import {
   backstagePluginPrometheusPlugin,
-  BackstagePrometheusContent,
+  EntityPrometheusContent,
 } from '../src';
 
 createDevApp()
   .registerPlugin(backstagePluginPrometheusPlugin)
   .addPage({
-    element: <BackstagePrometheusContent />,
+    element: <EntityPrometheusContent />,
     title: 'Root Page',
     path: '/backstage-plugin-prometheus',
   })

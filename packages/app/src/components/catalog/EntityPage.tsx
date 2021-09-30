@@ -97,7 +97,11 @@ import {
   EntityArgoCDContent,
   isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
-import { BackstagePrometheusContent } from '@roadiehq/plugin-backstage-plugin-prometheus';
+import {
+  EntityPrometheusAlertCard,
+  EntityPrometheusContent,
+  EntityPrometheusGraphCard,
+} from '@roadiehq/plugin-backstage-plugin-prometheus';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -207,6 +211,12 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+    <Grid item md={6}>
+      <EntityPrometheusAlertCard />
+    </Grid>
+    <Grid item md={6}>
+      <EntityPrometheusGraphCard />
+    </Grid>
   </Grid>
 );
 
@@ -238,7 +248,7 @@ const serviceEntityPage = (
       <EntityDatadogContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/prometheus" title="Prometheus">
-      <BackstagePrometheusContent />
+      <EntityPrometheusContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/dependencies" title="Dependencies">
       <Grid container spacing={3} alignItems="stretch">

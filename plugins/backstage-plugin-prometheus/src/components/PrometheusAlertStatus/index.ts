@@ -14,3 +14,4 @@
  * limitations under the License.
  */
 export { PrometheusAlertStatus } from './PrometheusAlertStatus';
+export { PrometheusAlertEntityWrapper } from './PrometheusAlertEntityWrapper';

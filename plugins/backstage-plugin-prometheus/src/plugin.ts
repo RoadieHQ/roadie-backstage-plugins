@@ -16,6 +16,7 @@
 import {
   configApiRef,
   createApiFactory,
+  createComponentExtension,
   createPlugin,
   createRoutableExtension,
   createRouteRef,
@@ -25,15 +26,6 @@ import { PrometheusApi, prometheusApiRef } from './api';
 
 export const rootRouteRef = createRouteRef({
   title: 'backstage-plugin-prometheus',
-});
-
-export const entityContentRouteRef = createRouteRef({
-  title: 'Buildkite Entity Content',
-});
-
-export const buildViewRouteRef = createRouteRef({
-  title: 'Buildkite Build view',
-  path: ':buildNumber',
 });
 
 export const backstagePluginPrometheusPlugin = createPlugin({
@@ -51,10 +43,32 @@ export const backstagePluginPrometheusPlugin = createPlugin({
   },
 });
 
-export const BackstagePrometheusContent = backstagePluginPrometheusPlugin.provide(
+export const EntityPrometheusContent = backstagePluginPrometheusPlugin.provide(
   createRoutableExtension({
     component: () =>
       import('./components/PrometheusContentWrapper').then(m => m.default),
     mountPoint: rootRouteRef,
+  }),
+);
+
+export const EntityPrometheusAlertCard = backstagePluginPrometheusPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/PrometheusAlertStatus').then(
+          m => m.PrometheusAlertEntityWrapper,
+        ),
+    },
+  }),
+);
+
+export const EntityPrometheusGraphCard = backstagePluginPrometheusPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/PrometheusGraph').then(
+          m => m.PrometheusGraphEntityWrapper,
+        ),
+    },
   }),
 );

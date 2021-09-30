@@ -226,7 +226,7 @@ export const PrometheusGraph = ({
   graphType = 'line',
 }: {
   query: string;
-  range: {
+  range?: {
     hours?: number;
     minutes?: number;
   };

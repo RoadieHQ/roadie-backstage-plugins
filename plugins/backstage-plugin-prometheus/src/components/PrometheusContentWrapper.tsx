@@ -32,7 +32,13 @@ import {
 } from './util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
 
-const PrometheusContentWrapper = () => {
+const PrometheusContentWrapper = ({
+  step = 14,
+  range = { hours: 1 },
+}: {
+  step?: number;
+  range?: { hours?: number; minutes?: number };
+}) => {
   const { entity } = useEntity();
   const graphContent = isPrometheusGraphAvailable(entity);
   const alertContent = isPrometheusAlertAvailable(entity);
@@ -54,36 +60,34 @@ const PrometheusContentWrapper = () => {
     : [];
 
   return (
-    ruleTuples && (
-      <Content>
-        <ContentHeader title="Prometheus">
-          <SupportButton>
-            Plugin to show Prometheus graphs and alerts for the project
-          </SupportButton>
-        </ContentHeader>
-        {alertContent && (
-          <Grid container spacing={3} direction="column">
-            <Grid item>
-              <PrometheusAlertStatus alerts={alerts} />
+    <Content>
+      <ContentHeader title="Prometheus">
+        <SupportButton>
+          Plugin to show Prometheus graphs and alerts for the project
+        </SupportButton>
+      </ContentHeader>
+      {alertContent && (
+        <Grid container spacing={3} direction="column">
+          <Grid item>
+            <PrometheusAlertStatus alerts={alerts} />
+          </Grid>
+        </Grid>
+      )}
+      {graphContent && ruleTuples && (
+        <Grid container spacing={3} direction="column">
+          {ruleTuples.map(([query, dimension]) => (
+            <Grid item key={query}>
+              <PrometheusGraph
+                dimension={dimension}
+                query={query}
+                range={range}
+                step={step}
+              />
             </Grid>
-          </Grid>
-        )}{' '}
-        {graphContent && (
-          <Grid container spacing={3} direction="column">
-            {ruleTuples.map(([query, dimension]) => (
-              <Grid item key={query}>
-                <PrometheusGraph
-                  dimension={dimension}
-                  query={query}
-                  range={{ hours: 1 }}
-                  step={14}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Content>
-    )
+          ))}
+        </Grid>
+      )}
+    </Content>
   );
 };
 

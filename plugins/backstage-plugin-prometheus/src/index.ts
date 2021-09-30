@@ -15,5 +15,7 @@
  */
 export {
   backstagePluginPrometheusPlugin,
-  BackstagePrometheusContent,
+  EntityPrometheusContent,
+  EntityPrometheusGraphCard,
+  EntityPrometheusAlertCard,
 } from './plugin';
