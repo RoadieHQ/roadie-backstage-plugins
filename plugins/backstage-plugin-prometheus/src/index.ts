@@ -19,3 +19,6 @@ export {
   EntityPrometheusGraphCard,
   EntityPrometheusAlertCard,
 } from './plugin';
+
+export { PrometheusGraph } from './components/PrometheusGraph';
+export { PrometheusAlertStatus } from './components/PrometheusAlertStatus';

@@ -41,7 +41,6 @@ export class PrometheusApi {
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    console.log(options.configApi.get('prometheus'));
     this.proxyPath = options.configApi.getOptionalString(
       'prometheus.proxyPath',
     );

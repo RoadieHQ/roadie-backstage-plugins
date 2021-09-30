@@ -44,7 +44,11 @@ function resultToGraphData(
   if (result.length === 0) {
     return { keys, metrics, data: [] };
   }
-  const grouper = dimension || Object.keys(result[0].metric)[0];
+
+  const grouper =
+    dimension && result.every(it => Object.keys(it.metric).includes(dimension))
+      ? dimension
+      : Object.keys(result[0].metric)[0];
 
   const data = _(result)
     .flatMap(it => {
@@ -73,19 +77,19 @@ export function useMetrics({
   dimension,
 }: {
   query: string;
-  range: {
+  range?: {
     hours?: number;
     minutes?: number;
   };
   step?: number;
   dimension?: string;
 }) {
-  const PrometheusApi = useApi(prometheusApiRef);
+  const prometheusApi = useApi(prometheusApiRef);
 
   const { value, loading, error } = useAsync(async (): Promise<
     PrometheusResponse
   > => {
-    return await PrometheusApi.query({ query, range, step });
+    return await prometheusApi.query({ query, range, step });
   }, [query, range, step]);
   if (value) {
     if (isMetricResult(value.data.resultType, value.data.result)) {
@@ -101,11 +105,11 @@ export function useMetrics({
 }
 
 export function useAlerts(alerts: string[]) {
-  const PrometheusApi = useApi(prometheusApiRef);
+  const prometheusApi = useApi(prometheusApiRef);
   const { value, loading, error } = useAsync(async (): Promise<
     PrometheusRuleResponse
   > => {
-    return await PrometheusApi.getAlerts();
+    return await prometheusApi.getAlerts();
   }, []);
   if (value && value.status !== 'error') {
     const rules = value.data.groups.flatMap(it => it.rules);
