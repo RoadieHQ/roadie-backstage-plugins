@@ -47,7 +47,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
     let builds = [];
     try {
       builds = await api.getBuilds(owner, repo, page + 1, pageSize);
-    } catch (e) {
+    } catch (e:any) {
       errorApi.post(e);
     }
     if (page === 0) setTotal(builds?.[0].number);
@@ -61,7 +61,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
       await api.restartBuild(requestUrl);
       retry();
       return;
-    } catch (e) {
+    } catch (e:any) {
       errorApi.post(e);
       throw e;
     }

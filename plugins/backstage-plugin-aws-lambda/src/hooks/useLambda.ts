@@ -49,7 +49,7 @@ export function useLambda({
     try {
       const lambdaFunction = await getFunctionByName();
       return lambdaFunction;
-    } catch (err) {
+    } catch (err:any) {
       if (err?.message === 'MissingBackendAwsAuthException') {
         errorApi.post(new Error('Please add aws auth backend plugin'));
         return null;

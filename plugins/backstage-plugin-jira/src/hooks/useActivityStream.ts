@@ -82,7 +82,7 @@ export const useActivityStream = (size: number, projectKey: string) => {
         },
       );
       return mappedData as Array<ActivityStreamElement>;
-    } catch (err) {
+    } catch (err:any) {
       return handleError(err);
     }
   }, [api, size, projectKey]);
