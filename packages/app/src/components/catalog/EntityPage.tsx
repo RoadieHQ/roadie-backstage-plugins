@@ -85,6 +85,9 @@ import {
   isBuildkiteAvailable,
 } from '@roadiehq/backstage-plugin-buildkite';
 import {
+  EntityBugsnagErrorsOverviewTable
+} from "@roadiehq/backstage-plugin-bugsnag";
+import {
   EntitySecurityInsightsContent,
   EntityGithubDependabotContent,
   SecurityInsightsWidget,
@@ -243,6 +246,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/bugsnag" title="Bugsnag">
+      <EntityBugsnagErrorsOverviewTable />
     </EntityLayout.Route>
     <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />

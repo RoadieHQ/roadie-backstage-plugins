@@ -6,6 +6,7 @@
  * Happy hacking!
  */
 
+// eslint-disable-next-line notice/notice
 import Router from 'express-promise-router';
 import {
   createServiceBuilder,

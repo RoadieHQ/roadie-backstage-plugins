@@ -28,13 +28,9 @@ export {
   EntityGithubInsightsReleasesCard,
 } from './plugin';
 export {
-  Router,
-  /**
-   * @deprecated since v0.3.0 you should use new name isGithubInsightsAvailable
-   */
-  isGithubInsightsAvailable as isPluginApplicableToEntity,
-  isGithubInsightsAvailable,
-} from './components/Router';
+  InsightsPage,
+  isGithubInsightsAvailable
+} from './components/InsightsPage/InsightsPage';
 /**
  * @deprecated since v0.3.0 you should use new composability API
  */
