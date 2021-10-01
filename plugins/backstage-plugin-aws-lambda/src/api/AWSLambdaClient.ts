@@ -35,7 +35,7 @@ async function generateCredentials(backendUrl: string, options: {
       secretAccessKey: resp.SecretAccessKey,
       sessionToken: resp.SessionToken,
     });
-  } catch (e) {
+  } catch (e:any) {
     throw new Error('MissingBackendAwsAuthException');
   }
 }

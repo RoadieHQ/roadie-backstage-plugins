@@ -40,12 +40,11 @@ export const useAppDetails = ({
         return await api.listApps({ url, appSelector, projectName });
       }
       return Promise.reject('Neither appName nor appSelector provided');
-    } catch (e) {
-      errorApi.post(e);
+    } catch (e:any) {
+      errorApi.post(new Error('Something went wrong'));
       return Promise.reject(e);
     }
   });
-
   return {
     loading,
     value,

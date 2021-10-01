@@ -52,7 +52,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const json = await response.json();
     try {
       return await tsDecode(typeCodec, json);
-    } catch (e) {
+    } catch (e:any) {
       if (tsIsDecodeError(e)) {
         throw new Error(
           `remote data validation failed: ${reporter

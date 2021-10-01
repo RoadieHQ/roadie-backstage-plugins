@@ -76,7 +76,7 @@ export function useBuilds() {
   let baseUrl: string;
   try {
     baseUrl = configApi.getString('travisci.baseUrl');
-  } catch (e) {
+  } catch (e:any) {
     baseUrl = 'https://travis-ci.com/';
   }
 
@@ -92,7 +92,7 @@ export function useBuilds() {
           offset,
           repoSlug,
         });
-      } catch (e) {
+      } catch (e:any) {
         errorApi.post(e);
         return Promise.reject(e);
       }
@@ -103,7 +103,7 @@ export function useBuilds() {
   const restartBuild = async (buildId: number) => {
     try {
       await api.retry(buildId);
-    } catch (e) {
+    } catch (e:any) {
       errorApi.post(e);
     }
   };

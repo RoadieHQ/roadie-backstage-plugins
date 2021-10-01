@@ -39,7 +39,7 @@ export function useSettings(repoName: string) {
             type: 'setCredentials',
             payload: stateFromStorage,
           });
-      } catch (error) {
+      } catch (error:any) {
         errorApi.post(error);
       }
     };
