@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/backstage/backstage",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
     "directory": "plugins/backstage-plugin-bugsnag"
   },
   "publishConfig": {
