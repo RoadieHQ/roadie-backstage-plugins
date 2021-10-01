@@ -39,38 +39,46 @@ export class BugsnagClient implements BugsnagApi {
   }
 
   async fetchOrganisations(): Promise<Organisation[]> {
-    const response = await fetch(`${await this.getApiUrl()}/user/organizations`);
+    const response = await fetch(
+      `${await this.getApiUrl()}/user/organizations`,
+    );
+    const payload = await response.json();
     if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload);
+      throw new Error(payload.errors[0]);
     }
-    return await response.json();
+    return payload;
   }
 
-  async fetchTrends(projectId:string, errorId: string): Promise<TrendData[]> {
-    const response = await fetch(`${await this.getApiUrl()}/projects/${projectId}/errors/${errorId}/trend?&buckets_count=10`);
+  async fetchTrends(projectId: string, errorId: string): Promise<TrendData[]> {
+    const response = await fetch(
+      `${await this.getApiUrl()}/projects/${projectId}/errors/${errorId}/trend?&buckets_count=10`,
+    );
+    const payload = await response.json();
     if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload);
+      throw new Error(payload.errors[0]);
     }
-    return await response.json();
+    return await payload;
   }
 
   async fetchProjects(organisationId: string): Promise<Project[]> {
-    const response = await fetch(`${await this.getApiUrl()}/organizations/${organisationId}/projects`);
+    const response = await fetch(
+      `${await this.getApiUrl()}/organizations/${organisationId}/projects`,
+    );
+    const payload = await response.json();
     if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload);
+      throw new Error(payload.errors[0]);
     }
-    return await response.json();
+    return await payload;
   }
 
   async fetchErrors(projectId: string): Promise<BugsnagError[]> {
-    const response = await fetch(`${await this.getApiUrl()}/projects/${projectId}/errors`);
+    const response = await fetch(
+      `${await this.getApiUrl()}/projects/${projectId}/errors`,
+    );
+    const payload = await response.json();
     if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload);
+      throw new Error(payload.errors[0]);
     }
-    return await response.json();
+    return await payload;
   }
 }
