@@ -1193,8 +1193,8 @@
 
 "@backstage/backend-common@^0.7.0":
   version "0.7.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/backend-common/-/backend-common-0.7.0.tgz#3121293d404765f11a4488c165e634acab7ad1a1"
-  integrity sha1-MSEpPUBHZfEaRIjBZeY0rKt60aE=
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.7.0.tgz#3121293d404765f11a4488c165e634acab7ad1a1"
+  integrity sha512-4IAJjzLVna81cjkedm1GuhNzik5TPKptGWJfqwKAJ1pkVfoviMvB6nfvDYfXIWynd7GZmiRR+C9eR3M+dxx8PQ==
   dependencies:
     "@backstage/cli-common" "^0.1.1"
     "@backstage/config" "^0.1.5"
@@ -1233,8 +1233,8 @@
 
 "@backstage/backend-common@^0.9.0", "@backstage/backend-common@^0.9.4", "@backstage/backend-common@^0.9.5":
   version "0.9.5"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/backend-common/-/backend-common-0.9.5.tgz#ae336f40463ee41e1da85f37e86aaa4c7b159e8a"
-  integrity sha1-rjNvQEY+5B4dqF836GqqTHsVnoo=
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.9.5.tgz#ae336f40463ee41e1da85f37e86aaa4c7b159e8a"
+  integrity sha512-kRbbQoQEHXuCO/P/G7qe9Fd2UwA4ZFM5gtCFCvjDfmVL3hYKbwmV1KVUJ3WBnAFMVh7oxZmTLOSUf8561ab0qA==
   dependencies:
     "@backstage/cli-common" "^0.1.3"
     "@backstage/config" "^0.1.10"
@@ -1277,8 +1277,8 @@
 
 "@backstage/catalog-client@^0.3.18":
   version "0.3.19"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/catalog-client/-/catalog-client-0.3.19.tgz#109b0fde1cc2d9a306635f3775fc8f6174172b14"
-  integrity sha1-EJsP3hzC2aMGY183dfyPYXQXKxQ=
+  resolved "https://registry.yarnpkg.com/@backstage/catalog-client/-/catalog-client-0.3.19.tgz#109b0fde1cc2d9a306635f3775fc8f6174172b14"
+  integrity sha512-0ydcC/1ISNgR8SggOUnMNNHtsRwrKN5GX+AXgTVdZk4qpz1MqG1+fzrNld9V7KVvXdsbGDZAl/b5a7/FJEpCqg==
   dependencies:
     "@backstage/catalog-model" "^0.9.2"
     "@backstage/config" "^0.1.9"
@@ -1287,8 +1287,8 @@
 
 "@backstage/catalog-client@^0.4.0":
   version "0.4.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/catalog-client/-/catalog-client-0.4.0.tgz#eb0aff31bdce8f2c12de8fbce558557b18452a00"
-  integrity sha1-6wr/Mb3OjywS3o+85VhVexhFKgA=
+  resolved "https://registry.yarnpkg.com/@backstage/catalog-client/-/catalog-client-0.4.0.tgz#eb0aff31bdce8f2c12de8fbce558557b18452a00"
+  integrity sha512-Y2lBhsZTSKU2gbMAB0/RZ/jmFGUPdhScsDINsRIVwfLKjtTJjSgJ8iaLdsYxQS4oZq2HAT5l7fsflnVEDS6IRQ==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/config" "^0.1.10"
@@ -1297,8 +1297,8 @@
 
 "@backstage/catalog-model@^0.9.0", "@backstage/catalog-model@^0.9.1", "@backstage/catalog-model@^0.9.2", "@backstage/catalog-model@^0.9.3":
   version "0.9.3"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/catalog-model/-/catalog-model-0.9.3.tgz#8e9c5407de84ec5869a65793c5e32a8d4bd2bd7c"
-  integrity sha1-jpxUB96E7FhppleTxeMqjUvSvXw=
+  resolved "https://registry.yarnpkg.com/@backstage/catalog-model/-/catalog-model-0.9.3.tgz#8e9c5407de84ec5869a65793c5e32a8d4bd2bd7c"
+  integrity sha512-iE3FS1kTsmIhdrB+fL2liplXwEL5iAeYwsFlEOAt5JGZk43EBDWwKTifxBB+pylmO2pzwD3HssJhojO5OPWxEQ==
   dependencies:
     "@backstage/config" "^0.1.10"
     "@backstage/errors" "^0.1.2"
@@ -1312,13 +1312,13 @@
 
 "@backstage/cli-common@^0.1.1", "@backstage/cli-common@^0.1.3":
   version "0.1.3"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/cli-common/-/cli-common-0.1.3.tgz#6fc6f42548fd36a20d5d1809653d6c890591c48f"
-  integrity sha1-b8b0JUj9NqINXRgJZT1siQWRxI8=
+  resolved "https://registry.yarnpkg.com/@backstage/cli-common/-/cli-common-0.1.3.tgz#6fc6f42548fd36a20d5d1809653d6c890591c48f"
+  integrity sha512-PY4L2KwoYvwZEXZ2F6BGESfzEGsHaNEqOm2+WuWL3iLACmpR2UlhqkqPxwXxWnVhudOn13O3aeiIn/6HocPU2w==
 
 "@backstage/cli@^0.7.13", "@backstage/cli@^0.7.4":
   version "0.7.14"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/cli/-/cli-0.7.14.tgz#5de0cf2243e9e48384cc47bf43625edd8f90f5c9"
-  integrity sha1-XeDPIkPp5IOEzEe/Q2Je3Y+Q9ck=
+  resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.7.14.tgz#5de0cf2243e9e48384cc47bf43625edd8f90f5c9"
+  integrity sha512-VZWD5IYnIzjJ9gcF/9COiwfvyn02XZJ6K4ypuC1/CVrWhM6ufgPastiu9At8fom2wnyYdLZFlsvML8r4dzT3mQ==
   dependencies:
     "@babel/core" "^7.4.4"
     "@babel/plugin-transform-modules-commonjs" "^7.4.4"
@@ -1410,8 +1410,8 @@
 
 "@backstage/config-loader@^0.6.1", "@backstage/config-loader@^0.6.5", "@backstage/config-loader@^0.6.9":
   version "0.6.9"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/config-loader/-/config-loader-0.6.9.tgz#c5221c5aae0c1d8ca00fdb00dabfd31ab6fc28dc"
-  integrity sha1-xSIcWq4MHYygD9sA2r/TGrb8KNw=
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.6.9.tgz#c5221c5aae0c1d8ca00fdb00dabfd31ab6fc28dc"
+  integrity sha512-JJ6hzcgTqoe1crN4SeHTLCythTKVRi3W/NLnRyVHBaRXsipTRA+o+pwCuyaAxY9h/wvyAlzZbe6XBLqaMf2/Pg==
   dependencies:
     "@backstage/cli-common" "^0.1.3"
     "@backstage/config" "^0.1.9"
@@ -1427,15 +1427,15 @@
 
 "@backstage/config@^0.1.10", "@backstage/config@^0.1.5", "@backstage/config@^0.1.6", "@backstage/config@^0.1.8", "@backstage/config@^0.1.9":
   version "0.1.10"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/config/-/config-0.1.10.tgz#09d1f0f61f87f8f3bb6f2035ef2a91bc676d0f57"
-  integrity sha1-CdHw9h+H+PO7byA17yqRvGdtD1c=
+  resolved "https://registry.yarnpkg.com/@backstage/config/-/config-0.1.10.tgz#09d1f0f61f87f8f3bb6f2035ef2a91bc676d0f57"
+  integrity sha512-1kpfnnTJU5+2leoSBUQVvBKjwbHUVDIGsjkItElhUKGBNkguKwq6qcDZpZFvXM8/vcr1W2KhuZ/PF/L9mhGGow==
   dependencies:
     lodash "^4.17.21"
 
 "@backstage/core-app-api@^0.1.12", "@backstage/core-app-api@^0.1.13", "@backstage/core-app-api@^0.1.14", "@backstage/core-app-api@^0.1.15", "@backstage/core-app-api@^0.1.3", "@backstage/core-app-api@^0.1.4", "@backstage/core-app-api@^0.1.6", "@backstage/core-app-api@^0.1.8":
   version "0.1.15"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/core-app-api/-/core-app-api-0.1.15.tgz#981bdf9473cd23ce7b91177e26c5ffc84f8f773d"
-  integrity sha1-mBvflHPNI857kRd+JsX/yE+Pdz0=
+  resolved "https://registry.yarnpkg.com/@backstage/core-app-api/-/core-app-api-0.1.15.tgz#981bdf9473cd23ce7b91177e26c5ffc84f8f773d"
+  integrity sha512-EaUIDGR7EmajYUeoGXixPaCxcLDIl5UhZPQFthYpurVBuwBKZWLnfCSU4qBxYvXzm3DQdRZtI9HO0H17w4zw7g==
   dependencies:
     "@backstage/config" "^0.1.10"
     "@backstage/core-components" "^0.6.0"
@@ -1454,8 +1454,8 @@
 
 "@backstage/core-components@^0.4.0", "@backstage/core-components@^0.4.2":
   version "0.4.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/core-components/-/core-components-0.4.2.tgz#a80dceabdfb43b794b43d6436919688ff4da15ca"
-  integrity sha1-qA3Oq9+0O3lLQ9ZDaRloj/TaFco=
+  resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.4.2.tgz#a80dceabdfb43b794b43d6436919688ff4da15ca"
+  integrity sha512-WACyEaD+k2v2MEeJ52Kyj/Rw3a2agIqW9FXnYP+xCAWia8kw1cBX8eMXRblsEV8xwheTQzyd1lzeIpdkyGhhQg==
   dependencies:
     "@backstage/config" "^0.1.9"
     "@backstage/core-plugin-api" "^0.1.8"
@@ -1499,8 +1499,8 @@
 
 "@backstage/core-components@^0.6.0":
   version "0.6.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/core-components/-/core-components-0.6.0.tgz#714eca24d001432c458ee2160ca2122e87e2f5c2"
-  integrity sha1-cU7KJNABQyxFjuIWDKISLofi9cI=
+  resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.6.0.tgz#714eca24d001432c458ee2160ca2122e87e2f5c2"
+  integrity sha512-RBaX1U55HWNR3qHIZkuZ3f2+29temjGmoQI8HcLXjSz1b0i4y2/FavW0ow6X4xWXXLSMHkoZszwyYTHHdw/uPQ==
   dependencies:
     "@backstage/config" "^0.1.10"
     "@backstage/core-plugin-api" "^0.1.9"
@@ -1542,8 +1542,8 @@
 
 "@backstage/core-plugin-api@^0.1.3", "@backstage/core-plugin-api@^0.1.4", "@backstage/core-plugin-api@^0.1.6", "@backstage/core-plugin-api@^0.1.8", "@backstage/core-plugin-api@^0.1.9":
   version "0.1.9"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/core-plugin-api/-/core-plugin-api-0.1.9.tgz#c5e69f4aea1a08eaa58236466de1aa6693284413"
-  integrity sha1-xeafSuoaCOqlgjZGbeGqZpMoRBM=
+  resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-0.1.9.tgz#c5e69f4aea1a08eaa58236466de1aa6693284413"
+  integrity sha512-mE727Jw3+h4FeLBiqAws39nhSNPaME6rGNMhg+Ee6NaMAF1Jj9MxajaVXFbQQmAfUzz2tbDzaLeR0bcaVV7LiA==
   dependencies:
     "@backstage/config" "^0.1.9"
     "@backstage/theme" "^0.2.9"
@@ -1559,8 +1559,8 @@
 
 "@backstage/dev-utils@^0.2.0", "@backstage/dev-utils@^0.2.2", "@backstage/dev-utils@^0.2.4", "@backstage/dev-utils@^0.2.9":
   version "0.2.11"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/dev-utils/-/dev-utils-0.2.11.tgz#2df12fe7d214f402e5052f7888a8b29372cbcd6b"
-  integrity sha1-LfEv59IU9ALlBS94iKiyk3LLzWs=
+  resolved "https://registry.yarnpkg.com/@backstage/dev-utils/-/dev-utils-0.2.11.tgz#2df12fe7d214f402e5052f7888a8b29372cbcd6b"
+  integrity sha512-q12daeRImQxupuuaYh2QlFWa/X0ofyCja7I7DvK/sNNmRKKO4eZLOJi7Y21S/AmzEQd0FSn7V0ZUKEk2yRsHXw==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/core-app-api" "^0.1.15"
@@ -1584,8 +1584,8 @@
 
 "@backstage/errors@^0.1.1", "@backstage/errors@^0.1.2":
   version "0.1.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/errors/-/errors-0.1.2.tgz#3af40670c8f13c6382fa3e87d1e5ee53489d7bce"
-  integrity sha1-OvQGcMjxPGOC+j6H0eXuU0ide84=
+  resolved "https://registry.yarnpkg.com/@backstage/errors/-/errors-0.1.2.tgz#3af40670c8f13c6382fa3e87d1e5ee53489d7bce"
+  integrity sha512-AfLcuxqOtjJvqv2DYd6NcZp+s/hYHQ7esiZvx+t5VgFfKoKm2uyPOL5gUsGRYq7jDEDchcqN+oYrwaZ7YIo2Cg==
   dependencies:
     "@backstage/config" "^0.1.9"
     cross-fetch "^3.0.6"
@@ -1593,8 +1593,8 @@
 
 "@backstage/integration-react@^0.1.10", "@backstage/integration-react@^0.1.11":
   version "0.1.11"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/integration-react/-/integration-react-0.1.11.tgz#f44cb133aaba2c26427e528c0f3d8ec58f08f09b"
-  integrity sha1-9EyxM6q6LCZCflKMDz2OxY8I8Js=
+  resolved "https://registry.yarnpkg.com/@backstage/integration-react/-/integration-react-0.1.11.tgz#f44cb133aaba2c26427e528c0f3d8ec58f08f09b"
+  integrity sha512-/sgCrwQH21Ae5UCo7eLTsU4xy5fQlcDDcs7zLpRlA+o4ivkOw4zrBYUFRWyOEQ8BDgwfhiM59TlWbPr/0M8I7w==
   dependencies:
     "@backstage/config" "^0.1.10"
     "@backstage/core-components" "^0.6.0"
@@ -1610,8 +1610,8 @@
 
 "@backstage/integration@^0.5.2":
   version "0.5.9"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/integration/-/integration-0.5.9.tgz#9eeb2f570794b196a8e769d8628b68937863a0fc"
-  integrity sha1-nusvVweUsZao52nYYotok3hjoPw=
+  resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-0.5.9.tgz#9eeb2f570794b196a8e769d8628b68937863a0fc"
+  integrity sha512-SfYcIHMurasJ5AlNzvq/4+8VLx5ONZ1vZqSG9zX/jvASCyrQY+Ifumaj13XBBuykTv61eHaqsLcEFtd0zgBtpQ==
   dependencies:
     "@backstage/config" "^0.1.6"
     "@octokit/auth-app" "^3.4.0"
@@ -1622,8 +1622,8 @@
 
 "@backstage/integration@^0.6.2", "@backstage/integration@^0.6.4", "@backstage/integration@^0.6.5", "@backstage/integration@^0.6.6":
   version "0.6.6"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/integration/-/integration-0.6.6.tgz#827057d6068b644e8a9d6d4fe3a62e4152fbf671"
-  integrity sha1-gnBX1gaLZE6KnW1P46YuQVL79nE=
+  resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-0.6.6.tgz#827057d6068b644e8a9d6d4fe3a62e4152fbf671"
+  integrity sha512-89a1UyTRYKMc+LyKSk32R7lK3zFzSnu6LFQQi2N5yKLUF4TpmYb4zv80tcDAvV46c/ZrnKJFNQPxmVviUNzOwg==
   dependencies:
     "@backstage/config" "^0.1.10"
     "@octokit/auth-app" "^3.4.0"
@@ -1634,8 +1634,8 @@
 
 "@backstage/plugin-api-docs@^0.6.9":
   version "0.6.10"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-api-docs/-/plugin-api-docs-0.6.10.tgz#848c98365b9f8f7447a97155ab81fd65fb8c5867"
-  integrity sha1-hIyYNlufj3RHqXFVq4H9ZfuMWGc=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-api-docs/-/plugin-api-docs-0.6.10.tgz#848c98365b9f8f7447a97155ab81fd65fb8c5867"
+  integrity sha512-oZy68AADwyPilKf5bIZPvf17WE0OTD+SRUpsS4P22RKgm1bdjrYtDN3OfSAY8ARKcTsZvAcylw1aajwtxuDYQQ==
   dependencies:
     "@asyncapi/react-component" "^0.23.0"
     "@backstage/catalog-model" "^0.9.3"
@@ -1661,8 +1661,8 @@
 
 "@backstage/plugin-app-backend@^0.3.13":
   version "0.3.16"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-app-backend/-/plugin-app-backend-0.3.16.tgz#7960f4993768584b7cda7213bad31c685db90f05"
-  integrity sha1-eWD0mTdoWEt82nITutMcaF25DwU=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-app-backend/-/plugin-app-backend-0.3.16.tgz#7960f4993768584b7cda7213bad31c685db90f05"
+  integrity sha512-5qjlp8n1DPDjnkglMaPErDo7+yg3PV4jkndAAcXW+uvqH6+7hzMV82D500NLX3OmwgdcwSCHhRzr0vcRlgTCww==
   dependencies:
     "@backstage/backend-common" "^0.9.0"
     "@backstage/config" "^0.1.8"
@@ -1676,8 +1676,8 @@
 
 "@backstage/plugin-auth-backend@^0.4.0":
   version "0.4.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.4.2.tgz#ab5d28401e4474ae1f0af34b78442108fc5fdecc"
-  integrity sha1-q10oQB5EdK4fCvNLeEQhCPxf3sw=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.4.2.tgz#ab5d28401e4474ae1f0af34b78442108fc5fdecc"
+  integrity sha512-fLFoZKvuHAxRLwLr7Nv6aFKcH9XwrYqEmBCUlBf8/g19zloqFe8cyBx7r499yzse6fQvWq66hmZjT9Zn7LYMwg==
   dependencies:
     "@backstage/backend-common" "^0.9.5"
     "@backstage/catalog-client" "^0.4.0"
@@ -1721,8 +1721,8 @@
 
 "@backstage/plugin-catalog-backend@^0.15.0":
   version "0.15.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.15.0.tgz#2fe854c7f54d21d36ac010c05565eb68ce0bbfbb"
-  integrity sha1-L+hUx/VNIdNqwBDAVWXraM4Lv7s=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.15.0.tgz#2fe854c7f54d21d36ac010c05565eb68ce0bbfbb"
+  integrity sha512-kVFDiqVx5TuuOccgXdAocQPex4ZBjUeX9o2OKjCKrxGkVQQARapCye4NkdfFZymnOE3B39itamfQEg9ShpRLDA==
   dependencies:
     "@backstage/backend-common" "^0.9.5"
     "@backstage/catalog-client" "^0.4.0"
@@ -1756,8 +1756,8 @@
 
 "@backstage/plugin-catalog-import@^0.7.0":
   version "0.7.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-catalog-import/-/plugin-catalog-import-0.7.0.tgz#7acba29f9bd47e1df73dd3851347ce43972db4f7"
-  integrity sha1-esuin5vUfh33PdOFE0fOQ5cttPc=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-import/-/plugin-catalog-import-0.7.0.tgz#7acba29f9bd47e1df73dd3851347ce43972db4f7"
+  integrity sha512-XDuSUAr65FBR5BAaXGmQ/bx3Vim3jjGiTZ/JiUMs3+qSEHxYWIEaCq7/SGiqRWHI2ThoMMQANS4t5nDxGMM8xA==
   dependencies:
     "@backstage/catalog-client" "^0.4.0"
     "@backstage/catalog-model" "^0.9.3"
@@ -1783,8 +1783,8 @@
 
 "@backstage/plugin-catalog-react@^0.4.0":
   version "0.4.6"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-catalog-react/-/plugin-catalog-react-0.4.6.tgz#f33f3cd734f110d3c547f7eae4e25d14806ec796"
-  integrity sha1-8z881zTxENPFR/fq5OJdFIBux5Y=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-react/-/plugin-catalog-react-0.4.6.tgz#f33f3cd734f110d3c547f7eae4e25d14806ec796"
+  integrity sha512-DQO9/oE4mWty6cyUCHiDbf9jFOEPtS0HB+DHiXHHzI7nCC/89p05RiKZpo3ctd5p5oENAYmWO4G7eVJkf5NjiA==
   dependencies:
     "@backstage/catalog-client" "^0.3.18"
     "@backstage/catalog-model" "^0.9.1"
@@ -1807,8 +1807,8 @@
 
 "@backstage/plugin-catalog-react@^0.5.0", "@backstage/plugin-catalog-react@^0.5.1":
   version "0.5.1"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-catalog-react/-/plugin-catalog-react-0.5.1.tgz#96909524a5734b4124ce782bbcb25ebf8859912b"
-  integrity sha1-lpCVJKVzS0EkzngrvLJev4hZkSs=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-react/-/plugin-catalog-react-0.5.1.tgz#96909524a5734b4124ce782bbcb25ebf8859912b"
+  integrity sha512-jSySPzj23Ys5guzWSHby5mAdk6+TpFPgNNHKuGm99ulNYSfNPKmSW4/JbD0Ub5T7joku1LtKrN8dUDvdgkhovg==
   dependencies:
     "@backstage/catalog-client" "^0.4.0"
     "@backstage/catalog-model" "^0.9.3"
@@ -1830,8 +1830,8 @@
 
 "@backstage/plugin-catalog@^0.6.16", "@backstage/plugin-catalog@^0.6.17":
   version "0.6.17"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-catalog/-/plugin-catalog-0.6.17.tgz#4a5b434b52cdd5170d459f40ec69ba5dd68de987"
-  integrity sha1-SltDS1LN1RcNRZ9A7Gm6XdaN6Yc=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog/-/plugin-catalog-0.6.17.tgz#4a5b434b52cdd5170d459f40ec69ba5dd68de987"
+  integrity sha512-Ec1Nn7IdISrTjeG2sgZzBUc2G9iyUzF4NOBzQwsObIDukDv+pSYgiVDmH+2wV8Jv4Sl6sC8R9a3qfc9OkPPT7w==
   dependencies:
     "@backstage/catalog-client" "^0.4.0"
     "@backstage/catalog-model" "^0.9.3"
@@ -1853,8 +1853,8 @@
 
 "@backstage/plugin-github-actions@^0.4.19":
   version "0.4.20"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-github-actions/-/plugin-github-actions-0.4.20.tgz#ad92dff05aad0a9b8a0b476033f96f120a80f0af"
-  integrity sha1-rZLf8FqtCpuKC0dgM/lvEgqA8K8=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-github-actions/-/plugin-github-actions-0.4.20.tgz#ad92dff05aad0a9b8a0b476033f96f120a80f0af"
+  integrity sha512-5T4m5jetL0xfVZSyeP6KAS8E2vxY0UBlftb7I4DriBRB2G5W+hbUjcsBBC9I570ixYxV0ccVY7+KJVYIo6G2xg==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/core-components" "^0.6.0"
@@ -1876,8 +1876,8 @@
 
 "@backstage/plugin-org@^0.3.24":
   version "0.3.25"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-org/-/plugin-org-0.3.25.tgz#8afa5049f82f44286620e6abcae1d341fc256b8e"
-  integrity sha1-ivpQSfgvRChmIOaryuHTQfwla44=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-org/-/plugin-org-0.3.25.tgz#8afa5049f82f44286620e6abcae1d341fc256b8e"
+  integrity sha512-3P6mdoKRUlvyhZZG5V9fVQv4Y+B0eRj3EArGV5go7xma2+IY8y2fBeIBUSjwbeuMjHwGpKeAyWPRdAItJfbdfg==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/core-components" "^0.6.0"
@@ -1896,8 +1896,8 @@
 
 "@backstage/plugin-proxy-backend@^0.2.8":
   version "0.2.12"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-proxy-backend/-/plugin-proxy-backend-0.2.12.tgz#0356efa1d509d0006587f68837a162e29f9912b4"
-  integrity sha1-A1bvodUJ0ABlh/aIN6Fi4p+ZErQ=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-proxy-backend/-/plugin-proxy-backend-0.2.12.tgz#0356efa1d509d0006587f68837a162e29f9912b4"
+  integrity sha512-CHxZKMuqFJxKVPACAcxLqdKfQRBzbHhk4I3aoX8NxGYAXaYiGa1XmDx6aKwMcT1SvshujjzZtAzD31/QmPuErQ==
   dependencies:
     "@backstage/backend-common" "^0.9.0"
     "@backstage/config" "^0.1.8"
@@ -1914,8 +1914,8 @@
 
 "@backstage/plugin-scaffolder-backend-module-cookiecutter@^0.1.2":
   version "0.1.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-scaffolder-backend-module-cookiecutter/-/plugin-scaffolder-backend-module-cookiecutter-0.1.2.tgz#b461b4e50e8a28131a19cd374c0049451c11ab71"
-  integrity sha1-tGG05Q6KKBMaGc03TABJRRwRq3E=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend-module-cookiecutter/-/plugin-scaffolder-backend-module-cookiecutter-0.1.2.tgz#b461b4e50e8a28131a19cd374c0049451c11ab71"
+  integrity sha512-44Gwx071wV9vOU34hee8FY44jHfUEmoYFw/xHGimInYZiE3RCvAaqhZeUzmf7d0h7XKMMqce7KxIem6jxZOFDg==
   dependencies:
     "@backstage/backend-common" "^0.9.0"
     "@backstage/config" "^0.1.8"
@@ -1930,8 +1930,8 @@
 
 "@backstage/plugin-scaffolder-backend@^0.15.1", "@backstage/plugin-scaffolder-backend@^0.15.2":
   version "0.15.6"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.6.tgz#b412feae7f404293b4024a3f2d877c29fe6ace45"
-  integrity sha1-tBL+rn9AQpO0Ako/LYd8Kf5qzkU=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.6.tgz#b412feae7f404293b4024a3f2d877c29fe6ace45"
+  integrity sha512-sFHXeDqUkQdG91jBweMjZa3UzUVUl+YOrgjF83rTK1O3EAX1hfkk5KRxsodn9rvoFd3D5kT7XC31oPpqrmvA+A==
   dependencies:
     "@backstage/backend-common" "^0.9.4"
     "@backstage/catalog-client" "^0.4.0"
@@ -1972,8 +1972,8 @@
 
 "@backstage/plugin-scaffolder@^0.11.5":
   version "0.11.6"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-scaffolder/-/plugin-scaffolder-0.11.6.tgz#db8c5ec5503ef5865f07d72441676647f6baca18"
-  integrity sha1-24xexVA+9YZfB9ckQWdmR/a6yhg=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder/-/plugin-scaffolder-0.11.6.tgz#db8c5ec5503ef5865f07d72441676647f6baca18"
+  integrity sha512-LHkGqFmjbIMXWWO4vIqjhaeRck2VZbl6fVHpzALrr0o4IZZ7hET3nCr0zZtyul/aEr9xeHIyXcMVJI/w6YwbjQ==
   dependencies:
     "@backstage/catalog-client" "^0.4.0"
     "@backstage/catalog-model" "^0.9.3"
@@ -2009,8 +2009,8 @@
 
 "@backstage/plugin-search@^0.4.12", "@backstage/plugin-search@^0.4.13":
   version "0.4.13"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-search/-/plugin-search-0.4.13.tgz#565dfc7805136b1b2adefc92ba62fb9d84d96e2c"
-  integrity sha1-Vl38eAUTaxsq3vySumL7nYTZbiw=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-search/-/plugin-search-0.4.13.tgz#565dfc7805136b1b2adefc92ba62fb9d84d96e2c"
+  integrity sha512-Nsj3WZuLdl4ZxI12nLrOknhI5Pwd6mk2didWu+KigEsk8mW9vgfAjxHbRsXLm2SOSLx123MBTUfoEuo+W/+05A==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/config" "^0.1.10"
@@ -2033,8 +2033,8 @@
 
 "@backstage/plugin-tech-radar@^0.4.8":
   version "0.4.9"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-tech-radar/-/plugin-tech-radar-0.4.9.tgz#b6a85fb472b3e930e34f9c77a089abd1f9403b93"
-  integrity sha1-tqhftHKz6TDjT5x3oImr0flAO5M=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-tech-radar/-/plugin-tech-radar-0.4.9.tgz#b6a85fb472b3e930e34f9c77a089abd1f9403b93"
+  integrity sha512-gxwSPsSp3hNA01P6N+98LrYwfydQ/Ppezv0eoRrasb/RH8/3wa2pGN6/aEF7uebJjz3KE1Do/LPYWPyHiYhGsw==
   dependencies:
     "@backstage/core-components" "^0.6.0"
     "@backstage/core-plugin-api" "^0.1.9"
@@ -2051,8 +2051,8 @@
 
 "@backstage/plugin-techdocs-backend@^0.10.0":
   version "0.10.3"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-techdocs-backend/-/plugin-techdocs-backend-0.10.3.tgz#27a5356f81c5aedc2a3703896762ce6979c595fb"
-  integrity sha1-J6U1b4HFrtwqNwOJZ2LOaXnFlfs=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs-backend/-/plugin-techdocs-backend-0.10.3.tgz#27a5356f81c5aedc2a3703896762ce6979c595fb"
+  integrity sha512-aeazchGYKT9VrSUg8NaBlvkuFq0ZFd88PUg8fIy1iHktBt1H2r/BrOmJAuI7C+cfidpuMWp5p4OLK1rlwPaUQA==
   dependencies:
     "@backstage/backend-common" "^0.9.4"
     "@backstage/catalog-client" "^0.4.0"
@@ -2075,8 +2075,8 @@
 
 "@backstage/plugin-techdocs@^0.12.0":
   version "0.12.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-techdocs/-/plugin-techdocs-0.12.0.tgz#6a11f91676c569c1fad5d7c793db69240f81197d"
-  integrity sha1-ahH5FnbFacH61dfHk9tpJA+BGX0=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs/-/plugin-techdocs-0.12.0.tgz#6a11f91676c569c1fad5d7c793db69240f81197d"
+  integrity sha512-bbhJb1poBwCa3Idf4tMI6sWRG0Nb0oUZbk6p/LfGO7gFyLID0cWX3+TG2tAeqyOgZl6EK2OsVkFSSEwympCzXg==
   dependencies:
     "@backstage/catalog-model" "^0.9.3"
     "@backstage/config" "^0.1.10"
@@ -2108,8 +2108,8 @@
 
 "@backstage/plugin-user-settings@^0.3.6":
   version "0.3.7"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/plugin-user-settings/-/plugin-user-settings-0.3.7.tgz#9d655cf09d310852b7ada6e51ad066f14b4bcf6a"
-  integrity sha1-nWVc8J0xCFK3rablGtBm8UtLz2o=
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-user-settings/-/plugin-user-settings-0.3.7.tgz#9d655cf09d310852b7ada6e51ad066f14b4bcf6a"
+  integrity sha512-AJSaJSHrSW+BfovKmFw7e0kdtK/p8jvY98N1Gp9OvUl7BGn8Nb3F3eXqB9CdvLAs8NIiKCcneuYrscQmPudrvQ==
   dependencies:
     "@backstage/core-components" "^0.6.0"
     "@backstage/core-plugin-api" "^0.1.9"
@@ -2124,15 +2124,15 @@
 
 "@backstage/search-common@^0.2.0":
   version "0.2.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/search-common/-/search-common-0.2.0.tgz#91971536b0b9a7d8eb308b79d744d4a8dfdeea4d"
-  integrity sha1-kZcVNrC5p9jrMIt510TUqN/e6k0=
+  resolved "https://registry.yarnpkg.com/@backstage/search-common/-/search-common-0.2.0.tgz#91971536b0b9a7d8eb308b79d744d4a8dfdeea4d"
+  integrity sha512-eJzY+UF+edhr8EpMwAPWrETzCuR4HMJ7V1Z590gveEsAB7/OATd3MHh5hyvlICbERrejAsvTlFkta6kR+aFIzg==
   dependencies:
     "@backstage/config" "^0.1.6"
 
 "@backstage/techdocs-common@^0.10.1":
   version "0.10.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/techdocs-common/-/techdocs-common-0.10.2.tgz#d6d749d339a4cb4533e8e21bf3b0d835a973e3c5"
-  integrity sha1-1tdJ0zmky0Uz6OIb87DYNalz48U=
+  resolved "https://registry.yarnpkg.com/@backstage/techdocs-common/-/techdocs-common-0.10.2.tgz#d6d749d339a4cb4533e8e21bf3b0d835a973e3c5"
+  integrity sha512-BdK2AeuAnGVdQcRT09CqDUPHJXS1qcXEJh5fWPn7MIMMAIH7IbSJ1GbaHPCxJ10VYsQ1VcCZpi6MMbjQ/9faTQ==
   dependencies:
     "@azure/identity" "^1.5.0"
     "@azure/storage-blob" "^12.5.0"
@@ -2159,8 +2159,8 @@
 
 "@backstage/test-utils-core@^0.1.2":
   version "0.1.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/test-utils-core/-/test-utils-core-0.1.2.tgz#1124a89fd5248099d719b97cfb968f6f9452644b"
-  integrity sha1-ESSon9UkgJnXGbl8+5aPb5RSZEs=
+  resolved "https://registry.yarnpkg.com/@backstage/test-utils-core/-/test-utils-core-0.1.2.tgz#1124a89fd5248099d719b97cfb968f6f9452644b"
+  integrity sha512-1M2Uj6/6yZ4zFSWlIHt8EYvsfpLkqP29NU3aJD+U4WztEfPHLDwSsnGJsF3TNcHrJUmlw18/wpyUqhm0n2m0zw==
   dependencies:
     "@testing-library/jest-dom" "^5.10.1"
     "@testing-library/react" "^11.2.5"
@@ -2170,8 +2170,8 @@
 
 "@backstage/test-utils@^0.1.14", "@backstage/test-utils@^0.1.16", "@backstage/test-utils@^0.1.17":
   version "0.1.17"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/test-utils/-/test-utils-0.1.17.tgz#ff69875127127a46c015ca72dba9f4d06d62967b"
-  integrity sha1-/2mHUScSekbAFcpy26n00G1ilns=
+  resolved "https://registry.yarnpkg.com/@backstage/test-utils/-/test-utils-0.1.17.tgz#ff69875127127a46c015ca72dba9f4d06d62967b"
+  integrity sha512-ZYqyokeM6BtC69fTX7OWCD2CfUtGFf0fHPj2/Bu9/mwArtytwQUNlwt7Wpxl5jPWSIUuv4AqAXePD6/BHqxylw==
   dependencies:
     "@backstage/core-app-api" "^0.1.8"
     "@backstage/core-plugin-api" "^0.1.6"
@@ -2191,15 +2191,15 @@
 
 "@backstage/theme@^0.2.10", "@backstage/theme@^0.2.6", "@backstage/theme@^0.2.7", "@backstage/theme@^0.2.8", "@backstage/theme@^0.2.9":
   version "0.2.10"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/theme/-/theme-0.2.10.tgz#5a87c76600951b8d97476c9b87e191ebd5a71e9b"
-  integrity sha1-WofHZgCVG42XR2ybh+GR69WnHps=
+  resolved "https://registry.yarnpkg.com/@backstage/theme/-/theme-0.2.10.tgz#5a87c76600951b8d97476c9b87e191ebd5a71e9b"
+  integrity sha512-YPfjpgtZp1I6jMZ2V0JG/9UzbdF5zqzNoJytHtldB4MqtrQUm7UPZyrNbintLW96LOVqwfMnzjGXztT5tO46Tg==
   dependencies:
     "@material-ui/core" "^4.12.2"
 
 "@backstage/version-bridge@^0.1.0":
   version "0.1.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/version-bridge/-/version-bridge-0.1.0.tgz#546dc1ec48aa0d5f317777921d659fc0ff067436"
-  integrity sha1-VG3B7EiqDV8xd3eSHWWfwP8GdDY=
+  resolved "https://registry.yarnpkg.com/@backstage/version-bridge/-/version-bridge-0.1.0.tgz#546dc1ec48aa0d5f317777921d659fc0ff067436"
+  integrity sha512-5GhZpeqgr/I5kiwMAJaTa7vLMjINGvze2xsaU96v1gMXuJTj/kKCa5Y9QMEuNn/SS6gMIzlTiUEvxfqVsxvLxw==
   dependencies:
     "@types/react" "*"
     react "^16.12.0"
