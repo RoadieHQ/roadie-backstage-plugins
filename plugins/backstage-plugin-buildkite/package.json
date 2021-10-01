@@ -9,7 +9,11 @@
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "github:RoadieHQ/roadie-backstage-plugins",
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "plugins/backstage-plugin-buildkite"
+  },
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
