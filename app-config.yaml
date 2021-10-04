@@ -69,7 +69,7 @@ proxy:
 
   '/prometheus/api':
     # url to the api of your hosted argoCD instance
-    target: https://localhost:9090/api/v1/
+    target: http://localhost:9090/api/v1/
     changeOrigin: true
     secure: false
 
