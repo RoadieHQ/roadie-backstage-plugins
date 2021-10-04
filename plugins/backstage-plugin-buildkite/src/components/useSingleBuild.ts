@@ -30,7 +30,7 @@ export const useSingleBuild = ({owner, repo, buildNumber}: {owner: string, repo:
           repo,
           buildNumber,
         )
-      } catch (e) {
+      } catch (e:any) {
         errorApi.post(e);
         return Promise.reject(e);
       }

@@ -25,7 +25,7 @@ export const useStatuses = (projectKey: string) => {
   const getStatuses = useCallback(async () => {
     try {
       return await api.getStatuses(projectKey);
-    } catch (err) {
+    } catch (err:any) {
       return handleError(err);
     }
   }, [api, projectKey]);

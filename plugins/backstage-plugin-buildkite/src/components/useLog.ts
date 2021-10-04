@@ -28,7 +28,7 @@ export const useLog = (url: string) => {
         url,
       );
       return Promise.resolve(build);
-    } catch (e) {
+    } catch (e:any) {
       errorApi.post(e);
       return Promise.reject(e);
     }

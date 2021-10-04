@@ -163,7 +163,7 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
   if (error) {
     return (
       <InfoCard title="ArgoCD history">
-        Error occurred while fetching data. {error.name}: {error.message}
+        Error occurred while fetching data. {error.message}
       </InfoCard>
     );
   }
