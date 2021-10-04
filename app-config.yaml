@@ -68,7 +68,7 @@ proxy:
       Cookie: ${ARGOCD_AUTH_TOKEN}
 
   '/prometheus/api':
-    # url to the api of your hosted argoCD instance
+    # url to the api of your hosted prometheus instance
     target: http://localhost:9090/api/v1/
     changeOrigin: true
     secure: false
