@@ -28,7 +28,7 @@ const entityMock = {
   metadata: {
     namespace: 'default',
     annotations: {
-      'prometheus/rule': 'memUsage',
+      'prometheus.io/rule': 'memUsage',
     },
     name: 'sample-service',
     description:

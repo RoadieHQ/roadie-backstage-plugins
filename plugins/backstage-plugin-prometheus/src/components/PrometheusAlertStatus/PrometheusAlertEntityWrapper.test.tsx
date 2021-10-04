@@ -30,7 +30,7 @@ const entityMock = {
   metadata: {
     namespace: 'default',
     annotations: {
-      'prometheus/alert': 'test alert name',
+      'prometheus.io/alert': 'test alert name',
     },
     name: 'sample-service',
     description:

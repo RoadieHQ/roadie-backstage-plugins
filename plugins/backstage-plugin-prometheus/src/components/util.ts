@@ -15,8 +15,8 @@
  */
 import { Entity } from '@backstage/catalog-model';
 
-export const PROMETHEUS_RULE_ANNOTATION = 'prometheus/rule';
-export const PROMETHEUS_ALERT_ANNOTATION = 'prometheus/alert';
+export const PROMETHEUS_RULE_ANNOTATION = 'prometheus.io/rule';
+export const PROMETHEUS_ALERT_ANNOTATION = 'prometheus.io/alert';
 
 export const isPrometheusGraphAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[PROMETHEUS_RULE_ANNOTATION]);

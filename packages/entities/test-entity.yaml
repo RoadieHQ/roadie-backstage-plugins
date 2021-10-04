@@ -45,11 +45,11 @@ kind: Component
 metadata:
   name: sample-service-3
   description: |
-    A service for testing Buildkite plugin
+    A service for testing Buildkite and Prometheus plugins
   annotations:
     buildkite.com/project-slug: exampleorganization/exampleproject
-    prometheus/alert: "test alert name"
-    prometheus/rule: memUsage,node_memory_Active_bytes|instance
+    prometheus.io/alert: "test alert name"
+    prometheus.io/rule: memUsage,node_memory_Active_bytes|instance
 
 spec:
   type: service
