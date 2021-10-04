@@ -21,6 +21,8 @@ import {
 } from '@backstage/core-plugin-api';
 import { DateTime, Duration } from 'luxon';
 
+const DEFAULT_PROXY_PATH = '/prometheus/api/';
+
 export const prometheusApiRef = createApiRef<PrometheusApi>({
   id: 'plugin.prometheus.service',
   description: 'Used by the Prometheus plugin to make requests',
@@ -29,33 +31,26 @@ export const prometheusApiRef = createApiRef<PrometheusApi>({
 type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
-  /**
-   * Path to use for requests via the proxy, defaults to /prometheus/api
-   */
 };
 
 export class PrometheusApi {
   private readonly discoveryApi: DiscoveryApi;
-  private readonly proxyPath?: string;
-  private readonly baseUrl?: string;
+
+  /**
+   * Path to use for requests via the proxy, defaults to /prometheus/api
+   */
+  private readonly proxyPath: string;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    this.proxyPath = options.configApi.getOptionalString(
-      'prometheus.proxyPath',
-    );
-    this.baseUrl = options.configApi.getOptionalString('prometheus.baseUrl');
+    this.proxyPath =
+      options.configApi.getOptionalString('prometheus.proxyPath') ||
+      DEFAULT_PROXY_PATH;
   }
 
   private async getApiUrl() {
-    if (this.proxyPath) {
-      const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
-      return `${proxyUrl}${this.proxyPath}`;
-    }
-    if (this.baseUrl) {
-      return this.baseUrl;
-    }
-    throw new Error('Failed to determine URL for Prometheus.');
+    const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
+    return `${proxyUrl}${this.proxyPath}`;
   }
 
   async query({
@@ -77,7 +72,7 @@ export class PrometheusApi {
       .minus(Duration.fromObject(range))
       .toSeconds();
     const response = await fetch(
-      `${apiUrl}/api/v1/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
+      `${apiUrl}/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
     );
     if (!response.ok) {
       throw new Error(
@@ -89,7 +84,7 @@ export class PrometheusApi {
 
   async getAlerts() {
     const apiUrl = await this.getApiUrl();
-    const response = await fetch(`${apiUrl}/api/v1/rules?type=alert`);
+    const response = await fetch(`${apiUrl}/rules?type=alert`);
 
     if (!response.ok) {
       throw new Error(

@@ -21,13 +21,6 @@ export interface Config {
    */
   prometheus?: {
     /**
-     * The base url of the Prometheus.
-     * Should be used in case direct access to Prometheus from the browser is available.
-     * @visibility frontend
-     */
-    baseUrl?: string;
-
-    /**
      * The proxy path for Prometheus.
      * Should be used if proxy is in use for security etc purposes.
      * @visibility frontend

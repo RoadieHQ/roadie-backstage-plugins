@@ -45,7 +45,7 @@ const entityMock = {
 
 const config = {
   getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_s: string) => 'http://test.server/url' },
+    { getOptionalString: (_s: string) => 'test.server/url' },
   ],
 };
 
@@ -67,7 +67,7 @@ describe('PrometheusAlertEntityWrapper', () => {
   // setup mock response
   beforeEach(() => {
     server.use(
-      rest.get('http://test.server/url/*', (_, res, ctx) =>
+      rest.get('test.server/url/*', (_, res, ctx) =>
         res(
           ctx.status(200),
           ctx.json(require('../../mocks/mockAlertResponse.json')),

@@ -48,26 +48,12 @@ metadata:
     A service for testing Buildkite plugin
   annotations:
     buildkite.com/project-slug: exampleorganization/exampleproject
+    prometheus/alert: "test alert name"
+    prometheus/rule: memUsage,node_memory_Active_bytes|instance
+
 spec:
   type: service
   owner: roadie
   lifecycle: experimental
   providesApis:
     - sample-service-3
-
----
-
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: sample-service-2
-  description: |
-    A service for testing Travis CI plugin
-  annotations:
-    travis-ci.com/repo-slug: RoadieHQ/sample-service
-spec:
-  type: service
-  owner: roadie
-  lifecycle: experimental
-  providesApis:
-    - sample-service-2
