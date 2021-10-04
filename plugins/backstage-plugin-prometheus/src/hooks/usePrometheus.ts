@@ -104,7 +104,7 @@ export function useMetrics({
   return { loading, error, data: [], keys: [], metrics: [] };
 }
 
-export function useAlerts(alerts: string[]) {
+export function useAlerts(alerts: string[] | 'all') {
   const prometheusApi = useApi(prometheusApiRef);
   const { value, loading, error } = useAsync(async (): Promise<
     PrometheusRuleResponse
@@ -114,7 +114,7 @@ export function useAlerts(alerts: string[]) {
   if (value && value.status !== 'error') {
     const rules = value.data.groups.flatMap(it => it.rules);
     const displayableAlerts: PrometheusDisplayableAlert[] = rules
-      .filter(rule => alerts.includes(rule.name))
+      .filter(rule => alerts === 'all' || alerts.includes(rule.name))
       .flatMap(rule =>
         rule.alerts.map(alert => ({ ...rule, ...alert, id: rule.name })),
       );

@@ -46,7 +46,7 @@ const state = (str: string) => {
     case 'inactive':
       return <StatusAborted>{str}</StatusAborted>;
     default:
-      return <StatusAborted>Unknown</StatusAborted>;
+      return <StatusAborted>Unknown ({str})</StatusAborted>;
   }
 };
 
@@ -109,7 +109,11 @@ const columns: TableColumn<PrometheusDisplayableAlert>[] = [
   },
 ];
 
-export const PrometheusAlertStatus = ({ alerts }: { alerts: string[] }) => {
+export const PrometheusAlertStatus = ({
+  alerts,
+}: {
+  alerts: string[] | 'all';
+}) => {
   const { error, loading, displayableAlerts } = useAlerts(alerts);
   if (loading) {
     return <Progress />;

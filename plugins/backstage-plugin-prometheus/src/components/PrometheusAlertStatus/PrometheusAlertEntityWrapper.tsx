@@ -35,5 +35,9 @@ export const PrometheusAlertEntityWrapper = () => {
     ? entity.metadata.annotations!![PROMETHEUS_ALERT_ANNOTATION].split(',')
     : [];
 
-  return <PrometheusAlertStatus alerts={alerts} />;
+  return alerts.length > 0 && alerts[0] === 'all' ? (
+    <PrometheusAlertStatus alerts="all" />
+  ) : (
+    <PrometheusAlertStatus alerts={alerts} />
+  );
 };

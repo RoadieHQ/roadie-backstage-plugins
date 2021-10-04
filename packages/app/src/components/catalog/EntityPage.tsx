@@ -84,9 +84,7 @@ import {
   EntityBuildkiteContent,
   isBuildkiteAvailable,
 } from '@roadiehq/backstage-plugin-buildkite';
-import {
-  EntityBugsnagErrorsOverviewTable
-} from "@roadiehq/backstage-plugin-bugsnag";
+import { EntityBugsnagErrorsOverviewTable } from '@roadiehq/backstage-plugin-bugsnag';
 import {
   EntitySecurityInsightsContent,
   EntityGithubDependabotContent,
@@ -214,7 +212,7 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
-    <Grid item md={6}>
+    <Grid item md={8}>
       <EntityPrometheusAlertCard />
     </Grid>
     <Grid item md={6}>
