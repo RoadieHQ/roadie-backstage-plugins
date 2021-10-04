@@ -35,9 +35,11 @@ import { PrometheusAlertStatus } from './PrometheusAlertStatus';
 const PrometheusContentWrapper = ({
   step = 14,
   range = { hours: 1 },
+  graphType,
 }: {
   step?: number;
   range?: { hours?: number; minutes?: number };
+  graphType?: 'line' | 'area';
 }) => {
   const { entity } = useEntity();
   const graphContent = isPrometheusGraphAvailable(entity);
@@ -82,6 +84,7 @@ const PrometheusContentWrapper = ({
                 query={query}
                 range={range}
                 step={step}
+                graphType={graphType}
               />
             </Grid>
           ))}
