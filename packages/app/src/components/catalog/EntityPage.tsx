@@ -102,7 +102,7 @@ import {
   EntityPrometheusAlertCard,
   EntityPrometheusContent,
   EntityPrometheusGraphCard,
-} from '@roadiehq/plugin-backstage-plugin-prometheus';
+} from '@roadiehq/backstage-plugin-prometheus';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
