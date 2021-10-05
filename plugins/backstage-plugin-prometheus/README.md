@@ -12,7 +12,7 @@ Backstage plugin exposing graphs and alerts from Prometheus
 - Show basic statistics widget about pull requests for your repository.
 
 
-The plugin provides a entity content page and two additional widgets:
+The plugin provides an entity content page and two additional widgets:
 1. Alert table widget
 2. Prometheus Graph widget
 * Graph widget has two versions, line graph and an area graph
@@ -29,7 +29,7 @@ This plugin expects you to have Prometheus running with its API available to be 
 
 ```bash
 cd packages/app
-yarn add @roadiehq/plugin-backstage-plugin-prometheus
+yarn add @roadiehq/backstage-plugin-prometheus
 ```
 
 ## Configure proxy for Prometheus
@@ -59,7 +59,7 @@ prometheus:
 // packages/app/src/components/catalog/EntityPage.tsx
 import {
   EntityPrometheusContent,
-} from '@roadiehq/plugin-backstage-plugin-prometheus';
+} from '@roadiehq/backstage-plugin-prometheus';
 ...
 
 const serviceEntityPage = (
@@ -84,7 +84,7 @@ const serviceEntityPage = (
 import {
   EntityPrometheusAlertCard,  
   EntityPrometheusGraphCard,
-} from '@roadiehq/plugin-backstage-plugin-prometheus';
+} from '@roadiehq/backstage-plugin-prometheus';
 
 ...
 
