@@ -21,7 +21,7 @@ import {
 } from '@backstage/core-plugin-api';
 import { DateTime, Duration } from 'luxon';
 
-const DEFAULT_PROXY_PATH = '/prometheus/api/';
+const DEFAULT_PROXY_PATH = '/prometheus/api';
 
 export const prometheusApiRef = createApiRef<PrometheusApi>({
   id: 'plugin.prometheus.service',
