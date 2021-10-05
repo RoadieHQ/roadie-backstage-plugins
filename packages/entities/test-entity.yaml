@@ -48,8 +48,8 @@ metadata:
     A service for testing Buildkite and Prometheus plugins
   annotations:
     buildkite.com/project-slug: exampleorganization/exampleproject
-    prometheus.io/alert: "test alert name"
-    prometheus.io/rule: memUsage,node_memory_Active_bytes|instance
+    prometheus.io/alert: "Excessive Memory Usage"
+    prometheus.io/rule: node_memory_Active_bytes|instance,memUsage
 
 spec:
   type: service

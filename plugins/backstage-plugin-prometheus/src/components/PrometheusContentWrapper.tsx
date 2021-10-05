@@ -60,6 +60,7 @@ const PrometheusContentWrapper = ({
   const alerts = alertContent
     ? entity.metadata.annotations!![PROMETHEUS_ALERT_ANNOTATION].split(',')
     : [];
+  const alertProp = alerts.length > 0 && alerts[0] === 'all' ? 'all' : alerts;
 
   return (
     <Content>
@@ -71,14 +72,14 @@ const PrometheusContentWrapper = ({
       {alertContent && (
         <Grid container spacing={3} direction="column">
           <Grid item>
-            <PrometheusAlertStatus alerts={alerts} />
+            <PrometheusAlertStatus alerts={alertProp} />
           </Grid>
         </Grid>
       )}
       {graphContent && ruleTuples && (
         <Grid container spacing={3} direction="column">
           {ruleTuples.map(([query, dimension]) => (
-            <Grid item key={query}>
+            <Grid item key={query} md={6}>
               <PrometheusGraph
                 dimension={dimension}
                 query={query}
