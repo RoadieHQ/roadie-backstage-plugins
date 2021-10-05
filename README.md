@@ -41,7 +41,6 @@ yarn install
 ```
 and running same command in root directory.
 
-
 You should be able to run application from root directory, by running
 
 ```bash
