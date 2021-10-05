@@ -79,7 +79,7 @@ const PrometheusContentWrapper = ({
       {graphContent && ruleTuples && (
         <Grid container spacing={3} direction="column">
           {ruleTuples.map(([query, dimension]) => (
-            <Grid item key={query} md={6}>
+            <Grid item key={query}>
               <PrometheusGraph
                 dimension={dimension}
                 query={query}
