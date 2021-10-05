@@ -46,7 +46,7 @@ proxy:
        Authorization: $YOUR_AUTH_TOKEN_IF_PROMETHEUS_IS_SECURED
 
 
-# Defaults to /prometheus/api/ and can be omitted if proxy is configured for that url
+# Defaults to /prometheus/api and can be omitted if proxy is configured for that url
 prometheus:
    proxyPath: /prometheus/api
 
