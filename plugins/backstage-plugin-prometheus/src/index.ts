@@ -13,23 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+export {
+  backstagePluginPrometheusPlugin,
+  EntityPrometheusContent,
+  EntityPrometheusGraphCard,
+  EntityPrometheusAlertCard,
+} from './plugin';
 
-import {
-  ScmIntegrationsApi,
-  scmIntegrationsApiRef,
-  ScmAuth,
-} from '@backstage/integration-react';
-import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-} from '@backstage/core-plugin-api';
-
-export const apis: AnyApiFactory[] = [
-  createApiFactory({
-    api: scmIntegrationsApiRef,
-    deps: { configApi: configApiRef },
-    factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
-  }),
-  ScmAuth.createDefaultApiFactory(),
-];
+export { PrometheusGraph } from './components/PrometheusGraph';
+export { PrometheusAlertStatus } from './components/PrometheusAlertStatus';

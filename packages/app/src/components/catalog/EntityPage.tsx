@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// eslint-disable-next-line notice/notice
+
 import React from 'react';
 import { Button, Grid } from '@material-ui/core';
 import { EmptyState } from '@backstage/core-components';
@@ -82,17 +82,15 @@ import {
 } from '@roadiehq/backstage-plugin-travis-ci';
 import {
   EntityBuildkiteContent,
-  isBuildkiteAvailable
-} from "@roadiehq/backstage-plugin-buildkite";
-import {
-  EntityBugsnagErrorsOverviewTable
-} from "@roadiehq/backstage-plugin-bugsnag";
+  isBuildkiteAvailable,
+} from '@roadiehq/backstage-plugin-buildkite';
+import { EntityBugsnagErrorsOverviewTable } from '@roadiehq/backstage-plugin-bugsnag';
 import {
   EntitySecurityInsightsContent,
   EntityGithubDependabotContent,
   SecurityInsightsWidget,
   DependabotAlertsWidget,
-  isSecurityInsightsAvailable
+  isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
 import {
   EntityArgoCDHistoryCard,
@@ -100,6 +98,11 @@ import {
   EntityArgoCDContent,
   isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
+import {
+  EntityPrometheusAlertCard,
+  EntityPrometheusContent,
+  EntityPrometheusGraphCard,
+} from '@roadiehq/backstage-plugin-prometheus';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -209,6 +212,12 @@ const overviewContent = (
     <Grid item md={8} xs={12}>
       <EntityHasSubcomponentsCard variant="gridItem" />
     </Grid>
+    <Grid item md={8}>
+      <EntityPrometheusAlertCard />
+    </Grid>
+    <Grid item md={6}>
+      <EntityPrometheusGraphCard />
+    </Grid>
   </Grid>
 );
 
@@ -241,6 +250,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/prometheus" title="Prometheus">
+      <EntityPrometheusContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/dependencies" title="Dependencies">
       <Grid container spacing={3} alignItems="stretch">

@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
+import React from 'react';
+import { createDevApp } from '@backstage/dev-utils';
 import {
-  ScmIntegrationsApi,
-  scmIntegrationsApiRef,
-  ScmAuth,
-} from '@backstage/integration-react';
-import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-} from '@backstage/core-plugin-api';
+  backstagePluginPrometheusPlugin,
+  EntityPrometheusContent,
+} from '../src';
 
-export const apis: AnyApiFactory[] = [
-  createApiFactory({
-    api: scmIntegrationsApiRef,
-    deps: { configApi: configApiRef },
-    factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
-  }),
-  ScmAuth.createDefaultApiFactory(),
-];
+createDevApp()
+  .registerPlugin(backstagePluginPrometheusPlugin)
+  .addPage({
+    element: <EntityPrometheusContent />,
+    title: 'Root Page',
+    path: '/backstage-plugin-prometheus',
+  })
+  .render();

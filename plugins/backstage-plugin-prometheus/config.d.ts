@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  ScmIntegrationsApi,
-  scmIntegrationsApiRef,
-  ScmAuth,
-} from '@backstage/integration-react';
-import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-} from '@backstage/core-plugin-api';
-
-export const apis: AnyApiFactory[] = [
-  createApiFactory({
-    api: scmIntegrationsApiRef,
-    deps: { configApi: configApiRef },
-    factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
-  }),
-  ScmAuth.createDefaultApiFactory(),
-];
+/** Configuration for the Prometheus plugin */
+export interface Config {
+  /**
+   * @visibility frontend
+   */
+  prometheus?: {
+    /**
+     * The proxy path for Prometheus.
+     * Should be used if proxy is in use for security etc purposes.
+     * @visibility frontend
+     */
+    proxyPath?: string;
+  };
+}

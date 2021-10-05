@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Entity } from '@backstage/catalog-model';
 
-import {
-  ScmIntegrationsApi,
-  scmIntegrationsApiRef,
-  ScmAuth,
-} from '@backstage/integration-react';
-import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-} from '@backstage/core-plugin-api';
+export const PROMETHEUS_RULE_ANNOTATION = 'prometheus.io/rule';
+export const PROMETHEUS_ALERT_ANNOTATION = 'prometheus.io/alert';
 
-export const apis: AnyApiFactory[] = [
-  createApiFactory({
-    api: scmIntegrationsApiRef,
-    deps: { configApi: configApiRef },
-    factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
-  }),
-  ScmAuth.createDefaultApiFactory(),
-];
+export const isPrometheusGraphAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[PROMETHEUS_RULE_ANNOTATION]);
+
+export const isPrometheusAlertAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[PROMETHEUS_ALERT_ANNOTATION]);

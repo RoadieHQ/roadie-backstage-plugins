@@ -67,6 +67,12 @@ proxy:
     headers:
       Cookie: ${ARGOCD_AUTH_TOKEN}
 
+  '/prometheus/api':
+    # url to the api of your hosted prometheus instance
+    target: http://localhost:9090/api/v1/
+    changeOrigin: true
+    secure: false
+
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
@@ -137,3 +143,6 @@ catalog:
         - allow: [Template]
 argocd:
   baseUrl: https://localhost:8080
+
+prometheus:
+  proxyPath: /prometheus/api
