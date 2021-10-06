@@ -38,9 +38,3 @@ export type Project = {
   slug: string;
   name: string;
 };
-
-export type TrendData = {
-  from:string,
-  to:string,
-  events_count: number
-}

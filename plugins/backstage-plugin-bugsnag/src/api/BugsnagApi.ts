@@ -15,7 +15,7 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { BugsnagError, Organisation, Project, TrendData } from './types';
+import { BugsnagError, Organisation, Project } from './types';
 
 export const bugsnagApiRef = createApiRef<BugsnagApi>({
   id: 'plugin.bugsnag.service',
@@ -24,7 +24,6 @@ export const bugsnagApiRef = createApiRef<BugsnagApi>({
 
 export interface BugsnagApi {
   fetchErrors(projectId:string): Promise<BugsnagError[]>;
-  fetchTrends(projectId: string, errorId: string): Promise<TrendData[]>;
   fetchOrganisations(): Promise<Organisation[]>;
   fetchProjects(organisationId: string): Promise<Project[]>;
 }

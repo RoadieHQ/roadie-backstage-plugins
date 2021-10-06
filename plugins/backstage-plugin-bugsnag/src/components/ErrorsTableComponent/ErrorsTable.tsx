@@ -23,7 +23,6 @@ import { makeStyles } from '@material-ui/core';
 import { useAsync } from 'react-use';
 import { bugsnagApiRef } from '../..';
 import { BugsnagError, Project } from '../../api/types';
-import { ErrorGraph } from '../ErrorGraph/ErrorGraph';
 import { DateTime } from 'luxon';
 
 const useStyles = makeStyles({
@@ -56,10 +55,6 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
     { title: 'Stage', field: 'stage' },
     { title: 'First seen', field: 'first_seen' },
     { title: 'Last seen', field: 'last_seen' },
-    {
-      title: 'Trend',
-      render: data => <ErrorGraph bugsnagError={data as BugsnagError} />,
-    },
     { title: 'Severity', field: 'severity' },
   ];
 
