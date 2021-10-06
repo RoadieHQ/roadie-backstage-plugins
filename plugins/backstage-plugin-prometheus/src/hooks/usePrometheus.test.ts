@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useMetrics, useAlerts } from './usePrometheus';
+import { resultToGraphData, useAlerts } from './usePrometheus';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 
@@ -28,36 +28,25 @@ describe('usePrometheus', () => {
     getAlerts: () => ['alert'],
   });
 
-  describe('useMetrics', () => {
-    it('should use first property of response as dimension when not defined', () => {
+  describe('resultToGraphData', () => {
+    it('should use first property of response as dimension when not defined', async () => {
       const firstProperty = 'memUsage';
 
-      (useAsync as any).mockReturnValue({
-        value: require('../mocks/mockQueryResponse.json'),
-        loading: false,
-      });
-
-      const { metrics, keys, data } = useMetrics({
-        query: 'something something',
-      });
-
+      const response = require('../mocks/mockQueryResponse.json');
+      const { metrics, keys, data } = resultToGraphData(response.data.result);
       expect(metrics).toHaveProperty(firstProperty);
       expect(keys).toStrictEqual([firstProperty]);
       expect(data).toHaveLength(2);
     });
 
-    it("should handle cases where dimension doesn't exist", () => {
+    it("should handle cases where dimension doesn't exist", async () => {
       const firstProperty = 'memUsage';
 
-      (useAsync as any).mockReturnValue({
-        value: require('../mocks/mockQueryResponse.json'),
-        loading: false,
-      });
-
-      const { metrics, keys, data } = useMetrics({
-        query: 'something something',
-        dimension: 'notexisting',
-      });
+      const response = require('../mocks/mockQueryResponse.json');
+      const { metrics, keys, data } = resultToGraphData(
+        response.data.result,
+        'something non existing',
+      );
       expect(metrics).toHaveProperty(firstProperty);
       expect(keys).toStrictEqual([firstProperty]);
       expect(data).toHaveLength(2);

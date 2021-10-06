@@ -19,7 +19,7 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { msw } from '@backstage/test-utils';
 import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
-import { configApiRef } from '@backstage/core-plugin-api';
+import { configApiRef, errorApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { PrometheusGraphEntityWrapper } from './PrometheusGraphEntityWrapper';
 import { prometheusApiRef } from '../../api';
@@ -41,6 +41,10 @@ const entityMock = {
   kind: 'Component',
 };
 
+const mockErrorApi = {
+  post: jest.fn(),
+};
+
 const config = {
   getOptionalConfigArray: (_: string) => [
     { getOptionalString: (_s: string) => 'test.server/url' },
@@ -54,6 +58,7 @@ const mockPrometheusApi = {
 const apis = ApiRegistry.from([
   [configApiRef, config],
   [prometheusApiRef, mockPrometheusApi],
+  [errorApiRef, mockErrorApi],
 ]);
 
 describe('PrometheusGraphEntityWrapper', () => {

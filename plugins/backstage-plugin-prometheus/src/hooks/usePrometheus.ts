@@ -34,7 +34,7 @@ function isMetricResult(
   return resultType === 'matrix' || resultType === 'vector';
 }
 
-function resultToGraphData(
+export function resultToGraphData(
   result: PrometheusMatrixVectorResult[],
   dimension?: string,
 ) {
