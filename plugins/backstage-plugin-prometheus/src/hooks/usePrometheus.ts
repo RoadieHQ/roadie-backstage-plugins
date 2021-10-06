@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-import { useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import { errorApiRef, useApi } from '@backstage/core-plugin-api';
+import { useAsync, useAsyncFn } from 'react-use';
 import { prometheusApiRef } from '../api';
 import {
   PrometheusDisplayableAlert,
   PrometheusMatrixVectorResult,
-  PrometheusResponse,
   PrometheusRuleResponse,
   PrometheusScalarStringResult,
   ResultType,
@@ -71,37 +70,47 @@ function resultToGraphData(
 }
 
 export function useMetrics({
-  query = `up`,
-  range = { hours: 1 },
-  step = 14,
+  query,
+  range,
+  step,
   dimension,
 }: {
   query: string;
-  range?: {
+  range: {
     hours?: number;
     minutes?: number;
   };
-  step?: number;
+  step: number;
   dimension?: string;
 }) {
   const prometheusApi = useApi(prometheusApiRef);
-
-  const { value, loading, error } = useAsync(async (): Promise<
-    PrometheusResponse
-  > => {
-    return await prometheusApi.query({ query, range, step });
-  }, [query, range, step]);
-  if (value) {
-    if (isMetricResult(value.data.resultType, value.data.result)) {
-      const { data, keys, metrics } = resultToGraphData(
-        value.data.result,
-        dimension,
-      );
-      return { loading, error, data, keys, metrics };
+  const errorApi = useApi(errorApiRef);
+  const [state, fetchGraph] = useAsyncFn(async () => {
+    try {
+      const value = await prometheusApi.query({ query, range, step });
+      if (isMetricResult(value.data.resultType, value.data.result)) {
+        return resultToGraphData(value.data.result, dimension);
+      }
+      errorApi.post({
+        name: 'Prometheus Graph construction error',
+        message: 'Only metric or vector result types are supported',
+      });
+      return Promise.reject();
+    } catch (e) {
+      errorApi.post({
+        name: 'Prometheus API Error',
+        message: 'Failed to retrieve graph data from prometheus API',
+      });
+      return Promise.reject(e);
     }
-    throw new Error('Only metric or vector result types are supported');
-  }
-  return { loading, error, data: [], keys: [], metrics: [] };
+  }, []);
+
+  return {
+    loading: state.loading,
+    error: state.error,
+    value: state.value,
+    fetchGraph,
+  };
 }
 
 export function useAlerts(alerts: string[] | 'all') {
