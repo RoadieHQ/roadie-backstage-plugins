@@ -15,7 +15,6 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { BugsnagError, Organisation, Project, TrendData } from './types';
 
 export const bugsnagApiRef = createApiRef<BugsnagApi>({
   id: 'plugin.bugsnag.service',
