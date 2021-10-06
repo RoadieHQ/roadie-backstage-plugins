@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { BugsnagApi } from './BugsnagApi';
-import { BugsnagError, Organisation, Project, TrendData } from './types';
+import { BugsnagError, Organisation, Project } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 const DEFAULT_PROXY_PATH = '/bugsnag/api';
@@ -47,17 +47,6 @@ export class BugsnagClient implements BugsnagApi {
       throw new Error(payload.errors[0]);
     }
     return payload;
-  }
-
-  async fetchTrends(projectId: string, errorId: string): Promise<TrendData[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/projects/${projectId}/errors/${errorId}/trend?&buckets_count=10`,
-    );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-    return await payload;
   }
 
   async fetchProjects(organisationId: string): Promise<Project[]> {
