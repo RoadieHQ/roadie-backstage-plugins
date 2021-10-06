@@ -40,7 +40,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-use": "^17.2.4",
-    "luxon": "^2.0.1"
+    "luxon": "^2.0.1",
+    "swr": "^1.0.1"
   },
   "devDependencies": {
     "@backstage/cli": "^0.7.4",

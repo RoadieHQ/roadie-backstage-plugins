@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { BugsnagApi } from './BugsnagApi';
-import { BugsnagError, Organisation, Project, TrendData } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 const DEFAULT_PROXY_PATH = '/bugsnag/api';
@@ -33,52 +32,8 @@ export class BugsnagClient implements BugsnagApi {
     this.proxyPath = options.proxyPath ?? DEFAULT_PROXY_PATH;
   }
 
-  private async getApiUrl() {
+  async getApiUrl() {
     const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
     return proxyUrl + this.proxyPath;
-  }
-
-  async fetchOrganisations(): Promise<Organisation[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/user/organizations`,
-    );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-    return payload;
-  }
-
-  async fetchTrends(projectId: string, errorId: string): Promise<TrendData[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/projects/${projectId}/errors/${errorId}/trend?&buckets_count=10`,
-    );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-    return await payload;
-  }
-
-  async fetchProjects(organisationId: string): Promise<Project[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/organizations/${organisationId}/projects`,
-    );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-    return await payload;
-  }
-
-  async fetchErrors(projectId: string): Promise<BugsnagError[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/projects/${projectId}/errors`,
-    );
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-    return await payload;
   }
 }

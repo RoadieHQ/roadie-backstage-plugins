@@ -15,24 +15,35 @@
  */
 
 import React from 'react';
-import { useApi } from '@backstage/core-plugin-api';
+import useSWR, { SWRConfig } from 'swr';
 import { Table, TableColumn, Link, Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import { makeStyles } from '@material-ui/core';
-import { useAsync } from 'react-use';
-import { bugsnagApiRef } from '../..';
-import { BugsnagError, Project } from '../../api/types';
-import { ErrorGraph } from '../ErrorGraph/ErrorGraph';
+import { BugsnagError, Project, Organisation } from '../../api/types';
 import { DateTime } from 'luxon';
 
 const useStyles = makeStyles({
   iconClass: {
     verticalAlign: 'middle',
-  }
+  },
 });
 
-const getDetailsUrl = (errorId: string, errorClass: string, organisationName: string, projectName: string) => {
+const fetcher = async (url: RequestInfo) => {
+  const res = await fetch(url);
+  const payload = await res.json();
+  if (!res.ok) {
+    throw new Error(payload.errors[0]);
+  }
+  return payload;
+};
+
+const getDetailsUrl = (
+  errorId: string,
+  errorClass: string,
+  organisationName: string,
+  projectName: string,
+) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const classes = useStyles();
   const url = `https://app.bugsnag.com/${organisationName}/${projectName}/errors/${errorId}`;
@@ -42,13 +53,22 @@ const getDetailsUrl = (errorId: string, errorClass: string, organisationName: st
         onClick={() => window.open(url, '_blank')}
         aria-label="View"
         fontSize="small"
-        className={classes.iconClass} />
+        className={classes.iconClass}
+      />
       {errorClass}
     </Link>
   );
-}
+};
 
-export const DenseTable = ({ errors, organisationName, projectName }: { errors: BugsnagError[], organisationName: string, projectName: string }) => {
+export const DenseTable = ({
+  errors,
+  organisationName,
+  projectName,
+}: {
+  errors: BugsnagError[];
+  organisationName: string;
+  projectName: string;
+}) => {
   const columns: TableColumn[] = [
     { title: '', field: 'class' },
     { title: 'Events', field: 'events' },
@@ -56,26 +76,39 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
     { title: 'Stage', field: 'stage' },
     { title: 'First seen', field: 'first_seen' },
     { title: 'Last seen', field: 'last_seen' },
-    {
-      title: 'Trend',
-      render: data => <ErrorGraph bugsnagError={data as BugsnagError} />,
-    },
     { title: 'Severity', field: 'severity' },
   ];
 
-  const data = errors.map(error => {
-    return {
-      severity: error.severity,
-      class: getDetailsUrl(error.id, error.error_class, organisationName, projectName),
-      stage: error.release_stages,
-      events: error.events,
-      id: error.id,
-      project_id: error.project_id,
-      users: error.users,
-      first_seen: DateTime.fromISO(error.first_seen).toLocaleString(),
-      last_seen: DateTime.fromISO(error.last_seen).toLocaleString()
-    };
-  });
+  const data = errors.map(
+    (err: {
+      severity: any;
+      id: string;
+      error_class: string;
+      release_stages: any;
+      events: any;
+      project_id: any;
+      users: any;
+      first_seen: string;
+      last_seen: string;
+    }) => {
+      return {
+        severity: err.severity,
+        class: getDetailsUrl(
+          err.id,
+          err.error_class,
+          organisationName,
+          projectName || '',
+        ),
+        stage: err.release_stages,
+        events: err.events,
+        id: err.id,
+        project_id: err.project_id,
+        users: err.users,
+        first_seen: DateTime.fromISO(err.first_seen).toLocaleString(),
+        last_seen: DateTime.fromISO(err.last_seen).toLocaleString(),
+      };
+    },
+  );
 
   return (
     <Table
@@ -87,17 +120,131 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
   );
 };
 
-export const ErrorsTable = ({ organisationName, project }: { organisationName: string, project: Project }) => {
-  const api = useApi(bugsnagApiRef);
-  const { value, loading, error } = useAsync(
-    async () =>
-      await api.fetchErrors(project.id)
+export const AllErrors = ({
+  projects,
+  projectApiKey,
+  organisationName,
+  apiUrl,
+}: {
+  projects: Project[];
+  projectApiKey: string;
+  organisationName: string;
+  apiUrl: string;
+}) => {
+  const filteredProject = projects.find(
+    (proj: { api_key: string | string[] }) =>
+      proj.api_key.includes(projectApiKey),
   );
-  if (loading) {
+
+  const projectName = filteredProject?.slug;
+
+  const { data: errors, error: isError } = useSWR(
+    `${apiUrl}/projects/${filteredProject?.id}/errors`,
+  );
+
+  if (!errors) {
     return <Progress />;
-  } else if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
+  } else if (isError) {
+    return <Alert severity="error">{isError.message}</Alert>;
   }
 
-  return <DenseTable organisationName={organisationName} projectName={project.slug} errors={value || []} />;
+  return (
+    <DenseTable
+      errors={errors}
+      organisationName={organisationName}
+      projectName={projectName || ''}
+    />
+  );
+};
+
+export const Projects = ({
+  apiUrl,
+  organisations,
+  organisationName,
+  projectApiKey,
+}: {
+  apiUrl: string;
+  organisations: Organisation[];
+  organisationName: string;
+  projectApiKey: string;
+}) => {
+  const organisation = organisations.find((org: { name: string | string[] }) =>
+    org.name.includes(organisationName),
+  );
+
+  const { data: projects, error: projectError } = useSWR(
+    `${apiUrl}/organizations/${organisation?.id}/projects`,
+  );
+
+  const orgName = organisation?.slug;
+
+  if (!projects) {
+    return <Progress />;
+  } else if (projectError) {
+    return <Alert severity="error">{projectError.message}</Alert>;
+  }
+
+  return (
+    <AllErrors
+      projects={projects}
+      projectApiKey={projectApiKey}
+      organisationName={orgName || ''}
+      apiUrl={apiUrl}
+    />
+  );
+};
+
+export const Organisations = ({
+  apiUrl,
+  organisationName,
+  projectApiKey,
+}: {
+  apiUrl: string;
+  organisationName: string;
+  projectApiKey: string;
+}) => {
+  const { data: organisations, error: organisationError } = useSWR(
+    `${apiUrl}/user/organizations`,
+  );
+
+  if (!organisations) {
+    return <Progress />;
+  } else if (organisationError) {
+    return <Alert severity="error">{organisationError.message}</Alert>;
+  }
+
+  return (
+    <Projects
+      apiUrl={apiUrl}
+      organisations={organisations}
+      organisationName={organisationName}
+      projectApiKey={projectApiKey}
+    />
+  );
+};
+
+export const ErrorsTable = ({
+  apiUrl,
+  organisationName,
+  projectApiKey,
+}: {
+  apiUrl: string;
+  organisationName: string;
+  projectApiKey: string;
+}) => {
+  return (
+    <SWRConfig
+      value={{
+        refreshInterval: 60000,
+        revalidateOnMount: false,
+        fetcher,
+      }}
+    >
+      <Organisations
+        apiUrl={apiUrl}
+        organisationName={organisationName}
+        projectApiKey={projectApiKey}
+      />
+    </SWRConfig>
+  );
 };
