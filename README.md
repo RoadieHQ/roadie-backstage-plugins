@@ -26,6 +26,7 @@ cd packages/app
 
 folder.
 
+
 Inside this repository you can add other plugins by running 
 
 ```bash
