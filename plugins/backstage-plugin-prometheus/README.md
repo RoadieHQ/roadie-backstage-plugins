@@ -2,7 +2,7 @@
 
 Backstage plugin exposing graphs and alerts from Prometheus
 
-![prom_entity_content.png](docs/prom_entity_content.png)
+![Prometheus Entity Content Page Screenshot](./docs/prom_entity_content.png)
 
 
 
@@ -123,15 +123,15 @@ Example annotation
 Produces the following graphs:
 1. `memUsage|component`
    (grouping by component, otherwise `__name__` would be the first item on this saved rule. Showed here as an area graph)
-   ![Area Graph widget](docs/prom_areagraph_widget.png)
+   ![Area Graph widget](./docs/prom_areagraph_widget.png)
 
 2. `node_memory_active_bytes|instance`
    (grouping by `instance`, image shows extra data on hover over a line.)
-   ![Line graph with hover](docs/prom_graph_hover.png)
+   ![Line graph with hover](./docs/prom_graph_hover.png)
 
 3. `sum by (instance) (node_cpu_seconds_total)`
    (`instance` is the grouper label defined in the query --> it is returned on the result set as the first label name, and is therefore used to group data with.)
-    ![Line Graph constructed by query](docs/prom_graph_query.png)
+    ![Line Graph constructed by query](./docs/prom_graph_query.png)
 
 ### Alerts
 
@@ -141,7 +141,7 @@ The 'alert' annotation expects a comma separated list of predefined alert names 
 
 Example annotation
 `prometheus.io/alert: 'Excessive Memory Usage'` produces the following table. 
-![Alert table](docs/prom_alert.png)
+![Alert table](./docs/prom_alert.png)
 
 
 ## Custom Graphs and Tables

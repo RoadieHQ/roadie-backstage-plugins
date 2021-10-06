@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DateTime } from 'luxon';
 import { Box, useTheme } from '@material-ui/core';
 import {
@@ -234,19 +234,23 @@ export const PrometheusGraph = ({
   dimension?: string;
   graphType?: 'line' | 'area';
 }) => {
-  const { data, keys, metrics, loading, error } = useMetrics({
+  const { fetchGraph, value, loading, error } = useMetrics({
     query,
     range,
     step,
     dimension,
   });
 
+  useEffect(() => {
+    fetchGraph();
+  }, [fetchGraph]);
+
   if (loading) {
     return <Progress />;
   } else if (error) {
     return <Alert severity="error">{error.message}</Alert>;
   }
-
+  const { data, keys, metrics } = value ?? { data: [], keys: [], metrics: {} };
   return graphType === 'line' ? (
     <InfoCard title={query}>
       <LineGraph data={data} keys={keys} metrics={metrics} />
