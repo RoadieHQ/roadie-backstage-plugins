@@ -55,3 +55,14 @@ export const EntityGithubPullRequestsOverviewCard = githubPullRequestsPlugin.pro
     },
   }),
 );
+
+export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
+  createComponentExtension({
+    component: {
+      lazy: () =>
+        import('./components/PullRequestsTable').then(
+          m => m.PullRequestsTable,
+        ),
+    },
+  }),
+);
