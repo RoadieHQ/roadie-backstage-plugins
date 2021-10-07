@@ -37,7 +37,7 @@ export const Router = (_props: Props) =>{
     <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   ) : (
     <FlatRoutes>
-      <Route path="/" element={<PullRequestsPage entity={entity} />} />
+      <Route path="/" element={<PullRequestsPage />} />
     </FlatRoutes>
   );
 }

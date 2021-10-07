@@ -22,6 +22,7 @@ import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const generatedColumns: TableColumn[] = [
   {
@@ -139,12 +140,14 @@ export const PullRequestsTableView: FC<Props> = ({
   );
 };
 
-export const PullRequestsTable = ({
-  entity,
-}: {
-  entity: Entity;
+type TableProps = {
+  /** @deprecated The entity is now grabbed from context instead */
+  entity?: Entity;
   branch?: string;
-}) => {
+};
+
+export const PullRequestsTable = (__props: TableProps) => {
+  const { entity } = useEntity();
   const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
     'open',
   );
