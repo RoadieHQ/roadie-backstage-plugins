@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { Entity } from '@backstage/catalog-model';
@@ -28,7 +29,7 @@ export const useRequest = (
   showTotal: boolean = false,
 ) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useEntityGithubScmIntegration();
+  const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -56,31 +57,10 @@ export const useRequest = (
       };
     }
     return maxResults ? data.slice(0, maxResults) : data;
-  }, []);
+  }, [baseUrl]);
 
   return {
     value,
-    loading,
-    error,
-  };
-};
-
-export const useAvatar = (username: string) => {
-  const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useEntityGithubScmIntegration();
-
-  const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
-
-    const response = await octokit.request(`GET /user/${username}`, {
-      baseUrl,
-    });
-    return response.data;
-  }, []);
-
-  return {
-    avatar: value.avatar_url,
     loading,
     error,
   };

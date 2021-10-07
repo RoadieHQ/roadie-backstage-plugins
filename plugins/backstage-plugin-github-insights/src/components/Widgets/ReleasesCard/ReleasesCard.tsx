@@ -43,7 +43,7 @@ const ReleasesCard = (_props: Props) => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
-  const { hostname } = useEntityGithubScmIntegration();
+  const { hostname } = useEntityGithubScmIntegration(entity);
 
   if (loading) {
     return <Progress />;

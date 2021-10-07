@@ -15,19 +15,20 @@
  */
 import React from 'react';
 import {
-  makeStyles,
   Avatar,
-  Grid,
-  Typography,
-  Divider,
-  Link,
   Box,
+  Divider,
+  Grid,
+  Link,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core-components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { useEntityGithubScmIntegration } from '../../../../../hooks/useEntityGithubScmIntegration';
 import { useContributor } from '../../../../../hooks/useContributor';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
   contributorsTooltipContainer: {
@@ -40,7 +41,8 @@ type Props = {
 };
 const ContributorTooltipContent = ({ contributorLogin }: Props) => {
   const classes = useStyles();
-  const { hostname } = useEntityGithubScmIntegration();
+  const { entity } = useEntity();
+  const { hostname } = useEntityGithubScmIntegration(entity);
   const { contributor, loading } = useContributor(contributorLogin);
 
   if (loading) {

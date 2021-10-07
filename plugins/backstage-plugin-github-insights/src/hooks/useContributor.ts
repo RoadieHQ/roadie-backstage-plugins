@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { ContributorData } from '../components/types';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const useContributor = (username: string) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useEntityGithubScmIntegration();
+  const { entity } = useEntity();
+  const { baseUrl } = useEntityGithubScmIntegration(entity);
 
   const { value, loading, error } = useAsync(async (): Promise<
     ContributorData
@@ -34,7 +37,7 @@ export const useContributor = (username: string) => {
     });
     const data = response.data;
     return data;
-  }, [username]);
+  }, [username, baseUrl]);
 
   return {
     contributor: value,

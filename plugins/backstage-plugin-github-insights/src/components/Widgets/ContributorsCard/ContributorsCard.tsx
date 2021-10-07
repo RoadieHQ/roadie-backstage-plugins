@@ -43,7 +43,7 @@ const ContributorsCard = (_props: Props) => {
   const { owner, repo } = useProjectEntity(entity);
   const classes = useStyles();
   const { value, loading, error } = useRequest(entity, 'contributors', 10);
-  const { hostname } = useEntityGithubScmIntegration();
+  const { hostname } = useEntityGithubScmIntegration(entity);
 
   if (loading) {
     return <Progress />;

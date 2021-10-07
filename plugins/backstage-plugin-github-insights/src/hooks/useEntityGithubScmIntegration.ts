@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 import { useApi } from '@backstage/core-plugin-api';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
-import { useEntity } from '@backstage/plugin-catalog-react';
-import { parseLocationReference } from '@backstage/catalog-model';
+import { Entity, parseLocationReference } from '@backstage/catalog-model';
 
-export const useEntityGithubScmIntegration = () => {
-  const { entity, loading, error } = useEntity();
+const defaultGithubIntegration = {
+  hostname: 'github.com',
+  baseUrl: 'https://api.github.com',
+};
+
+export const useEntityGithubScmIntegration = (entity: Entity) => {
   const integrations = useApi(scmIntegrationsApiRef);
-  if (loading || error) {
-    return {
-      hostname: '',
-      baseUrl: '',
-    };
+  if (!entity) {
+    return defaultGithubIntegration;
   }
   const location = parseLocationReference(
     entity.metadata.annotations!!['backstage.io/managed-by-location'] || '',
@@ -38,8 +38,5 @@ export const useEntityGithubScmIntegration = () => {
       baseUrl: scm.config.apiBaseUrl,
     };
   }
-  return {
-    hostname: 'github.com',
-    baseUrl: 'https://api.github.com',
-  };
+  return defaultGithubIntegration;
 };

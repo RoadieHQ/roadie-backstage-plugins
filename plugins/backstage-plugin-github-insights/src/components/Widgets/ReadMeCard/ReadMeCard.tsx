@@ -88,7 +88,7 @@ const ReadMeCard = (props: Props) => {
   const path = readmePath || 'README.md';
 
   const { value, loading, error } = useRequest(entity, request);
-  const { hostname } = useEntityGithubScmIntegration();
+  const { hostname } = useEntityGithubScmIntegration(entity);
 
   if (loading) {
     return <Progress />;
