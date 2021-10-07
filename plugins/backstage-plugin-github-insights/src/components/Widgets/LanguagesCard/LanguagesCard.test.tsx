@@ -16,14 +16,8 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -31,21 +25,23 @@ import { entityMock, languagesResponseMock } from '../../../mocks/mocks';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { LanguagesCard } from '..';
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import {
+  createScmIntegrationsApiMock,
+  defaultIntegrationsConfig,
+} from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_2: string) => undefined },
-  ],
-};
-
 const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
-  [configApiRef, config],
+  [
+    scmIntegrationsApiRef,
+    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+  ],
 ]);
 
 describe('LanguagesCard', () => {
@@ -56,8 +52,8 @@ describe('LanguagesCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/languages',
-        (_, res, ctx) => res(ctx.json(languagesResponseMock))
-      )
+        (_, res, ctx) => res(ctx.json(languagesResponseMock)),
+      ),
     );
   });
 
@@ -70,8 +66,8 @@ describe('LanguagesCard', () => {
               <LanguagesCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
 
     expect(await rendered.findByText(/TypeScript/)).toBeInTheDocument();

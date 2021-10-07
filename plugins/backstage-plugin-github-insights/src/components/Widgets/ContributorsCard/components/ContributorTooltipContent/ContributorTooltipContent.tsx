@@ -26,7 +26,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core-components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { useUrl } from '../../../../../hooks/useUrl';
+import { useEntityGithubScmIntegration } from '../../../../../hooks/useEntityGithubScmIntegration';
 import { useContributor } from '../../../../../hooks/useContributor';
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +40,7 @@ type Props = {
 };
 const ContributorTooltipContent = ({ contributorLogin }: Props) => {
   const classes = useStyles();
-  const { hostname } = useUrl();
+  const { hostname } = useEntityGithubScmIntegration();
   const { contributor, loading } = useContributor(contributorLogin);
 
   if (loading) {

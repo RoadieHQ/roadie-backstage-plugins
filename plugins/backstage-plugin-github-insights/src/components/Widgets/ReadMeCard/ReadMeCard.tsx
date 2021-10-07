@@ -16,14 +16,18 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MarkdownContent } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  MarkdownContent,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
-import { useUrl } from '../../../hooks/useUrl';
+import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   infoCard: {
     marginBottom: theme.spacing(3),
     '& + .MuiAlert-root': {
@@ -68,11 +72,11 @@ function b64DecodeUnicode(str: string): string {
   return decodeURIComponent(
     Array.prototype.map
       // eslint-disable-next-line func-names
-      .call(atob(str), function (c) {
+      .call(atob(str), function(c) {
         // eslint-disable-next-line prefer-template
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
-      .join("")
+      .join(''),
   );
 }
 
@@ -84,7 +88,7 @@ const ReadMeCard = (props: Props) => {
   const path = readmePath || 'README.md';
 
   const { value, loading, error } = useRequest(entity, request);
-  const { hostname } = useUrl();
+  const { hostname } = useEntityGithubScmIntegration();
 
   if (loading) {
     return <Progress />;
@@ -102,15 +106,15 @@ const ReadMeCard = (props: Props) => {
       className={classes.infoCard}
       deepLink={{
         link: `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-          value.url
+          value.url,
         )}/${path}`,
         title: 'Read me',
-        onClick: (e) => {
+        onClick: e => {
           e.preventDefault();
           window.open(
             `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-              value.url
-            )}/${path}`
+              value.url,
+            )}/${path}`,
           );
         },
       }}
@@ -122,17 +126,27 @@ const ReadMeCard = (props: Props) => {
         }}
       >
         <MarkdownContent
-          content={b64DecodeUnicode(value.content).replace(
-            /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp)(.*)\)/gim,
-            '[$1]' + `(//${hostname}/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
-              value.url
-            )}/` + '$2$3$4)').replace(
+          content={b64DecodeUnicode(value.content)
+            .replace(
+              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp)(.*)\)/gim,
+              '[$1]' +
+                `(//${hostname}/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
+                  value.url,
+                )}/` +
+                '$2$3$4)',
+            )
+            .replace(
               /\[([^\[\]]*)\]\((?!https?:\/\/)docs\/(.*?)(\.md)\)/gim,
-              '[$1](docs/$2/)').replace(
-                /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.md)\)/gim,
-                '[$1]' + `(//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-                  value.url
-                )}/` + '$2$3)')}
+              '[$1](docs/$2/)',
+            )
+            .replace(
+              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.md)\)/gim,
+              '[$1]' +
+                `(//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
+                  value.url,
+                )}/` +
+                '$2$3)',
+            )}
         />
       </div>
     </InfoCard>

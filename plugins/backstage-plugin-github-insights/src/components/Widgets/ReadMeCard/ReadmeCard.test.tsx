@@ -16,14 +16,8 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -31,21 +25,23 @@ import { entityMock, readmeResponseMock } from '../../../mocks/mocks';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { ReadMeCard } from '..';
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import {
+  createScmIntegrationsApiMock,
+  defaultIntegrationsConfig,
+} from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_2: string) => undefined },
-  ],
-};
-
 const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
-  [configApiRef, config],
+  [
+    scmIntegrationsApiRef,
+    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+  ],
 ]);
 
 describe('ReadmeCard', () => {
@@ -56,8 +52,8 @@ describe('ReadmeCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/readme',
-        (_, res, ctx) => res(ctx.json(readmeResponseMock))
-      )
+        (_, res, ctx) => res(ctx.json(readmeResponseMock)),
+      ),
     );
   });
 
@@ -70,13 +66,13 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(
       await rendered.findByText(
-        'Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end.'
-      )
+        'Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end.',
+      ),
     ).toBeInTheDocument();
   });
   it('should render unicode correctly', async () => {
@@ -88,11 +84,11 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(
-      await rendered.findByText('⭐', { exact: false })
+      await rendered.findByText('⭐', { exact: false }),
     ).toBeInTheDocument();
   });
   it('should render techdocs links correctly', async () => {
@@ -104,11 +100,12 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByText('TechDocs Test Link')).toHaveAttribute(
-      'href', 'docs/overview/what-is-backstage/',
+      'href',
+      'docs/overview/what-is-backstage/',
     );
   });
   it('should render images and add headlines correctly', async () => {
@@ -120,8 +117,8 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByAltText('headline')).toBeInTheDocument();
   });
@@ -134,11 +131,12 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByAltText('alt-text')).toHaveAttribute(
-      'title', 'cc some-title',
+      'title',
+      'cc some-title',
     );
   });
   it('should check image not to have title', async () => {
@@ -150,11 +148,12 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByAltText('headline')).not.toHaveAttribute(
-      'title', 'cc some-title',
+      'title',
+      'cc some-title',
     );
   });
   it('should render images url correctly', async () => {
@@ -166,11 +165,12 @@ describe('ReadmeCard', () => {
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByAltText('headline')).toHaveAttribute(
-      'src', '//github.com/mcalus3/backstage/raw/master/docs/assets/headline.png',
+      'src',
+      '//github.com/mcalus3/backstage/raw/master/docs/assets/headline.png',
     );
   });
 });

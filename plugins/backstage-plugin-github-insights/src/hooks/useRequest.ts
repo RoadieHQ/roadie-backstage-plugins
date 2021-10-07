@@ -18,7 +18,7 @@ import { Octokit } from '@octokit/rest';
 import { Entity } from '@backstage/catalog-model';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useProjectEntity } from './useProjectEntity';
-import { useUrl } from './useUrl';
+import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 
 export const useRequest = (
   entity: Entity,
@@ -28,7 +28,7 @@ export const useRequest = (
   showTotal: boolean = false,
 ) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useEntityGithubScmIntegration();
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -67,7 +67,7 @@ export const useRequest = (
 
 export const useAvatar = (username: string) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useEntityGithubScmIntegration();
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);

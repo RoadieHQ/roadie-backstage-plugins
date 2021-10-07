@@ -16,12 +16,12 @@
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { useUrl } from './useUrl';
+import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { ContributorData } from '../components/types';
 
 export const useContributor = (username: string) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useEntityGithubScmIntegration();
 
   const { value, loading, error } = useAsync(async (): Promise<
     ContributorData

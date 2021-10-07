@@ -14,87 +14,67 @@
  * limitations under the License.
  */
 import React from 'react';
-import { render, RenderResult, act, waitFor } from '@testing-library/react';
+import { act, render, RenderResult, waitFor } from '@testing-library/react';
 import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { wrapInTestApp } from '@backstage/test-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
-import {
-  configApiRef,
-  githubAuthApiRef
-} from '@backstage/core-plugin-api';
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
 
+import { ApiProvider, ApiRegistry, GithubAuth } from '@backstage/core-app-api';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
-  ApiProvider,
-  ApiRegistry,
-  GithubAuth,
-} from '@backstage/core-app-api';
-
+  createScmIntegrationsApiMock,
+  defaultIntegrationsConfig,
+} from '../../mocks/scmIntegrationsApiMock';
 
 const getSession = jest
   .fn()
   .mockResolvedValue({ providerInfo: { accessToken: 'access-token' } });
 
-const supportConfig = {
-  getString: (_2: string) => {
-    return '';
-  },
-
-  getOptionalString: (_3: string) => {
-    return null;
-  },
-
-  getConfigArray: (_: string) => {
-    return [];
-  },
-};
-
-const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_2: string) => undefined },
-  ],
-
-  getOptionalConfig: (_: string) => {
-    return supportConfig;
-  },
-};
-
 const apis = ApiRegistry.from([
   [githubAuthApiRef, new GithubAuth({ getSession } as any)],
-  [configApiRef, config],
+  [
+    scmIntegrationsApiRef,
+    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+  ],
 ]);
-
 
 describe('Insights Page', () => {
   it('should render', async () => {
     let renderResult: RenderResult;
 
     await act(async () => {
-      renderResult = render(wrapInTestApp(
-        <ApiProvider apis={apis}>
-          <ThemeProvider theme={lightTheme}>
-            <EntityProvider entity={{
-              apiVersion: '1',
-              kind: 'a',
-              metadata: {
-                name: 'Example Service',
-                annotations: {
-                  'github.com/project-slug': 'octocat/Hello-World',
-                },
-              },
-            }}>
-              <InsightsPage />
-            </EntityProvider>
-          </ThemeProvider>
-        </ApiProvider>
-
-      ));
+      renderResult = render(
+        wrapInTestApp(
+          <ApiProvider apis={apis}>
+            <ThemeProvider theme={lightTheme}>
+              <EntityProvider
+                entity={{
+                  apiVersion: '1',
+                  kind: 'a',
+                  metadata: {
+                    name: 'Example Service',
+                    annotations: {
+                      'github.com/project-slug': 'octocat/Hello-World',
+                      'backstage.io/managed-by-location':
+                        'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
+                    },
+                  },
+                }}
+              >
+                <InsightsPage />
+              </EntityProvider>
+            </ThemeProvider>
+          </ApiProvider>,
+        ),
+      );
     });
 
     await waitFor(() =>
-      expect(renderResult.getByText('GitHub Insights')).toBeInTheDocument()
+      expect(renderResult.getByText('GitHub Insights')).toBeInTheDocument(),
     );
   });
 });

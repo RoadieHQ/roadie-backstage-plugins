@@ -4,11 +4,11 @@ import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
-import { useUrl } from './useUrl';
+import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 
 export const useProtectedBranches = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useEntityGithubScmIntegration();
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -21,7 +21,7 @@ export const useProtectedBranches = (entity: Entity) => {
         owner,
         repo,
         protected: true,
-      }
+      },
     );
     return response.data;
   }, []);
@@ -35,7 +35,7 @@ export const useProtectedBranches = (entity: Entity) => {
 
 export const useRepoLicence = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useEntityGithubScmIntegration();
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -50,11 +50,11 @@ export const useRepoLicence = (entity: Entity) => {
           owner,
           repo,
           path: 'LICENSE',
-        }
+        },
       )) as OctokitResponse<any>;
       license = atob(response.data.content)
         .split('\n')
-        .map((line) => line.trim())
+        .map(line => line.trim())
         .filter(Boolean)[0];
     } catch (a) {
       license = 'No license file found';
