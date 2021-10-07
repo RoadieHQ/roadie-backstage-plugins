@@ -76,7 +76,7 @@ type Node = {
       description: string,
     },
     firstPatchedVersion: {
-      identifier: string,
+      identifier?: string,
     }
   }
 };

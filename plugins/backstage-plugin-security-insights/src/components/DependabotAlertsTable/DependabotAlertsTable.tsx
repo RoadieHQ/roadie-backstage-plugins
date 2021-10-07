@@ -41,7 +41,7 @@ type Node = {
       description: string,
     },
     firstPatchedVersion: {
-      identifier: string,
+      identifier?: string,
     }
   }
 };
@@ -106,7 +106,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
       state: node.dismissedAt ? 'Dismissed' : 'Open',
       name: getDetailsUrl(node.securityVulnerability.package.name, detailsUrl, node.dismissedAt, node.vulnerableManifestPath),
       severity: capitalize((node.securityVulnerability.severity).toLowerCase()),
-      patched_version: node.securityVulnerability.firstPatchedVersion.identifier
+      patched_version: node?.securityVulnerability?.firstPatchedVersion?.identifier || '',
     };
   });
   return (
