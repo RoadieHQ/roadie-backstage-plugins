@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { Link, List, ListItem, Chip } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
@@ -20,9 +21,9 @@ import Alert from '@material-ui/lab/Alert';
 import { InfoCard, Progress } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
-import { useUrl } from '../../../hooks/useUrl';
+import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
 
 type Release = {
@@ -43,7 +44,7 @@ const ReleasesCard = (_props: Props) => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
-  const { hostname } = useUrl();
+  const { hostname } = useEntityGithubScmIntegration(entity);
 
   if (loading) {
     return <Progress />;
@@ -61,7 +62,7 @@ const ReleasesCard = (_props: Props) => {
       deepLink={{
         link: `//${hostname}/${owner}/${repo}/releases`,
         title: 'Releases',
-        onClick: (e) => {
+        onClick: e => {
           e.preventDefault();
           window.open(`//${hostname}/${owner}/${repo}/releases`);
         },
@@ -78,10 +79,16 @@ const ReleasesCard = (_props: Props) => {
               rel="noopener noreferrer"
             >
               <p className={classes.releaseTitle}>{release.name}</p>
-              <LocalOfferOutlinedIcon fontSize="inherit" className={classes.releaseTagIcon} /> {release.tag_name}
+              <LocalOfferOutlinedIcon
+                fontSize="inherit"
+                className={classes.releaseTagIcon}
+              />{' '}
+              {release.tag_name}
               {/* by {release.author.login} */}
             </Link>
-            {release.prerelease && <Chip color="primary" size="small" label="Pre-release" />}
+            {release.prerelease && (
+              <Chip color="primary" size="small" label="Pre-release" />
+            )}
           </ListItem>
         ))}
       </List>

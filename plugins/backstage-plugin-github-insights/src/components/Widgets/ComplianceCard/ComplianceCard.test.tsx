@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
+
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -35,21 +30,23 @@ import {
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import ComplianceCard from '.';
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import {
+  createScmIntegrationsApiMock,
+  defaultIntegrationsConfig,
+} from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_2: string) => undefined },
-  ],
-};
-
 const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
-  [configApiRef, config],
+  [
+    scmIntegrationsApiRef,
+    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+  ],
 ]);
 
 describe('ComplianceCard', () => {
@@ -60,12 +57,12 @@ describe('ComplianceCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/contents/LICENSE',
-        (_, res, ctx) => res(ctx.json(licenseResponseMock))
+        (_, res, ctx) => res(ctx.json(licenseResponseMock)),
       ),
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/branches?protected=true',
-        (_, res, ctx) => res(ctx.json(branchesResponseMock))
-      )
+        (_, res, ctx) => res(ctx.json(branchesResponseMock)),
+      ),
     );
   });
 
@@ -78,8 +75,8 @@ describe('ComplianceCard', () => {
               <ComplianceCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
     expect(await rendered.findByText('master')).toBeInTheDocument();
     expect(await rendered.findByText('Apache License')).toBeInTheDocument();

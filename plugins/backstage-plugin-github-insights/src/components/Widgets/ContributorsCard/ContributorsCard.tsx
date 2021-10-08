@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
@@ -20,9 +21,9 @@ import { InfoCard, Progress } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import ContributorsList from './components/ContributorsList';
 import { useRequest } from '../../../hooks/useRequest';
-import { useUrl } from '../../../hooks/useUrl';
+import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -43,7 +44,7 @@ const ContributorsCard = (_props: Props) => {
   const { owner, repo } = useProjectEntity(entity);
   const classes = useStyles();
   const { value, loading, error } = useRequest(entity, 'contributors', 10);
-  const { hostname } = useUrl();
+  const { hostname } = useEntityGithubScmIntegration(entity);
 
   if (loading) {
     return <Progress />;

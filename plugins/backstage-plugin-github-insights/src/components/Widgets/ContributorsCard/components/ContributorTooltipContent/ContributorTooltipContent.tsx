@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import {
-  makeStyles,
   Avatar,
-  Grid,
-  Typography,
-  Divider,
-  Link,
   Box,
+  Divider,
+  Grid,
+  Link,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core-components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { useUrl } from '../../../../../hooks/useUrl';
+import { useEntityGithubScmIntegration } from '../../../../../hooks/useEntityGithubScmIntegration';
 import { useContributor } from '../../../../../hooks/useContributor';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
   contributorsTooltipContainer: {
@@ -40,7 +42,8 @@ type Props = {
 };
 const ContributorTooltipContent = ({ contributorLogin }: Props) => {
   const classes = useStyles();
-  const { hostname } = useUrl();
+  const { entity } = useEntity();
+  const { hostname } = useEntityGithubScmIntegration(entity);
   const { contributor, loading } = useContributor(contributorLogin);
 
   if (loading) {
