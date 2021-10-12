@@ -25,7 +25,7 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { Chip, Tooltip } from '@material-ui/core';
+import { Chip, Tooltip, makeStyles } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { useAlerts } from '../../hooks/usePrometheus';
@@ -36,6 +36,18 @@ export default {
 
   component: StatusOK,
 };
+
+const useStyles = makeStyles((theme) => ({
+  chipRoot: {
+    margin: theme.spacing(1),
+    height: '100%',
+  },
+  chipLabel: {
+    overflowWrap: 'break-word',
+    whiteSpace: 'normal',
+    textOverflow: 'clip'
+  }
+}));
 
 const state = (str: string) => {
   switch (str) {
@@ -102,7 +114,12 @@ const columns: TableColumn<PrometheusDisplayableAlert>[] = [
     render: row => (
       <>
         {Object.entries(row.annotations).map(([k, v]) => (
-          <Chip key={k + v} label={`${k}: ${v}`} size="small" />
+          <Chip
+            key={k + v}
+            label={`${k}: ${v}`}
+            size="small"
+            classes={{ root: useStyles().chipRoot, label: useStyles().chipLabel, }}
+          />
         ))}
       </>
     ),
