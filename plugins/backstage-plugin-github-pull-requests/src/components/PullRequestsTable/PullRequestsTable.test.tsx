@@ -16,14 +16,8 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef,
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { msw } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -31,6 +25,7 @@ import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
 import { entityMock, openPullsRequestMock } from '../../mocks/mocks';
 import { PullRequestsTable } from './PullRequestsTable';
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -64,7 +59,9 @@ describe('PullRequestsTable', () => {
   it('should display a table with data from requests', async () => {
     const rendered = render(
       <ApiProvider apis={apis}>
-        <PullRequestsTable entity={entityMock} />
+        <EntityProvider entity={entityMock}>
+          <PullRequestsTable />
+        </EntityProvider>
       </ApiProvider>,
     );
     expect(
