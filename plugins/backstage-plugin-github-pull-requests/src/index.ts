@@ -22,6 +22,7 @@ export {
   githubPullRequestsPlugin,
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
+  EntityGithubPullRequestsTable
 } from './plugin';
 export * from './api';
 export {
