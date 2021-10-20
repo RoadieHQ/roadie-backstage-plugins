@@ -34,6 +34,7 @@ export const securityInsightsPlugin = createPlugin({
 
 export const EntitySecurityInsightsContent = securityInsightsPlugin.provide(
   createRoutableExtension({
+    name: 'EntitySecurityInsightsContent',
     component: () => import('./components/Router').then((m) => m.Router),
     mountPoint: entityContentRouteRef,
   })
@@ -41,17 +42,19 @@ export const EntitySecurityInsightsContent = securityInsightsPlugin.provide(
 
 export const EntityGithubDependabotContent = securityInsightsPlugin.provide(
   createComponentExtension({
-   component: {
-     lazy: () =>
-       import('./components/GithubDependabotTab').then(
-         (m) => m.GithubDependabotTab
-       ),
-   },
- })
+    name: 'EntityGithubDependabotContent',
+    component: {
+      lazy: () =>
+        import('./components/GithubDependabotTab').then(
+          (m) => m.GithubDependabotTab
+        ),
+    },
+  })
 );
 
 export const EntitySecurityInsightsCard = securityInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntitySecurityInsightsCard',
     component: {
       lazy: () =>
         import('./components/SecurityInsightsWidget').then(
@@ -63,6 +66,7 @@ export const EntitySecurityInsightsCard = securityInsightsPlugin.provide(
 
 export const EntityDependabotAlertsCard = securityInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityDependabotAlertsCard',
     component: {
       lazy: () =>
         import('./components/DependabotAlertsWidget').then(

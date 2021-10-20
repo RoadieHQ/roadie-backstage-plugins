@@ -29,6 +29,7 @@ export const travisciPlugin = createPlugin({
 
 export const EntityTravisCIContent = travisciPlugin.provide(
   createRoutableExtension({
+    name: 'EntityTravisCIContent',
     component: () => import('./Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
   }),
@@ -36,6 +37,7 @@ export const EntityTravisCIContent = travisciPlugin.provide(
 
 export const EntityTravisCIOverviewCard = travisciPlugin.provide(
   createComponentExtension({
+    name: 'EntityTravisCIOverviewCard',
     component: {
       lazy: () =>
         import('./components/LastBuildCard').then(m => m.LastBuildCard),

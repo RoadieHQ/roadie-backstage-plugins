@@ -48,6 +48,7 @@ export const buildkitePlugin = createPlugin({
 
 export const EntityBuildkiteContent = buildkitePlugin.provide(
   createRoutableExtension({
+    name: 'EntityBuildkiteContent',
     component: () => import('./components/Router').then((m) => m.Router),
     mountPoint: entityContentRouteRef,
   })

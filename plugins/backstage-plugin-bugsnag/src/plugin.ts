@@ -40,6 +40,7 @@ export const backstagePluginBugsnag = createPlugin({
 
 export const EntityBugsnagErrorsOverviewTable = backstagePluginBugsnag.provide(
   createRoutableExtension({
+    name: 'EntityBugsnagErrorsOverviewTable',
     component: () =>
       import('./components/ErrorsOverviewComponent').then(m => m.ErrorsOverview),
     mountPoint: rootRouteRef,

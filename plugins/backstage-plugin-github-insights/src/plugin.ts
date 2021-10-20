@@ -31,6 +31,7 @@ export const githubInsightsPlugin = createPlugin({
 
 export const EntityGithubInsightsContent = githubInsightsPlugin.provide(
   createRoutableExtension({
+    name: 'EntityGithubInsightsContent',
     component: () => import('./components/InsightsPage').then(m => m.InsightsPage),
     mountPoint: rootRouteRef,
   })
@@ -38,6 +39,7 @@ export const EntityGithubInsightsContent = githubInsightsPlugin.provide(
 
 export const EntityGithubInsightsComplianceCard = githubInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubInsightsComplianceCard',
     component: {
       lazy: () =>
         import('./components/Widgets/index').then((m) => m.ComplianceCard),
@@ -47,6 +49,7 @@ export const EntityGithubInsightsComplianceCard = githubInsightsPlugin.provide(
 
 export const EntityGithubInsightsContributorsCard = githubInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubInsightsContributorsCard',
     component: {
       lazy: () =>
         import('./components/Widgets/index').then((m) => m.ContributorsCard),
@@ -56,6 +59,7 @@ export const EntityGithubInsightsContributorsCard = githubInsightsPlugin.provide
 
 export const EntityGithubInsightsLanguagesCard = githubInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubInsightsLanguagesCard',
     component: {
       lazy: () =>
         import('./components/Widgets/index').then((m) => m.LanguagesCard),
@@ -65,6 +69,7 @@ export const EntityGithubInsightsLanguagesCard = githubInsightsPlugin.provide(
 
 export const EntityGithubInsightsReadmeCard = githubInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubInsightsReadmeCard',
     component: {
       lazy: () =>
         import('./components/Widgets/index').then((m) => m.ReadMeCard),
@@ -74,6 +79,7 @@ export const EntityGithubInsightsReadmeCard = githubInsightsPlugin.provide(
 
 export const EntityGithubInsightsReleasesCard = githubInsightsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubInsightsReleasesCard',
     component: {
       lazy: () =>
         import('./components/Widgets/index').then((m) => m.ReleasesCard),

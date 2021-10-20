@@ -40,6 +40,7 @@ export const datadogPlugin = createPlugin({
 
 export const EntityDatadogContent = datadogPlugin.provide(
   createRoutableExtension({
+    name: 'EntityDatadogContent',
     component: () => import('./Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
   }),
@@ -47,6 +48,7 @@ export const EntityDatadogContent = datadogPlugin.provide(
 
 export const EntityDatadogGraphCard = datadogPlugin.provide(
   createComponentExtension({
+    name: 'EntityDatadogGraphCard',
     component: {
       lazy: () => import('./components/GraphWidget').then(m => m.GraphWidget),
     },

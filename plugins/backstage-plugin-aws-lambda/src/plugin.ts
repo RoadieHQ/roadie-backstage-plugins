@@ -36,6 +36,7 @@ export const awsLambdaPlugin = createPlugin({
 
 export const EntityAWSLambdaOverviewCard = awsLambdaPlugin.provide(
   createComponentExtension({
+    name: 'EntityAWSLambdaOverviewCard',
     component: {
       lazy: () =>
         import('./components/AWSLambdaOverview/AWSLambdaOverview').then(

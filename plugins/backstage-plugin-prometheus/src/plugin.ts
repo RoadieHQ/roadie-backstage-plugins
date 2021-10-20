@@ -45,6 +45,7 @@ export const backstagePluginPrometheusPlugin = createPlugin({
 
 export const EntityPrometheusContent = backstagePluginPrometheusPlugin.provide(
   createRoutableExtension({
+    name: 'EntityPrometheusContent',
     component: () =>
       import('./components/PrometheusContentWrapper').then(m => m.default),
     mountPoint: rootRouteRef,
@@ -53,6 +54,7 @@ export const EntityPrometheusContent = backstagePluginPrometheusPlugin.provide(
 
 export const EntityPrometheusAlertCard = backstagePluginPrometheusPlugin.provide(
   createComponentExtension({
+    name: 'EntityPrometheusAlertCard',
     component: {
       lazy: () =>
         import('./components/PrometheusAlertStatus').then(
@@ -64,6 +66,7 @@ export const EntityPrometheusAlertCard = backstagePluginPrometheusPlugin.provide
 
 export const EntityPrometheusGraphCard = backstagePluginPrometheusPlugin.provide(
   createComponentExtension({
+    name: 'EntityPrometheusGraphCard',
     component: {
       lazy: () =>
         import('./components/PrometheusGraph').then(

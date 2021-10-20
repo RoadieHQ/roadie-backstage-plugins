@@ -28,6 +28,7 @@ export const argocdPlugin = createPlugin({
 
 export const EntityArgoCDContent = argocdPlugin.provide(
   createRoutableExtension({
+    name: 'EntityArgoCDContent',
     component: () => import('./Router').then((m) => m.Router),
     mountPoint: entityContentRouteRef,
   })
@@ -35,6 +36,7 @@ export const EntityArgoCDContent = argocdPlugin.provide(
 
 export const EntityArgoCDOverviewCard = argocdPlugin.provide(
   createComponentExtension({
+    name: 'EntityArgoCDOverviewCard',
     component: {
       lazy: () =>
         import('./components/ArgoCDDetailsCard').then(
@@ -46,6 +48,7 @@ export const EntityArgoCDOverviewCard = argocdPlugin.provide(
 
 export const EntityArgoCDHistoryCard = argocdPlugin.provide(
   createComponentExtension({
+    name: 'EntityArgoCDHistoryCard',
     component: {
       lazy: () =>
         import('./components/ArgoCDHistoryCard').then(

@@ -40,6 +40,7 @@ export const githubPullRequestsPlugin = createPlugin({
 
 export const EntityGithubPullRequestsContent = githubPullRequestsPlugin.provide(
   createRoutableExtension({
+    name: 'EntityGithubPullRequestsContent',
     component: () => import('./components/Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
   }),
@@ -47,6 +48,7 @@ export const EntityGithubPullRequestsContent = githubPullRequestsPlugin.provide(
 
 export const EntityGithubPullRequestsOverviewCard = githubPullRequestsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubPullRequestsOverviewCard',
     component: {
       lazy: () =>
         import('./components/PullRequestsStatsCard').then(
@@ -58,6 +60,7 @@ export const EntityGithubPullRequestsOverviewCard = githubPullRequestsPlugin.pro
 
 export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
   createComponentExtension({
+    name: 'EntityGithubPullRequestsTable',
     component: {
       lazy: () =>
         import('./components/PullRequestsTable').then(
