@@ -1853,9 +1853,9 @@
     yn "^4.0.0"
 
 "@backstage/plugin-scaffolder-backend@^0.15.1", "@backstage/plugin-scaffolder-backend@^0.15.2":
-  version "0.15.8"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.8.tgz#34a67b005d8d09c67ba5d43f0f42133628a7c0f3"
-  integrity sha512-odpI3NSI8tlJCuQ0+5lWFCmf40qCqelF50A4W7BIPUZ6CEfobnO/33PHL1Cw3mldtwETxDYBE5nkJbeqY0SAuw==
+  version "0.15.9"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-0.15.9.tgz#e177a05394a1359ef9898d025e7c0adff15e03de"
+  integrity sha512-T7Z2VdowwRmVbYTOMI2Rj+xG9PiBlOK2t8Yrn/IyHzqq61Ayu8kSrksgYIusSqu2TU7sAHPscieGeqtBn/Kt4A==
   dependencies:
     "@backstage/backend-common" "^0.9.6"
     "@backstage/catalog-client" "^0.5.0"
