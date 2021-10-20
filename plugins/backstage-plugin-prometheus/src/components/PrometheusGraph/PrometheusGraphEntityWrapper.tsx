@@ -20,7 +20,6 @@ import { PrometheusGraph } from './PrometheusGraph';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
   isPrometheusGraphAvailable,
-  PROMETHEUS_ALERT_ANNOTATION,
   PROMETHEUS_RULE_ANNOTATION,
 } from '../util';
 
@@ -37,7 +36,7 @@ export const PrometheusGraphEntityWrapper = ({
   const graphContent = isPrometheusGraphAvailable(entity);
   if (!graphContent) {
     return (
-      <MissingAnnotationEmptyState annotation={PROMETHEUS_ALERT_ANNOTATION} />
+      <MissingAnnotationEmptyState annotation={PROMETHEUS_RULE_ANNOTATION} />
     );
   }
   const ruleTuples = graphContent
