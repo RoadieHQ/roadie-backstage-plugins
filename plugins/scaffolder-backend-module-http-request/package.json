@@ -1,5 +1,5 @@
 {
-  "name": "@roadiehq/plugin-scaffolder-http-request",
+  "name": "@roadiehq/backstage-plugin-scaffolder-http-request",
   "version": "0.0.1",
   "main": "src/index.ts",
   "types": "src/index.ts",

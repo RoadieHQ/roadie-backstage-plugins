@@ -1,16 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  extends: [require.resolve('@backstage/cli/config/eslint.backend')],
+  extends: [require.resolve('@backstage/cli/config/eslint')],
   rules: {
-    'notice/notice': [
-      'error',
-      {
-        templateFile: path.resolve(
-          __dirname,
-          '../../roadie-notice-template.txt',
-        ),
-      },
-    ],
+    'no-restricted-imports': 'off',
   },
 };
