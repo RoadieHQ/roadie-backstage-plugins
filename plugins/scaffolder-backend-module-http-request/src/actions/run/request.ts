@@ -1,0 +1,122 @@
+/*
+ * Copyright 2021 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/*
+ * Copyright 2021 The Backstage Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { http } from './helpers';
+import { HttpOptions, Headers, Params, Methods } from './types';
+
+export function createHttpAction() {
+  return createTemplateAction<{
+    url: string;
+    method: Methods;
+    headers?: Headers;
+    params?: Params;
+  }>({
+    id: 'http:request',
+    description: 'Creates a get request',
+    schema: {
+      input: {
+        type: 'object',
+        required: ['url', 'method'],
+        properties: {
+          method: {
+            title: 'Method',
+            description: 'The method type of the request',
+            enum: ['GET', 'POST', 'UPDATE', 'PUT', 'DELETE'],
+          },
+          url: {
+            title: 'The URL you want to get',
+            description: 'The http endpoint you want to query',
+            type: 'string',
+          },
+          headers: {
+            title: 'Request Headers',
+            description: 'The Headers you would like to pass to your request',
+            type: 'object',
+          },
+          params: {
+            title: 'Request query',
+            description:
+              'The query parameters you would like to pass to your request',
+            type: 'object',
+          },
+          body: {
+            title: 'Request body',
+            description: 'The body you would like to pass to your request',
+            type: 'object',
+          },
+        },
+      },
+      output: {
+        type: 'object',
+        properties: {
+          code: {
+            title: 'Response Code',
+            type: 'string',
+          },
+          headers: {
+            title: 'Response Headers',
+            type: 'object',
+          },
+          body: {
+            title: 'Response Body',
+            type: 'object',
+          },
+        },
+      },
+    },
+
+    async handler(ctx) {
+      const { input } = ctx;
+      const { url, method, params } = input;
+
+      ctx.logger.info(
+        `Creating ${method} request with http:request scaffolder action against ${url}`,
+      );
+
+      const queryParams: string = params
+        ? new URLSearchParams(input.params).toString()
+        : '';
+
+      const httpOptions: HttpOptions = {
+        method,
+        url: queryParams !== '' ? `${url}?${queryParams}` : url,
+        headers: input.headers ? (input.headers as Headers) : {},
+      };
+
+      const { code, headers, body } = await http(httpOptions, ctx.logger);
+
+      ctx.output('code', code);
+      ctx.output('headers', headers);
+      ctx.output('body', body);
+    },
+  });
+}
