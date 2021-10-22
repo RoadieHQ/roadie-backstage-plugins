@@ -31,7 +31,7 @@
     "@gitbeaker/node": "^29.2.0",
     "@octokit/rest": "^18.5.3",
     "@roadiehq/backstage-plugin-aws-auth": "^0.3.2",
-    "@roadiehq/backstage-plugin-scaffolder-http-request": "^0.0.1",
+    "@roadiehq/scaffolder-backend-module-http-request": "^1.0.0",
     "app": "^0.0.4",
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
