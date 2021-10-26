@@ -26,6 +26,7 @@ import scaffolder from './plugins/scaffolder';
 import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import aws from './plugins/aws';
+import argocd from './plugins/argocd';
 import { PluginEnvironment } from './types';
 
 function makeCreateEnv(config: Config) {
@@ -60,6 +61,7 @@ async function main() {
   const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
   const appEnv = useHotMemoize(module, () => createEnv('app'));
   const awsEnv = useHotMemoize(module, () => createEnv('aws'));
+  const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -68,6 +70,7 @@ async function main() {
   apiRouter.use('/techdocs', await techdocs(techdocsEnv));
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/aws', await aws(awsEnv));
+  apiRouter.use('/argocd', await argocd(argocdEnv));
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)
