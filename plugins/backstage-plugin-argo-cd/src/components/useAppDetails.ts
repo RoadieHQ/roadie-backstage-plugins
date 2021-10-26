@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { errorApiRef, useApi } from '@backstage/core-plugin-api';
+import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
 import { argoCDApiRef } from '../api';
 
@@ -30,17 +30,49 @@ export const useAppDetails = ({
 }) => {
   const api = useApi(argoCDApiRef);
   const errorApi = useApi(errorApiRef);
+  const configApi = useApi(configApiRef);
+  const argoConfigType = configApi
+    .getConfigArray('argocd.appLocatorMethods')
+    .filter(element => element.getString('type') === 'config');
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {
     try {
-      if (appName) {
+      if (appName && !argoConfigType) {
         return await api.getAppDetails({ url, appName });
+      }
+      if (appName && argoConfigType) {
+        const kubeInfo = await api.argoServiceLocator({
+          appName: appName as string,
+        });
+        if (kubeInfo instanceof Error) return kubeInfo;
+        const promises = kubeInfo.map(async (instance: any) => {
+          const apiOut = await api.getAppDetails({
+            url,
+            appName,
+            instance: instance.name,
+          });
+          if (!apiOut.metadata) {
+            return {
+              status: {
+                history: [],
+                sync: { status: 'Missing' },
+                health: { status: 'Missing' },
+                operationState: {},
+              },
+              metadata: { name: appName, instance: instance.name },
+            };
+          }
+          apiOut.metadata.instance = instance;
+          return apiOut;
+        });
+        const output = await Promise.all(promises);
+        return output;
       }
       if (appSelector || projectName) {
         return await api.listApps({ url, appSelector, projectName });
       }
       return Promise.reject('Neither appName nor appSelector provided');
-    } catch (e) {
+    } catch (e: any) {
       errorApi.post(e);
       return Promise.reject(e);
     }

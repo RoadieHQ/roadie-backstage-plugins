@@ -1,7 +1,16 @@
 import * as t from 'io-ts';
 
 export const argoCDAppDetails = t.type({
-  metadata: t.type({ name: t.string }),
+  metadata: t.type({
+    name: t.string,
+    instance: t.union([
+      t.type({
+        name: t.union([t.string, t.undefined]),
+        url: t.union([t.string, t.undefined]),
+      }),
+      t.undefined,
+    ]),
+  }),
   status: t.type({
     sync: t.type({
       status: t.string,
@@ -12,12 +21,14 @@ export const argoCDAppDetails = t.type({
     operationState: t.type({
       finishedAt: t.string,
     }),
-    history: t.array(t.type({
-      id: t.number,
-      revision: t.string,
-      deployStartedAt: t.union([t.string, t.undefined]),
-      deployedAt: t.union([t.string, t.undefined]),
-    })),
+    history: t.array(
+      t.type({
+        id: t.number,
+        revision: t.string,
+        deployStartedAt: t.union([t.string, t.undefined]),
+        deployedAt: t.union([t.string, t.undefined]),
+      }),
+    ),
   }),
 });
 

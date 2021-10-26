@@ -1,4 +1,7 @@
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  createApiRef,
+  DiscoveryApi,
+} from '@backstage/core-plugin-api';
 import {
   argoCDAppDetails,
   ArgoCDAppDetails,
@@ -6,7 +9,10 @@ import {
   ArgoCDAppList,
 } from '../types';
 import { Type as tsType } from 'io-ts';
-import { decode as tsDecode, isDecodeError as tsIsDecodeError } from 'io-ts-promise';
+import {
+  decode as tsDecode,
+  isDecodeError as tsIsDecodeError,
+} from 'io-ts-promise';
 import reporter from 'io-ts-reporters';
 
 export interface ArgoCDApi {
@@ -18,7 +24,11 @@ export interface ArgoCDApi {
   getAppDetails(options: {
     url: string;
     appName: string;
+    instance?: string;
   }): Promise<ArgoCDAppDetails>;
+  argoServiceLocator(options: {
+    appName: string;
+  }): Promise<Array<string> | Error>;
 }
 
 export const argoCDApiRef = createApiRef<ArgoCDApi>({
@@ -28,17 +38,26 @@ export const argoCDApiRef = createApiRef<ArgoCDApi>({
 
 export type Options = {
   discoveryApi: DiscoveryApi;
+  backendBaseUrl: string;
+  searchInstances: boolean;
   proxyPath?: string;
 };
 
 export class ArgoCDApiClient implements ArgoCDApi {
   private readonly discoveryApi: DiscoveryApi;
+  private readonly backendBaseUrl: string;
+  private readonly searchInstances: boolean;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
+    this.backendBaseUrl = options.backendBaseUrl;
+    this.searchInstances = options.searchInstances;
   }
 
-  private async getProxyUrl() {
+  private async getBaseUrl() {
+    if (this.searchInstances === true) {
+      return `${this.backendBaseUrl}/api/argocd`;
+    }
     return await this.discoveryApi.getBaseUrl('proxy');
   }
 
@@ -70,7 +89,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     appSelector?: string;
     projectName?: string;
   }) {
-    const proxyUrl = await this.getProxyUrl();
+    const proxyUrl = await this.getBaseUrl();
     const params: { [key: string]: string | undefined } = {
       selector: options.appSelector,
       project: options.projectName,
@@ -88,11 +107,38 @@ export class ArgoCDApiClient implements ArgoCDApi {
     );
   }
 
-  async getAppDetails(options: { url: string; appName: string }) {
-    const proxyUrl = await this.getProxyUrl();
+  async getAppDetails(options: {
+    url: string;
+    appName: string;
+    instance?: string;
+  }) {
+    const proxyUrl = await this.getBaseUrl();
+    if (this.searchInstances === true) {
+      return await this.fetchDecode(
+        `${proxyUrl}/argoInstance/${options.instance}/applications/${options.appName}`,
+        argoCDAppDetails,
+      );
+    }
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications/${options.appName}`,
       argoCDAppDetails,
     );
+  }
+
+  async argoServiceLocator(options: { appName: string }) {
+    const proxyUrl = await this.getBaseUrl();
+    return fetch(`${proxyUrl}/find/${options.appName}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async response => {
+        const resp = await response.json();
+        return resp;
+      })
+      .catch(_ => {
+        throw new Error('Cannot get argo location(s) for service');
+      });
   }
 }

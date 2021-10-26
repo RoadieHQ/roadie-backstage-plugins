@@ -7,5 +7,6 @@ module.exports = {
     // causing this issue but one of them is. Eventually the @backstage eslint config will
     // be updated to support V3 of @typescript-eslint and this rule can be defaulted.
     '@typescript-eslint/camelcase': 0,
+    'no-console': [0],
   },
 };

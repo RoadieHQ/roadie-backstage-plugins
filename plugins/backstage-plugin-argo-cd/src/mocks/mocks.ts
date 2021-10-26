@@ -83,6 +83,7 @@ export const getResponseStubMissingData = {
 export const getResponseStub = {
   metadata: {
     name: 'guestbook',
+    instance: { name: 'argoInstance1', url: 'https://test.com' },
     namespace: 'argocd',
     selfLink:
       '/apis/argoproj.io/v1alpha1/namespaces/argocd/applications/guestbook',
@@ -219,10 +220,10 @@ export const getResponseStub = {
 
 export const getEmptyResponseStub = {
   metadata: {
-    resourceVersion: '7277391'
+    resourceVersion: '7277391',
   },
-  items: null
-}
+  items: null,
+};
 
 export class ArgoCDApiMock implements ArgoCDApi {
   // @ts-ignore
