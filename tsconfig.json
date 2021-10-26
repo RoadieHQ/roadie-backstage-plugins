@@ -1,10 +1,10 @@
 {
   "extends": "@backstage/cli/config/tsconfig.json",
   "include": [
-    "packages/*/src",
-    "plugins/*/src",
-    "plugins/*/dev",
-    "plugins/*/migrations",
+    "packages/**/src",
+    "plugins/**/src",
+    "plugins/**/dev",
+    "plugins/**/migrations",
     "packages/app/cypress/types.d.ts",
     "packages/app/cypress/integration/*",
     "packages/app/cypress/plugins/*"

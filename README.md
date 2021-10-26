@@ -1,4 +1,4 @@
-This monorepo will contain all plugins we, at Roadie, have worked on up until now. Currently we are in the process of integration so for now you may not find all the plugins in this repository, so you can search for the ones we still haven't integrated [here](https://github.com/RoadieHQ?q=backstage-plugins&type=public&language=&sort=stargazers) or look them up on [npmjs](https://npmjs.com).
+This repo contains the Backstage plugins we, at Roadie, create and maintain. These plugins are published and you can look them up on [npmjs](https://npmjs.com).
 
 
 ## Getting Started
@@ -26,6 +26,7 @@ cd packages/app
 
 folder.
 
+
 Inside this repository you can add other plugins by running 
 
 ```bash
@@ -40,7 +41,6 @@ followed by
 yarn install
 ```
 and running same command in root directory.
-
 
 You should be able to run application from root directory, by running
 
@@ -66,9 +66,11 @@ yarn dev
 
  [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite). 
 
+ [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag). 
+
 ## Structure of the repository.
 
-This repository, as mentioned above, will be a place where all of the plugins we have developed will be integrated under `/plugins` folder. This way it will be easy and straightforward to use and/or modify them by following steps below:
+This repository is a place where all of the RoadieHQ plugins we are developed are integrated under `/plugins` folder. They may be uses and/or modified by following steps below:
  
 ### Plugins container
 
@@ -79,7 +81,7 @@ cd roadie-backstage-plugin/plugins
 cd selected-plugin
 ```
 
-Plugin folders will consist separate unit tests per every plugin, while general e2e tests are written under 
+Plugin folders consist separate unit tests per every plugin, while general e2e tests are written under 
 
 ```bash
 cd roadie-backstage-plugin/packages/app/cypress/integration
@@ -95,7 +97,7 @@ cd roadie-backstage-plugin/plugins
 cd selected-plugin
 ```
 
-Plugin folders will consist separate unit tests per every plugin, while general E2E tests are written under 
+Plugin folders consist of separate unit tests for each plugin, while general E2E tests are written under 
 
 ```bash
 cd roadie-backstage-plugin/packages/app/cypress/integration
@@ -104,7 +106,7 @@ folder.
 
 ## Community
 
-- [Discord chatroom](https://discord.gg/YbBfjbgt) - Get support 
+- [Discord chatroom](https://discord.gg/d9SJrQR5uH) - Get support 
 - [Contributing](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
 - Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
 

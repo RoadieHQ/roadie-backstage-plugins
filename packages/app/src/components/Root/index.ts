@@ -14,4 +14,5 @@
  * limitations under the License.
  */
 
+// eslint-disable-next-line notice/notice
 export { Root } from './Root';

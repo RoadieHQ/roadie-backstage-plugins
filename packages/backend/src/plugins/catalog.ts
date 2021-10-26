@@ -1,3 +1,4 @@
+// eslint-disable-next-line notice/notice
 import {
   CatalogBuilder,
   createRouter

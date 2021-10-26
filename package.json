@@ -32,13 +32,14 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "plugins/*"
+      "plugins/**"
     ]
   },
   "devDependencies": {
     "@backstage/cli": "^0.7.4",
     "@spotify/prettier-config": "^7.0.0",
     "concurrently": "^6.0.0",
+    "eslint-plugin-notice": "^0.9.10",
     "lerna": "^4.0.0",
     "prettier": "^1.19.1"
   },

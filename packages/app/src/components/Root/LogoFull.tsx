@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// eslint-disable-next-line notice/notice
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 

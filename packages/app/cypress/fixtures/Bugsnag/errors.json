@@ -1,0 +1,23 @@
+[{
+        "id": "123456qwerty!!",
+        "severity": "warning",
+        "project_id": "0987qwert!!",
+        "first_seen": "2021-09-05T09:17:17.384804Z",
+        "last_seen": "2021-09-20T09:17:17.384804Z",
+        "events": 3,
+        "release_stages": "Development",
+        "error_class": "Error",
+        "users": 5
+    },
+    {
+        "id": "123456qwerty2!!",
+        "severity": "warning",
+        "project_id": "0987qwert!!",
+        "first_seen": "2021-09-11T09:17:17.384804Z",
+        "last_seen": "2021-09-20T09:17:17.384804Z",
+        "events": 3,
+        "release_stages": "Development",
+        "error_class": "Error",
+        "users": 5
+    }
+]
