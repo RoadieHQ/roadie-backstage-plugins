@@ -23,10 +23,6 @@ describe('scaffolder http request', () => {
   })
 
   describe('Navigating to the actions page', () => {
-    it('should show http:request', () => {
-      cy.contains('http:request');
-    });
-
     it('should show http:backstage:request', () => {
       cy.contains('http:backstage:request');
     });

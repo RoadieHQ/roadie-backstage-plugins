@@ -2,6 +2,10 @@
 
 Welcome to the `http` actions for the `scaffolder-backend`.
 
+This contains one action; `http:backstage:request`.
+
+The `http:backstage:request` action allows the task to call any of the backstage APIs available to the user that triggers it. The action takes care of passing the authentication token of the user to the task execution so that the action can perform actions on behalf of the user that triggers it.
+
 ## Getting started
 
 You need to configure the action in your backend:
@@ -20,7 +24,6 @@ Configure the action:
 // packages/backend/src/plugins/scaffolder.ts
 
 const actions = [
-  createHttpAction(),
   createHttpBackstageAction({ config }),
   ...createBuiltInActions({
     containerRunner,
@@ -59,33 +62,20 @@ spec:
   parameters:
     - title: Fill in some params
       properties:
-        httpGetUrl:
-          title: Get Url
+        httpGetPath:
+          title: Get Path
           type: string
-          description: The url endpoint you want to get
+          description: The path you want to get on your backstage instance
           ui:autofocus: true
           ui:options:
             rows: 5
 
   steps:
-    - id: get_request
-      name: Get request
-      action: http:request
-      input:
-        method: 'GET'
-        url: '{{ parameters.httpGetUrl }}'
-        headers:
-          test: 'hello'
-          foo: 'bar'
-        params:
-          name: 'test'
-          bar: 'foo'
-
     - id: backstage_request
       name: backstage request
       action: http:backstage:request
       input:
-        method: 'POST'
+        method: 'GET'
         path: '/api/proxy/snyk/org/org/project/project-id/aggregated-issues'
         headers:
           test: 'hello'
@@ -95,12 +85,9 @@ spec:
           bar: 'foo'
 
   output:
-    getResponse: '{{ steps.get_request.output.body }}'
-    getCode: '{{ steps.get_request.output.code }}'
-    getHeaders: '{{ steps.get_request.output.headers }}'
-    proxyResponse: '{{ steps.backstage_request_with_input.output.body }}'
-    proxyCode: '{{ steps.backstage_request_with_input.output.code }}'
-    proxyHeaders: '{{ steps.backstage_request_with_input.output.headers }}'
+    getResponse: '{{ steps.backstage_request.output.body }}'
+    getCode: '{{ steps.backstage_request.output.code }}'
+    getHeaders: '{{ steps.backstage_request.output.headers }}'
 ```
 
 You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.
