@@ -42,7 +42,7 @@ return await createRouter({
 });
 ```
 
-> **_NOTE:_**  The createHttpBackstageAction will set the task token if and only if the Authorization header is set during the creation of the task (see (here)[https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/src/service/router.ts#L303]. During the execution of the task, it adds it as a header in the following format: 'Authorization: Bearer ${token}'.
+> **_NOTE:_**  The createHttpBackstageAction will set the task token if and only if the Authorization header is set during the creation of the task (see [here](https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/src/service/router.ts#L303). During the execution of the task, it adds it as a header in the following format: 'Authorization: Bearer ${token}'.
 
 After that you can use the action in your template:
 
