@@ -25,7 +25,7 @@ import {
   createBuiltinActions,
   TemplateAction
 } from '@backstage/plugin-scaffolder-backend';
-import { createHttpAction, createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
+import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
@@ -49,7 +49,6 @@ export const createActions = (options: {
   });
 
   return [
-    createHttpAction(),
     createHttpBackstageAction({config}),
     ...defaultActions
   ];
