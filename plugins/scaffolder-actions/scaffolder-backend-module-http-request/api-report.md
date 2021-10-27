@@ -8,9 +8,6 @@ import { Config } from '@backstage/config';
 import { TemplateAction } from '@backstage/plugin-scaffolder-backend';
 
 // @public (undocumented)
-export function createHttpAction(): TemplateAction<any>;
-
-// @public (undocumented)
 export function createHttpBackstageAction(options: {
     config: Config;
 }): TemplateAction<any>;
