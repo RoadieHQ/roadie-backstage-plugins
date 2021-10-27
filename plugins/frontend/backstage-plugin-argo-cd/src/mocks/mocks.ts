@@ -220,9 +220,9 @@ export const getResponseStub = {
 
 export const getEmptyResponseStub = {
   metadata: {
-    resourceVersion: '7277391',
+    resourceVersion: '7277391'
   },
-  items: null,
+  items: null
 };
 
 export class ArgoCDApiMock implements ArgoCDApi {
@@ -230,7 +230,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
   // constructor(_: Options) {}
 
   // @ts-ignore
-  async listApps(_: { url: string; appSelector: string }) {
+  async listApps(_: { url: string; appSelector: string; }) {
     return {
       items: [
         {
@@ -272,7 +272,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
   }
 
   // @ts-ignore
-  async getAppDetails(_: { appName: string }) {
+  async getAppDetails(_: { appName: string; }) {
     return {
       metadata: {
         name: 'guestbook',
