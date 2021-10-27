@@ -19,9 +19,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.9.2",
-    "@backstage/catalog-client": "^0.3.18",
-    "@backstage/config": "^0.1.4",
+    "@backstage/backend-common": "^0.9.6",
+    "@backstage/catalog-client": "^0.5.0",
+    "@backstage/config": "^0.1.8",
     "@types/express": "^4.17.6",
     "axios": "^0.21.1",
     "express": "^4.17.1",
@@ -31,9 +31,8 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.7.9",
+    "@backstage/cli": "^0.8.0",
     "@types/supertest": "^2.0.8",
-    "msw": "^0.21.2",
     "supertest": "^4.0.2",
     "ts-jest": "^26.1.0"
   },
