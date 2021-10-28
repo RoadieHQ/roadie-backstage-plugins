@@ -32,11 +32,10 @@ export function createRouter({
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
-
   const argoUserName =
-    config.getOptionalString('argocd.username') ?? 'argocd.username';
+    config.getOptionalString('argocd.username') ?? 'argocdUsername';
   const argoPassword =
-    config.getOptionalString('argocd.password') ?? 'argocd.password';
+    config.getOptionalString('argocd.password') ?? 'argocdPassword';
 
   const argoApps = config
     .getConfigArray('argocd.appLocatorMethods')
