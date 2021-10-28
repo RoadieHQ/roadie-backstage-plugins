@@ -41,6 +41,7 @@ import {
   getResponseStubMissingData,
   getEntityStubWithAppSelector,
   getEmptyResponseStub,
+  getIdentityApiStub,
 } from './mocks/mocks';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
@@ -50,7 +51,7 @@ const errorApiMock = { post: jest.fn(), error$: jest.fn() };
 const apis = ApiRegistry.from([
   [configApiRef, new ConfigReader({})],
   [errorApiRef, errorApiMock],
-  [argoCDApiRef, new ArgoCDApiClient({ discoveryApi })],
+  [argoCDApiRef, new ArgoCDApiClient({ discoveryApi, identityApi: getIdentityApiStub })],
 ]);
 
 describe('argo-cd', () => {

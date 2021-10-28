@@ -1,4 +1,4 @@
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import { createApiRef, DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 import {
   argoCDAppDetails,
   ArgoCDAppDetails,
@@ -28,14 +28,17 @@ export const argoCDApiRef = createApiRef<ArgoCDApi>({
 
 export type Options = {
   discoveryApi: DiscoveryApi;
+  identityApi: IdentityApi;
   proxyPath?: string;
 };
 
 export class ArgoCDApiClient implements ArgoCDApi {
   private readonly discoveryApi: DiscoveryApi;
+  private readonly identityApi: IdentityApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
+    this.identityApi = options.identityApi;
   }
 
   private async getProxyUrl() {
@@ -43,7 +46,15 @@ export class ArgoCDApiClient implements ArgoCDApi {
   }
 
   private async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
-    const response = await fetch(url);
+    const idToken = await this.identityApi.getIdToken();
+    const response = await fetch(url, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(idToken && { Authorization: `Bearer ${idToken}` }),
+        },
+      },
+    );
     if (!response.ok) {
       throw new Error(
         `failed to fetch data, status ${response.status}: ${response.statusText}`,

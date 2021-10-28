@@ -5,6 +5,7 @@ import {
   createRoutableExtension,
   createRouteRef,
   discoveryApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import { ArgoCDApiClient, argoCDApiRef } from './api';
 
@@ -17,8 +18,8 @@ export const argocdPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: argoCDApiRef,
-      deps: { discoveryApi: discoveryApiRef },
-      factory: ({ discoveryApi }) => new ArgoCDApiClient({ discoveryApi }),
+      deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef },
+      factory: ({ discoveryApi, identityApi }) => new ArgoCDApiClient({ discoveryApi, identityApi }),
     }),
   ],
   routes: {
