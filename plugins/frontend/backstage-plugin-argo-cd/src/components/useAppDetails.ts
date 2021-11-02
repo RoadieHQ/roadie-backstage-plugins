@@ -31,16 +31,23 @@ export const useAppDetails = ({
   const api = useApi(argoCDApiRef);
   const errorApi = useApi(errorApiRef);
   const configApi = useApi(configApiRef);
-  const argoConfigType = configApi
-    .getConfigArray('argocd.appLocatorMethods')
-    .filter(element => element.getString('type') === 'config');
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {
+    if (!appName) {
+      return Promise.reject('Neither appName nor appSelector provided');
+    }
+    
+    let argoSearchMethod: boolean;
     try {
-      if (appName && !argoConfigType) {
+      argoSearchMethod = configApi.getOptionalConfigArray('argocd.appLocatorMethods') ? true : false
+    } catch {
+      argoSearchMethod = false
+    }
+    try {
+      if (!argoSearchMethod) {
         return await api.getAppDetails({ url, appName });
       }
-      if (appName && argoConfigType) {
+      if (argoSearchMethod) {
         const kubeInfo = await api.argoServiceLocator({
           appName: appName as string,
         });
@@ -71,11 +78,11 @@ export const useAppDetails = ({
       if (appSelector || projectName) {
         return await api.listApps({ url, appSelector, projectName });
       }
-      return Promise.reject('Neither appName nor appSelector provided');
     } catch (e:any) {
       errorApi.post(new Error('Something went wrong'));
       return Promise.reject(e);
     }
+    return Promise.reject('Neither appName nor appSelector provided');
   });
   return {
     loading,

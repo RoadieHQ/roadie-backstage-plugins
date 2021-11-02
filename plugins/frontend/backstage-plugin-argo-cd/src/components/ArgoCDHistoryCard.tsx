@@ -45,6 +45,7 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const argoScan = configApi.getOptionalConfigArray('argocd.appLocatorMethods');
 
   const history = data.items
     ? data.items
@@ -80,10 +81,6 @@ const HistoryTable = ({
           row.app
         ),
       highlight: true,
-    },
-    {
-      title: 'Instance',
-      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Deploy Started',
@@ -124,6 +121,16 @@ const HistoryTable = ({
       sorting: false,
     },
   ];
+
+  if (argoScan) {
+    columns.concat(
+    [
+      {
+        title: 'Instance',
+        render: (row: any): React.ReactNode => row.metadata.instance.name,
+      },
+    ])
+  }
 
   return (
     <Table
@@ -175,7 +182,23 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
 
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
-      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
+      return (
+        <HistoryTable
+          data={value as ArgoCDAppList}
+          retry={retry}
+        />
+      );
+    }
+    if (Array.isArray(value)) {
+      const wrapped: ArgoCDAppList = {
+        items: value as Array<ArgoCDAppDetails>,
+      };
+      return (
+        <HistoryTable
+          data={wrapped}
+          retry={retry}
+        />
+      );
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],

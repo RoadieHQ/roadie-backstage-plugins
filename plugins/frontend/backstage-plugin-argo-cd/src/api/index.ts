@@ -122,7 +122,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
   }) {
     const proxyUrl = await this.getBaseUrl();
     if (this.searchInstances === true) {
-      return await this.fetchDecode(
+      return this.fetchDecode(
         `${proxyUrl}/argoInstance/${options.instance}/applications/${options.appName}`,
         argoCDAppDetails,
       );

@@ -77,6 +77,7 @@ const OverviewComponent = ({
 }: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const argoScan = configApi.getOptionalConfigArray('argocd.appLocatorMethods');
 
   const columns: TableColumn[] = [
     {
@@ -96,10 +97,6 @@ const OverviewComponent = ({
         ),
     },
     {
-      title: 'Instance',
-      render: (row: any): React.ReactNode => row.metadata.instance.name,
-    },
-    {
       title: 'Sync Status',
       render: (row: any): React.ReactNode => (
         <State value={row.status.sync.status} />
@@ -117,6 +114,16 @@ const OverviewComponent = ({
         getElapsedTime(row.status.operationState.finishedAt!),
     },
   ];
+
+  if (argoScan) {
+    columns.concat(
+    [
+      {
+        title: 'Instance',
+        render: (row: any): React.ReactNode => row.metadata.instance.name,
+      },
+    ])
+  }
 
   return (
     <Table
@@ -182,7 +189,7 @@ const ArgoCDDetails = ({
         />
       );
     }
-    if (value as Array<ArgoCDAppDetails>) {
+    if (Array.isArray(value)) {
       const wrapped: ArgoCDAppList = {
         items: value as Array<ArgoCDAppDetails>,
       };

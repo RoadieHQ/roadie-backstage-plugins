@@ -30,8 +30,7 @@ export const argocdPlugin = createPlugin({
           identityApi,
           backendBaseUrl: configApi.getString('backend.baseUrl'),
           searchInstances: configApi
-            .getConfigArray('argocd.appLocatorMethods')
-            .some(element => element.getString('type') === 'config'),
+            .getOptionalConfigArray('argocd.appLocatorMethods') ? true : false,
         }),
     }),
   ],
