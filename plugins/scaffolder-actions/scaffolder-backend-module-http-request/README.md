@@ -25,7 +25,7 @@ Configure the action:
 
 const actions = [
   createHttpBackstageAction({ config }),
-  ...createBuiltInActions({
+  ...createBuiltinActions({
     containerRunner,
     integrations,
     config,
