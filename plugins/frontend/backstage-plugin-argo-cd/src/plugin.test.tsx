@@ -36,6 +36,7 @@ import {
   getResponseStubMissingData,
   getEntityStubWithAppSelector,
   getEmptyResponseStub,
+  getIdentityApiStub,
 } from './mocks/mocks';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
@@ -66,6 +67,7 @@ const apis = ApiRegistry.from([
     argoCDApiRef,
     new ArgoCDApiClient({
       discoveryApi,
+      identityApi: getIdentityApiStub,
       backendBaseUrl: 'https://testbackend.com',
       searchInstances: true,
     }),

@@ -6,6 +6,7 @@ import {
   createRoutableExtension,
   createRouteRef,
   discoveryApiRef,
+  identityApiRef,
 } from '@backstage/core-plugin-api';
 import { ArgoCDApiClient, argoCDApiRef } from './api';
 
@@ -20,11 +21,13 @@ export const argocdPlugin = createPlugin({
       api: argoCDApiRef,
       deps: {
         discoveryApi: discoveryApiRef,
+        identityApi: identityApiRef,
         configApi: configApiRef,
       },
-      factory: ({ discoveryApi, configApi }) =>
+      factory: ({ discoveryApi, identityApi, configApi }) =>
         new ArgoCDApiClient({
-          discoveryApi: discoveryApi,
+          discoveryApi,
+          identityApi,
           backendBaseUrl: configApi.getString('backend.baseUrl'),
           searchInstances: configApi
             .getConfigArray('argocd.appLocatorMethods')
