@@ -83,7 +83,7 @@ describe('ArgoCD service', () => {
       data: {
         metadata: {
           name: 'testApp-nonprod',
-          namespace: 'dx-argocd',
+          namespace: 'argocd',
         },
         status: {},
       },
