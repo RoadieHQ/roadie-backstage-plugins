@@ -1,3 +1,4 @@
+/* eslint-disable notice/notice */
 import { createRouter } from '@roadiehq/backstage-plugin-argo-cd-backend';
 import { PluginEnvironment } from '../types';
 
