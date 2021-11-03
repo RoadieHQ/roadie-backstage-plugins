@@ -63,7 +63,6 @@ const HistoryTable = ({
       }).filter(value => Object.keys(value).length !== 0)
       .flat()
     : [];
-
   const columns: TableColumn[] = [
     {
       title: 'Name',
@@ -81,6 +80,10 @@ const HistoryTable = ({
           row.app
         ),
       highlight: true,
+    },
+    {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Deploy Started',
@@ -121,16 +124,6 @@ const HistoryTable = ({
       sorting: false,
     },
   ];
-
-  if (argoScan) {
-    columns.concat(
-    [
-      {
-        title: 'Instance',
-        render: (row: any): React.ReactNode => row.metadata.instance.name,
-      },
-    ])
-  }
 
   return (
     <Table
