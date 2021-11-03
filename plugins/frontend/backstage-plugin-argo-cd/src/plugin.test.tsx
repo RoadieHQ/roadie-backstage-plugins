@@ -127,22 +127,22 @@ describe('argo-cd', () => {
       expect(await rendered.findByText('Healthy')).toBeInTheDocument();
     });
 
-    // it.only("should display empty table when no item returned with app selector", async () => {
-    //   worker.use(
-    //     rest.get("*", (_, res, ctx) => res(ctx.json(getEmptyResponseStub)))
-    //   );
-    //   const rendered = render(
-    //     <ApiProvider apis={apis}>
-    //       <EntityProvider entity={getEntityStubWithAppSelector}>
-    //         <ArgoCDDetailsCard />
-    //       </EntityProvider>
-    //     </ApiProvider>
-    //   );
+    it("should display empty table when no item returned with app selector", async () => {
+      worker.use(
+        rest.get("*", (_, res, ctx) => res(ctx.json(getEmptyResponseStub)))
+      );
+      const rendered = render(
+        <ApiProvider apis={apis}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>
+      );
 
-    //   expect(
-    //     await rendered.findByText("No records to display")
-    //   ).toBeInTheDocument();
-    // });
+      expect(
+        await rendered.findByText("No records to display")
+      ).toBeInTheDocument();
+    });
 
     it('should display link to argo cd source', async () => {
       const apisWithArgoCDBaseURL = apis.with(
@@ -289,27 +289,27 @@ describe('argo-cd', () => {
       expect(await rendered.findByText('Healthy')).toBeInTheDocument();
     });
 
-    // it('should display empty table when no item returned with app selector', async () => {
-    //   worker.use(
-    //     rest.post('*', (_, res, ctx) =>
-    //       res(ctx.json({ items: [{ instance: { name: 'argoInstance1' } }] })),
-    //     ),
-    //   );
-    //   worker.use(
-    //     rest.get('*', (_, res, ctx) => res(ctx.json(getEmptyResponseStub))),
-    //   );
-    //   const rendered = render(
-    //     <ApiProvider apis={apisScan}>
-    //       <EntityProvider entity={getEntityStubWithAppSelector}>
-    //         <ArgoCDDetailsCard />
-    //       </EntityProvider>
-    //     </ApiProvider>,
-    //   );
+    it('should display empty table when no item returned with app selector', async () => {
+      worker.use(
+        rest.post('*', (_, res, ctx) =>
+          res(ctx.json({ items: [{ instance: { name: 'argoInstance1' } }] })),
+        ),
+      );
+      worker.use(
+        rest.get('*', (_, res, ctx) => res(ctx.json(getEmptyResponseStub))),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScan}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
 
-    //   expect(
-    //     await rendered.findByText('No records to display'),
-    //   ).toBeInTheDocument();
-    // });
+      expect(
+        await rendered.findByText('No records to display'),
+      ).toBeInTheDocument();
+    });
 
     it('should display link to argo cd source', async () => {
       const apisWithArgoCDBaseURL = apisScan.with(
