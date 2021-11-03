@@ -124,9 +124,9 @@ argocd/proxy-url: '/argocd/api2'
 
 `argocd/proxy-url` annotation defaults to '/argocd/api' so it's not needed if there is only one proxy config.
 
-## Support for multiple ArgoCD instances - Option 2 - Argo CD backend plugin
+## Support for multiple Argo CD instances - Option 2 - Argo CD backend plugin
 
-If you want to create multiple components that fetch data from different argoCD instances, you can dynamically set the ArgoCD instance url by adding the following to your app-config.yaml files.
+If you want to create multiple components that fetch data from different Argo CD instances, you can dynamically set the Argo CD instance url by adding the following to your app-config.yaml files.
 
 The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
 
