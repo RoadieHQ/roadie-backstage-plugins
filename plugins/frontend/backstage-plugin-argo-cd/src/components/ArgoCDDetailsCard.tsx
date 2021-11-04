@@ -77,7 +77,6 @@ const OverviewComponent = ({
 }: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
-  const argoScan = configApi.getOptionalConfigArray('argocd.appLocatorMethods') ? true : false;
 
   const columns: TableColumn[] = [
     {
