@@ -10,6 +10,15 @@ export interface Config {
      * The base url of the ArgoCD instance.
      * @visibility frontend
      */
-    appLocatorMethods?: Array<object>;
+    appLocatorMethods?: Array</**
+     * @visibility secret
+     */
+    {
+      /**
+       * The base url of the ArgoCD instance.
+       * @visibility frontend
+       */
+      type: string;
+    }>;
   };
 }
