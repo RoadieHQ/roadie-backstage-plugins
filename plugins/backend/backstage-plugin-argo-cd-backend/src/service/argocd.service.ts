@@ -97,8 +97,7 @@ export class ArgoService implements ArgoServiceApi {
     argoAppName: string,
     argoToken: string,
   ): Promise<any> {
-    let options: AxiosRequestConfig;
-    options = {
+    const options: AxiosRequestConfig = {
       method: 'GET',
       url: `${baseUrl}/api/v1/applications/${argoAppName}`,
       headers: {
