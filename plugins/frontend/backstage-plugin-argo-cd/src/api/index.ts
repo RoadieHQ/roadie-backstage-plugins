@@ -55,7 +55,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
   }
 
   private async getBaseUrl() {
-    if (this.searchInstances === true) {
+    if (this.searchInstances) {
       return `${this.backendBaseUrl}/api/argocd`;
     }
     return await this.discoveryApi.getBaseUrl('proxy');
@@ -121,7 +121,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     instance?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
-    if (this.searchInstances === true) {
+    if (this.searchInstances) {
       return this.fetchDecode(
         `${proxyUrl}/argoInstance/${options.instance}/applications/${options.appName}`,
         argoCDAppDetails,
