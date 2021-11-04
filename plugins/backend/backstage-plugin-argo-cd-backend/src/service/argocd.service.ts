@@ -8,7 +8,6 @@ export interface ArgoServiceApi {
     argoInstanceName: string,
     argoAppName: string,
     argoToken: string,
-    isLab: boolean,
   ) => Promise<object>;
 }
 
@@ -53,7 +52,6 @@ export class ArgoService implements ArgoServiceApi {
             argoInstance.name,
             name,
             token,
-            argoInstance.name.includes('lab'),
           );
         } catch (error: any) {
           getArgoAppDataResp = { error: true };
@@ -98,28 +96,16 @@ export class ArgoService implements ArgoServiceApi {
     argoInstanceName: string,
     argoAppName: string,
     argoToken: string,
-    isLab: boolean,
   ): Promise<any> {
     let options: AxiosRequestConfig;
-    if (isLab) {
-      options = {
-        method: 'GET',
-        url: `${baseUrl}/api/v1/applications/${argoAppName}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Cookie: `${argoToken}`,
-        },
-      };
-    } else {
-      options = {
-        method: 'GET',
-        url: `${baseUrl}/api/v1/applications/${argoAppName}`,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${argoToken}`,
-        },
-      };
-    }
+    options = {
+      method: 'GET',
+      url: `${baseUrl}/api/v1/applications/${argoAppName}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+    };
     try {
       const resp = await axios.request(options);
       resp.data.instance = argoInstanceName;
