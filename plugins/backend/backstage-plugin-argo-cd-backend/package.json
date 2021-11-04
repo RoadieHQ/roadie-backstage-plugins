@@ -9,6 +9,11 @@
     "main": "dist/index.cjs.js",
     "types": "dist/index.d.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "plugins/backend/backstage-plugin-argo-cd-backend"
+  },
   "scripts": {
     "start": "backstage-cli backend:dev",
     "build": "backstage-cli backend:build",
