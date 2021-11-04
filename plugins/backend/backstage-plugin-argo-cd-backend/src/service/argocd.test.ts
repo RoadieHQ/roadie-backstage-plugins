@@ -48,7 +48,6 @@ describe('ArgoCD service', () => {
       'argoInstance1',
       'testApp',
       'testToken',
-      false,
     );
 
     expect(await resp).toStrictEqual({
@@ -73,7 +72,6 @@ describe('ArgoCD service', () => {
         'argoInstance1',
         'testApp',
         'testToken',
-        false,
       ),
     ).rejects.toThrow();
   });
