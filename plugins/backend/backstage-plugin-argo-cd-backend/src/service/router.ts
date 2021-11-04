@@ -72,7 +72,6 @@ export function createRouter({
         matchedArgoInstance.name,
         argoAppName,
         token,
-        matchedArgoInstance.name === 'lab-ok8s-cluster' ? true : false,
       );
       return response.send(resp);
     },
