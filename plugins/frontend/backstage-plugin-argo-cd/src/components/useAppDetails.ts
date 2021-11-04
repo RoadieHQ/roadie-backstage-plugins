@@ -44,7 +44,7 @@ export const useAppDetails = ({
         return await api.getAppDetails({ url, appName });
       }
       if (argoSearchMethod && appName) {
-        const kubeInfo = await api.argoServiceLocator({
+        const kubeInfo = await api.serviceLocatorUrl({
           appName: appName as string,
         });
         if (kubeInfo instanceof Error) return kubeInfo;

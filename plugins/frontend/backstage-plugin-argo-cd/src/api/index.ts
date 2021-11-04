@@ -23,7 +23,7 @@ export interface ArgoCDApi {
     appName: string;
     instance?: string;
   }): Promise<ArgoCDAppDetails>;
-  argoServiceLocator(options: {
+  serviceLocatorUrl(options: {
     appName: string;
   }): Promise<Array<string> | Error>;
 }
@@ -133,7 +133,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     );
   }
 
-  async argoServiceLocator(options: { appName: string }) {
+  async serviceLocatorUrl(options: { appName: string }) {
     const proxyUrl = await this.getBaseUrl();
     return fetch(`${proxyUrl}/find/${options.appName}`, {
       method: 'GET',
