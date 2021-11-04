@@ -68,6 +68,14 @@ yarn dev
 
  [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag). 
 
+ [Argo CD](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd).
+
+    - In collaboration with [American Airlines](https://github.com/AmericanAirlines)
+
+ [Argo CD Backend](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend).
+
+    - Contributed by [American Airlines](https://github.com/AmericanAirlines)
+
 ## Structure of the repository.
 
 This repository is a place where all of the RoadieHQ plugins we are developed are integrated under `/plugins` folder. They may be uses and/or modified by following steps below:
