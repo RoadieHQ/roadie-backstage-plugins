@@ -45,7 +45,6 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
-  const argoScan = configApi.getOptionalConfigArray('argocd.appLocatorMethods');
 
   const history = data.items
     ? data.items
