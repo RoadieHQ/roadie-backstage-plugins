@@ -33,12 +33,7 @@ export const useAppDetails = ({
   const configApi = useApi(configApiRef);
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {    
-    let argoSearchMethod: boolean;
-    try {
-      argoSearchMethod = configApi.getOptionalConfigArray('argocd.appLocatorMethods') ? true : false
-    } catch {
-      argoSearchMethod = false
-    }
+    const argoSearchMethod: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length)
     try {
       if (!argoSearchMethod && appName) {
         return await api.getAppDetails({ url, appName });
