@@ -53,7 +53,8 @@ const HistoryTable = ({
           return app.status.history.map(entry => {
             return {
               app: app.metadata.name,
-              ...entry
+              instance: app.metadata?.instance?.name,
+              ...entry,
             };
           });
         }
@@ -61,7 +62,6 @@ const HistoryTable = ({
       }).filter(value => Object.keys(value).length !== 0)
       .flat()
     : [];
-
   const columns: TableColumn[] = [
     {
       title: 'Name',
@@ -79,6 +79,10 @@ const HistoryTable = ({
           row.app
         ),
       highlight: true,
+    },
+    {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Deploy Started',
@@ -170,7 +174,23 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
 
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
-      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
+      return (
+        <HistoryTable
+          data={value as ArgoCDAppList}
+          retry={retry}
+        />
+      );
+    }
+    if (Array.isArray(value)) {
+      const wrapped: ArgoCDAppList = {
+        items: value as Array<ArgoCDAppDetails>,
+      };
+      return (
+        <HistoryTable
+          data={wrapped}
+          retry={retry}
+        />
+      );
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],

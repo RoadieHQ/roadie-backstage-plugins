@@ -27,16 +27,13 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import {
-  configApiRef,
-  useApi,
-} from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import ErrorBoundary from './ErrorBoundary';
 import { isArgocdAvailable } from '../Router';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
@@ -73,17 +70,34 @@ type OverviewComponentProps = {
   retry: () => void;
 };
 
-const OverviewComponent = ({ data, extraColumns, retry }: OverviewComponentProps) => {
+const OverviewComponent = ({
+  data,
+  extraColumns,
+  retry,
+}: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
-  const baseUrl = configApi.getOptionalString('argocd.baseUrl')
+  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
 
   const columns: TableColumn[] = [
     {
       title: 'Name',
       highlight: true,
-      render: (row: any): React.ReactNode => (
-        baseUrl ? <Link href={`${baseUrl}/applications/${row.metadata.name}`} target="_blank" rel="noopener">{row.metadata.name}</Link> : row.metadata.name
-      ),
+      render: (row: any): React.ReactNode =>
+        baseUrl ? (
+          <Link
+            href={`${baseUrl}/applications/${row.metadata.name}`}
+            target="_blank"
+            rel="noopener"
+          >
+            {row.metadata.name}
+          </Link>
+        ) : (
+          row.metadata.name
+        ),
+    },
+    {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Sync Status',
@@ -128,7 +142,13 @@ const OverviewComponent = ({ data, extraColumns, retry }: OverviewComponentProps
   );
 };
 
-const ArgoCDDetails = ({ entity, extraColumns }: { entity: Entity, extraColumns: TableColumn[] }) => {
+const ArgoCDDetails = ({
+  entity,
+  extraColumns,
+}: {
+  entity: Entity;
+  extraColumns: TableColumn[];
+}) => {
   const { url, appName, appSelector, projectName } = useArgoCDAppData({
     entity,
   });
@@ -154,12 +174,36 @@ const ArgoCDDetails = ({ entity, extraColumns }: { entity: Entity, extraColumns:
   }
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
-      return <OverviewComponent data={value as ArgoCDAppList} retry={retry} extraColumns={extraColumns} />;
+      return (
+        <OverviewComponent
+          data={value as ArgoCDAppList}
+          retry={retry}
+          extraColumns={extraColumns}
+        />
+      );
+    }
+    if (Array.isArray(value)) {
+      const wrapped: ArgoCDAppList = {
+        items: value as Array<ArgoCDAppDetails>,
+      };
+      return (
+        <OverviewComponent
+          data={wrapped}
+          retry={retry}
+          extraColumns={extraColumns}
+        />
+      );
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],
     };
-    return <OverviewComponent data={wrapped} retry={retry} extraColumns={extraColumns} />;
+    return (
+      <OverviewComponent
+        data={wrapped}
+        retry={retry}
+        extraColumns={extraColumns}
+      />
+    );
   }
   return null;
 };
@@ -167,7 +211,7 @@ const ArgoCDDetails = ({ entity, extraColumns }: { entity: Entity, extraColumns:
 type Props = {
   /** @deprecated The entity is now grabbed from context instead */
   entity?: Entity;
-  extraColumns?: TableColumn[]
+  extraColumns?: TableColumn[];
 };
 
 export const ArgoCDDetailsCard = (props: Props) => {

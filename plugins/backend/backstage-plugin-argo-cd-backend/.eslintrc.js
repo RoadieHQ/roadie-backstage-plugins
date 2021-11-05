@@ -1,5 +1,5 @@
 module.exports = {
-  extends: [require.resolve('@backstage/cli/config/eslint')],
+  extends: [require.resolve('@backstage/cli/config/eslint.backend')],
   rules: {
     'notice/notice': 'off',
     // Related issue: https://github.com/typescript-eslint/typescript-eslint/issues/2077

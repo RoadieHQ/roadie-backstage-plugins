@@ -1,4 +1,5 @@
 import {
+  configApiRef,
   createApiFactory,
   createComponentExtension,
   createPlugin,
@@ -18,8 +19,18 @@ export const argocdPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: argoCDApiRef,
-      deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef },
-      factory: ({ discoveryApi, identityApi }) => new ArgoCDApiClient({ discoveryApi, identityApi }),
+      deps: {
+        discoveryApi: discoveryApiRef,
+        identityApi: identityApiRef,
+        configApi: configApiRef,
+      },
+      factory: ({ discoveryApi, identityApi, configApi }) =>
+        new ArgoCDApiClient({
+          discoveryApi,
+          identityApi,
+          backendBaseUrl: configApi.getString('backend.baseUrl'),
+          searchInstances: Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length),
+        }),
     }),
   ],
   routes: {
@@ -32,7 +43,7 @@ export const EntityArgoCDContent = argocdPlugin.provide(
     name: 'EntityArgoCDContent',
     component: () => import('./Router').then((m) => m.Router),
     mountPoint: entityContentRouteRef,
-  })
+  }),
 );
 
 export const EntityArgoCDOverviewCard = argocdPlugin.provide(
@@ -40,11 +51,9 @@ export const EntityArgoCDOverviewCard = argocdPlugin.provide(
     name: 'EntityArgoCDOverviewCard',
     component: {
       lazy: () =>
-        import('./components/ArgoCDDetailsCard').then(
-          (m) => m.ArgoCDDetailsCard
-        ),
+        import('./components/ArgoCDDetailsCard').then(m => m.ArgoCDDetailsCard),
     },
-  })
+  }),
 );
 
 export const EntityArgoCDHistoryCard = argocdPlugin.provide(
@@ -52,9 +61,7 @@ export const EntityArgoCDHistoryCard = argocdPlugin.provide(
     name: 'EntityArgoCDHistoryCard',
     component: {
       lazy: () =>
-        import('./components/ArgoCDHistoryCard').then(
-          (m) => m.ArgoCDHistoryCard
-        ),
+        import('./components/ArgoCDHistoryCard').then(m => m.ArgoCDHistoryCard),
     },
-  })
+  }),
 );

@@ -89,7 +89,7 @@ The Argo CD plugin is a part of the Backstage sample app. To start using it for 
     ```
     ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
     ```
-## Support for multiple ArgoCD instances
+## Support for multiple ArgoCD instances - Option 1
 
 If you want to create multiple components that fetch data from different argoCD instances, you have to add a proxy config for each instance:
 
@@ -113,13 +113,24 @@ proxy:
       Cookie:
         $env: ARGOCD_AUTH_TOKEN2
 ```
+
 Add all required auth tokens to environmental variables, in this example, `ARGOCD_AUTH_TOKEN2`.
 
 And then in the following component definition annotations add a line with the url to the desired proxy path:
+
 ```yml
 argocd/proxy-url: '/argocd/api2'
 ```
+
 `argocd/proxy-url` annotation defaults to '/argocd/api' so it's not needed if there is only one proxy config.
+
+## Support for multiple Argo CD instances - Option 2 - Argo CD backend plugin
+
+If you want to create multiple components that fetch data from different Argo CD instances, you can dynamically set the Argo CD instance url by adding the following to your app-config.yaml files.
+
+The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
+
+Please visit the Argo CD backend plugin [README](../../backend/backstage-plugin-argo-cd-backend/README.md) for more information
 
 ## Develop plugin locally
 
