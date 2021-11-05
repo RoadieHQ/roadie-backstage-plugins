@@ -2113,9 +2113,9 @@
     react-use "^17.2.4"
 
 "@backstage/plugin-techdocs-backend@^0.10.0":
-  version "0.10.6"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs-backend/-/plugin-techdocs-backend-0.10.6.tgz#580ff0d742dad8cada440068574fc19d85e68717"
-  integrity sha512-vKXALxuXBKKO889gjvJsjWqKrllaSCrsGeZ7zH3/8SNAXtWAUhmwjVi6h8GNOABZUmOn1BmBCavO4rjc6ryq/g==
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs-backend/-/plugin-techdocs-backend-0.10.7.tgz#0bc5246fc15045a395e3c0369232a4d9914000f7"
+  integrity sha512-MMeW9k8XZwPJpb+mc5YZmR23/vdUqrKdyH/i5O4aKAhFdELphPWK+fcwJv1v+J77oiYmUoqZpgwo7SxSbyI07g==
   dependencies:
     "@backstage/backend-common" "^0.9.8"
     "@backstage/catalog-client" "^0.5.0"
