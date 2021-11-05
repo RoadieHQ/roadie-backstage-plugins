@@ -130,7 +130,7 @@ If you want to create multiple components that fetch data from different Argo CD
 
 The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
 
-Please visit the Argo CD backend plugin [README](../../backend/backstage-plugin-argo-cd-backend/README.md) for more information
+Please visit the [ArgoCD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) for more information
 
 ## Develop plugin locally
 
@@ -144,6 +144,7 @@ To run the integration tests locally `yarn workspace app cy:dev` (assuming you h
 
 ## Links
 
+- [ArgoCD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend)
 - [Backstage](https://backstage.io)
 - [Further instructons](https://roadie.io/backstage/plugins/argo-cd/)
 - Get hosted, managed Backstage for your company: https://roadie.io
