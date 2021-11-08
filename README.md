@@ -78,7 +78,7 @@ yarn dev
 
 ## Structure of the repository.
 
-This repository is a place where all of the RoadieHQ plugins we are developed are integrated under `/plugins` folder. They may be uses and/or modified by following steps below:
+This repository is a place where all of the RoadieHQ plugins we are developed are integrated under `/plugins` folder. Depending on the type of the plugin they are separated in frontend or backend folder. Please note the scaffolder actions is handled separately. Plugins may be used and/or modified by following steps below:
  
 ### Plugins container
 
@@ -86,6 +86,7 @@ Navigate to
 
 ```bash
 cd roadie-backstage-plugin/plugins
+cd backend/frontend 
 cd selected-plugin
 ```
 
@@ -102,6 +103,7 @@ In order to make E2E testing isolated from real entities, we have created `test-
 
 ```bash
 cd roadie-backstage-plugin/plugins
+cd backend/frontend 
 cd selected-plugin
 ```
 
