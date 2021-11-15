@@ -18,6 +18,11 @@ jobs:
     - run: yarn tsc
     - run: yarn build
     
+    - name: Create Release Pull Request
+      uses: changesets/action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
     - name: 'Login to npmjs npm repo .npmrc'
       shell: bash
       run: |
@@ -25,6 +30,7 @@ jobs:
         echo "_auth = ${{ secrets.NPM_CONFIG__AUTH }}" >> .npmrc
         echo "always-auth = true" >> .npmrc
 
+    # Publishes current version of packages that are not already present in the registry.
     - name: Run publish
       run: |
         git config --global user.email "bot@roadie.io"
