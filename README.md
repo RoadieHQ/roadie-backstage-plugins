@@ -1,4 +1,4 @@
-This repo contains the Backstage plugins we, at Roadie, create and maintain. These plugins are published and you can look them up on [npmjs](https://npmjs.com).
+This repo contains the Backstage plugins we, at Roadie, created and maintain. These plugins are published and you can look them up on [npmjs](https://npmjs.com).
 
 
 ## Getting Started
