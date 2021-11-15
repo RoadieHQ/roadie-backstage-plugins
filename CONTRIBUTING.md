@@ -51,6 +51,27 @@ We use the backstage-cli to build, serve, lint, test and package all the plugins
 
 As such, the [same coding guidelines as in Backstage repository mostly apply](https://github.com/backstage/backstage/blob/master/CONTRIBUTING.md#coding-guidelines).
 
+## Creating Changesets
+
+We use [changesets](https://github.com/atlassian/changesets) in order to prepare releases. To make the process of generating releases easy, please include changesets with your pull request. This will result in a every package affected by a change getting a proper version number and an entry in its `CHANGELOG.md.
+
+### When to use a changeset?
+
+Any time a patch, minor, or major change aligning to [Semantic Versioning](https://semver.org) is made to any published package in `plugins/`, a changeset should be used. 
+
+In general, changesets are not needed for the documentation, build utilities or similar.
+
+### How to create a changeset
+
+1. Run `yarn changeset`
+2. Select which packages you want to include a changeset for
+3. Select impact of change that you're introducing, using `minor` for breaking changes and `patch` otherwise. 
+4. Explain your changes in the generated changeset. See [examples of well written changesets](https://backstage.io/docs/getting-started/contributors#writing-changesets).
+5. Add generated changeset to Git
+6. Push the commit with your changeset to the branch associated with your PR
+
+For more information, checkout [adding a changeset](https://github.com/atlassian/changesets/blob/master/docs/adding-a-changeset.md) documentation in the changesets repository.
+
 ## Merging to main
 
 Plugins are automatically published when a version bump is merged to the `main` branch. Please include version bumps with your pull requests if you would like them to be released.
