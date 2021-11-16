@@ -24,9 +24,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     # Define ${CURRENT_VERSION}
+    - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD-HH-MM
     - name: Set Current Version
       run: |
-        CURRENT_VERSION=$(node -p 'require("./lerna.json").version')
+        CURRENT_VERSION=${{ steps.current-time.outputs.formattedTime }}
         echo "CURRENT_VERSION=${CURRENT_VERSION}" >> $GITHUB_ENV
     - name: Tag Check
       id: tag_check
@@ -41,6 +46,7 @@ jobs:
         fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Create Git Tag
       uses: pkgdeps/git-tag-action@v2
       with:
