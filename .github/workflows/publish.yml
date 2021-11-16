@@ -28,7 +28,7 @@ jobs:
       uses: 1466587594/get-current-time@v2
       id: current-time
       with:
-        format: YYYYMMDD-HH-MM
+        format: YYYY--MM--DD
     - name: Set Current Version
       run: |
         CURRENT_VERSION=${{ steps.current-time.outputs.formattedTime }}
