@@ -25,10 +25,10 @@ jobs:
     
     # Define ${CURRENT_VERSION}
     - name: Get current time
-        uses: 1466587594/get-current-time@v2
-        id: current-time
-        with:
-          format: YYYYMMDD-HH-MM
+      uses: 1466587594/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYYMMDD-HH-MM
     - name: Set Current Version
       run: |
         CURRENT_VERSION=${{ steps.current-time.outputs.formattedTime }}
