@@ -109,8 +109,8 @@ steps:
       headers:
         content-type: 'application/json'
       body:
-        test: 'hello'
-        foo: 'bar'
+        name: 'test'
+        bar: 'foo'
 
 output:
   getResponse: '{{ steps.backstage_request.output.body }}'
