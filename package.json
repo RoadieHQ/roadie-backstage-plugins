@@ -23,7 +23,8 @@
     "lint": "lerna run lint --since origin/main --",
     "lint:all": "lerna run lint --",
     "create-plugin": "backstage-cli create-plugin --scope roadiehq --no-private",
-    "remove-plugin": "backstage-cli remove-plugin"
+    "remove-plugin": "backstage-cli remove-plugin",
+    "release": "changeset version && yarn diff --yes && yarn prettier --write '{packages,plugins}/*/{package.json,CHANGELOG.md}' && yarn install"
   },
   "resolutions": {
     "graphql-language-service-interface": "2.8.2",
