@@ -45,7 +45,11 @@ return await createRouter({
 });
 ```
 
-After that you can use the action in your template:
+### Supported methods
+
+Action supports following HTTP methods: `GET`, `HEAD`, `OPTIONS`, `POST`, `UPDATE`, `DELETE`, `PUT`, `PATCH`
+
+### Example of using GET method
 
 ```yaml
 ---
@@ -54,7 +58,7 @@ kind: Template
 metadata:
   name: HTTP-testing
   title: Http testing for post/get
-  description: Testing get/post functionality with get + post
+  description: Testing get functionality with get
 spec:
   owner: roadie
   type: service
@@ -80,14 +84,52 @@ spec:
         headers:
           test: 'hello'
           foo: 'bar'
-        body:
-          name: 'test'
-          bar: 'foo'
 
   output:
     getResponse: '{{ steps.backstage_request.output.body }}'
     getCode: '{{ steps.backstage_request.output.code }}'
     getHeaders: '{{ steps.backstage_request.output.headers }}'
+```
+
+### Example of using POST method
+
+If method requires to have request body if can be specified as `body` parameters. There are two options here:
+
+1. `content-type: application/json` header is specified. Everything under `body` hash will be converted into JSON string
+2. `content-type: application/json` header is not specified. `body` treated as a plain string
+
+```yaml
+steps:
+  - id: backstage_request
+    name: backstage request
+    action: http:backstage:request
+    input:
+      method: 'POST'
+      path: '/api/proxy/snyk/org/org/project/project-id/aggregated-issues'
+      headers:
+        content-type: 'application/json'
+      body:
+        test: 'hello'
+        foo: 'bar'
+
+output:
+  getResponse: '{{ steps.backstage_request.output.body }}'
+  getCode: '{{ steps.backstage_request.output.code }}'
+  getHeaders: '{{ steps.backstage_request.output.headers }}'
+```
+
+Snippet above will send the following HTTP request:
+
+```sh
+--------  127.0.0.1:53321 | POST /
+Headers
+"Accept" : ["*/*"]
+"Content-Type" : ["application/json"]
+"Connection" : ["close"]
+"User-Agent" : ["node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"]
+"Content-Length" : ["27"]
+00000000  7b 22 6e 61 6d 65 22 3a  22 74 65 73 74 22 2c 22  |{"name":"test","|
+00000010  62 61 72 22 3a 22 66 6f  6f 22 7d                 |bar":"foo"}|
 ```
 
 You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.

@@ -21,11 +21,11 @@ export type Params = {
   [key: string]: string;
 };
 
-export type Methods = 'GET' | 'POST' | 'UPDATE' | 'DELETE' | 'PUT';
+export type Methods = 'GET' | 'HEAD' | 'OPTIONS' | 'POST' | 'UPDATE' | 'DELETE' | 'PUT' | 'PATCH';
 
 export interface HttpOptions {
   url: string;
   method: Methods;
   headers: Headers;
-  body?: string;
+  body?: string | undefined;
 }

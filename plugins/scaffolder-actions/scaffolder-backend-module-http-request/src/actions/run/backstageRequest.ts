@@ -26,6 +26,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     method: Methods;
     headers?: Headers;
     params?: Params;
+    body?: string;
   }>({
     id: 'http:backstage:request',
     description:
@@ -95,10 +96,24 @@ export function createHttpBackstageAction(options: { config: Config }) {
         ? new URLSearchParams(params).toString()
         : '';
 
+      let inputBody: string | undefined = undefined;
+
+      if (
+        input.body &&
+        input.headers &&
+        input.headers['content-type'] &&
+        input.headers['content-type'].includes('application/json')
+      ) {
+        inputBody = JSON.stringify(input.body);
+      } else {
+        inputBody = input.body
+      }
+
       const httpOptions: HttpOptions = {
         method: input.method,
         url: queryParams !== '' ? `${url}?${queryParams}` : url,
         headers: input.headers ? (input.headers as Headers) : {},
+        body: inputBody,
       };
 
       if (token) {

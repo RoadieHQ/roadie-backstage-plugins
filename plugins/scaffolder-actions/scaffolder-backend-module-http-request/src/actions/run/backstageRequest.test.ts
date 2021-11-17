@@ -81,6 +81,98 @@ describe('http:backstage:request', () => {
       });
     });
 
+    describe('with body defined as application/json', () => {
+      it('should create a request and pass body parameter', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              "content-type" : "application/json"
+            },
+            body:  {
+              'name': 'test'
+            } ,
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              "content-type" : "application/json"
+            },
+            body: '{"name":"test"}',
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with body defined as a string', () => {
+      it('should create a request and pass body parameter', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            body: 'test',
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {},
+            body: 'test',
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with body undefined', () => {
+      it('should create a request and body should be undefined', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              "content-type" : "application/json"
+            },
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              "content-type" : "application/json"
+            },
+            body: undefined
+          },
+          logger,
+        );
+      });
+    });
+
     describe('with a token request', () => {
       it('should create a request', async () => {
         (http as jest.Mock).mockReturnValue({
