@@ -16,7 +16,7 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { generateBackstageUrl, http } from './helpers';
-import { HttpOptions, Headers, Params, Methods } from './types';
+import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { Config } from '@backstage/config';
 
 export function createHttpBackstageAction(options: { config: Config }) {
@@ -26,7 +26,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     method: Methods;
     headers?: Headers;
     params?: Params;
-    body?: string;
+    body?: Body;
   }>({
     id: 'http:backstage:request',
     description:
@@ -39,7 +39,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
           method: {
             title: 'Method',
             description: 'The method type of the request',
-            enum: ['GET', 'POST', 'UPDATE', 'PUT', 'DELETE'],
+            enum: [ 'GET', 'HEAD', 'OPTIONS', 'POST', 'UPDATE', 'DELETE', 'PUT', 'PATCH' ],
           },
           path: {
             title: 'Request path',
@@ -96,7 +96,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
         ? new URLSearchParams(params).toString()
         : '';
 
-      let inputBody: string | undefined = undefined;
+      let inputBody: Body = undefined;
 
       if (
         input.body &&

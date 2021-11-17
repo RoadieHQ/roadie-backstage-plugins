@@ -23,9 +23,11 @@ export type Params = {
 
 export type Methods = 'GET' | 'HEAD' | 'OPTIONS' | 'POST' | 'UPDATE' | 'DELETE' | 'PUT' | 'PATCH';
 
+export type Body = string | undefined
+
 export interface HttpOptions {
   url: string;
   method: Methods;
   headers: Headers;
-  body?: string | undefined;
+  body?: Body;
 }

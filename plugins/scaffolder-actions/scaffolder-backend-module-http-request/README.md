@@ -93,7 +93,7 @@ spec:
 
 ### Example of using POST method
 
-If method requires to have request body if can be specified as `body` parameters. There are two options here:
+If the request requires a body, it can be specified using the body parameter. There are two options here
 
 1. `content-type: application/json` header is specified. Everything under `body` hash will be converted into JSON string
 2. `content-type: application/json` header is not specified. `body` treated as a plain string
