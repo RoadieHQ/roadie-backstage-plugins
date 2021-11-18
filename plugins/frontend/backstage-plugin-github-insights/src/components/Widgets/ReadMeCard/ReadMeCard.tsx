@@ -21,11 +21,16 @@ import {
   InfoCard,
   Progress,
   MarkdownContent,
+  MissingAnnotationEmptyState
 } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
+import {
+  isGithubInsightsAvailable,
+  GITHUB_INSIGHTS_ANNOTATION
+} from '../../../hooks/useProjectName';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
@@ -83,8 +88,13 @@ function b64DecodeUnicode(str: string): string {
 
 const ReadMeCard = (props: Props) => {
   const { entity } = useEntity();
-  const { owner, repo, readmePath } = useProjectEntity(entity);
   const classes = useStyles();
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  }
+
+  const { owner, repo, readmePath } = useProjectEntity(entity);
   const request = readmePath ? `contents/${readmePath}` : 'readme';
   const path = readmePath || 'README.md';
 

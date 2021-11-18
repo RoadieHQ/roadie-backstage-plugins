@@ -18,11 +18,15 @@ import React from 'react';
 import { Link, List, ListItem, Chip } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress } from '@backstage/core-components';
+import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
+import {
+  isGithubInsightsAvailable,
+  GITHUB_INSIGHTS_ANNOTATION
+} from '../../../hooks/useProjectName';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
 
@@ -42,6 +46,11 @@ type Props = {
 const ReleasesCard = (_props: Props) => {
   const classes = useStyles();
   const { entity } = useEntity();
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  }
+
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
   const { hostname } = useEntityGithubScmIntegration(entity);

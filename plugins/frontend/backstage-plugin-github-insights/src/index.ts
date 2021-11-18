@@ -30,8 +30,10 @@ export {
 } from './plugin';
 export {
   InsightsPage,
-  isGithubInsightsAvailable
 } from './components/InsightsPage/InsightsPage';
+export {
+  isGithubInsightsAvailable
+} from './hooks/useProjectName';
 /**
  * @deprecated since v0.3.0 you should use new composability API
  */

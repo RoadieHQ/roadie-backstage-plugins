@@ -19,6 +19,5 @@ import { Entity } from '@backstage/catalog-model';
 
 export const GITHUB_INSIGHTS_ANNOTATION = 'github.com/project-slug';
 
-export const useProjectName = (entity: Entity) => {
-  return entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION] ?? '';
-};
+export const isGithubInsightsAvailable = (entity: Entity) =>
+  Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION])
