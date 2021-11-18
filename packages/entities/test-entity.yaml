@@ -31,7 +31,6 @@ metadata:
     A service for testing Travis CI plugin
   annotations:
     travis-ci.com/repo-slug: RoadieHQ/sample-service
-    github.com/project-slug: organisation/github-project-slug
 spec:
   type: service
   owner: roadie
@@ -51,7 +50,6 @@ metadata:
     buildkite.com/project-slug: exampleorganization/exampleproject
     prometheus.io/alert: "test alert name"
     prometheus.io/rule: node_memory_Active_bytes|instance,memUsage
-    github.com/project-slug: organisation/github-project-slug
 
 spec:
   type: service
