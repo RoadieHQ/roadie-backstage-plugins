@@ -21,9 +21,17 @@ export const useProjectEntity = (entity: Entity) => {
     'github.com/project-slug'
   ] as string;
 
+  if(!projectSlug && projectSlug === ''){
+    throw new Error(`No "github.com/project-slug" annotation found for your entity ${entity.metadata.name}`)
+  }
+
   const readmePath = entity.metadata?.annotations?.[
     "github.com/project-readme-path"
   ] as string;
+
+  if(!readmePath || readmePath === ''){
+    throw new Error(`No "github.com/project-readme-path" annotation found for your entity ${entity.metadata.name}`)
+  }
 
   return {
     owner: projectSlug.split("/")[0],
