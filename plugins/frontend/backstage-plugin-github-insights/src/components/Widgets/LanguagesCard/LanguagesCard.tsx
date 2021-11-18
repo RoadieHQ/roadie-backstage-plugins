@@ -25,7 +25,7 @@ import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION
-} from '../../../hooks/useProjectName';
+} from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from "@backstage/plugin-catalog-react";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,12 +71,12 @@ const LanguagesCard = (_props: Props) => {
   const { entity } = useEntity();
   let barWidth = 0;
   const classes = useStyles();
+  const { owner, repo } = useProjectEntity(entity);
+  const { value, loading, error } = useRequest(entity, 'languages', 0, 0, true);
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
     return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
   }
-  const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useRequest(entity, 'languages', 0, 0, true);
 
   if (loading) {
     return <Progress />;

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { Page, Content, ContentHeader, SupportButton, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { GITHUB_INSIGHTS_ANNOTATION, isGithubInsightsAvailable } from '../../hooks/useProjectName';
+import { GITHUB_INSIGHTS_ANNOTATION, isGithubInsightsAvailable } from '../utils/isGithubInsightsAvailable';
 import {
   ComplianceCard,
   ContributorsCard,

@@ -27,7 +27,7 @@ import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION
-} from '../../../hooks/useProjectName';
+} from '../../utils/isGithubInsightsAvailable';
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
 import { useEntity } from "@backstage/plugin-catalog-react";
@@ -46,13 +46,11 @@ const ComplianceCard = (_props: Props) => {
     error: licenseError,
   } = useRepoLicence(entity);
   const classes = useStyles();
-
+  const { owner, repo } = useProjectEntity(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
     return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
   }
-
-  const { owner, repo } = useProjectEntity(entity);
 
   if (loading || licenseLoading) {
     return <Progress />;

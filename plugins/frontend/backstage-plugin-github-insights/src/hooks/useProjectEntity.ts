@@ -33,8 +33,8 @@ export const useProjectEntity = (entity: Entity) => {
   }
 
   return {
-    owner: projectSlug.split("/")[0],
-    repo: projectSlug.split("/")[1],
+    owner: projectSlug?.split("/")[0] || '',
+    repo: projectSlug?.split("/")[1] || '',
     readmePath,
   };
 };

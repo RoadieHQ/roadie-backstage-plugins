@@ -33,7 +33,7 @@ export {
 } from './components/InsightsPage/InsightsPage';
 export {
   isGithubInsightsAvailable
-} from './hooks/useProjectName';
+} from './components/utils/isGithubInsightsAvailable';
 /**
  * @deprecated since v0.3.0 you should use new composability API
  */

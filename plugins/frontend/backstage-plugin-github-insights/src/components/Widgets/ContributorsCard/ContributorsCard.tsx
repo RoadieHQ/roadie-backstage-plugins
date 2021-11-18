@@ -26,7 +26,7 @@ import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION
-} from '../../../hooks/useProjectName';
+} from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
@@ -49,10 +49,10 @@ const ContributorsCard = (_props: Props) => {
   const { value, loading, error } = useRequest(entity, 'contributors', 10);
   const { hostname } = useEntityGithubScmIntegration(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
+  const { owner, repo } = useProjectEntity(entity);
   if (!projectAlert) {
     return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
   }
-  const { owner, repo } = useProjectEntity(entity);
 
   if (loading) {
     return <Progress />;

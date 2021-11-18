@@ -26,7 +26,7 @@ import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION
-} from '../../../hooks/useProjectName';
+} from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
 
@@ -46,14 +46,15 @@ type Props = {
 const ReleasesCard = (_props: Props) => {
   const classes = useStyles();
   const { entity } = useEntity();
-  const projectAlert = isGithubInsightsAvailable(entity);
-  if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
-  }
 
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
   const { hostname } = useEntityGithubScmIntegration(entity);
+
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  }
 
   if (loading) {
     return <Progress />;
