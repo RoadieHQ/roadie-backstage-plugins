@@ -17,11 +17,15 @@
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress } from '@backstage/core-components';
+import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
+import {
+  isGithubInsightsAvailable,
+  GITHUB_INSIGHTS_ANNOTATION
+} from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from "@backstage/plugin-catalog-react";
 
 const useStyles = makeStyles((theme) => ({
@@ -66,9 +70,13 @@ type Props = {
 const LanguagesCard = (_props: Props) => {
   const { entity } = useEntity();
   let barWidth = 0;
-  const { owner, repo } = useProjectEntity(entity);
   const classes = useStyles();
+  const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0, true);
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  }
 
   if (loading) {
     return <Progress />;

@@ -17,13 +17,17 @@
 import React from 'react';
 import { Box, List, ListItem } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, StructuredMetadataTable } from '@backstage/core-components';
+import { InfoCard, Progress, StructuredMetadataTable, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import {
   useProtectedBranches,
   useRepoLicence,
 } from '../../../hooks/useComplianceHooks';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
+import {
+  isGithubInsightsAvailable,
+  GITHUB_INSIGHTS_ANNOTATION
+} from '../../utils/isGithubInsightsAvailable';
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
 import { useEntity } from "@backstage/plugin-catalog-react";
@@ -35,7 +39,6 @@ type Props = {
 
 const ComplianceCard = (_props: Props) => {
   const { entity } = useEntity();
-  const { owner, repo } = useProjectEntity(entity);
   const { branches, loading, error } = useProtectedBranches(entity);
   const {
     license,
@@ -43,6 +46,11 @@ const ComplianceCard = (_props: Props) => {
     error: licenseError,
   } = useRepoLicence(entity);
   const classes = useStyles();
+  const { owner, repo } = useProjectEntity(entity);
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+  }
 
   if (loading || licenseLoading) {
     return <Progress />;

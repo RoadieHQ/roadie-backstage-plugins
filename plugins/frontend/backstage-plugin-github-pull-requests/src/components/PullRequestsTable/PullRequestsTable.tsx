@@ -16,8 +16,8 @@
 import React, { FC, useState } from 'react';
 import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Table, TableColumn } from '@backstage/core-components';
-import { useProjectName } from '../useProjectName';
+import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
+import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
@@ -146,14 +146,13 @@ type TableProps = {
   branch?: string;
 };
 
-export const PullRequestsTable = (__props: TableProps) => {
+const PullRequests = (__props: TableProps) => {
   const { entity } = useEntity();
+  const projectName = isGithubSlugSet(entity);
+  const [owner, repo] = (projectName ?? '/').split('/');
   const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
     'open',
   );
-  const projectName = useProjectName(entity);
-  const [owner, repo] = projectName.split('/');
-
   const [tableProps, { retry, setPage, setPageSize }] = usePullRequests({
     state: PRStatusFilter,
     owner,
@@ -195,4 +194,13 @@ export const PullRequestsTable = (__props: TableProps) => {
       onChangePage={setPage}
     />
   );
+}
+
+export const PullRequestsTable = (__props: TableProps) => {
+  const { entity } = useEntity();
+  const projectName = isGithubSlugSet(entity);
+  if (!projectName || projectName === '') {
+    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+  }
+  return <PullRequests/>
 };

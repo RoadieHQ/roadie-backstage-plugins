@@ -18,7 +18,7 @@ import { Entity } from '@backstage/catalog-model';
 import { Route } from 'react-router';
 import { FlatRoutes } from '@backstage/core-app-api';
 import PullRequestsPage from './PullRequestsPage';
-import { GITHUB_PULL_REQUESTS_ANNOTATION } from './useProjectName';
+import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import { useEntity } from "@backstage/plugin-catalog-react";
 
