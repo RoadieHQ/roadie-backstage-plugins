@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+
+/* eslint-disable import/no-extraneous-dependencies */
 /*
  * Copyright 2020 The Backstage Authors
  *
@@ -14,35 +17,10 @@
  * limitations under the License.
  */
 
-/**
- * This script creates a release on GitHub for the Backstage repository.
- * Given a git tag, it identifies the PR created by changesets which is responsible for creating
- * the git tag. It then uses the PR description consisting of changelogs for packages as the
- * release description.
- *
- * Example:
- *
- * Set GITHUB_TOKEN environment variable.
- *
- * (Dry Run mode, will create a DRAFT release, but will not publish it.)
- * (Draft releases are visible to maintainers and do not notify users.)
- * $ node scripts/get-release-description v0.4.1
- *
- * This will open the git tree at this tag https://github.com/backstage/backstage/tree/v0.4.1
- * It will identify https://github.com/backstage/backstage/pull/3668 as the responsible changeset PR.
- * And will use everything in the PR description under "Releases" section.
- *
- * (Production or GitHub Actions Mode)
- * $ node scripts/get-release-description v0.4.1 true
- *
- * This will do the same steps as above, and will publish the Release with the description.
- */
-
- const {
+const {
     Octokit
 } = require('@octokit/rest');
 
-// See Examples above to learn about these command line arguments.
 const [TAG_NAME, BOOL_CREATE_RELEASE] = process.argv.slice(2);
 
 if (!BOOL_CREATE_RELEASE) {
@@ -57,8 +35,11 @@ const EXPECTED_COMMIT_MESSAGE = /^Merge pull request #(?<prNumber>[0-9]+) from/;
 const CHANGESET_RELEASE_BRANCH = 'roadie-backstage-plugins/changeset-release/main';
 
 // Initialize a GitHub client
+const {
+    GITHUB_TOKEN
+} = process.env;
 const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN,
+    auth: GITHUB_TOKEN
 });
 
 // Get the message of the commit responsible for a tag
@@ -81,7 +62,7 @@ async function getCommitMessageUsingTagName(tagName) {
 
     // Get the commit SHA using the tag SHA
     const tagData = await octokit.git.getTag({
-        owner: GH_REPO,
+        owner: GH_OWNER,
         repo: GH_REPO,
         tag_sha: tagSha,
     });
@@ -113,6 +94,7 @@ async function getCommitMessageUsingTagName(tagName) {
 
 // There is a PR number in our expected commit message. Get the description of that PR.
 async function getReleaseDescriptionFromCommitMessage(commitMessage) {
+    // It should exactly match the pattern of changeset commit message, or else will abort.
     const expectedMessage = RegExp(EXPECTED_COMMIT_MESSAGE);
     if (!expectedMessage.test(commitMessage)) {
         throw new Error(
@@ -122,7 +104,6 @@ async function getReleaseDescriptionFromCommitMessage(commitMessage) {
 
     // Get the PR description from the commit message
     const prNumber = commitMessage.match(expectedMessage).groups.prNumber;
-
     const {
         data
     } = await octokit.pulls.get({
@@ -147,7 +128,7 @@ async function createRelease(releaseDescription) {
     const boolCreateDraft = !BOOL_CREATE_RELEASE;
 
     const releaseResponse = await octokit.repos.createRelease({
-        owner: GH_REPO,
+        owner: GH_OWNER,
         repo: GH_REPO,
         tag_name: TAG_NAME,
         name: TAG_NAME,
