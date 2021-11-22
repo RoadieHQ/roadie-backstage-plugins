@@ -23,7 +23,8 @@
     "lint": "lerna run lint --since origin/main --",
     "lint:all": "lerna run lint --",
     "create-plugin": "backstage-cli create-plugin --scope roadiehq --no-private",
-    "remove-plugin": "backstage-cli remove-plugin"
+    "remove-plugin": "backstage-cli remove-plugin",
+    "release": "changeset version && yarn prettier --write '{packages,plugins}/*/{package.json,CHANGELOG.md}' && yarn install"
   },
   "resolutions": {
     "graphql-language-service-interface": "2.8.2",
@@ -36,9 +37,9 @@
     ]
   },
   "devDependencies": {
-    "@types/webpack": "^5.28.0",
     "@backstage/cli": "^0.7.4",
     "@spotify/prettier-config": "^7.0.0",
+    "@types/webpack": "^5.28.0",
     "concurrently": "^6.0.0",
     "eslint-plugin-notice": "^0.9.10",
     "lerna": "^4.0.0",
@@ -58,5 +59,8 @@
     "transformModules": [
       "@asyncapi/react-component"
     ]
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.18.0"
   }
 }
