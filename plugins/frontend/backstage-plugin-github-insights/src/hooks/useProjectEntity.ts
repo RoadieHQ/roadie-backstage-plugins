@@ -16,18 +16,25 @@
 
 import { Entity } from '@backstage/catalog-model';
 
+const GITHUB_PROJECT_ANNOTATION = 'github.com/project-slug';
+const GITHUB_README_ANNOTATION = 'github.com/project-readme-path';
+
 export const useProjectEntity = (entity: Entity) => {
   const projectSlug = entity.metadata?.annotations?.[
-    'github.com/project-slug'
+    GITHUB_PROJECT_ANNOTATION
   ] as string;
 
   const readmePath = entity.metadata?.annotations?.[
-    "github.com/project-readme-path"
+    GITHUB_README_ANNOTATION
   ] as string;
 
+  if(!projectSlug && projectSlug === ''){
+    throw new Error(`No "${GITHUB_PROJECT_ANNOTATION}" annotation found for your entity ${entity.metadata.name}`)
+  }
+
   return {
-    owner: projectSlug.split("/")[0],
-    repo: projectSlug.split("/")[1],
+    owner: projectSlug?.split("/")[0] || '',
+    repo: projectSlug?.split("/")[1] || '',
     readmePath,
   };
 };

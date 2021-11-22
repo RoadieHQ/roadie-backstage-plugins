@@ -5,10 +5,10 @@
   "bundled": true,
   "dependencies": {
     "@backstage/catalog-model": "^0.9.3",
-    "@backstage/cli": "^0.8.0",
+    "@backstage/cli": "^0.9.0",
     "@backstage/core-app-api": "^0.1.14",
     "@backstage/core-components": "^0.7.0",
-    "@backstage/core-plugin-api": "^0.1.8",
+    "@backstage/core-plugin-api": "^0.2.0",
     "@backstage/integration-react": "^0.1.10",
     "@backstage/plugin-api-docs": "^0.6.9",
     "@backstage/plugin-catalog": "^0.7.0",

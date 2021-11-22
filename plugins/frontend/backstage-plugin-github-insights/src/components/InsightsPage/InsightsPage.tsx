@@ -17,8 +17,7 @@
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import { Page, Content, ContentHeader, SupportButton, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { Entity } from '@backstage/catalog-model';
-import { GITHUB_INSIGHTS_ANNOTATION } from '../../hooks/useProjectName';
+import { GITHUB_INSIGHTS_ANNOTATION, isGithubInsightsAvailable } from '../utils/isGithubInsightsAvailable';
 import {
   ComplianceCard,
   ContributorsCard,
@@ -27,10 +26,6 @@ import {
   ReleasesCard,
 } from '../Widgets';
 import { useEntity } from "@backstage/plugin-catalog-react";
-
-export const isGithubInsightsAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION]);
-}
 
 export const InsightsPage = () => {
   const { entity } = useEntity();

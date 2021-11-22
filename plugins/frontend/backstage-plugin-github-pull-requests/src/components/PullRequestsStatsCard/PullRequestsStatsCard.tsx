@@ -18,9 +18,10 @@ import React, { useState } from 'react';
 import {
   InfoCard,
   InfoCardVariants,
-  StructuredMetadataTable
+  StructuredMetadataTable,
+  MissingAnnotationEmptyState
 } from '@backstage/core-components';
-import { useProjectName } from '../useProjectName';
+import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
 import {
   Box,
@@ -55,11 +56,11 @@ type Props = {
   variant?: InfoCardVariants;
 };
 
-const PullRequestsStatsCard = (props: Props) => {
+const StatsCard = (props: Props) => {
   const { entity } = useEntity();
   const classes = useStyles();
   const [pageSize, setPageSize] = useState<number>(20);
-  const projectName = useProjectName(entity);
+  const projectName = isGithubSlugSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
   const [{ statsData, loading: loadingStatistics }] = usePullRequestsStatistics(
     {
@@ -69,6 +70,10 @@ const PullRequestsStatsCard = (props: Props) => {
       state: 'closed',
     },
   );
+
+  if (!projectName || projectName === '') {
+    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+  }
 
   const metadata = {
     'average time of PR until merge': statsData?.avgTimeUntilMerge,
@@ -101,6 +106,15 @@ const PullRequestsStatsCard = (props: Props) => {
       )}
     </InfoCard>
   );
+};
+
+const PullRequestsStatsCard = (props: Props) => {
+  const { entity } = useEntity();
+  const projectName = isGithubSlugSet(entity);
+  if (!projectName || projectName === '') {
+    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+  }
+  return <StatsCard {...props}/>
 };
 
 export default PullRequestsStatsCard;

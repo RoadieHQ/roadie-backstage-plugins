@@ -18,6 +18,6 @@ import { Entity } from '@backstage/catalog-model';
 
 export const GITHUB_PULL_REQUESTS_ANNOTATION = 'github.com/project-slug';
 
-export const useProjectName = (entity: Entity) => {
+export const isGithubSlugSet = (entity: Entity) => {
   return entity?.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION] ?? '';
 };

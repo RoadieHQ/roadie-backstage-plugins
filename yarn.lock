@@ -1325,7 +1325,7 @@
     uuid "^8.0.0"
     yup "^0.32.9"
 
-"@backstage/cli-common@^0.1.1", "@backstage/cli-common@^0.1.4", "@backstage/cli-common@^0.1.5", "@backstage/cli-common@^0.1.6":
+"@backstage/cli-common@^0.1.1", "@backstage/cli-common@^0.1.4", "@backstage/cli-common@^0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@backstage/cli-common/-/cli-common-0.1.6.tgz#dee2debd5afded2289cad008b8897017af6822ef"
   integrity sha512-NriXzd2GUKV0szbgQSmRnF+5oEh70hEFPwcFVjbnfOO75rDAYroihwSRAj4IvIKC3vwKAw+BZCGdF7zCl40MGw==
@@ -1424,21 +1424,21 @@
     yml-loader "^2.1.0"
     yn "^4.0.0"
 
-"@backstage/cli@^0.8.0":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.8.2.tgz#18e005e047ba482ed3f70289ffd654f2d37e369c"
-  integrity sha512-pAMFTENnHvT/gWmO4RT+MOYWKrzgE+pcy6kSe6oODEtf8+2sLA7t0qm10QHUAeh4I0MHidhAYuB50QgVeiyOlg==
+"@backstage/cli@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.9.0.tgz#d1f6b1b7061311de1ce624d07aaf94c1dc9bfc33"
+  integrity sha512-kVbEJMU4CEhnhM1xxCPUacsdcCjYMq1C+hiJlmUPvSCnSuAKnnfWQfbV6UasbaVmXVUI5ngEk/w1eZLz77xv1g==
   dependencies:
-    "@backstage/cli-common" "^0.1.5"
+    "@backstage/cli-common" "^0.1.6"
     "@backstage/config" "^0.1.11"
-    "@backstage/config-loader" "^0.7.2"
+    "@backstage/config-loader" "^0.8.0"
     "@backstage/errors" "^0.1.4"
     "@backstage/types" "^0.1.1"
     "@hot-loader/react-dom" "^16.13.0"
     "@lerna/package-graph" "^4.0.0"
     "@lerna/project" "^4.0.0"
     "@octokit/request" "^5.4.12"
-    "@rollup/plugin-commonjs" "^17.1.0"
+    "@rollup/plugin-commonjs" "^21.0.1"
     "@rollup/plugin-json" "^4.0.2"
     "@rollup/plugin-node-resolve" "^13.0.0"
     "@rollup/plugin-yaml" "^3.0.0"
@@ -1483,7 +1483,7 @@
     jest "^26.0.1"
     jest-css-modules "^2.1.0"
     jest-transform-yaml "^0.1.1"
-    json-schema "^0.3.0"
+    json-schema "^0.4.0"
     lodash "^4.17.21"
     mini-css-extract-plugin "^2.4.2"
     node-libs-browser "^2.2.1"
@@ -1534,12 +1534,12 @@
     yaml "^1.9.2"
     yup "^0.32.9"
 
-"@backstage/config-loader@^0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.7.2.tgz#c3867874e8cbc7405b920227c12663b0b74b6a84"
-  integrity sha512-2qepisnco1RlAv8UF/kdtUDiHcFQia006831iC4DNZzMYokRJ8du2sIoH6J7tMkXkUwSwpBT29VoOz0VNOQoEg==
+"@backstage/config-loader@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.8.0.tgz#891720dd3f23fa11883fc12a862361c50df6ef82"
+  integrity sha512-FHssUm4wheIQccyPybE/uU7nZNNDuDQfBAQ7gtxefRxQzoFjsvYTMjds7xlbY1szSQi5KdP2aMbZ1q4+oXNiOA==
   dependencies:
-    "@backstage/cli-common" "^0.1.5"
+    "@backstage/cli-common" "^0.1.6"
     "@backstage/config" "^0.1.11"
     "@backstage/errors" "^0.1.4"
     "@backstage/types" "^0.1.1"
@@ -1547,7 +1547,7 @@
     ajv "^7.0.3"
     chokidar "^3.5.2"
     fs-extra "9.1.0"
-    json-schema "^0.3.0"
+    json-schema "^0.4.0"
     json-schema-merge-allof "^0.8.1"
     json-schema-traverse "^1.0.0"
     node-fetch "2.6.5"
@@ -1648,7 +1648,7 @@
     remark-gfm "^2.0.0"
     zen-observable "^0.8.15"
 
-"@backstage/core-plugin-api@^0.1.3", "@backstage/core-plugin-api@^0.1.4", "@backstage/core-plugin-api@^0.1.8":
+"@backstage/core-plugin-api@^0.1.3":
   version "0.1.13"
   resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-0.1.13.tgz#583c0fe3440450c304f13dcc85eac3bd80f357d7"
   integrity sha512-BWEqleTXR7m7nsCyt6cEnc+Gx/VT4vLdNr9fc1kXfzSAA7cUT4VKjlVmm5kdyih3BSQ4+0k7Pm/NIf0jfa7rlg==
@@ -4331,6 +4331,19 @@
     magic-string "^0.25.7"
     resolve "^1.17.0"
 
+"@rollup/plugin-commonjs@^21.0.1":
+  version "21.0.1"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-21.0.1.tgz#1e57c81ae1518e4df0954d681c642e7d94588fee"
+  integrity sha512-EA+g22lbNJ8p5kuZJUYyhhDK7WgJckW5g4pNN7n4mAFUM96VuwUnNT3xr2Db2iCZPI1pJPbGyfT5mS9T1dHfMg==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+    commondir "^1.0.1"
+    estree-walker "^2.0.1"
+    glob "^7.1.6"
+    is-reference "^1.2.1"
+    magic-string "^0.25.7"
+    resolve "^1.17.0"
+
 "@rollup/plugin-json@^4.0.2":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-json/-/plugin-json-4.1.0.tgz#54e09867ae6963c593844d8bd7a9c718294496f3"
@@ -4814,6 +4827,14 @@
     "@types/ssh2" "*"
 
 "@types/dockerode@^3.2.1", "@types/dockerode@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.0.tgz#d6afcc1de31e211ee900da3a48ef4f1a496cf05a"
+  integrity sha512-3Mc0b2gnypJB8Gwmr+8UVPkwjpf4kg1gVxw8lAI4Y/EzpK50LixU1wBSPN9D+xqiw2Ubb02JO8oM0xpwzvi2mg==
+  dependencies:
+    "@types/docker-modem" "*"
+    "@types/node" "*"
+
+"@types/dockerode@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@types/dockerode/-/dockerode-3.3.0.tgz#d6afcc1de31e211ee900da3a48ef4f1a496cf05a"
   integrity sha512-3Mc0b2gnypJB8Gwmr+8UVPkwjpf4kg1gVxw8lAI4Y/EzpK50LixU1wBSPN9D+xqiw2Ubb02JO8oM0xpwzvi2mg==
