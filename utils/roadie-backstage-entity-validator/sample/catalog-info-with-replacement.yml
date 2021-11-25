@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: test-service-api
+  description: API for test-service
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:team-atools
+  definition:
+    $text: "./openapi/v1.oas3.yaml"
