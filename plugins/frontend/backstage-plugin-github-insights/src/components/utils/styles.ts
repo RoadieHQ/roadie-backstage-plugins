@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import { BackstageTheme } from '@backstage/theme';
 
+// @ts-ignore
 export const styles = makeStyles<BackstageTheme>(theme => ({
   card: {
     boxShadow: 'none',
