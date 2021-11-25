@@ -62,7 +62,7 @@ async function main() {
   );
   const packageList = diff
     .split('\n')
-    .filter(path => path.match(/^(packages|plugins)\/[^/]+\/package\.json$/));
+    .filter(path => path.match(/^(packages|plugins|utils)\/[^/]+\/package\.json$/));
 
   const packageVersions = await Promise.all(
     packageList.map(async path => {
