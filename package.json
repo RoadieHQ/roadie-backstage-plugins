@@ -33,7 +33,8 @@
   "workspaces": {
     "packages": [
       "packages/*",
-      "plugins/**"
+      "plugins/**",
+      "utils/**"
     ]
   },
   "devDependencies": {
