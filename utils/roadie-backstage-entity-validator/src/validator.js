@@ -14,7 +14,8 @@ import {
   userEntityV1alpha1Validator,
 } from '@backstage/catalog-model';
 import annotationSchema from './schemas/annotations.schema.json';
-import Ajv from 'ajv';
+
+const Ajv = require('ajv');
 
 const ajv = new Ajv({verbose: true})
 require('ajv-formats')(ajv)
