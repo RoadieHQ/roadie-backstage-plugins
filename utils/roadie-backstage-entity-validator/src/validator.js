@@ -14,8 +14,8 @@ import {
   userEntityV1alpha1Validator,
 } from '@backstage/catalog-model';
 import annotationSchema from './schemas/annotations.schema.json';
+import Ajv from 'ajv';
 
-const Ajv = require('ajv')
 const ajv = new Ajv({verbose: true})
 require('ajv-formats')(ajv)
 
@@ -29,7 +29,7 @@ const VALIDATORS = {
 }
 
 function modifyPlaceholders(obj) {
-  for (let k in obj) {
+  for (const k in obj) {
     if (typeof obj[k] === "object") {
       if(obj[k].$text){
         obj[k] = "DUMMY TEXT"
@@ -39,14 +39,6 @@ function modifyPlaceholders(obj) {
     }
   }
 }
-
-export const validateFromFile = async (filepath = './sample/catalog-info.yml', verbose = true) => {
-  const fileContents = fs.readFileSync(filepath, 'utf8');
-  if (verbose) {
-    console.log(`Validating Entity Schema policies for file ${filepath}`);
-  }
-  await validate(fileContents, verbose);
-};
 
 export const validate = async (fileContents, verbose = true) => {
   let validator
@@ -89,11 +81,11 @@ export const validate = async (fileContents, verbose = true) => {
     }))
     const validateEntityKind = async (entity) => {
       const results = {}
-      for (const validator of Object.entries(VALIDATORS)) {
-        const result = await validator[1].check(entity)
-        results[validator[0]] = result
+      for (const v of Object.entries(VALIDATORS)) {
+        const result = await v[1].check(entity)
+        results[v[0]] = result
         if (result === true && verbose) {
-          console.log(`Validated entity kind '${validator[0]}' successfully.`);
+          console.log(`Validated entity kind '${v[0]}' successfully.`);
         }
       }
       return results
@@ -112,4 +104,12 @@ export const validate = async (fileContents, verbose = true) => {
   } catch (e) {
     throw new Error(e)
   }
+};
+
+export const validateFromFile = async (filepath = './sample/catalog-info.yml', verbose = true) => {
+  const fileContents = fs.readFileSync(filepath, 'utf8');
+  if (verbose) {
+    console.log(`Validating Entity Schema policies for file ${filepath}`);
+  }
+  await validate(fileContents, verbose);
 };
