@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.7",
-    "@backstage/catalog-model": "^0.7.8",
+    "@backstage/catalog-model": "^0.9.7",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
