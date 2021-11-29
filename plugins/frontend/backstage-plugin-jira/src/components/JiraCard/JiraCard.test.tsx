@@ -16,8 +16,12 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ApiProvider, ApiRegistry, UrlPatternDiscovery } from '@backstage/core-app-api';
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import {
+  ApiProvider,
+  ApiRegistry,
+  UrlPatternDiscovery,
+} from '@backstage/core-app-api';
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { rest } from 'msw';
 import { msw } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -59,8 +63,9 @@ describe('JiraCard', () => {
         'http://exampleapi.com/jira/api/rest/api/latest/project/BT/statuses',
         (_, res, ctx) => res(ctx.json(statusesResponseStub)),
       ),
-      rest.get('http://exampleapi.com/jira/api/activity', (_, res, ctx) =>
-        res(ctx.xml(activityResponseStub)),
+      rest.get(
+        'http://exampleapi.com/jira/api/activity?maxResults=25&streams=key+IS+&os_authType=basic',
+        (_, res, ctx) => res(ctx.xml(activityResponseStub)),
       ),
     );
 
@@ -73,7 +78,11 @@ describe('JiraCard', () => {
         </ApiProvider>
       </MemoryRouter>,
     );
-    
+
+    expect(await rendered.findByText(/backstage-test/)).toBeInTheDocument();
+    expect(
+      (await rendered.findAllByText(/testComponent/)).length,
+    ).toBeGreaterThan(0);
     expect(
       await rendered.findByText(
         /changed the status to Selected for Development/,
@@ -100,8 +109,9 @@ describe('JiraCard', () => {
         'http://exampleapi.com/jira/api/rest/api/latest/project/BT/statuses',
         (_, res, ctx) => res(ctx.status(403)),
       ),
-      rest.get('http://exampleapi.com/jira/api/activity', (_, res, ctx) =>
-        res(ctx.status(403)),
+      rest.get(
+        'http://exampleapi.com/jira/api/activity?maxResults=25&streams=key+IS+&os_authType=basic',
+        (_, res, ctx) => res(ctx.status(403)),
       ),
     );
     const rendered = render(
@@ -114,7 +124,7 @@ describe('JiraCard', () => {
       </MemoryRouter>,
     );
 
-    const text = await rendered.findByText(/status 403: Forbidden/)
-      expect(text).toBeInTheDocument();
+    const text = await rendered.findByText(/status 403: Forbidden/);
+    expect(text).toBeInTheDocument();
   });
 });
