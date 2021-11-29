@@ -73,9 +73,7 @@ describe('JiraCard', () => {
         </ApiProvider>
       </MemoryRouter>,
     );
-
-    expect(await rendered.findByText(/backstage-test/)).toBeInTheDocument();
-    expect((await rendered.findAllByText(/testComponent/)).length).toBeGreaterThan(0);
+    
     expect(
       await rendered.findByText(
         /changed the status to Selected for Development/,
