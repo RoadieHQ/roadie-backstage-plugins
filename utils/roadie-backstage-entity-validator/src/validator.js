@@ -31,9 +31,13 @@ const VALIDATORS = {
 function modifyPlaceholders(obj) {
   for (const k in obj) {
     if (typeof obj[k] === 'object') {
-      if (obj[k].$text) {
-        obj[k] = 'DUMMY TEXT';
-        return;
+      try {
+        if (obj[k].$text) {
+          obj[k] = 'DUMMY TEXT';
+          return;
+        }
+      } catch(e) {
+        throw new Error(`Placeholder with name ${k} is empty. Please remove it or populate it.`)
       }
       modifyPlaceholders(obj[k]);
     }
