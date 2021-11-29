@@ -37,7 +37,7 @@ function modifyPlaceholders(obj) {
           return;
         }
       } catch(e) {
-        throw new Error(`Placeholder with name ${k} is empty. Please remove it or populate it.`)
+        throw new Error(`Placeholder with name '${k}' is empty. Please remove it or populate it.`)
       }
       modifyPlaceholders(obj[k]);
     }
