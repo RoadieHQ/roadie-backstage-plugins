@@ -38,12 +38,12 @@ const decodeHtml = (html: string) => {
   return txt.value;
 };
 
-export const useActivityStream = (size: number, projectKey: string) => {
+export const useActivityStream = (size: number, projectKey: string, isBearerAuth: boolean) => {
   const api = useApi(jiraApiRef);
 
   const getActivityStream = useCallback(async () => {
     try {
-      const response = await api.getActivityStream(size, projectKey);
+      const response = await api.getActivityStream(size, projectKey, isBearerAuth);
       const parsedData = JSON.parse(
         convert.xml2json(response, { compact: true, spaces: 2 }),
       );
@@ -85,7 +85,7 @@ export const useActivityStream = (size: number, projectKey: string) => {
     } catch (err:any) {
       return handleError(err);
     }
-  }, [api, size, projectKey]);
+  }, [api, size, projectKey, isBearerAuth]);
 
   const [state, fetchActivityStream] = useAsyncFn(() => getActivityStream(), [
     size,

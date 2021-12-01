@@ -115,13 +115,15 @@ const options = {
   },
 };
 
-export const ActivityStream = ({ projectKey }: { projectKey: string }) => {
+export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, tokenType: string | undefined; }) => {
   const classes = useStyles();
   const [size, setSize] = useState(25);
   const [disableButton, setDisableButton] = useState(false);
+  const isBearerAuth = tokenType?.includes('Bearer') ? true: false;
   const { activities, activitiesLoading, activitiesError } = useActivityStream(
     size,
     projectKey,
+    isBearerAuth
   );
 
   const showMore = useCallback(() => {

@@ -16,16 +16,14 @@
 
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import {
-  errorApiRef
-} from '@backstage/core-plugin-api';
+import { errorApiRef } from '@backstage/core-plugin-api';
 import {
   ApiRegistry,
   ApiProvider,
   UrlPatternDiscovery,
 } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import {msw, wrapInTestApp} from '@backstage/test-utils';
+import { msw, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
@@ -51,23 +49,23 @@ describe('BuildKiteBuildsTable', () => {
   it('should display a table with the data from the requests', async () => {
     worker.use(
       rest.get(
-        ' http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
-        (_, res, ctx) => res(ctx.json(buildsResponseMock))
-      )
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => res(ctx.json(buildsResponseMock)),
+      ),
     );
     const rendered = render(
       wrapInTestApp(
         <ApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>
-      )
+        </ApiProvider>,
+      ),
     );
 
     expect(
-      await rendered.findByText('rbnetwork/example-pipeline')
+      await rendered.findByText('rbnetwork/example-pipeline'),
     ).toBeInTheDocument();
     expect(
-      await rendered.findByText('Update catalog-info.yaml')
+      await rendered.findByText('Update catalog-info.yaml'),
     ).toBeInTheDocument();
     expect((await rendered.findAllByText('Queued')).length).toEqual(5);
     expect((await rendered.findAllByText('main')).length).toEqual(5);
@@ -76,21 +74,22 @@ describe('BuildKiteBuildsTable', () => {
   it('should display an error on fetch failure', async () => {
     worker.use(
       rest.get(
-        ' http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
-        (_, res, ctx) => res(ctx.status(403))
-      )
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => res(ctx.status(403)),
+      ),
     );
     render(
       wrapInTestApp(
         <ApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>
-    ));
+        </ApiProvider>,
+      ),
+    );
 
     await waitFor(() =>
       expect(postMock).toBeCalledWith(
-        new Error('failed to fetch data, status 403: Forbidden')
-      )
+        new Error('failed to fetch data, status 403: Forbidden'),
+      ),
     );
   });
 });

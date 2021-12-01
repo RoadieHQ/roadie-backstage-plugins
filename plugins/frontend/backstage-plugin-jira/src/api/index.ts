@@ -172,11 +172,11 @@ export class JiraAPI {
     };
   }
 
-  async getActivityStream(size: number, projectKey: string) {
+  async getActivityStream(size: number, projectKey: string, isBearerAuth: boolean) {
     const { baseUrl } = await this.getUrls();
 
     const request = await fetch(
-      `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic`,
+      isBearerAuth? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`:`${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic` ,
     );
     if (!request.ok) {
       throw new Error(

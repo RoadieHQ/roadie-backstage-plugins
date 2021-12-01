@@ -76,7 +76,7 @@ const CardProjectDetails = ({
 export const JiraCard = (_props: EntityProps) => {
   const { entity } = useEntity();
   const classes = useStyles();
-  const { projectKey, component } = useProjectEntity(entity);
+  const { projectKey, component, tokenType } = useProjectEntity(entity);
   const [statusesNames, setStatusesNames] = useState<Array<string>>([]);
   const {
     project,
@@ -174,7 +174,7 @@ export const JiraCard = (_props: EntityProps) => {
             ))}
           </Grid>
           <Divider />
-          <ActivityStream projectKey={projectKey} />
+          <ActivityStream projectKey={projectKey} tokenType={tokenType}/>
         </div>
       ) : null}
     </InfoCard>
