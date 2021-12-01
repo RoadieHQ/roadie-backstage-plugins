@@ -27,7 +27,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@main
       with:
-        node-version: 14.x
+        node-version: [14.x, 16.x]
     - run: yarn install --frozen-lockfile
   
     - name: Fetch previous commit for release check
@@ -65,7 +65,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [14.x, 16.x]
 
     env:
       CI: 'true'
@@ -78,7 +78,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@main
       with:
-        node-version: 14.x
+        node-version: [14.x, 16.x]
     - run: yarn install --frozen-lockfile
 
     - name: build type declarations
