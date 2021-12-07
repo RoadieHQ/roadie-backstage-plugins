@@ -363,6 +363,42 @@ export const getEmptyResponseStub = {
   items: null
 };
 
+export const getResponseStubAppListForInstanceOne = {
+  metadata: {
+    resourceVersion: '7277391'
+  },
+  items: [getResponseStubScanning,]
+};
+
+
+export const getResponseStubAppListForInstanceTwo = () => {
+  const item = JSON.parse(JSON.stringify(getResponseStubScanning));
+  item.metadata.instance.name = 'argoInstance2';
+  return {
+    metadata: {
+      resourceVersion: '7277390'
+    },
+    items: [item,]
+  };
+};
+
+export const multipleApps = () => {
+  const item = JSON.parse(JSON.stringify(getResponseStubScanning));
+  const item1 = JSON.parse(JSON.stringify(item));
+  item1.metadata.name = 'guestbook-prod';
+  const item2 = JSON.parse(JSON.stringify(item));
+  item2.metadata.name = 'guestbook-staging';
+  return [item1, item2];
+};
+
+export const getResponseStubAppListWithMultipleApps = {
+  metadata: {
+    resourceVersion: '7277391'
+  },
+  items: multipleApps()
+};
+
+
 export class ArgoCDApiMock implements ArgoCDApi {
   // @ts-ignore
   // constructor(_: Options) {}

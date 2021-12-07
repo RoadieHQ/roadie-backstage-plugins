@@ -39,7 +39,7 @@ const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const State = ({ value }: { value: string }) => {
+const State = ({ value }: { value: string; }) => {
   const colorMap: Record<string, string> = {
     Pending: '#dcbc21',
     Synced: 'green',
@@ -97,7 +97,7 @@ const OverviewComponent = ({
     },
     {
       title: 'Instance',
-      render: (row: any): React.ReactNode => row.instance,
+      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
     },
     {
       title: 'Sync Status',
