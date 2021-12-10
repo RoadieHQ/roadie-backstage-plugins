@@ -20,8 +20,6 @@ import {
   IdentityApi,
   errorApiRef,
   configApiRef,
-  ProfileInfo,
-  BackstageUserIdentity
 } from '@backstage/core-plugin-api';
 import {
   ApiRegistry,

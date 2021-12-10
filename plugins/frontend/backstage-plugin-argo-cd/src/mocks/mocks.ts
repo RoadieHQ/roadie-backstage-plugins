@@ -1,4 +1,4 @@
-import { BackstageUserIdentity, IdentityApi, ProfileInfo } from '@backstage/core-plugin-api';
+import { IdentityApi } from '@backstage/core-plugin-api';
 import { ArgoCDApi } from '..';
 
 export const getEntityStub = {
