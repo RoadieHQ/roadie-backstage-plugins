@@ -19,7 +19,7 @@ import { render } from '@testing-library/react';
 import {
   IdentityApi,
   errorApiRef,
-  configApiRef
+  configApiRef,
 } from '@backstage/core-plugin-api';
 import {
   ApiRegistry,
@@ -49,6 +49,9 @@ const identityApi: IdentityApi = {
   async signOut() {
     return Promise.resolve();
   },
+  getProfileInfo: jest.fn(),
+  getBackstageIdentity: jest.fn(),
+  getCredentials: jest.fn()
 };
 
 const config = {
