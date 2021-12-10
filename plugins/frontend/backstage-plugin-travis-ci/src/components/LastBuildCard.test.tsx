@@ -19,7 +19,9 @@ import { render } from '@testing-library/react';
 import {
   IdentityApi,
   errorApiRef,
-  configApiRef
+  configApiRef,
+  ProfileInfo,
+  BackstageUserIdentity
 } from '@backstage/core-plugin-api';
 import {
   ApiRegistry,
@@ -49,6 +51,15 @@ const identityApi: IdentityApi = {
   async signOut() {
     return Promise.resolve();
   },
+  getProfileInfo: function (): Promise<ProfileInfo> {
+    throw new Error('Function not implemented.');
+  },
+  getBackstageIdentity: function (): Promise<BackstageUserIdentity> {
+    throw new Error('Function not implemented.');
+  },
+  getCredentials: function (): Promise<{ token?: string | undefined; }> {
+    throw new Error('Function not implemented.');
+  }
 };
 
 const config = {

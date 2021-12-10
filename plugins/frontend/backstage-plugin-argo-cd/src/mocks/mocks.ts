@@ -1,4 +1,4 @@
-import { IdentityApi } from '@backstage/core-plugin-api';
+import { BackstageUserIdentity, IdentityApi, ProfileInfo } from '@backstage/core-plugin-api';
 import { ArgoCDApi } from '..';
 
 export const getEntityStub = {
@@ -444,4 +444,13 @@ export const getIdentityApiStub: IdentityApi = {
   async signOut() {
     return Promise.resolve();
   },
+  getProfileInfo: function (): Promise<ProfileInfo> {
+    throw new Error('Function not implemented.');
+  },
+  getBackstageIdentity: function (): Promise<BackstageUserIdentity> {
+    throw new Error('Function not implemented.');
+  },
+  getCredentials: function (): Promise<{ token?: string | undefined; }> {
+    throw new Error('Function not implemented.');
+  }
 };
