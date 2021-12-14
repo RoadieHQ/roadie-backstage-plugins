@@ -34,5 +34,5 @@ labels: kind/bug
 
 ## Your Environment
 
-- `@backstage/catalog-react` version:
-- `@backstage/integrations` version:
+- `@backstage/plugin-catalog-react` version:
+- `@backstage/integration` version:
