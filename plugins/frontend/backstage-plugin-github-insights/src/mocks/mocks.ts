@@ -18,6 +18,8 @@ export const entityMock = {
     namespace: 'default',
     annotations: {
       'backstage.io/managed-by-location':
+      'url:https://github.com/mcalus3/sample-service/blob/master/backstage5.yaml',
+      'backstage.io/source-location':
         'url:https://github.com/mcalus3/sample-service/blob/master/backstage5.yaml',
       'github.com/project-slug': 'mcalus3/backstage',
     },

@@ -16,7 +16,12 @@
 
 import { useApi } from '@backstage/core-plugin-api';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
-import { Entity, parseLocationReference } from '@backstage/catalog-model';
+import {
+  Entity,
+  parseLocationReference,
+  LOCATION_ANNOTATION,
+  SOURCE_LOCATION_ANNOTATION,
+} from '@backstage/catalog-model';
 
 const defaultGithubIntegration = {
   hostname: 'github.com',
@@ -28,10 +33,16 @@ export const useEntityGithubScmIntegration = (entity: Entity) => {
   if (!entity) {
     return defaultGithubIntegration;
   }
-  const location = parseLocationReference(
-    entity.metadata.annotations!!['backstage.io/managed-by-location'] || '',
-  );
-  const scm = integrations.github.byUrl(location.target);
+
+  let location = entity.metadata.annotations?.[SOURCE_LOCATION_ANNOTATION];
+
+  if (!location) {
+    location = entity.metadata.annotations?.[LOCATION_ANNOTATION];
+  }
+
+  const { target } = parseLocationReference(location || '');
+
+  const scm = integrations.github.byUrl(target);
   if (scm) {
     return {
       hostname: scm.config.host,
