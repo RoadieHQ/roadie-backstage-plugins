@@ -22,18 +22,18 @@ describe('Prometheus', () => {
     cy.saveGithubToken();
     cy.intercept(
       'GET',
-      'http://localhost:7000/api/proxy/prometheus/api/rules?type=alert',
+      'http://localhost:7007/api/proxy/prometheus/api/rules?type=alert',
       { fixture: 'prometheus/alerts.json' },
     );
     cy.visit('/catalog/default/component/sample-service-3');
     cy.intercept(
       'GET',
-      'http://localhost:7000/api/proxy/prometheus/api/query_range?query=node_memory_Active_bytes*',
+      'http://localhost:7007/api/proxy/prometheus/api/query_range?query=node_memory_Active_bytes*',
       { fixture: 'prometheus/graphs.json' },
     );
     cy.intercept(
       'GET',
-      'http://localhost:7000/api/proxy/prometheus/api/query_range?query=memUsage*',
+      'http://localhost:7007/api/proxy/prometheus/api/query_range?query=memUsage*',
       { fixture: 'prometheus/graphs2.json' },
     );
   });

@@ -20,7 +20,7 @@ import 'os';
 describe('AWS Lambda', () => {
     beforeEach(() => {
         cy.saveGithubToken();
-        cy.intercept('GET', 'http://localhost:7000/api/aws/credentials', { fixture: 'AWSLambda/AWSCredentials.json' })
+        cy.intercept('GET', 'http://localhost:7007/api/aws/credentials', { fixture: 'AWSLambda/AWSCredentials.json' })
         cy.intercept('GET', 'https://lambda.eu-west-1.amazonaws.com/2015-03-31/functions/HelloWorld', { fixture: 'AWSLambda/AWSLambdaResponse.json' })
         cy.visit('/catalog/default/component/sample-service')
     })

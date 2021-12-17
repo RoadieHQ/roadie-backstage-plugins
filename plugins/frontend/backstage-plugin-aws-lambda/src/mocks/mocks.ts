@@ -29,7 +29,7 @@ export const entityMock = {
   ],
 };
 
-//  http://localhost:7000/api/aws/credentials
+//  http://localhost:7007/api/aws/credentials
 export const credentialsResponseMock = {
   AccessKeyId: 'test-key-id',
   SecretAccessKey: 'test-access-key',
