@@ -36,7 +36,8 @@ import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
 
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
-import { createApp, FlatRoutes } from '@backstage/core-app-api';
+import { FlatRoutes } from '@backstage/core-app-api';
+import { createApp } from '@backstage/app-defaults';
 
 const app = createApp({
   apis,
