@@ -20,7 +20,6 @@ import { PullRequestState } from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
-  description: 'Used by the Github Pull Requests plugin to make requests',
 });
 
 export type GithubPullRequestsApi = {

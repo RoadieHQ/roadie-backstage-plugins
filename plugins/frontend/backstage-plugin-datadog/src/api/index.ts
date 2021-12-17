@@ -4,7 +4,6 @@ export interface DatadogApi {}
 
 export const datadogApiRef = createApiRef<DatadogApi>({
   id: 'plugin.datadog.service',
-  description: 'Used by the Datadog plugin to make requests',
 });
 
 export type Options = {

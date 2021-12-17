@@ -82,7 +82,6 @@ export interface TravisCIApi {
 
 export const travisCIApiRef = createApiRef<TravisCIApi>({
   id: 'plugin.travisci.service',
-  description: 'Used by the TravisCI plugin to make requests',
 });
 
 export class TravisCIApiClient implements TravisCIApi {

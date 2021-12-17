@@ -19,7 +19,6 @@ import { BugsnagError, Organisation, Project } from './types';
 
 export const bugsnagApiRef = createApiRef<BugsnagApi>({
   id: 'plugin.bugsnag.service',
-  description: 'Used by the Bugsnag plugin to make requests',
 });
 
 export interface BugsnagApi {

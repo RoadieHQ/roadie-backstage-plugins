@@ -25,7 +25,6 @@ const DEFAULT_PROXY_PATH = '/prometheus/api';
 
 export const prometheusApiRef = createApiRef<PrometheusApi>({
   id: 'plugin.prometheus.service',
-  description: 'Used by the Prometheus plugin to make requests',
 });
 
 type Options = {
