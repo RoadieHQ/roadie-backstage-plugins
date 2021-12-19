@@ -11207,29 +11207,23 @@ graphql-config@^4.1.0:
     minimatch "3.0.4"
     string-env-interpolation "1.0.1"
 
-graphql-language-service-interface@2.8.2, graphql-language-service-interface@^2.10.2:
-  version "2.8.2"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.8.2.tgz#b3bb2aef7eaf0dff0b4ea419fa412c5f66fa268b"
-  integrity sha512-otbOQmhgkAJU1QJgQkMztNku6SbJLu/uodoFOYOOtJsizTjrMs93vkYaHCcYnLA3oi1Goj27XcHjMnRCYQOZXQ==
-  dependencies:
-    graphql-language-service-parser "^1.9.0"
-    graphql-language-service-types "^1.8.0"
-    graphql-language-service-utils "^2.5.1"
-    vscode-languageserver-types "^3.15.1"
-
-graphql-language-service-parser@1.9.0, graphql-language-service-parser@^1.10.4, graphql-language-service-parser@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.9.0.tgz#79af21294119a0a7e81b6b994a1af36833bab724"
-  integrity sha512-B5xPZLbBmIp0kHvpY1Z35I5DtPoDK9wGxQVRDIzcBaiIvAmlTrDvjo3bu7vKREdjFbYKvWNgrEWENuprMbF17Q==
-  dependencies:
-    graphql-language-service-types "^1.8.0"
-
-graphql-language-service-types@^1.8.0, graphql-language-service-types@^1.8.6:
-  version "1.8.6"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-types/-/graphql-language-service-types-1.8.6.tgz#a95ce09328f50e027e664cdcbe6a24018407b871"
-  integrity sha512-1xH2kqkgKjvfsc/+fyDnzP21aSSofbVYfzyH8QcNCsxVF0zEvUij+3qyO/dHmQljIyc+Ss62J2udlnZEZM0hcA==
+graphql-language-service-interface@^2.10.2:
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-interface/-/graphql-language-service-interface-2.10.2.tgz#de9386f699e446320256175e215cdc10ccf9f9b7"
+  integrity sha512-RKIEBPhRMWdXY3fxRs99XysTDnEgAvNbu8ov/5iOlnkZsWQNzitjtd0O0l1CutQOQt3iXoHde7w8uhCnKL4tcg==
   dependencies:
     graphql-config "^4.1.0"
+    graphql-language-service-parser "^1.10.4"
+    graphql-language-service-types "^1.8.7"
+    graphql-language-service-utils "^2.7.1"
+    vscode-languageserver-types "^3.15.1"
+
+graphql-language-service-parser@^1.10.4:
+  version "1.10.4"
+  resolved "https://registry.yarnpkg.com/graphql-language-service-parser/-/graphql-language-service-parser-1.10.4.tgz#b2979deefc5c0df571dacd409b2d5fbf1cdf7a9d"
+  integrity sha512-duDE+0aeKLFVrb9Kf28U84ZEHhHcvTjWIT6dJbIAQJWBaDoht0D4BK9EIhd94I3DtKRc1JCJb2+70y1lvP/hiA==
+  dependencies:
+    graphql-language-service-types "^1.8.7"
 
 graphql-language-service-types@^1.8.7:
   version "1.8.7"
@@ -11238,14 +11232,6 @@ graphql-language-service-types@^1.8.7:
   dependencies:
     graphql-config "^4.1.0"
     vscode-languageserver-types "^3.15.1"
-
-graphql-language-service-utils@^2.5.1:
-  version "2.6.3"
-  resolved "https://registry.yarnpkg.com/graphql-language-service-utils/-/graphql-language-service-utils-2.6.3.tgz#be283c2f8cd38e59b3185e7cd04cc40bed0c4d00"
-  integrity sha512-rc5SToegDZ3VlnC0J7EriWe3G9zxFsPspxNV/rqcMcMq2hON9Q53bxTdg75KTNRUY78h+1ZHsXPEgecQtVk+0w==
-  dependencies:
-    graphql-language-service-types "^1.8.6"
-    nullthrows "^1.0.0"
 
 graphql-language-service-utils@^2.7.1:
   version "2.7.1"
