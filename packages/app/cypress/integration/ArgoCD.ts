@@ -22,7 +22,11 @@ describe('Travis CI', () => {
     cy.saveGithubToken();
     cy.intercept(
       'GET',
+<<<<<<< HEAD
       'http://localhost:7000/api/proxy/argocd/api/applications/name/test-app',
+=======
+      'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
+>>>>>>> parent of 8ce9e45 (Revert "Change default backend port from 7000 to 7007")
       { fixture: 'ArgoCD/applications-test-app.json' },
     );
     cy.visit('/catalog/default/component/sample-service');

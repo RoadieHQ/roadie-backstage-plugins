@@ -20,7 +20,7 @@ import 'os';
 describe('Travis CI', () => {
   beforeEach(() => {
     cy.saveGithubToken();
-    cy.intercept('GET', 'http://localhost:7000/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5', { fixture: 'travisCi/builds.json' })
+    cy.intercept('GET', 'http://localhost:7007/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5', { fixture: 'travisCi/builds.json' })
     cy.visit('/catalog/default/component/sample-service-2')
   })
 
