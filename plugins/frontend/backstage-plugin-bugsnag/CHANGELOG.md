@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.2.3
+
+### Patch Changes
+
+- 120ca2e: Removed deprecated `description` option from `ApiRefConfig` for all plugins
+
 ## 1.2.2
 
 ### Patch Changes

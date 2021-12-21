@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 1.3.2
+
+### Patch Changes
+
+- 120ca2e: Removed deprecated `description` option from `ApiRefConfig` for all plugins
+
 ## 1.3.1
 
 ### Patch Changes
