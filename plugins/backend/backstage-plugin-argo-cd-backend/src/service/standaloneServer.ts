@@ -29,7 +29,7 @@ export async function startStandaloneServer(
   });
 
   const service = createServiceBuilder(module)
-    .enableCors({ origin: 'http://localhost:7000' })
+    .enableCors({ origin: 'http://localhost:7007' })
     .addRouter('/backstage-plugin-argo-cd-backend', router);
 
   return await service.start().catch(err => {
