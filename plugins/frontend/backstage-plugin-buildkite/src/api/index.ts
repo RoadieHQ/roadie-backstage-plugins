@@ -18,7 +18,6 @@ import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
 
 export const buildKiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
-  description: 'Used by the Buildkite plugin to make requests',
 });
 
 const DEFAULT_PROXY_PATH = '/buildkite/api';

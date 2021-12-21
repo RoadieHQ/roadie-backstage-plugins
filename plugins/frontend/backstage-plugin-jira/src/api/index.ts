@@ -20,7 +20,6 @@ import fetch from 'cross-fetch';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
   id: 'plugin.jira.service',
-  description: 'Used by the Jira plugin to make requests',
 });
 
 const DEFAULT_PROXY_PATH = '/jira/api';
