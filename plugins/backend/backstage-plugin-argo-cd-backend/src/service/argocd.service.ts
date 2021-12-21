@@ -6,7 +6,10 @@ export interface ArgoServiceApi {
   getArgoAppData: (
     baseUrl: string,
     argoInstanceName: string,
-    argoAppName: string,
+    options: {
+      name: string,
+      selector: string;
+    },
     argoToken: string,
   ) => Promise<object>;
 }
@@ -21,9 +24,12 @@ export class ArgoService implements ArgoServiceApi {
     private username: string,
     private password: string,
     private config: Config,
-  ) {}
+  ) { }
 
-  async findArgoApp(name: string): Promise<findArgoAppResp[]> {
+  async findArgoApp(options: { name?: string, selector?: string; }): Promise<findArgoAppResp[]> {
+    if (!options.name && !options.selector) {
+      throw new Error('Neither name nor selector provided');
+    }
     const argoApps = this.config
       .getConfigArray('argocd.appLocatorMethods')
       .filter(element => element.getString('type') === 'config');
@@ -50,7 +56,7 @@ export class ArgoService implements ArgoServiceApi {
           getArgoAppDataResp = await this.getArgoAppData(
             argoInstance.url,
             argoInstance.name,
-            name,
+            options,
             token,
           );
         } catch (error: any) {
@@ -94,20 +100,28 @@ export class ArgoService implements ArgoServiceApi {
   async getArgoAppData(
     baseUrl: string,
     argoInstanceName: string,
-    argoAppName: string,
+    options: {
+      name?: string,
+      selector?: string;
+    },
     argoToken: string,
   ): Promise<any> {
-    const options: AxiosRequestConfig = {
+    const urlSuffix = options.name ? `/${options.name}` : `?selector=${options.selector}`;
+    const requestOptions: AxiosRequestConfig = {
       method: 'GET',
-      url: `${baseUrl}/api/v1/applications/${argoAppName}`,
+      url: `${baseUrl}/api/v1/applications${urlSuffix}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${argoToken}`,
       },
     };
     try {
-      const resp = await axios.request(options);
-      resp.data.instance = argoInstanceName;
+      const resp = await axios.request(requestOptions);
+      if (resp.data.items) {
+        (resp.data.items as any[]).forEach(item => { item.metadata.instance = { name: argoInstanceName }; });
+      } else {
+        resp.data.instance = argoInstanceName;
+      }
       return resp.data;
     } catch (error: any) {
       if (error.response?.status === 404) {

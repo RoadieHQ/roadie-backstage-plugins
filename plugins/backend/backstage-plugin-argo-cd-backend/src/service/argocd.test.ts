@@ -46,7 +46,7 @@ describe('ArgoCD service', () => {
     const resp = argoService.getArgoAppData(
       'https://argoInstance1.com',
       'argoInstance1',
-      'testApp',
+      { name: 'testApp' },
       'testToken',
     );
 
@@ -70,36 +70,103 @@ describe('ArgoCD service', () => {
       argoService.getArgoAppData(
         'https://argoInstance1.com',
         'argoInstance1',
-        'testApp',
+        { name: 'testApp' },
         'testToken',
       ),
     ).rejects.toThrow();
   });
 
-  it('show return the argo instances an argo app is on', async () => {
+  it('should return the argo instances an argo app is on', async () => {
     mocked(axios.request).mockResolvedValue({
       data: {
         metadata: {
           name: 'testApp-nonprod',
           namespace: 'argocd',
+          status: {},
         },
-        status: {},
       },
     });
 
-    const resp = argoService.findArgoApp('testApp');
+    const resp = argoService.findArgoApp({ name: 'testApp-nonprod' });
 
     expect(await resp).toStrictEqual([
       { name: 'argoInstance1', url: 'https://argoInstance1.com' },
     ]);
   });
 
-  it('show fail to return the argo instances an argo app is on', async () => {
+  it('should fail to return the argo instances an argo app is on', async () => {
     mocked(axios.request).mockRejectedValue({
       status: 500,
     });
     return expect(async () => {
-      await argoService.findArgoApp('testApp');
+      await argoService.findArgoApp({ name: 'testApp' });
     }).rejects.toThrow();
+  });
+
+  it('should return the argo instances using the app selector', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        metadata: {
+          name: 'testApp-nonprod',
+          namespace: 'argocd',
+          status: {},
+        },
+      },
+    });
+
+    const resp = argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
+
+    expect(await resp).toStrictEqual([
+      { name: 'argoInstance1', url: 'https://argoInstance1.com' },
+    ]);
+  });
+
+  it('should successfully decorate the items when using the app selector', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        items: [
+          {
+            metadata: {
+              name: 'testApp-prod',
+              namespace: 'argocd',
+            },
+          },
+          {
+            metadata: {
+              name: 'testApp-staging',
+              namespace: 'argocd',
+            },
+          }
+        ]
+      },
+    });
+
+    const resp = argoService.getArgoAppData('https://argoInstance1.com',
+      'argoInstance1',
+      { selector: 'service=testApp' },
+      'testToken');
+
+    expect(await resp).toStrictEqual({
+      items: [
+        {
+          metadata: {
+            instance: {
+              name: 'argoInstance1'
+            },
+            name: 'testApp-prod',
+            namespace: 'argocd',
+          },
+        },
+        {
+          metadata: {
+            instance: {
+              name: 'argoInstance1'
+            },
+            name: 'testApp-staging',
+            namespace: 'argocd',
+          },
+        },
+      ]
+    });
   });
 });

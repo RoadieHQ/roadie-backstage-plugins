@@ -32,8 +32,8 @@ export const useAppDetails = ({
   const errorApi = useApi(errorApiRef);
   const configApi = useApi(configApiRef);
 
-  const { loading, value, error, retry } = useAsyncRetry(async () => {    
-    const argoSearchMethod: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length)
+  const { loading, value, error, retry } = useAsyncRetry(async () => {
+    const argoSearchMethod: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
     try {
       if (!argoSearchMethod && appName) {
         return await api.getAppDetails({ url, appName });
@@ -63,14 +63,32 @@ export const useAppDetails = ({
           apiOut.metadata.instance = instance;
           return apiOut;
         });
+        return await Promise.all(promises);
+      }
+      if (argoSearchMethod && appSelector) {
+        const kubeInfo = await api.serviceLocatorUrl({
+          appSelector: appSelector as string,
+        });
+        if (kubeInfo instanceof Error) return kubeInfo;
+        const promises = kubeInfo.map(async (instance: any) => {
+          const apiOut = await api.getAppListDetails({
+            url,
+            appSelector,
+            instance: instance.name,
+          });
+          return apiOut;
+        });
         const output = await Promise.all(promises);
-        return output;
+        const items = {
+          items: output.flatMap(argoCdAppList => argoCdAppList.items)
+        };
+        return items;
       }
       if (appSelector || projectName) {
         return await api.listApps({ url, appSelector, projectName });
       }
       return Promise.reject('Neither appName nor appSelector provided');
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(new Error('Something went wrong'));
       return Promise.reject(e);
     }

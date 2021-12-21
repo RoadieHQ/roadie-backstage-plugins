@@ -34,6 +34,9 @@ import {
   getEntityStub,
   getResponseStub,
   getResponseStubScanning,
+  getResponseStubAppListForInstanceOne,
+  getResponseStubAppListForInstanceTwo,
+  getResponseStubAppListWithMultipleApps,
   getResponseStubMissingData,
   getEntityStubWithAppSelector,
   getEmptyResponseStub,
@@ -74,6 +77,40 @@ const apisScan = ApiRegistry.from([
                 url: 'https://testrancher.com',
                 name: 'argoInstance1',
               },
+            ],
+          },
+        ],
+      },
+    }),
+  ],
+  [errorApiRef, errorApiMock],
+  [
+    argoCDApiRef,
+    new ArgoCDApiClient({
+      discoveryApi,
+      identityApi: getIdentityApiStub,
+      backendBaseUrl: 'https://testbackend.com',
+      searchInstances: true,
+    }),
+  ],
+]);
+const apisScanMultipleInstances = ApiRegistry.from([
+  [
+    configApiRef,
+    new ConfigReader({
+      argocd: {
+        appLocatorMethods: [
+          {
+            type: 'config',
+            instances: [
+              {
+                url: 'https://testrancher.com',
+                name: 'argoInstance1',
+              },
+              {
+                url: 'https://testranchertwo.com',
+                name: 'argoInstance2',
+              }
             ],
           },
         ],
@@ -174,7 +211,7 @@ describe('argo-cd', () => {
           title: "Repo URL",
           field: "spec.source.repoURL",
         },
-      ]
+      ];
 
       const rendered = render(
         <ApiProvider apis={apis}>
@@ -203,11 +240,11 @@ describe('argo-cd', () => {
       expect(await rendered.findByText('guestbook')).toBeInTheDocument();
       expect(await rendered.findByText('Synced')).toBeInTheDocument();
 
-      const nextResponseStub = getResponseStub;
+      const nextResponseStub = JSON.parse(JSON.stringify(getResponseStub));
       nextResponseStub.status.sync.status = "OutOfSync";
 
       worker.use(
-        rest.get('*', (_, res, ctx) => res(ctx.json(getResponseStub)))
+        rest.get('*', (_, res, ctx) => res(ctx.json(nextResponseStub)))
       );
 
       const refreshButton = await rendered.findByTitle("Refresh");
@@ -251,7 +288,7 @@ describe('argo-cd', () => {
     it('should display fetched data', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/guestbook',
+          'https://testbackend.com/api/argocd/find/name/guestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -270,7 +307,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStubScanning)),
         ),
       );
@@ -299,7 +336,7 @@ describe('argo-cd', () => {
         rest.get('*', (_, res, ctx) => res(ctx.json(getEmptyResponseStub))),
       );
       const rendered = render(
-        <ApiProvider apis={apisScan}>
+        <ApiProvider apis={apis}>
           <EntityProvider entity={getEntityStubWithAppSelector}>
             <ArgoCDDetailsCard />
           </EntityProvider>
@@ -334,7 +371,7 @@ describe('argo-cd', () => {
 
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/guestbook',
+          'https://testbackend.com/api/argocd/find/name/guestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -353,7 +390,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStub)),
         ),
       );
@@ -374,7 +411,7 @@ describe('argo-cd', () => {
     it('should display extra column', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/guestbook',
+          'https://testbackend.com/api/argocd/find/name/guestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -393,7 +430,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStub)),
         ),
       );
@@ -423,7 +460,7 @@ describe('argo-cd', () => {
     it('should display properly failure status codes', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/guestbook',
+          'https://testbackend.com/api/argocd/find/name/guestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -442,7 +479,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.status(403)),
         ),
       );
@@ -459,7 +496,7 @@ describe('argo-cd', () => {
     it('should display data validation errors', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/guestbook',
+          'https://testbackend.com/api/argocd/find/name/guestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -478,7 +515,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStubMissingData)),
         ),
       );
@@ -493,5 +530,132 @@ describe('argo-cd', () => {
         await rendered.findByText(/remote data validation failed: /),
       ).toBeInTheDocument();
     });
+  });
+
+  describe('widget - scan instances with selector', () => {
+    it('should display fetched data from one instance', async () => {
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
+        ),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScan}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
+      expect(await rendered.findByText('guestbook')).toBeInTheDocument();
+      expect(await rendered.findByText('guestbook')).not.toHaveAttribute(
+        'href',
+      );
+      expect(await rendered.findByText('Synced')).toBeInTheDocument();
+      expect(await rendered.findByText('Healthy')).toBeInTheDocument();
+    });
+  });
+
+  it('should display fetched data from multiple instances', async () => {
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+        (_, res, ctx) =>
+          res(
+            ctx.json([
+              {
+                name: 'argoInstance1',
+                url: 'https://argocd-argoInstance1.com',
+              },
+              {
+                name: 'argoInstance2',
+                url: 'https://argocd-argoInstance2.com',
+              },
+            ]),
+          ),
+      ),
+    );
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
+      ),
+    );
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
+      ),
+    );
+    const rendered = render(
+      <ApiProvider apis={apisScanMultipleInstances}>
+        <EntityProvider entity={getEntityStubWithAppSelector}>
+          <ArgoCDDetailsCard />
+        </EntityProvider>
+      </ApiProvider>,
+    );
+    const apps = await rendered.findAllByText('guestbook');
+    expect(apps).toHaveLength(2);
+    expect(await rendered.findByText('argoInstance1')).toBeInTheDocument();
+    expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
+  });
+  it('should display fetched data from multiple instances with multiple apps', async () => {
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+        (_, res, ctx) =>
+          res(
+            ctx.json([
+              {
+                name: 'argoInstance1',
+                url: 'https://argocd-argoInstance1.com',
+              },
+              {
+                name: 'argoInstance2',
+                url: 'https://argocd-argoInstance2.com',
+              },
+            ]),
+          ),
+      ),
+    );
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+        (_, res, ctx) => res(ctx.json(getResponseStubAppListWithMultipleApps)),
+      ),
+    );
+    worker.use(
+      rest.get(
+        'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
+      ),
+    );
+    const rendered = render(
+      <ApiProvider apis={apisScanMultipleInstances}>
+        <EntityProvider entity={getEntityStubWithAppSelector}>
+          <ArgoCDDetailsCard />
+        </EntityProvider>
+      </ApiProvider>,
+    );
+    expect(await rendered.findByText('guestbook-prod')).toBeInTheDocument();
+    expect(await rendered.findByText('guestbook-staging')).toBeInTheDocument();
+
+    const apps = await rendered.findAllByText('argoInstance1');
+    expect(apps).toHaveLength(2);
+    expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
   });
 });
