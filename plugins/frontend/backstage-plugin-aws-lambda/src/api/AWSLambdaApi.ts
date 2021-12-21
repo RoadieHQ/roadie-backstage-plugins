@@ -19,7 +19,6 @@ import { LambdaData } from '../types';
 
 export const awsLambdaApiRef = createApiRef<AwsLambdaApi>({
   id: 'plugin.awslambda.service',
-  description: 'Used by the AWS lambda plugin to make requests',
 });
 
 export type AwsLambdaApi = {

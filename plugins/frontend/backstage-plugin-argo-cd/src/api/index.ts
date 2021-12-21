@@ -36,7 +36,6 @@ export interface ArgoCDApi {
 
 export const argoCDApiRef = createApiRef<ArgoCDApi>({
   id: 'plugin.argocd.service',
-  description: 'Used by the ArgoCD plugin to make requests',
 });
 
 export type Options = {
