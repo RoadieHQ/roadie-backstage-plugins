@@ -1,5 +1,18 @@
 # app
 
+## 0.0.6
+
+### Patch Changes
+
+- c9059c3: Change default port of backend from 7000 to 7007.
+
+  This is due to the AirPlay Receiver process occupying port 7000 and preventing local Backstage instances on MacOS to start.
+
+- Updated dependencies [c9059c3]
+  - @roadiehq/backstage-plugin-aws-lambda@1.2.4
+  - @roadiehq/backstage-plugin-buildkite@1.2.4
+  - @roadiehq/backstage-plugin-github-insights@1.3.4
+
 ## 0.0.5
 
 ### Patch Changes
