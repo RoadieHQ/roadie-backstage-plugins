@@ -28,7 +28,7 @@ export const entityMock = {
   ],
 };
 
-// http://localhost:7000/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds?page=1&per_page=5
+// http://localhost:7007/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds?page=1&per_page=5
 export const buildsResponseMock = [
   {
     id: 'a2b1e487-7da1-49c9-977d-a191065677a2',
