@@ -40,7 +40,7 @@ describe('http:backstage:request', () => {
       backend: {
         baseUrl: mockBaseUrl,
         listen: {
-          port: 7007,
+          port: 7000,
         },
       },
     });
