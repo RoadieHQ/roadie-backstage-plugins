@@ -6,9 +6,9 @@ organization:
   name: My Company
 
 backend:
-  baseUrl: http://localhost:7007
+  baseUrl: http://localhost:7000
   listen:
-    port: 7007
+    port: 7000
   csp:
     connect-src: ["'self'", 'http:', 'https:']
   cors:
