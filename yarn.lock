@@ -4514,17 +4514,6 @@
     helmet "^4.5.0"
     winston "^3.2.1"
 
-"@roadiehq/scaffolder-backend-module-http-request@^1.0.0":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@roadiehq/scaffolder-backend-module-http-request/-/scaffolder-backend-module-http-request-1.0.1.tgz#91de2e1ca3fba8c7a8fb27ff58cec469bb58eefc"
-  integrity sha512-36gTOrDxFHSQjR1Vd8IK28NB40XD250bc2Ij7ErEvaI5wOi4JTanZdcJxu2NfbEizMwIFLmEfPqh5mtCffvMxg==
-  dependencies:
-    "@backstage/backend-common" "^0.9.6"
-    "@backstage/config" "^0.1.8"
-    "@backstage/plugin-scaffolder-backend" "^0.15.2"
-    cross-fetch "^3.1.4"
-    winston "^3.2.1"
-
 "@rollup/plugin-commonjs@^21.0.1":
   version "21.0.1"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-commonjs/-/plugin-commonjs-21.0.1.tgz#1e57c81ae1518e4df0954d681c642e7d94588fee"
