@@ -4,7 +4,6 @@
 '@roadiehq/backstage-plugin-aws-lambda': patch
 '@roadiehq/backstage-plugin-buildkite': patch
 '@roadiehq/backstage-plugin-github-insights': patch
-'@roadiehq/scaffolder-backend-module-http-request': patch
 ---
 
 Change default port of backend from 7000 to 7007.
