@@ -2,7 +2,7 @@
 
 Welcome to the `http` actions for the `scaffolder-backend`.
 
-This contains one action; `http:backstage:request`.
+This contains one action: `http:backstage:request`.
 
 The `http:backstage:request` action allows the task to call any of the backstage APIs available to the user that triggers it. The action takes care of passing the authentication token of the user to the task execution so that the action can perform actions on behalf of the user that triggers it.
 
