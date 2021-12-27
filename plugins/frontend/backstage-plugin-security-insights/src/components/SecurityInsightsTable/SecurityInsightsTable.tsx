@@ -46,7 +46,7 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) 
   const {owner, repo} = useProjectEntity(entity);
   const projectName = useProjectName(entity);
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useUrl(entity);
 
   const { value, loading, error } = useAsync(async (): Promise<SecurityInsight[]> => {
     const token = await auth.getAccessToken(['repo']);
@@ -112,6 +112,7 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) 
             id={row.number}
             tableData={tableData}
             setTableData={setTableData}
+            entity={entity}
           />
         )
       ),

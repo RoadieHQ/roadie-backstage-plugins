@@ -37,9 +37,16 @@ export type UpdateSeverityStatusProps = {
   id: number;
   tableData: SecurityInsight[];
   setTableData: Dispatch<SetStateAction<SecurityInsight[]>>;
+  entity: Entity;
 };
 
 export type IssuesCounterProps = {
   issues: SecurityInsight[];
   issueStatus?: SecurityInsightFilterState;
+};
+
+export type GitHubIntegrationConfig = {
+  host: string;
+  apiBaseUrl: string;
+  rawBaseUrl: string;
 };
