@@ -248,7 +248,6 @@ export const entityStub: { entity: Entity } = {
       namespace: 'default',
       annotations: {
         'github.com/project-slug': 'roadiehq/sample-service',
-        'backstage.io/managed-by-location': 'url:http://roadiehq/sample-service/blob/master/catalog-info.yaml'
       },
       name: 'sample-service',
       description: 'Sample service'
