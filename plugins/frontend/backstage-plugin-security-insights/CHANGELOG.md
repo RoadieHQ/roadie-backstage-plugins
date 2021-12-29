@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.4.3
+
+### Patch Changes
+
+- 170ecc2: Enable multiple GitHub integrations and extract source location from entity managed annotations backstage.io/managed-by-origin-location or backstage.io/managed-by-location.
+
 ## 1.4.2
 
 ### Patch Changes
