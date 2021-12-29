@@ -60,14 +60,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
-  owner, repo, severityData, id, tableData, setTableData
+  owner, repo, severityData, id, tableData, setTableData, entity
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [dismissedReason, setDismissedReason] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const auth = useApi(githubAuthApiRef);
-  const { baseUrl } = useUrl();
+  const { baseUrl } = useUrl(entity);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -96,12 +96,12 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
     setTableData(tableData.map(element => (element.number === id ? {...element, state: 'dismissed'} : element)));
     return data;
   }, []);
-  
+
   const getSeverityState = useCallback(
     (severityState: SecurityInsightFilterState) => {
     switch(severityState) {
       case 'open':
-        return (          
+        return (
           <Chip
             label="Open"
             color="primary"
@@ -114,7 +114,7 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
           />
         );
       case 'dismissed':
-        return (          
+        return (
           <Chip
             label="Dismissed"
             color="secondary"
@@ -126,7 +126,7 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
           />
         );
       case 'fixed':
-        return (          
+        return (
           <Chip
             label="Fixed"
             color="primary"
@@ -136,7 +136,7 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
               label: classes.label,
             }}
           />
-        )  ; 
+        )  ;
       default: return 'Unknown';
     }
   }, []);
