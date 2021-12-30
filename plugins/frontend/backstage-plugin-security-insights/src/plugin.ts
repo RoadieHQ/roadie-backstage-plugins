@@ -22,7 +22,7 @@ import {
 } from '@backstage/core-plugin-api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'security-insights',
+  id: 'security-insights',
 });
 
 export const securityInsightsPlugin = createPlugin({
@@ -35,9 +35,9 @@ export const securityInsightsPlugin = createPlugin({
 export const EntitySecurityInsightsContent = securityInsightsPlugin.provide(
   createRoutableExtension({
     name: 'EntitySecurityInsightsContent',
-    component: () => import('./components/Router').then((m) => m.Router),
+    component: () => import('./components/Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
-  })
+  }),
 );
 
 export const EntityGithubDependabotContent = securityInsightsPlugin.provide(
@@ -46,10 +46,10 @@ export const EntityGithubDependabotContent = securityInsightsPlugin.provide(
     component: {
       lazy: () =>
         import('./components/GithubDependabotTab').then(
-          (m) => m.GithubDependabotTab
+          m => m.GithubDependabotTab,
         ),
     },
-  })
+  }),
 );
 
 export const EntitySecurityInsightsCard = securityInsightsPlugin.provide(
@@ -58,10 +58,10 @@ export const EntitySecurityInsightsCard = securityInsightsPlugin.provide(
     component: {
       lazy: () =>
         import('./components/SecurityInsightsWidget').then(
-          (m) => m.SecurityInsightsWidget
+          m => m.SecurityInsightsWidget,
         ),
     },
-  })
+  }),
 );
 
 export const EntityDependabotAlertsCard = securityInsightsPlugin.provide(
@@ -70,8 +70,8 @@ export const EntityDependabotAlertsCard = securityInsightsPlugin.provide(
     component: {
       lazy: () =>
         import('./components/DependabotAlertsWidget').then(
-          (m) => m.DependabotAlertsWidget
+          m => m.DependabotAlertsWidget,
         ),
     },
-  })
+  }),
 );

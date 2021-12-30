@@ -23,7 +23,7 @@ import {
 import { awsLambdaApiRef, AwsLambdaClient } from './api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'AWS Lambda Entity Content',
+  id: 'AWS Lambda Entity Content',
 });
 
 export const awsLambdaPlugin = createPlugin({
@@ -40,8 +40,8 @@ export const EntityAWSLambdaOverviewCard = awsLambdaPlugin.provide(
     component: {
       lazy: () =>
         import('./components/AWSLambdaOverview/AWSLambdaOverview').then(
-          (m) => m.AWSLambdaOverviewWidget
+          m => m.AWSLambdaOverviewWidget,
         ),
     },
-  })
+  }),
 );

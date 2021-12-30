@@ -24,19 +24,30 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
 
-import { ApiProvider, ApiRegistry, GithubAuth } from '@backstage/core-app-api';
+import {
+  ApiProvider,
+  ApiRegistry,
+  GithubAuth,
+  OAuthRequestManager,
+  UrlPatternDiscovery,
+} from '@backstage/core-app-api';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
   createScmIntegrationsApiMock,
   defaultIntegrationsConfig,
 } from '../../mocks/scmIntegrationsApiMock';
 
-const getSession = jest
-  .fn()
-  .mockResolvedValue({ providerInfo: { accessToken: 'access-token' } });
-
+const oauthRequestApi = new OAuthRequestManager();
 const apis = ApiRegistry.from([
-  [githubAuthApiRef, new GithubAuth({ getSession } as any)],
+  [
+    githubAuthApiRef,
+    GithubAuth.create({
+      discoveryApi: UrlPatternDiscovery.compile(
+        'http://example.com/{{pluginId}}',
+      ),
+      oauthRequestApi,
+    }),
+  ],
   [
     scmIntegrationsApiRef,
     createScmIntegrationsApiMock(defaultIntegrationsConfig),

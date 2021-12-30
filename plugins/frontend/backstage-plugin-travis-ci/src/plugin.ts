@@ -10,7 +10,7 @@ import {
 import { TravisCIApiClient, travisCIApiRef } from './api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'travisCI',
+  id: 'travisCI',
 });
 
 export const travisciPlugin = createPlugin({
@@ -19,7 +19,8 @@ export const travisciPlugin = createPlugin({
     createApiFactory({
       api: travisCIApiRef,
       deps: { discoveryApi: discoveryApiRef, identityApi: identityApiRef },
-      factory: ({ discoveryApi, identityApi }) => new TravisCIApiClient({ discoveryApi, identityApi }),
+      factory: ({ discoveryApi, identityApi }) =>
+        new TravisCIApiClient({ discoveryApi, identityApi }),
     }),
   ],
   routes: {

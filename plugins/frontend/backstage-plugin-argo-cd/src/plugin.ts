@@ -11,7 +11,7 @@ import {
 import { ArgoCDApiClient, argoCDApiRef } from './api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'ArgoCD Entity Content',
+  id: 'ArgoCD Entity Content',
 });
 
 export const argocdPlugin = createPlugin({
@@ -29,7 +29,10 @@ export const argocdPlugin = createPlugin({
           discoveryApi,
           identityApi,
           backendBaseUrl: configApi.getString('backend.baseUrl'),
-          searchInstances: Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length),
+          searchInstances: Boolean(
+            configApi.getOptionalConfigArray('argocd.appLocatorMethods')
+              ?.length,
+          ),
         }),
     }),
   ],
@@ -41,7 +44,7 @@ export const argocdPlugin = createPlugin({
 export const EntityArgoCDContent = argocdPlugin.provide(
   createRoutableExtension({
     name: 'EntityArgoCDContent',
-    component: () => import('./Router').then((m) => m.Router),
+    component: () => import('./Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
   }),
 );

@@ -21,7 +21,7 @@ export const isDatadogAvailable = (entity: Entity) =>
   isDatadogDashboardAvailable(entity) || isDatadogGraphAvailable(entity);
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'Datadog Entity Content',
+  id: 'Datadog Entity Content',
 });
 
 export const datadogPlugin = createPlugin({

@@ -25,7 +25,7 @@ import {
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'github-pull-requests',
+  id: 'github-pull-requests',
 });
 
 export const githubPullRequestsPlugin = createPlugin({
@@ -63,9 +63,7 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
     name: 'EntityGithubPullRequestsTable',
     component: {
       lazy: () =>
-        import('./components/PullRequestsTable').then(
-          m => m.PullRequestsTable,
-        ),
+        import('./components/PullRequestsTable').then(m => m.PullRequestsTable),
     },
   }),
 );
