@@ -17,23 +17,13 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { render } from '@testing-library/react';
-import {
-  entityStub,
-  dependabotAlertsResponseMock,
-} from '../../mocks/mocks';
+import { entityStub, dependabotAlertsResponseMock } from '../../mocks/mocks';
 import { graphql } from 'msw';
-import { msw, wrapInTestApp } from '@backstage/test-utils';
+import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { DependabotAlertsTable } from './DependabotAlertsTable';
-import {
-  ApiProvider,
-  ApiRegistry
-} from '@backstage/core-app-api';
-import {
-  configApiRef,
-  githubAuthApiRef
-}
-  from '@backstage/core-plugin-api';
+import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { securityInsightsPlugin } from '../../plugin';
 
 let entity: { entity: Entity };
@@ -48,13 +38,13 @@ jest.mock('@octokit/graphql', () => ({
   graphql: {
     defaults: () => {
       const gqlEndpoint = (_query: string, _params: object) => {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           resolve(dependabotAlertsResponseMock);
         });
-      }
+      };
       return gqlEndpoint;
-    }
-  }
+    },
+  },
 }));
 
 const GRAPHQL_GITHUB_API = graphql.link('https://api.github.com/graphql');
@@ -76,7 +66,7 @@ const apis = ApiRegistry.from([
 
 describe('Dependabot alerts overview', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     worker.resetHandlers();
@@ -89,7 +79,6 @@ describe('Dependabot alerts overview', () => {
     });
   });
 
-
   describe('GithubDependabotAlertsTable', () => {
     beforeEach(() => {
       entity = entityStub;
@@ -98,7 +87,7 @@ describe('Dependabot alerts overview', () => {
     it('check if mocked data is shown in the dependabot alerts table', async () => {
       worker.use(
         GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
-          res(ctx.data(dependabotAlertsResponseMock))
+          res(ctx.data(dependabotAlertsResponseMock));
         }),
       );
 
@@ -106,11 +95,12 @@ describe('Dependabot alerts overview', () => {
         wrapInTestApp(
           <ApiProvider apis={apis}>
             <DependabotAlertsTable />
-          </ApiProvider>
-        )
+          </ApiProvider>,
+        ),
       );
       expect(
-        await rendered.findByText('serialize-javascript')).toBeInTheDocument();
+        await rendered.findByText('serialize-javascript'),
+      ).toBeInTheDocument();
     });
   });
 });

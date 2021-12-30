@@ -16,22 +16,16 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef,
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { msw } from '@backstage/test-utils';
+import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
 import { closedPullsRequestMock, entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -51,7 +45,7 @@ const apis = ApiRegistry.from([
 
 describe('PullRequestsCard', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     worker.use(
