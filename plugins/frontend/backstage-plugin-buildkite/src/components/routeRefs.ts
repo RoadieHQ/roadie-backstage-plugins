@@ -18,13 +18,13 @@ import { createSubRouteRef } from '@backstage/core-plugin-api';
 import { buildViewRouteRef } from '../plugin';
 
 export const buildKiteRouteRef = createSubRouteRef({
-  path: '',
+  path: '/',
   id: 'Buildkite | All builds',
   parent: buildViewRouteRef,
 });
 
 export const buildKiteBuildRouteRef = createSubRouteRef({
-  path: ':buildNumber',
+  path: '/:buildNumber',
   id: 'Buildkite | Build info',
   parent: buildViewRouteRef,
 });
