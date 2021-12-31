@@ -24,7 +24,7 @@ export const buildKiteRouteRef = createSubRouteRef({
 });
 
 export const buildKiteBuildRouteRef = createSubRouteRef({
-  path: '//builds/:buildNumber',
+  path: '/builds/:buildNumber',
   id: 'Buildkite | Build info',
   parent: buildViewRouteRef,
 });

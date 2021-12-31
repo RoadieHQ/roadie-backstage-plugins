@@ -1553,27 +1553,6 @@
     yaml "^1.9.2"
     yup "^0.32.9"
 
-"@backstage/config-loader@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.9.0.tgz#8e1ecbd3636afca5a4b58ba390fd5045d625ec3f"
-  integrity sha512-OCkXjYdHikWNbRurAx6X0NE1J9DxbYGsqISQgIV7oZKf99grr566aqcn/WwK+KTT82jORj6JDXnJZgbr7Dxt3g==
-  dependencies:
-    "@backstage/cli-common" "^0.1.6"
-    "@backstage/config" "^0.1.11"
-    "@backstage/errors" "^0.1.4"
-    "@backstage/types" "^0.1.1"
-    "@types/json-schema" "^7.0.6"
-    ajv "^7.0.3"
-    chokidar "^3.5.2"
-    fs-extra "9.1.0"
-    json-schema "^0.4.0"
-    json-schema-merge-allof "^0.8.1"
-    json-schema-traverse "^1.0.0"
-    node-fetch "^2.6.1"
-    typescript-json-schema "^0.51.0"
-    yaml "^1.9.2"
-    yup "^0.32.9"
-
 "@backstage/config@^0.1.11", "@backstage/config@^0.1.5", "@backstage/config@^0.1.6", "@backstage/config@^0.1.8", "@backstage/config@^0.1.9":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@backstage/config/-/config-0.1.11.tgz#efaace61f02f11e6d0342efc9ef6d72da818ba80"
@@ -1978,29 +1957,6 @@
     qs "^6.10.1"
     react-router "6.0.0-beta.0"
     react-router-dom "6.0.0-beta.0"
-    react-use "^17.2.4"
-
-"@backstage/plugin-permission-common@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-common/-/plugin-permission-common-0.3.0.tgz#a804da7f17de215b4da527cb5a6e99d1d91154a6"
-  integrity sha512-ojxUcG5zCSHuZvTQDh1lpsrimrPGMFfDFiMY4B8U+9NK+aV4U21VcPtPNyKVP92yPuKq/GoKfNhb4VWT6C1vpA==
-  dependencies:
-    "@backstage/config" "^0.1.11"
-    "@backstage/errors" "^0.1.5"
-    cross-fetch "^3.0.6"
-    uuid "^8.0.0"
-    zod "^3.11.6"
-
-"@backstage/plugin-permission-react@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-react/-/plugin-permission-react-0.2.0.tgz#728a875b458999da42817093045f448d41d7c94a"
-  integrity sha512-pGVDfa9ftZ0FxyOiKDAsmMfkNHPjND5a4ImWs9Eb+UtCofs8gJCd+Es4jHbvnuRjorKtvVJoThb4s+OVxjjVyA==
-  dependencies:
-    "@backstage/config" "^0.1.11"
-    "@backstage/core-plugin-api" "^0.4.0"
-    "@backstage/plugin-permission-common" "^0.3.0"
-    cross-fetch "^3.0.6"
-    react-router "6.0.0-beta.0"
     react-use "^17.2.4"
 
 "@backstage/plugin-permission-common@^0.3.0":
