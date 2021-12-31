@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 1.4.0
+
+### Minor Changes
+
+- ed90f25: Breaking dependency updates for @backstage/core-app-api, @backstage/test-utils, @backstage/core-plugin-api, @backstage/backend-common && @backstage/integration
+
 ## 1.3.2
 
 ### Patch Changes
