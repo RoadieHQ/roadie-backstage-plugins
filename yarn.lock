@@ -1326,6 +1326,54 @@
     unzipper "^0.10.11"
     winston "^3.2.1"
 
+"@backstage/backend-common@^0.9.6":
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/@backstage/backend-common/-/backend-common-0.9.14.tgz#62d8712ffb23fdf695a75b22fb4eae011f7026d3"
+  integrity sha512-cJ59TpRoQT0iSd13eA90PMvUumgpGWqmBgJ9AMR8iXQockpnCFuFUp7cykmPzpUsjfFtf4W7rfuBq8Jk4Ua29w==
+  dependencies:
+    "@backstage/cli-common" "^0.1.6"
+    "@backstage/config" "^0.1.11"
+    "@backstage/config-loader" "^0.8.1"
+    "@backstage/errors" "^0.1.5"
+    "@backstage/integration" "^0.6.10"
+    "@backstage/types" "^0.1.1"
+    "@google-cloud/storage" "^5.8.0"
+    "@lerna/project" "^4.0.0"
+    "@octokit/rest" "^18.5.3"
+    "@types/cors" "^2.8.6"
+    "@types/dockerode" "^3.3.0"
+    "@types/express" "^4.17.6"
+    archiver "^5.0.2"
+    aws-sdk "^2.840.0"
+    compression "^1.7.4"
+    concat-stream "^2.0.0"
+    cors "^2.8.5"
+    dockerode "^3.3.1"
+    express "^4.17.1"
+    express-promise-router "^4.1.0"
+    fs-extra "9.1.0"
+    git-url-parse "^11.6.0"
+    helmet "^4.0.0"
+    isomorphic-git "^1.8.0"
+    jose "^1.27.1"
+    keyv "^4.0.3"
+    keyv-memcache "^1.2.5"
+    knex "^0.95.1"
+    lodash "^4.17.21"
+    logform "^2.1.1"
+    minimatch "^3.0.4"
+    minimist "^1.2.5"
+    morgan "^1.10.0"
+    node-abort-controller "^3.0.1"
+    node-fetch "^2.6.1"
+    raw-body "^2.4.1"
+    selfsigned "^1.10.7"
+    stoppable "^1.1.0"
+    tar "^6.1.2"
+    unzipper "^0.10.11"
+    winston "^3.2.1"
+    yn "^4.0.0"
+
 "@backstage/catalog-client@^0.5.0", "@backstage/catalog-client@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@backstage/catalog-client/-/catalog-client-0.5.3.tgz#39eb1f4ebafe1682ba2f212d448ca6e053673494"
@@ -1460,6 +1508,27 @@
     json-schema "^0.3.0"
     json-schema-merge-allof "^0.8.1"
     typescript-json-schema "^0.50.1"
+    yaml "^1.9.2"
+    yup "^0.32.9"
+
+"@backstage/config-loader@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.8.1.tgz#af446f80e97056b9ee5b9fe80d54bb4c51be4fc1"
+  integrity sha512-web8reZzZEvPenLs5tkN1ZMEhotBnVu82bcQmc8lX1+b1hcIZPWj0IvXRhkavdTDXIHc4GOkMeQgf8DoZ/6opw==
+  dependencies:
+    "@backstage/cli-common" "^0.1.6"
+    "@backstage/config" "^0.1.11"
+    "@backstage/errors" "^0.1.4"
+    "@backstage/types" "^0.1.1"
+    "@types/json-schema" "^7.0.6"
+    ajv "^7.0.3"
+    chokidar "^3.5.2"
+    fs-extra "9.1.0"
+    json-schema "^0.4.0"
+    json-schema-merge-allof "^0.8.1"
+    json-schema-traverse "^1.0.0"
+    node-fetch "^2.6.1"
+    typescript-json-schema "^0.51.0"
     yaml "^1.9.2"
     yup "^0.32.9"
 
@@ -1631,6 +1700,19 @@
     cross-fetch "^3.0.6"
     git-url-parse "~11.4.4"
     luxon "^1.25.0"
+
+"@backstage/integration@^0.6.10":
+  version "0.6.10"
+  resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-0.6.10.tgz#e55a26f5124445de74e46944f63c263c9b985995"
+  integrity sha512-qGAZ7rflWdZdjUgxzLWmkrR1zPC5ep62d0fqtwg77MZsGwBNrbNOI2qJbk+IRPmOgym2Adg2C95O2UV7Hyde7g==
+  dependencies:
+    "@backstage/config" "^0.1.11"
+    "@octokit/auth-app" "^3.4.0"
+    "@octokit/rest" "^18.5.3"
+    cross-fetch "^3.0.6"
+    git-url-parse "^11.6.0"
+    lodash "^4.17.21"
+    luxon "^2.0.2"
 
 "@backstage/integration@^0.7.0":
   version "0.7.0"
@@ -4549,6 +4631,17 @@
     express "^4.17.1"
     express-promise-router "^4.1.0"
     helmet "^4.5.0"
+    winston "^3.2.1"
+
+"@roadiehq/scaffolder-backend-module-http-request@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@roadiehq/scaffolder-backend-module-http-request/-/scaffolder-backend-module-http-request-1.0.0.tgz#9285919cc84d8f2b563f72a04093d5ee086d0d8e"
+  integrity sha512-mcKsMy0EvZGFow7HlkQIYjqnMIuCZ0qe/gptdZWbCu3+d8uWX4tjtYyxsfQepMwU3DTwZ0pMvbyHYeqlW7iz4w==
+  dependencies:
+    "@backstage/backend-common" "^0.9.6"
+    "@backstage/config" "^0.1.8"
+    "@backstage/plugin-scaffolder-backend" "^0.15.2"
+    cross-fetch "^3.1.4"
     winston "^3.2.1"
 
 "@rollup/plugin-commonjs@^21.0.1":
@@ -20789,6 +20882,19 @@ typescript-json-schema@^0.50.1:
     ts-node "^9.1.1"
     typescript "~4.2.3"
     yargs "^16.2.0"
+
+typescript-json-schema@^0.51.0:
+  version "0.51.0"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.51.0.tgz#e2abff69b8564c98c0edef2c13d55ef10fd71427"
+  integrity sha512-POhWbUNs2oaBti1W9k/JwS+uDsaZD9J/KQiZ/iXRQEOD0lTn9VmshIls9tn+A9X6O+smPjeEz5NEy6WTkCCzrQ==
+  dependencies:
+    "@types/json-schema" "^7.0.9"
+    "@types/node" "^16.9.2"
+    glob "^7.1.7"
+    json-stable-stringify "^1.0.1"
+    ts-node "^10.2.1"
+    typescript "~4.2.3"
+    yargs "^17.1.1"
 
 typescript-json-schema@^0.52.0:
   version "0.52.0"
