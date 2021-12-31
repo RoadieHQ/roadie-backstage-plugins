@@ -25,7 +25,7 @@ import {
 import { PrometheusApi, prometheusApiRef } from './api';
 
 export const rootRouteRef = createRouteRef({
-  title: 'backstage-plugin-prometheus',
+  id: 'backstage-plugin-prometheus',
 });
 
 export const backstagePluginPrometheusPlugin = createPlugin({

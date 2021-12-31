@@ -23,7 +23,7 @@ import {
   UrlPatternDiscovery,
 } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { msw, wrapInTestApp } from '@backstage/test-utils';
+import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
@@ -42,7 +42,7 @@ const apis = ApiRegistry.from([
 
 describe('BuildKiteBuildsTable', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => jest.resetAllMocks());
 

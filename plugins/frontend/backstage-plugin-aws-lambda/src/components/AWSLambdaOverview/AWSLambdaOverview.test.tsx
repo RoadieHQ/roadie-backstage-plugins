@@ -19,14 +19,11 @@ import { render } from '@testing-library/react';
 import {
   configApiRef,
   errorApiRef,
-  identityApiRef
+  identityApiRef,
 } from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider
-} from '@backstage/core-app-api';
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { msw } from '@backstage/test-utils';
+import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { setupServer } from 'msw/node';
 import {
@@ -48,22 +45,22 @@ const apis = ApiRegistry.from([
   [errorApiRef, errorApiMock],
   [configApiRef, config],
   [awsLambdaApiRef, new AwsLambdaClient()],
-  [identityApiRef, identityApiMock]
+  [identityApiRef, identityApiMock],
 ]);
 
 describe('AWSLambdaCard', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     worker.use(
       rest.get('https://test-url/api/aws/credentials', (_, res, ctx) =>
-        res(ctx.json(credentialsResponseMock))
+        res(ctx.json(credentialsResponseMock)),
       ),
       rest.get(
         'https://lambda.us-east-1.amazonaws.com/2015-03-31/functions/openfraksl-dev-graphql',
-        (_, res, ctx) => res(ctx.json(lambdaResponseMock))
-      )
+        (_, res, ctx) => res(ctx.json(lambdaResponseMock)),
+      ),
     );
   });
 
@@ -73,18 +70,18 @@ describe('AWSLambdaCard', () => {
         <EntityProvider entity={entityMock}>
           <AWSLambdaOverviewWidget />
         </EntityProvider>
-      </ApiProvider>
+      </ApiProvider>,
     );
     expect(
-      await rendered.findByText(lambdaResponseMock.Configuration.FunctionName)
+      await rendered.findByText(lambdaResponseMock.Configuration.FunctionName),
     ).toBeInTheDocument();
     expect(
-      await rendered.findByText(lambdaResponseMock.Configuration.State)
+      await rendered.findByText(lambdaResponseMock.Configuration.State),
     ).toBeInTheDocument();
     expect(
       await rendered.findByText(
-        lambdaResponseMock.Configuration.LastUpdateStatus
-      )
+        lambdaResponseMock.Configuration.LastUpdateStatus,
+      ),
     ).toBeInTheDocument();
   });
 });

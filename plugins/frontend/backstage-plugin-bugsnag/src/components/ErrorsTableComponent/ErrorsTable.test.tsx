@@ -23,7 +23,7 @@ import {
 } from '@backstage/core-app-api';
 import { errorApiRef } from '@backstage/core-plugin-api';
 import { rest } from 'msw';
-import { msw, wrapInTestApp } from '@backstage/test-utils';
+import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { ErrorsTable } from './ErrorsTable';
 import {
@@ -46,7 +46,7 @@ const apis = ApiRegistry.from([
 
 describe('BugsnagErrorsTable', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => jest.resetAllMocks());
 

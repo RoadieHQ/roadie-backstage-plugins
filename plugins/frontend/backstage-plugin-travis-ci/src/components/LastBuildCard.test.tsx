@@ -24,10 +24,10 @@ import {
 import {
   ApiRegistry,
   ApiProvider,
-  UrlPatternDiscovery
+  UrlPatternDiscovery,
 } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { msw, wrapInTestApp } from '@backstage/test-utils';
+import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { TravisCIApiClient, travisCIApiRef } from '../api';
 import { RecentTravisCIBuildsWidget } from '..';
@@ -51,7 +51,7 @@ const identityApi: IdentityApi = {
   },
   getProfileInfo: jest.fn(),
   getBackstageIdentity: jest.fn(),
-  getCredentials: jest.fn()
+  getCredentials: jest.fn(),
 };
 
 const config = {
@@ -65,7 +65,7 @@ const apis = ApiRegistry.from([
 ]);
 describe('LastBuildCard', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     // jest.resetAllMocks();
@@ -82,13 +82,14 @@ describe('LastBuildCard', () => {
   });
 
   it('should display widget with data', async () => {
-    const rendered = render(wrapInTestApp(
-          <ApiProvider apis={apis}>
-            <EntityProvider entity={entityMock}>
-              <RecentTravisCIBuildsWidget entity={entityMock} />
-            </EntityProvider>
-          </ApiProvider>
-        )
+    const rendered = render(
+      wrapInTestApp(
+        <ApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <RecentTravisCIBuildsWidget entity={entityMock} />
+          </EntityProvider>
+        </ApiProvider>,
+      ),
     );
     expect(
       await rendered.findByText(buildsResponseMock.builds[2].commit.message),

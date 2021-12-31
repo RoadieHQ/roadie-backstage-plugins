@@ -22,8 +22,7 @@ import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 import BuildkiteBuildView from './BuildKiteBuildView';
 import { BUILDKITE_ANNOTATION } from '../consts';
-import { buildViewRouteRef } from '../plugin';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const isBuildkiteAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[BUILDKITE_ANNOTATION]);
@@ -36,14 +35,11 @@ type Props = {
 export const Router = (_props: Props) => {
   const { entity } = useEntity();
   return !isBuildkiteAvailable(entity) ? (
-      <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />
+    <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />
   ) : (
-      <FlatRoutes>
-        <Route path="/" element={<BuildkiteBuildsTable entity={entity} />} />
-        <Route
-            path={`/${buildViewRouteRef.path}`}
-            element={<BuildkiteBuildView entity={entity} />}
-        />
-      </FlatRoutes>
+    <FlatRoutes>
+      <Route path="/" element={<BuildkiteBuildsTable entity={entity} />} />
+      <Route element={<BuildkiteBuildView entity={entity} />} />
+    </FlatRoutes>
   );
 };

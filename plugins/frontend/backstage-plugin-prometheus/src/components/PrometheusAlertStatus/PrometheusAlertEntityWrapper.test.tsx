@@ -17,7 +17,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { msw } from '@backstage/test-utils';
+import { setupRequestMockHandlers } from '@backstage/test-utils';
 import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
 import { configApiRef, errorApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
@@ -62,7 +62,7 @@ const apis = ApiRegistry.from([
 describe('PrometheusAlertEntityWrapper', () => {
   const server = setupServer();
   // Enable sane handlers for network requests
-  msw.setupDefaultHandlers(server);
+  setupRequestMockHandlers(server);
 
   // setup mock response
   beforeEach(() => {

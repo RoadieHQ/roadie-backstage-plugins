@@ -23,12 +23,11 @@ import {
 import { buildKiteApiRef, BuildkiteApi } from './api';
 
 export const entityContentRouteRef = createRouteRef({
-  title: 'Buildkite Entity Content',
+  id: 'Buildkite Entity Content',
 });
 
 export const buildViewRouteRef = createRouteRef({
-  title: 'Buildkite Build view',
-  path: ':buildNumber',
+  id: 'Buildkite Build view',
 });
 
 export const buildkitePlugin = createPlugin({
@@ -49,7 +48,7 @@ export const buildkitePlugin = createPlugin({
 export const EntityBuildkiteContent = buildkitePlugin.provide(
   createRoutableExtension({
     name: 'EntityBuildkiteContent',
-    component: () => import('./components/Router').then((m) => m.Router),
+    component: () => import('./components/Router').then(m => m.Router),
     mountPoint: entityContentRouteRef,
-  })
+  }),
 );

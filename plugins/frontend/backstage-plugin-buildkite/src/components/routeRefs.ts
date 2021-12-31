@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import { createRouteRef } from '@backstage/core-plugin-api';
+import { createSubRouteRef } from '@backstage/core-plugin-api';
+import { buildViewRouteRef } from '../plugin';
 
-export const buildKiteRouteRef = createRouteRef({
-  path: '',
-  title: 'Buildkite | All builds',
+export const buildKiteRouteRef = createSubRouteRef({
+  path: '/builds',
+  id: 'Buildkite | All builds',
+  parent: buildViewRouteRef,
 });
 
-export const buildKiteBuildRouteRef = createRouteRef({
-  path: ':buildNumber',
-  title: 'Buildkite | Build info',
+export const buildKiteBuildRouteRef = createSubRouteRef({
+  path: '/builds/:buildNumber',
+  id: 'Buildkite | Build info',
+  parent: buildViewRouteRef,
 });

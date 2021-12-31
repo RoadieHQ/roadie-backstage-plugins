@@ -16,16 +16,10 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  configApiRef,
-  githubAuthApiRef,
-} from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider,
-} from '@backstage/core-app-api';
+import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { msw } from '@backstage/test-utils';
+import { setupRequestMockHandlers } from '@backstage/test-utils';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { setupServer } from 'msw/node';
@@ -50,14 +44,14 @@ const apis = ApiRegistry.from([
 
 describe('Security Insights Card', () => {
   const worker = setupServer();
-  msw.setupDefaultHandlers(worker);
+  setupRequestMockHandlers(worker);
 
   beforeEach(() => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts',
-        (_, res, ctx) => res(ctx.json(alertsResponseMock))
-      )
+        (_, res, ctx) => res(ctx.json(alertsResponseMock)),
+      ),
     );
   });
 
@@ -69,7 +63,7 @@ describe('Security Insights Card', () => {
             <SecurityInsightsWidget />
           </EntityProvider>
         </ApiProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(await rendered.findByText('8 Warning')).toBeInTheDocument();
   });
