@@ -32,7 +32,7 @@
     "@octokit/rest": "^18.5.3",
     "@roadiehq/backstage-plugin-aws-auth": "^0.3.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "1.2.0",
-    "@roadiehq/scaffolder-backend-module-http-request": "1.0.0",
+    "@roadiehq/scaffolder-backend-module-http-request": "^2.1.0",
     "app": "^0.0.6",
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
