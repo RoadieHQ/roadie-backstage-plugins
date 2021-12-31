@@ -145,7 +145,7 @@ export const DependabotAlertsWidget = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
-  const { hostname } = useUrl();
+  const { hostname } = useUrl(entity);
 
   const query = `
   query GetDependabotAlertsWidget($name: String!, $owner: String!) {

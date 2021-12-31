@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import { useApi, configApiRef } from '@backstage/core-plugin-api';
+import { Entity } from "@backstage/catalog-model";
+import { useGitHubConfig } from "./useGitHubConfig";
 
-export const useUrl = () => {
-    const config = useApi(configApiRef);
-    const providerConfigs = config.getOptionalConfigArray('integrations.github') ?? [];
-    const targetProviderConfig = providerConfigs[0];
+export const useUrl = (entity: Entity) => {
+
+    const targetProviderConfig = useGitHubConfig(entity);
     const baseUrl = targetProviderConfig?.getOptionalString('apiBaseUrl') || 'https://api.github.com';
     const hostname = targetProviderConfig?.getOptionalString('host') || 'github.com';
 
     return {
-      hostname,
-      baseUrl,
+        hostname,
+        baseUrl,
     };
 }

@@ -52,7 +52,7 @@
   "devDependencies": {
     "@backstage/cli": "^0.10.1",
     "@backstage/dev-utils": "^0.2.14",
-    "@backstage/test-utils": "^0.2.0",
+    "@backstage/test-utils": "^0.2.1",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.6",
     "msw": "^0.35.0"
