@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 1.4.1
+
+### Patch Changes
+
+- a728fd1: Update underlying packages and release.
+
 ## 1.4.0
 
 ### Minor Changes

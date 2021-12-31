@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 1.2.1
+
+### Patch Changes
+
+- a728fd1: Update underlying packages and release.
+
 ## 1.2.0
 
 ### Minor Changes

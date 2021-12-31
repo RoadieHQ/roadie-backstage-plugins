@@ -1,5 +1,12 @@
 # backend
 
+## 0.0.9
+
+### Patch Changes
+
+- Updated dependencies [a728fd1]
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.1
+
 ## 0.0.8
 
 ### Patch Changes

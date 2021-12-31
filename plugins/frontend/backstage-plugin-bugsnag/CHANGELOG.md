@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.3.1
+
+### Patch Changes
+
+- a728fd1: Update underlying packages and release.
+
 ## 1.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.5.1
+
+### Patch Changes
+
+- a728fd1: Update underlying packages and release.
+
 ## 1.5.0
 
 ### Minor Changes
