@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.3.2
+
+### Patch Changes
+
+- 49abec7: Update patch to release new changes.
+
 ## 1.3.1
 
 ### Patch Changes
