@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.2
+
+### Patch Changes
+
+- ce0846b: Modify folder definition in package.json to match expected. No functional changes.
+
 ## 2.1.0
 
 ### Minor Changes
