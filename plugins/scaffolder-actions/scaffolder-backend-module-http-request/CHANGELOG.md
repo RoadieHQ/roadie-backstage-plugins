@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.3
+
+### Patch Changes
+
+- dd9bef9: Modify scaffolder plugin package.json and typescript configuration
+
 ## 2.1.2
 
 ### Patch Changes
