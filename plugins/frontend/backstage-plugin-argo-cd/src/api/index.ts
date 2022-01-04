@@ -133,7 +133,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
       );
     }
     return this.fetchDecode(
-      `${proxyUrl}${options.url}/applications/name/${options.appName}`,
+      `${proxyUrl}${options.url}/applications/${options.appName}`,
       argoCDAppDetails,
     );
   }
