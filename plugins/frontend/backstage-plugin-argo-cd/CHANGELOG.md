@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 1.5.3
+
+### Patch Changes
+
+- b69543e: Fix bug where an instance with no items would crash the card
+
 ## 1.5.2
 
 ### Patch Changes
