@@ -50,7 +50,7 @@ describe('PullRequestsCard', () => {
   beforeEach(() => {
     worker.use(
       rest.get(
-        'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=closed&per_page=20&page=1',
+        'https://api.github.com/search/issues?state=closed&per_page=20&page=1',
         (_, res, ctx) => res(ctx.json(closedPullsRequestMock)),
       ),
     );

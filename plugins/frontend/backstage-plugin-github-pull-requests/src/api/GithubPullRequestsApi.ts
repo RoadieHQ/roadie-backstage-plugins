@@ -24,6 +24,7 @@ export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
 
 export type GithubPullRequestsApi = {
   listPullRequests: ({
+    search,
     token,
     owner,
     repo,
@@ -33,6 +34,7 @@ export type GithubPullRequestsApi = {
     state,
     baseUrl,
   }: {
+    search: string;
     token: string;
     owner: string;
     repo: string;

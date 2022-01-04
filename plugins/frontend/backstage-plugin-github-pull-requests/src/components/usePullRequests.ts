@@ -37,18 +37,20 @@ export type PullRequest = {
 };
 
 export function usePullRequests({
+  search,
   owner,
   repo,
   branch,
   state,
 }: {
+  search: string;
   owner: string;
   repo: string;
   branch?: string;
   state?: PullRequestState;
 }) {
   const api = useApi(githubPullRequestsApiRef);
-  const auth = useApi(githubAuthApiRef);
+  // const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
@@ -60,7 +62,7 @@ export function usePullRequests({
   const { loading, value: prData, retry, error } = useAsyncRetry<
     PullRequest[]
   >(async () => {
-    const token = await auth.getAccessToken(['repo']);
+    // const token = await auth.getAccessToken(['repo']);
     if (!repo) {
       return [];
     }
@@ -68,7 +70,8 @@ export function usePullRequests({
       api
         // GitHub API pagination count starts from 1
         .listPullRequests({
-          token,
+          token: '',
+          search,
           owner,
           repo,
           pageSize,
@@ -123,7 +126,7 @@ export function usePullRequests({
     setPage(0);
     retry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [search, state]);
   return [
     {
       page,

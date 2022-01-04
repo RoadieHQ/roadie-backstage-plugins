@@ -21,6 +21,7 @@ import { PullRequestState } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
+    search = '',
     token,
     owner,
     repo,
@@ -29,6 +30,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     state = 'all',
     baseUrl,
   }: {
+    search: string;
     token: string;
     owner: string;
     repo: string;
@@ -43,12 +45,11 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     const pullRequestResponse = await new Octokit({
       auth: token,
       ...(baseUrl && { baseUrl }),
-    }).pulls.list({
-      repo,
+    }).search.issuesAndPullRequests({
+      q: `${search} in:title type:pr state:${state} repo:${owner}/${repo}`,
       state,
       per_page: pageSize,
       page,
-      owner,
     });
     const paginationLinks = pullRequestResponse.headers.link;
     const lastPage = paginationLinks?.match(/\d+(?!.*page=\d*)/g) || ['1'];
@@ -57,7 +58,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       : undefined;
     return {
       maxTotalItems,
-      pullRequestsData: (pullRequestResponse.data as any) as PullsListResponseData,
+      pullRequestsData: (pullRequestResponse.data.items as any) as PullsListResponseData,
     };
   }
 }
