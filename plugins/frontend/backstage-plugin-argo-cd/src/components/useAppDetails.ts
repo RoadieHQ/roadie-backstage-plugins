@@ -80,7 +80,7 @@ export const useAppDetails = ({
         });
         const output = await Promise.all(promises);
         const items = {
-          items: output.flatMap(argoCdAppList => argoCdAppList.items)
+          items: output.flatMap(argoCdAppList => argoCdAppList.items).filter(item => item !== null),
         };
         return items;
       }

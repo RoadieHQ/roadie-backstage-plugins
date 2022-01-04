@@ -568,94 +568,181 @@ describe('argo-cd', () => {
       expect(await rendered.findByText('Synced')).toBeInTheDocument();
       expect(await rendered.findByText('Healthy')).toBeInTheDocument();
     });
-  });
+    it('should display fetched data from multiple instances', async () => {
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+                {
+                  name: 'argoInstance2',
+                  url: 'https://argocd-argoInstance2.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
+        ),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScanMultipleInstances}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
+      const apps = await rendered.findAllByText('guestbook');
+      expect(apps).toHaveLength(2);
+      expect(await rendered.findByText('argoInstance1')).toBeInTheDocument();
+      expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
+    });
+    it('should display fetched data from multiple instances with multiple apps', async () => {
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+                {
+                  name: 'argoInstance2',
+                  url: 'https://argocd-argoInstance2.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListWithMultipleApps)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
+        ),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScanMultipleInstances}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
+      expect(await rendered.findByText('guestbook-prod')).toBeInTheDocument();
+      expect(await rendered.findByText('guestbook-staging')).toBeInTheDocument();
 
-  it('should display fetched data from multiple instances', async () => {
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/find/selector/name=guestbook',
-        (_, res, ctx) =>
-          res(
-            ctx.json([
-              {
-                name: 'argoInstance1',
-                url: 'https://argocd-argoInstance1.com',
-              },
-              {
-                name: 'argoInstance2',
-                url: 'https://argocd-argoInstance2.com',
-              },
-            ]),
-          ),
-      ),
-    );
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
-        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
-      ),
-    );
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
-        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
-      ),
-    );
-    const rendered = render(
-      <ApiProvider apis={apisScanMultipleInstances}>
-        <EntityProvider entity={getEntityStubWithAppSelector}>
-          <ArgoCDDetailsCard />
-        </EntityProvider>
-      </ApiProvider>,
-    );
-    const apps = await rendered.findAllByText('guestbook');
-    expect(apps).toHaveLength(2);
-    expect(await rendered.findByText('argoInstance1')).toBeInTheDocument();
-    expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
-  });
-  it('should display fetched data from multiple instances with multiple apps', async () => {
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/find/selector/name=guestbook',
-        (_, res, ctx) =>
-          res(
-            ctx.json([
-              {
-                name: 'argoInstance1',
-                url: 'https://argocd-argoInstance1.com',
-              },
-              {
-                name: 'argoInstance2',
-                url: 'https://argocd-argoInstance2.com',
-              },
-            ]),
-          ),
-      ),
-    );
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
-        (_, res, ctx) => res(ctx.json(getResponseStubAppListWithMultipleApps)),
-      ),
-    );
-    worker.use(
-      rest.get(
-        'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
-        (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceTwo())),
-      ),
-    );
-    const rendered = render(
-      <ApiProvider apis={apisScanMultipleInstances}>
-        <EntityProvider entity={getEntityStubWithAppSelector}>
-          <ArgoCDDetailsCard />
-        </EntityProvider>
-      </ApiProvider>,
-    );
-    expect(await rendered.findByText('guestbook-prod')).toBeInTheDocument();
-    expect(await rendered.findByText('guestbook-staging')).toBeInTheDocument();
+      const apps = await rendered.findAllByText('argoInstance1');
+      expect(apps).toHaveLength(2);
+      expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
+    });
+    it('should display fetched data from an instance when scanning multiple instances', async () => {
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+                {
+                  name: 'argoInstance2',
+                  url: 'https://argocd-argoInstance2.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppListWithMultipleApps)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
+        ),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScanMultipleInstances}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
+      expect(await rendered.findByText('guestbook-prod')).toBeInTheDocument();
+      expect(await rendered.findByText('guestbook-staging')).toBeInTheDocument();
 
-    const apps = await rendered.findAllByText('argoInstance1');
-    expect(apps).toHaveLength(2);
-    expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
+      const apps = await rendered.findAllByText('argoInstance1');
+      expect(apps).toHaveLength(2);
+      expect(rendered.queryByText('argoInstance2')).toBeNull();
+    });
+    it('should display an empty table when receiving no data from multiple instances', async () => {
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+                {
+                  name: 'argoInstance2',
+                  url: 'https://argocd-argoInstance2.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
+        ),
+      );
+      const rendered = render(
+        <ApiProvider apis={apisScanMultipleInstances}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </ApiProvider>,
+      );
+
+      expect(await rendered.findByText('No records to display')).toBeInTheDocument();
+      expect(rendered.queryByText('argoInstance1')).toBeNull();
+      expect(rendered.queryByText('argoInstance2')).toBeNull();
+    });
   });
 });
