@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.4
+
+### Patch Changes
+
+- c55914a: Modify scaffolder template docs to highlight usage options.
+
 ## 2.1.3
 
 ### Patch Changes
