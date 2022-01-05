@@ -117,17 +117,17 @@ export const validate = async (fileContents, verbose = true) => {
 };
 
 const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
-  const fileExists = (filepath) => {
+  const fileExists = (fp) => {
     let flag = true;
     try{
-      fs.accessSync(filepath, fs.constants.F_OK);
+      fs.accessSync(fp, fs.constants.F_OK);
     } catch(e){
       flag = false;
     }
     return flag;
   }
 
-  const validateTechDocs = async (data, filepath) => {
+  const validateTechDocs = async (data, fp) => {
     if(!data?.metadata?.annotations || !data?.metadata?.annotations["backstage.io/techdocs-ref"] ){
       return
     }
@@ -136,7 +136,7 @@ const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
       return
     }
 
-    const mkdocsPath = path.join(path.dirname(filepath), techDocsAnnotation.split(':')[1], 'mkdocs.yaml');
+    const mkdocsPath = path.join(path.dirname(fp), techDocsAnnotation.split(':')[1], 'mkdocs.yaml');
 
     if(await !fileExists(mkdocsPath)){
       throw new Error(`Techdocs annotation specifies "dir" but file under ${mkdocsPath} not found`)
