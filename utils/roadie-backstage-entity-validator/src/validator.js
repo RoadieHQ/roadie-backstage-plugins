@@ -12,13 +12,17 @@ import {
   locationEntityV1alpha1Validator,
   templateEntityV1beta2Validator,
   userEntityV1alpha1Validator,
+  systemEntityV1alpha1Validator,
+  domainEntityV1alpha1Validator,
+  resourceEntityV1alpha1Validator
 } from '@backstage/catalog-model';
 import annotationSchema from './schemas/annotations.schema.json';
 import Ajv from 'ajv';
+import ajvFormats from 'ajv-formats'
+import path from 'path'
 
 const ajv = new Ajv({ verbose: true });
-require('ajv-formats')(ajv);
-const path = require('path');
+ajvFormats(ajv);
 
 const VALIDATORS = {
   api: apiEntityV1alpha1Validator,
@@ -27,6 +31,9 @@ const VALIDATORS = {
   location: locationEntityV1alpha1Validator,
   template: templateEntityV1beta2Validator,
   user: userEntityV1alpha1Validator,
+  system: systemEntityV1alpha1Validator,
+  domain: domainEntityV1alpha1Validator,
+  resource: resourceEntityV1alpha1Validator
 };
 
 function modifyPlaceholders(obj) {
