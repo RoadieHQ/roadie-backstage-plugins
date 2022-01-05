@@ -18,6 +18,7 @@ import Ajv from 'ajv';
 
 const ajv = new Ajv({ verbose: true });
 require('ajv-formats')(ajv);
+const path = require('path');
 
 const VALIDATORS = {
   api: apiEntityV1alpha1Validator,
@@ -115,6 +116,49 @@ export const validate = async (fileContents, verbose = true) => {
   }
 };
 
+const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
+  const fileExists = (filepath) => {
+    let flag = true;
+    try{
+      fs.accessSync(filepath, fs.constants.F_OK);
+    } catch(e){
+      flag = false;
+    }
+    return flag;
+  }
+
+  const validateTechDocs = async (data, filepath) => {
+    if(!data?.metadata?.annotations || !data?.metadata?.annotations["backstage.io/techdocs-ref"] ){
+      return
+    }
+    const techDocsAnnotation = data.metadata.annotations["backstage.io/techdocs-ref"]
+    if(!techDocsAnnotation.includes('dir')){
+      return
+    }
+
+    const mkdocsPath = path.join(path.dirname(filepath), techDocsAnnotation.split(':')[1], 'mkdocs.yaml');
+
+    if(await !fileExists(mkdocsPath)){
+      throw new Error(`Techdocs annotation specifies "dir" but file under ${mkdocsPath} not found`)
+    }
+    return
+  }
+
+  try {
+    const data = yaml.loadAll(fileContents);
+    if(verbose){
+      console.log('Validating locally dependant catalog contents')
+    }
+    await Promise.all(
+      data.map(async (it) => {
+        await validateTechDocs(it, filepath);
+      })
+    );
+  } catch(e){
+    throw new Error(e);
+  }
+}
+
 export const validateFromFile = async (
   filepath = './sample/catalog-info.yml',
   verbose = true,
@@ -124,4 +168,5 @@ export const validateFromFile = async (
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
   await validate(fileContents, verbose);
+  await relativeSpaceValidation(fileContents, filepath, verbose)
 };

@@ -1,0 +1,15 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-5
+  description: |
+    A broken component
+  annotations:
+    backstage.io/techdocs-ref: dir:./
+spec:
+  type: service
+  owner: user:dtuite
+  lifecycle: experimental
+  providesApis:
+    - sample-service
