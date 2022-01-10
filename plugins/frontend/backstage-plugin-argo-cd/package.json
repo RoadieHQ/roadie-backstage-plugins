@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "^0.9.7",
-    "@backstage/core-app-api": "^0.3.0",
     "@backstage/core-components": "^0.8.0",
     "@backstage/core-plugin-api": "^0.4.0",
     "@backstage/plugin-catalog-react": "^0.6.5",
@@ -55,6 +54,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.10.1",
+    "@backstage/core-app-api": "^0.3.0",
     "@backstage/dev-utils": "^0.2.14",
     "@backstage/test-utils": "^0.2.1",
     "@testing-library/jest-dom": "^5.12.0",
