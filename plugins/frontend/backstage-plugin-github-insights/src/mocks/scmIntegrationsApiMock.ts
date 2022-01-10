@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ScmIntegrationsApi } from '@backstage/integration-react';
-import { ConfigReader } from '@backstage/core-app-api';
 
 export const defaultIntegrationsConfig = {
   integrations: {
@@ -32,23 +30,3 @@ export const defaultIntegrationsConfig = {
     ],
   },
 };
-
-export const createScmIntegrationsApiMock = (
-  config: object,
-): ScmIntegrationsApi => {
-  return ScmIntegrationsApi.fromConfig(
-    ConfigReader.fromConfigs([
-      {
-        context: 'unit-test',
-        data: config,
-      },
-    ]),
-  );
-};
-
-
-describe('github-insights', () => {
-  it('mock test', () => {
-    expect(true).toEqual(true);
-  });
-});
