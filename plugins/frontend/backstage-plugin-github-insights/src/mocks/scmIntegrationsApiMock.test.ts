@@ -45,3 +45,10 @@ export const createScmIntegrationsApiMock = (
     ]),
   );
 };
+
+
+describe('github-insights', () => {
+  it('mock test', () => {
+    expect(true).toEqual(true);
+  });
+});

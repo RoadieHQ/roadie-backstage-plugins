@@ -35,7 +35,7 @@ import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
   createScmIntegrationsApiMock,
   defaultIntegrationsConfig,
-} from '../../mocks/scmIntegrationsApiMock';
+} from '../../mocks/scmIntegrationsApiMock.test';
 
 const oauthRequestApi = new OAuthRequestManager();
 const apis = ApiRegistry.from([

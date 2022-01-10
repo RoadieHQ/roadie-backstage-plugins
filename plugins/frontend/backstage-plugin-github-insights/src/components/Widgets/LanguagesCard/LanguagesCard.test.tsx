@@ -30,7 +30,7 @@ import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
   createScmIntegrationsApiMock,
   defaultIntegrationsConfig,
-} from '../../../mocks/scmIntegrationsApiMock';
+} from '../../../mocks/scmIntegrationsApiMock.test';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
