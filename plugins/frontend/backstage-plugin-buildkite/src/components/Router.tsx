@@ -15,8 +15,7 @@
  */
 
 import React from 'react';
-import { Route } from 'react-router';
-import { FlatRoutes } from '@backstage/core-app-api';
+import { Route, Routes } from 'react-router';
 import { Entity } from '@backstage/catalog-model';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
@@ -37,9 +36,9 @@ export const Router = (_props: Props) => {
   return !isBuildkiteAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />
   ) : (
-    <FlatRoutes>
+    <Routes>
       <Route path="/" element={<BuildkiteBuildsTable entity={entity} />} />
       <Route element={<BuildkiteBuildView entity={entity} />} />
-    </FlatRoutes>
+    </Routes>
   );
 };

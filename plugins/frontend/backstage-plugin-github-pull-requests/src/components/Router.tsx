@@ -15,8 +15,7 @@
  */
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
-import { Route } from 'react-router';
-import { FlatRoutes } from '@backstage/core-app-api';
+import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
 import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
@@ -36,8 +35,8 @@ export const Router = (_props: Props) =>{
   return !isGithubPullRequestsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   ) : (
-    <FlatRoutes>
+    <Routes>
       <Route path="/" element={<PullRequestsPage />} />
-    </FlatRoutes>
+    </Routes>
   );
 }
