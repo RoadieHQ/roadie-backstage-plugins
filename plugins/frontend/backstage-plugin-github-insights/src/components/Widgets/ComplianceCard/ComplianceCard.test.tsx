@@ -17,7 +17,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { ApiProvider, ApiRegistry, ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
 import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
@@ -30,9 +30,8 @@ import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import ComplianceCard from '.';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  createScmIntegrationsApiMock,
   defaultIntegrationsConfig,
 } from '../../../mocks/scmIntegrationsApiMock';
 
@@ -44,7 +43,14 @@ const apis = ApiRegistry.from([
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
-    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+    ScmIntegrationsApi.fromConfig(
+      ConfigReader.fromConfigs([
+        {
+          context: 'unit-test',
+          data: defaultIntegrationsConfig,
+        },
+      ]),
+    ),
   ],
 ]);
 

@@ -30,10 +30,10 @@ import {
   GithubAuth,
   OAuthRequestManager,
   UrlPatternDiscovery,
+  ConfigReader,
 } from '@backstage/core-app-api';
-import { scmIntegrationsApiRef } from '@backstage/integration-react';
+import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  createScmIntegrationsApiMock,
   defaultIntegrationsConfig,
 } from '../../mocks/scmIntegrationsApiMock';
 
@@ -50,7 +50,14 @@ const apis = ApiRegistry.from([
   ],
   [
     scmIntegrationsApiRef,
-    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+    ScmIntegrationsApi.fromConfig(
+      ConfigReader.fromConfigs([
+        {
+          context: 'unit-test',
+          data: defaultIntegrationsConfig,
+        },
+      ]),
+    ),
   ],
 ]);
 
