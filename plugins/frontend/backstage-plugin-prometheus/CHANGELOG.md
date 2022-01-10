@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 1.3.3
+
+### Patch Changes
+
+- ecd06f5: Make "@backstage/core-app-api" a dev dependency
+
 ## 1.3.2
 
 ### Patch Changes
