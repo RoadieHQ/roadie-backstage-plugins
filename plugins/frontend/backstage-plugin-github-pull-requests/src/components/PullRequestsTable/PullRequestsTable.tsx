@@ -25,7 +25,7 @@ import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
-import {  useEntity } from '@backstage/plugin-catalog-react';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const generatedColumns: TableColumn[] = [
   {
@@ -105,6 +105,7 @@ type Props = {
   pageSize: number;
   onChangePageSize: (pageSize: number) => void;
   StateFilterComponent: FC<{}>;
+  SearchComponent: FC<{}>;
 };
 
 export const PullRequestsTableView: FC<Props> = ({
@@ -201,7 +202,7 @@ const PullRequests = (__props: TableProps) => {
           setAutoFocus(true)
         }}
         onChange={(event) => setSearch(event.target.value)}
-        placeholder={'Filter'}
+        placeholder="Filter"
         value={search}
         InputProps={{
           startAdornment: (
@@ -236,7 +237,6 @@ const PullRequests = (__props: TableProps) => {
       retry={retry}
       onChangePageSize={setPageSize}
       onChangePage={setPage}
-      onChangeSearch={setSearch}
     />
   );
 }

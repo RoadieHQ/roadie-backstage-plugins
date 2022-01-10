@@ -15,8 +15,7 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { PullsListResponseData } from '@octokit/types';
-import { PullRequestState } from '../types';
+import { PullRequestState, SearchPullRequestsResponseData } from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
@@ -44,7 +43,6 @@ export type GithubPullRequestsApi = {
     state?: PullRequestState;
     baseUrl: string|undefined;
   }) => Promise<{
-    maxTotalItems?: number;
-    pullRequestsData: PullsListResponseData;
+    pullRequestsData: SearchPullRequestsResponseData;
   }>;
 };

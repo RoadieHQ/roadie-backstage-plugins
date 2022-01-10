@@ -16,10 +16,9 @@
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
 import { useBaseUrl } from './useBaseUrl';
-import { PullRequestState } from '../types';
+import { PullRequestState, SearchPullRequestsResponseData } from '../types';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
@@ -31,14 +30,14 @@ export type PullRequestStatsCount = {
   closedCount: number;
   mergedCount: number;
 };
-function calculateStatistics(pullRequestsData: PullsListResponseData) {
-  return pullRequestsData.reduce<PullRequestStatsCount>(
+function calculateStatistics(pullRequestsData: SearchPullRequestsResponseData) {
+  return pullRequestsData.items.reduce<PullRequestStatsCount>(
     (acc, curr) => {
-      acc.avgTimeUntilMerge += curr.merged_at
-        ? new Date(curr.merged_at).getTime() -
+      acc.avgTimeUntilMerge += curr.pull_request.merged_at
+        ? new Date(curr.pull_request.merged_at).getTime() -
           new Date(curr.created_at).getTime()
         : 0;
-      acc.mergedCount += curr.merged_at ? 1 : 0;
+      acc.mergedCount += curr.pull_request.merged_at ? 1 : 0;
       acc.closedCount += curr.closed_at ? 1 : 0;
       return acc;
     },
@@ -78,6 +77,7 @@ export function usePullRequestsStatistics({
     }
     return api
       .listPullRequests({
+        search: '',
         token,
         owner,
         repo,
@@ -88,7 +88,7 @@ export function usePullRequestsStatistics({
         baseUrl,
       })
       .then(
-        ({ pullRequestsData }: { pullRequestsData: PullsListResponseData }) => {
+        ({ pullRequestsData }: { pullRequestsData: SearchPullRequestsResponseData }) => {
           const calcResult = calculateStatistics(pullRequestsData);
           if(calcResult.closedCount === 0 || calcResult.mergedCount === 0) return {
             avgTimeUntilMerge: 'Never',

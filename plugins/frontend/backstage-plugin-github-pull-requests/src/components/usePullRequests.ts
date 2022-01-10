@@ -17,9 +17,8 @@ import { useEffect, useState } from 'react';
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
-import { PullRequestState } from '../types';
+import { PullRequestState, SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 
 export type PullRequest = {
@@ -50,7 +49,7 @@ export function usePullRequests({
   state?: PullRequestState;
 }) {
   const api = useApi(githubPullRequestsApiRef);
-  // const auth = useApi(githubAuthApiRef);
+  const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
@@ -62,7 +61,7 @@ export function usePullRequests({
   const { loading, value: prData, retry, error } = useAsyncRetry<
     PullRequest[]
   >(async () => {
-    // const token = await auth.getAccessToken(['repo']);
+    const token = await auth.getAccessToken(['repo']);
     if (!repo) {
       return [];
     }
@@ -70,7 +69,7 @@ export function usePullRequests({
       api
         // GitHub API pagination count starts from 1
         .listPullRequests({
-          token: '',
+          token,
           search,
           owner,
           repo,
@@ -82,17 +81,17 @@ export function usePullRequests({
         })
         .then(
           ({
-            maxTotalItems,
-            pullRequestsData,
+            pullRequestsData: {
+              total_count, 
+              items
+            },
           }: {
-            maxTotalItems?: number;
-            pullRequestsData: PullsListResponseData;
+            pullRequestsData: SearchPullRequestsResponseData;
           }) => {
-            if (maxTotalItems) {
-              setTotal(maxTotalItems);
+            if (total_count) {
+              setTotal(total_count);
             }
-
-            return pullRequestsData.map(
+            return items.map(
               ({
                 id,
                 html_url,
@@ -103,7 +102,7 @@ export function usePullRequests({
                 user,
                 state: pr_state,
                 draft,
-                merged_at,
+                pull_request: { merged_at },
               }) => ({
                 url: html_url,
                 id,

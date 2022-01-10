@@ -16,8 +16,7 @@
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { PullsListResponseData } from '@octokit/types';
-import { PullRequestState } from '../types';
+import { PullRequestState, SearchPullRequestsResponseData } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
@@ -39,8 +38,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     state?: PullRequestState;
     baseUrl: string | undefined;
   }): Promise<{
-    maxTotalItems?: number;
-    pullRequestsData: PullsListResponseData;
+    pullRequestsData: SearchPullRequestsResponseData;
   }> {
     const pullRequestResponse = await new Octokit({
       auth: token,
@@ -51,14 +49,8 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       per_page: pageSize,
       page,
     });
-    const paginationLinks = pullRequestResponse.headers.link;
-    const lastPage = paginationLinks?.match(/\d+(?!.*page=\d*)/g) || ['1'];
-    const maxTotalItems = paginationLinks?.endsWith('rel="last"')
-      ? parseInt(lastPage[0], 10) * pageSize
-      : undefined;
     return {
-      maxTotalItems,
-      pullRequestsData: (pullRequestResponse.data.items as any) as PullsListResponseData,
+      pullRequestsData: (pullRequestResponse.data as any) as SearchPullRequestsResponseData,
     };
   }
 }

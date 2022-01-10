@@ -64,7 +64,7 @@ describe('PullRequestsCard', () => {
         </EntityProvider>
       </ApiProvider>,
     );
-    expect(await rendered.findByText('17 hours')).toBeInTheDocument();
-    expect(await rendered.findByText('100%')).toBeInTheDocument();
+    expect(await rendered.findByText('2 months')).toBeInTheDocument();
+    expect(await rendered.findByText('67%')).toBeInTheDocument();
   });
 });
