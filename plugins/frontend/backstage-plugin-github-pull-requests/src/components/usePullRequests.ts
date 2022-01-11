@@ -39,12 +39,14 @@ export function usePullRequests({
   search,
   owner,
   repo,
+  defaultFilter,
   branch,
   state,
 }: {
   search: string;
   owner: string;
   repo: string;
+  defaultFilter: string;
   branch?: string;
   state?: PullRequestState;
 }) {
@@ -73,6 +75,7 @@ export function usePullRequests({
           search,
           owner,
           repo,
+          defaultFilter,
           pageSize,
           page: page + 1,
           branch,

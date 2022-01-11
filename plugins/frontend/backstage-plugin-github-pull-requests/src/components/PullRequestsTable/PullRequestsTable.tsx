@@ -20,7 +20,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 import SearchIcon from '@material-ui/icons/Search';
 import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION, isRoadieBackstageDefaultFilter } from '../../utils/isGithubSlugSet';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
@@ -155,6 +155,7 @@ type TableProps = {
 const PullRequests = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
+  const defaultFilter = isRoadieBackstageDefaultFilter(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
   const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
     'open',
@@ -166,6 +167,7 @@ const PullRequests = (__props: TableProps) => {
     state: PRStatusFilter,
     owner,
     repo,
+    defaultFilter,
   });
   const StateFilterComponent = () => (
     <Box position="absolute" right={300} top={20}>

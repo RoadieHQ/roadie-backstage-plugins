@@ -24,6 +24,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     token,
     owner,
     repo,
+    defaultFilter = '',
     pageSize = 5,
     page,
     state = 'all',
@@ -33,6 +34,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     token: string;
     owner: string;
     repo: string;
+    defaultFilter: string;
     pageSize?: number;
     page?: number;
     state?: PullRequestState;
@@ -44,7 +46,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       auth: token,
       ...(baseUrl && { baseUrl }),
     }).search.issuesAndPullRequests({
-      q: `${search} in:title type:pr state:${state} repo:${owner}/${repo}`,
+      q: `${search} in:title type:pr state:${state} ${defaultFilter} repo:${owner}/${repo}`,
       state,
       per_page: pageSize,
       page,

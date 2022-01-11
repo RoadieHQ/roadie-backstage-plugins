@@ -27,6 +27,7 @@ export type GithubPullRequestsApi = {
     token,
     owner,
     repo,
+    defaultFilter,
     pageSize,
     page,
     branch,
@@ -37,6 +38,7 @@ export type GithubPullRequestsApi = {
     token: string;
     owner: string;
     repo: string;
+    defaultFilter: string;
     pageSize?: number;
     page?: number;
     branch?: string;
