@@ -16,8 +16,9 @@
 
 import { Entity } from '@backstage/catalog-model';
 
-export const GITHUB_PULL_REQUESTS_ANNOTATION = 'github.com/project-slug';
+export const ROADIE_BACKSTAGE_PULL_REQUESTS_DEFAULT_FILTER_ANNOTATION = 'roadie-backstage-pull-requests/default-filter';
 
-export const isGithubSlugSet = (entity: Entity) => {
-  return entity?.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION] ?? '';
+export const isRoadieBackstageDefaultFilterSet = (entity: Entity) => {
+    return entity?.metadata.annotations?.[ROADIE_BACKSTAGE_PULL_REQUESTS_DEFAULT_FILTER_ANNOTATION] ?? '';
 };
+  
