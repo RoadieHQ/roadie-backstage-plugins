@@ -82,6 +82,7 @@ export function usePullRequestsStatistics({
         owner,
         repo,
         pageSize,
+        defaultFilter: '',
         page: 1,
         branch,
         state,

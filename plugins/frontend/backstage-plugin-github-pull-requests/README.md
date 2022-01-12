@@ -66,8 +66,9 @@ const overviewContent = (
 
 ## Features
 
-- List Pull Requests for your repository, with filtering and search.
+- List Pull Requests for your repository, with filtering and search functionnality like in github.
 - Show basic statistics widget about pull requests for your repository.
+- Possibility to add a variable on the backstage configuration of a catalog entity allowing to add a default search filter on github pull requests
 
 ## Links
 

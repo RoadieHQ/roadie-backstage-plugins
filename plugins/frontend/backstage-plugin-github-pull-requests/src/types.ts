@@ -2,7 +2,7 @@ import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
 export type PullRequestState = 'open' | 'closed' | 'all';
 
-export type SearchPulLRequestsResponseDataItems = {
+export type SearchPullRequestsResponseDataItems = {
   items: Array<
     Omit<SearchIssuesAndPullRequestsResponseData['items'][number], "pull_request"> & {
       draft:boolean;
@@ -15,4 +15,4 @@ export type SearchPulLRequestsResponseDataItems = {
     }>
 }
 
-export type SearchPullRequestsResponseData = Omit<SearchIssuesAndPullRequestsResponseData, "items"> &  SearchPulLRequestsResponseDataItems;
+export type SearchPullRequestsResponseData = Omit<SearchIssuesAndPullRequestsResponseData, "items"> &  SearchPullRequestsResponseDataItems;

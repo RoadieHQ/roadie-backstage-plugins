@@ -17,7 +17,6 @@ import React, { FC, useState } from 'react';
 import { InputAdornment, IconButton, TextField, Typography, Box, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ClearIcon from '@material-ui/icons/Clear';
-
 import SearchIcon from '@material-ui/icons/Search';
 import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
@@ -47,7 +46,7 @@ const generatedColumns: TableColumn[] = [
     ),
   },
   {
-    title: 'Titles',
+    title: 'Title',
     field: 'title',
     highlight: true,
     render: (row: Partial<PullRequest>) => (
