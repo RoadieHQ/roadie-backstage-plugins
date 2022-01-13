@@ -1,1 +1,2 @@
-export { validate, validateFromFile } from './validator';
+export { validate, validateFromFile, validateAll } from './validator';
+export { getCatalogFiles } from './utils';

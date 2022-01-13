@@ -14,12 +14,13 @@ import {
   userEntityV1alpha1Validator,
   systemEntityV1alpha1Validator,
   domainEntityV1alpha1Validator,
-  resourceEntityV1alpha1Validator
+  resourceEntityV1alpha1Validator,
 } from '@backstage/catalog-model';
 import annotationSchema from './schemas/annotations.schema.json';
 import Ajv from 'ajv';
-import ajvFormats from 'ajv-formats'
-import path from 'path'
+import ajvFormats from 'ajv-formats';
+import path from 'path';
+import { getCatalogFiles } from './utils';
 
 const ajv = new Ajv({ verbose: true });
 ajvFormats(ajv);
@@ -33,7 +34,7 @@ const VALIDATORS = {
   user: userEntityV1alpha1Validator,
   system: systemEntityV1alpha1Validator,
   domain: domainEntityV1alpha1Validator,
-  resource: resourceEntityV1alpha1Validator
+  resource: resourceEntityV1alpha1Validator,
 };
 
 function modifyPlaceholders(obj) {
@@ -44,8 +45,10 @@ function modifyPlaceholders(obj) {
           obj[k] = 'DUMMY TEXT';
           return;
         }
-      } catch(e) {
-        throw new Error(`Placeholder with name '${k}' is empty. Please remove it or populate it.`)
+      } catch (e) {
+        throw new Error(
+          `Placeholder with name '${k}' is empty. Please remove it or populate it.`,
+        );
       }
       modifyPlaceholders(obj[k]);
     }
@@ -124,47 +127,57 @@ export const validate = async (fileContents, verbose = true) => {
 };
 
 const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
-  const fileExists = (fp) => {
+  const fileExists = fp => {
     let flag = true;
-    try{
+    try {
       fs.accessSync(fp, fs.constants.F_OK);
-    } catch(e){
+    } catch (e) {
       flag = false;
     }
     return flag;
-  }
+  };
 
   const validateTechDocs = async (data, fp) => {
-    if(!data?.metadata?.annotations || !data?.metadata?.annotations["backstage.io/techdocs-ref"] ){
-      return
+    if (
+      !data?.metadata?.annotations ||
+      !data?.metadata?.annotations['backstage.io/techdocs-ref']
+    ) {
+      return;
     }
-    const techDocsAnnotation = data.metadata.annotations["backstage.io/techdocs-ref"]
-    if(!techDocsAnnotation.includes('dir')){
-      return
+    const techDocsAnnotation =
+      data.metadata.annotations['backstage.io/techdocs-ref'];
+    if (!techDocsAnnotation.includes('dir')) {
+      return;
     }
 
-    const mkdocsPath = path.join(path.dirname(fp), techDocsAnnotation.split(':')[1], 'mkdocs.yaml');
+    const mkdocsPath = path.join(
+      path.dirname(fp),
+      techDocsAnnotation.split(':')[1],
+      'mkdocs.yaml',
+    );
 
-    if(await !fileExists(mkdocsPath)){
-      throw new Error(`Techdocs annotation specifies "dir" but file under ${mkdocsPath} not found`)
+    if (await !fileExists(mkdocsPath)) {
+      throw new Error(
+        `Techdocs annotation specifies "dir" but file under ${mkdocsPath} not found`,
+      );
     }
-    return
-  }
+    return;
+  };
 
   try {
     const data = yaml.loadAll(fileContents);
-    if(verbose){
-      console.log('Validating locally dependant catalog contents')
+    if (verbose) {
+      console.log('Validating locally dependant catalog contents');
     }
     await Promise.all(
-      data.map(async (it) => {
+      data.map(async it => {
         await validateTechDocs(it, filepath);
-      })
+      }),
     );
-  } catch(e){
+  } catch (e) {
     throw new Error(e);
   }
-}
+};
 
 export const validateFromFile = async (
   filepath = './sample/catalog-info.yml',
@@ -175,5 +188,13 @@ export const validateFromFile = async (
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
   await validate(fileContents, verbose);
-  await relativeSpaceValidation(fileContents, filepath, verbose)
+  await relativeSpaceValidation(fileContents, filepath, verbose);
+};
+
+export const validateAll = async (context = '.', verbose = true) => {
+  const catalogFiles = getCatalogFiles(context, verbose);
+
+  Promise.all(
+    catalogFiles.map(filePath => validateFromFile(filePath, verbose)),
+  );
 };
