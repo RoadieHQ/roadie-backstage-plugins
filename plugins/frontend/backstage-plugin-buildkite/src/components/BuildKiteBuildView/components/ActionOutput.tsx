@@ -96,7 +96,7 @@ export const ActionOutput: FC<{
         ) : (
           <Suspense fallback={<LinearProgress />}>
             <div style={{ height: '30vh', width: '100%' }}>
-              <LogViewer text="IRMAAA"/>
+              <LogViewer text={value.content}/>
             </div>
           </Suspense>
         )}
