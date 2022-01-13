@@ -23,15 +23,13 @@ import {
   Typography,
   Box,
 } from '@material-ui/core';
+import { LogViewer } from '@backstage/core-components';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import moment from 'moment';
 import { useLog } from '../../useLog';
 import { generateRequestUrl } from '../../utils';
-
-const LazyLog = React.lazy(() => import('react-lazylog/build/LazyLog'));
-moment.relativeTimeThreshold('ss', 0);
 
 const useStyles = makeStyles({
   accordion: {
@@ -98,7 +96,7 @@ export const ActionOutput: FC<{
         ) : (
           <Suspense fallback={<LinearProgress />}>
             <div style={{ height: '30vh', width: '100%' }}>
-              <LazyLog text={value.content} extraLines={1} enableSearch />
+              <LogViewer text={value.content}/>
             </div>
           </Suspense>
         )}
