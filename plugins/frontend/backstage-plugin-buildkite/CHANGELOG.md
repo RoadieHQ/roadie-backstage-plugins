@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 1.3.4
+
+### Patch Changes
+
+- b586451: Switch to using LogViewer from '@backstage/core-components'.
+
 ## 1.3.3
 
 ### Patch Changes
