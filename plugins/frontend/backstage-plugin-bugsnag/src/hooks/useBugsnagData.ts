@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const BUGSNAG_ANNOTATION = 'bugsnag.com/project-key';
+export const PROJECT_ANNOTATION = 'bugsnag.com/project-name';
 
 export const useBugsnagData = () => {
   const { entity } = useEntity();
@@ -29,4 +30,10 @@ export const useBugsnagData = () => {
     throw new Error("'bugsnag.com/project-key' annotation is missing");
   }
   return slugElements;
+};
+
+export const useProjectName = () => {
+  const { entity } = useEntity();
+  const projectNameSlug = entity?.metadata.annotations?.[PROJECT_ANNOTATION] ?? '';
+  return projectNameSlug;
 };

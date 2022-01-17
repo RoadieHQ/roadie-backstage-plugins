@@ -19,42 +19,51 @@ import { useAsync } from 'react-use';
 import { Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Entity } from '@backstage/catalog-model';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import {
   Page,
   Content,
   ContentHeader,
   SupportButton,
   MissingAnnotationEmptyState,
-  Progress
+  Progress,
 } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
 import { bugsnagApiRef } from '../..';
 import { ErrorsTable } from '../ErrorsTableComponent';
-import { BUGSNAG_ANNOTATION, useBugsnagData } from '../../hooks/useBugsnagData';
+import {
+  BUGSNAG_ANNOTATION,
+  useBugsnagData,
+  useProjectName,
+} from '../../hooks/useBugsnagData';
 
 export const isBugsnagAvailable = (entity: Entity) => {
   return Boolean(entity?.metadata.annotations?.[BUGSNAG_ANNOTATION]);
-}
+};
 
 export const ErrorsOverview = () => {
   const { entity } = useEntity();
   const organisationName = useBugsnagData()[0];
   const projectApiKey = useBugsnagData()[1];
+  const projectName = useProjectName();
   const api = useApi(bugsnagApiRef);
   const [slug, setOrganisationSlug] = useState('');
 
-
-  const { value, loading, error } = useAsync(
-    async () => {
-      const organisations = await api.fetchOrganisations();
-      const organisation = organisations.find(org => org.name.includes(organisationName));
-      setOrganisationSlug(organisation?.slug || '');
-      const projects = await api.fetchProjects(organisation?.id || '');
-      const filteredProject = projects.find(proj => proj.api_key.includes(projectApiKey));
-      return filteredProject;
-    }
-  );
+  const { value, loading, error } = useAsync(async () => {
+    const organisations = await api.fetchOrganisations();
+    const organisation = organisations.find(org =>
+      org.name.includes(organisationName),
+    );
+    setOrganisationSlug(organisation?.slug || '');
+    const projects = await api.fetchProjects(
+      organisation?.id,
+      projectName ? projectName : undefined,
+    );
+    const filteredProject = projects.find(proj =>
+      proj.api_key.includes(projectApiKey),
+    );
+    return filteredProject;
+  });
 
   if (loading) {
     return <Progress />;
@@ -69,15 +78,15 @@ export const ErrorsOverview = () => {
           <SupportButton>Overview of Bugsnag errors</SupportButton>
         </ContentHeader>
         <Grid>
-          {value ?
+          {value ? (
             <Grid item>
               <ErrorsTable project={value || {}} organisationName={slug} />
-            </Grid> : null
-          }
+            </Grid>
+          ) : null}
         </Grid>
       </Content>
     </Page>
   ) : (
     <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />
-  )
+  );
 };

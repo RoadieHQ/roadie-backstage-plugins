@@ -24,5 +24,5 @@ export const bugsnagApiRef = createApiRef<BugsnagApi>({
 export interface BugsnagApi {
   fetchErrors(projectId:string): Promise<BugsnagError[]>;
   fetchOrganisations(): Promise<Organisation[]>;
-  fetchProjects(organisationId: string): Promise<Project[]>;
+  fetchProjects(organisationId?: string, projectName?:string): Promise<Project[]>;
 }
