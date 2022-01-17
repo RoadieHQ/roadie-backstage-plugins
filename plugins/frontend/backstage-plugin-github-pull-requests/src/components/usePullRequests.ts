@@ -18,7 +18,7 @@ import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import moment from 'moment';
-import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 
 export type PullRequest = {
@@ -39,16 +39,12 @@ export function usePullRequests({
   search,
   owner,
   repo,
-  defaultFilter,
   branch,
-  state,
 }: {
   search: string;
   owner: string;
   repo: string;
-  defaultFilter: string;
   branch?: string;
-  state?: PullRequestState;
 }) {
   const api = useApi(githubPullRequestsApiRef);
   const auth = useApi(githubAuthApiRef);
@@ -75,11 +71,9 @@ export function usePullRequests({
           search,
           owner,
           repo,
-          defaultFilter,
           pageSize,
           page: page + 1,
           branch,
-          state,
           baseUrl,
         })
         .then(
@@ -91,7 +85,7 @@ export function usePullRequests({
           }: {
             pullRequestsData: SearchPullRequestsResponseData;
           }) => {
-            if (total_count) {
+            if (total_count >= 0) {
               setTotal(total_count);
             }
             return items.map(
@@ -128,7 +122,7 @@ export function usePullRequests({
     setPage(0);
     retry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, state]);
+  }, [search]);
   return [
     {
       page,

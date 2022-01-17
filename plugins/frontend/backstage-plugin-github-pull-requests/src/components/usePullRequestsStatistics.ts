@@ -77,15 +77,13 @@ export function usePullRequestsStatistics({
     }
     return api
       .listPullRequests({
-        search: '',
+        search: `state:${state}`,
         token,
         owner,
         repo,
         pageSize,
-        defaultFilter: '',
         page: 1,
         branch,
-        state,
         baseUrl,
       })
       .then(

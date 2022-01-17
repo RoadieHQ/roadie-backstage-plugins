@@ -12,6 +12,10 @@ The plugins will still be published to the same place on NPM and will have the s
 
 This plugin relies on the [GitHub Authentication Provider](https://backstage.io/docs/auth/github/provider) for its access to GitHub.
 
+We improve the search filter in order to work like in github : 
+When we added a new filter and refresh the page, the searchbar will display this new filter by default.
+You need to add this annotation `roadie-backstage-pull-requests/default-filter`  on the configuration of a component of the backstage catalog.
+
 ## Install the plugin
 
 ```bash
@@ -66,7 +70,7 @@ const overviewContent = (
 
 ## Features
 
-- List Pull Requests for your repository, with filtering and search functionnality like in github.
+- List Pull Requests for your repository, with filtering and search (The searchbar is working like in github).
 - Show basic statistics widget about pull requests for your repository.
 - Possibility to add a variable on the backstage configuration of a catalog entity allowing to add a default search filter on github pull requests
 

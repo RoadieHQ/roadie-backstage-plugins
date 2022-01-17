@@ -15,7 +15,7 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { SearchPullRequestsResponseData } from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
@@ -27,22 +27,18 @@ export type GithubPullRequestsApi = {
     token,
     owner,
     repo,
-    defaultFilter,
     pageSize,
     page,
     branch,
-    state,
     baseUrl,
   }: {
     search: string;
     token: string;
     owner: string;
     repo: string;
-    defaultFilter: string;
     pageSize?: number;
     page?: number;
     branch?: string;
-    state?: PullRequestState;
     baseUrl: string|undefined;
   }) => Promise<{
     pullRequestsData: SearchPullRequestsResponseData;

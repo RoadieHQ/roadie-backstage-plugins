@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
+import { debounce } from 'lodash';
 import { InputAdornment, IconButton, TextField, Typography, Box, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -157,55 +158,61 @@ const PullRequests = (__props: TableProps) => {
   const projectName = isGithubSlugSet(entity);
   const defaultFilter = isRoadieBackstageDefaultFilterSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
-  const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
-    'open',
-  );
-  const [search, setSearch] = useState('');
-  const [autoFocus, setAutoFocus] = useState(false);
+  const [search, setSearch] = useState(`state:open ${defaultFilter}`);
+  const setSearchValueDebounced = useRef(debounce(setSearch, 500));
+  const onChangePRStatusFilter = (state: PullRequestState) => {
+    if(state  === 'all') {
+      setSearch((currentSearch: string) => currentSearch.replace(/state:(open|closed)/g, '').trim());
+    } else {
+      setSearch((currentSearch: string) => 
+        currentSearch.search(/state:(open|closed)/g) === -1 ? 
+          `state:${state} ${currentSearch}` :
+          currentSearch.replace(/state:(open|closed)/g, `state:${state}`
+        )
+      );
+    }
+  };
   const [tableProps, { retry, setPage, setPageSize }] = usePullRequests({
     search: search,
-    state: PRStatusFilter,
     owner,
     repo,
-    defaultFilter,
   });
   const StateFilterComponent = () => (
-    <Box position="absolute" right={300} top={20}>
+    <Box position="absolute" right={525} top={20}>
       <ButtonGroup color="primary" aria-label="text primary button group">
         <Button
-          color={PRStatusFilter === 'open' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('open')}
+          color={search.search('state:open') !== -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('open')}
         >
           OPEN
         </Button>
         <Button
-          color={PRStatusFilter === 'closed' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('closed')}
+          color={search.search('state:closed') !== -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('closed')}
         >
           CLOSED
         </Button>
         <Button
-          color={PRStatusFilter === 'all' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('all')}
+          color={search.search('state') === -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('all')}
         >
           ALL
         </Button>
       </ButtonGroup>
     </Box>
   );
-  const SearchComponent = () => (
-    <Box position="absolute" right={10} top={25}>
+  const SearchComponent = () => {
+    const [draftSearch, setDraftSearch] = useState(search);
+    return (
+    <Box position="absolute" width={500} right={10} top={25}>
       <TextField
-        autoFocus={autoFocus}
-        onBlur={() => {
-          setAutoFocus(false)
+        fullWidth
+        onChange={(event) => {
+          setDraftSearch(event.target.value);
+          setSearchValueDebounced.current(event.target.value);
         }}
-        onClick={() => {
-          setAutoFocus(true)
-        }}
-        onChange={(event) => setSearch(event.target.value)}
         placeholder="Filter"
-        value={search}
+        value={draftSearch}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -215,8 +222,11 @@ const PullRequests = (__props: TableProps) => {
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
-                disabled={!search}
-                onClick={() => setSearch('')}
+                disabled={!draftSearch}
+                onClick={() => {
+                  setDraftSearch('');
+                  setSearch('');
+                }}
               >
                 <ClearIcon
                   fontSize="small"
@@ -229,6 +239,7 @@ const PullRequests = (__props: TableProps) => {
       />
     </Box>
   )
+  };
 
   return (
     <PullRequestsTableView
