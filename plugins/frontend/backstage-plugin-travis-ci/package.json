@@ -31,7 +31,6 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "^0.9.7",
-    "@backstage/core-app-api": "^0.3.0",
     "@backstage/core-components": "^0.8.0",
     "@backstage/core-plugin-api": "^0.4.0",
     "@backstage/plugin-catalog-react": "^0.6.5",
@@ -43,14 +42,17 @@
     "date-fns": "^2.18.0",
     "history": "^5.0.0",
     "moment": "^2.29.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-use": "^17.2.4"
   },
+  "peerDependencies": {
+    "react": "^16.13.1 || ^17.0.0",
+    "react-dom": "^16.13.1 || ^17.0.0"
+  },
   "devDependencies": {
     "@backstage/cli": "^0.10.1",
+    "@backstage/core-app-api": "^0.3.0",
     "@backstage/dev-utils": "^0.2.14",
     "@backstage/test-utils": "^0.2.1",
     "@testing-library/jest-dom": "^5.10.1",
