@@ -43,12 +43,14 @@
     "history": "^5.0.0",
     "html-react-parser": "^0.14.1",
     "moment": "^2.29.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "react-use": "^17.2.4",
     "sanitize-html": "^2.3.3",
     "uuid": "8.3.2",
     "xml-js": "^1.6.11"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1 || ^17.0.0",
+    "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.10.1",
