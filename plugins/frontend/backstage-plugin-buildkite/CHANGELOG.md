@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 1.3.5
+
+### Patch Changes
+
+- 142ce1c: Moved React dependencies to `peerDependencies` and allow both React v16 and v17 to be used.
+
 ## 1.3.4
 
 ### Patch Changes

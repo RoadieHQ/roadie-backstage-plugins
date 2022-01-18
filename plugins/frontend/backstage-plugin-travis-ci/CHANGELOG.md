@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 1.3.3
+
+### Patch Changes
+
+- 142ce1c: Moved React dependencies to `peerDependencies` and allow both React v16 and v17 to be used.
+- faf6526: Removed unused dependency on `@backstage/core-app-api`.
+
 ## 1.3.2
 
 ### Patch Changes
