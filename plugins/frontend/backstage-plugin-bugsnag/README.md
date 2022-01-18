@@ -31,6 +31,13 @@ proxy:
         X-version: '2'
 ```
 
+ Define number of results fetched per request (this is optional and if ommited it will be set to default value of 30). This will be used as a 'per_page' parameter (https://bugsnagapiv2.docs.apiary.io/#introduction/rate-limiting).
+
+ ```yml
+bugsnag:
+  resultsPerPage: <number>
+```
+
 3. Add plugin to your Backstage instance:
 
 ```ts
@@ -61,7 +68,7 @@ const serviceEntityPage = (
 bugsnag.com/project-key: <organization-name>/<project-notifier-api-key>
 ```
 
-Please note that if your organisation has more than 100 projects you need to provide additional annotations where you will provide the name of the project:
+Please note that if your organisation has more projects than results returned by page and defined under 'bugsnag.resultsPerPage' you need to provide additional annotations where you will provide the name of the project:
 
 ```yml
 bugsnag.com/project-name: <project-name>

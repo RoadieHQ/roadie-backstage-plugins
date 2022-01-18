@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-import { createApiRef } from '@backstage/core-plugin-api';
-import { BugsnagError, Organisation, Project } from './types';
-
-export const bugsnagApiRef = createApiRef<BugsnagApi>({
-  id: 'plugin.bugsnag.service',
-});
-
-export interface BugsnagApi {
-  fetchErrors(projectId:string): Promise<BugsnagError[]>;
-  fetchOrganisations(): Promise<Organisation[]>;
-  fetchProjects(organisationId?: string, projectName?:string, perPage?: number): Promise<Project[]>;
+export interface Config {
+  /** Results per page for bugsnag plugin */
+  bugsnag?: {
+    /**
+     *
+     * @visibility frontend
+     */
+    resultsPerPage: number;
+  };
 }

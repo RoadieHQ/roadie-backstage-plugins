@@ -28,7 +28,7 @@ import {
   MissingAnnotationEmptyState,
   Progress,
 } from '@backstage/core-components';
-import { useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { bugsnagApiRef } from '../..';
 import { ErrorsTable } from '../ErrorsTableComponent';
 import {
@@ -47,7 +47,9 @@ export const ErrorsOverview = () => {
   const projectApiKey = useBugsnagData()[1];
   const projectName = useProjectName();
   const api = useApi(bugsnagApiRef);
+  const configApi = useApi(configApiRef);
   const [slug, setOrganisationSlug] = useState('');
+  const resultsPerPage = configApi?.getOptionalNumber('bugsnag.resultsPerPage');
 
   const { value, loading, error } = useAsync(async () => {
     const organisations = await api.fetchOrganisations();
@@ -58,6 +60,7 @@ export const ErrorsOverview = () => {
     const projects = await api.fetchProjects(
       organisation?.id,
       projectName ? projectName : undefined,
+      resultsPerPage ? resultsPerPage : 30,
     );
     const filteredProject = projects.find(proj =>
       proj.api_key.includes(projectApiKey),

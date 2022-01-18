@@ -52,10 +52,11 @@ export class BugsnagClient implements BugsnagApi {
   async fetchProjects(
     organisationId?: string,
     projectName?: string,
+    perPage?: number
   ): Promise<Project[]> {
     const query = projectName ? `q=${projectName}&` : '';
     const response = await fetch(
-      `${await this.getApiUrl()}/organizations/${organisationId}/projects?${query}per_page=100`,
+      `${await this.getApiUrl()}/organizations/${organisationId}/projects?${query}per_page=${perPage}`,
     );
     const payload = await response.json();
     if (!response.ok) {
