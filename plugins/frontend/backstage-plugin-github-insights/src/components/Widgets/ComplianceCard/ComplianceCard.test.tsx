@@ -16,10 +16,14 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiProvider, ApiRegistry, ConfigReader } from '@backstage/core-app-api';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import {
   branchesResponseMock,
@@ -30,16 +34,17 @@ import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import ComplianceCard from '.';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  defaultIntegrationsConfig,
-} from '../../../mocks/scmIntegrationsApiMock';
+  scmIntegrationsApiRef,
+  ScmIntegrationsApi,
+} from '@backstage/integration-react';
+import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
@@ -52,7 +57,7 @@ const apis = ApiRegistry.from([
       ]),
     ),
   ],
-]);
+];
 
 describe('ComplianceCard', () => {
   const worker = setupServer();
@@ -74,13 +79,13 @@ describe('ComplianceCard', () => {
   it('should display a card with the data from the requests', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ComplianceCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByText('master')).toBeInTheDocument();
