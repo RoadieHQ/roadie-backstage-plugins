@@ -163,3 +163,6 @@ argocd:
 
 prometheus:
   proxyPath: /prometheus/api
+
+bugsnag:
+  resultsPerPage: 50
