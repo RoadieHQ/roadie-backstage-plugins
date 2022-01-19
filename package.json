@@ -6,8 +6,8 @@
     "node": "14 || 16"
   },
   "scripts": {
-    "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
-    "dev:ci": "concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
+    "dev": "NODE_ENV=development concurrently \"yarn start\" \"yarn start-backend\"",
+    "dev:ci": "NODE_ENV=development concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
     "start-backend:ci": "yarn workspace backend backstage-cli build && node packages/backend",
