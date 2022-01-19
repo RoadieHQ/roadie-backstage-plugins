@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.4.0
+
+### Minor Changes
+
+- 10bf6bf: Introduce new annotations in order to fix the limit with pagination and default of fetching 30 requests per page.
+
 ## 1.3.3
 
 ### Patch Changes
