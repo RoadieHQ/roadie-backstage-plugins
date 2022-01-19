@@ -1,6 +1,6 @@
 # Bugsnag Plugin for Backstage
 
-![a preview of the Bugsnag plugin](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-bugsnag/docs/backstage-bugsnag-plugin.png)
+![a preview of the Bugsnag plugin](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/frontend/backstage-plugin-bugsnag/docs/backstage-bugsnag-plugin.png)
 
 Since Bugsnag has a policy around API rate limits (https://bugsnagapiv2.docs.apiary.io/#introduction/rate-limiting), we are not displaying error trends in the table. However, you can visit error details page in Bugsnag for more details, including error trend.
 

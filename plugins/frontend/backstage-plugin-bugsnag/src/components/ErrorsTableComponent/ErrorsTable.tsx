@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Table, TableColumn, Link, Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import OpenInNew from '@material-ui/icons/OpenInNew';
@@ -84,9 +84,14 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
 
 export const ErrorsTable = ({ organisationName, project }: { organisationName: string, project: Project }) => {
   const api = useApi(bugsnagApiRef);
+  const configApi = useApi(configApiRef);
+  const perPage = configApi?.getOptionalNumber('bugsnag.resultsPerPage');
   const { value, loading, error } = useAsync(
     async () =>
-      await api.fetchErrors(project.id)
+      await api.fetchErrors({
+        projectId: project.id,
+        perPage,
+      })
   );
   if (loading) {
     return <Progress />;

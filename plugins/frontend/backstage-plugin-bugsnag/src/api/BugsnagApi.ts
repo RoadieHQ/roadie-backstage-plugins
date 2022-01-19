@@ -22,7 +22,13 @@ export const bugsnagApiRef = createApiRef<BugsnagApi>({
 });
 
 export interface BugsnagApi {
-  fetchErrors(projectId: string): Promise<BugsnagError[]>;
+  fetchErrors({
+    projectId,
+    perPage,
+  }: {
+    projectId: string;
+    perPage?: number;
+  }): Promise<BugsnagError[]>;
   fetchOrganisations(): Promise<Organisation[]>;
   fetchProjects({
     organisationId,

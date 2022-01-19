@@ -69,9 +69,15 @@ export class BugsnagClient implements BugsnagApi {
     return await payload;
   }
 
-  async fetchErrors(projectId: string): Promise<BugsnagError[]> {
+  async fetchErrors({
+    projectId,
+    perPage = 30,
+  }: {
+    projectId: string;
+    perPage?: number;
+  }): Promise<BugsnagError[]> {
     const response = await fetch(
-      `${await this.getApiUrl()}/projects/${projectId}/errors`,
+      `${await this.getApiUrl()}/projects/${projectId}/errors?per_page=${perPage}`,
     );
     const payload = await response.json();
     if (!response.ok) {
