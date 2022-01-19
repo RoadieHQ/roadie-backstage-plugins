@@ -49,11 +49,15 @@ export class BugsnagClient implements BugsnagApi {
     return payload;
   }
 
-  async fetchProjects(
-    organisationId?: string,
-    projectName?: string,
-    perPage?: number
-  ): Promise<Project[]> {
+  async fetchProjects({
+    organisationId,
+    projectName,
+    perPage = 30,
+  }: {
+    organisationId?: string;
+    projectName?: string;
+    perPage?: number;
+  }): Promise<Project[]> {
     const query = projectName ? `q=${projectName}&` : '';
     const response = await fetch(
       `${await this.getApiUrl()}/organizations/${organisationId}/projects?${query}per_page=${perPage}`,

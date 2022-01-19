@@ -49,7 +49,7 @@ export const ErrorsOverview = () => {
   const api = useApi(bugsnagApiRef);
   const configApi = useApi(configApiRef);
   const [slug, setOrganisationSlug] = useState('');
-  const resultsPerPage = configApi?.getOptionalNumber('bugsnag.resultsPerPage');
+  const perPage = configApi?.getOptionalNumber('bugsnag.resultsPerPage');
 
   const { value, loading, error } = useAsync(async () => {
     const organisations = await api.fetchOrganisations();
@@ -57,11 +57,13 @@ export const ErrorsOverview = () => {
       org.name.includes(organisationName),
     );
     setOrganisationSlug(organisation?.slug || '');
-    const projects = await api.fetchProjects(
-      organisation?.id,
-      projectName ? projectName : undefined,
-      resultsPerPage ? resultsPerPage : 30,
-    );
+
+    const projects = await api.fetchProjects({
+      organisationId: organisation ? organisation.id : undefined,
+      projectName: projectName ? projectName : undefined,
+      perPage,
+    });
+
     const filteredProject = projects.find(proj =>
       proj.api_key.includes(projectApiKey),
     );

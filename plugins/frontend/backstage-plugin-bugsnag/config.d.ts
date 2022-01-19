@@ -21,6 +21,6 @@ export interface Config {
      *
      * @visibility frontend
      */
-    resultsPerPage: number;
+    resultsPerPage?: number;
   };
 }
