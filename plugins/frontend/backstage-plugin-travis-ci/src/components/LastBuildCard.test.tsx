@@ -20,14 +20,15 @@ import {
   IdentityApi,
   errorApiRef,
   configApiRef,
+  AnyApiRef,
 } from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider,
-  UrlPatternDiscovery,
-} from '@backstage/core-app-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { TravisCIApiClient, travisCIApiRef } from '../api';
 import { RecentTravisCIBuildsWidget } from '..';
@@ -58,11 +59,11 @@ const config = {
   getString: (_: string) => undefined,
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, errorApiMock],
   [travisCIApiRef, new TravisCIApiClient({ discoveryApi, identityApi })],
-]);
+];
 describe('LastBuildCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -84,11 +85,11 @@ describe('LastBuildCard', () => {
   it('should display widget with data', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
             <RecentTravisCIBuildsWidget entity={entityMock} />
           </EntityProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(

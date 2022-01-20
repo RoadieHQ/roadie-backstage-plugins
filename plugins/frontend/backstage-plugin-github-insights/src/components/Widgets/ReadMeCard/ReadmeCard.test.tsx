@@ -16,26 +16,31 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiProvider, ApiRegistry, ConfigReader } from '@backstage/core-app-api';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { entityMock, readmeResponseMock } from '../../../mocks/mocks';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { ReadMeCard } from '..';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  defaultIntegrationsConfig,
-} from '../../../mocks/scmIntegrationsApiMock';
+  scmIntegrationsApiRef,
+  ScmIntegrationsApi,
+} from '@backstage/integration-react';
+import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
@@ -48,7 +53,7 @@ const apis = ApiRegistry.from([
       ]),
     ),
   ],
-]);
+];
 
 describe('ReadmeCard', () => {
   const worker = setupServer();
@@ -66,13 +71,13 @@ describe('ReadmeCard', () => {
   it('should display a card with the data from the requests', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(
@@ -84,13 +89,13 @@ describe('ReadmeCard', () => {
   it('should render unicode correctly', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(
@@ -100,13 +105,13 @@ describe('ReadmeCard', () => {
   it('should render techdocs links correctly', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByText('TechDocs Test Link')).toHaveAttribute(
@@ -117,13 +122,13 @@ describe('ReadmeCard', () => {
   it('should render images and add headlines correctly', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByAltText('headline')).toBeInTheDocument();
@@ -131,13 +136,13 @@ describe('ReadmeCard', () => {
   it('should render images and add title correctly', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByAltText('alt-text')).toHaveAttribute(
@@ -148,13 +153,13 @@ describe('ReadmeCard', () => {
   it('should check image not to have title', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByAltText('headline')).not.toHaveAttribute(
@@ -165,13 +170,13 @@ describe('ReadmeCard', () => {
   it('should render images url correctly', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReadMeCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByAltText('headline')).toHaveAttribute(

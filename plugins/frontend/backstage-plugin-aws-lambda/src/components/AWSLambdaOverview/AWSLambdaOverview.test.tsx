@@ -17,13 +17,16 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import {
+  AnyApiRef,
   configApiRef,
   errorApiRef,
   identityApiRef,
 } from '@backstage/core-plugin-api';
-import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { setupServer } from 'msw/node';
 import {
@@ -41,12 +44,12 @@ const config = {
   getString: (_: string) => 'https://test-url',
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
   [configApiRef, config],
   [awsLambdaApiRef, new AwsLambdaClient()],
   [identityApiRef, identityApiMock],
-]);
+];
 
 describe('AWSLambdaCard', () => {
   const worker = setupServer();
@@ -66,11 +69,11 @@ describe('AWSLambdaCard', () => {
 
   it('should display an ovreview card with the data from the requests', async () => {
     const rendered = render(
-      <ApiProvider apis={apis}>
+      <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <AWSLambdaOverviewWidget />
         </EntityProvider>
-      </ApiProvider>,
+      </TestApiProvider>,
     );
     expect(
       await rendered.findByText(lambdaResponseMock.Configuration.FunctionName),
