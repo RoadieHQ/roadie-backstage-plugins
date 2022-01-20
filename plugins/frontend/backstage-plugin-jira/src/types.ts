@@ -111,3 +111,8 @@ export type ProjectDetailsProps = {
 export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
 };
+
+export type CustomQuery = {
+  title: string;
+  query: string;
+};

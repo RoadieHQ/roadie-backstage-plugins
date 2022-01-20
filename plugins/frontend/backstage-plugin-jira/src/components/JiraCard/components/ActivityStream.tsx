@@ -73,8 +73,9 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius: '5px',
       },
       '&::-webkit-scrollbar-thumb': {
-        border: `1px solid ${theme.palette.type === 'dark' ? '#555' : '#F5F5F5'
-          }`,
+        border: `1px solid ${
+          theme.palette.type === 'dark' ? '#555' : '#F5F5F5'
+        }`,
         backgroundColor: theme.palette.type === 'dark' ? '#F5F5F5' : '#555',
         borderRadius: '4px',
       },
@@ -115,15 +116,21 @@ const options = {
   },
 };
 
-export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, tokenType: string | undefined; }) => {
+export const ActivityStream = ({
+  projectKey,
+  tokenType,
+}: {
+  projectKey: string;
+  tokenType: string | undefined;
+}) => {
   const classes = useStyles();
   const [size, setSize] = useState(25);
   const [disableButton, setDisableButton] = useState(false);
-  const isBearerAuth = tokenType?.includes('Bearer') ? true: false;
+  const isBearerAuth = tokenType?.includes('Bearer') ? true : false;
   const { activities, activitiesLoading, activitiesError } = useActivityStream(
     size,
     projectKey,
-    isBearerAuth
+    isBearerAuth,
   );
 
   const showMore = useCallback(() => {
@@ -134,7 +141,9 @@ export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, 
   }, [size, activities]);
 
   if (activitiesError) return null; // Hide activity stream on error
-  const filteredIssues = activities?.filter(entry => !entry?.icon?.title.includes("Sub-task"))
+  const filteredIssues = activities?.filter(
+    entry => !entry?.icon?.title.includes('Sub-task'),
+  );
   return (
     <>
       <Typography variant="subtitle1">Activity stream</Typography>
@@ -150,7 +159,7 @@ export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, 
                     sanitizeHtml(entry.summary || entry.content || '', {
                       disallowedTagsMode: 'escape',
                     }),
-                    options
+                    options,
                   )}
                 </Box>
                 <Box display="flex" alignItems="center" mt={1}>
@@ -160,7 +169,10 @@ export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, 
                     </Tooltip>
                   ) : null}
                   <Tooltip title={entry.time.value}>
-                    <Typography variant="caption" className={entry.icon ? classes.time : classes.timeNoIcon}>
+                    <Typography
+                      variant="caption"
+                      className={entry.icon ? classes.time : classes.timeNoIcon}
+                    >
                       {entry.time.elapsed}
                     </Typography>
                   </Tooltip>

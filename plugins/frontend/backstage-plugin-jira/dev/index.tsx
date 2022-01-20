@@ -16,4 +16,6 @@
 import { createDevApp } from '@backstage/dev-utils';
 import { jiraPlugin } from '../src/plugin';
 
-createDevApp().registerPlugin(jiraPlugin).render();
+createDevApp()
+  .registerPlugin(jiraPlugin)
+  .render();

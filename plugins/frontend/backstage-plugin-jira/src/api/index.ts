@@ -15,7 +15,13 @@
  */
 
 import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
-import { IssuesCounter, IssueType, Project, Status } from '../types';
+import {
+  CustomQuery,
+  IssuesCounter,
+  IssueType,
+  Project,
+  Status,
+} from '../types';
 import fetch from 'cross-fetch';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
@@ -138,7 +144,7 @@ export class JiraAPI {
       iconUrl: status.iconUrl,
     }));
 
-    const filteredIssues = issuesTypes.filter(el => el.name !== "Sub-task");
+    const filteredIssues = issuesTypes.filter(el => el.name !== 'Sub-task');
 
     const issuesCounter = await Promise.all(
       filteredIssues.map(issue => {
@@ -171,11 +177,17 @@ export class JiraAPI {
     };
   }
 
-  async getActivityStream(size: number, projectKey: string, isBearerAuth: boolean) {
+  async getActivityStream(
+    size: number,
+    projectKey: string,
+    isBearerAuth: boolean,
+  ) {
     const { baseUrl } = await this.getUrls();
 
     const request = await fetch(
-      isBearerAuth? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`:`${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic` ,
+      isBearerAuth
+        ? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`
+        : `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic`,
     );
     if (!request.ok) {
       throw new Error(
@@ -216,5 +228,34 @@ export class JiraAPI {
           }, [] as string[]),
       ),
     ];
+  }
+
+  async getIssuesCountByJql(query: CustomQuery) {
+    const { apiUrl } = await this.getUrls();
+
+    // TODO : mutualize this ?
+    const request = await fetch(`${apiUrl}search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jql: query.query,
+        maxResults: 0,
+      }),
+    });
+
+    if (!request.ok) {
+      throw new Error(
+        `failed to fetch data, sttatus : ${request.status}: ${request.statusText}`,
+      );
+    }
+
+    const response = await request.json();
+    return {
+      total: response.total,
+      name: query.title,
+      iconUrl: '', // TODO : find an icon
+    };
   }
 }
