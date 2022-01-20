@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.5
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 2.1.4
 
 ### Patch Changes

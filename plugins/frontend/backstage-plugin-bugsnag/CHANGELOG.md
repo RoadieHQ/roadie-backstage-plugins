@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.4.1
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 1.4.0
 
 ### Minor Changes
