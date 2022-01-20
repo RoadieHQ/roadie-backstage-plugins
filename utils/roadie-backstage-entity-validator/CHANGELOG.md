@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 1.2.5
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 1.2.4
 
 ### Patch Changes

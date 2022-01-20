@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.5.5
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 1.5.4
 
 ### Patch Changes

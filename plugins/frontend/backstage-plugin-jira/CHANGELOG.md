@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 1.4.5
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 1.4.4
 
 ### Patch Changes
