@@ -38,7 +38,12 @@ import { awsLambdaApiRef, AWSLambdaOverviewWidget } from '../..';
 import { AwsLambdaClient } from '../../api';
 
 const errorApiMock = { post: jest.fn(), error$: jest.fn() };
-const identityApiMock = { getCredentials: jest.fn(), error$: jest.fn() };
+const identityApiMock = (getCredentials: any) => ({
+  signOut: jest.fn(),
+  getProfileInfo: jest.fn(),
+  getBackstageIdentity: jest.fn(),
+  getCredentials,
+});
 
 const config = {
   getString: (_: string) => 'https://test-url',
