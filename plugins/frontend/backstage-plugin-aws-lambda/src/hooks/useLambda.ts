@@ -39,7 +39,7 @@ export function useLambda({
   const getFunctionByName = useCallback(
     async () => {
       const { token } = await identityApi.getCredentials();
-      return await lambdaApi.getFunctionByName({
+      return lambdaApi.getFunctionByName({
         backendUrl: configApi.getString('backend.baseUrl'),
         awsRegion: region,
         functionName: lambdaName,
