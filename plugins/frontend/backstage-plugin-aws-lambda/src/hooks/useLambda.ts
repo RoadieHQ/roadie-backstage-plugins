@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useAsyncRetry } from 'react-use';
+import { useAsync, useAsyncRetry } from 'react-use';
 import {
   useApi,
   errorApiRef,
@@ -36,14 +36,17 @@ export function useLambda({
   const configApi = useApi(configApiRef);
   const identityApi = useApi(identityApiRef);
 
+  const identity = useAsync(async () => {
+    await identityApi.getCredentials();
+  });
+
   const getFunctionByName = useCallback(
     async () => {
-      const { token } = await identityApi.getCredentials();
-      return lambdaApi.getFunctionByName({
+      return await lambdaApi.getFunctionByName({
         backendUrl: configApi.getString('backend.baseUrl'),
         awsRegion: region,
         functionName: lambdaName,
-        token: token,
+        token: identity.value || undefined,
       });
     },
     [region, lambdaName], // eslint-disable-line react-hooks/exhaustive-deps
