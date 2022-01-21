@@ -96,7 +96,7 @@ export class TravisCIApiClient implements TravisCIApi {
   }
 
   async retry(buildNumber: number): Promise<Response> {
-    const idToken = await this.identityApi.getIdToken();
+    const idToken = await this.identityApi.getCredentials();
     return fetch(`${await this.getApiUrl()}/build/${buildNumber}/restart`, {
       method: 'post',
       headers: new Headers({
@@ -107,7 +107,7 @@ export class TravisCIApiClient implements TravisCIApi {
   }
 
   async getBuilds({ limit = 10, offset = 0, repoSlug }: FetchParams) {
-    const idToken = await this.identityApi.getIdToken();
+    const idToken = await this.identityApi.getCredentials();
     const response = await fetch(
       `${await this.getApiUrl()}/repo/${encodeURIComponent(
         repoSlug
@@ -130,7 +130,7 @@ export class TravisCIApiClient implements TravisCIApi {
   }
 
   async getUser() {
-    const idToken = await this.identityApi.getIdToken();
+    const idToken = await this.identityApi.getCredentials();
     return await (
       await fetch(`${await this.getApiUrl()}/user`, {
         headers: new Headers({
@@ -142,7 +142,7 @@ export class TravisCIApiClient implements TravisCIApi {
   }
 
   async getBuild(buildId: number): Promise<TravisCIBuildResponse> {
-    const idToken = await this.identityApi.getIdToken();
+    const idToken = await this.identityApi.getCredentials();
     const response = await fetch(`${await this.getApiUrl()}/build/${buildId}`, {
       headers: new Headers({
         'Travis-API-Version': '3',

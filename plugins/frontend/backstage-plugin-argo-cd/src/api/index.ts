@@ -67,7 +67,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
   }
 
   private async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
-    const idToken = await this.identityApi.getIdToken();
+    const idToken = await this.identityApi.getCredentials();
     const response = await fetch(url,
       {
         headers: {

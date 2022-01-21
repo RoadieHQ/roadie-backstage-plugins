@@ -38,21 +38,22 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const errorApiMock = { post: jest.fn(), error$: jest.fn() };
 const identityApi: IdentityApi = {
-  getUserId() {
-    return 'jane-fonda';
-  },
-  getProfile() {
+  async getProfileInfo() {
     return { email: 'jane-fonda@spotify.com' };
   },
-  async getIdToken() {
-    return Promise.resolve('fake-id-token');
+  async getBackstageIdentity () {
+    return {
+      type: 'user',
+      userEntityRef: 'user:default/jane-fonda',
+      ownershipEntityRefs: [],
+    }
+  },
+  async getCredentials() {
+    return {token: 'fake-id-token'}
   },
   async signOut() {
     return Promise.resolve();
   },
-  getProfileInfo: jest.fn(),
-  getBackstageIdentity: jest.fn(),
-  getCredentials: jest.fn(),
 };
 
 const config = {

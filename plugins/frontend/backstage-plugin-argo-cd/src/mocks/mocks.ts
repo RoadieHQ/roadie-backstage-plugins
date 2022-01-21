@@ -468,19 +468,8 @@ export class ArgoCDApiMock implements ArgoCDApi {
 }
 
 export const getIdentityApiStub: IdentityApi = {
-  getUserId() {
-    return 'jane-fonda';
-  },
-  getProfile() {
-    return { email: 'jane-fonda@spotify.com' };
-  },
-  async getIdToken() {
-    return Promise.resolve('fake-id-token');
-  },
-  async signOut() {
-    return Promise.resolve();
-  },
   getProfileInfo: jest.fn(),
   getBackstageIdentity: jest.fn(),
   getCredentials: jest.fn(),
+  signOut: jest.fn(),
 };
