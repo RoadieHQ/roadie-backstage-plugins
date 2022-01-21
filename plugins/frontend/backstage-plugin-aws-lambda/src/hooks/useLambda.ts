@@ -37,7 +37,7 @@ export function useLambda({
   const identityApi = useApi(identityApiRef);
 
   const identity = useAsync(async () => {
-    await identityApi.getCredentials();
+    return await identityApi.getCredentials();
   });
 
   const getFunctionByName = useCallback(
@@ -46,7 +46,7 @@ export function useLambda({
         backendUrl: configApi.getString('backend.baseUrl'),
         awsRegion: region,
         functionName: lambdaName,
-        token: identity.value || undefined,
+        token: identity.value?.token || undefined,
       });
     },
     [region, lambdaName], // eslint-disable-line react-hooks/exhaustive-deps
