@@ -43,7 +43,7 @@
     "@types/node-fetch": "^2.5.7",
     "history": "^5.0.0",
     "moment": "^2.27.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "react-router": "6.0.0-beta.0",
     "react-use": "^17.2.4"
   },
