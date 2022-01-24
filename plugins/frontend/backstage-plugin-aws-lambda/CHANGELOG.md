@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 1.3.6
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
 ## 1.3.5
 
 ### Patch Changes

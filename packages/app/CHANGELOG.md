@@ -1,5 +1,23 @@
 # app
 
+## 0.0.8
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+- Updated dependencies [b5db653]
+  - @roadiehq/backstage-plugin-argo-cd@1.5.7
+  - @roadiehq/backstage-plugin-aws-lambda@1.3.6
+  - @roadiehq/backstage-plugin-bugsnag@1.4.2
+  - @roadiehq/backstage-plugin-buildkite@1.3.7
+  - @roadiehq/backstage-plugin-datadog@1.4.6
+  - @roadiehq/backstage-plugin-github-insights@1.4.6
+  - @roadiehq/backstage-plugin-github-pull-requests@1.3.6
+  - @roadiehq/backstage-plugin-jira@1.4.6
+  - @roadiehq/backstage-plugin-prometheus@1.3.6
+  - @roadiehq/backstage-plugin-security-insights@1.5.6
+  - @roadiehq/backstage-plugin-travis-ci@1.3.5
+
 ## 0.0.7
 
 ### Patch Changes
