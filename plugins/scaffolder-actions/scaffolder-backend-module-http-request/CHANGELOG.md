@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.6
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
 ## 2.1.5
 
 ### Patch Changes
