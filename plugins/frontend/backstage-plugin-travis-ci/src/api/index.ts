@@ -1,4 +1,8 @@
-import { createApiRef, DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
+import {
+  createApiRef,
+  DiscoveryApi,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 
 export type TravisCIBuildResponse = {
   '@type': string;
@@ -51,7 +55,7 @@ export type TravisCIBuildResponse = {
       '@href': string;
       '@representation': string;
       id: number;
-    }
+    },
   ];
   stages: any[];
   created_by: {
@@ -89,40 +93,47 @@ export class TravisCIApiClient implements TravisCIApi {
   discoveryApi: DiscoveryApi;
   identityApi: IdentityApi;
 
-  constructor(options: { discoveryApi: DiscoveryApi, identityApi: IdentityApi }) {
+  constructor(options: {
+    discoveryApi: DiscoveryApi;
+    identityApi: IdentityApi;
+  }) {
     this.baseUrl = '/travisci/api';
     this.discoveryApi = options.discoveryApi;
     this.identityApi = options.identityApi;
   }
 
   async retry(buildNumber: number): Promise<Response> {
-    const idToken = await this.identityApi.getIdToken();
+    const { token } = await this.identityApi.getCredentials();
     return fetch(`${await this.getApiUrl()}/build/${buildNumber}/restart`, {
       method: 'post',
-      headers: new Headers({
-        'Travis-API-Version': '3',
-        ...(idToken && { Authorization: `Bearer ${idToken}` }),
-      }),
+      headers: token
+        ? new Headers({
+            'Travis-API-Version': '3',
+            Authorization: `Bearer ${token}`,
+          })
+        : undefined,
     });
   }
 
   async getBuilds({ limit = 10, offset = 0, repoSlug }: FetchParams) {
-    const idToken = await this.identityApi.getIdToken();
+    const { token } = await this.identityApi.getCredentials();
     const response = await fetch(
       `${await this.getApiUrl()}/repo/${encodeURIComponent(
-        repoSlug
+        repoSlug,
       )}/builds?offset=${offset}&limit=${limit}`,
       {
-        headers: new Headers({
-          'Travis-API-Version': '3',
-          ...(idToken && { Authorization: `Bearer ${idToken}` }),
-        }),
-      }
+        headers: token
+          ? new Headers({
+              'Travis-API-Version': '3',
+              Authorization: `Bearer ${token}`,
+            })
+          : undefined,
+      },
     );
 
     if (!response.ok) {
       throw new Error(
-        `error while fetching travis builds: ${response.status}: ${response.statusText}`
+        `error while fetching travis builds: ${response.status}: ${response.statusText}`,
       );
     }
 
@@ -130,24 +141,28 @@ export class TravisCIApiClient implements TravisCIApi {
   }
 
   async getUser() {
-    const idToken = await this.identityApi.getIdToken();
+    const { token } = await this.identityApi.getCredentials();
     return await (
       await fetch(`${await this.getApiUrl()}/user`, {
-        headers: new Headers({
-          'Travis-API-Version': '3',
-          ...(idToken && { Authorization: `Bearer ${idToken}` }),
-        }),
+        headers: token
+          ? new Headers({
+              'Travis-API-Version': '3',
+              Authorization: `Bearer ${token}`,
+            })
+          : undefined,
       })
     ).json();
   }
 
   async getBuild(buildId: number): Promise<TravisCIBuildResponse> {
-    const idToken = await this.identityApi.getIdToken();
+    const { token } = await this.identityApi.getCredentials();
     const response = await fetch(`${await this.getApiUrl()}/build/${buildId}`, {
-      headers: new Headers({
-        'Travis-API-Version': '3',
-        ...(idToken && { Authorization: `Bearer ${idToken}` }),
-      }),
+      headers: token
+        ? new Headers({
+            'Travis-API-Version': '3',
+            Authorization: `Bearer ${token}`,
+          })
+        : undefined,
     });
 
     return response.json();

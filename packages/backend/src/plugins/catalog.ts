@@ -12,7 +12,6 @@ export default async function createPlugin(
   const builder = await CatalogBuilder.create(env);
   const {
     entitiesCatalog,
-    locationsCatalog,
     locationService,
     processingEngine,
     locationAnalyzer,
@@ -22,7 +21,6 @@ export default async function createPlugin(
 
   return await createRouter({
     entitiesCatalog,
-    locationsCatalog,
     locationService,
     locationAnalyzer,
     logger: env.logger,
