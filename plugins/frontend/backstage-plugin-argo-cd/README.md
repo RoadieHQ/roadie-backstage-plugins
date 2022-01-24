@@ -1,12 +1,14 @@
 # Argo CD Plugin for Backstage
 
-![](./docs/argo-cd-plugin.png)
+![](./docs/argo-cd-plugin.webp)
 
 [https://roadie.io/backstage/plugins/argo-cd](https://roadie.io/backstage/plugins/argo-cd)
 
 ## Features
 
-- 
+- Last deploy time
+- Healthcheck
+- Status
 
 ## How to add argo-cd project dependency to Backstage app
 
