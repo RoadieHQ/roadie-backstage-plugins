@@ -1,10 +1,8 @@
-# backstage-plugin-prometheus
+# Backstage Plugin Prometheus
 
 Backstage plugin exposing graphs and alerts from Prometheus
 
 ![Prometheus Entity Content Page Screenshot](./docs/prom_entity_content.png)
-
-
 
 ## Features
 
@@ -12,13 +10,10 @@ Backstage plugin exposing graphs and alerts from Prometheus
 - Show basic statistics widget about pull requests for your repository.
 
 
-The plugin provides an entity content page and two additional widgets:
+### The plugin provides an entity content page and two additional widgets:
 1. Alert table widget
 2. Prometheus Graph widget
 * Graph widget has two versions, line graph and an area graph
-
-
-
 
 
 ## Configuring
@@ -171,6 +166,6 @@ Type definition for `PrometheusAlertStatus' props is:
 ## Links
 
 - [Backstage](https://backstage.io)
-- Get hosted, managed Backstage for your company: https://roadie.io
 - [Prometheus](https://prometheus.io/docs/introduction/overview/)
 - [Prometheus Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
+- Get hosted, managed Backstage for your company: https://roadie.io

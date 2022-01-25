@@ -1,4 +1,4 @@
-# [Datadog Plugin for Backstage](https://roadie.io/backstage/plugins/)
+# Datadog Plugin for Backstage
 
 Embed Datadog graphs and dashboards into Backstage.
 
@@ -15,10 +15,7 @@ This readme will show you how to
 
 ![dashboard](./docs/datadog-widget.png?raw=true)
 
-## Repository migration notice (June/July 2021)
 
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
 ## Setup and integrate the plugin into Backstage.
 
 1. In the [packages/app](https://github.com/backstage/backstage/blob/master/packages/app/) directory of your backstage instance, add the plugin as a package.json dependency:
@@ -192,13 +189,10 @@ If obtained by another actor, it is usable by them.
 Everyone is welcome to contribute to this repository. Feel free to raise [issues](https://github.com/RoadieHQ/backstage-plugin-datadog/issues) or to submit [Pull Requests](https://github.com/RoadieHQ/backstage-plugin-datadog/pulls).
 
 
-Join us on Discord.
-
-[![Join our Discord server!](https://invidget.switchblade.xyz/chuePWkM?theme=light)](https://discord.gg/chuePWkM)
+[Join our Discord server!](https://discord.gg/chuePWkM)
 
 
 ## Links
 
 - [Backstage](https://backstage.io)
-<!-- - [Further instructons](https://roadie.io/backstage/plugins/datadog/) -->
 - Get hosted, managed Backstage for your company: https://roadie.io

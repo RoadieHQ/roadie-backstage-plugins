@@ -2,8 +2,6 @@
 
 ![](./docs/argo-cd-plugin.webp)
 
-[https://roadie.io/backstage/plugins/argo-cd](https://roadie.io/backstage/plugins/argo-cd)
-
 ## Features
 
 - Last deploy time
@@ -148,5 +146,4 @@ To run the integration tests locally `yarn workspace app cy:dev` (assuming you h
 
 - [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend)
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/argo-cd/)
 - Get hosted, managed Backstage for your company: https://roadie.io

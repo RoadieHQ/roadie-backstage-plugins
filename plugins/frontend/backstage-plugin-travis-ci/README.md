@@ -2,8 +2,6 @@
 
 ![a list of builds in the Travis CI plugin for Backstage](./docs/travis-ci-plugin-1642x1027.png)
 
-[https://roadie.io/backstage/plugins/travis-ci](https://roadie.io/backstage/plugins/travis-ci)
-
 ## Features
 
 - List Travis CI Builds
@@ -108,5 +106,4 @@ and run `yarn install` in the root backstage directory - it will create a symbol
 ## Links
 
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/travis-ci/)
 - Get hosted, managed Backstage for your company: https://roadie.io
