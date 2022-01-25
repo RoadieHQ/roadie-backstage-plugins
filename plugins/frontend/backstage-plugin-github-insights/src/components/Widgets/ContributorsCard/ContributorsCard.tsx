@@ -17,7 +17,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import ContributorsList from './components/ContributorsList';
 import { useRequest } from '../../../hooks/useRequest';
@@ -25,9 +29,10 @@ import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScm
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -46,12 +51,22 @@ type Props = {
 const ContributorsCard = (_props: Props) => {
   const { entity } = useEntity();
   const classes = useStyles();
-  const { value, loading, error } = useRequest(entity, 'contributors', 10);
   const { hostname } = useEntityGithubScmIntegration(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
   const { owner, repo } = useProjectEntity(entity);
+  const { value: isPrivate } = useGithubRepository({ owner, repo });
+  const { value, loading, error } = useRequest({
+    entity,
+    requestName: 'contributors',
+    perPage: 10,
+    maxResults: 0,
+    showTotal: false,
+    isPrivate,
+  });
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {

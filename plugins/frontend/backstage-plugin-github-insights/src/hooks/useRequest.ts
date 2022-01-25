@@ -21,18 +21,26 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 
-export const useRequest = (
-  entity: Entity,
-  requestName: string,
-  perPage: number = 0,
-  maxResults: number = 0,
-  showTotal: boolean = false,
-) => {
+export const useRequest = ({
+  entity,
+  requestName,
+  perPage = 0,
+  maxResults = 0,
+  showTotal,
+  isPrivate = false,
+}: {
+  entity: Entity;
+  requestName: string;
+  perPage: number;
+  maxResults: number;
+  showTotal?: boolean;
+  isPrivate?: boolean;
+}) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = isPrivate ? await auth.getAccessToken(['repo']) : undefined;
     const octokit = new Octokit({ auth: token });
 
     const response = await octokit.request(

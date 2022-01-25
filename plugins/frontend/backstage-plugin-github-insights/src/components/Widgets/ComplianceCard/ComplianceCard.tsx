@@ -31,6 +31,7 @@ import {
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
 import { useEntity } from "@backstage/plugin-catalog-react";
+import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
 type Props = {
   /** @deprecated The entity is now grabbed from context instead */
@@ -39,14 +40,15 @@ type Props = {
 
 const ComplianceCard = (_props: Props) => {
   const { entity } = useEntity();
-  const { branches, loading, error } = useProtectedBranches(entity);
+  const classes = useStyles();
+  const { owner, repo } = useProjectEntity(entity);
+  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { branches, loading, error } = useProtectedBranches({entity, isPrivate});
   const {
     license,
     loading: licenseLoading,
     error: licenseError,
-  } = useRepoLicence(entity);
-  const classes = useStyles();
-  const { owner, repo } = useProjectEntity(entity);
+  } = useRepoLicence({entity, isPrivate});
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
     return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />

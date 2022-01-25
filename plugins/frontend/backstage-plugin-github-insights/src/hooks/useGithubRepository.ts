@@ -13,5 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { PullRequestsTable, PullRequestsTableView } from './PullRequestsTable';
-export type { PullRequest } from '../../hooks/usePullRequests';
+
+import { useAsync } from 'react-use';
+import { Octokit } from '@octokit/rest';
+
+export const useGithubRepository = ({
+  owner,
+  repo,
+}: {
+  owner: string;
+  repo: string;
+}) => {
+  const { value, loading, error } = useAsync(
+    async (): Promise<boolean> => {
+      const octokit = new Octokit();
+      const githubRepositoryResponse = await octokit.rest.repos.get({
+        owner,
+        repo,
+      });
+      return githubRepositoryResponse.data.private;
+    },
+  );
+
+  return {
+    value,
+    loading,
+    error
+  };
+};

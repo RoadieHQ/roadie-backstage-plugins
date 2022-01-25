@@ -32,6 +32,7 @@ import {
   GITHUB_INSIGHTS_ANNOTATION
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -92,8 +93,15 @@ const ReadMeCard = (props: Props) => {
   const { owner, repo, readmePath } = useProjectEntity(entity);
   const request = readmePath ? `contents/${readmePath}` : 'readme';
   const path = readmePath || 'README.md';
-
-  const { value, loading, error } = useRequest(entity, request);
+  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { value, loading, error } = useRequest({
+    entity,
+    requestName: request,
+    perPage: 0,
+    maxResults: 0,
+    showTotal: false,
+    isPrivate,
+  });
   const { hostname } = useEntityGithubScmIntegration(entity);
 
   const projectAlert = isGithubInsightsAvailable(entity);

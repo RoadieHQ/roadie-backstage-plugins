@@ -29,6 +29,7 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
+import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
 type Release = {
   id: number;
@@ -48,7 +49,15 @@ const ReleasesCard = (_props: Props) => {
   const { entity } = useEntity();
 
   const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
+  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { value, loading, error } = useRequest({
+    entity,
+    requestName: 'releases',
+    perPage: 0,
+    maxResults: 5,
+    showTotal: false,
+    isPrivate,
+  });
   const { hostname } = useEntityGithubScmIntegration(entity);
 
   const projectAlert = isGithubInsightsAvailable(entity);

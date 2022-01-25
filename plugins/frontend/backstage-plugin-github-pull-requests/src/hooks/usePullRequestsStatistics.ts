@@ -18,7 +18,7 @@ import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
-import { useBaseUrl } from './useBaseUrl';
+import { useBaseUrl } from '../components/useBaseUrl';
 import { PullRequestState } from '../types';
 
 export type PullRequestStats = {
@@ -55,12 +55,14 @@ export function usePullRequestsStatistics({
   branch,
   pageSize,
   state,
+  isPrivate = false,
 }: {
   owner: string;
   repo: string;
   branch?: string;
   pageSize: number;
   state: PullRequestState;
+  isPrivate?: boolean;
 }) {
   const api = useApi(githubPullRequestsApiRef);
   const auth = useApi(githubAuthApiRef);
@@ -69,7 +71,6 @@ export function usePullRequestsStatistics({
   const { loading, value: statsData, error } = useAsyncRetry<
     PullRequestStats
   >(async () => {
-    const token = await auth.getAccessToken(['repo']);
     if (!repo) {
       return {
         avgTimeUntilMerge: 'Never',
@@ -78,7 +79,7 @@ export function usePullRequestsStatistics({
     }
     return api
       .listPullRequests({
-        token,
+        token: isPrivate ? await auth.getAccessToken(['repo']) : undefined,
         owner,
         repo,
         pageSize,
@@ -90,10 +91,11 @@ export function usePullRequestsStatistics({
       .then(
         ({ pullRequestsData }: { pullRequestsData: PullsListResponseData }) => {
           const calcResult = calculateStatistics(pullRequestsData);
-          if(calcResult.closedCount === 0 || calcResult.mergedCount === 0) return {
-            avgTimeUntilMerge: 'Never',
-            mergedToClosedRatio: '0%',
-          }
+          if (calcResult.closedCount === 0 || calcResult.mergedCount === 0)
+            return {
+              avgTimeUntilMerge: 'Never',
+              mergedToClosedRatio: '0%',
+            };
           const avgTimeUntilMergeDiff = moment.duration(
             calcResult.avgTimeUntilMerge / calcResult.mergedCount,
           );
@@ -104,7 +106,7 @@ export function usePullRequestsStatistics({
             mergedToClosedRatio: `${Math.round(
               (calcResult.mergedCount / calcResult.closedCount) * 100,
             )}%`,
-          }
+          };
         },
       );
   }, [pageSize, repo, owner]);

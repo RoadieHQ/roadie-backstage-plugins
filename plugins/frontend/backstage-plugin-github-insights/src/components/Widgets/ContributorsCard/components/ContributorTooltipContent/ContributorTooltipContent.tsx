@@ -30,6 +30,8 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { useEntityGithubScmIntegration } from '../../../../../hooks/useEntityGithubScmIntegration';
 import { useContributor } from '../../../../../hooks/useContributor';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useGithubRepository } from '../../../../../hooks/useGithubRepository';
+import { useProjectEntity } from '../../../../../hooks/useProjectEntity';
 
 const useStyles = makeStyles(theme => ({
   contributorsTooltipContainer: {
@@ -44,7 +46,9 @@ const ContributorTooltipContent = ({ contributorLogin }: Props) => {
   const classes = useStyles();
   const { entity } = useEntity();
   const { hostname } = useEntityGithubScmIntegration(entity);
-  const { contributor, loading } = useContributor(contributorLogin);
+  const { owner, repo } = useProjectEntity(entity);
+  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { contributor, loading } = useContributor({username:contributorLogin, isPrivate});
 
   if (loading) {
     return <Progress />;

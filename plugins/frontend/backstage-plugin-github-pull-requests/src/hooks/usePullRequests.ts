@@ -20,7 +20,7 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
 import { PullRequestState } from '../types';
-import { useBaseUrl } from './useBaseUrl';
+import { useBaseUrl } from '../components/useBaseUrl';
 
 export type PullRequest = {
   id: number;
@@ -31,7 +31,7 @@ export type PullRequest = {
   createdTime: string;
   state: string;
   draft: boolean;
-  merged: string|null;
+  merged: string | null;
   creatorNickname: string;
   creatorProfileLink: string;
 };
@@ -41,11 +41,13 @@ export function usePullRequests({
   repo,
   branch,
   state,
+  isPrivate = false,
 }: {
   owner: string;
   repo: string;
   branch?: string;
   state?: PullRequestState;
+  isPrivate?: boolean;
 }) {
   const api = useApi(githubPullRequestsApiRef);
   const auth = useApi(githubAuthApiRef);
@@ -57,73 +59,70 @@ export function usePullRequests({
     return moment(start).fromNow();
   };
 
-  const { loading, value: prData, retry, error } = useAsyncRetry<
-    PullRequest[]
-  >(async () => {
-    const token = await auth.getAccessToken(['repo']);
-    if (!repo) {
-      return [];
-    }
-    return (
-      api
-        // GitHub API pagination count starts from 1
-        .listPullRequests({
-          token,
-          owner,
-          repo,
-          pageSize,
-          page: page + 1,
-          branch,
-          state,
-          baseUrl,
-        })
-        .then(
-          ({
-            maxTotalItems,
-            pullRequestsData,
-          }: {
-            maxTotalItems?: number;
-            pullRequestsData: PullsListResponseData;
-          }) => {
-            if (maxTotalItems) {
-              setTotal(maxTotalItems);
-            }
-
-            return pullRequestsData.map(
-              ({
-                id,
-                html_url,
-                title,
-                number,
-                created_at,
-                updated_at,
-                user,
-                state: pr_state,
-                draft,
-                merged_at,
-              }) => ({
-                url: html_url,
-                id,
-                number,
-                title,
-                state: pr_state,
-                draft,
-                merged: merged_at,
-                creatorNickname: user.login,
-                creatorProfileLink: user.html_url,
-                createdTime: getElapsedTime(created_at),
-                updatedTime: getElapsedTime(updated_at),
-              }),
-            );
-          },
-        )
-    );
-  }, [page, pageSize, repo, owner]);
   useEffect(() => {
     setPage(0);
     retry();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  const { loading, value: prData, retry, error } = useAsyncRetry<
+    PullRequest[]
+  >(async () => {
+    if (!repo) {
+      return [];
+    }
+    return api
+      .listPullRequests({
+        token: isPrivate ? await auth.getAccessToken(['repo']) : undefined,
+        owner,
+        repo,
+        pageSize,
+        page: page + 1,
+        branch,
+        state,
+        baseUrl,
+      })
+      .then(
+        ({
+          maxTotalItems,
+          pullRequestsData,
+        }: {
+          maxTotalItems?: number;
+          pullRequestsData: PullsListResponseData;
+        }) => {
+          if (maxTotalItems) {
+            setTotal(maxTotalItems);
+          }
+
+          return pullRequestsData.map(
+            ({
+              id,
+              html_url,
+              title,
+              number,
+              created_at,
+              updated_at,
+              user,
+              state: pr_state,
+              draft,
+              merged_at,
+            }) => ({
+              url: html_url,
+              id,
+              number,
+              title,
+              state: pr_state,
+              draft,
+              merged: merged_at,
+              creatorNickname: user.login,
+              creatorProfileLink: user.html_url,
+              createdTime: getElapsedTime(created_at),
+              updatedTime: getElapsedTime(updated_at),
+            }),
+          );
+        },
+      );
+  }, [page, pageSize, repo, owner]);
+
   return [
     {
       page,

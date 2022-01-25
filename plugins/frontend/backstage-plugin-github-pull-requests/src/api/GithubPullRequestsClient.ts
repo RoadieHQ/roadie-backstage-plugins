@@ -16,7 +16,7 @@
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { PullsListResponseData } from '@octokit/types';
+import { PullsListResponseData} from '@octokit/types';
 import { PullRequestState } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
@@ -29,7 +29,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     state = 'all',
     baseUrl,
   }: {
-    token: string;
+    token?: string;
     owner: string;
     repo: string;
     pageSize?: number;

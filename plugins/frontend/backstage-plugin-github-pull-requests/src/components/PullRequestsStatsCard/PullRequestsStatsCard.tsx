@@ -22,7 +22,7 @@ import {
   MissingAnnotationEmptyState
 } from '@backstage/core-components';
 import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
-import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
+import { usePullRequestsStatistics } from '../../hooks/usePullRequestsStatistics';
 import {
   Box,
   CircularProgress,
@@ -34,6 +34,7 @@ import {
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from "@backstage/plugin-catalog-react";
+import { useGithubRepository } from '../../hooks/useGithubRepository';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -62,12 +63,15 @@ const StatsCard = (props: Props) => {
   const [pageSize, setPageSize] = useState<number>(20);
   const projectName = isGithubSlugSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
+  const { value: isPrivate } = useGithubRepository({owner, repo});
+
   const [{ statsData, loading: loadingStatistics }] = usePullRequestsStatistics(
     {
       owner,
       repo,
       pageSize,
       state: 'closed',
+      isPrivate
     },
   );
 

@@ -21,13 +21,20 @@ import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 
-export const useProtectedBranches = (entity: Entity) => {
+export const useProtectedBranches = ({
+  entity,
+  isPrivate = false,
+}: {
+  entity: Entity;
+  isPrivate?: boolean;
+}) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
+    const octokit = new Octokit({
+      auth: isPrivate ? await auth.getAccessToken(['repo']) : undefined,
+    });
 
     const response = await octokit.request(
       'GET /repos/{owner}/{repo}/branches',
@@ -48,13 +55,20 @@ export const useProtectedBranches = (entity: Entity) => {
   };
 };
 
-export const useRepoLicence = (entity: Entity) => {
+export const useRepoLicence = ({
+  entity,
+  isPrivate = false,
+}: {
+  entity: Entity;
+  isPrivate?: boolean;
+}) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
+    const octokit = new Octokit({
+      auth: isPrivate ? await auth.getAccessToken(['repo']) : undefined,
+    });
 
     let license: string = '';
     try {

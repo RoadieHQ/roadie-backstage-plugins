@@ -21,7 +21,13 @@ import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { ContributorData } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
-export const useContributor = (username: string) => {
+export const useContributor = ({
+  username,
+  isPrivate = false,
+}: {
+  username: string;
+  isPrivate?: boolean;
+}) => {
   const auth = useApi(githubAuthApiRef);
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
@@ -29,7 +35,7 @@ export const useContributor = (username: string) => {
   const { value, loading, error } = useAsync(async (): Promise<
     ContributorData
   > => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = isPrivate ? await auth.getAccessToken(['repo']) : undefined;
     const octokit = new Octokit({ auth: token });
 
     const response = await octokit.request(`GET /users/${username}`, {
