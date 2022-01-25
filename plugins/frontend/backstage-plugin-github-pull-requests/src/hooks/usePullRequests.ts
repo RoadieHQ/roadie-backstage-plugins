@@ -59,11 +59,6 @@ export function usePullRequests({
     return moment(start).fromNow();
   };
 
-  useEffect(() => {
-    setPage(0);
-    retry();
-  }, [state]);
-
   const { loading, value: prData, retry, error } = useAsyncRetry<
     PullRequest[]
   >(async () => {
@@ -122,6 +117,11 @@ export function usePullRequests({
         },
       );
   }, [page, pageSize, repo, owner]);
+
+  useEffect(() => {
+    setPage(0);
+    retry();
+  }, [state]);
 
   return [
     {
