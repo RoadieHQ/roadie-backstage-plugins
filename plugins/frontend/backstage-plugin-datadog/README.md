@@ -189,7 +189,7 @@ If obtained by another actor, it is usable by them.
 Everyone is welcome to contribute to this repository. Feel free to raise [issues](https://github.com/RoadieHQ/backstage-plugin-datadog/issues) or to submit [Pull Requests](https://github.com/RoadieHQ/backstage-plugin-datadog/pulls).
 
 
-[Join our Discord server!](https://discord.gg/chuePWkM)
+[Join our Discord server!](https://discord.gg/cjv6H6m8VN)
 
 
 ## Links
