@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 import React, { FC, useState } from 'react';
-import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
+import { Typography, Box, Link, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  Table,
+  TableColumn,
+  MissingAnnotationEmptyState,
+  InfoCard,
+} from '@backstage/core-components';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { usePullRequests, PullRequest } from '../../hooks/usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
@@ -33,11 +41,7 @@ const generatedColumns: TableColumn[] = [
     width: '150px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.url!}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={row.url!}>
           #{row.number}
         </a>
       </Box>
@@ -49,7 +53,10 @@ const generatedColumns: TableColumn[] = [
     highlight: true,
     render: (row: Partial<PullRequest>) => (
       <Typography variant="body2" noWrap>
-        {getStatusIconType(row as PullRequest)} <Box ml={1} component="span">{row.title}</Box>
+        {getStatusIconType(row as PullRequest)}{' '}
+        <Box ml={1} component="span">
+          {row.title}
+        </Box>
       </Typography>
     ),
   },
@@ -96,6 +103,7 @@ type Props = {
   loading: boolean;
   retry: () => void;
   projectName: string;
+  error?: Error;
   page: number;
   prData?: PullRequest[];
   onChangePage: (page: number) => void;
@@ -109,6 +117,7 @@ export const PullRequestsTableView: FC<Props> = ({
   projectName,
   loading,
   pageSize,
+  error,
   page,
   prData,
   onChangePage,
@@ -116,6 +125,25 @@ export const PullRequestsTableView: FC<Props> = ({
   total,
   StateFilterComponent,
 }) => {
+  if (error) {
+    return error.message.includes('API rate limit') ? (
+      <InfoCard title={projectName}>
+        API Rate Limit exceeded. Authenticated requests get a higher rate limit
+        so after you log in and set up GitHub provider, this rate will be
+        higher. You can read more in official
+        <Link
+          href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting"
+          target="_blank"
+          rel="noopener"
+          style={{ paddingLeft: '0.3rem' }}
+        >
+          documentation
+        </Link>
+      </InfoCard>
+    ) : (
+      <InfoCard title={projectName}>{error.message}</InfoCard>
+    );
+  }
   return (
     <Table
       isLoading={loading}
@@ -154,7 +182,7 @@ const PullRequests = (__props: TableProps) => {
   const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
     'open',
   );
-  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { value: isPrivate } = useGithubRepository({ owner, repo });
   const [tableProps, { retry, setPage, setPageSize }] = usePullRequests({
     state: PRStatusFilter,
     owner,
@@ -197,13 +225,17 @@ const PullRequests = (__props: TableProps) => {
       onChangePage={setPage}
     />
   );
-}
+};
 
 export const PullRequestsTable = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <PullRequests/>
+  return <PullRequests />;
 };

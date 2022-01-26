@@ -120,8 +120,7 @@ export function usePullRequests({
 
   useEffect(() => {
     setPage(0);
-    retry();
-  }, [state, retry]);
+  }, [state]);
 
   return [
     {

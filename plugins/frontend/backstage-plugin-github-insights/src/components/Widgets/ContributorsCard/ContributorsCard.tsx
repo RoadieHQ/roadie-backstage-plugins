@@ -33,6 +33,7 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useGithubRepository } from '../../../hooks/useGithubRepository';
+import { Link } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -72,7 +73,21 @@ const ContributorsCard = (_props: Props) => {
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
+    return error.message.includes('API rate limit') ? (
+      <Alert severity="error" className={classes.infoCard}>
+        API Rate Limit exceeded. Authenticated requests get a higher rate limit
+        so after you log in and set up GitHub provider, this rate will be
+        higher. You can read more in official
+        <Link
+          href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting"
+          target="_blank"
+          rel="noopener"
+          style={{ paddingLeft: '0.3rem' }}
+        >
+          documentation
+        </Link>
+      </Alert>
+    ) : (
       <Alert severity="error" className={classes.infoCard}>
         {error.message}
       </Alert>

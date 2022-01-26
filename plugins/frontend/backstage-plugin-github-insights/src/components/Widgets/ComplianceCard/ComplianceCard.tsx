@@ -15,9 +15,14 @@
  */
 
 import React from 'react';
-import { Box, List, ListItem } from '@material-ui/core';
+import { Box, Link, List, ListItem } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, StructuredMetadataTable, MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  StructuredMetadataTable,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import {
   useProtectedBranches,
@@ -26,11 +31,11 @@ import {
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
 type Props = {
@@ -42,26 +47,43 @@ const ComplianceCard = (_props: Props) => {
   const { entity } = useEntity();
   const classes = useStyles();
   const { owner, repo } = useProjectEntity(entity);
-  const { value: isPrivate } = useGithubRepository({owner, repo});
-  const { branches, loading, error } = useProtectedBranches({entity, isPrivate});
+  const { value: isPrivate } = useGithubRepository({ owner, repo });
+  const { branches, loading, error } = useProtectedBranches({
+    entity,
+    isPrivate,
+  });
   const {
     license,
     loading: licenseLoading,
     error: licenseError,
-  } = useRepoLicence({entity, isPrivate});
+  } = useRepoLicence({ entity, isPrivate });
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading || licenseLoading) {
     return <Progress />;
   } else if (error || licenseError) {
-    return (
+    return error?.message.includes('API Rate Limit') ||
+      licenseError?.message.includes('API Rate Limit') ? (
       <Alert severity="error">
-        Error occured while fetching data for the compliance card:{' '}
-        {error?.message}
+        API Rate Limit exceeded. Authenticated requests get a higher rate limit
+        so after you log in and set up GitHub provider, this rate will be
+        higher. You can read more in official
+        <Link
+          href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting"
+          target="_blank"
+          rel="noopener"
+          style={{ paddingLeft: '0.3rem' }}
+        >
+          documentation
+        </Link>
       </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
     );
   }
 

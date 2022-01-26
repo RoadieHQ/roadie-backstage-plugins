@@ -15,21 +15,25 @@
  */
 
 import React from 'react';
-import { Chip, makeStyles, Tooltip } from '@material-ui/core';
+import { Chip, Link, makeStyles, Tooltip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useGithubRepository } from '../../../hooks/useGithubRepository';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   infoCard: {
     marginBottom: theme.spacing(3),
     '& + .MuiAlert-root': {
@@ -73,7 +77,7 @@ const LanguagesCard = (_props: Props) => {
   let barWidth = 0;
   const classes = useStyles();
   const { owner, repo } = useProjectEntity(entity);
-  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { value: isPrivate } = useGithubRepository({ owner, repo });
   const { value, loading, error } = useRequest({
     entity,
     requestName: 'languages',
@@ -84,13 +88,29 @@ const LanguagesCard = (_props: Props) => {
   });
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
+    return error.message.includes('API rate limit') ? (
+      <Alert severity="error" className={classes.infoCard}>
+        API Rate Limit exceeded. Authenticated requests get a higher rate limit
+        so after you log in and set up GitHub provider, this rate will be
+        higher. You can read more in official
+        <Link
+          href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting"
+          target="_blank"
+          rel="noopener"
+          style={{ paddingLeft: '0.3rem' }}
+        >
+          documentation
+        </Link>
+      </Alert>
+    ) : (
       <Alert severity="error" className={classes.infoCard}>
         {error.message}
       </Alert>
@@ -120,10 +140,10 @@ const LanguagesCard = (_props: Props) => {
                 />
               </Tooltip>
             );
-          }
+          },
         )}
       </div>
-      {Object.entries(value.data as Language).map((language) => (
+      {Object.entries(value.data as Language).map(language => (
         <Chip
           classes={{
             label: classes.label,

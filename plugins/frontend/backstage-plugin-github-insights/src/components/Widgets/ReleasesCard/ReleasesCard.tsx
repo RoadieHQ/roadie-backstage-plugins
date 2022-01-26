@@ -18,14 +18,18 @@ import React from 'react';
 import { Link, List, ListItem, Chip } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
@@ -49,7 +53,7 @@ const ReleasesCard = (_props: Props) => {
   const { entity } = useEntity();
 
   const { owner, repo } = useProjectEntity(entity);
-  const { value: isPrivate } = useGithubRepository({owner, repo});
+  const { value: isPrivate } = useGithubRepository({ owner, repo });
   const { value, loading, error } = useRequest({
     entity,
     requestName: 'releases',
@@ -62,13 +66,29 @@ const ReleasesCard = (_props: Props) => {
 
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
+    return error.message.includes('API rate limit') ? (
+      <Alert severity="error" className={classes.infoCard}>
+        API Rate Limit exceeded. Authenticated requests get a higher rate limit
+        so after you log in and set up GitHub provider, this rate will be
+        higher. You can read more in official
+        <Link
+          href="https://docs.github.com/en/rest/overview/resources-in-the-rest-api#rate-limiting"
+          target="_blank"
+          rel="noopener"
+          style={{ paddingLeft: '0.3rem' }}
+        >
+          documentation
+        </Link>
+      </Alert>
+    ) : (
       <Alert severity="error" className={classes.infoCard}>
         {error.message}
       </Alert>
