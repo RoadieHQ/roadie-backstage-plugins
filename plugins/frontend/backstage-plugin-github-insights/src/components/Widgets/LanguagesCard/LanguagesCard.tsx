@@ -16,19 +16,23 @@
 
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
+import { Alert } from '@material-ui/lab';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   infoCard: {
     marginBottom: theme.spacing(3),
     '& + .MuiAlert-root': {
@@ -75,16 +79,21 @@ const LanguagesCard = (_props: Props) => {
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0, true);
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
+    return error?.message.includes('Not Found') ? (
+      <Alert severity="error">
+        There was an issue with fetching this information. Check that you are
+        logged into GitHub if this is a private repository.
       </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
     );
   }
   return value && owner && repo ? (
@@ -111,10 +120,10 @@ const LanguagesCard = (_props: Props) => {
                 />
               </Tooltip>
             );
-          }
+          },
         )}
       </div>
-      {Object.entries(value.data as Language).map((language) => (
+      {Object.entries(value.data as Language).map(language => (
         <Chip
           classes={{
             label: classes.label,

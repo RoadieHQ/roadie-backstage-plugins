@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Box, List, ListItem } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import { InfoCard, Progress, StructuredMetadataTable, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import {
@@ -55,11 +55,12 @@ const ComplianceCard = (_props: Props) => {
   if (loading || licenseLoading) {
     return <Progress />;
   } else if (error || licenseError) {
-    return (
+    return error?.message.includes('Not Found')? (
       <Alert severity="error">
-        Error occured while fetching data for the compliance card:{' '}
-        {error?.message}
+        There was an issue with fetching this information. Check that you are logged into GitHub if this is a private repository.
       </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
     );
   }
 

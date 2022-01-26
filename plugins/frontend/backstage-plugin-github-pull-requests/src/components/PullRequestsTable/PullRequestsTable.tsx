@@ -16,13 +16,21 @@
 import React, { FC, useState } from 'react';
 import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  Table,
+  TableColumn,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { Alert } from '@material-ui/lab';
 
 const generatedColumns: TableColumn[] = [
   {
@@ -32,11 +40,7 @@ const generatedColumns: TableColumn[] = [
     width: '150px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.url!}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={row.url!}>
           #{row.number}
         </a>
       </Box>
@@ -48,7 +52,10 @@ const generatedColumns: TableColumn[] = [
     highlight: true,
     render: (row: Partial<PullRequest>) => (
       <Typography variant="body2" noWrap>
-        {getStatusIconType(row as PullRequest)} <Box ml={1} component="span">{row.title}</Box>
+        {getStatusIconType(row as PullRequest)}{' '}
+        <Box ml={1} component="span">
+          {row.title}
+        </Box>
       </Typography>
     ),
   },
@@ -102,6 +109,7 @@ type Props = {
   pageSize: number;
   onChangePageSize: (pageSize: number) => void;
   StateFilterComponent: FC<{}>;
+  error?: Error;
 };
 
 export const PullRequestsTableView: FC<Props> = ({
@@ -113,8 +121,19 @@ export const PullRequestsTableView: FC<Props> = ({
   onChangePage,
   onChangePageSize,
   total,
+  error,
   StateFilterComponent,
 }) => {
+  if (error) {
+    return error?.message.includes('Not Found') ? (
+      <Alert severity="error">
+        There was an issue with fetching this information. Check that you are
+        logged into GitHub if this is a private repository.
+      </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
+    );
+  }
   return (
     <Table
       isLoading={loading}
@@ -194,13 +213,17 @@ const PullRequests = (__props: TableProps) => {
       onChangePage={setPage}
     />
   );
-}
+};
 
 export const PullRequestsTable = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <PullRequests/>
+  return <PullRequests />;
 };

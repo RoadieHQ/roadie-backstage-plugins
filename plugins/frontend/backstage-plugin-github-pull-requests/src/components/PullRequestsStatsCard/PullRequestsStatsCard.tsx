@@ -19,9 +19,12 @@ import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
 import {
   Box,
@@ -32,8 +35,9 @@ import {
   Select,
   makeStyles,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { Entity } from '@backstage/catalog-model';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -62,17 +66,21 @@ const StatsCard = (props: Props) => {
   const [pageSize, setPageSize] = useState<number>(20);
   const projectName = isGithubSlugSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
-  const [{ statsData, loading: loadingStatistics }] = usePullRequestsStatistics(
-    {
-      owner,
-      repo,
-      pageSize,
-      state: 'closed',
-    },
-  );
+  const [
+    { statsData, loading: loadingStatistics, error },
+  ] = usePullRequestsStatistics({
+    owner,
+    repo,
+    pageSize,
+    state: 'closed',
+  });
 
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
 
   const metadata = {
@@ -80,9 +88,23 @@ const StatsCard = (props: Props) => {
     'merged to closed ratio': statsData?.mergedToClosedRatio,
   };
 
+  if (error) {
+    return error?.message.includes('Not Found') ? (
+      <Alert severity="error">
+        There was an issue with fetching this information. Check that you are
+        logged into GitHub if this is a private repository.
+      </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
+    );
+  }
+
   return (
     <InfoCard
-      title="Pull requests statistics" className={classes.infoCard} variant={props.variant}>
+      title="Pull requests statistics"
+      className={classes.infoCard}
+      variant={props.variant}
+    >
       {loadingStatistics ? (
         <CircularProgress />
       ) : (
@@ -112,9 +134,13 @@ const PullRequestsStatsCard = (props: Props) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <StatsCard {...props}/>
+  return <StatsCard {...props} />;
 };
 
 export default PullRequestsStatsCard;

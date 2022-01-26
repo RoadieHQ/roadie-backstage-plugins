@@ -16,12 +16,12 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import {
   InfoCard,
   Progress,
   MarkdownContent,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
@@ -29,7 +29,7 @@ import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScm
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
@@ -98,16 +98,21 @@ const ReadMeCard = (props: Props) => {
 
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
+    return error?.message.includes('Not Found') ? (
+      <Alert severity="error">
+        There was an issue with fetching this information. Check that you are
+        logged into GitHub if this is a private repository.
       </Alert>
+    ) : (
+      <Alert severity="error">{error?.message}</Alert>
     );
   }
 
