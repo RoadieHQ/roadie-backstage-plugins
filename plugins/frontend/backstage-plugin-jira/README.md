@@ -1,12 +1,6 @@
 # Jira Plugin for Backstage
 
-![a Jira plugin for Backstage](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/frontend/backstage-plugin-jira/docs/jira-plugin.gif).
-
-## Repository migration notice (June/July 2021)
-
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
-
+![a Jira plugin for Backstage](./docs/jira-plugin.gif).
 ## Features
 
 - Show project details and tasks
@@ -95,5 +89,4 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
 ## Links
 
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/jira)
 - Get hosted, managed Backstage for your company: https://roadie.io

@@ -1,9 +1,12 @@
 # GitHub Security Insights Plugin for Backstage
 
-![a list of security alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-security-plugin.jpg)
+![a list of security alerts](./docs/roadie-backstage-security-plugin.jpg)
 
-![a list of dependabot alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-dependabot-alerts.png)
+![a list of dependabot alerts](./docs/roadie-backstage-dependabot-alerts.png)
+## Features
 
+- List detected vulnerabilities for your repository, with filtering and search.
+- Show statistics widget about detected vulnerabilities for your repository.
 ## Plugin Setup
 
 1. If you have standalone app (you didn't clone this repo), then in the [packages/app](https://github.com/backstage/backstage/blob/master/packages/app/) directory of your backstage instance, add the plugin as a package.json dependency:
@@ -56,9 +59,9 @@ const serviceEntityPage = (
 
 ## Widget setup
 
-![security insights widget](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/backstage-plugin-security-widget-1.png)
+![security insights widget](./docs/backstage-plugin-security-widget-1.png)
 
-![dependabot alerts widget](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-dependabot-widget.png)
+![dependabot alerts widget](./docs/roadie-backstage-dependabot-widget.png)
 
 1. You must install plugin by following the steps above to add widgets to your Overview.
 
@@ -121,10 +124,7 @@ dependabotAlertsConfiguration:
   severity: [ high, medium]
 ``` 
 
-## Features
 
-- List detected vulnerabilities for your repository, with filtering and search.
-- Show statistics widget about detected vulnerabilities for your repository.
 
 ## Links
 

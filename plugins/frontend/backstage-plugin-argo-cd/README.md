@@ -1,12 +1,12 @@
 # Argo CD Plugin for Backstage
 
-![](./docs/argo-cd-plugin.png)
-
-[https://roadie.io/backstage/plugins/argo-cd](https://roadie.io/backstage/plugins/argo-cd)
+![](./docs/argo-cd-plugin.webp)
 
 ## Features
 
-- 
+- Last deploy time
+- Healthcheck
+- Status
 
 ## How to add argo-cd project dependency to Backstage app
 
@@ -146,5 +146,4 @@ To run the integration tests locally `yarn workspace app cy:dev` (assuming you h
 
 - [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend)
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/argo-cd/)
 - Get hosted, managed Backstage for your company: https://roadie.io

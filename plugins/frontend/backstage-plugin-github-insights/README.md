@@ -1,11 +1,11 @@
 # GitHub Insights Plugin for Backstage
 
-![a preview of the GitHub insights plugin](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-code-insights/main/docs/code-insights-plugin.png)
+![a preview of the GitHub insights plugin](./docs/code-insights-plugin.png)
+## Features
 
-## Repository migration notice (June/July 2021)
+- Add GitHub Insights plugin tab.
+- Show widgets about repository contributors, languages, readme and release at overview page.
 
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
 
 ## Plugin Setup
 
@@ -78,11 +78,6 @@ const overviewContent = (
 ## Readme path
 
 By default the plugin will use the annotation `github.com/project-slug` and get the root `README.md` from the repository. You can use a specific path by using the annotation `'github.com/project-readme-path': 'packages/sub-module/README.md'`. It can be useful if you have a component inside a monorepos.
-
-## Features
-
-- Add GitHub Insights plugin tab.
-- Show widgets about repository contributors, languages, readme and release at overview page.
 
 ### Widgets
 
