@@ -29,7 +29,7 @@ export const useContributor = (username: string) => {
   const { value, loading, error } = useAsync(async (): Promise<
     ContributorData
   > => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = await auth.getAccessToken(['repo'],{optional: true})
     const octokit = new Octokit({ auth: token });
 
     const response = await octokit.request(`GET /users/${username}`, {

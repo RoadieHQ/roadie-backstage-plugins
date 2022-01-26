@@ -69,7 +69,7 @@ export function usePullRequestsStatistics({
   const { loading, value: statsData, error } = useAsyncRetry<
     PullRequestStats
   >(async () => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = await auth.getAccessToken(['repo'],{optional: true})
     if (!repo) {
       return {
         avgTimeUntilMerge: 'Never',

@@ -26,7 +26,7 @@ export const useProtectedBranches = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = await auth.getAccessToken(['repo'], { optional: true });
     const octokit = new Octokit({ auth: token });
 
     const response = await octokit.request(
@@ -53,7 +53,7 @@ export const useRepoLicence = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
+    const token = await auth.getAccessToken(['repo'],{optional: true})
     const octokit = new Octokit({ auth: token });
 
     let license: string = '';
