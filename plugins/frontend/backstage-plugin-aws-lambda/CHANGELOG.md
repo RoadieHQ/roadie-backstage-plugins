@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 1.3.7
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.3.6
 
 ### Patch Changes
