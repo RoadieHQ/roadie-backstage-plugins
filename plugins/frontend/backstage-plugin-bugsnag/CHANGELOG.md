@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.4.3
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.4.2
 
 ### Patch Changes

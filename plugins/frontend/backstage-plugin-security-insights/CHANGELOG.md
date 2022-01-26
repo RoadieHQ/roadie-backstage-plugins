@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.5.7
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.5.6
 
 ### Patch Changes

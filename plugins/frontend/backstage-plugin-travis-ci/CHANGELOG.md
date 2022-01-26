@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 1.3.6
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.3.5
 
 ### Patch Changes

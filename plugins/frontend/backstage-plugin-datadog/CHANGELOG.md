@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 1.4.7
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.4.6
 
 ### Patch Changes

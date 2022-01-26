@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 1.2.5
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
 ## 1.2.4
 
 ### Patch Changes
