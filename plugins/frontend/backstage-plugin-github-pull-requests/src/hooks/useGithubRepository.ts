@@ -28,7 +28,7 @@ export const useGithubRepository = ({
   const auth = useApi(githubAuthApiRef);
   const { value, loading, error } = useAsync(
     async (): Promise<boolean> => {
-      const token = await auth.getAccessToken(['repo'], { optional: false });
+      const token = await auth.getAccessToken(['repo'], { optional: true });
       const octokit = new Octokit({ auth: token });
       if(token) {
         return true;
