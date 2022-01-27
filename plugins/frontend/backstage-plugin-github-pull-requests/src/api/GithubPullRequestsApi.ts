@@ -31,6 +31,7 @@ export type GithubPullRequestsApi = {
     page,
     branch,
     baseUrl,
+    etag
   }: {
     search: string;
     token: string;
@@ -39,8 +40,10 @@ export type GithubPullRequestsApi = {
     pageSize?: number;
     page?: number;
     branch?: string;
-    baseUrl: string|undefined;
+    baseUrl: string | undefined;
+    etag: string
   }) => Promise<{
     pullRequestsData: SearchPullRequestsResponseData;
+    etag?: string
   }>;
 };

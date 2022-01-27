@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 import { useEffect, useState } from 'react';
-import { useAsyncRetry } from 'react-use';
+import { useAsyncFn } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
 import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
@@ -30,10 +31,19 @@ export type PullRequest = {
   createdTime: string;
   state: string;
   draft: boolean;
-  merged: string|null;
+  merged: string | null;
   creatorNickname: string;
   creatorProfileLink: string;
 };
+export type PrStateData = {
+  etag: string;
+  data: PullRequest[];
+}
+export type PrState = {
+  open: PrStateData;
+  closed: PrStateData;
+  all: PrStateData;
+}
 
 export function usePullRequests({
   search,
@@ -49,95 +59,102 @@ export function usePullRequests({
   const api = useApi(githubPullRequestsApiRef);
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
-  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
+  const [prState, setPrState] = useState<PrState>({ open: { etag: "", data: [] }, closed: { etag: "", data: [] }, all: { etag: "", data: [] } });
   const getElapsedTime = (start: string) => {
     return moment(start).fromNow();
   };
 
-  const { loading, value: prData, retry, error } = useAsyncRetry<
-    PullRequest[]
-  >(async () => {
+  const [{ loading, error }, doFetch] = useAsyncFn(async () => {
     const token = await auth.getAccessToken(['repo']);
-    if (!repo) {
-      return [];
+    try {
+      const {
+        pullRequestsData,
+        etag
+      } = await api.listPullRequests({
+        token,
+        search,
+        owner,
+        repo,
+        pageSize,
+        page: page + 1,
+        branch,
+        baseUrl,
+        etag: prState[search].etag || ""
+      })
+
+      if (etag) {
+        setPrState((current) => ({
+          ...current,
+          ...{ [search]: { ...current[search], etag } }
+        }))
+
+      }
+
+      return pullRequestsData.items.map(
+        ({
+          id,
+          html_url,
+          title,
+          number,
+          created_at,
+          updated_at,
+          user,
+          state: pr_state,
+          draft,
+          pull_request: { merged_at },
+        }) => ({
+          url: html_url,
+          id,
+          number,
+          title,
+          state: pr_state,
+          draft,
+          merged: merged_at,
+          creatorNickname: user.login,
+          creatorProfileLink: user.html_url,
+          createdTime: getElapsedTime(created_at),
+          updatedTime: getElapsedTime(updated_at),
+        }),
+      );
     }
-    return (
-      api
-        // GitHub API pagination count starts from 1
-        .listPullRequests({
-          token,
-          search,
-          owner,
-          repo,
-          pageSize,
-          page: page + 1,
-          branch,
-          baseUrl,
-        })
-        .then(
-          ({
-            pullRequestsData: {
-              total_count, 
-              items
-            },
-          }: {
-            pullRequestsData: SearchPullRequestsResponseData;
-          }) => {
-            if (total_count >= 0) {
-              setTotal(total_count);
-            }
-            return items.map(
-              ({
-                id,
-                html_url,
-                title,
-                number,
-                created_at,
-                updated_at,
-                user,
-                state: pr_state,
-                draft,
-                pull_request: { merged_at },
-              }) => ({
-                url: html_url,
-                id,
-                number,
-                title,
-                state: pr_state,
-                draft,
-                merged: merged_at,
-                creatorNickname: user.login,
-                creatorProfileLink: user.html_url,
-                createdTime: getElapsedTime(created_at),
-                updatedTime: getElapsedTime(updated_at),
-              }),
-            );
-          },
-        )
-    );
-  }, [page, pageSize, repo, owner]);
+    catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          return prState[search].data
+        }
+      }
+      throw e
+    }
+  },
+    [page, pageSize, repo, owner, search]);
   useEffect(() => {
     setPage(0);
-    retry();
+    (async () => {
+      const pullRequests = await doFetch();
+      if (pullRequests) {
+        setPrState((current) => ({
+          ...current,
+          ...{ [search]: { ...current[search], data: pullRequests } }
+        }))
+      }
+
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [search, pageSize, page, repo, owner]);
   return [
     {
       page,
       pageSize,
       loading,
-      prData,
+      prData: prState[search].data,
       projectName: `${owner}/${repo}`,
-      total,
       error,
     },
     {
-      prData,
       setPage,
       setPageSize,
-      retry,
     },
   ] as const;
 }

@@ -97,7 +97,6 @@ const generatedColumns: TableColumn[] = [
 
 type Props = {
   loading: boolean;
-  retry: () => void;
   projectName: string;
   page: number;
   prData?: PullRequest[];
@@ -161,14 +160,14 @@ const PullRequests = (__props: TableProps) => {
   const [search, setSearch] = useState(`state:open ${defaultFilter}`);
   const setSearchValueDebounced = useRef(debounce(setSearch, 500));
   const onChangePRStatusFilter = (state: PullRequestState) => {
-    if(state  === 'all') {
+    if (state === 'all') {
       setSearch((currentSearch: string) => currentSearch.replace(/state:(open|closed)/g, '').trim());
     } else {
-      setSearch((currentSearch: string) => 
-        currentSearch.search(/state:(open|closed)/g) === -1 ? 
+      setSearch((currentSearch: string) =>
+        currentSearch.search(/state:(open|closed)/g) === -1 ?
           `state:${state} ${currentSearch}` :
           currentSearch.replace(/state:(open|closed)/g, `state:${state}`
-        )
+          )
       );
     }
   };
@@ -204,41 +203,41 @@ const PullRequests = (__props: TableProps) => {
   const SearchComponent = () => {
     const [draftSearch, setDraftSearch] = useState(search);
     return (
-    <Box position="absolute" width={500} right={10} top={25}>
-      <TextField
-        fullWidth
-        onChange={(event) => {
-          setDraftSearch(event.target.value);
-          setSearchValueDebounced.current(event.target.value);
-        }}
-        placeholder="Filter"
-        value={draftSearch}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
+      <Box position="absolute" width={500} right={10} top={25}>
+        <TextField
+          fullWidth
+          onChange={(event) => {
+            setDraftSearch(event.target.value);
+            setSearchValueDebounced.current(event.target.value);
+          }}
+          placeholder="Filter"
+          value={draftSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
                 <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                disabled={!draftSearch}
-                onClick={() => {
-                  setDraftSearch('');
-                  setSearch('');
-                }}
-              >
-                <ClearIcon
-                  fontSize="small"
-                  aria-label="clear"
-                />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Box>
-  )
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  disabled={!draftSearch}
+                  onClick={() => {
+                    setDraftSearch('');
+                    setSearch('');
+                  }}
+                >
+                  <ClearIcon
+                    fontSize="small"
+                    aria-label="clear"
+                  />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    )
   };
 
   return (
@@ -247,7 +246,6 @@ const PullRequests = (__props: TableProps) => {
       StateFilterComponent={StateFilterComponent}
       SearchComponent={SearchComponent}
       loading={tableProps.loading}
-      retry={retry}
       onChangePageSize={setPageSize}
       onChangePage={setPage}
     />
@@ -260,5 +258,5 @@ export const PullRequestsTable = (__props: TableProps) => {
   if (!projectName || projectName === '') {
     return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   }
-  return <PullRequests/>
+  return <PullRequests />
 };

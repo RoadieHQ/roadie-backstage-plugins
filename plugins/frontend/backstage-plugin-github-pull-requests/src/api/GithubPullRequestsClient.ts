@@ -27,6 +27,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     pageSize = 5,
     page,
     baseUrl,
+    etag
   }: {
     search: string;
     token: string;
@@ -35,9 +36,12 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     pageSize?: number;
     page?: number;
     baseUrl: string | undefined;
+    etag: string
   }): Promise<{
     pullRequestsData: SearchPullRequestsResponseData;
+    etag?: string
   }> {
+
     const pullRequestResponse = await new Octokit({
       auth: token,
       ...(baseUrl && { baseUrl }),
@@ -45,6 +49,9 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       q: `${search} in:title type:pr repo:${owner}/${repo}`,
       per_page: pageSize,
       page,
+      headers: {
+        "if-none-match": etag,
+      },
     });
     return {
       pullRequestsData: (pullRequestResponse.data as any) as SearchPullRequestsResponseData,
