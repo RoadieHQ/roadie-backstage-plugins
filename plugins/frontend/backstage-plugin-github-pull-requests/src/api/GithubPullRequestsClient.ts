@@ -16,7 +16,7 @@
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { SearchPullRequestsResponseData } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
@@ -24,20 +24,16 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     token,
     owner,
     repo,
-    defaultFilter = '',
     pageSize = 5,
     page,
-    state = 'all',
     baseUrl,
   }: {
     search: string;
     token: string;
     owner: string;
     repo: string;
-    defaultFilter: string;
     pageSize?: number;
     page?: number;
-    state?: PullRequestState;
     baseUrl: string | undefined;
   }): Promise<{
     pullRequestsData: SearchPullRequestsResponseData;
@@ -46,8 +42,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       auth: token,
       ...(baseUrl && { baseUrl }),
     }).search.issuesAndPullRequests({
-      q: `${search} in:title type:pr state:${state} ${defaultFilter} repo:${owner}/${repo}`,
-      state,
+      q: `${search} in:title type:pr repo:${owner}/${repo}`,
       per_page: pageSize,
       page,
     });
