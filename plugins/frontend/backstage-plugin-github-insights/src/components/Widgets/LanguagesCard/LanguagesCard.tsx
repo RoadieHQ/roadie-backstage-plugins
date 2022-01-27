@@ -100,7 +100,6 @@ const LanguagesCard = (_props: Props) => {
       <InfoCard
         title="Languages"
         className={classes.infoCard}
-        vclassName={classes.infoCard}
       >
         API Rate Limit exceeded. Authenticated requests get a higher rate limit
         so after you log in and set up GitHub provider, this rate will be

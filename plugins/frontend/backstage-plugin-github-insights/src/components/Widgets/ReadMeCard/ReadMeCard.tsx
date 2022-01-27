@@ -115,10 +115,7 @@ const ReadMeCard = (props: Props) => {
     return <Progress />;
   } else if (error) {
     return error.message.includes('API rate limit') ? (
-      <InfoCard
-        title="Read me"
-        className={classes.infoCard}
-      >
+      <InfoCard title="Read me" className={classes.infoCard}>
         API Rate Limit exceeded. Authenticated requests get a higher rate limit
         so after you log in and set up GitHub provider, this rate will be
         higher. You can read more in official
@@ -142,6 +139,20 @@ const ReadMeCard = (props: Props) => {
     <InfoCard
       title="Read me"
       className={classes.infoCard}
+      deepLink={{
+        link: `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
+          value.url,
+        )}/${path}`,
+        title: 'Read me',
+        onClick: e => {
+          e.preventDefault();
+          window.open(
+            `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
+              value.url,
+            )}/${path}`,
+          );
+        },
+      }}
     >
       <div
         className={classes.readMe}
