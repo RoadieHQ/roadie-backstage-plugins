@@ -31,7 +31,7 @@ export const useGithubRepository = ({
       const token = await auth.getAccessToken(['repo'], { optional: true });
       const octokit = new Octokit({ auth: token });
       if(token) {
-        return true;
+        return false;
       }
       const githubRepositoryResponse = await octokit.rest.repos.get({
         owner,
