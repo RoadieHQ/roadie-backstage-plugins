@@ -16,6 +16,7 @@
 
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
+import { githubAuthApiRef, useApi } from '@backstage/core-plugin-api';
 
 export const useGithubRepository = ({
   owner,
@@ -24,9 +25,11 @@ export const useGithubRepository = ({
   owner: string;
   repo: string;
 }) => {
+  const auth = useApi(githubAuthApiRef);
   const { value, loading, error } = useAsync(
     async (): Promise<boolean> => {
-      const octokit = new Octokit();
+      const token = await auth.getAccessToken(['repo'], { optional: true });
+      const octokit = new Octokit({ auth: token });
       const githubRepositoryResponse = await octokit.rest.repos.get({
         owner,
         repo,
@@ -34,10 +37,9 @@ export const useGithubRepository = ({
       return githubRepositoryResponse.data.private;
     },
   );
-
   return {
     value,
     loading,
-    error
+    error,
   };
 };

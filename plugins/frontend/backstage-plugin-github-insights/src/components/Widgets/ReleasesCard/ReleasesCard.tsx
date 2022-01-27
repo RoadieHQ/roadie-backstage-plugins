@@ -75,7 +75,11 @@ const ReleasesCard = (_props: Props) => {
     return <Progress />;
   } else if (error) {
     return error.message.includes('API rate limit') ? (
-      <Alert severity="error" className={classes.infoCard}>
+      <InfoCard
+        title="Releases"
+        className={classes.infoCard}
+      >
+        {' '}
         API Rate Limit exceeded. Authenticated requests get a higher rate limit
         so after you log in and set up GitHub provider, this rate will be
         higher. You can read more in official
@@ -87,7 +91,7 @@ const ReleasesCard = (_props: Props) => {
         >
           documentation
         </Link>
-      </Alert>
+      </InfoCard>
     ) : (
       <Alert severity="error" className={classes.infoCard}>
         {error.message}

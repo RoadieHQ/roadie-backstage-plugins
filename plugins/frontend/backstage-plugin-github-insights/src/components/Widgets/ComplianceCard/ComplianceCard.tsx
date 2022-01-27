@@ -69,7 +69,7 @@ const ComplianceCard = (_props: Props) => {
   } else if (error || licenseError) {
     return error?.message.includes('API Rate Limit') ||
       licenseError?.message.includes('API Rate Limit') ? (
-      <Alert severity="error">
+        <InfoCard title="Compliance report">
         API Rate Limit exceeded. Authenticated requests get a higher rate limit
         so after you log in and set up GitHub provider, this rate will be
         higher. You can read more in official
@@ -81,7 +81,7 @@ const ComplianceCard = (_props: Props) => {
         >
           documentation
         </Link>
-      </Alert>
+      </InfoCard>
     ) : (
       <Alert severity="error">{error?.message}</Alert>
     );
