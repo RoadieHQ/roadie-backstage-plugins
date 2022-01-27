@@ -19,11 +19,18 @@ import { Entity } from '@backstage/catalog-model';
 import { render } from '@testing-library/react';
 import { entityStub, dependabotAlertsResponseMock } from '../../mocks/mocks';
 import { graphql } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { DependabotAlertsTable } from './DependabotAlertsTable';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 import { securityInsightsPlugin } from '../../plugin';
 
 let entity: { entity: Entity };
@@ -59,10 +66,10 @@ const config = {
   ],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
-]);
+];
 
 describe('Dependabot alerts overview', () => {
   const worker = setupServer();
@@ -93,9 +100,9 @@ describe('Dependabot alerts overview', () => {
 
       const rendered = render(
         wrapInTestApp(
-          <ApiProvider apis={apis}>
+          <TestApiProvider apis={apis}>
             <DependabotAlertsTable />
-          </ApiProvider>,
+          </TestApiProvider>,
         ),
       );
       expect(

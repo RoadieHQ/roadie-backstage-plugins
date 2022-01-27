@@ -1,16 +1,17 @@
 // eslint-disable-next-line notice/notice
 import {
   CatalogBuilder,
-  createRouter
+  createRouter,
 } from '@backstage/plugin-catalog-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 
-export default async function createPlugin(env: PluginEnvironment): Promise<Router> {
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
   const {
     entitiesCatalog,
-    locationsCatalog,
     locationService,
     processingEngine,
     locationAnalyzer,
@@ -20,7 +21,6 @@ export default async function createPlugin(env: PluginEnvironment): Promise<Rout
 
   return await createRouter({
     entitiesCatalog,
-    locationsCatalog,
     locationService,
     locationAnalyzer,
     logger: env.logger,

@@ -16,14 +16,14 @@
 
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { errorApiRef } from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider,
-  UrlPatternDiscovery,
-} from '@backstage/core-app-api';
+import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+  wrapInTestApp,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
@@ -35,10 +35,10 @@ const postMock = jest.fn();
 const errorApiMock = { post: postMock, error$: jest.fn() };
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
   [buildKiteApiRef, new BuildkiteApi({ discoveryApi })],
-]);
+];
 
 describe('BuildKiteBuildsTable', () => {
   const worker = setupServer();
@@ -55,9 +55,9 @@ describe('BuildKiteBuildsTable', () => {
     );
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
 
@@ -80,9 +80,9 @@ describe('BuildKiteBuildsTable', () => {
     );
     render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
 

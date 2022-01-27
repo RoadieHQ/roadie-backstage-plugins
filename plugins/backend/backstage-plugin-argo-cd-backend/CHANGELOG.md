@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 1.2.5
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
+## 1.2.4
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
+## 1.2.3
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
+## 1.2.2
+
+### Patch Changes
+
+- 49abec7: Update patch to release new changes.
+
 ## 1.2.1
 
 ### Patch Changes

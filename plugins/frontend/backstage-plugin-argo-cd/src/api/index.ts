@@ -1,9 +1,13 @@
-import { createApiRef, DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
+import {
+  createApiRef,
+  DiscoveryApi,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import {
   argoCDAppDetails,
   ArgoCDAppDetails,
   argoCDAppList,
-  ArgoCDAppList
+  ArgoCDAppList,
 } from '../types';
 import { Type as tsType } from 'io-ts';
 import {
@@ -67,15 +71,15 @@ export class ArgoCDApiClient implements ArgoCDApi {
   }
 
   private async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
-    const idToken = await this.identityApi.getIdToken();
-    const response = await fetch(url,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          ...(idToken && { Authorization: `Bearer ${idToken}` }),
-        },
-      },
-    );
+    const { token } = await this.identityApi.getCredentials();
+    const response = await fetch(url, {
+      headers: token
+        ? {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+    });
     if (!response.ok) {
       throw new Error(
         `failed to fetch data, status ${response.status}: ${response.statusText}`,
@@ -84,7 +88,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const json = await response.json();
     try {
       return await tsDecode(typeCodec, json);
-    } catch (e: any) {
+    } catch (e) {
       if (tsIsDecodeError(e)) {
         throw new Error(
           `remote data validation failed: ${reporter
@@ -103,7 +107,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     projectName?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
-    const params: { [key: string]: string | undefined; } = {
+    const params: { [key: string]: string | undefined } = {
       selector: options.appSelector,
       project: options.projectName,
     };
@@ -133,7 +137,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
       );
     }
     return this.fetchDecode(
-      `${proxyUrl}${options.url}/applications/name/${options.appName}`,
+      `${proxyUrl}${options.url}/applications/${options.appName}`,
       argoCDAppDetails,
     );
   }
@@ -156,12 +160,14 @@ export class ArgoCDApiClient implements ArgoCDApi {
     );
   }
 
-  async serviceLocatorUrl(options: { appName?: string, appSelector?: string; }) {
+  async serviceLocatorUrl(options: { appName?: string; appSelector?: string }) {
     if (!options.appName && !options.appSelector) {
       throw new Error('Need to provide appName or appSelector');
     }
     const proxyUrl = await this.getBaseUrl();
-    const url = options.appName ? `${proxyUrl}/find/name/${options.appName}` : `${proxyUrl}/find/selector/${options.appSelector}`;
+    const url = options.appName
+      ? `${proxyUrl}/find/name/${options.appName}`
+      : `${proxyUrl}/find/selector/${options.appSelector}`;
     return fetch(url, {
       method: 'GET',
       headers: {

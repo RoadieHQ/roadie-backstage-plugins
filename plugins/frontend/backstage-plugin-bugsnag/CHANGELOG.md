@@ -1,5 +1,41 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.4.3
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
+## 1.4.2
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
+## 1.4.1
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
+## 1.4.0
+
+### Minor Changes
+
+- 10bf6bf: Introduce new annotations in order to fix the limit with pagination and default of fetching 30 requests per page.
+
+## 1.3.3
+
+### Patch Changes
+
+- 142ce1c: Moved React dependencies to `peerDependencies` and allow both React v16 and v17 to be used.
+
+## 1.3.2
+
+### Patch Changes
+
+- 49abec7: Update patch to release new changes.
+
 ## 1.3.1
 
 ### Patch Changes

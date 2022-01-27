@@ -1,5 +1,41 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.4.7
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
+## 1.4.6
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
+## 1.4.5
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
+## 1.4.4
+
+### Patch Changes
+
+- 142ce1c: Moved React dependencies to `peerDependencies` and allow both React v16 and v17 to be used.
+
+## 1.4.3
+
+### Patch Changes
+
+- 3de124a: Bump github insights plugin
+
+## 1.4.2
+
+### Patch Changes
+
+- 49abec7: Update patch to release new changes.
+
 ## 1.4.1
 
 ### Patch Changes

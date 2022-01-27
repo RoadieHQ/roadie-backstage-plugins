@@ -16,10 +16,16 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
@@ -37,11 +43,11 @@ const config = {
   ],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
   [githubPullRequestsApiRef, new GithubPullRequestsClient()],
-]);
+];
 
 describe('PullRequestsCard', () => {
   const worker = setupServer();
@@ -58,11 +64,11 @@ describe('PullRequestsCard', () => {
 
   it('should display an ovreview card with the data from the requests', async () => {
     const rendered = render(
-      <ApiProvider apis={apis}>
+      <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <PullRequestsStatsCard />
         </EntityProvider>
-      </ApiProvider>,
+      </TestApiProvider>,
     );
     expect(await rendered.findByText('2 months')).toBeInTheDocument();
     expect(await rendered.findByText('67%')).toBeInTheDocument();

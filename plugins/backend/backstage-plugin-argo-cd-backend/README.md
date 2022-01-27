@@ -1,8 +1,5 @@
 # Argo CD Plugin Backend for Backstage
 
-[https://roadie.io/backstage/plugins/argo-cd](https://roadie.io/backstage/plugins/argo-cd)
-
-
 ## Support for multiple ArgoCD instances - Option 2 - Argo CD backend plugin
 
 If you want to create multiple components that fetch data from different argoCD instances, you can dynamically set the ArgoCD instance url by adding the following to your app-config.yaml files.

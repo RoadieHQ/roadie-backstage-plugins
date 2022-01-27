@@ -7,12 +7,14 @@ import {
   PluginEndpointDiscovery,
   UrlReader,
 } from '@backstage/backend-common';
+import { PermissionAuthorizer } from '@backstage/plugin-permission-common';
 
 export type PluginEnvironment = {
   logger: Logger;
   database: PluginDatabaseManager;
   cache: PluginCacheManager;
   config: Config;
-  reader: UrlReader
+  reader: UrlReader;
   discovery: PluginEndpointDiscovery;
+  permissions: PermissionAuthorizer;
 };

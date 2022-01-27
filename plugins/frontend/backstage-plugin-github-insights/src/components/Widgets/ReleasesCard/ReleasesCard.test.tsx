@@ -16,33 +16,44 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+  wrapInTestApp,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { entityMock, releasesResponseMock } from '../../../mocks/mocks';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import ReleasesCard from '.';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
-  createScmIntegrationsApiMock,
-  defaultIntegrationsConfig,
-} from '../../../mocks/scmIntegrationsApiMock';
+  scmIntegrationsApiRef,
+  ScmIntegrationsApi,
+} from '@backstage/integration-react';
+import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
-    createScmIntegrationsApiMock(defaultIntegrationsConfig),
+    ScmIntegrationsApi.fromConfig(
+      ConfigReader.fromConfigs([
+        {
+          context: 'unit-test',
+          data: defaultIntegrationsConfig,
+        },
+      ]),
+    ),
   ],
-]);
+];
 
 describe('ReleasesCard', () => {
   const worker = setupServer();
@@ -60,13 +71,13 @@ describe('ReleasesCard', () => {
   it('should display a card with the data from the requests', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ReleasesCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findAllByText('release-2021-01-09')).toHaveLength(2);

@@ -1,5 +1,41 @@
 # backend
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [5ae1b4b]
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.5
+
+## 0.0.12
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+- Updated dependencies [b5db653]
+  - app@0.0.8
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.4
+  - @roadiehq/scaffolder-backend-module-http-request@2.1.6
+
+## 0.0.11
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+- Updated dependencies [a02dbf5]
+  - app@0.0.7
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.3
+  - @roadiehq/scaffolder-backend-module-http-request@2.1.5
+
+## 0.0.10
+
+### Patch Changes
+
+- Updated dependencies [49abec7]
+- Updated dependencies [ce0846b]
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.2
+  - @roadiehq/scaffolder-backend-module-http-request@2.1.2
+
 ## 0.0.9
 
 ### Patch Changes

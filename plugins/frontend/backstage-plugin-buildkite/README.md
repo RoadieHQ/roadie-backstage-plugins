@@ -70,5 +70,4 @@ metadata:
 ## Links
 
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/buildkite)
 - Get hosted, managed Backstage for your company: https://roadie.io

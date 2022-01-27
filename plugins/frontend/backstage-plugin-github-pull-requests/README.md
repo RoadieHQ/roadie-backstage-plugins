@@ -1,12 +1,13 @@
 # GitHub Pull Requests Plugin for Backstage
 
-![a list of pull requests in the GitHub Pull Requests](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-github-pull-requests/main/docs/list-of-pull-requests-and-stats-tab-view.png)
+![a list of pull requests in the GitHub Pull Requests](./docs/list-of-pull-requests-and-stats-tab-view.png)
+
+## Features
+
+- List Pull Requests for your repository, with filtering and search.
+- Show basic statistics widget about pull requests for your repository.
 
 
-## Repository migration notice
-
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
 
 ## Plugin Configuration Requirements
 
@@ -44,7 +45,7 @@ const serviceEntityPage = (
 
 ## Widget setup
 
-![a list of pull requests in the GitHub Pull Requests](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-github-pull-requests/main/docs/github-pullrequests-widget.png)
+![a list of pull requests in the GitHub Pull Requests](./docs/github-pullrequests-widget.png)
 
 1. You must install plugin by following the steps above to add widget to your Overview
 

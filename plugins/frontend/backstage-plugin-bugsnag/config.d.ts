@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-export const defaultIntegrationsConfig = {
-  integrations: {
-    github: [
-      {
-        host: 'fake',
-        apiBaseUrl: 'https://fake',
-        token: 'fake',
-      },
-      {
-        host: 'github.com',
-        apiBaseUrl: 'https://api.github.com',
-        token: 'asdf',
-      },
-    ],
-  },
-};
+export interface Config {
+  /** Results per page for bugsnag plugin */
+  bugsnag?: {
+    /**
+     *
+     * @visibility frontend
+     */
+    resultsPerPage?: number;
+  };
+}

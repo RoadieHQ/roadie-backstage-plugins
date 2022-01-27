@@ -18,6 +18,7 @@ import {
   SingleConnectionDatabaseManager,
   SingleHostDiscovery,
   UrlReaders,
+  ServerTokenManager,
 } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import app from './plugins/app';
@@ -29,6 +30,7 @@ import techdocs from './plugins/techdocs';
 import aws from './plugins/aws';
 import argocd from './plugins/argocd';
 import { PluginEnvironment } from './types';
+import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
@@ -39,12 +41,17 @@ function makeCreateEnv(config: Config) {
 
   const databaseManager = SingleConnectionDatabaseManager.fromConfig(config);
   const cacheManager = CacheManager.fromConfig(config);
+  const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
+  const permissions = ServerPermissionClient.fromConfig(config, {
+    discovery,
+    tokenManager,
+  });
 
   return (plugin: string): PluginEnvironment => {
     const logger = root.child({ type: 'plugin', plugin });
     const database = databaseManager.forPlugin(plugin);
     const cache = cacheManager.forPlugin(plugin);
-    return { logger, database, cache, config, reader, discovery };
+    return { logger, database, cache, config, reader, discovery, permissions };
   };
 }
 
