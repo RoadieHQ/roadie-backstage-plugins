@@ -88,9 +88,11 @@ const App = () => (
   <AppProvider>
     <AlertDisplay />
     <OAuthRequestDialog />
+
     <AppRouter>
       <Root>{routes}</Root>
     </AppRouter>
+
   </AppProvider>
 );
 

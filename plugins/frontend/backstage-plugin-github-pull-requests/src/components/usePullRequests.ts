@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useAsyncFn } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
@@ -21,6 +21,7 @@ import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
 import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
+import { GithubPullRequestsContext } from "./PullRequestsContext"
 
 export type PullRequest = {
   id: number;
@@ -32,6 +33,8 @@ export type PullRequest = {
   state: string;
   draft: boolean;
   merged: string | null;
+  created_at: string;
+  closed_at: string;
   creatorNickname: string;
   creatorProfileLink: string;
 };
@@ -60,11 +63,11 @@ export function usePullRequests({
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
-  const [prState, setPrState] = useState<PrState>({ open: { etag: "", data: [] }, closed: { etag: "", data: [] }, all: { etag: "", data: [] } });
+  const { prState, setPrState } = useContext(GithubPullRequestsContext)
   const getElapsedTime = (start: string) => {
     return moment(start).fromNow();
   };
+  console.log(prState)
 
   const [{ loading, error }, doFetch] = useAsyncFn(async () => {
     const token = await auth.getAccessToken(['repo']);
@@ -112,6 +115,8 @@ export function usePullRequests({
           state: pr_state,
           draft,
           merged: merged_at,
+          created_at,
+          closed_at,
           creatorNickname: user.login,
           creatorProfileLink: user.html_url,
           createdTime: getElapsedTime(created_at),
@@ -124,8 +129,8 @@ export function usePullRequests({
         if (e.status === 304) {
           return prState[search].data
         }
+        return prState[state].data
       }
-      throw e
     }
   },
     [page, pageSize, repo, owner, search]);
@@ -146,7 +151,6 @@ export function usePullRequests({
   return [
     {
       page,
-      pageSize,
       loading,
       prData: prState[search].data,
       projectName: `${owner}/${repo}`,
@@ -154,7 +158,6 @@ export function usePullRequests({
     },
     {
       setPage,
-      setPageSize,
     },
   ] as const;
 }

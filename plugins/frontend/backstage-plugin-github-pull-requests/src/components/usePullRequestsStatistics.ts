@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useAsyncRetry } from 'react-use';
-import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
-import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { useMemo } from 'react';
+import { PullRequest } from './usePullRequests'
 import moment from 'moment';
-import { useBaseUrl } from './useBaseUrl';
-import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { PullRequestState } from '../types';
+import { usePullRequests } from './usePullRequests';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
@@ -33,9 +32,9 @@ export type PullRequestStatsCount = {
 function calculateStatistics(pullRequestsData: SearchPullRequestsResponseData) {
   return pullRequestsData.items.reduce<PullRequestStatsCount>(
     (acc, curr) => {
-      acc.avgTimeUntilMerge += curr.pull_request.merged_at
+      acc.avgTimeUntilMerge += curr.merged
         ? new Date(curr.pull_request.merged_at).getTime() -
-          new Date(curr.created_at).getTime()
+        new Date(curr.created_at).getTime()
         : 0;
       acc.mergedCount += curr.pull_request.merged_at ? 1 : 0;
       acc.closedCount += curr.closed_at ? 1 : 0;
@@ -61,52 +60,33 @@ export function usePullRequestsStatistics({
   pageSize: number;
   state: PullRequestState;
 }) {
-  const api = useApi(githubPullRequestsApiRef);
-  const auth = useApi(githubAuthApiRef);
-  const baseUrl = useBaseUrl();
+  const [{ loading, prData, error }, _] = usePullRequests({ owner, repo, branch, state, pageSize })
 
-  const { loading, value: statsData, error } = useAsyncRetry<
-    PullRequestStats
-  >(async () => {
-    const token = await auth.getAccessToken(['repo']);
-    if (!repo) {
-      return {
-        avgTimeUntilMerge: 'Never',
-        mergedToClosedRatio: '0%',
-      };
+
+  const calcResult = useMemo(() => calculateStatistics(prData), [prData]);
+
+  let statsData;
+  if (calcResult.closedCount === 0 || calcResult.mergedCount === 0) {
+    statsData = {
+      avgTimeUntilMerge: 'Never',
+      mergedToClosedRatio: '0%',
     }
-    return api
-      .listPullRequests({
-        search: `state:${state}`,
-        token,
-        owner,
-        repo,
-        pageSize,
-        page: 1,
-        branch,
-        baseUrl,
-      })
-      .then(
-        ({ pullRequestsData }: { pullRequestsData: SearchPullRequestsResponseData }) => {
-          const calcResult = calculateStatistics(pullRequestsData);
-          if(calcResult.closedCount === 0 || calcResult.mergedCount === 0) return {
-            avgTimeUntilMerge: 'Never',
-            mergedToClosedRatio: '0%',
-          }
-          const avgTimeUntilMergeDiff = moment.duration(
-            calcResult.avgTimeUntilMerge / calcResult.mergedCount,
-          );
 
-          const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
-          return {
-            avgTimeUntilMerge: avgTimeUntilMerge,
-            mergedToClosedRatio: `${Math.round(
-              (calcResult.mergedCount / calcResult.closedCount) * 100,
-            )}%`,
-          }
-        },
-      );
-  }, [pageSize, repo, owner]);
+  } else {
+
+    const avgTimeUntilMergeDiff = moment.duration(
+      calcResult.avgTimeUntilMerge / calcResult.mergedCount,
+    );
+
+    const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
+    statsData = {
+      avgTimeUntilMerge: avgTimeUntilMerge,
+      mergedToClosedRatio: `${Math.round(
+        (calcResult.mergedCount / calcResult.closedCount) * 100,
+      )}%`,
+    }
+
+  }
 
   return [
     {

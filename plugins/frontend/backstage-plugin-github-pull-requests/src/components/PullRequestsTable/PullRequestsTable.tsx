@@ -175,6 +175,7 @@ const PullRequests = (__props: TableProps) => {
     search: search,
     owner,
     repo,
+    pageSize
   });
   const StateFilterComponent = () => (
     <Box position="absolute" right={525} top={20}>
@@ -243,6 +244,7 @@ const PullRequests = (__props: TableProps) => {
   return (
     <PullRequestsTableView
       {...tableProps}
+      pageSize={pageSize}
       StateFilterComponent={StateFilterComponent}
       SearchComponent={SearchComponent}
       loading={tableProps.loading}

@@ -42,3 +42,5 @@ export {
    */
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
+
+export * from './components/PullRequestsContext'

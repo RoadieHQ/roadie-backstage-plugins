@@ -41,7 +41,7 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     pullRequestsData: SearchPullRequestsResponseData;
     etag?: string
   }> {
-
+    console.log(typeof token, "TOKEN?")
     const pullRequestResponse = await new Octokit({
       auth: token,
       ...(baseUrl && { baseUrl }),
