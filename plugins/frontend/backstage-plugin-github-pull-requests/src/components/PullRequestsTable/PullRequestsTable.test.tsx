@@ -32,6 +32,7 @@ import { GithubPullRequestsClient } from '../../api';
 import { entityMock, openPullsRequestMock } from '../../mocks/mocks';
 import { PullRequestsTable } from './PullRequestsTable';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { GithubPullRequestsProvider } from '../PullRequestsContext';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -66,7 +67,9 @@ describe('PullRequestsTable', () => {
     const rendered = render(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
-          <PullRequestsTable />
+          <GithubPullRequestsProvider>
+            <PullRequestsTable />
+          </GithubPullRequestsProvider>
         </EntityProvider>
       </TestApiProvider>,
     );
