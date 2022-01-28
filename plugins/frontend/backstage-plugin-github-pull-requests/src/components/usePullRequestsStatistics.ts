@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import { useMemo } from 'react';
-import { PullRequest } from './usePullRequests'
 import moment from 'moment';
-import { PullRequestState } from '../types';
+import { PullRequestState, PullRequest } from '../types';
 import { usePullRequests } from './usePullRequests';
 
 export type PullRequestStats = {
@@ -60,10 +59,10 @@ export function usePullRequestsStatistics({
   pageSize: number;
   state: PullRequestState;
 }) {
-  const [{ loading, prData, error }, _] = usePullRequests({ owner, repo, branch, state, pageSize })
+  const [{ loading, prData, error }, _] = usePullRequests({ owner, repo, branch, state, pageSize: Math.max(pageSize, 20) })
 
 
-  const calcResult = useMemo(() => calculateStatistics(prData), [prData]);
+  const calcResult = useMemo(() => calculateStatistics(prData.slice(0, pageSize)), [prData, pageSize]);
 
   let statsData;
   if (calcResult.closedCount === 0 || calcResult.mergedCount === 0) {

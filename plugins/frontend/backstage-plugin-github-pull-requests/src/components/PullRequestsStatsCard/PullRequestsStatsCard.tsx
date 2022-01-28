@@ -114,7 +114,7 @@ const PullRequestsStatsCard = (props: Props) => {
   if (!projectName || projectName === '') {
     return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   }
-  return <StatsCard {...props}/>
+  return <StatsCard {...props} />
 };
 
 export default PullRequestsStatsCard;

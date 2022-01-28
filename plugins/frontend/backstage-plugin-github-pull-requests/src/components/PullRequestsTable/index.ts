@@ -14,4 +14,3 @@
  * limitations under the License.
  */
 export { PullRequestsTable, PullRequestsTableView } from './PullRequestsTable';
-export type { PullRequest } from '../usePullRequests';

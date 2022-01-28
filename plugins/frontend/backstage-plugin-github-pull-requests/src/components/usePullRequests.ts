@@ -19,34 +19,9 @@ import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
-import { SearchPullRequestsResponseData } from '../types';
+import { PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 import { GithubPullRequestsContext } from "./PullRequestsContext"
-
-export type PullRequest = {
-  id: number;
-  number: number;
-  url: string;
-  title: string;
-  updatedTime: string;
-  createdTime: string;
-  state: string;
-  draft: boolean;
-  merged: string | null;
-  created_at: string;
-  closed_at: string;
-  creatorNickname: string;
-  creatorProfileLink: string;
-};
-export type PrStateData = {
-  etag: string;
-  data: PullRequest[];
-}
-export type PrState = {
-  open: PrStateData;
-  closed: PrStateData;
-  all: PrStateData;
-}
 
 export function usePullRequests({
   search,
@@ -67,11 +42,10 @@ export function usePullRequests({
   const getElapsedTime = (start: string) => {
     return moment(start).fromNow();
   };
-  console.log(prState)
 
   const [{ loading, error }, doFetch] = useAsyncFn(async () => {
-    const token = await auth.getAccessToken(['repo']);
     try {
+      const token = await auth.getAccessToken(['repo']);
       const {
         pullRequestsData,
         etag
@@ -88,7 +62,7 @@ export function usePullRequests({
       })
 
       if (etag) {
-        setPrState((current) => ({
+        setPrState((current: PrState) => ({
           ...current,
           ...{ [search]: { ...current[search], etag } }
         }))
@@ -126,8 +100,8 @@ export function usePullRequests({
     }
     catch (e) {
       if (e instanceof RequestError) {
-        if (e.status === 304) {
-          return prState[search].data
+        if (e.status !== 304) {
+          throw e
         }
         return prState[state].data
       }
@@ -139,7 +113,7 @@ export function usePullRequests({
     (async () => {
       const pullRequests = await doFetch();
       if (pullRequests) {
-        setPrState((current) => ({
+        setPrState((current: PrState) => ({
           ...current,
           ...{ [search]: { ...current[search], data: pullRequests } }
         }))
