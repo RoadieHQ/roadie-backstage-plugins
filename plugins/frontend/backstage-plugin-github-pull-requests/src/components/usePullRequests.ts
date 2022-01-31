@@ -20,6 +20,7 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
 import { PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { PrState, PullRequest, PullRequestState } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 import { useGithubPullRequests } from "./GithubPullRequestsContext"
 
@@ -43,7 +44,8 @@ export function usePullRequests({
     return moment(start).fromNow();
   };
 
-  const { loading, value, error } = useAsync(async (): Promise<any> => {
+  const { loading, value, error } = useAsync(async (): Promise<PullRequest[] | void> => {
+    let result;
     try {
       const token = await auth.getAccessToken(['repo']);
       const {
@@ -103,9 +105,10 @@ export function usePullRequests({
         if (e.status !== 304) {
           throw e
         }
-        return prState[state].data
+        result = prState[state].data
       }
     }
+    return result
   },
     [page, pageSize, repo, owner, search]);
   useEffect(() => {
