@@ -321,7 +321,6 @@ const defaultEntityPage = (
 
 const componentPage = (
   <GithubPullRequestsProvider>
-
     <EntitySwitch>
       <EntitySwitch.Case if={isComponentType('service')}>
         {serviceEntityPage}
@@ -333,7 +332,6 @@ const componentPage = (
 
       <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
     </EntitySwitch>
-
   </GithubPullRequestsProvider>
 );
 

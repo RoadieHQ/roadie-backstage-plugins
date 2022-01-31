@@ -24,12 +24,36 @@ cd packages/app
 yarn add @roadiehq/backstage-plugin-github-pull-requests
 ```
 
-## Add plugin API to your Backstage instance:
+## Add  provider to your Backstage instance:
+- Add the `GithubPullRequestsProvider` to the componentPage 
+```ts
+// packages/app/src/components/catalog/EntityPage.tsx
+import { GithubPullRequestsProvider } from '@roadiehq/backstage-plugin-github-pull-requests';
+...
 
+const componentPage = (
+  <GithubPullRequestsProvider>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isComponentType('service')}>
+        {serviceEntityPage}
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case if={isComponentType('website')}>
+        {websiteEntityPage}
+      </EntitySwitch.Case>
+
+      <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
+    </EntitySwitch>
+  </GithubPullRequestsProvider>
+);
+```
+
+## Add plugin API to your Backstage instance:
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
 import { EntityGithubPullRequestsContent } from '@roadiehq/backstage-plugin-github-pull-requests';
 ...
+
 
 const serviceEntityPage = (
   <EntityLayout>
