@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useContext, useEffect, useState } from 'react';
-import { useAsyncFn } from 'react-use';
+import { useEffect, useState } from 'react';
+import { useAsync } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
 import { PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
-import { GithubPullRequestsContext } from "./PullRequestsContext"
+import { useGithubPullRequests } from "./GithubPullRequestsContext"
 
 export function usePullRequests({
   search,
@@ -38,12 +38,12 @@ export function usePullRequests({
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [page, setPage] = useState(0);
-  const { prState, setPrState } = useContext(GithubPullRequestsContext)
+  const { prState, setPrState } = useGithubPullRequests()
   const getElapsedTime = (start: string) => {
     return moment(start).fromNow();
   };
 
-  const [{ loading, error }, doFetch] = useAsyncFn(async () => {
+  const { loading, value, error } = useAsync(async (): Promise<any> => {
     try {
       const token = await auth.getAccessToken(['repo']);
       const {
