@@ -38,3 +38,4 @@ export {
  * @deprecated since v0.3.0 you should use new composability API
  */
 export * from './components/Widgets';
+export * from './components/GithubInsightsContext'

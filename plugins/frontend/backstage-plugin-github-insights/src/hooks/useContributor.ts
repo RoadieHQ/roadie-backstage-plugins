@@ -20,24 +20,44 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { ContributorData } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useGithubInsights } from '../components/GithubInsightsContext';
+import { RequestError } from "@octokit/request-error";
+import { useEffect } from 'react';
 
 export const useContributor = (username: string) => {
   const auth = useApi(githubAuthApiRef);
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
 
+  const { contributor } = useGithubInsights()
+  const { contributorData, setContributorData } = contributor
+
   const { value, loading, error } = useAsync(async (): Promise<
     ContributorData
   > => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
+    try {
+      const token = await auth.getAccessToken(['repo']);
+      const octokit = new Octokit({ auth: token });
 
-    const response = await octokit.request(`GET /users/${username}`, {
-      baseUrl,
-    });
-    const data = response.data;
-    return data;
+      const response = await octokit.request(`GET /users/${username}`, {
+        headers: { "if-none-match": contributorData[username].etag },
+        baseUrl,
+      });
+      const data = response.data;
+      return data;
+    } catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          return contributorData.data
+        }
+      }
+    }
   }, [username, baseUrl]);
+
+  useEffect(() => {
+    //TODO set data
+    setContributorData((current) => ({ ...current, ...{ contributorData } }))
+  }, [value])
 
   return {
     contributor: value,

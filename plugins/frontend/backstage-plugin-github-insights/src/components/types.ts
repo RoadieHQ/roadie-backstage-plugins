@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { Dispatch, SetStateAction } from "react";
 export type ContributorData = {
   name: string;
   login: string;
@@ -20,3 +22,19 @@ export type ContributorData = {
   location: string;
   avatar_url: string;
 };
+
+
+export type Key = "repoLicense" | "contributor" | "repoBranches" | "request"
+
+export type RequestStateStore = {
+  [key: string]: GithubRequestState
+}
+
+export type GithubRequestState = {
+  etag: string;
+  data: string;
+}
+export type State = [GithubRequestState | RequestStateStore, Dispatch<SetStateAction<GithubRequestState | RequestStateStore>>]
+export type GithubInsightsState = {
+  Key: State;
+}

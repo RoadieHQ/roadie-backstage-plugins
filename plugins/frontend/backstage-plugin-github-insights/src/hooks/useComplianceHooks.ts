@@ -20,26 +20,52 @@ import { OctokitResponse } from '@octokit/types';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
+import { useEffect } from 'react';
+import { useGithubInsights } from '../components/GithubInsightsContext';
+import { RequestError } from "@octokit/request-error";
 
 export const useProtectedBranches = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
 
-    const response = await octokit.request(
-      'GET /repos/{owner}/{repo}/branches',
-      {
-        baseUrl,
-        owner,
-        repo,
-        protected: true,
-      },
-    );
-    return response.data;
+  const { repoBranches } = useGithubInsights()
+  const { branches, setBranches } = repoBranches
+
+  const { value, loading, error } = useAsync(async (): Promise<any> => {
+    try {
+      const token = await auth.getAccessToken(['repo']);
+      const octokit = new Octokit({ auth: token });
+
+      const response = await octokit.request(
+        'GET /repos/{owner}/{repo}/branches',
+        {
+          headers: {
+            "if-none-match": branches.etag
+          },
+          baseUrl,
+          owner,
+          repo,
+          protected: true,
+        },
+      );
+      if (response.headers.etag) {
+        setBranches({ ...branches, etag: response.headers.etag })
+      }
+      return response.data;
+
+    } catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          return branches.data
+        }
+      }
+    }
   }, [baseUrl]);
+
+  useEffect(() => {
+    setBranches({ ...branches, data: value })
+  }, [value])
 
   return {
     branches: value,
@@ -52,6 +78,10 @@ export const useRepoLicence = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
+
+  const { repoLicense } = useGithubInsights()
+  const { licence, setLicence } = repoLicense
+
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const octokit = new Octokit({ auth: token });
@@ -61,19 +91,34 @@ export const useRepoLicence = (entity: Entity) => {
       const response = (await octokit.request(
         'GET /repos/{owner}/{repo}/contents/{path}',
         {
+          headers: {
+            "if-none-match": licence.etag
+          },
           baseUrl,
           owner,
           repo,
           path: 'LICENSE',
         },
       )) as OctokitResponse<any>;
+
+      if (response.headers.etag) {
+        setLicence({ ...licence, etag: response.headers.etag })
+      }
+
       license = atob(response.data.content)
         .split('\n')
         .map(line => line.trim())
         .filter(Boolean)[0];
-    } catch (a) {
-      license = 'No license file found';
+    } catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          return licence.data
+        } else if (e.status === 404) {
+          license = 'No license file found';
+        }
+      }
     }
+    setLicence({ ...licence, data: license })
     return license;
   }, [baseUrl]);
   return {
