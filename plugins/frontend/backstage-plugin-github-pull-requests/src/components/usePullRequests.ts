@@ -66,7 +66,7 @@ export function usePullRequests({
       if (etag) {
         setPrState((current: PrState) => ({
           ...current,
-          ...{ [search]: { ...current[search], etag } }
+          [search]: { ...current[search], etag }
         }))
 
       }
@@ -113,28 +113,26 @@ export function usePullRequests({
     [page, pageSize, repo, owner, search]);
   useEffect(() => {
     setPage(0);
-    (async () => {
-      const pullRequests = await doFetch();
-      if (pullRequests) {
-        setPrState((current: PrState) => ({
-          ...current,
-          ...{ [search]: { ...current[search], data: pullRequests } }
-        }))
-      }
+    if (!loading && value) {
+      setPrState((current: PrState) => ({
+        ...current,
+        [state]: { ...current[state], data: value }
+      }))
+    }
 
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, pageSize, page, repo, owner]);
-  return [
-    {
-      page,
-      loading,
-      prData: prState[search].data,
-      projectName: `${owner}/${repo}`,
-      error,
-    },
-    {
-      setPage,
-    },
-  ] as const;
+  })()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [search, pageSize, page, repo, owner]);
+return [
+  {
+    page,
+    loading,
+    prData: prState[search].data,
+    projectName: `${owner}/${repo}`,
+    error,
+  },
+  {
+    setPage,
+  },
+] as const;
 }
