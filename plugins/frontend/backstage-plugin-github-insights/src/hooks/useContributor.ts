@@ -18,23 +18,22 @@ import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
-import { ContributorData } from '../components/types';
+import { ContributorData, GithubRequestState, RequestStateStore } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useGithubInsights } from '../components/GithubInsightsContext';
 import { RequestError } from "@octokit/request-error";
 import { useEffect } from 'react';
 
-export const useContributor = (username: string) => {
+export const useContributor = (username: string): { contributor?: ContributorData, error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
 
   const { contributor } = useGithubInsights()
-  const { contributorData, setContributorData } = contributor
+  const [contributorData, setContributorData] = contributor
 
-  const { value, loading, error } = useAsync(async (): Promise<
-    ContributorData
-  > => {
+  const { value, loading, error } = useAsync(async (): Promise<GithubRequestState | undefined> => {
+    let result;
     try {
       const token = await auth.getAccessToken(['repo']);
       const octokit = new Octokit({ auth: token });
@@ -43,24 +42,30 @@ export const useContributor = (username: string) => {
         headers: { "if-none-match": contributorData[username].etag },
         baseUrl,
       });
-      const data = response.data;
-      return data;
+
+      result = { data: response.data as ContributorData, etag: response.headers.etag ?? "" };
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return contributorData.data
+          result = contributorData[username]
         }
       }
     }
+    return result
   }, [username, baseUrl]);
 
   useEffect(() => {
-    //TODO set data
-    setContributorData((current) => ({ ...current, ...{ contributorData } }))
-  }, [value])
+    if (value) {
+      setContributorData((current: RequestStateStore) => ({
+        ...current,
+        [username]: { ...value }
+      }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username, value])
 
   return {
-    contributor: value,
+    contributor: value ? value.data as ContributorData : undefined,
     loading,
     error,
   };

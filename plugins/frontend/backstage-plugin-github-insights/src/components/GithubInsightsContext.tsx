@@ -1,24 +1,45 @@
+/*
+ * Copyright 2021 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import React, { FC, useContext, useState } from "react"
-import { GithubInsightsState } from "./types"
+import { GithubInsightsState, GithubRequestState } from "./types"
+
+class DefaultDict<T> {
+    constructor(defaultVal: T) {
+        return new Proxy({}, {
+            get: (target: { [key: string]: {} }, name: string) => name in target ? target[name] : defaultVal
+        })
+    }
+}
 
 
-
-const GithubInsightsContext = React.createContext<GithubInsightsState>({ "asd": [] })
+const GithubInsightsContext = React.createContext<GithubInsightsState>({
+    repoLicense: [{ etag: "", data: {} }, () => { }],
+    contributor: [{}, () => { }],
+    repoBranches: [{ etag: "", data: {} }, () => { }],
+    request: [{}, () => { }],
+})
 
 export const GithubInsightsProvider: FC = ({ children }) => {
-    const [licence, setLicence] = useState({ etag: "", data: "" })
-    const [contributorData, setContributorData] = useState<{ [key: string]: { etag: "", data: "" } }>({})
-    const [branches, setBranches] = useState({ etag: "", data: {} })
+    const [license, setLicense] = useState<GithubRequestState>({ etag: "", data: "" })
+    const [contributorData, setContributorData] = useState<any>(new DefaultDict({ etag: "", data: {} }))
+    const [branches, setBranches] = useState<GithubRequestState>({ etag: "", data: {} })
+    const [requestState, setRequestState] = useState<any>(new DefaultDict({ etag: "", data: {} }))
 
-    const [requestState, setRequestState] = useState({
-        releases: { etag: "", data: {} },
-        readme: { etag: "", data: {} },
-        contributors: { etag: "", data: {} },
-        languages: { etag: "", data: {} },
-    })
-
-    const value = {
-        "repoLicence": [licence, setLicence],
+    const value: GithubInsightsState = {
+        "repoLicense": [license, setLicense],
         "contributor": [contributorData, setContributorData],
         "repoBranches": [branches, setBranches],
         "request": [requestState, setRequestState]

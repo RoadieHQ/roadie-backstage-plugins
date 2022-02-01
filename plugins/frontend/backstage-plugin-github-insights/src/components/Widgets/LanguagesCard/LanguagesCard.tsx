@@ -72,7 +72,7 @@ const LanguagesCard = (_props: Props) => {
   let barWidth = 0;
   const classes = useStyles();
   const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useRequest(entity, 'languages', 0, 0, true);
+  const { value, loading, error } = useRequest(entity, 'languages', 0, 0);
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
     return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
@@ -90,9 +90,11 @@ const LanguagesCard = (_props: Props) => {
   return value && owner && repo ? (
     <InfoCard title="Languages" className={classes.infoCard}>
       <div className={classes.barContainer}>
-        {Object.entries(value.data as Language).map(
+        {Object.entries(value as Language).map(
           (language, index: number) => {
-            barWidth = barWidth + (language[1] / value.total) * 100;
+            barWidth = barWidth + (language[1] / Object.values(value as Record<string, number>).reduce(
+              (a, b) => a + b,
+            )) * 100;
             return (
               <Tooltip
                 title={language[0]}
@@ -104,7 +106,7 @@ const LanguagesCard = (_props: Props) => {
                   key={language[0]}
                   style={{
                     marginTop: index === 0 ? '0' : `-16px`,
-                    zIndex: Object.keys(value.data).length - index,
+                    zIndex: Object.keys(value).length - index,
                     backgroundColor: colors[language[0]]?.color || '#333',
                     width: `${barWidth}%`,
                   }}
@@ -114,7 +116,7 @@ const LanguagesCard = (_props: Props) => {
           }
         )}
       </div>
-      {Object.entries(value.data as Language).map((language) => (
+      {Object.entries(value as Language).map((language) => (
         <Chip
           classes={{
             label: classes.label,
@@ -127,7 +129,9 @@ const LanguagesCard = (_props: Props) => {
                   backgroundColor: colors[language[0]]?.color || '#333',
                 }}
               />
-              {language[0]} - {((language[1] / value.total) * 100).toFixed(2)}%
+              {language[0]} - {((language[1] / Object.values(value as Record<string, number>).reduce(
+                (a, b) => a + b,
+              )) * 100).toFixed(2)}%
             </>
           }
           variant="outlined"

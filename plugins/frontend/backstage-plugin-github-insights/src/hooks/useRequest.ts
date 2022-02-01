@@ -30,16 +30,16 @@ export const useRequest = (
   requestName: string,
   perPage: number = 0,
   maxResults: number = 0,
-  showTotal: boolean = false,
 ) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
   const { request } = useGithubInsights()
-  const { requestState, setRequestState } = request
+  const [requestState, setRequestState] = request
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
+    let result;
     try {
       const token = await auth.getAccessToken(['repo']);
       const octokit = new Octokit({ auth: token });
@@ -55,39 +55,32 @@ export const useRequest = (
         },
       );
 
-      if (response.headers.etag) {
-        setRequestState((current) => ({
-          ...current,
-          ...{ [requestName]: { ...current[requestName], etag: response.headers.etag } }
-        }))
-      }
       const data = response.data;
 
-      if (showTotal) {
-        if (Object.values(data).length === 0) return null;
-        return {
-          data,
-          total: Object.values(data as Record<string, number>).reduce(
-            (a, b) => a + b,
-          ),
-        };
-      }
-      return maxResults ? data.slice(0, maxResults) : data;
+      result = { data: maxResults ? data.slice(0, maxResults) : data, etag: response.headers.etag ?? "" };
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return requestState[requestName].data
+          result = requestState[requestName]
         }
       }
     }
-  }, [baseUrl]);
+    return result
+  }, [baseUrl, requestName]);
 
   useEffect(() => {
-    setRequestState((current) => ({ ...current, ...{ [requestName]: { ...current[requestName], data: value } } }))
-  }, [value])
+    if (value?.data) {
+      setRequestState((current) => ({
+        ...current,
+        [requestName]: { ...value }
+      }))
+
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, requestName])
 
   return {
-    value,
+    value: value ? value.data : undefined,
     loading,
     error,
   };

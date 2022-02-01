@@ -68,9 +68,9 @@ const ComplianceCard = (_props: Props) => {
       <StructuredMetadataTable
         metadata={{
           'Protected branches':
-            branches?.length && owner && repo ? (
+            branches?.data.length && owner && repo ? (
               <List className={classes.listStyle}>
-                {branches.map((branch: any) => (
+                {branches.data.map((branch: any) => (
                   <ListItem key={branch.name}>{branch.name}</ListItem>
                 ))}
               </List>
@@ -87,7 +87,7 @@ const ComplianceCard = (_props: Props) => {
               </Box>
             ),
           License:
-            license === 'No license file found' ? (
+            license && license.data === 'No license file found' ? (
               <Box display="flex" alignItems="center">
                 <WarningIcon
                   style={{
@@ -99,7 +99,7 @@ const ComplianceCard = (_props: Props) => {
                 <span>None</span>
               </Box>
             ) : (
-              license
+              license.data
             ),
         }}
       />

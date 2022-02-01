@@ -35,6 +35,7 @@ import {
   ScmIntegrationsApi,
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
+import { GithubInsightsProvider } from "../../GithubInsightsContext"
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -74,7 +75,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -92,7 +95,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -108,7 +113,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -125,7 +132,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -139,7 +148,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -156,7 +167,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
@@ -173,7 +186,9 @@ describe('ReadmeCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <GithubInsightsProvider>
+                <ReadMeCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,

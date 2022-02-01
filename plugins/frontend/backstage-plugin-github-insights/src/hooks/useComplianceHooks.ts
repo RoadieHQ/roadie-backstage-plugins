@@ -30,9 +30,10 @@ export const useProtectedBranches = (entity: Entity) => {
   const { owner, repo } = useProjectEntity(entity);
 
   const { repoBranches } = useGithubInsights()
-  const { branches, setBranches } = repoBranches
+  const [branches, setBranches] = repoBranches
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
+    let result;
     try {
       const token = await auth.getAccessToken(['repo']);
       const octokit = new Octokit({ auth: token });
@@ -49,22 +50,25 @@ export const useProtectedBranches = (entity: Entity) => {
           protected: true,
         },
       );
-      if (response.headers.etag) {
-        setBranches({ ...branches, etag: response.headers.etag })
-      }
-      return response.data;
+
+      result = { data: response.data, etag: response.headers.etag ?? "" };
 
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return branches.data
+          result = branches
         }
       }
     }
+    return result
   }, [baseUrl]);
 
   useEffect(() => {
-    setBranches({ ...branches, data: value })
+    if (value) {
+      setBranches({ ...value })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
   return {
@@ -80,13 +84,13 @@ export const useRepoLicence = (entity: Entity) => {
   const { owner, repo } = useProjectEntity(entity);
 
   const { repoLicense } = useGithubInsights()
-  const { licence, setLicence } = repoLicense
+  const [licence, setLicense] = repoLicense
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const octokit = new Octokit({ auth: token });
 
-    let license: string = '';
+    let result;
     try {
       const response = (await octokit.request(
         'GET /repos/{owner}/{repo}/contents/{path}',
@@ -101,26 +105,31 @@ export const useRepoLicence = (entity: Entity) => {
         },
       )) as OctokitResponse<any>;
 
-      if (response.headers.etag) {
-        setLicence({ ...licence, etag: response.headers.etag })
-      }
-
-      license = atob(response.data.content)
+      const license = atob(response.data.content)
         .split('\n')
         .map(line => line.trim())
         .filter(Boolean)[0];
+      result = { etag: response.headers.etag ?? "", data: license }
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return licence.data
+          return licence
         } else if (e.status === 404) {
-          license = 'No license file found';
+          const license = 'No license file found';
+          result = { etag: "", data: license }
         }
       }
     }
-    setLicence({ ...licence, data: license })
-    return license;
+    return result
   }, [baseUrl]);
+
+  useEffect(() => {
+    if (value) {
+      setLicense({ ...value })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
   return {
     license: value,
     loading,

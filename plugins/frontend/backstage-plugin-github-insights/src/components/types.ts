@@ -15,6 +15,7 @@
  */
 
 import { Dispatch, SetStateAction } from "react";
+
 export type ContributorData = {
   name: string;
   login: string;
@@ -32,9 +33,15 @@ export type RequestStateStore = {
 
 export type GithubRequestState = {
   etag: string;
-  data: string;
+  data: string | object;
 }
-export type State = [GithubRequestState | RequestStateStore, Dispatch<SetStateAction<GithubRequestState | RequestStateStore>>]
+
+export type State = [GithubRequestState, Dispatch<SetStateAction<GithubRequestState>>]
+export type StateStore = [RequestStateStore, Dispatch<SetStateAction<RequestStateStore>>]
+
 export type GithubInsightsState = {
-  Key: State;
+  repoLicense: State;
+  contributor: StateStore;
+  repoBranches: State;
+  request: StateStore;
 }

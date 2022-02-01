@@ -39,6 +39,7 @@ import {
   ScmIntegrationsApi,
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
+import { GithubInsightsProvider } from "../../GithubInsightsContext"
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -82,7 +83,9 @@ describe('ComplianceCard', () => {
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ComplianceCard />
+              <GithubInsightsProvider>
+                <ComplianceCard />
+              </GithubInsightsProvider>
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
