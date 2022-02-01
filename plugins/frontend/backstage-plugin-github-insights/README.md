@@ -16,7 +16,30 @@ cd packages/app
 yarn add @roadiehq/backstage-plugin-github-insights
 ```
 
-2. Add plugin API to your Backstage instance:
+2. Add the provider to the component page.
+```ts
+// packages/app/src/components/catalog/EntityPage.tsx
+import { GithubInsightsProvider } from '@roadiehq/backstage-plugin-github-insights';
+
+...
+
+const componentPage = (
+  <GithubInsightsProvider>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isComponentType('service')}>
+        {serviceEntityPage}
+      </EntitySwitch.Case>
+      <EntitySwitch.Case if={isComponentType('website')}>
+        {websiteEntityPage}
+      </EntitySwitch.Case>
+      <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
+    </EntitySwitch>
+  </GithubInsightsProvider>
+);
+
+```
+
+3. Add plugin API to your Backstage instance:
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
@@ -41,7 +64,7 @@ const serviceEntityPage = (
 
 ## Widgets setup
 
-1. You must install plugin by following the steps above to add widgets to your Overview. You might add only selected widgets or all of them.
+1. You must install plugin and add the provider by following the steps above to add widgets to your Overview. You might add only selected widgets or all of them.
 
 2. Add widgets to your Overview tab:
 
