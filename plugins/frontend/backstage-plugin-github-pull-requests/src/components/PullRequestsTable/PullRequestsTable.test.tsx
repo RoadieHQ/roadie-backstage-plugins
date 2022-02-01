@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import {
   configApiRef,
   githubAuthApiRef,
@@ -50,7 +50,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubPullRequestsApiRef, new GithubPullRequestsClient()],
 ];
 
-describe('PullRequestsTable', () => {
+describe.only('PullRequestsTable', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
@@ -61,10 +61,7 @@ describe('PullRequestsTable', () => {
         (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
       ),
     );
-  });
-
-  it('should display a table with data from requests', async () => {
-    const rendered = render(
+    render(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <GithubPullRequestsProvider>
@@ -73,6 +70,9 @@ describe('PullRequestsTable', () => {
         </EntityProvider>
       </TestApiProvider>,
     );
+  });
+
+  it('should display a table with data from requests', async () => {
     expect(
       await rendered.findByText('Remove old instructions'),
     ).toBeInTheDocument();
