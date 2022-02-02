@@ -32,8 +32,6 @@ import { GithubPullRequestsClient } from '../../api';
 import { closedPullsRequestMock, entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { GithubPullRequestsProvider } from '../GithubPullRequestsContext';
-
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
@@ -67,9 +65,7 @@ describe('PullRequestsCard', () => {
     const rendered = render(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
-          <GithubPullRequestsProvider>
-            <PullRequestsStatsCard />
-          </GithubPullRequestsProvider>
+          <PullRequestsStatsCard />
         </EntityProvider>
       </TestApiProvider>,
     );

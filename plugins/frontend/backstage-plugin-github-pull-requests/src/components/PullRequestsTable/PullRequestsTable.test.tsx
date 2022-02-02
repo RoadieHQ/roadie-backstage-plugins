@@ -32,7 +32,6 @@ import { GithubPullRequestsClient } from '../../api';
 import { entityMock, openPullsRequestMock } from '../../mocks/mocks';
 import { PullRequestsTable } from './PullRequestsTable';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { GithubPullRequestsProvider } from '../GithubPullRequestsContext';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -57,16 +56,14 @@ describe.only('PullRequestsTable', () => {
   beforeEach(() => {
     worker.use(
       rest.get(
-        'https://api.github.com/search/issues?state=open&per_page=5&page=1',
+        'https://api.github.com/search/issues',
         (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
       ),
     );
     render(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
-          <GithubPullRequestsProvider>
-            <PullRequestsTable />
-          </GithubPullRequestsProvider>
+          <PullRequestsTable />
         </EntityProvider>
       </TestApiProvider>,
     );
@@ -82,4 +79,10 @@ describe.only('PullRequestsTable', () => {
       await rendered.findByText('Complete code migration to plugins repo'),
     ).toBeInTheDocument();
   });
+  it('should display data from state when api returns 304', async () => {
+    rest.get(
+      'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=open&per_page=5&page=1',
+      (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
+    )
+  })
 });

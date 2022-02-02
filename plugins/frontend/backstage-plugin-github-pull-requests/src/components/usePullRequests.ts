@@ -21,8 +21,9 @@ import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
 import { PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
 import { PrState, PullRequest, PullRequestState } from '../types';
+import { PullRequest, PullRequestState } from '../types';
 import { useBaseUrl } from './useBaseUrl';
-import { useGithubPullRequests } from "./GithubPullRequestsContext"
+import { useStore } from "./store"
 
 export function usePullRequests({
   search,
@@ -39,7 +40,7 @@ export function usePullRequests({
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [page, setPage] = useState(0);
-  const { prState, setPrState } = useGithubPullRequests()
+  const { prState, setPrState } = useStore()
   const getElapsedTime = (start: string) => {
     return moment(start).fromNow();
   };
@@ -64,11 +65,7 @@ export function usePullRequests({
       })
 
       if (etag) {
-        setPrState((current: PrState) => ({
-          ...current,
-          [search]: { ...current[search], etag }
-        }))
-
+        setPrState({ [search]: { ...prState[search], etag } })
       }
 
       return pullRequestsData.items.map(
@@ -114,10 +111,7 @@ export function usePullRequests({
   useEffect(() => {
     setPage(0);
     if (!loading && value) {
-      setPrState((current: PrState) => ({
-        ...current,
-        [state]: { ...current[state], data: value }
-      }))
+      setPrState({ [state]: { ...prState[state], data: value } })
     }
 
   })()

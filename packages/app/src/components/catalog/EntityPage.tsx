@@ -54,7 +54,6 @@ import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
-  GithubPullRequestsProvider
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   isAWSLambdaAvailable,
@@ -320,19 +319,17 @@ const defaultEntityPage = (
 );
 
 const componentPage = (
-  <GithubPullRequestsProvider>
-    <EntitySwitch>
-      <EntitySwitch.Case if={isComponentType('service')}>
-        {serviceEntityPage}
-      </EntitySwitch.Case>
+  <EntitySwitch>
+    <EntitySwitch.Case if={isComponentType('service')}>
+      {serviceEntityPage}
+    </EntitySwitch.Case>
 
-      <EntitySwitch.Case if={isComponentType('website')}>
-        {websiteEntityPage}
-      </EntitySwitch.Case>
+    <EntitySwitch.Case if={isComponentType('website')}>
+      {websiteEntityPage}
+    </EntitySwitch.Case>
 
-      <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
-    </EntitySwitch>
-  </GithubPullRequestsProvider>
+    <EntitySwitch.Case>{defaultEntityPage}</EntitySwitch.Case>
+  </EntitySwitch>
 );
 
 const apiPage = (

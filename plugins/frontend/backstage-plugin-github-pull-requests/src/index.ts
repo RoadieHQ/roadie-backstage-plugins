@@ -43,4 +43,4 @@ export {
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
 
-export * from './components/GithubPullRequestsContext'
+export * from './components/store'
