@@ -18,9 +18,9 @@ import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
-import { ContributorData, GithubRequestState, RequestStateStore } from '../components/types';
+import { ContributorData, GithubRequestState } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { useGithubInsights, useStore } from '../components/store';
+import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
 import { useEffect } from 'react';
 
@@ -32,8 +32,6 @@ export const useContributor = (username: string): { contributor?: ContributorDat
   // const { contributor } = useGithubInsights()
   // const [contributorData, setContributorData] = contributor
   const { state: contributorData, setContributorData } = useStore(state => state.contributor)
-  console.log(contributorData["almafa"], setContributorData, "ungabunga")
-  console.log(contributorData, setContributorData, "ungabunga")
 
   const { value, loading, error } = useAsync(async (): Promise<GithubRequestState | undefined> => {
     let result;
