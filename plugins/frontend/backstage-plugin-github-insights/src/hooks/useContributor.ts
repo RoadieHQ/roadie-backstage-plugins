@@ -29,9 +29,7 @@ export const useContributor = (username: string): { contributor?: ContributorDat
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
 
-  // const { contributor } = useGithubInsights()
-  // const [contributorData, setContributorData] = contributor
-  const { state: contributorData, setContributorData } = useStore(state => state.contributor)
+  const { state: contributorData, setState: setContributorData } = useStore(state => state.contributor)
 
   const { value, loading, error } = useAsync(async (): Promise<GithubRequestState | undefined> => {
     let result;
@@ -59,8 +57,7 @@ export const useContributor = (username: string): { contributor?: ContributorDat
     if (value) {
       setContributorData(username, value)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [username, value])
+  }, [username, value, setContributorData])
 
   return {
     contributor: value ? value.data as ContributorData : undefined,
@@ -68,4 +65,3 @@ export const useContributor = (username: string): { contributor?: ContributorDat
     error,
   };
 };
-// Cannot read properties of undefined (reading 'kissmikijr')

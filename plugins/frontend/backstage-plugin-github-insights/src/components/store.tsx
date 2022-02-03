@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import create from 'zustand'
+import create, { SetState, GetState, StoreApi } from 'zustand'
 import produce from "immer"
-import { GithubRequestState } from "./types"
+import { GithubRequestState, GithubInsightsState } from "./types"
 
 class DefaultDict<T> {
     constructor(defaultVal: T) {
@@ -28,45 +28,45 @@ class DefaultDict<T> {
 
 const initialState: GithubRequestState = { etag: "", data: [] }
 
-const createLicenseSlice = (set) => ({
+const createLicenseSlice = (set: SetState<GithubInsightsState>) => ({
     license: {
         state: initialState,
-        setLicense: (next) => set(produce((draft) => { draft.license.state = next }))
+        setState: (next: GithubRequestState) => set(produce((draft) => { draft.license.state = next }))
     }
 })
 
-const createBranchesSlice = (set) => ({
+const createBranchesSlice = (set: SetState<GithubInsightsState>) => ({
     branches: {
         state: initialState,
-        setBranches: (next) => set(produce((draft) => { draft.branches.state = next }))
+        setState: (next: GithubRequestState) => set(produce((draft) => { draft.branches.state = next }))
     },
 })
 
-const createContributorSlice = (set) => ({
+const createContributorSlice = (set: SetState<GithubInsightsState>) => ({
     contributor: {
         state: new DefaultDict(initialState),
-        setContributorData: (key, value) => set((prev) => {
+        setState: (key: string, value: GithubRequestState) => set((prev) => {
             prev.contributor.state[key] = value
-            return produce((prev) => {
-                prev.contributor.state = prev.contributor.state
+            return produce((draft) => {
+                draft.contributor.state = prev.contributor.state
             })
         })
     }
 })
-const createRequestSlice = (set) => ({
+const createRequestSlice = (set: SetState<GithubInsightsState>) => ({
     request: {
         state: new DefaultDict(initialState),
-        setRequestState: (key, value) => set((prev) => {
+        setState: (key: string, value: GithubRequestState) => set((prev) => {
             prev.request.state[key] = value
-            return produce((prev) => {
-                prev.requesst.state = prev.request.state
+            return produce((draft) => {
+                draft.requesst.state = prev.request.state
             })
         })
     }
 })
 
 
-export const useStore = create((set) => ({
+export const useStore = create<GithubInsightsState, SetState<GithubInsightsState>, GetState<GithubInsightsState>, StoreApi<GithubInsightsState>>((set) => ({
     ...createLicenseSlice(set),
     ...createContributorSlice(set),
     ...createBranchesSlice(set),

@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { Dispatch, SetStateAction } from "react";
-
 export type ContributorData = {
   name: string;
   login: string;
@@ -36,12 +34,18 @@ export type GithubRequestState = {
   data: string | object;
 }
 
-export type State = [GithubRequestState, Dispatch<SetStateAction<GithubRequestState>>]
-export type StateStore = [RequestStateStore, Dispatch<SetStateAction<RequestStateStore>>]
+export type State = {
+  state: GithubRequestState;
+  setState: (next: GithubRequestState) => void;
+}
+export type StateStore = {
+  state: RequestStateStore;
+  setState: (key: string, value: GithubRequestState) => void;
+}
 
 export type GithubInsightsState = {
-  repoLicense: State;
+  license: State;
   contributor: StateStore;
-  repoBranches: State;
+  branches: State;
   request: StateStore;
 }

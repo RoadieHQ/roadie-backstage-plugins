@@ -35,7 +35,6 @@ import {
   ScmIntegrationsApi,
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../mocks/scmIntegrationsApiMock';
-import { GithubInsightsProvider } from "../GithubInsightsContext"
 
 const oauthRequestApi = new OAuthRequestManager();
 const apis: [AnyApiRef, Partial<unknown>][] = [
@@ -84,9 +83,7 @@ describe('Insights Page', () => {
                   },
                 }}
               >
-                <GithubInsightsProvider>
-                  <InsightsPage />
-                </GithubInsightsProvider>
+                <InsightsPage />
               </EntityProvider>
             </ThemeProvider>
           </TestApiProvider>,

@@ -29,7 +29,7 @@ export const useProtectedBranches = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { state: branches, setBranches } = useStore(state => state.branches)
+  const { state: branches, setState: setBranches } = useStore(state => state.branches)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -67,8 +67,7 @@ export const useProtectedBranches = (entity: Entity) => {
       setBranches(value)
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
+  }, [value, setBranches])
 
   return {
     branches: value,
@@ -82,10 +81,7 @@ export const useRepoLicence = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  // const { repoLicense } = useGithubInsights()
-  // const [licence, setLicense] = repoLicense
-
-  const { state: license, setLicense } = useStore(state => state.license)
+  const { state: license, setState: setLicense } = useStore(state => state.license)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -116,8 +112,7 @@ export const useRepoLicence = (entity: Entity) => {
         if (e.status === 304) {
           return license
         } else if (e.status === 404) {
-          const license = 'No license file found';
-          result = { etag: "", data: license }
+          result = { etag: "", data: 'No license file found' }
         }
       }
     }
@@ -126,11 +121,10 @@ export const useRepoLicence = (entity: Entity) => {
 
   useEffect(() => {
     if (value) {
-      setLicense({ ...value })
+      setLicense(value)
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
+  }, [value, setLicense])
   return {
     license: value,
     loading,

@@ -35,7 +35,7 @@ export const useRequest = (
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { state: requestState, setRequestState } = useStore(state => state.request)
+  const { state: requestState, setState: setRequestState } = useStore(state => state.request)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -71,8 +71,7 @@ export const useRequest = (
     if (value?.data) {
       setRequestState(requestName, value)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, requestName])
+  }, [value, requestName, setRequestState])
 
   return {
     value: value ? value.data : undefined,
