@@ -21,7 +21,7 @@ import { Entity } from '@backstage/catalog-model';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
-import { useGithubInsights } from '../components/GithubInsightsContext';
+import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
 
 
@@ -35,8 +35,7 @@ export const useRequest = (
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { request } = useGithubInsights()
-  const [requestState, setRequestState] = request
+  const { state: requestState, setRequestState } = useStore(state => state.request)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -70,11 +69,7 @@ export const useRequest = (
 
   useEffect(() => {
     if (value?.data) {
-      setRequestState((current) => ({
-        ...current,
-        [requestName]: { ...value }
-      }))
-
+      setRequestState(requestName, value)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, requestName])

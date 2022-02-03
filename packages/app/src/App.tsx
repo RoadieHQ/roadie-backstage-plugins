@@ -39,9 +39,6 @@ import { Root } from './components/Root';
 import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { createApp } from '@backstage/app-defaults';
-import {
-  GithubInsightsProvider
-} from '@roadiehq/backstage-plugin-github-insights';
 
 const app = createApp({
   apis,
@@ -91,15 +88,11 @@ const routes = (
 
 const App = () => (
   <AppProvider>
-    <GithubInsightsProvider>
-      <AlertDisplay />
-      <OAuthRequestDialog />
-
-      <AppRouter>
-        <Root>{routes}</Root>
-      </AppRouter>
-
-    </GithubInsightsProvider>
+    <AlertDisplay />
+    <OAuthRequestDialog />
+    <AppRouter>
+      <Root>{routes}</Root>
+    </AppRouter>
   </AppProvider>
 );
 

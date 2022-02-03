@@ -20,7 +20,7 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { ContributorData, GithubRequestState, RequestStateStore } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { useGithubInsights } from '../components/GithubInsightsContext';
+import { useGithubInsights, useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
 import { useEffect } from 'react';
 
@@ -29,8 +29,11 @@ export const useContributor = (username: string): { contributor?: ContributorDat
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
 
-  const { contributor } = useGithubInsights()
-  const [contributorData, setContributorData] = contributor
+  // const { contributor } = useGithubInsights()
+  // const [contributorData, setContributorData] = contributor
+  const { state: contributorData, setContributorData } = useStore(state => state.contributor)
+  console.log(contributorData["almafa"], setContributorData, "ungabunga")
+  console.log(contributorData, setContributorData, "ungabunga")
 
   const { value, loading, error } = useAsync(async (): Promise<GithubRequestState | undefined> => {
     let result;
@@ -56,10 +59,7 @@ export const useContributor = (username: string): { contributor?: ContributorDat
 
   useEffect(() => {
     if (value) {
-      setContributorData((current: RequestStateStore) => ({
-        ...current,
-        [username]: { ...value }
-      }))
+      setContributorData(username, value)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, value])
@@ -70,3 +70,4 @@ export const useContributor = (username: string): { contributor?: ContributorDat
     error,
   };
 };
+// Cannot read properties of undefined (reading 'kissmikijr')

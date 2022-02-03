@@ -21,7 +21,7 @@ import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { useEffect } from 'react';
-import { useGithubInsights } from '../components/GithubInsightsContext';
+import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
 
 export const useProtectedBranches = (entity: Entity) => {
@@ -29,8 +29,7 @@ export const useProtectedBranches = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { repoBranches } = useGithubInsights()
-  const [branches, setBranches] = repoBranches
+  const { state: branches, setBranches } = useStore(state => state.branches)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -65,7 +64,7 @@ export const useProtectedBranches = (entity: Entity) => {
 
   useEffect(() => {
     if (value) {
-      setBranches({ ...value })
+      setBranches(value)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,8 +82,10 @@ export const useRepoLicence = (entity: Entity) => {
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { repoLicense } = useGithubInsights()
-  const [licence, setLicense] = repoLicense
+  // const { repoLicense } = useGithubInsights()
+  // const [licence, setLicense] = repoLicense
+
+  const { state: license, setLicense } = useStore(state => state.license)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
@@ -96,7 +97,7 @@ export const useRepoLicence = (entity: Entity) => {
         'GET /repos/{owner}/{repo}/contents/{path}',
         {
           headers: {
-            "if-none-match": licence.etag
+            "if-none-match": license.etag
           },
           baseUrl,
           owner,
@@ -105,15 +106,15 @@ export const useRepoLicence = (entity: Entity) => {
         },
       )) as OctokitResponse<any>;
 
-      const license = atob(response.data.content)
+      const licenseData = atob(response.data.content)
         .split('\n')
         .map(line => line.trim())
         .filter(Boolean)[0];
-      result = { etag: response.headers.etag ?? "", data: license }
+      result = { etag: response.headers.etag ?? "", data: licenseData }
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return licence
+          return license
         } else if (e.status === 404) {
           const license = 'No license file found';
           result = { etag: "", data: license }
