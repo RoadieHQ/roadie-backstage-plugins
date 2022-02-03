@@ -56,7 +56,7 @@ describe('PullRequestsTable', () => {
   beforeEach(() => {
     worker.use(
       rest.get(
-        'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=open&per_page=5&page=1',
+        'https://api.github.com/search/issues?state=open&per_page=5&page=1',
         (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
       ),
     );
@@ -71,12 +71,12 @@ describe('PullRequestsTable', () => {
       </TestApiProvider>,
     );
     expect(
-      await rendered.findByText('add test with msw library'),
+      await rendered.findByText('Remove old instructions'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('muenchdo')).toBeInTheDocument();
-    expect(await rendered.findByText('mcalus3')).toBeInTheDocument();
+    expect(await rendered.findByText('martina-if')).toBeInTheDocument();
+    expect(await rendered.findByText('iain-b')).toBeInTheDocument();
     expect(
-      await rendered.findByText('Bump ini from 1.3.5 to 1.3.8'),
+      await rendered.findByText('Complete code migration to plugins repo'),
     ).toBeInTheDocument();
   });
 });

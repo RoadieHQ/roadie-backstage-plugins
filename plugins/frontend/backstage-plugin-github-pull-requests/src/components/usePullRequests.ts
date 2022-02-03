@@ -17,9 +17,8 @@ import { useEffect, useState } from 'react';
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { PullsListResponseData } from '@octokit/types';
 import moment from 'moment';
-import { PullRequestState } from '../types';
+import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 
 export type PullRequest = {
@@ -37,15 +36,15 @@ export type PullRequest = {
 };
 
 export function usePullRequests({
+  search,
   owner,
   repo,
   branch,
-  state,
 }: {
+  search: string;
   owner: string;
   repo: string;
   branch?: string;
-  state?: PullRequestState;
 }) {
   const api = useApi(githubPullRequestsApiRef);
   const auth = useApi(githubAuthApiRef);
@@ -69,27 +68,27 @@ export function usePullRequests({
         // GitHub API pagination count starts from 1
         .listPullRequests({
           token,
+          search,
           owner,
           repo,
           pageSize,
           page: page + 1,
           branch,
-          state,
           baseUrl,
         })
         .then(
           ({
-            maxTotalItems,
-            pullRequestsData,
+            pullRequestsData: {
+              total_count, 
+              items
+            },
           }: {
-            maxTotalItems?: number;
-            pullRequestsData: PullsListResponseData;
+            pullRequestsData: SearchPullRequestsResponseData;
           }) => {
-            if (maxTotalItems) {
-              setTotal(maxTotalItems);
+            if (total_count >= 0) {
+              setTotal(total_count);
             }
-
-            return pullRequestsData.map(
+            return items.map(
               ({
                 id,
                 html_url,
@@ -100,7 +99,7 @@ export function usePullRequests({
                 user,
                 state: pr_state,
                 draft,
-                merged_at,
+                pull_request: { merged_at },
               }) => ({
                 url: html_url,
                 id,
@@ -123,7 +122,7 @@ export function usePullRequests({
     setPage(0);
     retry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }, [search]);
   return [
     {
       page,

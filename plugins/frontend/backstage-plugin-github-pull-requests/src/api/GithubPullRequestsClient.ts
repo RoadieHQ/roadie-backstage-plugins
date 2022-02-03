@@ -16,48 +16,38 @@
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { PullsListResponseData } from '@octokit/types';
-import { PullRequestState } from '../types';
+import { SearchPullRequestsResponseData } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
+    search = '',
     token,
     owner,
     repo,
     pageSize = 5,
     page,
-    state = 'all',
     baseUrl,
   }: {
+    search: string;
     token: string;
     owner: string;
     repo: string;
     pageSize?: number;
     page?: number;
-    state?: PullRequestState;
     baseUrl: string | undefined;
   }): Promise<{
-    maxTotalItems?: number;
-    pullRequestsData: PullsListResponseData;
+    pullRequestsData: SearchPullRequestsResponseData;
   }> {
     const pullRequestResponse = await new Octokit({
       auth: token,
       ...(baseUrl && { baseUrl }),
-    }).pulls.list({
-      repo,
-      state,
+    }).search.issuesAndPullRequests({
+      q: `${search} in:title type:pr repo:${owner}/${repo}`,
       per_page: pageSize,
       page,
-      owner,
     });
-    const paginationLinks = pullRequestResponse.headers.link;
-    const lastPage = paginationLinks?.match(/\d+(?!.*page=\d*)/g) || ['1'];
-    const maxTotalItems = paginationLinks?.endsWith('rel="last"')
-      ? parseInt(lastPage[0], 10) * pageSize
-      : undefined;
     return {
-      maxTotalItems,
-      pullRequestsData: (pullRequestResponse.data as any) as PullsListResponseData,
+      pullRequestsData: (pullRequestResponse.data as any) as SearchPullRequestsResponseData,
     };
   }
 }
