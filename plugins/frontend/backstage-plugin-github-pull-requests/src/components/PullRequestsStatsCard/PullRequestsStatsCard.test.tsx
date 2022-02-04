@@ -32,6 +32,7 @@ import { GithubPullRequestsClient } from '../../api';
 import { closedPullsRequestMock, entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };

@@ -49,7 +49,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubPullRequestsApiRef, new GithubPullRequestsClient()],
 ];
 
-describe.only('PullRequestsTable', () => {
+describe('PullRequestsTable', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
@@ -79,10 +79,5 @@ describe.only('PullRequestsTable', () => {
       await rendered.findByText('Complete code migration to plugins repo'),
     ).toBeInTheDocument();
   });
-  it('should display data from state when api returns 304', async () => {
-    rest.get(
-      'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=open&per_page=5&page=1',
-      (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
-    )
-  })
+
 });

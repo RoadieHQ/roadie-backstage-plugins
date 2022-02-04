@@ -38,12 +38,10 @@ export type PrStateData = {
     data: PullRequest[];
 }
 export type PrState = {
-    open: PrStateData;
-    closed: PrStateData;
-    all: PrStateData;
+    [key: string]: PrStateData;
 }
 
-export type PullRequestsContextData = {
+export type GithubPullRequestsState = {
     prState: PrState,
-    setPrState: Dispatch<SetStateAction<PrState>>
+    setPrState: (next: PrState) => void
 }

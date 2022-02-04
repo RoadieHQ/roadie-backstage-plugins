@@ -1,5 +1,5 @@
 ---
-'@roadiehq/backstage-plugin-github-pull-requests': major
+'@roadiehq/backstage-plugin-github-pull-requests': minor
 ---
 
-Add provider to the plugin to be able to save some state in it.
+Add state to the plugin
