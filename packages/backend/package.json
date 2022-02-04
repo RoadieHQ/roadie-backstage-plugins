@@ -23,7 +23,7 @@
     "@backstage/config": "^0.1.5",
     "@backstage/integration": "^0.7.0",
     "@backstage/plugin-app-backend": "^0.3.13",
-    "@backstage/plugin-auth-backend": "^0.8.0",
+    "@backstage/plugin-auth-backend": "^0.9.0",
     "@backstage/plugin-catalog-backend": "^0.21.0",
     "@backstage/plugin-permission-common": "^0.4.0",
     "@backstage/plugin-permission-node": "^0.4.0",
