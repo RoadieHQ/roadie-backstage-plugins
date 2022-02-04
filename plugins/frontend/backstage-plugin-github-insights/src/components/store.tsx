@@ -16,7 +16,7 @@
 
 import create, { SetState, GetState, StoreApi } from 'zustand'
 import produce from "immer"
-import { GithubRequestState, GithubInsightsState } from "./types"
+import { GithubRequestState, GithubInsightsState, RequestStateStore } from "./types"
 
 class DefaultDict<T> {
     constructor(defaultVal: T) {
@@ -44,7 +44,7 @@ const createBranchesSlice = (set: SetState<GithubInsightsState>) => ({
 
 const createContributorSlice = (set: SetState<GithubInsightsState>) => ({
     contributor: {
-        state: new DefaultDict(initialState),
+        state: new DefaultDict(initialState) as RequestStateStore,
         setState: (key: string, value: GithubRequestState) => set((prev) => {
             prev.contributor.state[key] = value
             return produce((draft) => {
@@ -55,7 +55,7 @@ const createContributorSlice = (set: SetState<GithubInsightsState>) => ({
 })
 const createRequestSlice = (set: SetState<GithubInsightsState>) => ({
     request: {
-        state: new DefaultDict(initialState),
+        state: new DefaultDict(initialState) as RequestStateStore,
         setState: (key: string, value: GithubRequestState) => set((prev) => {
             prev.request.state[key] = value
             return produce((draft) => {
