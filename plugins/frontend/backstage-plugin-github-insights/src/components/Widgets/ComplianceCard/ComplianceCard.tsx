@@ -87,7 +87,7 @@ const ComplianceCard = (_props: Props) => {
               </Box>
             ),
           License:
-            license && license.data === 'No license file found' ? (
+            license.data === 'No license file found' ? (
               <Box display="flex" alignItems="center">
                 <WarningIcon
                   style={{

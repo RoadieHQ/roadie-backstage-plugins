@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
@@ -70,14 +70,14 @@ describe('ComplianceCard', () => {
         (_, res, ctx) => res(ctx.json(licenseResponseMock)),
       ),
       rest.get(
-        'https://api.github.com/repos/mcalus3/backstage/branches?protected=true',
+        'https://api.github.com/repos/mcalus3/backstage/branches',
         (_, res, ctx) => res(ctx.json(branchesResponseMock)),
       ),
     );
   });
 
   it('should display a card with the data from the requests', async () => {
-    const rendered = render(
+    render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
@@ -87,8 +87,48 @@ describe('ComplianceCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    );
-    expect(await rendered.findByText('master')).toBeInTheDocument();
-    expect(await rendered.findByText('Apache License')).toBeInTheDocument();
+    )
+
+    expect(await screen.findByText('master')).toBeInTheDocument();
+    expect(await screen.findByText('Apache License')).toBeInTheDocument();
   });
+  it('should display card with data from sate on second render', async () => {
+    const { rerender } = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <ComplianceCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    )
+
+    worker.use(
+      rest.get(
+        'https://api.github.com/repos/mcalus3/backstage/contents/LICENSE',
+        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+      ),
+      rest.get(
+        'https://api.github.com/repos/mcalus3/backstage/branches',
+        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+      ),
+    );
+
+    rerender(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <ComplianceCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    )
+
+    expect(await screen.findByText('master')).toBeInTheDocument();
+    expect(await screen.findByText("Apache License")).toBeInTheDocument()
+  })
 });
