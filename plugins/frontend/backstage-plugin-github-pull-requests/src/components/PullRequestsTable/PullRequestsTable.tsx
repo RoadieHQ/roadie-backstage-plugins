@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
 import React, { FC, useState, useRef } from 'react';
 import { debounce } from 'lodash';
 import { InputAdornment, IconButton, TextField, Typography, Box, ButtonGroup, Button } from '@material-ui/core';
-=======
-import React, { FC, useEffect, useState } from 'react';
-import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
->>>>>>> 92a7fad (SC-6275  make filtering on the frontend)
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
 import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
 import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
-<<<<<<< HEAD
 import { isRoadieBackstageDefaultFilterSet } from '../../utils/isRoadieBackstageDefaultFilterSet';
-import { usePullRequests, PullRequest } from '../usePullRequests';
-import { PullRequestState } from '../../types';
-=======
 import { usePullRequests } from '../usePullRequests';
 import { PullRequestState, PullRequest } from '../../types';
->>>>>>> 92a7fad (SC-6275  make filtering on the frontend)
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -181,15 +171,15 @@ const PullRequests = (__props: TableProps) => {
       );
     }
   };
-  const [tableProps, { retry, setPage, setPageSize }] = usePullRequests({
+  const [tableProps, { setPage }] = usePullRequests({
     search: search,
     owner,
     repo,
-    pageSize: 20
+    // pageSize: 20
   });
-  useEffect(() => {
-    setData(tableProps.prData.slice(0, pageSize))
-  }, [pageSize, tableProps.prData])
+  // useEffect(() => {
+  //   setData(tableProps.prData.slice(0, pageSize))
+  // }, [pageSize, tableProps.prData])
 
   const StateFilterComponent = () => (
     <Box position="absolute" right={525} top={20}>
@@ -259,13 +249,13 @@ const PullRequests = (__props: TableProps) => {
     <PullRequestsTableView
       page={tableProps.page}
       projectName={tableProps.projectName}
-      total={tableProps.total}
-      prData={data}
-      pageSize={pageSize}
+      // total={tableProps.total}
+      prData={tableProps.prData}
       StateFilterComponent={StateFilterComponent}
       SearchComponent={SearchComponent}
       loading={tableProps.loading}
-      onChangePageSize={setPageSize}
+      // onChangePageSize={setPageSize}
+      // pageSize={pageSize}
       onChangePage={setPage}
     />
   );

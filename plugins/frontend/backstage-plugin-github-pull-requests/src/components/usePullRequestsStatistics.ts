@@ -15,7 +15,7 @@
  */
 import { useMemo } from 'react';
 import moment from 'moment';
-import { PullRequestState, PullRequest } from '../types';
+import { PullRequestState, PullRequest, SearchPullRequestsResponseData } from '../types';
 import { usePullRequests } from './usePullRequests';
 
 export type PullRequestStats = {

@@ -19,9 +19,7 @@ import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { RequestError } from "@octokit/request-error";
 import moment from 'moment';
-import { PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
-import { PrState, PullRequest, PullRequestState } from '../types';
-import { PullRequest, PullRequestState } from '../types';
+import { PullRequest, PrState, PullRequestState, SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 import { useStore } from "./store"
 
@@ -57,11 +55,10 @@ export function usePullRequests({
         search,
         owner,
         repo,
-        pageSize,
         page: page + 1,
         branch,
         baseUrl,
-        etag: prState[search].etag || ""
+        etag: search in prState ? prState[search].etag : ""
       })
 
       if (etag) {
@@ -79,6 +76,7 @@ export function usePullRequests({
           user,
           state: pr_state,
           draft,
+          closed_at,
           pull_request: { merged_at },
         }) => ({
           url: html_url,
@@ -102,31 +100,30 @@ export function usePullRequests({
         if (e.status !== 304) {
           throw e
         }
-        result = prState[state].data
+        result = prState[search].data
       }
     }
     return result
   },
-    [page, pageSize, repo, owner, search]);
+    [page, repo, owner, search]);
   useEffect(() => {
     setPage(0);
     if (!loading && value) {
-      setPrState({ [state]: { ...prState[state], data: value } })
+      setPrState({ [search]: { ...prState[search], data: value } })
     }
 
-  })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [search, pageSize, page, repo, owner]);
-return [
-  {
-    page,
-    loading,
-    prData: prState[search].data,
-    projectName: `${owner}/${repo}`,
-    error,
-  },
-  {
-    setPage,
-  },
-] as const;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, page, repo, owner]);
+  return [
+    {
+      page,
+      loading,
+      prData: search in prState ? prState[search].data : [],
+      projectName: `${owner}/${repo}`,
+      error,
+    },
+    {
+      setPage,
+    },
+  ] as const;
 }

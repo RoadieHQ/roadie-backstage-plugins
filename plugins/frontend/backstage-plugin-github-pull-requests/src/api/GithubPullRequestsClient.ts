@@ -15,16 +15,8 @@
  */
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
-<<<<<<< HEAD
 import { Octokit } from '@octokit/rest';
 import { SearchPullRequestsResponseData } from '../types';
-=======
-import { PullsListResponseData } from '@octokit/types';
-import { PullRequestState } from '../types';
-import { createTokenAuth } from "@octokit/auth-token"
-import { request } from "@octokit/request"
-import { createUnauthenticatedAuth } from "@octokit/auth-unauthenticated"
->>>>>>> 92a7fad (SC-6275  make filtering on the frontend)
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
@@ -49,7 +41,6 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     pullRequestsData: SearchPullRequestsResponseData;
     etag?: string
   }> {
-    console.log(typeof token, "TOKEN?")
     const pullRequestResponse = await new Octokit({
       auth: token,
       ...(baseUrl && { baseUrl }),
