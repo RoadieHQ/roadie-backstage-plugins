@@ -69,8 +69,6 @@ const routes = (
       path="/catalog/:namespace/:kind/:name"
       element={<CatalogEntityPage />}
     >
-
-
       {entityPage}
     </Route>
     <Route path="/docs" element={<TechdocsPage />} />
