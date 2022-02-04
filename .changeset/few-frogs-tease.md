@@ -2,4 +2,4 @@
 '@roadiehq/backstage-plugin-github-insights': minor
 ---
 
-Add context to the plugin to be able to use state
+Add state to cache response from the github api
