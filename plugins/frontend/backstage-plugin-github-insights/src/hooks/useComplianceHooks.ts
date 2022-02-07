@@ -25,7 +25,7 @@ import { RequestError } from "@octokit/request-error";
 
 export const NO_LICENSE_MSG = 'No license file found'
 
-export const useProtectedBranches = (entity: Entity) => {
+export const useProtectedBranches = (entity: Entity): { branches?: [], error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
@@ -74,7 +74,7 @@ export const useProtectedBranches = (entity: Entity) => {
   };
 };
 
-export const useRepoLicence = (entity: Entity) => {
+export const useRepoLicence = (entity: Entity): { license?: string, error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
