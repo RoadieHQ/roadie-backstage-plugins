@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 1.4.0
+
+### Minor Changes
+
+- aa4f48d: Improve search functionality, so it supports searching per author and type of PR. This is a common pattern used in GitHub, so implementing it also for our plugin.
+
 ## 1.3.7
 
 ### Patch Changes

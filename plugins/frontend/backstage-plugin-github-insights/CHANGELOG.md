@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.5.0
+
+### Minor Changes
+
+- eb94c37: Add state to cache response from the github api
+
 ## 1.4.7
 
 ### Patch Changes
