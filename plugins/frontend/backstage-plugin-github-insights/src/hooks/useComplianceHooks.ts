@@ -20,9 +20,10 @@ import { OctokitResponse } from '@octokit/types';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
-import { useEffect } from 'react';
 import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
+
+const NO_LICENSE_MSG = 'No license file found'
 
 export const useProtectedBranches = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
@@ -62,12 +63,9 @@ export const useProtectedBranches = (entity: Entity) => {
     return result
   }, [baseUrl]);
 
-  useEffect(() => {
-    if (value) {
-      setBranches(value)
-    }
-
-  }, [value, setBranches])
+  if (value) {
+    setBranches(value)
+  }
 
   return {
     branches: value,
@@ -84,6 +82,11 @@ export const useRepoLicence = (entity: Entity) => {
   const { state: license, setState: setLicense } = useStore(state => state.license)
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
+
+    if (license.data === NO_LICENSE_MSG) {
+      return license
+    }
+
     const token = await auth.getAccessToken(['repo']);
     const octokit = new Octokit({ auth: token });
 
@@ -112,19 +115,17 @@ export const useRepoLicence = (entity: Entity) => {
         if (e.status === 304) {
           return license
         } else if (e.status === 404) {
-          result = { etag: "", data: 'No license file found' }
+          result = { etag: "", data: NO_LICENSE_MSG }
         }
       }
     }
     return result
   }, [baseUrl]);
 
-  useEffect(() => {
-    if (value) {
-      setLicense(value)
-    }
+  if (value) {
+    setLicense(value)
+  }
 
-  }, [value, setLicense])
   return {
     license: value,
     loading,

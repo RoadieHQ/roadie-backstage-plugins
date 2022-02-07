@@ -22,7 +22,6 @@ import { ContributorData, GithubRequestState } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
-import { useEffect } from 'react';
 
 export const useContributor = (username: string): { contributor?: ContributorData, error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
@@ -53,11 +52,9 @@ export const useContributor = (username: string): { contributor?: ContributorDat
     return result
   }, [username, baseUrl]);
 
-  useEffect(() => {
-    if (value) {
-      setContributorData(username, value)
-    }
-  }, [username, value, setContributorData])
+  if (value) {
+    setContributorData(username, value)
+  }
 
   return {
     contributor: value ? value.data as ContributorData : undefined,

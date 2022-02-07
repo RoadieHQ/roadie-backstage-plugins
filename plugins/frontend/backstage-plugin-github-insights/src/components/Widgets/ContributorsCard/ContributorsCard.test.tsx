@@ -84,7 +84,7 @@ describe('ContributorsCard', () => {
     expect(await screen.findByText('People')).toBeInTheDocument();
     expect(await screen.getByAltText('Rugvip')).toBeInTheDocument();
   });
-  it('should display a card with data from sate on second render when request is 304', async () => {
+  it('should display a card with data from state on second render when request is 304', async () => {
     const { rerender } = render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>

@@ -92,7 +92,7 @@ describe('ComplianceCard', () => {
     expect(await screen.findByText('master')).toBeInTheDocument();
     expect(await screen.findByText('Apache License')).toBeInTheDocument();
   });
-  it('should display card with data from sate on second render', async () => {
+  it('should display card with data from state on second render', async () => {
     const { rerender } = render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>

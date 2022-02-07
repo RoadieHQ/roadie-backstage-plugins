@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { useEffect } from 'react';
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { Entity } from '@backstage/catalog-model';
@@ -67,11 +66,9 @@ export const useRequest = (
     return result
   }, [baseUrl, requestName]);
 
-  useEffect(() => {
-    if (value?.data) {
-      setRequestState(requestName, value)
-    }
-  }, [value, requestName, setRequestState])
+  if (value?.data) {
+    setRequestState(requestName, value)
+  }
 
   return {
     value: value ? value.data : undefined,
