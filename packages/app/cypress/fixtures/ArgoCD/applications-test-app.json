@@ -7,6 +7,9 @@
     "resourceVersion": "2540554",
     "generation": 2520,
     "creationTimestamp": "2021-03-04T17:31:16Z",
+    "labels": {
+      "testlabel": "roadie"
+    },
     "managedFields": [
       {
         "manager": "argocd-server",

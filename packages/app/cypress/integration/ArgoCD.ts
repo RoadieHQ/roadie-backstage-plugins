@@ -17,7 +17,7 @@
 // eslint-disable-next-line no-restricted-imports
 import 'os';
 
-describe('Travis CI', () => {
+describe('Argo CD', () => {
   beforeEach(() => {
     cy.saveGithubToken();
     cy.intercept(
