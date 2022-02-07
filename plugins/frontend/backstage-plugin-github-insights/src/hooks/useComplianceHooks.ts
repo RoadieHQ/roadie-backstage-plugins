@@ -23,7 +23,7 @@ import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { useStore } from '../components/store';
 import { RequestError } from "@octokit/request-error";
 
-const NO_LICENSE_MSG = 'No license file found'
+export const NO_LICENSE_MSG = 'No license file found'
 
 export const useProtectedBranches = (entity: Entity) => {
   const auth = useApi(githubAuthApiRef);
@@ -68,7 +68,7 @@ export const useProtectedBranches = (entity: Entity) => {
   }
 
   return {
-    branches: value,
+    branches: value ? value?.data : undefined,
     loading,
     error,
   };
@@ -127,7 +127,7 @@ export const useRepoLicence = (entity: Entity) => {
   }
 
   return {
-    license: value,
+    license: value ? value?.data : undefined,
     loading,
     error,
   };

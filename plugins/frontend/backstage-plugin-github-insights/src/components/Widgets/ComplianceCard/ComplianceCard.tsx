@@ -22,6 +22,7 @@ import { Entity } from '@backstage/catalog-model';
 import {
   useProtectedBranches,
   useRepoLicence,
+  NO_LICENSE_MSG
 } from '../../../hooks/useComplianceHooks';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
@@ -68,9 +69,9 @@ const ComplianceCard = (_props: Props) => {
       <StructuredMetadataTable
         metadata={{
           'Protected branches':
-            branches?.data.length && owner && repo ? (
+            branches?.length && owner && repo ? (
               <List className={classes.listStyle}>
-                {branches.data.map((branch: any) => (
+                {branches.map((branch: any) => (
                   <ListItem key={branch.name}>{branch.name}</ListItem>
                 ))}
               </List>
@@ -87,7 +88,7 @@ const ComplianceCard = (_props: Props) => {
               </Box>
             ),
           License:
-            license.data === 'No license file found' ? (
+            license === NO_LICENSE_MSG ? (
               <Box display="flex" alignItems="center">
                 <WarningIcon
                   style={{
@@ -99,7 +100,7 @@ const ComplianceCard = (_props: Props) => {
                 <span>None</span>
               </Box>
             ) : (
-              license.data
+              license
             ),
         }}
       />
