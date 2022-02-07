@@ -37,7 +37,7 @@ const serviceEntityPage = (
 );
 ```
 
-4. Run backstage app with `yarn start` and navigate to services tabs.
+3. Run backstage app with `yarn start` and navigate to services tabs.
 
 ## Widgets setup
 

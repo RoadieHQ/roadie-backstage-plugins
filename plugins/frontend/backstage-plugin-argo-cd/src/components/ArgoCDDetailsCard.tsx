@@ -39,7 +39,7 @@ const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const State = ({ value }: { value: string; }) => {
+const State = ({ value }: { value: string }) => {
   const colorMap: Record<string, string> = {
     Pending: '#dcbc21',
     Synced: 'green',
@@ -114,7 +114,9 @@ const OverviewComponent = ({
     {
       title: 'Last Synced',
       render: (row: any): React.ReactNode =>
-        getElapsedTime(row.status.operationState.finishedAt!),
+        row.status.operationState
+          ? getElapsedTime(row.status.operationState.finishedAt!)
+          : '',
     },
   ];
 
