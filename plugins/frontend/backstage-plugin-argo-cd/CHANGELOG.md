@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 1.5.9
+
+### Patch Changes
+
+- f79f2a7: Gracefully handle situation where an app is missing operationState
+
 ## 1.5.8
 
 ### Patch Changes
