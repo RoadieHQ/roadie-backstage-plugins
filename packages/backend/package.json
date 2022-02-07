@@ -41,7 +41,8 @@
     "express-promise-router": "^4.1.0",
     "knex": "^0.21.6",
     "sqlite3": "^5.0.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "@backstage/backend-tasks":"^0.1.5"
   },
   "devDependencies": {
     "@backstage/cli": "^0.13.0",

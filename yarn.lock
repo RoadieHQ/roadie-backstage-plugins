@@ -1514,6 +1514,24 @@
     unzipper "^0.10.11"
     winston "^3.2.1"
 
+"@backstage/backend-tasks@^0.1.5":
+  version "0.1.5"
+  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/backstage-all/@backstage/backend-tasks/-/backend-tasks-0.1.5.tgz#bea83be6a857e52b3c00ad878a4ecea5fc597b0c"
+  integrity sha512-MlliL6DZ7flBYJmlP/l8KQuQF54Nth/DpmyyfmravoncbrEGfZVMtp9Q7fKc6GUjQ6N8H9XHMn1T+4YOj0LnUg==
+  dependencies:
+    "@backstage/backend-common" "^0.10.6"
+    "@backstage/config" "^0.1.13"
+    "@backstage/errors" "^0.2.0"
+    "@backstage/types" "^0.1.1"
+    "@types/luxon" "^2.0.4"
+    knex "^0.95.1"
+    lodash "^4.17.21"
+    luxon "^2.0.2"
+    node-abort-controller "^3.0.1"
+    uuid "^8.0.0"
+    winston "^3.2.1"
+    zod "^3.9.5"
+
 "@backstage/catalog-client@^0.5.0", "@backstage/catalog-client@^0.5.5":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@backstage/catalog-client/-/catalog-client-0.5.5.tgz#6e136b63c886c8c2adefec91c6abff0f32c3a6ca"
@@ -23094,7 +23112,7 @@ zip-stream@^4.1.0:
     compress-commons "^4.1.0"
     readable-stream "^3.6.0"
 
-zod@^3.11.6:
+zod@^3.11.6, zod@^3.9.5:
   version "3.11.6"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.11.6.tgz#e43a5e0c213ae2e02aefe7cb2b1a6fa3d7f1f483"
   integrity sha512-daZ80A81I3/9lIydI44motWe6n59kRBfNzTuS2bfzVh1nAXi667TOTWWtatxyG+fwgNUiagSj/CWZwRRbevJIg==
