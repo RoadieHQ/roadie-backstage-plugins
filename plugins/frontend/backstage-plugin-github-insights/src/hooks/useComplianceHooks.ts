@@ -20,64 +20,114 @@ import { OctokitResponse } from '@octokit/types';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
+import { useStore } from '../components/store';
+import { RequestError } from "@octokit/request-error";
 
-export const useProtectedBranches = (entity: Entity) => {
+export const NO_LICENSE_MSG = 'No license file found'
+
+export const useProtectedBranches = (entity: Entity): { branches?: [], error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
 
-    const response = await octokit.request(
-      'GET /repos/{owner}/{repo}/branches',
-      {
-        baseUrl,
-        owner,
-        repo,
-        protected: true,
-      },
-    );
-    return response.data;
+  const { state: branches, setState: setBranches } = useStore(state => state.branches)
+
+  const { value, loading, error } = useAsync(async (): Promise<any> => {
+    let result;
+    try {
+      const token = await auth.getAccessToken(['repo']);
+      const octokit = new Octokit({ auth: token });
+
+      const response = await octokit.request(
+        'GET /repos/{owner}/{repo}/branches',
+        {
+          headers: {
+            "if-none-match": branches.etag
+          },
+          baseUrl,
+          owner,
+          repo,
+          protected: true,
+        },
+      );
+
+      result = { data: response.data, etag: response.headers.etag ?? "" };
+
+    } catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          result = branches
+        }
+      }
+    }
+    return result
   }, [baseUrl]);
 
+  if (value) {
+    setBranches(value)
+  }
+
   return {
-    branches: value,
+    branches: value ? value?.data : undefined,
     loading,
     error,
   };
 };
 
-export const useRepoLicence = (entity: Entity) => {
+export const useRepoLicence = (entity: Entity): { license?: string, error?: Error, loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
+
+  const { state: license, setState: setLicense } = useStore(state => state.license)
+
   const { value, loading, error } = useAsync(async (): Promise<any> => {
+
+    if (license.data === NO_LICENSE_MSG) {
+      return license
+    }
+
     const token = await auth.getAccessToken(['repo']);
     const octokit = new Octokit({ auth: token });
 
-    let license: string = '';
+    let result;
     try {
       const response = (await octokit.request(
         'GET /repos/{owner}/{repo}/contents/{path}',
         {
+          headers: {
+            "if-none-match": license.etag
+          },
           baseUrl,
           owner,
           repo,
           path: 'LICENSE',
         },
       )) as OctokitResponse<any>;
-      license = atob(response.data.content)
+
+      const licenseData = atob(response.data.content)
         .split('\n')
         .map(line => line.trim())
         .filter(Boolean)[0];
-    } catch (a) {
-      license = 'No license file found';
+      result = { etag: response.headers.etag ?? "", data: licenseData }
+    } catch (e) {
+      if (e instanceof RequestError) {
+        if (e.status === 304) {
+          return license
+        } else if (e.status === 404) {
+          result = { etag: "", data: NO_LICENSE_MSG }
+        }
+      }
     }
-    return license;
+    return result
   }, [baseUrl]);
+
+  if (value) {
+    setLicense(value)
+  }
+
   return {
-    license: value,
+    license: value ? value?.data : undefined,
     loading,
     error,
   };
