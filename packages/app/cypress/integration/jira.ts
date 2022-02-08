@@ -18,18 +18,42 @@
 import 'os';
 
 describe('Jira plugin', () => {
-    beforeEach(() => {
-        cy.saveGithubToken()
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST', { fixture: 'jira/project.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic', { fixture: 'jira/activitystream.xml' })
-        cy.intercept('POST', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',{ fixture: 'jira/searchresult.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/statuses',{ fixture: 'jira/statuses.json' })
-        cy.visit('/catalog/default/component/sample-service')
-    })
-
-    describe('Navigating to Jira Overview', () => {
-        it('should show Jira in Overview tab', () => {
-            cy.contains('Activity stream');
-        });
+  beforeEach(() => {
+    cy.saveGithubToken();
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST',
+      { fixture: 'jira/project.json' },
+    ).then(() => {
+      Cypress.config();
     });
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic',
+      { fixture: 'jira/activitystream.xml' },
+    ).then(() => {
+      Cypress.config();
+    });
+    cy.intercept(
+      'POST',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',
+      { fixture: 'jira/searchresult.json' },
+    ).then(() => {
+      Cypress.config();
+    });
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/statuses',
+      { fixture: 'jira/statuses.json' },
+    ).then(() => {
+      Cypress.config();
+    });
+    cy.visit('/catalog/default/component/sample-service');
+  });
+
+  describe('Navigating to Jira Overview', () => {
+    it('should show Jira in Overview tab', () => {
+      cy.contains('Activity stream');
+    });
+  });
 });
