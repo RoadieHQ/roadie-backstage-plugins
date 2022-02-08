@@ -20,9 +20,7 @@ import 'os';
 describe('Buildkite', () => {
   beforeEach(() => {
     cy.saveGithubToken();
-    cy.intercept('GET', 'http://localhost:7007/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5 ', { fixture: 'buildkite/builds.json' })..then(() => {
-      Cypress.config();
-    });
+    cy.intercept('GET', 'http://localhost:7007/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5 ', { fixture: 'buildkite/builds.json' })
     cy.visit('/catalog/default/component/sample-service-3')
   })
 

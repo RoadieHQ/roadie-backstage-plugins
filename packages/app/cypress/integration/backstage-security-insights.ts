@@ -21,9 +21,7 @@ describe('SecurityInsights', () => {
     beforeEach(() => {
         cy.saveGithubToken();
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts', { fixture: 'securityInsights/alerts.json' })
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100', { fixture: 'securityInsights/alerts.json' })..then(() => {
-            Cypress.config();
-          });
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100', { fixture: 'securityInsights/alerts.json' })
         cy.intercept('POST', 'https://api.github.com/graphql', { fixture: 'securityInsights/graphql.json' })
         cy.visit('/catalog/default/component/sample-service')
     })

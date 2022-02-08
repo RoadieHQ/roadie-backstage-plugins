@@ -18,62 +18,32 @@
 import 'os';
 
 describe('GithubInsights', () => {
-  beforeEach(() => {
-    cy.saveGithubToken();
-    cy.intercept(
-      'GET',
-      'https://api.github.com/repos/organisation/github-project-slug/languages',
-      { fixture: 'githubInsights/languages.json' },
-    ).then(() => {
-      Cypress.config();
-    });
-    cy.intercept(
-      'GET',
-      'https://api.github.com/repos/organisation/github-project-slug/releases',
-      { fixture: 'githubInsights/releases.json' },
-    ).then(() => {
-      Cypress.config();
-    });
-    cy.intercept(
-      'GET',
-      'https://api.github.com/repos/organisation/github-project-slug/readme',
-      { fixture: 'githubInsights/readme.json' },
-    ).then(() => {
-      Cypress.config();
-    });
-    cy.intercept(
-      'GET',
-      'https://api.github.com/repos/organisation/github-project-slug/branches?protected=true',
-      { fixture: 'githubInsights/compliance.json' },
-    ).then(() => {
-      Cypress.config();
-    });
-    cy.intercept(
-      'GET',
-      'https://api.github.com/repos/organisation/github-project-slug/contributors?per_page=10',
-      { fixture: 'githubInsights/contributors.json' },
-    ).then(() => {
-      Cypress.config();
-    });
-    cy.visit('/catalog/default/component/sample-service');
-  });
+    beforeEach(() => {
+        cy.saveGithubToken();
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/languages', { fixture: 'githubInsights/languages.json' })
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/releases', { fixture: 'githubInsights/releases.json' })
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/readme', { fixture: 'githubInsights/readme.json' })
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/branches?protected=true', { fixture: 'githubInsights/compliance.json' })
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/contributors?per_page=10', { fixture: 'githubInsights/contributors.json' })
+        cy.visit('/catalog/default/component/sample-service')
+    })
 
-  describe('Navigating to GitHub Insights', () => {
-    it('should show GitHub Insights Releases in Overview tab', () => {
-      cy.contains('Releases');
-    });
+    describe('Navigating to GitHub Insights', () => {
+        it('should show GitHub Insights Releases in Overview tab', () => {
+            cy.contains('Releases');
+        });
 
-    it('should show GitHub Insights Languages in Overview tab', () => {
-      cy.contains('Languages');
-    });
+        it('should show GitHub Insights Languages in Overview tab', () => {
+            cy.contains('Languages');
+        });
 
-    it('should show GitHub Insights Read me in Overview tab', () => {
-      cy.contains('Read me');
-    });
+        it('should show GitHub Insights Read me in Overview tab', () => {
+            cy.contains('Read me');
+        });
 
-    it('should show GitHub Insights when navigating to Code insights tab', () => {
-      cy.visit('/catalog/default/component/sample-service/code-insights');
-      cy.contains('GitHub Insights');
+        it('should show GitHub Insights when navigating to Code insights tab', () => {
+            cy.visit('/catalog/default/component/sample-service/code-insights')
+            cy.contains('GitHub Insights');
+        });
     });
-  });
 });

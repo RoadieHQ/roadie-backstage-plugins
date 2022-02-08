@@ -24,9 +24,7 @@ describe('Travis CI', () => {
       'GET',
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       { fixture: 'ArgoCD/applications-test-app.json' },
-    ).then(() => {
-      Cypress.config();
-    });
+    );
     cy.visit('/catalog/default/component/sample-service');
   });
 

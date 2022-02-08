@@ -20,9 +20,7 @@ import 'os';
 describe('Github Pull Requests', () => {
     beforeEach(() => {
         cy.saveGithubToken();
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/pulls?state=open&per_page=5&page=1', { fixture: 'githubPRs/pull-requests.json' }).then(() => {
-            Cypress.config();
-          });
+        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/pulls?state=open&per_page=5&page=1', { fixture: 'githubPRs/pull-requests.json' })
         cy.visit('/catalog/default/component/sample-service')
     })
 
