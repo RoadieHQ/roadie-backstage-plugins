@@ -5,7 +5,7 @@ metadata:
   description: |
     A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
   annotations:
-    github.com/project-slug: organisation/github-project-slug
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
     aws.com/lambda-function-name: HelloWorld
     aws.com/lambda-region: eu-west-1
     jira/project-key: TEST
@@ -22,7 +22,6 @@ spec:
     - sample-service
 
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -39,7 +38,6 @@ spec:
     - sample-service-2
 
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:

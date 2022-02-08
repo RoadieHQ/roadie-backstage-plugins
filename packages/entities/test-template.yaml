@@ -1,0 +1,61 @@
+# Notice the v1beta3 version
+apiVersion: backstage.io/v1beta2
+kind: Template
+# some metadata about the template itself
+metadata:
+  name: zip-demo
+  title: My custom zip action
+  description: scaffolder action to zip the current context?
+spec:
+  owner: roadie
+  type: service
+
+  # here's the steps that are executed in series in the scaffolder backend
+  # these are the steps which are rendered in the frontend with the form input
+  parameters:
+    - title: Create File
+      properties:
+        path:
+          title: Path
+          type: string
+          defaults: "."
+          description: workspace path to zip
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+        content:
+          title: File Content
+          type: string
+          description: content of the file
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+    - title: Zip
+      properties:
+        zipPath:
+          title: Path
+          type: string
+          defaults: "."
+          description: workspace path to zip
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+  steps:
+    - id: createFile
+      name: Create File
+      action: roadiehq:utils:fs:writeFile
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+
+    - id: zip
+      name: Zip
+      action: roadiehq:utils:zip
+      input:
+        path: ${{ parameters.zipPath }}
+
+  # # some outputs which are saved along with the job for use in the frontend
+  output:
+    path: ${{ steps.zip.output.path }}
