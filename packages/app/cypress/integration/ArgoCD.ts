@@ -17,7 +17,7 @@
 // eslint-disable-next-line no-restricted-imports
 import 'os';
 
-describe('Travis CI', () => {
+describe('Argo CD', () => {
   beforeEach(() => {
     cy.saveGithubToken();
     cy.intercept(
@@ -25,18 +25,17 @@ describe('Travis CI', () => {
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       { fixture: 'ArgoCD/applications-test-app.json' },
     );
+    cy.visit('/catalog/default/component/sample-service');
   });
 
   describe('Navigate to Overview', () => {
     it('should show the ArgoCD History card', () => {
-      cy.visit('/catalog/default/component/sample-service');
       cy.contains('ArgoCD history');
       cy.contains('test-app');
       cy.contains('53e28ff20cc530b9ada2173fbbd64d48338583ba');
     });
 
     it('should show ArgoCD app details card', () => {
-      cy.visit('/catalog/default/component/sample-service');
       cy.contains('ArgoCD overview');
       cy.contains('test-app');
       cy.contains('Synced');
@@ -46,7 +45,6 @@ describe('Travis CI', () => {
 
   describe('Navigate to argocd tab', () => {
     it('should show the ArgoCD History table', () => {
-      cy.visit('/catalog/default/component/sample-service/argocd');
       cy.contains('ArgoCD history');
       cy.contains('test-app');
       cy.contains('53e28ff20cc530b9ada2173fbbd64d48338583ba');

@@ -25,12 +25,20 @@ describe('GithubInsights', () => {
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/readme', { fixture: 'githubInsights/readme.json' })
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/branches?protected=true', { fixture: 'githubInsights/compliance.json' })
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/contributors?per_page=10', { fixture: 'githubInsights/contributors.json' })
+        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigating to GitHub Insights', () => {
         it('should show GitHub Insights Releases in Overview tab', () => {
-            cy.visit('/catalog/default/component/sample-service')
             cy.contains('Releases');
+        });
+
+        it('should show GitHub Insights Languages in Overview tab', () => {
+            cy.contains('Languages');
+        });
+
+        it('should show GitHub Insights Read me in Overview tab', () => {
+            cy.contains('Read me');
         });
 
         it('should show GitHub Insights when navigating to Code insights tab', () => {
