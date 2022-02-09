@@ -21,11 +21,11 @@ describe('Github Pull Requests', () => {
     beforeEach(() => {
         cy.saveGithubToken();
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/pulls?state=open&per_page=5&page=1', { fixture: 'githubPRs/pull-requests.json' })
-        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigating to GitHub Pull Requests', () => {
         it('should show GitHub Pull Requests in Overview tab', () => {
+            cy.visit('/catalog/default/component/sample-service')
             cy.contains('Pull requests statistics');
         });
 

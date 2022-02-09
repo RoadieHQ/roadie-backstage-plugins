@@ -23,11 +23,11 @@ describe('SecurityInsights', () => {
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts', { fixture: 'securityInsights/alerts.json' })
         cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100', { fixture: 'securityInsights/alerts.json' })
         cy.intercept('POST', 'https://api.github.com/graphql', { fixture: 'securityInsights/graphql.json' })
-        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigating to Security Insights', () => {
         it('should show Security Insights Releases in Overview tab', () => {
+            cy.visit('/catalog/default/component/sample-service')
             cy.contains('Security Insights');
             cy.contains('0 Warning')
             cy.contains('0 Error')

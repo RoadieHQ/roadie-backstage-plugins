@@ -25,7 +25,6 @@ describe('Prometheus', () => {
       'http://localhost:7007/api/proxy/prometheus/api/rules?type=alert',
       { fixture: 'prometheus/alerts.json' },
     );
-    cy.visit('/catalog/default/component/sample-service-3');
     cy.intercept(
       'GET',
       'http://localhost:7007/api/proxy/prometheus/api/query_range?query=node_memory_Active_bytes*',
@@ -49,7 +48,6 @@ describe('Prometheus', () => {
     });
     it('should show Prometheus graphs for two rules defined in catalog-info', () => {
       cy.visit('/catalog/default/component/sample-service-3/prometheus');
-
       cy.contains('node_memory_Active_bytes');
       cy.contains('memUsage');
       cy.get('.recharts-legend-item-text').contains('memUsage');
