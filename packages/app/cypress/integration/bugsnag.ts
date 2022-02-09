@@ -25,7 +25,6 @@ describe('Bugsnag', () => {
         cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors?per_page=50', { fixture: 'Bugsnag/errors.json' })
         cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors/123456qwerty!!/trend?&buckets_count=10', { fixture: 'Bugsnag/trends.json' })
         cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors/123456qwerty2!!/trend?&buckets_count=10', { fixture: 'Bugsnag/trends.json' })
-        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigating to Bugsnag', () => {

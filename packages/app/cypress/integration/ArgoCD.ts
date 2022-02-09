@@ -25,7 +25,6 @@ describe('Travis CI', () => {
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       { fixture: 'ArgoCD/applications-test-app.json' },
     );
-    cy.visit('/catalog/default/component/sample-service');
   });
 
   describe('Navigate to Overview', () => {

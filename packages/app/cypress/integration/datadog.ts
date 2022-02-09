@@ -22,7 +22,6 @@ describe('Datadog', () => {
         cy.saveGithubToken();
         cy.intercept('GET', 'https://p.datadoghq.eu/sb/test-datadog-link', { fixture: 'datadog/datadogdashboard.json' })
         cy.intercept('GET', 'https://app.datadoghq.eu/graph/embed?token=qwertytoken1234&height=300&width=600&legend=true', { fixture: 'datadog/dashboard.html' })
-        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigate to datadog dashboard', () => {
