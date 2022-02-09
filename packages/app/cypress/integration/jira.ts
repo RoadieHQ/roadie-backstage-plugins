@@ -24,11 +24,11 @@ describe('Jira plugin', () => {
         cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic', { fixture: 'jira/activitystream.xml' })
         cy.intercept('POST', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',{ fixture: 'jira/searchresult.json' })
         cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/statuses',{ fixture: 'jira/statuses.json' })
+        cy.visit('/catalog/default/component/sample-service')
     })
 
     describe('Navigating to Jira Overview', () => {
         it('should show Jira in Overview tab', () => {
-            cy.visit('/catalog/default/component/sample-service')
             cy.contains('Activity stream');
         });
     });
