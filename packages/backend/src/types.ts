@@ -5,16 +5,20 @@ import {
   PluginCacheManager,
   PluginDatabaseManager,
   PluginEndpointDiscovery,
+  TokenManager,
   UrlReader,
 } from '@backstage/backend-common';
-import { PermissionAuthorizer } from '@backstage/plugin-permission-common';
+import { ServerPermissionClient } from '@backstage/plugin-permission-node';
+import { PluginTaskScheduler } from '@backstage/backend-tasks';
 
 export type PluginEnvironment = {
   logger: Logger;
-  database: PluginDatabaseManager;
   cache: PluginCacheManager;
+  database: PluginDatabaseManager;
   config: Config;
   reader: UrlReader;
   discovery: PluginEndpointDiscovery;
-  permissions: PermissionAuthorizer;
+  tokenManager: TokenManager;
+  permissions: ServerPermissionClient;
+  scheduler: PluginTaskScheduler;
 };
