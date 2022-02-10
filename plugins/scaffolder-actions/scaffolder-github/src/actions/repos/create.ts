@@ -16,45 +16,34 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { Config } from '@backstage/config';
-import path from 'path'
-import AdmZip from "adm-zip"
+import fetch from "cross-fetch"
 
-export function createZipAction(options: { config: Config }) {
+
+export function createGithubReposCreateAction(options: { config: Config }) {
     const { config } = options;
-    return createTemplateAction<{ path: string }>({
-        id: "roadiehq:utils:zip",
-        description: "Zips the content of the path",
+    return createTemplateAction<{ name: string }>({
+        id: "roadiehq:github:repos:create",
+        description: "Creates a github repository",
         schema: {
             input: {
                 type: 'object',
                 properties: {
-                    path: {
-                        title: 'Path',
-                        description: 'Relative path you would like to zip',
+                    name: {
+                        title: 'Repo name',
+                        description: 'Name of the repository',
                         type: 'string',
                     },
-                }
-            },
-            output: {
-                type: 'object',
-                properties: {
-                    path: {
-                        title: 'Zip Path',
-                        type: 'string'
+                    private: {
+                        type: "string"
+                    },
+                    team_id: {
+                        type: "number"
                     }
                 }
-            }
+            },
         },
         async handler(ctx) {
-            const zip = new AdmZip()
-            ctx.logger.info(ctx.workspacePath)
-            zip.addLocalFolder(ctx.workspacePath)
-            ctx.logger.info(zip.getEntries())
 
-            const resultPath = path.join(ctx.workspacePath, ctx.input.path)
-            zip.writeZip(resultPath)
-            ctx.logger.info(resultPath)
-            ctx.output('path', resultPath)
         }
     })
 }

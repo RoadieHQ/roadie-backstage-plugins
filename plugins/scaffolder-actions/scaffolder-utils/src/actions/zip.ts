@@ -15,14 +15,12 @@
  */
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import { Config } from '@backstage/config';
 import path from 'path'
-import fs from "fs-extra"
+import AdmZip from "adm-zip"
 
-export function createFileAction(options: { config: Config }) {
-    const { config } = options;
-    return createTemplateAction<{ path: string, content: string }>({
-        id: "roadiehq:utils:fs:writeFile",
+export function createZipAction() {
+    return createTemplateAction<{ path: string }>({
+        id: "roadiehq:utils:zip",
         description: "Zips the content of the path",
         schema: {
             input: {
@@ -30,33 +28,28 @@ export function createFileAction(options: { config: Config }) {
                 properties: {
                     path: {
                         title: 'Path',
-                        description: 'Relative path',
+                        description: 'Relative path you would like to zip',
                         type: 'string',
                     },
-                    content: {
-                        title: 'Content of the file',
-                        description: 'inside of a file :kekw:',
-                        type: 'string'
-                    }
                 }
             },
             output: {
                 type: 'object',
                 properties: {
                     path: {
-                        title: 'Path',
+                        title: 'Zip Path',
                         type: 'string'
                     }
                 }
             }
         },
         async handler(ctx) {
-            ctx.logger.info(ctx.workspacePath)
-
+            const zip = new AdmZip()
             const resultPath = path.join(ctx.workspacePath, ctx.input.path)
-            ctx.logger.info(ctx.input.content)
-            fs.outputFileSync(resultPath, ctx.input.content)
-            ctx.logger.info(resultPath)
+
+            zip.addLocalFolder(resultPath)
+            zip.writeZip(resultPath)
+
             ctx.output('path', resultPath)
         }
     })
