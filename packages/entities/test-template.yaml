@@ -1,5 +1,5 @@
 # Notice the v1beta3 version
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
@@ -10,15 +10,13 @@ spec:
   owner: roadie
   type: service
 
-  # here's the steps that are executed in series in the scaffolder backend
-  # these are the steps which are rendered in the frontend with the form input
   parameters:
     - title: Create File
       properties:
         path:
           title: Path
           type: string
-          defaults: "."
+          default: "."
           description: workspace path to zip
           ui:autofocus: true
           ui:options:
@@ -31,12 +29,19 @@ spec:
           ui:options:
             rows: 5
 
+    - title: Sleep
+      properties:
+        amount:
+          title: Sleep
+          type: number
+          description: Amount to sleep in seconds
+
     - title: Zip
       properties:
         zipPath:
           title: Path
           type: string
-          defaults: "."
+          default: "."
           description: workspace path to zip
           ui:autofocus: true
           ui:options:
@@ -50,12 +55,17 @@ spec:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
 
+    - id: sleep
+      name: Sleep
+      action: roadiehq:utils:sleep
+      input:
+        amount: ${{ parameters.amount }}
+
     - id: zip
       name: Zip
       action: roadiehq:utils:zip
       input:
         path: ${{ parameters.zipPath }}
 
-  # # some outputs which are saved along with the job for use in the frontend
   output:
     path: ${{ steps.zip.output.path }}
