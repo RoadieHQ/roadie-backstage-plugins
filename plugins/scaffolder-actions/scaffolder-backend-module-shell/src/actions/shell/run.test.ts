@@ -34,12 +34,16 @@ describe("shell:run", () => {
     it('creates the action successfully', async () => {
         const action = createShellRunAction({ containerRunner })
         expect(action.id).toEqual('shell:run')
-        await action.handler({ input: { command: 'ls -l' }, logStream } as ActionContext<{command: string}>)
+        await action.handler({ input: { command: 'ls -l' }, logStream, workspacePath: '/tmp' } as ActionContext<{command: string}>)
         expect(containerRunner.runContainer).toBeCalledWith({
             args: ["-c", 'ls -l'],
             command: "bash",
             imageName: "bash",
             logStream: logStream,
+            mountDirs: {
+                ['/tmp']: '/input'
+            },
+            workingDir: '/input'
         })
     })
 
