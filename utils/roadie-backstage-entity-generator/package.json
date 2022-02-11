@@ -1,0 +1,49 @@
+{
+  "name": "@roadiehq/roadie-backstage-entity-validator",
+  "version": "1.2.6",
+  "author": "RoadieHQ",
+  "description": "Backstage entity validator library",
+  "main": "src/index.js",
+  "license": "Apache-2.0",
+  "private": false,
+  "homepage": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "bugs": {
+    "url": "https://github.com/RoadieHQ/backstage-entity-validator/issues",
+    "email": "support@roadie.io"
+  },
+  "repository": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.js",
+    "types": "types.d.ts"
+  },
+  "scripts": {
+    "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
+    "lint": "backstage-cli lint",
+    "test": "backstage-cli test",
+    "diff": "backstage-cli plugin:diff",
+    "prepack": "backstage-cli prepack",
+    "postpack": "backstage-cli postpack",
+    "clean": "backstage-cli clean"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@backstage/catalog-model": "^0.9.7",
+    "ajv": "^8.4.0",
+    "ajv-formats": "^2.1.0",
+    "glob": "^7.1.7",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.13.0",
+    "@vercel/ncc": "^0.27.0",
+    "jest": "^27.0.1"
+  },
+  "keywords": [
+    "backstage",
+    "validation",
+    "linting",
+    "roadie"
+  ]
+}

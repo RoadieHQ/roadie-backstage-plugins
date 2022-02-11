@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "Entity metadata annotations",
+  "description": "Individual annotation format validations",
+  "type": "object",
+  "required": ["metadata"],
+  "additionalProperties": true,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "description": "Key/value pairs of non-identifying auxiliary information attached to the entity.",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^.+$": {
+              "type": "string"
+            }
+          },
+          "allOf": [
+            {
+              "properties": {
+                "backstage.io/managed-by-location": {
+                  "type": "string",
+                  "pattern": "(url|gitlab|github|azure\/api|dir):.*"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/managed-by-origin-location": {
+                  "type": "string",
+                  "pattern": "(url|gitlab|github|azure\/api|dir):.*"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/techdocs-ref": {
+                  "type": "string",
+                  "pattern": "(url|gitlab|github|azure\/api|dir):.*"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/source-location": {
+                  "type": "string",
+                  "pattern": "((url|gitlab|github|azure\/api):.*|(dir):.*\/)$"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/view-url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/edit-url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            {
+              "properties": {
+                "graph.microsoft.com/group-id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            {
+              "properties": {
+                "graph.microsoft.com/user-id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            {
+              "properties": {
+                "datadog/dashboard-url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            {
+              "properties": {
+                "backstage.io/ldap-uuid": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            {"properties": {"backstage.io/ldap-dn": {"type": "string"}}},
+            {"properties": {"backstage.io/ldap-rdn": {"type": "string"}}},
+            {"properties": {"jenkins.io/github-folder": {"type": "string"}}},
+            {"properties": {"github.com/project-slug": {"type": "string"}}},
+            {"properties": {"github.com/team-slug": {"type": "string"}}},
+            {"properties": {"github.com/user-login": {"type": "string"}}},
+            {"properties": {"rollbar.com/project-slug": {"type": "string"}}},
+            {"properties": {"circleci.com/project-slug": {"type": "string"}}},
+            {"properties": {"sonarqube.org/project-key": {"type": "string"}}},
+            {"properties": {"backstage.io/code-coverage": {"type": "string"}}},
+            {"properties": {"github.com/project-slug": {"type": "string"}}},
+            {"properties": {"sentry.io/project-slug": {"type": "string"}}},
+            {"properties": {"aws.com/lambda-function-name": {"type": "string"}}},
+            {"properties": {"aws.com/lambda-region": {"type": "string"}}},
+            {"properties": {"jira/project-key": {"type": "string"}}},
+            {"properties": {"snyk.io/org-name": {"type": "string"}}},
+            {"properties": {"graph.microsoft.com/tenant-id": {"type": "string"}}}
+          ]
+        }
+      }
+    }
+  }
+}
