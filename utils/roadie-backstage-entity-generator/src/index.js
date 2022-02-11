@@ -1,1 +1,1 @@
-export { validate, validateFromFile } from './validator';
+export * from "./generator"

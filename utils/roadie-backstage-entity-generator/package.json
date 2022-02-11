@@ -1,17 +1,17 @@
 {
-  "name": "@roadiehq/roadie-backstage-entity-validator",
+  "name": "@roadiehq/roadie-backstage-entity-generator",
   "version": "1.2.6",
   "author": "RoadieHQ",
-  "description": "Backstage entity validator library",
+  "description": "Backstage entity generator library",
   "main": "src/index.js",
   "license": "Apache-2.0",
   "private": false,
-  "homepage": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "homepage": "https://github.com/RoadieHQ/backstage-entity-generator",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-entity-validator/issues",
+    "url": "https://github.com/RoadieHQ/backstage-entity-generator/issues",
     "email": "support@roadie.io"
   },
-  "repository": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "repository": "https://github.com/RoadieHQ/backstage-entity-generator",
   "publishConfig": {
     "access": "public",
     "main": "dist/index.js",
@@ -29,8 +29,8 @@
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@backstage/catalog-model": "^0.9.7",
-    "ajv": "^8.4.0",
-    "ajv-formats": "^2.1.0",
+    "@octokit/plugin-paginate-rest": "^2.17.0",
+    "@octokit/rest": "^18.12.0",
     "glob": "^7.1.7",
     "js-yaml": "^4.1.0",
     "minimist": "^1.2.5"
