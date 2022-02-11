@@ -53,6 +53,10 @@ spec:
             type: string
 
   steps:
+    - id: generate
+      name: Auto Generate Org's catalog files.
+      action: roadiehq:utils:generate
+
     - id: publish
       name: Create repository
       action: publish:github
@@ -65,6 +69,12 @@ spec:
         requireCodeOwnerReviews: ${{parameters.requireCodeOwnerReviews}}
         description: ${{ parameters.description }}
         token: ${{ secrets.USER_OAUTH_TOKEN }}
+
+    - id: registerLocation
+      name: Register Location files.
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{steps.publish.output.repoContentsUrl}}
 
   output:
     remoteUrl: ${{steps.publish.output.remoteUrl}}

@@ -35,7 +35,7 @@ const getCatalogInfo = ({ org, name, description, owner, tags }) => {
   return entity
 }
 
-const getRootLocation = ({ targets }) => {
+const getRootLocation = ({ targets, basePath }) => {
   const location = {
     apiVersion: "backstage.io/v1alpha1",
     kind: "Location",
@@ -59,7 +59,7 @@ const generateCatalog = async () => {
   );
   return Promise.all(repos.map(async repo => {
     // console.log(repo)
-    if (repo.isArchived) {
+    if (repo.isArchived || repo.name.startsWith(".")) {
       return
     }
     let owner = "guest"
@@ -86,18 +86,17 @@ const generateCatalog = async () => {
   }))
 }
 
-const main = async () => {
+export const main = async (basePath) => {
   console.log("Starting rate limit: ", await (await octokit.rest.rateLimit.get()).data.rate)
   const catalog = await (await generateCatalog()).filter(Boolean)
   catalog.forEach(c => {
-    if (!fs.existsSync(c.path.replace("/catalog-info.yaml", ""), { recursive: true })) {
-      fs.mkdirSync(c.path.replace("/catalog-info.yaml", ""), { recursive: true });
+    if (!fs.existsSync(path.join(basePath, c.path.replace("/catalog-info.yaml", "")), { recursive: true })) {
+      fs.mkdirSync(path.join(basePath, c.path.replace("/catalog-info.yaml", "")), { recursive: true });
     }
-    fs.writeFileSync(c.path, yaml.dump(c.entity))
+    fs.writeFileSync(path.join(basePath, c.path), yaml.dump(c.entity))
   })
-  const location = getRootLocation({ targets: catalog })
-  fs.writeFileSync("catalog-info.yaml", yaml.dump(location))
+  const location = getRootLocation({ targets: catalog, basePath })
+  fs.writeFileSync(path.join(basePath, "catalog-info.yaml"), yaml.dump(location))
 
   console.log("Ending rate limit: ", await (await octokit.rest.rateLimit.get()).data.rate)
 }
-main()

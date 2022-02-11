@@ -13,7 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './actions/zip';
-export * from './actions/createFile'
-export * from './actions/sleep'
-export * from './actions/generateCatalogFiles'
+
+import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { main } from "@roadiehq/roadie-backstage-entity-generator"
+
+export function createGeneratorAction() {
+    return createTemplateAction<{}>({
+        id: "roadiehq:utils:generate",
+        description: "Zips the content of the path",
+        async handler(ctx) {
+            await main(ctx.workspacePath)
+        }
+    })
+}
