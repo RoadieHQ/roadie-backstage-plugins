@@ -62,6 +62,10 @@ export function createShellRunAction(options: {
         command: "bash",
         imageName: "bash",
         logStream: ctx.logStream,
+        workingDir: '/input',
+        mountDirs: {
+          [ctx.workspacePath]: "/input",
+        }
       })
     },
   });
