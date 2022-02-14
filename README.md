@@ -1,4 +1,36 @@
-This repo contains the Backstage plugins we, at Roadie, create and maintain. These plugins are published and you can look them up on [npmjs](https://npmjs.com).
+This repo contains the Backstage plugins created and maintained by [Roadie](https://roadie.io). Roadie is a SaaS Backstage solution.
+
+Amongst others, the following plugins can be found within this repo:
+
+- [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests)
+
+- [Github Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights)
+
+-  [AWS Lambda](https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda)
+
+-  [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira)
+
+- [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog)
+
+- [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci)
+
+-  [Security Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights)
+
+-  [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite)
+
+- [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag)
+
+- [Argo CD](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd) (created in collaboration with [American Airlines](https://github.com/AmericanAirlines))
+
+- [Argo CD Backend](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) (contributed by [American Airlines](https://github.com/AmericanAirlines))
+
+Installation instructions for each plugin can be found in their individual README files.
+
+Backstage is an open platform for creating developer portals. To learn more about the problems it can help solve, please check out our [Ultimate Guide to Backstage by Spotify](https://roadie.io/backstage-spotify/).
+
+## 
+
+
 
 
 ## Getting Started
@@ -48,38 +80,10 @@ You should be able to run application from root directory, by running
 yarn dev
 ```
 
- More information about plugins, together with installation instructions, can be found on the link below
-
- [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests).
- 
- [Github Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights).
-
- [AWS Lambda](https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda). 
- 
- [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira). 
- 
- [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog). 
-
- [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci).
-
- [Security Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights).
-
- [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite). 
-
- [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag). 
-
- [Argo CD](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd).
-
-    - In collaboration with [American Airlines](https://github.com/AmericanAirlines)
-
- [Argo CD Backend](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend).
-
-    - Contributed by [American Airlines](https://github.com/AmericanAirlines)
-
 ## Structure of the repository.
 
 This repository is a place where all of the RoadieHQ plugins we are developed are integrated under `/plugins` folder. Depending on the type of the plugin they are separated in frontend or backend folder. Please note the scaffolder actions are handled separately. Plugins may be used and/or modified by following steps below:
- 
+
 ### Plugins container
 
 Navigate to 
@@ -122,4 +126,4 @@ folder.
 
 ## License
 
- Copyright 2021 Larder Software Limited. Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+ Copyright 2022 Larder Software Limited. Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
