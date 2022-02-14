@@ -58,7 +58,6 @@ const generateCatalog = async () => {
     (response) => response.data.map((repo) => ({ teamsUrl: repo.teams_url, name: repo.name, tags: repo.topics, description: repo.description, isArchived: repo.archived }))
   );
   return Promise.all(repos.map(async repo => {
-    // console.log(repo)
     if (repo.isArchived || repo.name.startsWith(".")) {
       return
     }
@@ -86,7 +85,7 @@ const generateCatalog = async () => {
   }))
 }
 
-export const main = async (basePath) => {
+export const main = async ({ basePath, token, org }) => {
   console.log("Starting rate limit: ", await (await octokit.rest.rateLimit.get()).data.rate)
   const catalog = await (await generateCatalog()).filter(Boolean)
   catalog.forEach(c => {

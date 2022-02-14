@@ -20,9 +20,9 @@ import { main } from "@roadiehq/roadie-backstage-entity-generator"
 export function createGeneratorAction() {
     return createTemplateAction<{}>({
         id: "roadiehq:utils:generate",
-        description: "Zips the content of the path",
+        description: "Auto generates catalog files from the github org",
         async handler(ctx) {
-            await main(ctx.workspacePath)
+            await main({ basePath: ctx.workspacePath, org: "RoadieHQ", token: "" })
         }
     })
 }
