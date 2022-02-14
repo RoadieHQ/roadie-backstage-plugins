@@ -1,4 +1,6 @@
 {
-    "JavaScript": 5229,
-    "Dockerfile": 187
+    "data": {
+        "JavaScript": 5229,
+        "Dockerfile": 187
+    }
 }
