@@ -21,7 +21,7 @@ import fs from "fs-extra"
 export function createFileAction() {
     return createTemplateAction<{ path: string, content: string }>({
         id: "roadiehq:utils:fs:writeFile",
-        description: "Zips the content of the path",
+        description: "Creates a file with the content on the given path",
         schema: {
             input: {
                 type: 'object',
@@ -32,8 +32,8 @@ export function createFileAction() {
                         type: 'string',
                     },
                     content: {
-                        title: 'Content of the file',
-                        description: 'inside of a file :kekw:',
+                        title: 'Content',
+                        description: 'This will be the content of the file',
                         type: 'string'
                     }
                 }
