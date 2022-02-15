@@ -7,8 +7,6 @@ This contains a collection of actions:
  - `roadiehq:utils:sleep`
  - `roadiehq:utils:fs:writeFile`
 
-The `http:backstage:request` action allows the task to call any of the backstage APIs available to the user that triggers it. The action takes care of passing the authentication token of the user to the task execution so that the action can perform actions on behalf of the user that triggers it.
-
 ## Getting started
 
 Create your Backstage application using the Backstage CLI as described here:
@@ -27,6 +25,8 @@ yarn add @roadiehq/scaffolder-utils
 
 Configure the action:
 (you can check the [docs](https://backstage.io/docs/features/software-templates/writing-custom-actions#registering-custom-actions) to see all options):
+
+Here you can pick the actions that you'd like to register to your backstage instance.
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
@@ -74,10 +74,9 @@ spec:
   parameters:
     - title: Zip
       properties:
-        zipPath:
+        path:
           title: Path
           type: string
-          default: "."
           description: Workspace path to zip
 
   steps:
@@ -85,8 +84,72 @@ spec:
       name: Zip
       action: roadiehq:utils:zip
       input:
-        path: ${{ parameters.zipPath }}
+        path: ${{ parameters.path }}
 
   output:
     path: ${{ steps.zip.output.path }}
 ```
+### Example of using sleep action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: sleep-dummy
+  title: Sleep template
+  description: A template with only one sleep example action that will ask for a user input for the amount of seconds it should sleep
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Zip
+      properties:
+        amount:
+          title: Sleep
+          type: number
+          description: Will sleep for this amount of seconds
+
+  steps:
+    - id: sleep
+      name: sleep
+      action: roadiehq:utils:sleep
+      input:
+        path: ${{ parameters.amount }}
+```
+### Example of using createFile action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-file-template
+  title: Create File template
+  description: Example temaplte to create a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Create File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the desired new file
+        content:
+          title: Content
+          type: string
+          description: The content of the newly created file
+  steps:
+    - id: createFile
+      name: Create File
+      action: roadiehq:utils:fs:writeFile
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
+
+
