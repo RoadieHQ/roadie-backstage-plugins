@@ -4,8 +4,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: zip-demo
-  title: My custom zip action
-  description: scaffolder action to zip the current context?
+  title: Scaffolder-utils test template
+  description: An example template to test most of the scaffolder-utils actions
 spec:
   owner: roadie
   type: service
@@ -16,7 +16,6 @@ spec:
         path:
           title: Path
           type: string
-          default: "."
           description: workspace path to zip
           ui:autofocus: true
           ui:options:
@@ -36,6 +35,17 @@ spec:
           type: number
           description: Amount to sleep in seconds
 
+    - title: Append
+      properties:
+        path:
+          title: Path
+          type: string
+          description: Amount to sleep in seconds
+        content:
+          title: Content
+          type: string
+          description: This will be appended to the end of the file
+
     - title: Zip
       properties:
         zipPath:
@@ -50,7 +60,7 @@ spec:
   steps:
     - id: createFile
       name: Create File
-      action: roadiehq:utils:fs:writeFile
+      action: roadiehq:utils:fs:write
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
@@ -60,6 +70,13 @@ spec:
       action: roadiehq:utils:sleep
       input:
         amount: ${{ parameters.amount }}
+
+    - id: appendFile
+      name: Append File
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
 
     - id: zip
       name: Zip

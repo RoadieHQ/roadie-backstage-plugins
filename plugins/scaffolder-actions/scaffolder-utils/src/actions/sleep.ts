@@ -15,6 +15,7 @@
  */
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { InputError } from '@backstage/errors';
 
 export function createSleepAction() {
     return createTemplateAction<{ amount: number }>({
@@ -34,6 +35,9 @@ export function createSleepAction() {
             },
         },
         async handler(ctx) {
+            if (isNaN(ctx.input?.amount)) {
+                throw new InputError('amount must be a number');
+            }
             await new Promise((resolve) => {
                 setTimeout(resolve, ctx.input.amount * 1000);
             });

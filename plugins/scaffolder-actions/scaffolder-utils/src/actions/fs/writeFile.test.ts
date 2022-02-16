@@ -13,85 +13,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { getVoidLogger } from '@backstage/backend-common';
-import { createZipAction } from "./zip"
+import { writeFileAction } from "./writeFile"
 import { PassThrough } from 'stream';
 import mock from "mock-fs"
 import fs from "fs"
 
-const mockLogger = getVoidLogger()
-mockLogger.error = jest.fn()
+describe("roadiehq:utils:fs:write", () => {
+    beforeEach(() => {
+        mock({
+            "fake-tmp-dir": {}
+        })
 
-describe("roadiehq:utils:zip", () => {
+    })
+    afterEach(() => mock.restore())
     const mockContext = {
         workspacePath: 'lol',
-        logger: mockLogger,
+        logger: getVoidLogger(),
         logStream: new PassThrough(),
         output: jest.fn(),
         createTemporaryDirectory: jest.fn(),
     };
-    const action = createZipAction()
+    const action = writeFileAction()
 
-
-    beforeEach(() => {
-        mock({
-            "fake-tmp-dir": {
-                "folder-to-be-zipped": {
-                    "foo": "bar",
-                    ["fake-file.yaml"]: "foo: bar"
-                }
-            }
-        })
-
-    })
-    afterEach(() => {
-        mock.restore()
-        mockContext.output.mockReset()
-    })
-    it("should throw error when parameter path is not provided", async () => {
+    it("should throw error when required parameter path is not provided", async () => {
         await expect(action.handler({
             ...mockContext,
             input: {}
         })).rejects.toThrow(/"path" argument must/);
     })
-    it("should create a zip file called 'outputPath' from the given 'path'", async () => {
+    it("should write file to the workspacePath with the given content", async () => {
         await action.handler({
             ...mockContext,
             workspacePath: "fake-tmp-dir",
             input: {
-                path: "folder-to-be-zipped",
-                outputPath: "folder-to-be-zipped.zip"
+                path: "fake-file.yaml",
+                content: "foo: bar"
             }
         })
 
-        expect(fs.existsSync("fake-tmp-dir/folder-to-be-zipped.zip")).toBe(true)
+        expect(fs.existsSync("fake-tmp-dir/fake-file.yaml")).toBe(true)
+        const file = fs.readFileSync("fake-tmp-dir/fake-file.yaml", "utf-8")
+        expect(file).toEqual("foo: bar")
+    })
+    it("should overwrite the file if it already exists", async () => {
+        mock({
+            "fake-tmp-dir": {
+                "fake-file.yaml": "This text shouldn't be in the file"
+            },
+        })
+
+        await action.handler({
+            ...mockContext,
+            workspacePath: "fake-tmp-dir",
+            input: {
+                path: "fake-file.yaml",
+                content: "foo: bar"
+            }
+        })
+
+        expect(fs.existsSync("fake-tmp-dir/fake-file.yaml")).toBe(true)
+        const file = fs.readFileSync("fake-tmp-dir/fake-file.yaml", "utf-8")
+        expect(file).toEqual("foo: bar")
     })
     it("should put path on the output property", async () => {
         const ctx = {
             ...mockContext,
             workspacePath: "fake-tmp-dir",
             input: {
-                path: "folder-to-be-zipped/fake-file.yaml",
-                outputPath: "fake-file.yaml.zip"
+                path: "fake-file.yaml",
+                content: "foo: bar"
             }
         }
         await action.handler(ctx)
 
-        expect(ctx.output).toHaveBeenCalledWith("outputPath", "fake-file.yaml.zip")
-    })
-    it("should call logger if file does not exist", async () => {
-        const ctx = {
-            ...mockContext,
-            workspacePath: "fake-tmp-dir",
-            input: {
-                path: "non/existent/path",
-                outputPath: "fake-file.yaml.zip"
-            }
-        }
-        await action.handler(ctx)
-
-        expect(ctx.logger.error).toHaveBeenCalledWith(expect.any(String))
-
+        expect(ctx.output).toHaveBeenCalledWith("path", "fake-tmp-dir/fake-file.yaml")
     })
 })

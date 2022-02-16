@@ -14,7 +14,36 @@
  * limitations under the License.
  */
 
-describe("roadiehq:utils:sleep", () => {
+import { getVoidLogger } from '@backstage/backend-common';
+import { createSleepAction } from "./sleep"
+import { PassThrough } from 'stream';
 
+describe("roadiehq:utils:sleep", () => {
+    const mockContext = {
+        workspacePath: 'lol',
+        logger: getVoidLogger(),
+        logStream: new PassThrough(),
+        output: jest.fn(),
+        createTemporaryDirectory: jest.fn(),
+    };
+    const action = createSleepAction()
+
+    it("should throw error when required parameter amount is not a number", async () => {
+        await expect(action.handler({
+            ...mockContext,
+            input: {}
+        })).rejects.toThrow(/amount must be a number/);
+        await expect(action.handler({
+            ...mockContext,
+            input: { amount: "alma" }
+        })).rejects.toThrow(/amount must be a number/);
+        await expect(action.handler({
+            ...mockContext,
+            input: { amount: {} }
+        })).rejects.toThrow(/amount must be a number/);
+        await expect(action.handler({
+            ...mockContext,
+            input: { amount: undefined }
+        })).rejects.toThrow(/amount must be a number/);
+    })
 })
-export { }

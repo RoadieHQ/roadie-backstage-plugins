@@ -17,13 +17,15 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import path from 'path'
 import AdmZip from "adm-zip"
+import fs from 'fs';
 
 export function createZipAction() {
-    return createTemplateAction<{ path: string }>({
+    return createTemplateAction<{ path: string, outputPath: string }>({
         id: "roadiehq:utils:zip",
         description: "Zips the content of the path",
         schema: {
             input: {
+                required: ['path'],
                 type: 'object',
                 properties: {
                     path: {
@@ -31,12 +33,18 @@ export function createZipAction() {
                         description: 'Relative path you would like to zip',
                         type: 'string',
                     },
+
+                    outputPath: {
+                        title: 'Output Path',
+                        description: 'The name of the result of the zip command',
+                        type: 'string',
+                    },
                 }
             },
             output: {
                 type: 'object',
                 properties: {
-                    path: {
+                    outputPath: {
                         title: 'Zip Path',
                         type: 'string'
                     }
@@ -46,11 +54,20 @@ export function createZipAction() {
         async handler(ctx) {
             const zip = new AdmZip()
             const resultPath = path.join(ctx.workspacePath, ctx.input.path)
+            const outputPath = path.join(ctx.workspacePath, ctx.input.outputPath)
 
-            zip.addLocalFolder(resultPath)
-            zip.writeZip(resultPath)
+            if (!fs.existsSync(resultPath)) {
+                ctx.logger.error(`File ${ctx.input.path} does not exists. Can't zip it.`)
+                return
+            }
+            if (fs.lstatSync(resultPath).isDirectory()) {
+                zip.addLocalFolder(resultPath)
+            } else if (fs.lstatSync(resultPath).isFile()) {
+                zip.addLocalFile(resultPath)
+            }
+            zip.writeZip(outputPath)
 
-            ctx.output('path', resultPath)
+            ctx.output('outputPath', ctx.input.outputPath)
         }
     })
 }

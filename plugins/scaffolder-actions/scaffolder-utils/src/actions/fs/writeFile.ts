@@ -18,12 +18,13 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import path from 'path'
 import fs from "fs-extra"
 
-export function createFileAction() {
+export function writeFileAction() {
     return createTemplateAction<{ path: string, content: string }>({
-        id: "roadiehq:utils:fs:writeFile",
+        id: "roadiehq:utils:fs:write",
         description: "Creates a file with the content on the given path",
         schema: {
             input: {
+                required: ["path", "content"],
                 type: 'object',
                 properties: {
                     path: {
@@ -49,8 +50,8 @@ export function createFileAction() {
             }
         },
         async handler(ctx) {
-            ctx.logger.info(ctx.workspacePath)
             const resultPath = path.join(ctx.workspacePath, ctx.input.path)
+
             fs.outputFileSync(resultPath, ctx.input.content)
             ctx.output('path', resultPath)
         }
