@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { createWriteFileAction as createFileAction } from "./writeFile"
-export { createAppendFileAction as appendFileAction } from "./appendFile"
+export { createWriteFileAction } from "./writeFile"
+export { createAppendFileAction } from "./appendFile"
