@@ -15,7 +15,7 @@
  */
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import path from 'path'
+import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from "fs-extra"
 
 export function writeFileAction() {
@@ -50,10 +50,10 @@ export function writeFileAction() {
             }
         },
         async handler(ctx) {
-            const resultPath = path.join(ctx.workspacePath, ctx.input.path)
+            const destFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.path)
 
-            fs.outputFileSync(resultPath, ctx.input.content)
-            ctx.output('path', resultPath)
+            fs.outputFileSync(destFilepath, ctx.input.content)
+            ctx.output('path', destFilepath)
         }
     })
 }

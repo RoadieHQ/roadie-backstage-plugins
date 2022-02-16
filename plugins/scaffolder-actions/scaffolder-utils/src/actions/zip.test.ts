@@ -18,7 +18,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { createZipAction } from "./zip"
 import { PassThrough } from 'stream';
 import mock from "mock-fs"
-import fs from "fs"
+import fs from "fs-extra"
 
 const mockLogger = getVoidLogger()
 mockLogger.error = jest.fn()

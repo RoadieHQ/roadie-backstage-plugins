@@ -17,7 +17,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { writeFileAction } from "./writeFile"
 import { PassThrough } from 'stream';
 import mock from "mock-fs"
-import fs from "fs"
+import fs from "fs-extra"
 
 describe("roadiehq:utils:fs:write", () => {
     beforeEach(() => {
@@ -87,6 +87,7 @@ describe("roadiehq:utils:fs:write", () => {
         }
         await action.handler(ctx)
 
-        expect(ctx.output).toHaveBeenCalledWith("path", "fake-tmp-dir/fake-file.yaml")
+        expect(ctx.output.mock.calls[0][0]).toEqual("path")
+        expect(ctx.output.mock.calls[0][1]).toContain("/fake-tmp-dir/fake-file.yaml")
     })
 })

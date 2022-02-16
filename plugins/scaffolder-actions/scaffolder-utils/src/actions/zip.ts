@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import { resolveSafeChildPath } from '@backstage/backend-common';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import path from 'path'
 import AdmZip from "adm-zip"
-import fs from 'fs';
+import fs from 'fs-extra';
 
 export function createZipAction() {
     return createTemplateAction<{ path: string, outputPath: string }>({
@@ -53,20 +53,19 @@ export function createZipAction() {
         },
         async handler(ctx) {
             const zip = new AdmZip()
-            const resultPath = path.join(ctx.workspacePath, ctx.input.path)
-            const outputPath = path.join(ctx.workspacePath, ctx.input.outputPath)
+            const sourceFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.path)
+            const destFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.outputPath)
 
-            if (!fs.existsSync(resultPath)) {
+            if (!fs.existsSync(sourceFilepath)) {
                 ctx.logger.error(`File ${ctx.input.path} does not exists. Can't zip it.`)
                 return
             }
-            if (fs.lstatSync(resultPath).isDirectory()) {
-                zip.addLocalFolder(resultPath)
-            } else if (fs.lstatSync(resultPath).isFile()) {
-                zip.addLocalFile(resultPath)
+            if (fs.lstatSync(sourceFilepath).isDirectory()) {
+                zip.addLocalFolder(sourceFilepath)
+            } else if (fs.lstatSync(sourceFilepath).isFile()) {
+                zip.addLocalFile(sourceFilepath)
             }
-            zip.writeZip(outputPath)
-
+            zip.writeZip(destFilepath)
             ctx.output('outputPath', ctx.input.outputPath)
         }
     })
