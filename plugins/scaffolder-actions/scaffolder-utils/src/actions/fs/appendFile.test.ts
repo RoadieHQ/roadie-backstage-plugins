@@ -15,7 +15,7 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { appendFileAction } from "./appendFile"
+import { createAppendFileAction } from "./appendFile"
 import { PassThrough } from 'stream';
 import mock from "mock-fs"
 import fs from "fs-extra"
@@ -36,7 +36,7 @@ describe("roadiehq:utils:fs:append", () => {
         output: jest.fn(),
         createTemporaryDirectory: jest.fn(),
     };
-    const action = appendFileAction()
+    const action = createAppendFileAction()
 
     it("should throw error when required parameter path is not provided", async () => {
         await expect(action.handler({

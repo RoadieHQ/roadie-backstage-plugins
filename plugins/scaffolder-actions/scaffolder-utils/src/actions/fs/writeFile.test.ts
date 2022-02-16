@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { getVoidLogger } from '@backstage/backend-common';
-import { writeFileAction } from "./writeFile"
+import { createWriteFileAction } from "./writeFile"
 import { PassThrough } from 'stream';
 import mock from "mock-fs"
 import fs from "fs-extra"
@@ -34,7 +34,7 @@ describe("roadiehq:utils:fs:write", () => {
         output: jest.fn(),
         createTemporaryDirectory: jest.fn(),
     };
-    const action = writeFileAction()
+    const action = createWriteFileAction()
 
     it("should throw error when required parameter path is not provided", async () => {
         await expect(action.handler({

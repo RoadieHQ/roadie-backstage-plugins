@@ -5,7 +5,8 @@ Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 This contains a collection of actions: 
  - `roadiehq:utils:zip`
  - `roadiehq:utils:sleep`
- - `roadiehq:utils:fs:writeFile`
+ - `roadiehq:utils:fs:write`
+ - `roadiehq:utils:fs:append`
 
 ## Getting started
 
@@ -30,13 +31,14 @@ Here you can pick the actions that you'd like to register to your backstage inst
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createZipAction, createFileAction, createSleepAction } from '@roadiehq/scaffolder-utils';
+import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction } from '@roadiehq/scaffolder-utils';
 ...
 
 const actions = [
   createFileAction(),
   createSleepAction(),
   createZipAction(),
+  createAppendFileAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -78,6 +80,10 @@ spec:
           title: Path
           type: string
           description: Workspace path to zip
+        outputPath:
+          title: Path
+          type: string
+          description: The path of the zip file
 
   steps:
     - id: zip
@@ -85,6 +91,7 @@ spec:
       action: roadiehq:utils:zip
       input:
         path: ${{ parameters.path }}
+        outputPath: ${{ parameters.outputPath }}
 
   output:
     path: ${{ steps.zip.output.path }}
@@ -104,10 +111,10 @@ spec:
   type: service
 
   parameters:
-    - title: Zip
+    - title: Sleep
       properties:
         amount:
-          title: Sleep
+          title: Amount to sleep
           type: number
           description: Will sleep for this amount of seconds
 
@@ -118,7 +125,7 @@ spec:
       input:
         path: ${{ parameters.amount }}
 ```
-### Example of using createFile action
+### Example of using writeFile action
 
 ```yaml
 ---
@@ -144,12 +151,44 @@ spec:
           type: string
           description: The content of the newly created file
   steps:
-    - id: createFile
+    - id: writeFile
       name: Create File
-      action: roadiehq:utils:fs:writeFile
+      action: roadiehq:utils:fs:write
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
 ```
+### Example of using appendFile action
 
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: append-file-template
+  title: Append File template
+  description: Example temaplte to append to a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Append File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file
+        content:
+          title: Content
+          type: string
+          description: The content to append to the file
+  steps:
+    - id: appendFile
+      name: Append File
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
 
