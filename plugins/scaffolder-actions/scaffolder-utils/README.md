@@ -1,4 +1,4 @@
-# scaffolder-backend-module-http-request
+# scaffolder-utils actions package
 
 Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 
