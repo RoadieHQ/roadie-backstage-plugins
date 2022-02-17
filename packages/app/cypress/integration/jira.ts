@@ -40,11 +40,10 @@ describe('Jira plugin', () => {
 
             cy.contains('John Doe added')
 
-
-        });
-        it('should open the statuses popup', () => {
             cy.get('#select-statuses').click()
             cy.get('[data-value="Selected for Development"]')
-        })
+
+
+        });
     });
 });
