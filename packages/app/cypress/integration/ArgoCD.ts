@@ -31,6 +31,7 @@ describe('Argo CD', () => {
 
   describe('Navigate to Overview', () => {
     it('should show the ArgoCD History card', () => {
+      cy.wait('@getArgoData')
       cy.contains('ArgoCD history');
       cy.contains('test-app');
       cy.contains('53e28ff20cc530b9ada2173fbbd64d48338583ba');
