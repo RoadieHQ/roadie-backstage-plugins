@@ -13,18 +13,15 @@ spec:
   parameters:
     - title: Create File
       properties:
-        path:
+        createPath:
           title: Path
           type: string
           description: workspace path to zip
-          ui:autofocus: true
-          ui:options:
-            rows: 5
-        content:
+        createContent:
           title: File Content
           type: string
           description: content of the file
-          ui:autofocus: true
+          ui:widget: textarea
           ui:options:
             rows: 5
 
@@ -37,33 +34,80 @@ spec:
 
     - title: Append
       properties:
-        path:
+        appendPath:
           title: Path
           type: string
           description: Amount to sleep in seconds
-        content:
+        appendContent:
           title: Content
           type: string
           description: This will be appended to the end of the file
+          ui:widget: textarea
+          ui:options:
+            rows: 5
 
     - title: Zip
       properties:
         zipPath:
           title: Path
           type: string
-          default: "."
           description: workspace path to zip
-          ui:autofocus: true
+
+        zipOutputPath:
+          title: Output Path
+          type: string
+          description: Name of the output zip
+
+    - title: Create Repo
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
           ui:options:
-            rows: 5
+            requestUserCredentials:
+              secretsKey: USER_OAUTH_TOKEN
+              additionalScopes:
+                github:
+                  - workflow:write
+            allowedHosts:
+              - github.com
+        description:
+          type: string
+        defaultBranch:
+          default: master
+          type: string
+        repoVisibility:
+          type: string
+          enum: ["private", "public", "internal"]
+        requireCodeOwnerReviews:
+          type: boolean
+
+        collaborators:
+          type: array
+          items:
+            type: "object"
+            required: ["username", "access"]
+            properties:
+              access:
+                type: "string"
+                description: "The type of access for the user"
+                enum: ["push", "pull", "admin", "maintain", "triage"]
+              username:
+                type: "string"
+                description: "The username or group"
+        topics:
+          type: array
+          items:
+            type: string
 
   steps:
     - id: createFile
       name: Create File
       action: roadiehq:utils:fs:write
       input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
+        path: ${{ parameters.createPath }}
+        content: ${{ parameters.createContent }}
 
     - id: sleep
       name: Sleep
@@ -75,14 +119,30 @@ spec:
       name: Append File
       action: roadiehq:utils:fs:append
       input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
+        path: ${{ parameters.appendPath }}
+        content: |
+
+          ${{ parameters.appendContent }}
 
     - id: zip
       name: Zip
       action: roadiehq:utils:zip
       input:
         path: ${{ parameters.zipPath }}
+        outputPath: ${{ parameters.zipOutputPath }}
+
+    - id: publish
+      name: Create repository
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        topics: ${{ parameters.topics }}
+        collaborators: ${{ parameters.collaborators }}
+        repoVisibility: ${{ parameters.repoVisibility }}
+        defaultBranch: ${{ parameters.defaultBranch }}
+        requireCodeOwnerReviews: ${{parameters.requireCodeOwnerReviews}}
+        description: ${{ parameters.description }}
+        token: ${{ secrets.USER_OAUTH_TOKEN }}
 
   output:
     path: ${{ steps.zip.output.path }}
