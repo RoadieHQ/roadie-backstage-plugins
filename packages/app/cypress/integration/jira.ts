@@ -42,8 +42,6 @@ describe('Jira plugin', () => {
 
             cy.get('#select-statuses').click()
             cy.get('[data-value="Selected for Development"]')
-
-
         });
     });
 });
