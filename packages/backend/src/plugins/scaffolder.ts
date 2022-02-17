@@ -26,7 +26,7 @@ import {
   TemplateAction
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
-import { createZipAction, createWriteFileAction, createSleepAction, createAppendFileAction } from '@roadiehq/scaffolder-utils';
+import { createZipAction, createWriteFileAction, createSleepAction, createAppendFileAction } from '@roadiehq/scaffolder-backend-module-utils';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';

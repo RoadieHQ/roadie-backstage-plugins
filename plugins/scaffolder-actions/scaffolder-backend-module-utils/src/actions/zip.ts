@@ -57,7 +57,7 @@ export function createZipAction() {
             const destFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.outputPath)
 
             if (!fs.existsSync(sourceFilepath)) {
-                ctx.logger.error(`File ${ctx.input.path} does not exists. Can't zip it.`)
+                ctx.logger.error(`File ${ctx.input.path} does not exist. Can't zip it.`)
                 return
             }
             if (fs.lstatSync(sourceFilepath).isDirectory()) {

@@ -166,14 +166,14 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: append-file-template
-  title: Append File template
+  title: Append To File template
   description: Example temaplte to append to a file with on the given path with the given content in the workspace.
 spec:
   owner: roadie
   type: service
 
   parameters:
-    - title: Append File
+    - title: Append To File
       properties:
         path:
           title: Path
@@ -185,7 +185,7 @@ spec:
           description: The content to append to the file
   steps:
     - id: appendFile
-      name: Append File
+      name: Append To File
       action: roadiehq:utils:fs:append
       input:
         path: ${{ parameters.path }}
