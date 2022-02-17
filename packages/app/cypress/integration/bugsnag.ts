@@ -20,17 +20,18 @@ import 'os';
 describe('Bugsnag', () => {
     beforeEach(() => {
         cy.saveGithubToken();
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/user/organizations', { fixture: 'Bugsnag/organisations.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/organizations/129876sdfgh/projects?per_page=50', { fixture: 'Bugsnag/projects.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors?per_page=50', { fixture: 'Bugsnag/errors.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors/123456qwerty!!/trend?&buckets_count=10', { fixture: 'Bugsnag/trends.json' })
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors/123456qwerty2!!/trend?&buckets_count=10', { fixture: 'Bugsnag/trends.json' })
+        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/user/organizations', { fixture: 'Bugsnag/organisations.json' }).as('getOrganizations')
+        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/organizations/129876sdfgh/projects?per_page=50', { fixture: 'Bugsnag/projects.json' }).as('getProjects')
+        cy.intercept('GET', 'http://localhost:7007/api/proxy/bugsnag/api/projects/0987qwert!!/errors?per_page=50', { fixture: 'Bugsnag/errors.json' }).as('getErrors')
+
         cy.visit('/catalog/default/component/sample-service/bugsnag')
+
+        cy.wait(['@getOrganizations', '@getProjects', '@getErrors'])
     })
 
     describe('Navigating to Bugsnag', () => {
         it('should show Bugsnag when navigating to Bugsnag tab', () => {
             cy.contains('Errors overview');
-          });
+        });
     });
 });
