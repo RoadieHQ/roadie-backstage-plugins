@@ -26,6 +26,7 @@ import {
   TemplateAction
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
+import { createZipAction, createWriteFileAction, createSleepAction, createAppendFileAction } from '@roadiehq/scaffolder-backend-module-utils';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
@@ -38,7 +39,7 @@ export const createActions = (options: {
   config: Config;
   containerRunner: ContainerRunner;
   catalogClient: CatalogClient
-}) : TemplateAction<any>[] => {
+}): TemplateAction<any>[] => {
   const { reader, integrations, config, containerRunner, catalogClient } = options;
   const defaultActions = createBuiltinActions({
     reader,
@@ -49,7 +50,11 @@ export const createActions = (options: {
   });
 
   return [
-    createHttpBackstageAction({config}),
+    createZipAction(),
+    createSleepAction(),
+    createWriteFileAction(),
+    createAppendFileAction(),
+    createHttpBackstageAction({ config }),
     ...defaultActions
   ];
 };

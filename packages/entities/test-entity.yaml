@@ -22,7 +22,6 @@ spec:
     - sample-service
 
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -39,7 +38,6 @@ spec:
     - sample-service-2
 
 ---
-
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:

@@ -58,7 +58,7 @@ Action supports following HTTP methods: `GET`, `HEAD`, `OPTIONS`, `POST`, `UPDAT
 
 ```yaml
 ---
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: HTTP-testing
