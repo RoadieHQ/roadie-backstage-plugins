@@ -55,9 +55,9 @@ describe('roadiehq:utils:sleep', () => {
     ).rejects.toThrow(/amount must be a number/);
   });
   it('should throw error when sleep amount is greater than maxSleep amount', async () => {
-    const action = createSleepAction({ maxSleep: 1 });
+    const customAction = createSleepAction({ maxSleep: 1 });
     await expect(
-      action.handler({
+      customAction.handler({
         ...mockContext,
         input: { amount: 2 },
       }),
