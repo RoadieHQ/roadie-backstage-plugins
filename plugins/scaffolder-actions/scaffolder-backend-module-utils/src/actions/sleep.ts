@@ -17,30 +17,36 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { InputError } from '@backstage/errors';
 
-export function createSleepAction() {
-    return createTemplateAction<{ amount: number }>({
-        id: "roadiehq:utils:sleep",
-        description: "Halts the scaffolding for the given amount of seconds",
-        schema: {
-            input: {
-                type: 'object',
-                required: ['amount'],
-                properties: {
-                    amount: {
-                        title: 'Sleep Amount',
-                        description: 'How much seconds should this step take.',
-                        type: 'number',
-                    },
-                }
-            },
+export function createSleepAction(options?: { maxSleep?: number }) {
+  return createTemplateAction<{ amount: number }>({
+    id: 'roadiehq:utils:sleep',
+    description: 'Halts the scaffolding for the given amount of seconds',
+    schema: {
+      input: {
+        type: 'object',
+        required: ['amount'],
+        properties: {
+          amount: {
+            title: 'Sleep Amount',
+            description: 'How much seconds should this step take.',
+            type: 'number',
+          },
         },
-        async handler(ctx) {
-            if (isNaN(ctx.input?.amount)) {
-                throw new InputError('amount must be a number');
-            }
-            await new Promise((resolve) => {
-                setTimeout(resolve, ctx.input.amount * 1000);
-            });
-        }
-    })
+      },
+    },
+    async handler(ctx) {
+      if (isNaN(ctx.input?.amount)) {
+        throw new InputError('amount must be a number');
+      } else if (options?.maxSleep && ctx.input.amount > options.maxSleep) {
+        throw new InputError(
+          `sleep amount can not be greater than maxSleep. amount: ${ctx.input.amount}, maxSleep: ${options.maxSleep}`,
+        );
+      }
+      ctx.logger.info(`Waiting ${ctx.input.amount} seconds`);
+
+      await new Promise(resolve => {
+        setTimeout(resolve, ctx.input.amount * 1000);
+      });
+    },
+  });
 }

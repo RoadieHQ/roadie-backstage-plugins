@@ -15,35 +15,52 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { createSleepAction } from "./sleep"
+import { createSleepAction } from './sleep';
 import { PassThrough } from 'stream';
 
-describe("roadiehq:utils:sleep", () => {
-    const mockContext = {
-        workspacePath: 'lol',
-        logger: getVoidLogger(),
-        logStream: new PassThrough(),
-        output: jest.fn(),
-        createTemporaryDirectory: jest.fn(),
-    };
-    const action = createSleepAction()
+describe('roadiehq:utils:sleep', () => {
+  const mockContext = {
+    workspacePath: 'lol',
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+  };
+  const action = createSleepAction();
 
-    it("should throw error when required parameter amount is not a number", async () => {
-        await expect(action.handler({
-            ...mockContext,
-            input: {}
-        })).rejects.toThrow(/amount must be a number/);
-        await expect(action.handler({
-            ...mockContext,
-            input: { amount: "alma" }
-        })).rejects.toThrow(/amount must be a number/);
-        await expect(action.handler({
-            ...mockContext,
-            input: { amount: {} }
-        })).rejects.toThrow(/amount must be a number/);
-        await expect(action.handler({
-            ...mockContext,
-            input: { amount: undefined }
-        })).rejects.toThrow(/amount must be a number/);
-    })
-})
+  it('should throw error when required parameter amount is not a number', async () => {
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: {},
+      }),
+    ).rejects.toThrow(/amount must be a number/);
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { amount: 'alma' },
+      }),
+    ).rejects.toThrow(/amount must be a number/);
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { amount: {} },
+      }),
+    ).rejects.toThrow(/amount must be a number/);
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { amount: undefined },
+      }),
+    ).rejects.toThrow(/amount must be a number/);
+  });
+  it('should throw error when sleep amount is greater than maxSleep amount', async () => {
+    const action = createSleepAction({ maxSleep: 1 });
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { amount: 2 },
+      }),
+    ).rejects.toThrow(/sleep amount can not be/);
+  });
+});
