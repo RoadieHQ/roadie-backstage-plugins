@@ -40,7 +40,7 @@ describe('roadiehq:utils:fs:append', () => {
     await expect(
       action.handler({
         ...mockContext,
-        input: { content: '' },
+        input: { content: '' } as any,
       }),
     ).rejects.toThrow(/"path" argument must/);
   });

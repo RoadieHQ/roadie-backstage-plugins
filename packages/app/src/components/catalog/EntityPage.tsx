@@ -29,7 +29,6 @@ import {
   EntityAboutCard,
   EntityDependsOnComponentsCard,
   EntityDependsOnResourcesCard,
-  EntitySystemDiagramCard,
   EntityHasComponentsCard,
   EntityHasResourcesCard,
   EntityHasSubcomponentsCard,
@@ -40,6 +39,7 @@ import {
   isComponentType,
   isKind,
 } from '@backstage/plugin-catalog';
+import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph'
 import {
   isGithubActionsAvailable,
   EntityGithubActionsContent,
@@ -412,7 +412,7 @@ const systemPage = (
       </Grid>
     </EntityLayout.Route>
     <EntityLayout.Route path="/diagram" title="Diagram">
-      <EntitySystemDiagramCard />
+      <EntityCatalogGraphCard />
     </EntityLayout.Route>
   </EntityLayout>
 );

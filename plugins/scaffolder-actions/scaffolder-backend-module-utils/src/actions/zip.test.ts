@@ -51,7 +51,7 @@ describe('roadiehq:utils:zip', () => {
     await expect(
       action.handler({
         ...mockContext,
-        input: {},
+        input: {} as any,
       }),
     ).rejects.toThrow(/"path" argument must/);
   });

@@ -2805,6 +2805,27 @@
   dependencies:
     "@backstage/plugin-permission-common" "^0.5.1"
 
+"@backstage/plugin-catalog-graph@^0.2.11":
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-graph/-/plugin-catalog-graph-0.2.11.tgz#e0ec6976ece75b4175d48214d5e9d6a7c215e9f1"
+  integrity sha512-qBdLV8yJKaqBNKdPRDMGEKYJ8H0ZIweVGM1gDibKvZ2aKzU4R8V18hsDgVPBHJkyFMWlPMBpwPUkGetH0/BtUg==
+  dependencies:
+    "@backstage/catalog-client" "^0.7.0"
+    "@backstage/catalog-model" "^0.10.0"
+    "@backstage/core-components" "^0.8.9"
+    "@backstage/core-plugin-api" "^0.6.1"
+    "@backstage/plugin-catalog-react" "^0.6.15"
+    "@backstage/theme" "^0.2.15"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.57"
+    classnames "^2.3.1"
+    lodash "^4.17.15"
+    p-limit "^3.1.0"
+    qs "^6.9.4"
+    react-router "6.0.0-beta.0"
+    react-use "^17.2.4"
+
 "@backstage/plugin-catalog-import@^0.8.0":
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-import/-/plugin-catalog-import-0.8.2.tgz#0ecf7a1597ffbf3d44d2f5d00dacc7d251768152"
