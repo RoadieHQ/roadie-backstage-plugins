@@ -1,0 +1,13 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: sample-template-v3
+spec:
+  type: foo
+  steps:
+  - id: zip
+    name: Zip
+    action: roadiehq:utils:zip
+    input:
+      path: foo.txt
+      outputPath: foo.zip

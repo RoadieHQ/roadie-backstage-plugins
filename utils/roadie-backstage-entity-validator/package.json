@@ -29,6 +29,7 @@
   "dependencies": {
     "@actions/core": "^1.2.7",
     "@backstage/catalog-model": "^0.10.1",
+    "@backstage/plugin-scaffolder-common": "^0.2.1",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
