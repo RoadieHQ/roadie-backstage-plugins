@@ -94,11 +94,11 @@ describe('http:backstage:request', () => {
             path: '/api/proxy/foo',
             method: 'POST',
             headers: {
-              "content-type" : "application/json"
+              'content-type': 'application/json',
             },
-            body:  {
-              'name': 'test'
-            } ,
+            body: {
+              name: 'test',
+            },
           },
         });
         expect(http).toBeCalledWith(
@@ -106,7 +106,7 @@ describe('http:backstage:request', () => {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
             headers: {
-              "content-type" : "application/json"
+              'content-type': 'application/json',
             },
             body: '{"name":"test"}',
           },
@@ -155,7 +155,7 @@ describe('http:backstage:request', () => {
             path: '/api/proxy/foo',
             method: 'POST',
             headers: {
-              "content-type" : "application/json"
+              'content-type': 'application/json',
             },
           },
         });
@@ -164,9 +164,9 @@ describe('http:backstage:request', () => {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
             headers: {
-              "content-type" : "application/json"
+              'content-type': 'application/json',
             },
-            body: undefined
+            body: undefined,
           },
           logger,
         );
@@ -182,7 +182,7 @@ describe('http:backstage:request', () => {
         });
         await action.handler({
           ...mockContext,
-          token: 'some-token',
+          secrets: { backstageToken: 'some-token' },
           input: {
             path: `/api/proxy/foo`,
             method: 'GET',
