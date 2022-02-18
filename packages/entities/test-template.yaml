@@ -4,8 +4,8 @@ kind: Template
 # some metadata about the template itself
 metadata:
   name: zip-demo
-  title: Scaffolder-utils test template
-  description: An example template to test most of the scaffolder-utils actions
+  title: scaffolder-backend-module-utils test template
+  description: An example template to test most of the scaffolder-backend-module-utils actions
 spec:
   owner: roadie
   type: service

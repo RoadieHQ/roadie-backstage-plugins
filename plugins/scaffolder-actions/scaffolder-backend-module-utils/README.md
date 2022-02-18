@@ -1,4 +1,4 @@
-# scaffolder-utils actions package
+# scaffolder-backend-module-utils actions package
 
 Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 
@@ -21,7 +21,7 @@ You need to configure the action in your backend:
 
 ```
 cd packages/backend
-yarn add @roadiehq/scaffolder-utils
+yarn add @roadiehq/scaffolder-backend-module-utils
 ```
 
 Configure the action:
@@ -31,7 +31,7 @@ Here you can pick the actions that you'd like to register to your backstage inst
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction } from '@roadiehq/scaffolder-utils';
+import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction } from '@roadiehq/scaffolder-backend-module-utils';
 ...
 
 const actions = [
