@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 export * from './actions/zip';
-export * from './actions/fs'
-export * from './actions/sleep'
+export * from './actions/fs';
+export * from './actions/sleep';

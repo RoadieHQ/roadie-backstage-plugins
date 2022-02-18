@@ -16,44 +16,47 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { resolveSafeChildPath } from '@backstage/backend-common';
-import fs from "fs-extra"
+import fs from 'fs-extra';
 
 export function createWriteFileAction() {
-    return createTemplateAction<{ path: string, content: string }>({
-        id: "roadiehq:utils:fs:write",
-        description: "Creates a file with the content on the given path",
-        schema: {
-            input: {
-                required: ["path", "content"],
-                type: 'object',
-                properties: {
-                    path: {
-                        title: 'Path',
-                        description: 'Relative path',
-                        type: 'string',
-                    },
-                    content: {
-                        title: 'Content',
-                        description: 'This will be the content of the file',
-                        type: 'string'
-                    }
-                }
-            },
-            output: {
-                type: 'object',
-                properties: {
-                    path: {
-                        title: 'Path',
-                        type: 'string'
-                    }
-                }
-            }
+  return createTemplateAction<{ path: string; content: string }>({
+    id: 'roadiehq:utils:fs:write',
+    description: 'Creates a file with the content on the given path',
+    schema: {
+      input: {
+        required: ['path', 'content'],
+        type: 'object',
+        properties: {
+          path: {
+            title: 'Path',
+            description: 'Relative path',
+            type: 'string',
+          },
+          content: {
+            title: 'Content',
+            description: 'This will be the content of the file',
+            type: 'string',
+          },
         },
-        async handler(ctx) {
-            const destFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.path)
+      },
+      output: {
+        type: 'object',
+        properties: {
+          path: {
+            title: 'Path',
+            type: 'string',
+          },
+        },
+      },
+    },
+    async handler(ctx) {
+      const destFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.path,
+      );
 
-            fs.outputFileSync(destFilepath, ctx.input.content)
-            ctx.output('path', destFilepath)
-        }
-    })
+      fs.outputFileSync(destFilepath, ctx.input.content);
+      ctx.output('path', destFilepath);
+    },
+  });
 }

@@ -16,57 +16,65 @@
 
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import AdmZip from "adm-zip"
+import { InputError } from '@backstage/errors';
+import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
 
 export function createZipAction() {
-    return createTemplateAction<{ path: string, outputPath: string }>({
-        id: "roadiehq:utils:zip",
-        description: "Zips the content of the path",
-        schema: {
-            input: {
-                required: ['path'],
-                type: 'object',
-                properties: {
-                    path: {
-                        title: 'Path',
-                        description: 'Relative path you would like to zip',
-                        type: 'string',
-                    },
+  return createTemplateAction<{ path: string; outputPath: string }>({
+    id: 'roadiehq:utils:zip',
+    description: 'Zips the content of the path',
+    schema: {
+      input: {
+        required: ['path'],
+        type: 'object',
+        properties: {
+          path: {
+            title: 'Path',
+            description: 'Relative path you would like to zip',
+            type: 'string',
+          },
 
-                    outputPath: {
-                        title: 'Output Path',
-                        description: 'The name of the result of the zip command',
-                        type: 'string',
-                    },
-                }
-            },
-            output: {
-                type: 'object',
-                properties: {
-                    outputPath: {
-                        title: 'Zip Path',
-                        type: 'string'
-                    }
-                }
-            }
+          outputPath: {
+            title: 'Output Path',
+            description: 'The name of the result of the zip command',
+            type: 'string',
+          },
         },
-        async handler(ctx) {
-            const zip = new AdmZip()
-            const sourceFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.path)
-            const destFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.outputPath)
+      },
+      output: {
+        type: 'object',
+        properties: {
+          outputPath: {
+            title: 'Zip Path',
+            type: 'string',
+          },
+        },
+      },
+    },
+    async handler(ctx) {
+      const zip = new AdmZip();
+      const sourceFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.path,
+      );
+      const destFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.outputPath,
+      );
 
-            if (!fs.existsSync(sourceFilepath)) {
-                ctx.logger.error(`File ${ctx.input.path} does not exist. Can't zip it.`)
-                return
-            }
-            if (fs.lstatSync(sourceFilepath).isDirectory()) {
-                zip.addLocalFolder(sourceFilepath)
-            } else if (fs.lstatSync(sourceFilepath).isFile()) {
-                zip.addLocalFile(sourceFilepath)
-            }
-            zip.writeZip(destFilepath)
-            ctx.output('outputPath', ctx.input.outputPath)
-        }
-    })
+      if (!fs.existsSync(sourceFilepath)) {
+        throw new InputError(
+          `File ${ctx.input.path} does not exist. Can't zip it.`,
+        );
+      }
+      if (fs.lstatSync(sourceFilepath).isDirectory()) {
+        zip.addLocalFolder(sourceFilepath);
+      } else if (fs.lstatSync(sourceFilepath).isFile()) {
+        zip.addLocalFile(sourceFilepath);
+      }
+      zip.writeZip(destFilepath);
+      ctx.output('outputPath', ctx.input.outputPath);
+    },
+  });
 }

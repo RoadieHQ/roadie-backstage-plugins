@@ -16,44 +16,48 @@
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { resolveSafeChildPath } from '@backstage/backend-common';
-import fs from "fs-extra"
+import fs from 'fs-extra';
 
 export function createAppendFileAction() {
-    return createTemplateAction<{ path: string, content: string }>({
-        id: "roadiehq:utils:fs:append",
-        description: "Append content to the end of the given file, it will create the file if it does not exist.",
-        schema: {
-            input: {
-                type: 'object',
-                required: ['content', 'path'],
-                properties: {
-                    path: {
-                        title: 'Path',
-                        description: 'Path to existing file to append.',
-                        type: 'string',
-                    },
-                    content: {
-                        title: 'Content',
-                        description: 'This will be appended to the file',
-                        type: 'string'
-                    }
-                }
-            },
-            output: {
-                type: 'object',
-                properties: {
-                    path: {
-                        title: 'Path',
-                        type: 'string'
-                    }
-                }
-            }
+  return createTemplateAction<{ path: string; content: string }>({
+    id: 'roadiehq:utils:fs:append',
+    description:
+      'Append content to the end of the given file, it will create the file if it does not exist.',
+    schema: {
+      input: {
+        type: 'object',
+        required: ['content', 'path'],
+        properties: {
+          path: {
+            title: 'Path',
+            description: 'Path to existing file to append.',
+            type: 'string',
+          },
+          content: {
+            title: 'Content',
+            description: 'This will be appended to the file',
+            type: 'string',
+          },
         },
-        async handler(ctx) {
-            const sourceFilepath = resolveSafeChildPath(ctx.workspacePath, ctx.input.path)
+      },
+      output: {
+        type: 'object',
+        properties: {
+          path: {
+            title: 'Path',
+            type: 'string',
+          },
+        },
+      },
+    },
+    async handler(ctx) {
+      const sourceFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.path,
+      );
 
-            fs.appendFileSync(sourceFilepath, ctx.input.content)
-            ctx.output('path', sourceFilepath)
-        }
-    })
+      fs.appendFileSync(sourceFilepath, ctx.input.content);
+      ctx.output('path', sourceFilepath);
+    },
+  });
 }

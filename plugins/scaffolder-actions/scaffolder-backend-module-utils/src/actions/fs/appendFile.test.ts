@@ -15,81 +15,83 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { createAppendFileAction } from "./appendFile"
+import { createAppendFileAction } from './appendFile';
 import { PassThrough } from 'stream';
-import mock from "mock-fs"
-import fs from "fs-extra"
+import mock from 'mock-fs';
+import fs from 'fs-extra';
 
-describe("roadiehq:utils:fs:append", () => {
+describe('roadiehq:utils:fs:append', () => {
+  beforeEach(() => {
+    mock({
+      'fake-tmp-dir': {},
+    });
+  });
+  afterEach(() => mock.restore());
+  const mockContext = {
+    workspacePath: 'lol',
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+  };
+  const action = createAppendFileAction();
 
-    beforeEach(() => {
-        mock({
-            "fake-tmp-dir": {}
-        })
+  it('should throw error when required parameter path is not provided', async () => {
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { content: '' },
+      }),
+    ).rejects.toThrow(/"path" argument must/);
+  });
+  it('should write file to the workspacePath with the given content if it doesnt exist', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: 'foo: bar',
+      },
+    });
 
-    })
-    afterEach(() => mock.restore())
-    const mockContext = {
-        workspacePath: 'lol',
-        logger: getVoidLogger(),
-        logStream: new PassThrough(),
-        output: jest.fn(),
-        createTemporaryDirectory: jest.fn(),
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toEqual('foo: bar');
+  });
+  it('should append the content to the file if it already exists', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'Append after this line in the file \n\n',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: 'foo: bar',
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toEqual('Append after this line in the file \n\nfoo: bar');
+  });
+  it('should put path on the output property', async () => {
+    const ctx = {
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: 'foo: bar',
+      },
     };
-    const action = createAppendFileAction()
+    await action.handler(ctx);
 
-    it("should throw error when required parameter path is not provided", async () => {
-        await expect(action.handler({
-            ...mockContext,
-            input: { content: "" }
-        })).rejects.toThrow(/"path" argument must/);
-    })
-    it("should write file to the workspacePath with the given content if it doesnt exist", async () => {
-        await action.handler({
-            ...mockContext,
-            workspacePath: "fake-tmp-dir",
-            input: {
-                path: "fake-file.yaml",
-                content: "foo: bar"
-            }
-        })
-
-        expect(fs.existsSync("fake-tmp-dir/fake-file.yaml")).toBe(true)
-        const file = fs.readFileSync("fake-tmp-dir/fake-file.yaml", "utf-8")
-        expect(file).toEqual("foo: bar")
-    })
-    it("should append the content to the file if it already exists", async () => {
-        mock({
-            "fake-tmp-dir": {
-                "fake-file.yaml": "Append after this line in the file \n\n"
-            },
-        })
-
-        await action.handler({
-            ...mockContext,
-            workspacePath: "fake-tmp-dir",
-            input: {
-                path: "fake-file.yaml",
-                content: "foo: bar"
-            }
-        })
-
-        expect(fs.existsSync("fake-tmp-dir/fake-file.yaml")).toBe(true)
-        const file = fs.readFileSync("fake-tmp-dir/fake-file.yaml", "utf-8")
-        expect(file).toEqual("Append after this line in the file \n\nfoo: bar")
-    })
-    it("should put path on the output property", async () => {
-        const ctx = {
-            ...mockContext,
-            workspacePath: "fake-tmp-dir",
-            input: {
-                path: "fake-file.yaml",
-                content: "foo: bar"
-            }
-        }
-        await action.handler(ctx)
-
-        expect(ctx.output.mock.calls[0][0]).toEqual("path")
-        expect(ctx.output.mock.calls[0][1]).toContain("/fake-tmp-dir/fake-file.yaml")
-    })
-})
+    expect(ctx.output.mock.calls[0][0]).toEqual('path');
+    expect(ctx.output.mock.calls[0][1]).toContain(
+      '/fake-tmp-dir/fake-file.yaml',
+    );
+  });
+});
