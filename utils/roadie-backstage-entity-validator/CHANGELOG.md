@@ -1,11 +1,5 @@
 # @roadiehq/roadie-backstage-entity-validator
 
-## 1.2.7
-
-### Patch Changes
-
-- 7da7bfe: Update dependencies
-
 ## 1.2.6
 
 ### Patch Changes

@@ -1,11 +1,5 @@
 # @roadiehq/backstage-plugin-datadog
 
-## 1.4.8
-
-### Patch Changes
-
-- 7da7bfe: Update dependencies
-
 ## 1.4.7
 
 ### Patch Changes
