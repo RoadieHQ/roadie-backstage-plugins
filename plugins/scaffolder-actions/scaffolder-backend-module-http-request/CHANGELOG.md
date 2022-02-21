@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.8
+
+### Patch Changes
+
+- c779d9e: Update README.md to suggest v3 template
+- c779d9e: Update dependencies
+
 ## 2.1.7
 
 ### Patch Changes
