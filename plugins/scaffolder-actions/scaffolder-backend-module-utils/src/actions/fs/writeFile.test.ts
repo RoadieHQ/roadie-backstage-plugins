@@ -39,7 +39,7 @@ describe('roadiehq:utils:fs:write', () => {
     await expect(
       action.handler({
         ...mockContext,
-        input: {},
+        input: {} as any,
       }),
     ).rejects.toThrow(/"path" argument must/);
   });

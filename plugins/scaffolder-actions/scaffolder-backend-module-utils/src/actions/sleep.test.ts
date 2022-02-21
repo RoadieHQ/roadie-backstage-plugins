@@ -32,25 +32,25 @@ describe('roadiehq:utils:sleep', () => {
     await expect(
       action.handler({
         ...mockContext,
-        input: {},
+        input: {} as any,
       }),
     ).rejects.toThrow(/amount must be a number/);
     await expect(
       action.handler({
         ...mockContext,
-        input: { amount: 'alma' },
+        input: { amount: 'foo' } as any,
       }),
     ).rejects.toThrow(/amount must be a number/);
     await expect(
       action.handler({
         ...mockContext,
-        input: { amount: {} },
+        input: { amount: {} } as any,
       }),
     ).rejects.toThrow(/amount must be a number/);
     await expect(
       action.handler({
         ...mockContext,
-        input: { amount: undefined },
+        input: { amount: undefined } as any,
       }),
     ).rejects.toThrow(/amount must be a number/);
   });

@@ -39,7 +39,16 @@ export function createHttpBackstageAction(options: { config: Config }) {
           method: {
             title: 'Method',
             description: 'The method type of the request',
-            enum: [ 'GET', 'HEAD', 'OPTIONS', 'POST', 'UPDATE', 'DELETE', 'PUT', 'PATCH' ],
+            enum: [
+              'GET',
+              'HEAD',
+              'OPTIONS',
+              'POST',
+              'UPDATE',
+              'DELETE',
+              'PUT',
+              'PATCH',
+            ],
           },
           path: {
             title: 'Request path',
@@ -84,7 +93,8 @@ export function createHttpBackstageAction(options: { config: Config }) {
     },
 
     async handler(ctx) {
-      const { input, token } = ctx;
+      const { input } = ctx;
+      const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
       const url = await generateBackstageUrl(config, input.path);
 
@@ -106,7 +116,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
       ) {
         inputBody = JSON.stringify(input.body);
       } else {
-        inputBody = input.body
+        inputBody = input.body;
       }
 
       const httpOptions: HttpOptions = {
