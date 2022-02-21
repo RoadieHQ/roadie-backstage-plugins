@@ -204,7 +204,7 @@ const overviewContent = (
       </EntitySwitch.Case>
     </EntitySwitch>
     <Grid item md={6}>
-      <EntityGithubPullRequestsOverviewCard />
+      <EntityGithubPullRequestsOverviewCard softLogin={true} />
     </Grid>
     <Grid item md={4} xs={12}>
       <EntityLinksCard />

@@ -19,7 +19,8 @@ import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
+  Progress
 } from '@backstage/core-components';
 import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
@@ -34,6 +35,9 @@ import {
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from "@backstage/plugin-catalog-react";
+import {githubAuthApiRef, useApi} from "@backstage/core-plugin-api";
+import { PromptLogin } from '../PromptLogin'
+import {useAsync} from "react-use";
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -54,6 +58,7 @@ type Props = {
   /** @deprecated The entity is now grabbed from context instead */
   entity?: Entity;
   variant?: InfoCardVariants;
+  softLogin?: boolean
 };
 
 const StatsCard = (props: Props) => {
@@ -109,11 +114,27 @@ const StatsCard = (props: Props) => {
 };
 
 const PullRequestsStatsCard = (props: Props) => {
+  const { softLogin } = props;
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
+  const auth = useApi(githubAuthApiRef);
+
+  const { loading, value: session } = useAsync(async () => {
+    return await auth.getProfile({ instantPopup: false, optional: true });
+  });
+
   if (!projectName || projectName === '') {
     return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   }
+
+  if (loading) {
+    return <Progress />
+  }
+
+  if (!session && softLogin) {
+    return <PromptLogin title="PullRequestsStatsCard" />
+  }
+
   return <StatsCard {...props}/>
 };
 
