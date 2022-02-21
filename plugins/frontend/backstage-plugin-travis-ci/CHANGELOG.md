@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 1.3.8
+
+### Patch Changes
+
+- c779d9e: Update dependencies
+
 ## 1.3.7
 
 ### Patch Changes

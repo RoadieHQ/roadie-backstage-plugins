@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 1.5.11
+
+### Patch Changes
+
+- c779d9e: Update dependencies
+
 ## 1.5.10
 
 ### Patch Changes
