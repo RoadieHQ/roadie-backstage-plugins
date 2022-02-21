@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 1.4.1
+
+### Patch Changes
+
+- 7da7bfe: Update dependencies
+
 ## 1.4.0
 
 ### Minor Changes

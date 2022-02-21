@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.7
+
+### Patch Changes
+
+- 7da7bfe: Update dependencies
+- 95c9c1b: Publish new scaffolder-backend-module-utils package
+
 ## 2.1.6
 
 ### Patch Changes

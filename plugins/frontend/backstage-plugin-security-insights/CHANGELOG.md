@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.5.8
+
+### Patch Changes
+
+- 7da7bfe: Update dependencies
+
 ## 1.5.7
 
 ### Patch Changes
