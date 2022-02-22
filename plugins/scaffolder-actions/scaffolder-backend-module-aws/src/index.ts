@@ -13,6 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './actions/zip';
-export * from './actions/s3'
-export * from './actions/sleep'
+export * from './actions/s3';
