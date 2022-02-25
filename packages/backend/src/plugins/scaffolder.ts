@@ -33,7 +33,6 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
 import { Config } from '@backstage/config';
-import { fromIni } from '@aws-sdk/credential-providers';
 
 export const createActions = (options: {
   reader: UrlReader;
