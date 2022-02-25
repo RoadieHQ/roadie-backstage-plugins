@@ -16,31 +16,168 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import { createAwsS3CpAction } from './cp';
 import { PassThrough } from 'stream';
-import mock from 'mock-fs';
+import mockFs from 'mock-fs';
+// import { createReadStream } from 'fs-extra';
 
-describe('roadiehq:utils:fs:write', () => {
-  beforeEach(() => {
-    mock({
-      'fake-tmp-dir': {},
-    });
-  });
-  afterEach(() => mock.restore());
+const mockS3Client = {
+  send: jest.fn().mockReturnThis(),
+};
+const createReadStreamMock = jest.fn();
+
+jest.mock('@aws-sdk/client-s3', () => {
+  return {
+    ...jest.requireActual('@aws-sdk/client-s3'),
+    S3Client: jest.fn(() => mockS3Client),
+  };
+});
+jest.mock('fs-extra', () => {
+  return {
+    ...jest.requireActual('fs-extra'),
+    createReadStream: jest.fn(() => createReadStreamMock),
+  };
+});
+
+describe.only('roadiehq:aws:s3:cp', () => {
   const mockContext = {
-    workspacePath: 'lol',
+    workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
   const action = createAwsS3CpAction();
+  beforeEach(() => {
+    mockFs({
+      '/fake-tmp-dir': {
+        'fake-file.txt': 'awesome foo bar upload content',
+      },
+    });
+    jest.clearAllMocks();
+  });
+  afterEach(() => {
+    mockFs.restore();
+  });
 
   it('should throw error when required parameter path is not provided', async () => {
     await expect(
       action.handler({
         ...mockContext,
-        input: {},
+        input: { region: 'something', bucket: 's' },
       }),
     ).rejects.toThrow(/"path" argument must/);
   });
-  it('should write file to the workspacePath with the given content', async () => {});
+  it('should call s3client send', async () => {
+    await action.handler({
+      ...mockContext,
+      input: { bucket: 'test', region: 'eu1' },
+    });
+
+    expect(mockS3Client.send).toBeCalledWith(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'fake-file.txt',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+  });
+
+  it('should call s3 upload with the given prefix', async () => {
+    await action.handler({
+      ...mockContext,
+      input: { bucket: 'test', region: 'eu1', prefix: 'upload-to-this' },
+    });
+
+    expect(mockS3Client.send).toBeCalledWith(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'upload-to-this/fake-file.txt',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+  });
+  it('should call s3 upload with the given path in the workspace', async () => {
+    mockFs({
+      '/fake-tmp-dir': {
+        'fake-file.txt': 'awesome foo bar upload content',
+        'upload-this-only': {
+          '1.json': '[]',
+          '2.json': '{}',
+        },
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      input: { bucket: 'test', region: 'eu1', path: 'upload-this-only' },
+    });
+
+    expect(mockS3Client.send.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'upload-this-only/1.json',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+    expect(mockS3Client.send.mock.calls[1][0]).toEqual(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'upload-this-only/2.json',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+  });
+
+  it('should call s3 upload with all files in the workspace', async () => {
+    mockFs({
+      '/fake-tmp-dir': {
+        'fake-file.txt': 'awesome foo bar upload content',
+        'upload-this': {
+          '1.json': '[]',
+          '2.json': '{}',
+        },
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      input: { bucket: 'test', region: 'eu1' },
+    });
+
+    expect(mockS3Client.send.mock.calls[0][0]).toEqual(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'fake-file.txt',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+    expect(mockS3Client.send.mock.calls[1][0]).toEqual(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'upload-this/1.json',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+    expect(mockS3Client.send.mock.calls[2][0]).toEqual(
+      expect.objectContaining({
+        input: {
+          Bucket: 'test',
+          Key: 'upload-this/2.json',
+          Body: createReadStreamMock,
+        },
+      }),
+    );
+  });
+  it('should use the provided credential if it exists', () => {});
 });

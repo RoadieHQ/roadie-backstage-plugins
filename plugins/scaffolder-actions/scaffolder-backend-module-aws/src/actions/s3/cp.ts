@@ -88,7 +88,12 @@ export function createAwsS3CpAction(options?: {
       const s3Client = new S3Client(config);
 
       const files = glob
-        .sync(resolveSafeChildPath(ctx.workspacePath, ctx.input.path || '**'))
+        .sync(
+          resolveSafeChildPath(
+            ctx.workspacePath,
+            ctx.input.path ? `${ctx.input.path}/**` : '**',
+          ),
+        )
         .filter(filePath => fs.lstatSync(filePath).isFile());
 
       await Promise.all(
@@ -96,7 +101,9 @@ export function createAwsS3CpAction(options?: {
           return s3Client.send(
             new PutObjectCommand({
               Bucket: ctx.input.bucket,
-              Key: filePath.replace(`${ctx.workspacePath}/`, `${prefix}/`),
+              Key:
+                (prefix ? `${prefix}/` : '') +
+                filePath.replace(`${ctx.workspacePath}/`, ''),
               Body: createReadStream(filePath),
             }),
           );

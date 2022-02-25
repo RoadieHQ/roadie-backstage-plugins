@@ -28,7 +28,7 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.51.0",
+    "@aws-sdk/client-s3": "^3.52.0",
     "@aws-sdk/credential-providers": "^3.52.0",
     "@backstage/backend-common": "^0.10.1",
     "@backstage/config": "^0.1.8",
@@ -43,11 +43,11 @@
     "@aws-sdk/types": "^3.52.0",
     "@backstage/cli": "^0.13.0",
     "@types/adm-zip": "^0.4.34",
-    "@types/aws-sdk": "^2.7.0",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
     "@types/jest": "^26.0.7",
     "@types/mock-fs": "^4.13.1",
+    "aws-sdk-client-mock": "^0.6.0",
     "mock-fs": "^5.1.2"
   },
   "files": [
