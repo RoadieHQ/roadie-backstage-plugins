@@ -96,8 +96,13 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = await generateBackstageUrl(config, input.path);
-
+      let url = input.path;
+      try {
+        new URL(input.path);
+      }
+      catch{
+        url = await generateBackstageUrl(config, input.path);
+      }
       ctx.logger.info(
         `Creating ${method} request with http:backstage:proxy scaffolder action against ${url}`,
       );
