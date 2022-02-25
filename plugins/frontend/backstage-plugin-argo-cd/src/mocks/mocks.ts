@@ -23,16 +23,6 @@ export const getEntityStub = {
     owner: 'david@roadie.io',
     lifecycle: 'experimental',
   },
-  relations: [
-    {
-      target: {
-        kind: 'group',
-        namespace: 'default',
-        name: 'david@roadie.io',
-      },
-      type: 'ownedBy',
-    },
-  ],
 };
 
 export const getEntityStubWithAppSelector = {
@@ -57,16 +47,6 @@ export const getEntityStubWithAppSelector = {
     owner: 'david@roadie.io',
     lifecycle: 'experimental',
   },
-  relations: [
-    {
-      target: {
-        kind: 'group',
-        namespace: 'default',
-        name: 'david@roadie.io',
-      },
-      type: 'ownedBy',
-    },
-  ],
 };
 
 export const getResponseStubMissingData = {
