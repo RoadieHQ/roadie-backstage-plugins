@@ -20,6 +20,7 @@ import fs, { createReadStream } from 'fs-extra';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import glob from 'glob';
 import { CredentialProvider } from '@aws-sdk/types';
+import { assertError } from '@backstage/errors';
 
 export function createAwsS3CpAction(options?: {
   credentials?: CredentialProvider;
@@ -60,29 +61,15 @@ export function createAwsS3CpAction(options?: {
           },
         },
       },
-      output: {
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            type: 'string',
-          },
-        },
-      },
     },
     async handler(ctx) {
       const config: S3ClientConfig = {
+        ...(options?.credentials && {
+          credentials: await options.credentials(),
+        }),
         region: ctx.input.region,
       };
 
-      if (options?.credentials) {
-        config.credentials = await options.credentials();
-        ctx.logger.info(
-          'credentials configured using the provided credentials',
-        );
-      } else {
-        ctx.logger.info('using the aws-sdk default credential providers');
-      }
       const prefix = ctx.input?.prefix || '';
 
       const s3Client = new S3Client(config);
@@ -96,21 +83,26 @@ export function createAwsS3CpAction(options?: {
         )
         .filter(filePath => fs.lstatSync(filePath).isFile());
 
-      await Promise.all(
-        files.map((filePath: string) => {
-          return s3Client.send(
-            new PutObjectCommand({
-              Bucket: ctx.input.bucket,
-              Key:
-                (prefix ? `${prefix}/` : '') +
-                filePath.replace(`${ctx.workspacePath}/`, ''),
-              Body: createReadStream(filePath),
-            }),
-          );
-        }),
-      );
+      try {
+        await Promise.all(
+          files.map((filePath: string) => {
+            return s3Client.send(
+              new PutObjectCommand({
+                Bucket: ctx.input.bucket,
+                Key:
+                  (prefix ? `${prefix}/` : '') +
+                  filePath.replace(`${ctx.workspacePath}/`, ''),
+                Body: createReadStream(filePath),
+              }),
+            );
+          }),
+        );
+      } catch (e) {
+        assertError(e);
+        ctx.logger.warn("wasn't able to upload the whole context");
+      }
       ctx.logger.info(
-        `uploading the following file(s): ${files
+        `successfully uploaded the following file(s): ${files
           .map(f => f.replace(`${ctx.workspacePath}/`, ''))
           .join('\n')}`,
       );

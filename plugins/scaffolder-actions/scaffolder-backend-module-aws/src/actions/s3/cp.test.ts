@@ -17,7 +17,6 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { createAwsS3CpAction } from './cp';
 import { PassThrough } from 'stream';
 import mockFs from 'mock-fs';
-// import { createReadStream } from 'fs-extra';
 
 const mockS3Client = {
   send: jest.fn().mockReturnThis(),
@@ -179,5 +178,4 @@ describe.only('roadiehq:aws:s3:cp', () => {
       }),
     );
   });
-  it('should use the provided credential if it exists', () => {});
 });
