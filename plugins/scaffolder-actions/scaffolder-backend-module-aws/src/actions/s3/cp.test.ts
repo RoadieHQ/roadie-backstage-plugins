@@ -57,14 +57,6 @@ describe('roadiehq:aws:s3:cp', () => {
     mockFs.restore();
   });
 
-  it('should throw error when required parameter path is not provided', async () => {
-    await expect(
-      action.handler({
-        ...mockContext,
-        input: { region: 'something', bucket: 's' },
-      }),
-    ).rejects.toThrow(/"path" argument must/);
-  });
   it('should call s3client send', async () => {
     await action.handler({
       ...mockContext,
