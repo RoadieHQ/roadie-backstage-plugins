@@ -25,7 +25,7 @@ yarn add @roadiehq/scaffolder-backend-module-aws
 Configure the action:
 (you can check the [docs](https://backstage.io/docs/features/software-templates/writing-custom-actions#registering-custom-actions) to see all options):
 
-Here you can pick the actions that you'd like to register to your backstage instance.
+Import the action that you'd like to register to your backstage instance.
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
@@ -56,7 +56,9 @@ return await createRouter({
 
 # Authentication
 
-This action accepts an optional `credentials` paramter. Which should be a `Credentials | CredentialProvider` Interface. If you want to override the `@aws-sdk/client-s3` module's default authentication provide a valid credential to the action.
+This action accepts an optional `credentials` parameter. Which should be a `CredentialProvider` interface from the [@aws-sdk/credential-provider](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/modules/_aws_sdk_credential_providers.html) If you want to override the `@aws-sdk/client-s3` module's default authentication, provide a valid credential to the action.
+
+Example:
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
@@ -86,6 +88,10 @@ return await createRouter({
 });
 ```
 
+# Template
+
+This is a minimum template to use this action. It accepts one required parameter `bucket`. And will upload the whole workspace context to this bucket.
+
 ```yaml
 ---
 apiVersion: scaffolder.backstage.io/v1beta3
@@ -101,15 +107,16 @@ spec:
   parameters:
     - title: Upload to S3
       properties:
+        required: ['bucket']
         bucket:
           title: Bucket
           type: string
           description: The context will be uploaded into this bucket
 
   steps:
-    - id: appendFile
-      name: Append To File
-      action: roadiehq:utils:fs:append
+    - id: uploadToS3
+      name: Upload to S3
+      action: roadiehq:aws:s3:cp
       input:
         region: eu-west-1
         bucket: ${{ parameters.bucket }}

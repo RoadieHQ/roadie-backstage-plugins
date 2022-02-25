@@ -36,7 +36,7 @@ jest.mock('fs-extra', () => {
   };
 });
 
-describe.only('roadiehq:aws:s3:cp', () => {
+describe('roadiehq:aws:s3:cp', () => {
   const mockContext = {
     workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
