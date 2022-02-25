@@ -19,6 +19,7 @@ import { Logger } from 'winston';
 import { HttpOptions } from './types';
 
 class HttpError extends Error {}
+const DEFAULT_TIMEOUT = 60_000;
 
 export const generateBackstageUrl = (config: Config, path: string): string => {
   // ensure the request points to the correct domain
@@ -34,12 +35,21 @@ export const http = async (
   logger: Logger,
 ): Promise<any> => {
   let res: any;
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT)
   const { url, ...other } = options;
+  const httpOptions = {...other, signal: controller.signal}
+
   try {
-    res = await fetch(url, other);
+    res = await fetch(url, httpOptions);
+    if(!res){
+      throw new HttpError(`Request was aborted as it took longer than ${DEFAULT_TIMEOUT/1000} seconds`);
+    }
   } catch (e) {
     throw new HttpError(`There was an issue with the request: ${e}`);
   }
+
+  clearTimeout(timeoutId);
 
   if (res.status >= 400) {
     logger.error(
