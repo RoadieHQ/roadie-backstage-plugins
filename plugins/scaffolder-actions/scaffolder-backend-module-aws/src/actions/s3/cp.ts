@@ -26,10 +26,12 @@ export function createAwsS3CpAction(options?: {
   credentials?: CredentialProvider;
 }) {
   return createTemplateAction<{
-    path?: string;
-    prefix?: string;
     bucket: string;
     region: string;
+    path?: string;
+    prefix?: string;
+    endpoint?: string;
+    s3ForcePathStyle?: boolean;
   }>({
     id: 'roadiehq:aws:s3:cp',
     description: 'Copies the path to the given bucket',
@@ -59,6 +61,16 @@ export function createAwsS3CpAction(options?: {
             description: 'Prefix to use in the s3 key.',
             type: 'string',
           },
+          endpoint: {
+            title: 'Endpoint',
+            description: 'The fully qualified endpoint of the webservice. ',
+            type: 'string',
+          },
+          s3ForcePathStyle: {
+            title: 'Force Path Style',
+            description: 'Whether to force path style URLs for S3 objects',
+            type: 'boolean',
+          },
         },
       },
     },
@@ -68,6 +80,8 @@ export function createAwsS3CpAction(options?: {
           credentials: await options.credentials(),
         }),
         region: ctx.input.region,
+        forcePathStyle: ctx.input.s3ForcePathStyle,
+        endpoint: ctx.input.endpoint,
       };
 
       const prefix = ctx.input?.prefix || '';
