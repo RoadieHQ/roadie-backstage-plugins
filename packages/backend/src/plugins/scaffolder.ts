@@ -27,6 +27,7 @@ import {
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
 import { createZipAction, createWriteFileAction, createSleepAction, createAppendFileAction } from '@roadiehq/scaffolder-backend-module-utils';
+import { createAwsS3CpAction } from '@roadiehq/scaffolder-backend-module-aws';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
@@ -54,6 +55,7 @@ export const createActions = (options: {
     createSleepAction(),
     createWriteFileAction(),
     createAppendFileAction(),
+    createAwsS3CpAction(),
     createHttpBackstageAction({ config }),
     ...defaultActions
   ];

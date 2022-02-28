@@ -37,6 +37,7 @@
     "@roadiehq/backstage-plugin-aws-auth": "^0.3.2",
     "@roadiehq/scaffolder-backend-module-http-request": "^2.1.8",
     "@roadiehq/scaffolder-backend-module-utils": "^0.1.2",
+    "@roadiehq/scaffolder-backend-module-aws": "^1.0.0",
     "@vscode/sqlite3": "^5.0.7",
     "app": "^0.0.8",
     "dockerode": "^3.2.1",
