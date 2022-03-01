@@ -18,9 +18,9 @@ import { useApi } from '@backstage/core-plugin-api';
 import { scmIntegrationsApiRef } from '@backstage/integration-react';
 import {
   Entity,
-  parseLocationReference,
-  LOCATION_ANNOTATION,
-  SOURCE_LOCATION_ANNOTATION,
+  parseLocationRef,
+  ANNOTATION_LOCATION,
+  ANNOTATION_SOURCE_LOCATION,
 } from '@backstage/catalog-model';
 
 const defaultGithubIntegration = {
@@ -34,13 +34,13 @@ export const useEntityGithubScmIntegration = (entity: Entity) => {
     return defaultGithubIntegration;
   }
 
-  let location = entity.metadata.annotations?.[SOURCE_LOCATION_ANNOTATION];
+  let location = entity.metadata.annotations?.[ANNOTATION_SOURCE_LOCATION];
 
   if (!location) {
-    location = entity.metadata.annotations?.[LOCATION_ANNOTATION];
+    location = entity.metadata.annotations?.[ANNOTATION_LOCATION];
   }
 
-  const { target } = parseLocationReference(location || '');
+  const { target } = parseLocationRef(location || '');
 
   const scm = integrations.github.byUrl(target);
   if (scm) {
