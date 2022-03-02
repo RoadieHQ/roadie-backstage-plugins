@@ -36,8 +36,7 @@ import {
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
-
-// // Using react-markdown to render text..
+// MarkdownContent uses rect-markdown which throws a type error in the tests so we are mocking it checking the plain text in the components.
 jest.mock('@backstage/core-components', ()=>({
   ...jest.requireActual('@backstage/core-components'),
  MarkdownContent:  ({ content }: { content: string }) => <span>{content}</span>,
