@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.1.9
+
+### Patch Changes
+
+- 6eff3b1: Adds a timeout to the http request scaffolder actions
+- 46b19a3: Update dependencies
+
 ## 2.1.8
 
 ### Patch Changes

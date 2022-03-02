@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.5.3
+
+### Patch Changes
+
+- 3296262: update imports for @backstage/catalog-model to remove deprecated imports
+- 46b19a3: Update dependencies
+
 ## 1.5.2
 
 ### Patch Changes
