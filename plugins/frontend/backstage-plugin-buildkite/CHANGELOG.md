@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 1.3.11
+
+### Patch Changes
+
+- 46b19a3: Update dependencies
+
 ## 1.3.10
 
 ### Patch Changes

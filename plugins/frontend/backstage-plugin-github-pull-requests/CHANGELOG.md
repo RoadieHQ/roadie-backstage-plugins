@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 1.4.3
+
+### Patch Changes
+
+- 46b19a3: Update dependencies
+
 ## 1.4.2
 
 ### Patch Changes

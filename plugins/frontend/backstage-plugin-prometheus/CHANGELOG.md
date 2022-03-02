@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 1.3.10
+
+### Patch Changes
+
+- 46b19a3: Update dependencies
+
 ## 1.3.9
 
 ### Patch Changes

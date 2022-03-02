@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 0.1.3
+
+### Patch Changes
+
+- 46b19a3: Update dependencies
+
 ## 0.1.2
 
 ### Patch Changes
