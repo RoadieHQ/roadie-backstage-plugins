@@ -20,12 +20,6 @@ export const entityMock = {
     owner: 'david@roadie.io',
     lifecycle: 'experimental',
   },
-  relations: [
-    {
-      target: { kind: 'group', namespace: 'default', name: 'david@roadie.io' },
-      type: 'ownedBy',
-    },
-  ],
 };
 
 // http://localhost:7007/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds?page=1&per_page=5

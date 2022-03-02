@@ -36,7 +36,6 @@ const createGitHubEntity = (originHost: string) => {
         type: 'service',
         lifecycle: 'experimental',
       },
-      relations: [],
     },
   };
 }

@@ -34,13 +34,14 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.11.0",
-    "@spotify/prettier-config": "^7.0.0",
+    "@backstage/cli": "^0.14.1",
+    "@spotify/prettier-config": "^12.0.0",
     "@types/webpack": "^5.28.0",
     "concurrently": "^6.0.0",
     "eslint-plugin-notice": "^0.9.10",
     "lerna": "^4.0.0",
-    "prettier": "^1.19.1"
+    "prettier": "^2.3.2",
+    "typescript": "~4.5.4"
   },
   "prettier": "@spotify/prettier-config",
   "lint-staged": {
