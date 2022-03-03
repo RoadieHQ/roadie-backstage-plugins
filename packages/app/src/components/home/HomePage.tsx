@@ -17,6 +17,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
+import { HomePageMarkdown } from '@roadiehq/backstage-home-plugin-markdown';
 
 export const HomePage = () => {
   return (
@@ -31,6 +32,9 @@ export const HomePage = () => {
             },
           ]}
         />
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <HomePageMarkdown />
       </Grid>
     </Grid>
   );

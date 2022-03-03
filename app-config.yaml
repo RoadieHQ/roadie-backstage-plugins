@@ -180,3 +180,10 @@ prometheus:
 
 bugsnag:
   resultsPerPage: 50
+
+home:
+  markdown:
+    baseUrl: https://api.github.com
+    owner: RoadieHQ
+    repo: roadie-backstage-plugins
+    path: README.md
