@@ -14,4 +14,6 @@
  * limitations under the License.
  */
 
-export { Content } from './Content';
+module.exports = {
+  extends: [require.resolve('@backstage/cli/config/eslint')],
+};
