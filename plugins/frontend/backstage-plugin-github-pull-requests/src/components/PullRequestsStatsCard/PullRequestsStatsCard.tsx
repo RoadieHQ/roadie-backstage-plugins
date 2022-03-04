@@ -19,9 +19,12 @@ import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
 import {
   Box,
@@ -33,7 +36,7 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -72,7 +75,11 @@ const StatsCard = (props: Props) => {
   );
 
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
 
   const metadata = {
@@ -82,7 +89,10 @@ const StatsCard = (props: Props) => {
 
   return (
     <InfoCard
-      title="Pull requests statistics" className={classes.infoCard} variant={props.variant}>
+      title="GitHub Pull Requests Statistic"
+      className={classes.infoCard}
+      variant={props.variant}
+    >
       {loadingStatistics ? (
         <CircularProgress />
       ) : (
@@ -112,9 +122,13 @@ const PullRequestsStatsCard = (props: Props) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <StatsCard {...props}/>
+  return <StatsCard {...props} />;
 };
 
 export default PullRequestsStatsCard;
