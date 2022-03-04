@@ -5,6 +5,8 @@ It fetches on every render but it caches based on the etag that gets returned by
 
 ## Preview
 
+![](./docs/home-page-markdown.png)
+
 ## Setup
 
 If you didn't set up the HomePage plugin you can see the official documentation about it [here](https://github.com/backstage/backstage/tree/master/plugins/home). You'll need to have it setup to be able to include this plugin.
@@ -33,7 +35,7 @@ export const HomePage = () => {
     <Grid item xs={12} md={6}>
         <HomePageMarkdown
             title="Neeews!"
-            owner="test"
+            owner="RoadieHQ"
             repo="roadie-backstage-plugins"
             path=".backstage/README.md"
         />

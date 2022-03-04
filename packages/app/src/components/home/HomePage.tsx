@@ -36,10 +36,10 @@ export const HomePage = () => {
       <Grid item xs={12} md={6}>
         <HomePageMarkdown
           title="Neeews!"
-          owner="test"
+          owner="RoadieHQ"
           repo="roadie-backstage-plugins"
-          path=".backstage/README.md"
-          branch="hurka"
+          path=".backstage/home-page.md"
+          branch="SC-7064-add-markdown-home-plugin"
         />
       </Grid>
     </Grid>
