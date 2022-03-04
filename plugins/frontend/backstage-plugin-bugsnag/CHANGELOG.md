@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 1.4.7
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+
 ## 1.4.6
 
 ### Patch Changes

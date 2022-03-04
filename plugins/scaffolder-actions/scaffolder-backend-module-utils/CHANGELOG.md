@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 0.1.4
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+
 ## 0.1.3
 
 ### Patch Changes

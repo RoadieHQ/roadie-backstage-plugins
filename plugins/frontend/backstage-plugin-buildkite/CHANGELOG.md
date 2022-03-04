@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 1.3.12
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+
 ## 1.3.11
 
 ### Patch Changes

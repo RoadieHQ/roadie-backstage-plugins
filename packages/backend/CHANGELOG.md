@@ -1,5 +1,17 @@
 # backend
 
+## 0.0.18
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+- Updated dependencies [f5cd7e4]
+  - app@0.0.9
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.2.10
+  - @roadiehq/scaffolder-backend-module-aws@1.1.1
+  - @roadiehq/scaffolder-backend-module-http-request@2.1.10
+  - @roadiehq/scaffolder-backend-module-utils@0.1.4
+
 ## 0.0.17
 
 ### Patch Changes

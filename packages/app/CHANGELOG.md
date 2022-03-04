@@ -1,5 +1,23 @@
 # app
 
+## 0.0.9
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+- Updated dependencies [f5cd7e4]
+  - @roadiehq/backstage-plugin-argo-cd@1.5.13
+  - @roadiehq/backstage-plugin-aws-lambda@1.3.11
+  - @roadiehq/backstage-plugin-bugsnag@1.4.7
+  - @roadiehq/backstage-plugin-buildkite@1.3.12
+  - @roadiehq/backstage-plugin-datadog@1.4.11
+  - @roadiehq/backstage-plugin-github-insights@1.5.4
+  - @roadiehq/backstage-plugin-github-pull-requests@1.4.4
+  - @roadiehq/backstage-plugin-jira@1.4.11
+  - @roadiehq/backstage-plugin-prometheus@1.3.11
+  - @roadiehq/backstage-plugin-security-insights@1.5.11
+  - @roadiehq/backstage-plugin-travis-ci@1.3.10
+
 ## 0.0.8
 
 ### Patch Changes

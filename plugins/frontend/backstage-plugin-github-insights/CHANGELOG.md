@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.5.4
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+
 ## 1.5.3
 
 ### Patch Changes
