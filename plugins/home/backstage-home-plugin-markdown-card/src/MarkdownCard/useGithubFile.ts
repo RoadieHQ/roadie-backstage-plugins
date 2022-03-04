@@ -16,25 +16,16 @@
 
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
-import {
-  useApi,
-  githubAuthApiRef,
-  configApiRef,
-} from '@backstage/core-plugin-api';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { RequestError } from '@octokit/request-error';
+import { MarkdownContentProps } from './Content';
 
 const BASE_URL = 'https://api.github.com';
-const state = { etag: undefined, data: '' };
+const cache = { etag: undefined, data: '' };
 
-export const useGithubFile = () => {
+export const useGithubFile = (props: MarkdownContentProps) => {
   const auth = useApi(githubAuthApiRef);
-  const configApi = useApi(configApiRef);
-
-  const owner = configApi.getConfig('homePageMarkdown').getString('owner');
-  const repo = configApi.getConfig('homePageMarkdown').getString('repo');
-  const path = configApi.getConfig('homePageMarkdown').getString('path');
-  const ref = configApi.getConfig('homePageMarkdown').getOptionalString('ref');
-
+  const { owner, repo, path, branch } = props;
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
     try {
@@ -44,11 +35,11 @@ export const useGithubFile = () => {
       const response = await octokit.request(
         `GET /repos/{owner}/{repo}/contents/${path}`,
         {
-          headers: { 'if-none-match': state.etag },
+          headers: { 'if-none-match': cache.etag },
           baseUrl: BASE_URL,
           owner,
           repo,
-          ...(ref && { ref }),
+          ...(branch && { ref: branch }),
         },
       );
 
@@ -61,7 +52,7 @@ export const useGithubFile = () => {
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          result = state;
+          result = cache;
         }
       }
     }
@@ -69,8 +60,8 @@ export const useGithubFile = () => {
   }, []);
 
   if (value) {
-    state.etag = value.etag;
-    state.data = value.data;
+    cache.etag = value.etag;
+    cache.data = value.data;
   }
 
   return {

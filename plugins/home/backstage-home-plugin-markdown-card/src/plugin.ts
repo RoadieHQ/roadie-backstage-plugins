@@ -6,7 +6,12 @@ import { homePlugin, createCardExtension } from '@backstage/plugin-home';
  * @public
  */
 export const HomePageMarkdown = homePlugin.provide(
-  createCardExtension({
+  createCardExtension<{
+    owner: string;
+    repo: string;
+    path: string;
+    branch?: string;
+  }>({
     name: 'HomePageMarkdown',
     title: 'Markdown',
     components: () => import('./MarkdownCard'),

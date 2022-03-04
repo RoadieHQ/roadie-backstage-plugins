@@ -22,7 +22,7 @@ import { HomePageMarkdown } from '@roadiehq/backstage-home-plugin-markdown';
 export const HomePage = () => {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <HomePageToolkit
           tools={[
             {
@@ -33,8 +33,14 @@ export const HomePage = () => {
           ]}
         />
       </Grid>
-      <Grid item xs={12} md={4}>
-        <HomePageMarkdown />
+      <Grid item xs={12} md={6}>
+        <HomePageMarkdown
+          title="Neeews!"
+          owner="test"
+          repo="roadie-backstage-plugins"
+          path=".backstage/README.md"
+          branch="hurka"
+        />
       </Grid>
     </Grid>
   );

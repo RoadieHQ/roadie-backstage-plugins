@@ -17,15 +17,27 @@
 import React from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { Progress, MarkdownContent } from '@backstage/core-components';
-import { useGithubFile } from '../useGithubFile';
+import { useGithubFile } from './useGithubFile';
+
+/**
+ * Props for Markdown content component {@link Content}.
+ *
+ * @public
+ */
+export type MarkdownContentProps = {
+  owner: string;
+  repo: string;
+  path: string;
+  branch?: string;
+};
 
 /**
  * A component to render a markdown file from github
  *
  * @public
  */
-export const Content = () => {
-  const { value, loading, error } = useGithubFile();
+export const Content = (props: MarkdownContentProps) => {
+  const { value, loading, error } = useGithubFile(props);
   if (loading) {
     return <Progress />;
   } else if (error) {
