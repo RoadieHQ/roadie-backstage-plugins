@@ -89,7 +89,7 @@ const StatsCard = (props: Props) => {
 
   return (
     <InfoCard
-      title="GitHub Pull Requests Statistic"
+      title="GitHub Pull Requests Statistics"
       className={classes.infoCard}
       variant={props.variant}
     >
