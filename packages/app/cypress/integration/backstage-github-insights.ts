@@ -18,38 +18,57 @@
 import 'os';
 
 describe('GithubInsights', () => {
-    beforeEach(() => {
-        cy.saveGithubToken();
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/languages', { fixture: 'githubInsights/languages.json' }).as('getLanguages')
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/releases', { fixture: 'githubInsights/releases.json' }).as('getReleases')
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/readme', { fixture: 'githubInsights/readme.json' }).as('getReadme')
-        cy.visit('/catalog/default/component/sample-service')
-        cy.wait(['@getLanguages', '@getReleases', '@getReadme'])
-    })
+  beforeEach(() => {
+    cy.saveGithubToken();
+    cy.intercept(
+      'GET',
+      'https://api.github.com/repos/organisation/github-project-slug/languages',
+      { fixture: 'githubInsights/languages.json' },
+    ).as('getLanguages');
+    cy.intercept(
+      'GET',
+      'https://api.github.com/repos/organisation/github-project-slug/releases',
+      { fixture: 'githubInsights/releases.json' },
+    ).as('getReleases');
+    cy.intercept(
+      'GET',
+      'https://api.github.com/repos/organisation/github-project-slug/readme',
+      { fixture: 'githubInsights/readme.json' },
+    ).as('getReadme');
+    cy.visit('/catalog/default/component/sample-service');
+    cy.wait(['@getLanguages', '@getReleases', '@getReadme']);
+  });
 
-    describe('Navigating to GitHub Insights', () => {
-        it('should show GitHub Insights Releases in Overview tab', () => {
-            cy.contains('Releases');
-        });
-
-        it('should show GitHub Insights Languages in Overview tab', () => {
-            cy.contains('Languages');
-        });
-
-        it('should show GitHub Insights Read me in Overview tab', () => {
-            cy.contains('Read me');
-        });
-
-        it('should show GitHub Insights when navigating to Code insights tab', () => {
-
-            cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/branches?protected=true', { fixture: 'githubInsights/compliance.json' }).as('getBranches')
-            cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/contributors?per_page=10', { fixture: 'githubInsights/contributors.json' }).as('getContributors')
-
-            cy.visit('/catalog/default/component/sample-service/code-insights')
-
-            cy.wait(['@getBranches', '@getContributors'])
-
-            cy.contains('GitHub Insights');
-        });
+  describe('Navigating to GitHub Insights', () => {
+    it('should show GitHub Insights Releases in Overview tab', () => {
+      cy.contains('Releases');
     });
+
+    it('should show GitHub Insights Languages in Overview tab', () => {
+      cy.contains('Languages');
+    });
+
+    it('should show GitHub Insights Readme in Overview tab', () => {
+      cy.contains('Readme');
+    });
+
+    it('should show GitHub Insights when navigating to Code insights tab', () => {
+      cy.intercept(
+        'GET',
+        'https://api.github.com/repos/organisation/github-project-slug/branches?protected=true',
+        { fixture: 'githubInsights/compliance.json' },
+      ).as('getBranches');
+      cy.intercept(
+        'GET',
+        'https://api.github.com/repos/organisation/github-project-slug/contributors?per_page=10',
+        { fixture: 'githubInsights/contributors.json' },
+      ).as('getContributors');
+
+      cy.visit('/catalog/default/component/sample-service/code-insights');
+
+      cy.wait(['@getBranches', '@getContributors']);
+
+      cy.contains('GitHub Insights');
+    });
+  });
 });

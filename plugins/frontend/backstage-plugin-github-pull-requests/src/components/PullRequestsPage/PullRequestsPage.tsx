@@ -33,7 +33,7 @@ type Props = {
 const PullRequestsPage = (__props: Props) => (
   <Page themeId="tool">
     <Content>
-      <ContentHeader title="Pull requests plugin">
+      <ContentHeader title="GitHub Pull Requests">
         <SupportButton>
           Plugin to show a project's pull requests on GitHub
         </SupportButton>
