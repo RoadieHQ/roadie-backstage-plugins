@@ -41,11 +41,7 @@ export const Content = (props: MarkdownContentProps) => {
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return (
-      <Alert severity="error" className={'warning'}>
-        {error.message}
-      </Alert>
-    );
+    return <Alert severity="error">{error.message}</Alert>;
   }
 
   return (
