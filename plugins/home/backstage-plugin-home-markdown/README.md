@@ -21,7 +21,7 @@ If you didn't set up the HomePage plugin you can see the official documentation 
 Add the following componenet to your HomePage.tsx file. The `HomePageMarkdown` props are the following type.
 
 ```bash
-yarn add @roadiehq/backstage-home-plugin-markdown
+yarn add @roadiehq/backstage-plugin-home-markdown
 ```
 
 ```ts
