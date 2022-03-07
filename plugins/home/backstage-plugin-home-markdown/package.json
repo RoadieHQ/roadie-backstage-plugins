@@ -1,5 +1,5 @@
 {
-  "name": "@roadiehq/backstage-home-plugin-markdown",
+  "name": "@roadiehq/backstage-plugin-home-markdown",
   "version": "1.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -12,7 +12,7 @@
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
-    "directory": "plugins/scaffolder-actions/backstage-home-plugin-markdown"
+    "directory": "plugins/scaffolder-actions/backstage-plugin-home-markdown"
   },
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",

@@ -17,7 +17,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
-import { HomePageMarkdown } from '@roadiehq/backstage-home-plugin-markdown';
+import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
 
 export const HomePage = () => {
   return (
