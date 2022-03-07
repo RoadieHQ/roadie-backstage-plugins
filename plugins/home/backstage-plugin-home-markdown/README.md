@@ -4,6 +4,7 @@ A react component that renders a markdown file from github as a homepage compone
 It fetches on every render but it caches based on the etag that gets returned by the github api.
 
 For the resources (links & images) currently you should use absolute urls. For example:
+Make sure you use `raw` in the url instad of `blob` if you copy paste from the browser.
 
 ```diff
 - ![](./docs/home-page-markdown.png)
