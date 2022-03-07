@@ -17,11 +17,12 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
+import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
 
 export const HomePage = () => {
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <HomePageToolkit
           tools={[
             {
@@ -30,6 +31,15 @@ export const HomePage = () => {
               icon: <></>,
             },
           ]}
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <HomePageMarkdown
+          title="Neeews!"
+          owner="RoadieHQ"
+          repo="roadie-backstage-plugins"
+          path=".backstage/home-page.md"
+          branch="SC-7064-add-markdown-home-plugin"
         />
       </Grid>
     </Grid>
