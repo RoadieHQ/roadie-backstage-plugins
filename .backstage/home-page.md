@@ -10,4 +10,4 @@ Pull requests
 
 Discord
 
-![](../plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)
+![](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/SC-7064-add-markdown-home-plugin/plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)

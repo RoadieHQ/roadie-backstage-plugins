@@ -3,6 +3,13 @@
 A react component that renders a markdown file from github as a homepage component. You can configure the plugin to point to a remote markdown file in github and it will fetch that markdown file and render it inside a card componenet.
 It fetches on every render but it caches based on the etag that gets returned by the github api.
 
+For the resources (links & images) currently you should use absolute urls. For example:
+
+```diff
+- ![](./docs/home-page-markdown.png)
++ ![](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/SC-7064-add-markdown-home-plugin/plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)
+```
+
 ## Preview
 
 ![](./docs/home-page-markdown.png)
