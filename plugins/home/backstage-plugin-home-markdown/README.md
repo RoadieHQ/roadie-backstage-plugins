@@ -7,7 +7,7 @@ For the resources (links & images) currently you should use absolute urls. For e
 
 ```diff
 - ![](./docs/home-page-markdown.png)
-+ ![](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/SC-7064-add-markdown-home-plugin/plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)
++ ![](https://github.com/RoadieHQ/roadie-backstage-plugins/raw/SC-7064-add-markdown-home-plugin/plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)
 ```
 
 ## Preview
