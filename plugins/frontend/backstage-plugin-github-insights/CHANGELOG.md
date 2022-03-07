@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.5.5
+
+### Patch Changes
+
+- 9819e86: Renamed card names in '@roadiehq/backstage-plugin-github-pull-requests', so instead of 'Pull requests plugin' it will show 'Github Pull Requests'. In '@roadiehq/backstage-plugin-github-insights' 'Read me' card is renamed to 'Readme'.
+
 ## 1.5.4
 
 ### Patch Changes
