@@ -38,9 +38,11 @@
     "@octokit/rest": "^18.12.0",
     "cross-fetch": "^3.1.4",
     "msw": "^0.38.2",
-    "react": "^17.0.2",
     "react-use": "^17.3.2",
     "winston": "^3.2.1"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.13.0",
