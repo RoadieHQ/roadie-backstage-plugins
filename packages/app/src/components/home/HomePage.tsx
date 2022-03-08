@@ -39,7 +39,6 @@ export const HomePage = () => {
           owner="RoadieHQ"
           repo="roadie-backstage-plugins"
           path=".backstage/home-page.md"
-          branch="SC-7064-add-markdown-home-plugin"
         />
       </Grid>
     </Grid>
