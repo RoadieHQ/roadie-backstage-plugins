@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 1.3.12
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
 ## 1.3.11
 
 ### Patch Changes

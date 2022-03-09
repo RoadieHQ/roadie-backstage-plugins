@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 1.4.6
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
 ## 1.4.5
 
 ### Patch Changes

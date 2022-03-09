@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 1.3.13
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
 ## 1.3.12
 
 ### Patch Changes
