@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 1.5.12
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
 ## 1.5.11
 
 ### Patch Changes

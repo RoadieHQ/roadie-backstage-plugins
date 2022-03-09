@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 1.4.12
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
 ## 1.4.11
 
 ### Patch Changes
