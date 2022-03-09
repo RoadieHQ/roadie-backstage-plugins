@@ -1,4 +1,4 @@
-# scaffolder-backend-module-utils actions package
+# scaffolder-backend-module-aws actions package
 
 Welcome to the roadie `aws` actions for the `scaffolder-backend`.
 

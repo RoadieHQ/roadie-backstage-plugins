@@ -35,7 +35,7 @@ export type MarkdownContentProps = {
 
 ```tsx
 // packages/app/src/components/home/HomePage.tsx
-import { HomePageMarkdown } from '@roadiehq/backstage-home-plugin-markdown';
+import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
 
 export const HomePage = () => {
   return (
