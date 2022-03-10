@@ -34,6 +34,12 @@ jest.mock('@backstage/core-components', () => ({
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
@@ -49,7 +55,39 @@ describe('<MarkdownContent>', () => {
   beforeEach(() => {
     worker.use(...handlers);
   });
+  it('should render sign in page', async () => {
+    const mockGithubUnAuth = {
+      getAccessToken: async (_: string[]) => 'test-token',
+      sessionState$: jest.fn(() => ({
+        subscribe: (fn: (a: string) => void) => {
+          fn('SignedOut');
+          return { unsubscribe: jest.fn() };
+        },
+      })),
+    };
 
+    const api: [AnyApiRef, Partial<unknown>][] = [
+      [githubAuthApiRef, mockGithubUnAuth],
+    ];
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={api}>
+          <Content
+            owner="test"
+            path=".backstage/home-page.md"
+            repo="roadie-backstage-plugins"
+          />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('You are not logged into github.', {
+        exact: false,
+      }),
+    ).toBeInTheDocument();
+  });
   it('should render markdown card', async () => {
     render(
       wrapInTestApp(

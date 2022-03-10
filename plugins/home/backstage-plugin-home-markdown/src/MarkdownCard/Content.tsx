@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { Progress, MarkdownContent } from '@backstage/core-components';
 import { useGithubFile } from './useGithubFile';
+import {
+  useApi,
+  githubAuthApiRef,
+  SessionState,
+} from '@backstage/core-plugin-api';
+
+import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 
 /**
  * Props for Markdown content component {@link Content}.
@@ -37,6 +44,28 @@ export type MarkdownContentProps = {
  * @public
  */
 export const Content = (props: MarkdownContentProps) => {
+  const githubApi = useApi(githubAuthApiRef);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const authSubscription = githubApi.sessionState$().subscribe(state => {
+      if (state === SessionState.SignedIn) {
+        setIsLoggedIn(true);
+      }
+    });
+    return () => {
+      authSubscription.unsubscribe();
+    };
+  }, [githubApi]);
+
+  return isLoggedIn ? (
+    <GithubFileContent {...props} />
+  ) : (
+    <GithubNotAuthorized />
+  );
+};
+
+function GithubFileContent(props: MarkdownContentProps) {
   const { value, loading, error } = useGithubFile(props);
   if (loading) {
     return <Progress />;
@@ -49,4 +78,30 @@ export const Content = (props: MarkdownContentProps) => {
       content={Buffer.from(value.content, 'base64').toString('utf8')}
     />
   );
-};
+}
+
+function GithubNotAuthorized() {
+  const githubApi = useApi(githubAuthApiRef);
+  return (
+    <Grid container>
+      <Grid item xs={8}>
+        <Typography>
+          You are not logged into github. You need to be signed in to see the
+          content of this card.
+        </Typography>
+      </Grid>
+      <Grid item xs={4} container justifyContent="flex-end">
+        <Tooltip placement="top" arrow title="Sign in to Github">
+          <Button
+            variant="outlined"
+            color="primary"
+            // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
+            onClick={() => githubApi.getAccessToken('repo')}
+          >
+            Sign in
+          </Button>
+        </Tooltip>
+      </Grid>
+    </Grid>
+  );
+}
