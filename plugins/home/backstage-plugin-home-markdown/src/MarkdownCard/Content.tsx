@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { Progress, MarkdownContent } from '@backstage/core-components';
 import { useGithubFile } from './useGithubFile';
+import {
+  useApi,
+  githubAuthApiRef,
+  SessionState,
+} from '@backstage/core-plugin-api';
+
+import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 
 /**
  * Props for Markdown content component {@link Content}.
@@ -37,6 +44,28 @@ export type MarkdownContentProps = {
  * @public
  */
 export const Content = (props: MarkdownContentProps) => {
+  const auth = useApi(githubAuthApiRef);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const authSubscription = auth.sessionState$().subscribe(state => {
+      if (state === SessionState.SignedIn) {
+        setIsLoggedIn(true);
+      }
+    });
+    return () => {
+      authSubscription.unsubscribe();
+    };
+  }, []);
+
+  return isLoggedIn ? (
+    <GithubFileContent {...props} />
+  ) : (
+    <GithubNotAuthorized api={auth} />
+  );
+};
+
+const GithubFileContent = (props: MarkdownContentProps) => {
   const { value, loading, error } = useGithubFile(props);
   if (loading) {
     return <Progress />;
@@ -48,5 +77,29 @@ export const Content = (props: MarkdownContentProps) => {
     <MarkdownContent
       content={Buffer.from(value.content, 'base64').toString('utf8')}
     />
+  );
+};
+
+const GithubNotAuthorized = ({ api }: { api: any }) => {
+  return (
+    <Grid container>
+      <Grid item xs={8}>
+        <Typography>
+          You are not logged into github. You need to be sign in to see the
+          content of this card.
+        </Typography>
+      </Grid>
+      <Grid item xs={4} container justifyContent="flex-end">
+        <Tooltip placement="top" arrow title={`Sign in to Github`}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => api.getAccessToken('repo')}
+          >
+            {`Sign in`}
+          </Button>
+        </Tooltip>
+      </Grid>
+    </Grid>
   );
 };
