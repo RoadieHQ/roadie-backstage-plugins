@@ -1,6 +1,7 @@
 # Markdown Home page plugin
 
-A react component that renders a markdown file from github as a homepage component. You can configure the plugin to point to a remote markdown file in github and it will fetch that markdown file and render it inside a card componenet.
+A react component that renders a markdown file from github as a homepage component. You'll need to log in to github to be able to fetch the markdown.
+You can configure the plugin to point to a remote markdown file in github and it will fetch that markdown file and render it inside a card componenet.
 It fetches on every render but it caches based on the etag that gets returned by the github api.
 
 For the resources (links & images) currently you should use absolute urls. For example:
