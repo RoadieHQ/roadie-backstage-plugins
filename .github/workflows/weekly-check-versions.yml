@@ -31,7 +31,7 @@ jobs:
           signoff: false
           branch: update-dependencies-${{ steps.current-time.outputs.formattedTime }}
           delete-branch: true
-          title: 'Update dependencies'
+          title: 'Update Dependencies - plugins'
           base: main
           body: |
             Update backstage dependencies
