@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 1.2.0
+
+### Minor Changes
+
+- c589226: Do not force auth pop
+
 ## 1.1.1
 
 ### Patch Changes
