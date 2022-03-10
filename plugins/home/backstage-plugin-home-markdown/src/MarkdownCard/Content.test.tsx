@@ -34,6 +34,12 @@ jest.mock('@backstage/core-components', () => ({
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
