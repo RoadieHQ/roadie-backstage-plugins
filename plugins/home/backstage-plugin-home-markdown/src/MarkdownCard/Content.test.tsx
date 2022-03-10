@@ -56,7 +56,7 @@ describe('<MarkdownContent>', () => {
     worker.use(...handlers);
   });
   it('should render sign in page', async () => {
-    const mockGithubAuth = {
+    const mockGithubUnAuth = {
       getAccessToken: async (_: string[]) => 'test-token',
       sessionState$: jest.fn(() => ({
         subscribe: (fn: (a: string) => void) => {
@@ -66,12 +66,12 @@ describe('<MarkdownContent>', () => {
       })),
     };
 
-    const apis: [AnyApiRef, Partial<unknown>][] = [
-      [githubAuthApiRef, mockGithubAuth],
+    const api: [AnyApiRef, Partial<unknown>][] = [
+      [githubAuthApiRef, mockGithubUnAuth],
     ];
     render(
       wrapInTestApp(
-        <TestApiProvider apis={apis}>
+        <TestApiProvider apis={api}>
           <Content
             owner="test"
             path=".backstage/home-page.md"
