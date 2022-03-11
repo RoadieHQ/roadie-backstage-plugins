@@ -17,7 +17,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
-import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
+import {
+  HomePageMarkdown,
+  HomePagePlainMarkdown,
+} from '@roadiehq/backstage-plugin-home-markdown';
 
 export const HomePage = () => {
   return (
@@ -40,6 +43,9 @@ export const HomePage = () => {
           repo="roadie-backstage-plugins"
           path=".backstage/home-page.md"
         />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <HomePagePlainMarkdown content="Helloo!!!" title="Markdown as props!" />
       </Grid>
     </Grid>
   );

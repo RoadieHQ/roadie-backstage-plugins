@@ -14,4 +14,22 @@
  * limitations under the License.
  */
 
-export { HomePageMarkdown, HomePagePlainMarkdown } from './plugin';
+import React from 'react';
+import { MarkdownContent } from '@backstage/core-components';
+/**
+ * Props for Markdown content component {@link Content}.
+ *
+ * @public
+ */
+export type PlainMarkdownContentProps = {
+  content: string;
+};
+
+/**
+ * A component to render a markdown file from github
+ *
+ * @public
+ */
+export const Content = (props: PlainMarkdownContentProps) => {
+  return <MarkdownContent content={props.content} />;
+};

@@ -33,3 +33,13 @@ export const HomePageMarkdown = homePlugin.provide(
     components: () => import('./MarkdownCard'),
   }),
 );
+
+export const HomePagePlainMarkdown = homePlugin.provide(
+  createCardExtension<{
+    content: string;
+  }>({
+    name: 'HomePagePlainMarkdown',
+    title: 'Markdown',
+    components: () => import('./PlainMarkdownCard'),
+  }),
+);

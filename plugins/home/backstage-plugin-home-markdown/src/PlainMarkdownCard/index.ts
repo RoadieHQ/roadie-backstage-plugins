@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { HomePageMarkdown, HomePagePlainMarkdown } from './plugin';
+export { Content } from './Content';
