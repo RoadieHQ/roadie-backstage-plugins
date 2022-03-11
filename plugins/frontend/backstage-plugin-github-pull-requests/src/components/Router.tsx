@@ -20,7 +20,8 @@ import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
 import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
+import { useGithubEnabled } from './useGithubEnabled';
 
 export const isGithubPullRequestsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION]);
@@ -30,9 +31,21 @@ type Props = {
   entity?: Entity;
 };
 
-
-export const Router = (_props: Props) =>{
+export const Router = (_props: Props) => {
   const { entity } = useEntity();
+  const githubEnabled = useGithubEnabled();
+  if (githubEnabled.loading) {
+    return <>Loading...</>;
+  }
+  if (githubEnabled.value === false) {
+    return (
+      <>
+        You do not have github enabled: please add the following annotation to
+        your UserEntity: 'github.com/read-only': 'true'
+      </>
+    );
+  }
+
   return !isGithubPullRequestsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
   ) : (
@@ -40,4 +53,4 @@ export const Router = (_props: Props) =>{
       <Route path="/" element={<PullRequestsPage />} />
     </Routes>
   );
-}
+};

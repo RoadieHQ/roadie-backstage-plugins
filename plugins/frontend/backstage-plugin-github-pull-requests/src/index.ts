@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export {
   /**
    * @deprecated From 0.2.0 new name 'pullRequestsPlugin' should be used
@@ -23,7 +22,7 @@ export {
   githubPullRequestsPlugin,
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
-  EntityGithubPullRequestsTable
+  EntityGithubPullRequestsTable,
 } from './plugin';
 export * from './api';
 export {
@@ -43,3 +42,4 @@ export {
    */
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
+export { useGithubEnabled as isGithubEnabled } from './components/useGithubEnabled';

@@ -39,7 +39,7 @@ import {
   isComponentType,
   isKind,
 } from '@backstage/plugin-catalog';
-import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph'
+import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   isGithubActionsAvailable,
   EntityGithubActionsContent,
@@ -54,6 +54,7 @@ import { EntityTechdocsContent } from '@backstage/plugin-techdocs';
 import {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
+  isGithubEnabled,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import {
   isAWSLambdaAvailable,
