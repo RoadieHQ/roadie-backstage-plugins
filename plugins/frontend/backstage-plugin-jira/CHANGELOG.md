@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 1.5.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
 ## 1.4.12
 
 ### Patch Changes

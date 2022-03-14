@@ -1,5 +1,17 @@
 # backend
 
+## 0.0.19
+
+### Patch Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+- Updated dependencies [f0421b4]
+  - app@0.0.10
+  - @roadiehq/backstage-plugin-argo-cd-backend@1.3.0
+  - @roadiehq/scaffolder-backend-module-aws@1.2.0
+  - @roadiehq/scaffolder-backend-module-http-request@2.2.0
+  - @roadiehq/scaffolder-backend-module-utils@0.2.0
+
 ## 0.0.18
 
 ### Patch Changes

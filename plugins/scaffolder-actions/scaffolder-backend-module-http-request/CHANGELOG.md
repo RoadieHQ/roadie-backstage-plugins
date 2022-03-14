@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 2.2.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
 ## 2.1.10
 
 ### Patch Changes

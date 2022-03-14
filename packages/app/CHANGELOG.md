@@ -1,5 +1,24 @@
 # app
 
+## 0.0.10
+
+### Patch Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+- Updated dependencies [f0421b4]
+  - @roadiehq/backstage-plugin-argo-cd@1.6.0
+  - @roadiehq/backstage-plugin-aws-lambda@1.4.0
+  - @roadiehq/backstage-plugin-bugsnag@1.5.0
+  - @roadiehq/backstage-plugin-buildkite@1.4.0
+  - @roadiehq/backstage-plugin-datadog@1.5.0
+  - @roadiehq/backstage-plugin-github-insights@1.6.0
+  - @roadiehq/backstage-plugin-github-pull-requests@1.5.0
+  - @roadiehq/backstage-plugin-jira@1.5.0
+  - @roadiehq/backstage-plugin-prometheus@1.4.0
+  - @roadiehq/backstage-plugin-security-insights@1.6.0
+  - @roadiehq/backstage-plugin-travis-ci@1.4.0
+  - @roadiehq/backstage-plugin-home-markdown@1.3.0
+
 ## 0.0.9
 
 ### Patch Changes
