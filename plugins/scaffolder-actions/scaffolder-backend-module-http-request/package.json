@@ -28,9 +28,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.12.0",
+    "@backstage/backend-common": "^0.13.0",
     "@backstage/config": "^0.1.8",
-    "@backstage/plugin-scaffolder-backend": "^0.17.0",
+    "@backstage/plugin-scaffolder-backend": "^0.18.0",
     "cross-fetch": "^3.1.4",
     "winston": "^3.2.1"
   },

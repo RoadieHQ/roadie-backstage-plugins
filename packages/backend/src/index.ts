@@ -9,15 +9,15 @@
 // eslint-disable-next-line notice/notice
 import Router from 'express-promise-router';
 import {
-  createServiceBuilder,
-  loadBackendConfig,
-  getRootLogger,
-  useHotMemoize,
-  notFoundHandler,
   CacheManager,
-  SingleConnectionDatabaseManager,
+  createServiceBuilder,
+  getRootLogger,
+  loadBackendConfig,
+  notFoundHandler,
+  DatabaseManager,
   SingleHostDiscovery,
   UrlReaders,
+  useHotMemoize,
   ServerTokenManager,
 } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
@@ -41,7 +41,7 @@ function makeCreateEnv(config: Config) {
 
   root.info(`Created UrlReader ${reader}`);
 
-  const databaseManager = SingleConnectionDatabaseManager.fromConfig(config);
+  const databaseManager = DatabaseManager.fromConfig(config);
   const cacheManager = CacheManager.fromConfig(config);
   const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
   const permissions = ServerPermissionClient.fromConfig(config, {
