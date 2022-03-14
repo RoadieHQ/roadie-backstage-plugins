@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 1.4.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
 ## 1.3.11
 
 ### Patch Changes

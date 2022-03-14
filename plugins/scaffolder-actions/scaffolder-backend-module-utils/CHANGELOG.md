@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 0.2.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
 ## 0.1.4
 
 ### Patch Changes

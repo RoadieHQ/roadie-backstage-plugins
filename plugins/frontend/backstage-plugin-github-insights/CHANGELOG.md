@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 1.6.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
 ## 1.5.5
 
 ### Patch Changes
