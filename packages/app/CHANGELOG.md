@@ -1,5 +1,27 @@
 # app
 
+## 1.0.0
+
+### Major Changes
+
+- df841f0: Update dependecies to follow latest upstream version. Removed deprecated props of type 'Entity' passed into components as it is grabbed from context instead.
+
+### Patch Changes
+
+- Updated dependencies [df841f0]
+  - @roadiehq/backstage-plugin-argo-cd@2.0.0
+  - @roadiehq/backstage-plugin-aws-lambda@2.0.0
+  - @roadiehq/backstage-plugin-bugsnag@2.0.0
+  - @roadiehq/backstage-plugin-buildkite@2.0.0
+  - @roadiehq/backstage-plugin-datadog@2.0.0
+  - @roadiehq/backstage-plugin-github-insights@2.0.0
+  - @roadiehq/backstage-plugin-github-pull-requests@2.0.0
+  - @roadiehq/backstage-plugin-jira@2.0.0
+  - @roadiehq/backstage-plugin-prometheus@2.0.0
+  - @roadiehq/backstage-plugin-security-insights@2.0.0
+  - @roadiehq/backstage-plugin-travis-ci@2.0.0
+  - @roadiehq/backstage-plugin-home-markdown@2.0.0
+
 ## 0.0.10
 
 ### Patch Changes
