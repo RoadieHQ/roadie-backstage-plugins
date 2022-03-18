@@ -1,23 +1,23 @@
 ---
-'app': minor
-'backend': minor
-'@roadiehq/backstage-plugin-argo-cd-backend': minor
-'@roadiehq/backstage-plugin-argo-cd': minor
-'@roadiehq/backstage-plugin-aws-lambda': minor
-'@roadiehq/backstage-plugin-bugsnag': minor
-'@roadiehq/backstage-plugin-buildkite': minor
-'@roadiehq/backstage-plugin-datadog': minor
-'@roadiehq/backstage-plugin-github-insights': minor
-'@roadiehq/backstage-plugin-github-pull-requests': minor
-'@roadiehq/backstage-plugin-jira': minor
-'@roadiehq/backstage-plugin-prometheus': minor
-'@roadiehq/backstage-plugin-security-insights': minor
-'@roadiehq/backstage-plugin-travis-ci': minor
-'@roadiehq/backstage-plugin-home-markdown': minor
-'@roadiehq/scaffolder-backend-module-aws': minor
-'@roadiehq/scaffolder-backend-module-http-request': minor
-'@roadiehq/scaffolder-backend-module-utils': minor
-'@roadiehq/roadie-backstage-entity-validator': minor
+'app': patch
+'backend': patch
+'@roadiehq/backstage-plugin-argo-cd-backend': patch
+'@roadiehq/backstage-plugin-argo-cd': patch
+'@roadiehq/backstage-plugin-aws-lambda': patch
+'@roadiehq/backstage-plugin-bugsnag': patch
+'@roadiehq/backstage-plugin-buildkite': patch
+'@roadiehq/backstage-plugin-datadog': patch
+'@roadiehq/backstage-plugin-github-insights': patch
+'@roadiehq/backstage-plugin-github-pull-requests': patch
+'@roadiehq/backstage-plugin-jira': patch
+'@roadiehq/backstage-plugin-prometheus': patch
+'@roadiehq/backstage-plugin-security-insights': patch
+'@roadiehq/backstage-plugin-travis-ci': patch
+'@roadiehq/backstage-plugin-home-markdown': patch
+'@roadiehq/scaffolder-backend-module-aws': patch
+'@roadiehq/scaffolder-backend-module-http-request': patch
+'@roadiehq/scaffolder-backend-module-utils': patch
+'@roadiehq/roadie-backstage-entity-validator': patch
 ---
 
 Update dependecies to follow latest upstream version. Remove deprecated 'Entity' property.
