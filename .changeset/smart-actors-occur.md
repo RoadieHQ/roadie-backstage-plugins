@@ -1,23 +1,23 @@
 ---
-'app': patch
-'backend': patch
-'@roadiehq/backstage-plugin-argo-cd-backend': patch
-'@roadiehq/backstage-plugin-argo-cd': patch
-'@roadiehq/backstage-plugin-aws-lambda': patch
-'@roadiehq/backstage-plugin-bugsnag': patch
-'@roadiehq/backstage-plugin-buildkite': patch
-'@roadiehq/backstage-plugin-datadog': patch
-'@roadiehq/backstage-plugin-github-insights': patch
-'@roadiehq/backstage-plugin-github-pull-requests': patch
-'@roadiehq/backstage-plugin-jira': patch
-'@roadiehq/backstage-plugin-prometheus': patch
-'@roadiehq/backstage-plugin-security-insights': patch
-'@roadiehq/backstage-plugin-travis-ci': patch
-'@roadiehq/backstage-plugin-home-markdown': patch
-'@roadiehq/scaffolder-backend-module-aws': patch
-'@roadiehq/scaffolder-backend-module-http-request': patch
-'@roadiehq/scaffolder-backend-module-utils': patch
-'@roadiehq/roadie-backstage-entity-validator': patch
+'app': major
+'backend': major
+'@roadiehq/backstage-plugin-argo-cd-backend': major
+'@roadiehq/backstage-plugin-argo-cd': major
+'@roadiehq/backstage-plugin-aws-lambda': major
+'@roadiehq/backstage-plugin-bugsnag': major
+'@roadiehq/backstage-plugin-buildkite': major
+'@roadiehq/backstage-plugin-datadog': major
+'@roadiehq/backstage-plugin-github-insights': major
+'@roadiehq/backstage-plugin-github-pull-requests': major
+'@roadiehq/backstage-plugin-jira': major
+'@roadiehq/backstage-plugin-prometheus': major
+'@roadiehq/backstage-plugin-security-insights': major
+'@roadiehq/backstage-plugin-travis-ci': major
+'@roadiehq/backstage-plugin-home-markdown': major
+'@roadiehq/scaffolder-backend-module-aws': major
+'@roadiehq/scaffolder-backend-module-http-request': major
+'@roadiehq/scaffolder-backend-module-utils': major
+'@roadiehq/roadie-backstage-entity-validator': major
 ---
 
-Update dependecies to follow latest upstream version. Remove deprecated 'Entity' property.
+Update dependecies to follow latest upstream version. Removed deprecated props of type 'Entity' passed into components as it is grabbed from context instead.
