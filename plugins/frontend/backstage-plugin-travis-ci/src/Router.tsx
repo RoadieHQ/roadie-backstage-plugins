@@ -20,20 +20,15 @@ import { Routes, Route } from 'react-router-dom';
 import { TravisCIBuildsPage } from './components/TravisCiBuildsPage';
 import { TRAVIS_ANNOTATION } from './hooks/useTravisRepoData';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const isTravisciAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[TRAVIS_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const Router = (_props: Props) =>{
+export const Router = () => {
   const { entity } = useEntity();
   return !isTravisciAvailable(entity) ? (
-      <MissingAnnotationEmptyState annotation={TRAVIS_ANNOTATION} />
+    <MissingAnnotationEmptyState annotation={TRAVIS_ANNOTATION} />
   ) : (
     <Routes>
       <Route path="/" element={<TravisCIBuildsPage entity={entity} />} />

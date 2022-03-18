@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { Entity } from '@backstage/catalog-model';
@@ -27,12 +26,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 export const isBuildkiteAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[BUILDKITE_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const Router = (_props: Props) => {
+export const Router = () => {
   const { entity } = useEntity();
   return !isBuildkiteAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />
