@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export {
   /**
    * @deprecated From 0.2.0 composability API should be used
@@ -26,15 +25,8 @@ export {
   EntitySecurityInsightsCard,
   EntityDependabotAlertsCard,
 } from './plugin';
-export {
-  /**
-   * @deprecated From 0.2.0 composability API should be used
-   */
-  SecurityInsightsWidget,
-} from './components/SecurityInsightsWidget';
-export {
-  DependabotAlertsWidget,
-} from './components/DependabotAlertsWidget';
+export { SecurityInsightsWidget } from './components/SecurityInsightsWidget';
+export { DependabotAlertsWidget } from './components/DependabotAlertsWidget';
 export {
   /**
    * @deprecated From 0.2.0 composability API should be used

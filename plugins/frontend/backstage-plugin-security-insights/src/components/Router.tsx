@@ -25,12 +25,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 export const isSecurityInsightsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[GITHUB_REPO_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const Router = (_props: Props) => {
+export const Router = () => {
   const { entity } = useEntity();
   return !isSecurityInsightsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_REPO_ANNOTATION} />

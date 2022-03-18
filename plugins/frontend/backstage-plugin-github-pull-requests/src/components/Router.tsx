@@ -20,18 +20,12 @@ import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
 import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const isGithubPullRequestsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-
-export const Router = (_props: Props) =>{
+export const Router = () => {
   const { entity } = useEntity();
   return !isGithubPullRequestsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
@@ -40,4 +34,4 @@ export const Router = (_props: Props) =>{
       <Route path="/" element={<PullRequestsPage />} />
     </Routes>
   );
-}
+};

@@ -17,18 +17,22 @@
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   infoCard: {
     marginBottom: theme.spacing(3),
     '& + .MuiAlert-root': {
@@ -62,12 +66,7 @@ type Language = {
   [key: string]: number;
 };
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-const LanguagesCard = (_props: Props) => {
+const LanguagesCard = () => {
   const { entity } = useEntity();
   let barWidth = 0;
   const classes = useStyles();
@@ -75,7 +74,9 @@ const LanguagesCard = (_props: Props) => {
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0);
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
@@ -90,33 +91,35 @@ const LanguagesCard = (_props: Props) => {
   return value && owner && repo ? (
     <InfoCard title="Languages" className={classes.infoCard}>
       <div className={classes.barContainer}>
-        {Object.entries(value as Language).map(
-          (language, index: number) => {
-            barWidth = barWidth + (language[1] / Object.values(value as Record<string, number>).reduce(
-              (a, b) => a + b,
-            )) * 100;
-            return (
-              <Tooltip
-                title={language[0]}
-                placement="bottom-end"
+        {Object.entries(value as Language).map((language, index: number) => {
+          barWidth =
+            barWidth +
+            (language[1] /
+              Object.values(value as Record<string, number>).reduce(
+                (a, b) => a + b,
+              )) *
+              100;
+          return (
+            <Tooltip
+              title={language[0]}
+              placement="bottom-end"
+              key={language[0]}
+            >
+              <div
+                className={classes.bar}
                 key={language[0]}
-              >
-                <div
-                  className={classes.bar}
-                  key={language[0]}
-                  style={{
-                    marginTop: index === 0 ? '0' : `-16px`,
-                    zIndex: Object.keys(value).length - index,
-                    backgroundColor: colors[language[0]]?.color || '#333',
-                    width: `${barWidth}%`,
-                  }}
-                />
-              </Tooltip>
-            );
-          }
-        )}
+                style={{
+                  marginTop: index === 0 ? '0' : `-16px`,
+                  zIndex: Object.keys(value).length - index,
+                  backgroundColor: colors[language[0]]?.color || '#333',
+                  width: `${barWidth}%`,
+                }}
+              />
+            </Tooltip>
+          );
+        })}
       </div>
-      {Object.entries(value as Language).map((language) => (
+      {Object.entries(value as Language).map(language => (
         <Chip
           classes={{
             label: classes.label,
@@ -129,9 +132,15 @@ const LanguagesCard = (_props: Props) => {
                   backgroundColor: colors[language[0]]?.color || '#333',
                 }}
               />
-              {language[0]} - {((language[1] / Object.values(value as Record<string, number>).reduce(
-                (a, b) => a + b,
-              )) * 100).toFixed(2)}%
+              {language[0]} -{' '}
+              {(
+                (language[1] /
+                  Object.values(value as Record<string, number>).reduce(
+                    (a, b) => a + b,
+                  )) *
+                100
+              ).toFixed(2)}
+              %
             </>
           }
           variant="outlined"

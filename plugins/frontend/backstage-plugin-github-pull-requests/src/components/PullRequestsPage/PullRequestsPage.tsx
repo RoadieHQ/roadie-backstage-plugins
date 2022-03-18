@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { Grid } from '@material-ui/core';
 import {
@@ -26,12 +25,7 @@ import {
 import { PullRequestsTable } from '../PullRequestsTable';
 import { Entity } from '@backstage/catalog-model';
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-const PullRequestsPage = (__props: Props) => (
+const PullRequestsPage = () => (
   <Page themeId="tool">
     <Content>
       <ContentHeader title="GitHub Pull Requests">
