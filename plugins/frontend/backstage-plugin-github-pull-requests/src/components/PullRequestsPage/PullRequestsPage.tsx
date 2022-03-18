@@ -23,7 +23,6 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { PullRequestsTable } from '../PullRequestsTable';
-import { Entity } from '@backstage/catalog-model';
 
 const PullRequestsPage = () => (
   <Page themeId="tool">

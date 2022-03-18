@@ -22,7 +22,6 @@ import {
   Progress,
   MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';

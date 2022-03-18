@@ -23,7 +23,6 @@ import {
   StructuredMetadataTable,
   MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { Entity } from '@backstage/catalog-model';
 import {
   useProtectedBranches,
   useRepoLicence,
