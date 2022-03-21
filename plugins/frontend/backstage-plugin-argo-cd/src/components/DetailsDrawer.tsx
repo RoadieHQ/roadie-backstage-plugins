@@ -12,7 +12,7 @@ import {
   StructuredMetadataTable,
 } from '@backstage/core-components';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import { Close } from '@material-ui/icons';
+import CloseIcon from '@material-ui/icons/Close';
 
 interface TableContent {
   [key: string]: any;
@@ -65,11 +65,11 @@ export const DetailsDrawer = (rowData: any, baseUrl: string | undefined) => {
     ...(baseUrl && {
       link: (
         <BackstageButton
-          name={"Open Argo CD Dashboard"}
+          name="Open Argo CD Dashboard"
           variant="outlined"
           color="primary"
           size="small"
-          title={'Open Argo CD Dashboard'}
+          title='Open Argo CD Dashboard'
           endIcon={<OpenInNewIcon />}
           component={Button}
           target="_blank"
@@ -102,7 +102,7 @@ export const DetailsDrawer = (rowData: any, baseUrl: string | undefined) => {
           onClick={() => setState(false)}
           color="inherit"
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
       </div>
       <div className={classes.content}>
@@ -120,7 +120,7 @@ export const DetailsDrawer = (rowData: any, baseUrl: string | undefined) => {
         {rowData.metadata.name}
       </Button>
       <Drawer
-        anchor={'right'}
+        anchor='right'
         classes={{ paper: classes.paper }}
         open={state}
         onClose={toggleDrawer(false)}
