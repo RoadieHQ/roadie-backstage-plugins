@@ -44,7 +44,7 @@ export const useGithubFile = (options: MarkdownContentProps) => {
         data,
         etag: response.headers.etag ?? '',
       };
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(`Unable to gather markdown contents: ${e.message}`)
     }
     return result;
