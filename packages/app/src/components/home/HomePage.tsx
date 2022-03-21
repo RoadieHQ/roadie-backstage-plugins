@@ -41,6 +41,16 @@ export const HomePage = () => {
           path=".backstage/home-page.md"
         />
       </Grid>
+
+      <Grid item xs={12} md={6}>
+        <HomePageMarkdown
+          title="History"
+          owner="RoadieHQ"
+          repo="roadie-backstage-plugins"
+          path=".backstage/home-page-test.md"
+          branch="test-two-mdown"
+        />
+      </Grid>
     </Grid>
   );
 };

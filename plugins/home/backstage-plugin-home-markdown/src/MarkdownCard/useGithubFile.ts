@@ -17,15 +17,11 @@
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { RequestError } from '@octokit/request-error';
-import { MarkdownContentProps } from './Content';
+import { MarkdownContentProps, BASE_URL} from './types';
 
-const BASE_URL = 'https://api.github.com';
-const cache = { etag: undefined, data: '' };
-
-export const useGithubFile = (props: MarkdownContentProps) => {
+export const useGithubFile = (options: MarkdownContentProps) => {
   const auth = useApi(githubAuthApiRef);
-  const { owner, repo, path, branch } = props;
+  const { owner, repo, path, branch } = options;
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
     try {
@@ -35,7 +31,6 @@ export const useGithubFile = (props: MarkdownContentProps) => {
       const response = await octokit.request(
         `GET /repos/{owner}/{repo}/contents/${path}`,
         {
-          headers: { 'if-none-match': cache.etag },
           baseUrl: BASE_URL,
           owner,
           repo,
@@ -50,19 +45,10 @@ export const useGithubFile = (props: MarkdownContentProps) => {
         etag: response.headers.etag ?? '',
       };
     } catch (e) {
-      if (e instanceof RequestError) {
-        if (e.status === 304) {
-          result = cache;
-        }
-      }
+      throw new Error(`Unable to gather markdown contents: ${e.message}`)
     }
     return result;
   }, []);
-
-  if (value) {
-    cache.etag = value.etag;
-    cache.data = value.data;
-  }
 
   return {
     value: value ? value.data : undefined,

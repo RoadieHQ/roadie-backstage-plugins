@@ -23,20 +23,8 @@ import {
   githubAuthApiRef,
   SessionState,
 } from '@backstage/core-plugin-api';
-
+import { MarkdownContentProps, GithubCache} from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
-
-/**
- * Props for Markdown content component {@link Content}.
- *
- * @public
- */
-export type MarkdownContentProps = {
-  owner: string;
-  repo: string;
-  path: string;
-  branch?: string;
-};
 
 /**
  * A component to render a markdown file from github
@@ -65,14 +53,14 @@ export const Content = (props: MarkdownContentProps) => {
   );
 };
 
-function GithubFileContent(props: MarkdownContentProps) {
-  const { value, loading, error } = useGithubFile(props);
+const GithubFileContent = (props: MarkdownContentProps) => {
+  const { value, loading, error } = useGithubFile({...props});
+
   if (loading) {
     return <Progress />;
   } else if (error) {
     return <Alert severity="error">{error.message}</Alert>;
   }
-
   return (
     <MarkdownContent
       content={Buffer.from(value.content, 'base64').toString('utf8')}
@@ -80,7 +68,7 @@ function GithubFileContent(props: MarkdownContentProps) {
   );
 }
 
-function GithubNotAuthorized() {
+const GithubNotAuthorized = () => {
   const githubApi = useApi(githubAuthApiRef);
   return (
     <Grid container>
