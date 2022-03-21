@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     height: '80%',
   },
 });
-export const DetailsDrawer = (rowData: any, baseUrl: string | undefined) => {
+export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined) => {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
   const toggleDrawer =

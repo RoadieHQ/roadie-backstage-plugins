@@ -35,7 +35,7 @@ import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { DetailsDrawer as detailsDrawer } from './detailsDrawer';
+import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
@@ -84,7 +84,7 @@ const OverviewComponent = ({
     {
       title: 'Name',
       highlight: true,
-      render: (row: any): React.ReactNode => detailsDrawer(row, baseUrl)
+      render: (row: any): React.ReactNode => detailsDrawerComponent(row, baseUrl)
     },
     {
       title: 'Instance',
