@@ -18,10 +18,21 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
 import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
+import {
+  HomePageRequestedReviewsCard,
+  HomePageYourOpenPullRequestsCard,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
 
 export const HomePage = () => {
   return (
     <Grid container spacing={3}>
+      <Grid item md={6}>
+        <HomePageRequestedReviewsCard />
+      </Grid>
+
+      <Grid item md={6}>
+        <HomePageYourOpenPullRequestsCard />
+      </Grid>
       <Grid item xs={12} md={6}>
         <HomePageToolkit
           tools={[
