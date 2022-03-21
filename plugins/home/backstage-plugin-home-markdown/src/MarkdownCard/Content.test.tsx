@@ -31,9 +31,9 @@ jest.mock('@backstage/core-components', () => ({
   ...jest.requireActual('@backstage/core-components'),
   MarkdownContent: ({ content }: { content: string }) => <span>{content}</span>,
 }));
-
+const mockAccessToken = jest.fn().mockImplementation(async (_: string[]) => 'test-token');
 const mockGithubAuth = {
-  getAccessToken: async (_: string[]) => 'test-token',
+  getAccessToken: mockAccessToken,
   sessionState$: jest.fn(() => ({
     subscribe: (fn: (a: string) => void) => {
       fn('SignedIn');
@@ -122,30 +122,29 @@ describe('<MarkdownContent>', () => {
       await screen.findByText('# Awesome test markdown', { exact: false }),
     ).toBeInTheDocument();
   });
-  it('should use cache when rerenders', async () => {
-    const { rerender } = render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <Content
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
-    );
-    rerender(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <Content
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
-    );
 
-    expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
+  describe('it fails to get the content', () =>{
+    beforeEach(() => {
+      mockAccessToken.mockImplementation(()=> { throw new Error('No :(')});
+    });
+
+    it('shouldn\'t render the markdown card but display an error', async () => {
+      render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <Content
+              owner="test"
+              path=".backstage/home-page.md"
+              repo="foo-bar"
+              branch="not-default"
+            />
+          </TestApiProvider>,
+        ),
+      );
+  
+      expect(
+        await screen.findByText('Unable to gather markdown contents: No :(', { exact: false }),
+      ).toBeInTheDocument();
+    });
   });
 });

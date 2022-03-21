@@ -23,20 +23,50 @@ import {
   githubAuthApiRef,
   SessionState,
 } from '@backstage/core-plugin-api';
-
+import { MarkdownContentProps} from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 
-/**
- * Props for Markdown content component {@link Content}.
- *
- * @public
- */
-export type MarkdownContentProps = {
-  owner: string;
-  repo: string;
-  path: string;
-  branch?: string;
-};
+
+const GithubFileContent = (props: MarkdownContentProps) => {
+  const { value, loading, error } = useGithubFile({...props});
+
+  if (loading) {
+    return <Progress />;
+  } else if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+  return (
+    <MarkdownContent
+      content={Buffer.from(value.content, 'base64').toString('utf8')}
+    />
+  );
+}
+
+const GithubNotAuthorized = () => {
+  const githubApi = useApi(githubAuthApiRef);
+  return (
+    <Grid container>
+      <Grid item xs={8}>
+        <Typography>
+          You are not logged into github. You need to be signed in to see the
+          content of this card.
+        </Typography>
+      </Grid>
+      <Grid item xs={4} container justifyContent="flex-end">
+        <Tooltip placement="top" arrow title="Sign in to Github">
+          <Button
+            variant="outlined"
+            color="primary"
+            // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
+            onClick={() => githubApi.getAccessToken('repo')}
+          >
+            Sign in
+          </Button>
+        </Tooltip>
+      </Grid>
+    </Grid>
+  );
+}
 
 /**
  * A component to render a markdown file from github
@@ -64,44 +94,3 @@ export const Content = (props: MarkdownContentProps) => {
     <GithubNotAuthorized />
   );
 };
-
-function GithubFileContent(props: MarkdownContentProps) {
-  const { value, loading, error } = useGithubFile(props);
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
-
-  return (
-    <MarkdownContent
-      content={Buffer.from(value.content, 'base64').toString('utf8')}
-    />
-  );
-}
-
-function GithubNotAuthorized() {
-  const githubApi = useApi(githubAuthApiRef);
-  return (
-    <Grid container>
-      <Grid item xs={8}>
-        <Typography>
-          You are not logged into github. You need to be signed in to see the
-          content of this card.
-        </Typography>
-      </Grid>
-      <Grid item xs={4} container justifyContent="flex-end">
-        <Tooltip placement="top" arrow title="Sign in to Github">
-          <Button
-            variant="outlined"
-            color="primary"
-            // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
-            onClick={() => githubApi.getAccessToken('repo')}
-          >
-            Sign in
-          </Button>
-        </Tooltip>
-      </Grid>
-    </Grid>
-  );
-}
