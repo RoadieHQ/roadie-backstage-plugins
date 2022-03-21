@@ -23,35 +23,9 @@ import {
   githubAuthApiRef,
   SessionState,
 } from '@backstage/core-plugin-api';
-import { MarkdownContentProps, GithubCache} from './types';
+import { MarkdownContentProps} from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 
-/**
- * A component to render a markdown file from github
- *
- * @public
- */
-export const Content = (props: MarkdownContentProps) => {
-  const githubApi = useApi(githubAuthApiRef);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const authSubscription = githubApi.sessionState$().subscribe(state => {
-      if (state === SessionState.SignedIn) {
-        setIsLoggedIn(true);
-      }
-    });
-    return () => {
-      authSubscription.unsubscribe();
-    };
-  }, [githubApi]);
-
-  return isLoggedIn ? (
-    <GithubFileContent {...props} />
-  ) : (
-    <GithubNotAuthorized />
-  );
-};
 
 const GithubFileContent = (props: MarkdownContentProps) => {
   const { value, loading, error } = useGithubFile({...props});
@@ -93,3 +67,30 @@ const GithubNotAuthorized = () => {
     </Grid>
   );
 }
+
+/**
+ * A component to render a markdown file from github
+ *
+ * @public
+ */
+export const Content = (props: MarkdownContentProps) => {
+  const githubApi = useApi(githubAuthApiRef);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const authSubscription = githubApi.sessionState$().subscribe(state => {
+      if (state === SessionState.SignedIn) {
+        setIsLoggedIn(true);
+      }
+    });
+    return () => {
+      authSubscription.unsubscribe();
+    };
+  }, [githubApi]);
+
+  return isLoggedIn ? (
+    <GithubFileContent {...props} />
+  ) : (
+    <GithubNotAuthorized />
+  );
+};
