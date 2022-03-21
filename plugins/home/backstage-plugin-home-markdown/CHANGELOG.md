@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.0.1
+
+### Patch Changes
+
+- d0431b5: Remove caching to avoid duplicate content
+
 ## 2.0.0
 
 ### Major Changes
