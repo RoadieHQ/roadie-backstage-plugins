@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.1.0
+
+### Minor Changes
+
+- 0af1e28: add additional information from argo cd in a drawer component
+
 ## 2.0.0
 
 ### Major Changes
