@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Box, LinearProgress, Link } from '@material-ui/core';
+import { Box, LinearProgress } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
 import {
@@ -35,6 +35,7 @@ import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
@@ -83,18 +84,7 @@ const OverviewComponent = ({
     {
       title: 'Name',
       highlight: true,
-      render: (row: any): React.ReactNode =>
-        baseUrl ? (
-          <Link
-            href={`${baseUrl}/applications/${row.metadata.name}`}
-            target="_blank"
-            rel="noopener"
-          >
-            {row.metadata.name}
-          </Link>
-        ) : (
-          row.metadata.name
-        ),
+      render: (row: any): React.ReactNode => detailsDrawerComponent(row, baseUrl)
     },
     {
       title: 'Instance',
