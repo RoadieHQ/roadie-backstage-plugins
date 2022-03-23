@@ -23,6 +23,8 @@ export {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
   EntityGithubPullRequestsTable,
+  HomePageRequestedReviewsCard,
+  HomePageYourOpenPullRequestsCard,
 } from './plugin';
 export * from './api';
 export {
@@ -43,8 +45,4 @@ export {
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
 
-export {
-  HomePageRequestedReviewsCard,
-  HomePageYourOpenPullRequestsCard,
-} from './components/HomepagePullRequestsCard';
 export { PullRequestsTableView } from './components/PullRequestsTable';

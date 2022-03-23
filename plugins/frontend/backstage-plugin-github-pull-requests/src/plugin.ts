@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import {
   createPlugin,
   createApiFactory,
@@ -22,6 +21,7 @@ import {
   createRoutableExtension,
   createComponentExtension,
 } from '@backstage/core-plugin-api';
+import { createCardExtension } from '@backstage/plugin-home';
 
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
@@ -47,17 +47,18 @@ export const EntityGithubPullRequestsContent = githubPullRequestsPlugin.provide(
   }),
 );
 
-export const EntityGithubPullRequestsOverviewCard = githubPullRequestsPlugin.provide(
-  createComponentExtension({
-    name: 'EntityGithubPullRequestsOverviewCard',
-    component: {
-      lazy: () =>
-        import('./components/PullRequestsStatsCard').then(
-          m => m.PullRequestsStatsCard,
-        ),
-    },
-  }),
-);
+export const EntityGithubPullRequestsOverviewCard =
+  githubPullRequestsPlugin.provide(
+    createComponentExtension({
+      name: 'EntityGithubPullRequestsOverviewCard',
+      component: {
+        lazy: () =>
+          import('./components/PullRequestsStatsCard').then(
+            m => m.PullRequestsStatsCard,
+          ),
+      },
+    }),
+  );
 
 export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
   createComponentExtension({
@@ -68,3 +69,24 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
     },
   }),
 );
+
+export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
+  createCardExtension({
+    name: 'HomePageRequestedReviewsCard',
+    title: 'Requested reviews from you',
+    components: () =>
+      import('./components/HomepagePullRequestsCard/RequestedReviewsCard'),
+  }),
+);
+
+export const HomePageYourOpenPullRequestsCard =
+  githubPullRequestsPlugin.provide(
+    createCardExtension({
+      name: 'HomePageRequestedReviewsCard',
+      title: 'Your open pull requests',
+      components: () =>
+        import(
+          './components/HomepagePullRequestsCard/YourOpenPullRequestsCard'
+        ),
+    }),
+  );

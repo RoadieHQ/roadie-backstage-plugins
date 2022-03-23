@@ -4,7 +4,7 @@ import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
 import { Grid, Box, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
-import { getStatusIconType } from '../Icons';
+import { getStatusIconType } from '../../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { BackstageTheme } from '@backstage/theme';
 
@@ -78,47 +78,24 @@ const PullRequestsListView = props => {
   );
 };
 
-// export const RequestedReviewsCard = () => {
-//   const { loading, error, value } = usePullRequest(
-//     identity =>
-//       `is:closed is:pr review-requested:${identity.id} archived:false`,
-//   );
+export const Content = () => {
+  const { loading, error, value } = usePullRequest(
+    identity => `is:open is:pr author:${identity.id} archived:false`,
+  );
 
-//   if (loading) return <>Loading...</>;
-//   if (error) return <>Error...</>;
+  if (loading) return <>Loading...</>;
+  if (error) return <>Error...</>;
 
-//   if (value) {
-//     return (
-//       <PullRequestsListView
-//         data={value.items}
-//         loading={loading}
-//         pageSize={5}
-//         page={1}
-//         projectName="Requested reviews from you"
-//       />
-//     );
-//   }
-//   return <div>PRs</div>;
-// };
-
-// export const YourOpenPullRequestsCard = () => {
-//   const { loading, error, value } = usePullRequest(
-//     identity => `is:open is:pr author:${identity.id} archived:false`,
-//   );
-
-//   if (loading) return <>Loading...</>;
-//   if (error) return <>Error...</>;
-
-//   if (value) {
-//     return (
-//       <PullRequestsListView
-//         data={value.items}
-//         loading={loading}
-//         pageSize={5}
-//         page={1}
-//         projectName="Your open pull requests"
-//       />
-//     );
-//   }
-//   return <div>PRs</div>;
-// };
+  if (value) {
+    return (
+      <PullRequestsListView
+        data={value.items}
+        loading={loading}
+        pageSize={5}
+        page={1}
+        projectName="Your open pull requests"
+      />
+    );
+  }
+  return <div>PRs</div>;
+};
