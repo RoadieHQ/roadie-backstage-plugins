@@ -26,11 +26,11 @@ import {
 export const HomePage = () => {
   return (
     <Grid container spacing={3}>
-      <Grid item md={6}>
+      <Grid item md={6} xs={12}>
         <HomePageRequestedReviewsCard />
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item md={6} xs={12}>
         <HomePageYourOpenPullRequestsCard />
       </Grid>
       <Grid item xs={12} md={6}>

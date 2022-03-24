@@ -17,16 +17,20 @@ import React from 'react';
 
 import { PullRequestsListView } from '../../PullRequestsListView';
 import { useGithubSearch } from '../../useGithubSearch';
+import { Progress } from '@backstage/core-components';
 
 export const Content = () => {
   const { loading, error, value } = useGithubSearch(
-    identity => `is:open is:pr author:${identity.id} archived:false`,
+    `state:open is:pr author:@me archived:false`,
   );
 
-  if (loading) return <>Loading...</>;
+  if (loading) return <Progress />;
   if (error) return <>Error...</>;
 
   if (value) {
+    if (value.items.length < 1) {
+      return <>You are all set! You don't have open PRs.</>;
+    }
     return (
       <PullRequestsListView
         data={value.items}

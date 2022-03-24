@@ -73,7 +73,7 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
 export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
   createCardExtension({
     name: 'HomePageRequestedReviewsCard',
-    title: 'Requested reviews from you',
+    title: 'Review requests',
     components: () => import('./components/Home/RequestedReviewsCard'),
   }),
 );

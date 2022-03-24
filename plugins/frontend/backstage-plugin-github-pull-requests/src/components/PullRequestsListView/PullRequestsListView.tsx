@@ -20,13 +20,28 @@ import { Typography } from '@material-ui/core';
 import { getStatusIconType } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { BackstageTheme } from '@backstage/theme';
+import { PullRequest } from '../usePullRequests';
+import { useRepository } from '../useGithubUrl';
+import { Progress } from '@backstage/core-components';
+
+import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
 const useStyles = makeStyles<BackstageTheme>((theme: BackstageTheme) => ({
+  container: {
+    backgroundColor: '#22272e',
+    border: '1px solid grey',
+    borderRadius: '10px',
+  },
   pullRequestRow: {
     borderBottom: '1px solid grey',
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
     },
+    '&:last-child': {
+      borderBottom: 'none',
+    },
+    overflowY: 'auto',
+    width: '100%',
   },
   title: {
     fontWeight: theme.typography.fontWeightBold,
@@ -36,38 +51,81 @@ const useStyles = makeStyles<BackstageTheme>((theme: BackstageTheme) => ({
     '&:hover': {
       color: '#539bf5',
     },
+    '&:first-child': {
+      paddingRight: '4px',
+    },
+  },
+  secondaryText: {
+    color: 'gray',
   },
 }));
 
 export const PullRequestsListView = props => {
   const { data } = props;
-  const classes = useStyles();
   console.log(data);
+  const classes = useStyles();
+
   return (
-    <Grid container>
+    <Grid container className={classes.container}>
       {data.map(pr => (
-        <Grid item md={12} className={classes.pullRequestRow}>
-          <Typography variant="body1" noWrap className={classes.title}>
-            {getStatusIconType(pr)}{' '}
-            <Box ml={1} component="span">
-              <Link
-                className={classes.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="none"
-                href={pr.pull_request.html_url}
-              >
-                {pr.title}
-              </Link>
-            </Box>
-          </Typography>
-          <Typography variant="caption">
-            <Box>
-              #{pr.number} opened by {pr.user.login}
-            </Box>
-          </Typography>
-        </Grid>
+        <PullRequestItem pr={pr} key={pr.id} />
       ))}
+    </Grid>
+  );
+};
+
+type PullRequestItemProps = {
+  pr: SearchIssuesAndPullRequestsResponseData;
+};
+const PullRequestItem = (props: PullRequestItemProps) => {
+  const { pr } = props;
+  const classes = useStyles();
+  const { value: repoData, error, loading } = useRepository(pr.repository_url);
+
+  if (loading) return <Progress />;
+  if (error) return <>Error...</>;
+
+  return (
+    <Grid item md={12} className={classes.pullRequestRow}>
+      <Typography variant="body1" noWrap className={classes.title}>
+        {getStatusIconType(pr)}{' '}
+        <Box ml={1} component="span">
+          {repoData ? (
+            <Link
+              className={classes.secondaryText + ' ' + classes.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={repoData.html_url}
+            >
+              {repoData.full_name}
+            </Link>
+          ) : (
+            <></>
+          )}
+          <Link
+            className={classes.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.pull_request.html_url}
+          >
+            {pr.title}
+          </Link>
+        </Box>
+      </Typography>
+      <Typography variant="caption" className={classes.secondaryText}>
+        #{pr.number} opened by{' '}
+        <Link
+          className={classes.secondaryText + ' ' + classes.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          underline="none"
+          href={pr.user.html_url}
+        >
+          {pr.user.login}
+        </Link>
+      </Typography>
     </Grid>
   );
 };

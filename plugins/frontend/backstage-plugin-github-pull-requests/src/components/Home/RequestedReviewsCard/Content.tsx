@@ -17,25 +17,29 @@ import React from 'react';
 
 import { PullRequestsListView } from '../../PullRequestsListView';
 import { useGithubSearch } from '../../useGithubSearch';
+import { Progress } from '@backstage/core-components';
 
 export const Content = () => {
   const { loading, error, value } = useGithubSearch(
-    identity => `is:open is:pr review-requested:${identity.id} archived:false`,
+    `is:open type:pr review-requested:@me archived:false`,
   );
 
-  if (loading) return <>Loading...</>;
+  if (loading) return <Progress />;
   if (error) return <>Error...</>;
 
   if (value) {
+    if (value.items.length < 1) {
+      return <>You are all set! You don't have review requests</>;
+    }
     return (
       <PullRequestsListView
         data={value.items}
         loading={loading}
         pageSize={5}
-        page={1}
-        projectName="Requested reviews from you"
+        page={0}
       />
     );
   }
+
   return <div>PRs</div>;
 };
