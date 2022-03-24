@@ -22,6 +22,7 @@ import {
   useGithubLoggedIn,
   GithubNotAuthorized,
 } from '../../useGithubLoggedIn';
+import Alert from '@material-ui/lab/Alert';
 
 const OpenPullRequestsContent = () => {
   const { loading, error, value } = useGithubSearch(
@@ -29,19 +30,13 @@ const OpenPullRequestsContent = () => {
   );
 
   if (loading) return <Progress />;
-  if (error) return <>Error...</>;
+  if (error) return <Alert severity="error">{error.message}</Alert>;
 
   if (value) {
-    if (value.items.length < 1) {
-      return <>You are all set! You don't have open PRs.</>;
-    }
     return (
       <PullRequestsListView
         data={value.items}
-        loading={loading}
-        pageSize={5}
-        page={1}
-        projectName="Your open pull requests"
+        emptyStateText="No open pull requests. Get back to work :)"
       />
     );
   }

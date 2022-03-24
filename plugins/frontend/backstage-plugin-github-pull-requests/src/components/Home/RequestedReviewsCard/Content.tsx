@@ -22,6 +22,7 @@ import {
   GithubNotAuthorized,
 } from '../../useGithubLoggedIn';
 import { Progress } from '@backstage/core-components';
+import Alert from '@material-ui/lab/Alert';
 
 const RequestedReviewsContet = () => {
   const { loading, error, value } = useGithubSearch(
@@ -29,18 +30,13 @@ const RequestedReviewsContet = () => {
   );
 
   if (loading) return <Progress />;
-  if (error) return <>Error...</>;
+  if (error) return <Alert severity="error">{error.message}</Alert>;
 
   if (value) {
-    if (value.items.length < 1) {
-      return <>You are all set! You don't have review requests</>;
-    }
     return (
       <PullRequestsListView
         data={value.items}
-        loading={loading}
-        pageSize={5}
-        page={0}
+        emptyStateText="No requested reviews."
       />
     );
   }

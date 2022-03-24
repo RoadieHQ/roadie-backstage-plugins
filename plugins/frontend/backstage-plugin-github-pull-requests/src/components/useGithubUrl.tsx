@@ -17,7 +17,7 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
 
-export const useRepository = (url: string) => {
+export const useGithubUrl = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
 
   return useAsync(async () => {

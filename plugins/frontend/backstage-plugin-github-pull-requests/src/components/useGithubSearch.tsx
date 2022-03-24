@@ -16,6 +16,7 @@
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
+// import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
 export const useGithubSearch = (query: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);

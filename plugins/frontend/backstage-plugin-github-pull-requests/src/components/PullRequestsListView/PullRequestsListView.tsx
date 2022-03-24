@@ -17,19 +17,18 @@ import React from 'react';
 
 import { Grid, Box, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
-import { getStatusIconType } from '../Icons';
+import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { BackstageTheme } from '@backstage/theme';
-import { useRepository } from '../useGithubUrl';
+import { useGithubUrl } from '../useGithubUrl';
 import { Progress } from '@backstage/core-components';
-
 import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
-const useStyles = makeStyles<BackstageTheme>((theme: BackstageTheme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
-    backgroundColor: '#22272e',
+    backgroundColor: theme.palette.background.default,
     border: '1px solid grey',
-    borderRadius: '10px',
+    borderRadius: '6px',
+    minHeight: '10vh',
   },
   pullRequestRow: {
     borderBottom: '1px solid grey',
@@ -43,7 +42,7 @@ const useStyles = makeStyles<BackstageTheme>((theme: BackstageTheme) => ({
     width: '100%',
   },
   title: {
-    fontWeight: theme.typography.fontWeightBold,
+    fontWeight: Number(theme.typography.fontWeightBold),
   },
   link: {
     color: theme.palette.text.primary,
@@ -55,14 +54,36 @@ const useStyles = makeStyles<BackstageTheme>((theme: BackstageTheme) => ({
     },
   },
   secondaryText: {
-    color: 'gray',
+    color: theme.palette.text.secondary,
   },
 }));
 
-export const PullRequestsListView = props => {
-  const { data } = props;
+type PullRequestListViewProps = {
+  data: SearchIssuesAndPullRequestsResponseData['items'];
+  emptyStateText: string;
+};
+export const PullRequestsListView = (props: PullRequestListViewProps) => {
+  const { data, emptyStateText } = props;
   console.log(data);
   const classes = useStyles();
+  if (data.length < 1) {
+    return (
+      <Grid
+        container
+        className={classes.container}
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+      >
+        <Grid item md={12}>
+          <Typography className={classes.secondaryText} variant="h6">
+            {emptyStateText}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
     <Grid container className={classes.container}>
@@ -74,21 +95,26 @@ export const PullRequestsListView = props => {
 };
 
 type PullRequestItemProps = {
-  pr: SearchIssuesAndPullRequestsResponseData;
+  pr: SearchIssuesAndPullRequestsResponseData['items'][number];
 };
 const PullRequestItem = (props: PullRequestItemProps) => {
   const { pr } = props;
   const classes = useStyles();
-  const { value: repoData, error, loading } = useRepository(pr.repository_url);
+  const { value: repoData, error, loading } = useGithubUrl(pr.repository_url);
 
   if (loading) return <Progress />;
   if (error) return <>Error...</>;
 
   return (
-    <Grid item md={12} className={classes.pullRequestRow}>
-      <Typography variant="body1" noWrap className={classes.title}>
-        {getStatusIconType(pr)}{' '}
-        <Box ml={1} component="span">
+    <Grid container spacing={1} width="100%">
+      <Grid
+        item
+        style={{ paddingLeft: '1rem', flexShrink: 0, verticalAlign: 'middle' }}
+      >
+        {getStatusIconType(pr)}
+      </Grid>
+      <Grid item xs={10}>
+        <Typography variant="body1" noWrap className={classes.title}>
           {repoData ? (
             <Link
               className={classes.secondaryText + ' ' + classes.link}
@@ -111,20 +137,29 @@ const PullRequestItem = (props: PullRequestItemProps) => {
           >
             {pr.title}
           </Link>
-        </Box>
-      </Typography>
-      <Typography variant="caption" className={classes.secondaryText}>
-        #{pr.number} opened by{' '}
-        <Link
-          className={classes.secondaryText + ' ' + classes.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          underline="none"
-          href={pr.user.html_url}
-        >
-          {pr.user.login}
-        </Link>
-      </Typography>
+        </Typography>
+        <Typography variant="caption" className={classes.secondaryText}>
+          #{pr.number} opened by{' '}
+          <Link
+            className={classes.secondaryText + ' ' + classes.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.user.html_url}
+          >
+            {pr.user.login}
+          </Link>
+        </Typography>
+      </Grid>
+
+      <Grid
+        item
+        style={{ verticalAlign: 'middle', display: 'inline-block' }}
+        justifyContent="flex-end"
+      >
+        <CommentIcon />
+        {pr.comments}
+      </Grid>
     </Grid>
   );
 };
