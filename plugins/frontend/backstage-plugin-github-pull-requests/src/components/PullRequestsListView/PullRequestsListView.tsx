@@ -20,7 +20,6 @@ import { Typography } from '@material-ui/core';
 import { getStatusIconType } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { BackstageTheme } from '@backstage/theme';
-import { PullRequest } from '../usePullRequests';
 import { useRepository } from '../useGithubUrl';
 import { Progress } from '@backstage/core-components';
 

@@ -18,8 +18,12 @@ import React from 'react';
 import { PullRequestsListView } from '../../PullRequestsListView';
 import { useGithubSearch } from '../../useGithubSearch';
 import { Progress } from '@backstage/core-components';
+import {
+  useGithubLoggedIn,
+  GithubNotAuthorized,
+} from '../../useGithubLoggedIn';
 
-export const Content = () => {
+const OpenPullRequestsContent = () => {
   const { loading, error, value } = useGithubSearch(
     `state:open is:pr author:@me archived:false`,
   );
@@ -42,4 +46,8 @@ export const Content = () => {
     );
   }
   return <div>PRs</div>;
+};
+export const Content = () => {
+  const isLoggedIn = useGithubLoggedIn();
+  return isLoggedIn ? <OpenPullRequestsContent /> : <GithubNotAuthorized />;
 };

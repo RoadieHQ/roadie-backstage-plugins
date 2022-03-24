@@ -13,3 +13,115 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import React from 'react';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  wrapInTestApp,
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
+import { render, screen, cleanup } from '@testing-library/react';
+import { setupServer } from 'msw/node';
+import { Content } from './Content';
+import { handlers } from '../../../mocks/handlers';
+
+const mockAccessToken = jest
+  .fn()
+  .mockImplementation(async (_: string[]) => 'test-token');
+const mockGithubAuth = {
+  getAccessToken: mockAccessToken,
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
+};
+
+const apis: [AnyApiRef, Partial<unknown>][] = [
+  [githubAuthApiRef, mockGithubAuth],
+];
+describe('<RequestedReviewsCard>', () => {
+  const worker = setupServer();
+  setupRequestMockHandlers(worker);
+  afterEach(() => {
+    worker.resetHandlers();
+    cleanup();
+  });
+  beforeEach(() => {
+    worker.use(...handlers);
+  });
+  it('should render sign in page', async () => {
+    const mockGithubUnAuth = {
+      getAccessToken: async (_: string[]) => 'test-token',
+      sessionState$: jest.fn(() => ({
+        subscribe: (fn: (a: string) => void) => {
+          fn('SignedOut');
+          return { unsubscribe: jest.fn() };
+        },
+      })),
+    };
+
+    const api: [AnyApiRef, Partial<unknown>][] = [
+      [githubAuthApiRef, mockGithubUnAuth],
+    ];
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={api}>
+          <Content />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('You are not logged into github.', {
+        exact: false,
+      }),
+    ).toBeInTheDocument();
+  });
+  it('should render home card with requested reviews', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('Test PR review requested', { exact: false }),
+    ).toBeInTheDocument();
+  });
+
+  // describe('it fails to get the content', () => {
+  //   beforeEach(() => {
+  //     mockAccessToken.mockImplementation(() => {
+  //       throw new Error('No :(');
+  //     });
+  //   });
+
+  //   it("shouldn't render the markdown card but display an error", async () => {
+  //     render(
+  //       wrapInTestApp(
+  //         <TestApiProvider apis={apis}>
+  //           <Content
+  //             owner="test"
+  //             path=".backstage/home-page.md"
+  //             repo="foo-bar"
+  //             branch="not-default"
+  //           />
+  //         </TestApiProvider>,
+  //       ),
+  //     );
+
+  //     expect(
+  //       await screen.findByText('Unable to gather markdown contents: No :(', {
+  //         exact: false,
+  //       }),
+  //     ).toBeInTheDocument();
+  //   });
+  // });
+});

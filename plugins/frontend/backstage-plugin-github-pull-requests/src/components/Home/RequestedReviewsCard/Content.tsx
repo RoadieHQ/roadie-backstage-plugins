@@ -17,9 +17,13 @@ import React from 'react';
 
 import { PullRequestsListView } from '../../PullRequestsListView';
 import { useGithubSearch } from '../../useGithubSearch';
+import {
+  useGithubLoggedIn,
+  GithubNotAuthorized,
+} from '../../useGithubLoggedIn';
 import { Progress } from '@backstage/core-components';
 
-export const Content = () => {
+const RequestedReviewsContet = () => {
   const { loading, error, value } = useGithubSearch(
     `is:open type:pr review-requested:@me archived:false`,
   );
@@ -42,4 +46,9 @@ export const Content = () => {
   }
 
   return <div>PRs</div>;
+};
+export const Content = () => {
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? <RequestedReviewsContet /> : <GithubNotAuthorized />;
 };
