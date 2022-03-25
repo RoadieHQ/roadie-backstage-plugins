@@ -31,6 +31,8 @@ const useStyles = makeStyles(theme => ({
     minHeight: '10vh',
   },
   pullRequestRow: {
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
     borderBottom: '1px solid grey',
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
@@ -38,8 +40,6 @@ const useStyles = makeStyles(theme => ({
     '&:last-child': {
       borderBottom: 'none',
     },
-    overflowY: 'auto',
-    width: '100%',
   },
   title: {
     fontWeight: Number(theme.typography.fontWeightBold),
@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.primary,
     '&:hover': {
       color: '#539bf5',
+      fill: '#539bf5',
     },
     '&:first-child': {
       paddingRight: '4px',
@@ -55,6 +56,10 @@ const useStyles = makeStyles(theme => ({
   },
   secondaryText: {
     color: theme.palette.text.secondary,
+  },
+  middleColumn: {
+    paddingRight: '0.5rem',
+    paddingLeft: '0.5rem',
   },
 }));
 
@@ -86,7 +91,7 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
   }
 
   return (
-    <Grid container className={classes.container}>
+    <Grid container className={classes.container} md={12} spacing={1}>
       {data.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
@@ -106,14 +111,11 @@ const PullRequestItem = (props: PullRequestItemProps) => {
   if (error) return <>Error...</>;
 
   return (
-    <Grid container spacing={1} width="100%">
-      <Grid
-        item
-        style={{ paddingLeft: '1rem', flexShrink: 0, verticalAlign: 'middle' }}
-      >
+    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
+      <Grid item style={{ paddingLeft: '1rem', flexShrink: 0 }} xs="auto">
         {getStatusIconType(pr)}
       </Grid>
-      <Grid item xs={10}>
+      <Grid item xs={10} className={classes.middleColumn}>
         <Typography variant="body1" noWrap className={classes.title}>
           {repoData ? (
             <Link
@@ -154,11 +156,24 @@ const PullRequestItem = (props: PullRequestItemProps) => {
 
       <Grid
         item
-        style={{ verticalAlign: 'middle', display: 'inline-block' }}
         justifyContent="flex-end"
+        container
+        spacing={1}
+        xs={1}
+        style={{ paddingRight: '1rem', flexShrink: 0 }}
+        className={classes.secondaryText}
       >
-        <CommentIcon />
-        {pr.comments}
+        <Grid item>
+          <Link
+            className={classes.secondaryText + ' ' + classes.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.html_url}
+          >
+            <CommentIcon /> {pr.comments}
+          </Link>
+        </Grid>
       </Grid>
     </Grid>
   );

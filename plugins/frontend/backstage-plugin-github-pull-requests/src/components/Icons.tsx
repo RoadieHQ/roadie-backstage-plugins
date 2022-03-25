@@ -19,21 +19,26 @@ import { makeStyles, Tooltip } from '@material-ui/core';
 import { PullRequest } from './usePullRequests';
 import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   open: {
     fill: '#22863a',
+    verticalAlign: 'sub',
   },
   closed: {
     fill: '#cb2431',
+    verticalAlign: 'sub',
   },
   merged: {
     fill: '#6f42c1',
+    verticalAlign: 'sub',
   },
   draft: {
     fill: '#6a737d',
+    verticalAlign: 'sub',
   },
   comment: {
     fill: '#768390',
+    verticalAlign: 'sub',
   },
 }));
 
