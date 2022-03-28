@@ -40,7 +40,8 @@ const serviceEntityPage = (
     <EntityLayout.Route
       path="/pull-requests"
       title="Pull Requests"
-      if={isGithubPullRequestsAvailable}
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isGithubPullRequestsAvailable}
     >
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>

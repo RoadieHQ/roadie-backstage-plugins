@@ -30,7 +30,9 @@ const serviceEntityPage = (
     <EntityLayout.Route
       path="/security-insights"
       title="Security Insights"
-      if={isSecurityInsightsAvailable}>
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isSecurityInsightsAvailable}
+      >
       <EntitySecurityInsightsContent />
     </EntityLayout.Route>
     ...
@@ -53,7 +55,9 @@ const serviceEntityPage = (
     <EntityLayout.Route 
       path="/dependabot" 
       title="Dependabot"
-      if={isSecurityInsightsAvailable}>
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isSecurityInsightsAvailable}
+      >
       <EntityGithubDependabotContent/>
     </EntityLayout.Route>
     ...
