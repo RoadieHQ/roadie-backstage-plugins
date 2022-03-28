@@ -32,16 +32,9 @@ const RequestedReviewsContet = () => {
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
-  if (value) {
-    return (
-      <PullRequestsListView
-        data={value}
-        emptyStateText="No requested reviews."
-      />
-    );
-  }
-
-  return <div>PRs</div>;
+  return (
+    <PullRequestsListView data={value} emptyStateText="No requested reviews." />
+  );
 };
 export const Content = () => {
   const isLoggedIn = useGithubLoggedIn();

@@ -155,13 +155,13 @@ const PullRequestItem = (props: PullRequestItemProps) => {
 };
 
 type PullRequestListViewProps = {
-  data: GithubSearchPullRequestsDataItem[];
+  data?: GithubSearchPullRequestsDataItem[];
   emptyStateText: string;
 };
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
   const classes = useStyles();
-  if (data.length < 1) {
+  if (!data || data.length < 1) {
     return (
       <Grid
         container

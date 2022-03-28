@@ -32,15 +32,12 @@ const OpenPullRequestsContent = () => {
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
-  if (value) {
-    return (
-      <PullRequestsListView
-        data={value}
-        emptyStateText="No open pull requests. Get back to work :)"
-      />
-    );
-  }
-  return <div>PRs</div>;
+  return (
+    <PullRequestsListView
+      data={value}
+      emptyStateText="No open pull requests."
+    />
+  );
 };
 export const Content = () => {
   const isLoggedIn = useGithubLoggedIn();
