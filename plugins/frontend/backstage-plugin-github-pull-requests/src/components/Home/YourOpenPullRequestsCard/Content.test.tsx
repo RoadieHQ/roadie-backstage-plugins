@@ -33,7 +33,7 @@ import {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, SignedInMockGithubAuthState],
 ];
-describe.only('<YourOpenPullRequestCard>', () => {
+describe('<YourOpenPullRequestCard>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {

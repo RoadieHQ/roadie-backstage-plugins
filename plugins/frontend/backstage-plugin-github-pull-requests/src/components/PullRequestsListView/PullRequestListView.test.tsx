@@ -57,7 +57,7 @@ describe('PullRequestsTable', () => {
   it('should display the emptyStateText when no data is provided', async () => {
     render(
       <TestApiProvider apis={apis}>
-        <PullRequestsListView data={[]} emptyStateText={'foo bar empty'} />
+        <PullRequestsListView data={[]} emptyStateText="foo bar empty" />
       </TestApiProvider>,
     );
 
@@ -87,7 +87,7 @@ describe('PullRequestsTable', () => {
     ];
     render(
       <TestApiProvider apis={apis}>
-        <PullRequestsListView data={testData} emptyStateText={''} />
+        <PullRequestsListView data={testData} emptyStateText="" />
       </TestApiProvider>,
     );
 

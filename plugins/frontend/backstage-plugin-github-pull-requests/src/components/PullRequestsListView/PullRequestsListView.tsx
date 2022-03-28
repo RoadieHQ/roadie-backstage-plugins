@@ -66,6 +66,94 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+type PullRequestItemProps = {
+  pr: GithubSearchPullRequestsDataItem;
+};
+const PullRequestItem = (props: PullRequestItemProps) => {
+  const { pr } = props;
+  const classes = useStyles();
+  const {
+    value: repoData,
+    error,
+    loading,
+  }: {
+    value?: GithubRepositoryData;
+    error?: Error;
+    loading: boolean;
+  } = useGithuRepositoryData(pr.repositoryUrl);
+
+  if (loading) return <Progress />;
+  if (error) return <Alert severity="error">{error.message}</Alert>;
+
+  return (
+    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
+      <Grid item style={{ paddingLeft: '1rem', flexShrink: 0 }} xs="auto">
+        {getStatusIconType(pr)}
+      </Grid>
+      <Grid item xs={10} className={classes.middleColumn}>
+        <Typography variant="body1" noWrap className={classes.title}>
+          {repoData ? (
+            <Link
+              className={`${classes.secondaryText} ${classes.link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={repoData.htmlUrl}
+            >
+              {repoData.fullName}
+            </Link>
+          ) : (
+            <></>
+          )}
+          <Link
+            className={classes.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.pullRequest.htmlUrl}
+          >
+            {pr.title}
+          </Link>
+        </Typography>
+        <Typography variant="caption" className={classes.secondaryText}>
+          #{pr.number} opened by{' '}
+          <Link
+            className={`${classes.secondaryText} ${classes.link}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.user.htmlUrl}
+          >
+            {pr.user.login}
+          </Link>
+        </Typography>
+      </Grid>
+
+      <Grid
+        item
+        justifyContent="flex-end"
+        container
+        spacing={1}
+        xs={1}
+        style={{ paddingRight: '1rem', flexShrink: 0 }}
+        className={classes.secondaryText}
+      >
+        <Grid item>
+          <Link
+            className={`${classes.secondaryText} ${classes.link}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="none"
+            href={pr.htmlUrl}
+          >
+            <CommentIcon /> {pr.comments}
+          </Link>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
+
 type PullRequestListViewProps = {
   data: GithubSearchPullRequestsDataItem[];
   emptyStateText: string;
@@ -97,94 +185,6 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       {data.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
-    </Grid>
-  );
-};
-
-type PullRequestItemProps = {
-  pr: GithubSearchPullRequestsDataItem;
-};
-const PullRequestItem = (props: PullRequestItemProps) => {
-  const { pr } = props;
-  const classes = useStyles();
-  const {
-    value: repoData,
-    error,
-    loading,
-  }: {
-    value?: GithubRepositoryData;
-    error?: Error;
-    loading: boolean;
-  } = useGithuRepositoryData(pr.repositoryUrl);
-
-  if (loading) return <Progress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
-
-  return (
-    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
-      <Grid item style={{ paddingLeft: '1rem', flexShrink: 0 }} xs="auto">
-        {getStatusIconType(pr)}
-      </Grid>
-      <Grid item xs={10} className={classes.middleColumn}>
-        <Typography variant="body1" noWrap className={classes.title}>
-          {repoData ? (
-            <Link
-              className={classes.secondaryText + ' ' + classes.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="none"
-              href={repoData.htmlUrl}
-            >
-              {repoData.fullName}
-            </Link>
-          ) : (
-            <></>
-          )}
-          <Link
-            className={classes.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="none"
-            href={pr.pullRequest.htmlUrl}
-          >
-            {pr.title}
-          </Link>
-        </Typography>
-        <Typography variant="caption" className={classes.secondaryText}>
-          #{pr.number} opened by{' '}
-          <Link
-            className={classes.secondaryText + ' ' + classes.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="none"
-            href={pr.user.htmlUrl}
-          >
-            {pr.user.login}
-          </Link>
-        </Typography>
-      </Grid>
-
-      <Grid
-        item
-        justifyContent="flex-end"
-        container
-        spacing={1}
-        xs={1}
-        style={{ paddingRight: '1rem', flexShrink: 0 }}
-        className={classes.secondaryText}
-      >
-        <Grid item>
-          <Link
-            className={classes.secondaryText + ' ' + classes.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="none"
-            href={pr.htmlUrl}
-          >
-            <CommentIcon /> {pr.comments}
-          </Link>
-        </Grid>
-      </Grid>
     </Grid>
   );
 };

@@ -34,7 +34,7 @@ import {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, SignedInMockGithubAuthState],
 ];
-describe.only('<RequestedReviewsCard>', () => {
+describe('<RequestedReviewsCard>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {
