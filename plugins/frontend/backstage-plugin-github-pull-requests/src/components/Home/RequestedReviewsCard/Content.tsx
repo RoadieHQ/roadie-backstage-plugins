@@ -16,7 +16,7 @@
 import React from 'react';
 
 import { PullRequestsListView } from '../../PullRequestsListView';
-import { useGithubSearch } from '../../useGithubSearch';
+import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
 import {
   useGithubLoggedIn,
   GithubNotAuthorized,
@@ -25,7 +25,7 @@ import { Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 
 const RequestedReviewsContet = () => {
-  const { loading, error, value } = useGithubSearch(
+  const { loading, error, value } = useGithubSearchPullRequest(
     `is:open is:pr review-requested:@me archived:false`,
   );
 
@@ -35,7 +35,7 @@ const RequestedReviewsContet = () => {
   if (value) {
     return (
       <PullRequestsListView
-        data={value.items}
+        data={value}
         emptyStateText="No requested reviews."
       />
     );

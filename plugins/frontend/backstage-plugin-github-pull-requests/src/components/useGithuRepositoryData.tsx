@@ -16,21 +16,22 @@
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
+import { GithubRepositoryData } from '../types';
 
-export const useGithubSearch = (query: string) => {
+export const useGithuRepositoryData = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
 
-  return useAsync(async () => {
+  return useAsync(async (): Promise<GithubRepositoryData> => {
     const token = await githubAuthApi.getAccessToken(['repo']);
 
-    const pullRequestResponse = await new Octokit({
+    const response = await new Octokit({
       auth: token,
       baseUrl: 'https://api.github.com',
-    }).search.issuesAndPullRequests({
-      q: query,
-      per_page: 5,
-      page: 1,
-    });
-    return pullRequestResponse.data;
+    }).request({ url: url });
+
+    return {
+      htmlUrl: response.data.html_url,
+      fullName: response.data.full_name,
+    };
   }, [githubAuthApi]);
 };

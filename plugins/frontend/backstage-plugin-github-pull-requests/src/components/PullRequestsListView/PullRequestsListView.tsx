@@ -19,9 +19,13 @@ import { Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useGithubUrl } from '../useGithubUrl';
+import { useGithuRepositoryData } from '../useGithuRepositoryData';
 import { Progress } from '@backstage/core-components';
-import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
+import {
+  GithubSearchPullRequestsDataItem,
+  GithubRepositoryData,
+} from '../../types';
+import Alert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -63,12 +67,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type PullRequestListViewProps = {
-  data: SearchIssuesAndPullRequestsResponseData['items'];
+  data: GithubSearchPullRequestsDataItem[];
   emptyStateText: string;
 };
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
-  console.log(data);
   const classes = useStyles();
   if (data.length < 1) {
     return (
@@ -90,7 +93,7 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
   }
 
   return (
-    <Grid container className={classes.container} md={12} spacing={1}>
+    <Grid container className={classes.container} spacing={1}>
       {data.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
@@ -99,15 +102,23 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
 };
 
 type PullRequestItemProps = {
-  pr: SearchIssuesAndPullRequestsResponseData['items'][number];
+  pr: GithubSearchPullRequestsDataItem;
 };
 const PullRequestItem = (props: PullRequestItemProps) => {
   const { pr } = props;
   const classes = useStyles();
-  const { value: repoData, error, loading } = useGithubUrl(pr.repository_url);
+  const {
+    value: repoData,
+    error,
+    loading,
+  }: {
+    value?: GithubRepositoryData;
+    error?: Error;
+    loading: boolean;
+  } = useGithuRepositoryData(pr.repositoryUrl);
 
   if (loading) return <Progress />;
-  if (error) return <>Error...</>;
+  if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (
     <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
@@ -122,9 +133,9 @@ const PullRequestItem = (props: PullRequestItemProps) => {
               target="_blank"
               rel="noopener noreferrer"
               underline="none"
-              href={repoData.html_url}
+              href={repoData.htmlUrl}
             >
-              {repoData.full_name}
+              {repoData.fullName}
             </Link>
           ) : (
             <></>
@@ -134,7 +145,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            href={pr.pull_request.html_url}
+            href={pr.pullRequest.htmlUrl}
           >
             {pr.title}
           </Link>
@@ -146,7 +157,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            href={pr.user.html_url}
+            href={pr.user.htmlUrl}
           >
             {pr.user.login}
           </Link>
@@ -168,7 +179,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
             target="_blank"
             rel="noopener noreferrer"
             underline="none"
-            href={pr.html_url}
+            href={pr.htmlUrl}
           >
             <CommentIcon /> {pr.comments}
           </Link>

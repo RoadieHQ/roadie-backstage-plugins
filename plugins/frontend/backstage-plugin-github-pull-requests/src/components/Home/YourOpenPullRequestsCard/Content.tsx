@@ -16,7 +16,7 @@
 import React from 'react';
 
 import { PullRequestsListView } from '../../PullRequestsListView';
-import { useGithubSearch } from '../../useGithubSearch';
+import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
 import { Progress } from '@backstage/core-components';
 import {
   useGithubLoggedIn,
@@ -25,17 +25,17 @@ import {
 import Alert from '@material-ui/lab/Alert';
 
 const OpenPullRequestsContent = () => {
-  const { loading, error, value } = useGithubSearch(
+  const { loading, error, value } = useGithubSearchPullRequest(
     `is:open is:pr author:@me archived:false`,
   );
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
-  if (value && value.items) {
+  if (value) {
     return (
       <PullRequestsListView
-        data={value.items}
+        data={value}
         emptyStateText="No open pull requests. Get back to work :)"
       />
     );

@@ -6,8 +6,9 @@
 
 - List Pull Requests for your repository, with filtering and search.
 - Show basic statistics widget about pull requests for your repository.
-
-
+- It has two homepage plugin componenets
+  - Review requests
+  - Open pull requests
 
 ## Plugin Configuration Requirements
 
@@ -66,6 +67,36 @@ const overviewContent = (
     ...
   </Grid>
 );
+
+```
+
+## Add Homepage components to your homepage
+
+If you didn't set up the HomePage plugin you can see the official documentation about it [here](https://github.com/backstage/backstage/tree/master/plugins/home). You'll need to have it setup to be able to include this plugin.
+
+```tsx
+//packages/app/src/components/home/HomePage.tsx
+
+import {
+  HomePageRequestedReviewsCard,
+  HomePageYourOpenPullRequestsCard,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
+
+
+export const HomePage = () => {
+  return (
+    ...
+
+      <Grid item md={6} xs={12}>
+        <HomePageRequestedReviewsCard />
+      </Grid>
+
+      <Grid item md={6} xs={12}>
+        <HomePageYourOpenPullRequestsCard />
+      </Grid>
+    ...
+  );
+};
 
 ```
 

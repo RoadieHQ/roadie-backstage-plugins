@@ -17,7 +17,7 @@
 import React from 'react';
 import { makeStyles, Tooltip } from '@material-ui/core';
 import { PullRequest } from './usePullRequests';
-import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
+import { GithubSearchPullRequestsDataItem } from '../types';
 
 const useStyles = makeStyles(() => ({
   open: {
@@ -102,7 +102,7 @@ export const CommentIcon = () => {
 };
 
 export const getStatusIconType = (
-  row: PullRequest | SearchIssuesAndPullRequestsResponseData['items'][number],
+  row: PullRequest | GithubSearchPullRequestsDataItem,
 ) => {
   switch (true) {
     case row.state === 'open' && row.draft:

@@ -35,13 +35,13 @@ export const handlers = [
   }),
   rest.get(
     'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins',
-    (req, res, ctx) => {
+    (_, res, ctx) => {
       return res(ctx.json(repoMock));
     },
   ),
   rest.get(
     'https://api.github.com/repos/RoadieHQ/marketing-site',
-    (req, res, ctx) => {
+    (_, res, ctx) => {
       return res(ctx.json(marketingSiteMock));
     },
   ),

@@ -25,11 +25,10 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
 import { handlers } from '../../../mocks/handlers';
-
 import {
   SignedInMockGithubAuthState,
   SignedOutMockGithubAuthState,
-} from '../../useGithubLoggedIn';
+} from '../../../mocks/githubAuthApi';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, SignedInMockGithubAuthState],
