@@ -19,7 +19,8 @@ yarn add @roadiehq/backstage-plugin-security-insights
 
 ```tsx
 import {
-  EntitySecurityInsightsContent
+  EntitySecurityInsightsContent,
+  isSecurityInsightsAvailable
 } from '@roadiehq/backstage-plugin-security-insights';
 
 
@@ -28,7 +29,8 @@ const serviceEntityPage = (
     ...
     <EntityLayout.Route
       path="/security-insights"
-      title="Security Insights">
+      title="Security Insights"
+      if={isSecurityInsightsAvailable}>
       <EntitySecurityInsightsContent />
     </EntityLayout.Route>
     ...
@@ -40,14 +42,18 @@ const serviceEntityPage = (
 
 ```tsx
 import {
-  EntityGithubDependabotContent
+  EntityGithubDependabotContent,
+  isSecurityInsightsAvailable
 } from '@roadiehq/backstage-plugin-security-insights';
 
 
 const serviceEntityPage = (
   <EntityPageLayout>
     ...
-    <EntityLayout.Route path="/dependabot" title="Dependabot">
+    <EntityLayout.Route 
+      path="/dependabot" 
+      title="Dependabot"
+      if={isSecurityInsightsAvailable}>
       <EntityGithubDependabotContent/>
     </EntityLayout.Route>
     ...
