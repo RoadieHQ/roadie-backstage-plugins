@@ -2630,9 +2630,9 @@
     yn "^4.0.0"
 
 "@backstage/plugin-auth-backend@^0.12.0":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.12.2.tgz#0262b4c9bf935cace6ce0f9bc0e75611a002fce5"
-  integrity sha512-aH4u+DQLjws6liDpLj1BgNt8mB0/EWOjQ69KjAlTJJA7dHbdwrRzsUOmsYLN3FhzeZXIZbvSjLgL4ArpDePnkw==
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.12.3.tgz#2a2698d2df16ee97d1055e6d37c3e475f38ae838"
+  integrity sha512-WxApPlxX44j0DD7jD3l/1YID6oVVUgv05/hH9hhcVLVy9m3f/g3JIfj1Ma39t+Z6xET+ZEDB401XdTkFSnVozQ==
   dependencies:
     "@backstage/backend-common" "^0.13.1"
     "@backstage/catalog-client" "^1.0.0"
