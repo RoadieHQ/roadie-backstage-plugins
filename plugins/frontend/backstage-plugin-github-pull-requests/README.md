@@ -72,6 +72,8 @@ const overviewContent = (
 
 ## Add Homepage components to your homepage
 
+![A preview image of the components](./docs/homepage-components.png)
+
 If you didn't set up the HomePage plugin you can see the official documentation about it [here](https://github.com/backstage/backstage/tree/master/plugins/home). You'll need to have it setup to be able to include this plugin.
 
 ```tsx
