@@ -15,10 +15,34 @@
  */
 
 import { rest } from 'msw';
-import { openPullsRequestMock } from './mocks';
+import {
+  openPullsRequestMock,
+  requestedReviewsMock,
+  repoMock,
+  marketingSiteMock,
+  yourOpenPullRequests,
+} from './mocks';
 
 export const handlers = [
   rest.get('https://api.github.com/search/issues', (req, res, ctx) => {
+    const query = req.url.searchParams.get('q');
+    if (query === 'is:open is:pr review-requested:@me archived:false') {
+      return res(ctx.json(requestedReviewsMock));
+    } else if (query === 'is:open is:pr author:@me archived:false') {
+      return res(ctx.json(yourOpenPullRequests));
+    }
     return res(ctx.json(openPullsRequestMock));
   }),
+  rest.get(
+    'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins',
+    (req, res, ctx) => {
+      return res(ctx.json(repoMock));
+    },
+  ),
+  rest.get(
+    'https://api.github.com/repos/RoadieHQ/marketing-site',
+    (req, res, ctx) => {
+      return res(ctx.json(marketingSiteMock));
+    },
+  ),
 ];

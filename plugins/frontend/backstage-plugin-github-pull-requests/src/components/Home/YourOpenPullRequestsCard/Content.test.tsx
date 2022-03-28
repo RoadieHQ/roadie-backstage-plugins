@@ -34,7 +34,7 @@ import {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, SignedInMockGithubAuthState],
 ];
-describe.only('<RequestedReviewsCard>', () => {
+describe.only('<YourOpenPullRequestCard>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {
@@ -74,7 +74,9 @@ describe.only('<RequestedReviewsCard>', () => {
     );
 
     expect(
-      await screen.findByText("Test PR don't merge", { exact: false }),
+      await screen.findByText('add github homepage PR components', {
+        exact: false,
+      }),
     ).toBeInTheDocument();
   });
 });

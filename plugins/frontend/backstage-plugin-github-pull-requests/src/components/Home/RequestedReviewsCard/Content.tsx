@@ -26,7 +26,7 @@ import Alert from '@material-ui/lab/Alert';
 
 const RequestedReviewsContet = () => {
   const { loading, error, value } = useGithubSearch(
-    `is:open type:pr review-requested:@me archived:false`,
+    `is:open is:pr review-requested:@me archived:false`,
   );
 
   if (loading) return <Progress />;

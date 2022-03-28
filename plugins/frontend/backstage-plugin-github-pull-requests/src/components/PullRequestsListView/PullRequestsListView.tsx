@@ -15,7 +15,7 @@
  */
 import React from 'react';
 
-import { Grid, Box, Link } from '@material-ui/core';
+import { Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,7 +28,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
     border: '1px solid grey',
     borderRadius: '6px',
-    minHeight: '10vh',
   },
   pullRequestRow: {
     paddingTop: '0.5rem',

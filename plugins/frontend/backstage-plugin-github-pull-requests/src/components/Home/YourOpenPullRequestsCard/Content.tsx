@@ -26,13 +26,13 @@ import Alert from '@material-ui/lab/Alert';
 
 const OpenPullRequestsContent = () => {
   const { loading, error, value } = useGithubSearch(
-    `state:open is:pr author:@me archived:false`,
+    `is:open is:pr author:@me archived:false`,
   );
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
-  if (value) {
+  if (value && value.items) {
     return (
       <PullRequestsListView
         data={value.items}
