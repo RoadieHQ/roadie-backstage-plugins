@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import {
@@ -56,9 +55,8 @@ describe('PullRequestsTable', () => {
 
   beforeEach(() => {
     worker.use(
-      rest.get(
-        'https://api.github.com/search/issues?state=open&per_page=5&page=1',
-        (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
+      rest.get('https://api.github.com/search/issues', (_, res, ctx) =>
+        res(ctx.json(openPullsRequestMock)),
       ),
     );
   });

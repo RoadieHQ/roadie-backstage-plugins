@@ -16,12 +16,27 @@
 
 import React, { FC, useState, useRef } from 'react';
 import { debounce } from 'lodash';
-import { InputAdornment, IconButton, TextField, Typography, Box, ButtonGroup, Button } from '@material-ui/core';
+import {
+  InputAdornment,
+  IconButton,
+  TextField,
+  Typography,
+  Box,
+  ButtonGroup,
+  Button,
+} from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  Table,
+  TableColumn,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { isRoadieBackstageDefaultFilterSet } from '../../utils/isRoadieBackstageDefaultFilterSet';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
@@ -37,11 +52,7 @@ const generatedColumns: TableColumn[] = [
     width: '150px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.url!}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={row.url!}>
           #{row.number}
         </a>
       </Box>
@@ -53,7 +64,10 @@ const generatedColumns: TableColumn[] = [
     highlight: true,
     render: (row: Partial<PullRequest>) => (
       <Typography variant="body2" noWrap>
-        {getStatusIconType(row as PullRequest)} <Box ml={1} component="span">{row.title}</Box>
+        {getStatusIconType(row as PullRequest)}{' '}
+        <Box ml={1} component="span">
+          {row.title}
+        </Box>
       </Typography>
     ),
   },
@@ -106,8 +120,8 @@ type Props = {
   total: number;
   pageSize: number;
   onChangePageSize: (pageSize: number) => void;
-  StateFilterComponent: FC<{}>;
-  SearchComponent: FC<{}>;
+  StateFilterComponent?: FC<{}>;
+  SearchComponent?: FC<{}>;
 };
 
 export const PullRequestsTableView: FC<Props> = ({
@@ -139,8 +153,8 @@ export const PullRequestsTableView: FC<Props> = ({
             <Box mr={1} />
             <Typography variant="h6">{projectName}</Typography>
           </Box>
-          <StateFilterComponent />
-          <SearchComponent />
+          {StateFilterComponent ? <StateFilterComponent /> : <></>}
+          {SearchComponent ? <SearchComponent /> : <></>}
         </>
       }
       columns={generatedColumns}
@@ -162,14 +176,15 @@ const PullRequests = (__props: TableProps) => {
   const [search, setSearch] = useState(`state:open ${defaultFilter}`);
   const setSearchValueDebounced = useRef(debounce(setSearch, 500));
   const onChangePRStatusFilter = (state: PullRequestState) => {
-    if(state  === 'all') {
-      setSearch((currentSearch: string) => currentSearch.replace(/state:(open|closed)/g, '').trim());
+    if (state === 'all') {
+      setSearch((currentSearch: string) =>
+        currentSearch.replace(/state:(open|closed)/g, '').trim(),
+      );
     } else {
-      setSearch((currentSearch: string) => 
-        currentSearch.search(/state:(open|closed)/g) === -1 ? 
-          `state:${state} ${currentSearch}` :
-          currentSearch.replace(/state:(open|closed)/g, `state:${state}`
-        )
+      setSearch((currentSearch: string) =>
+        currentSearch.search(/state:(open|closed)/g) === -1
+          ? `state:${state} ${currentSearch}`
+          : currentSearch.replace(/state:(open|closed)/g, `state:${state}`),
       );
     }
   };
@@ -205,41 +220,38 @@ const PullRequests = (__props: TableProps) => {
   const SearchComponent = () => {
     const [draftSearch, setDraftSearch] = useState(search);
     return (
-    <Box position="absolute" width={500} right={10} top={25}>
-      <TextField
-        fullWidth
-        onChange={(event) => {
-          setDraftSearch(event.target.value);
-          setSearchValueDebounced.current(event.target.value);
-        }}
-        placeholder="Filter"
-        value={draftSearch}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
+      <Box position="absolute" width={500} right={10} top={25}>
+        <TextField
+          fullWidth
+          onChange={event => {
+            setDraftSearch(event.target.value);
+            setSearchValueDebounced.current(event.target.value);
+          }}
+          placeholder="Filter"
+          value={draftSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
                 <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                disabled={!draftSearch}
-                onClick={() => {
-                  setDraftSearch('');
-                  setSearch('');
-                }}
-              >
-                <ClearIcon
-                  fontSize="small"
-                  aria-label="clear"
-                />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-    </Box>
-  )
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  disabled={!draftSearch}
+                  onClick={() => {
+                    setDraftSearch('');
+                    setSearch('');
+                  }}
+                >
+                  <ClearIcon fontSize="small" aria-label="clear" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    );
   };
 
   return (
@@ -253,13 +265,17 @@ const PullRequests = (__props: TableProps) => {
       onChangePage={setPage}
     />
   );
-}
+};
 
 export const PullRequestsTable = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <PullRequests/>
+  return <PullRequests />;
 };
