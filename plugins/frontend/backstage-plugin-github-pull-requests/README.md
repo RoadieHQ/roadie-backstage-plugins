@@ -28,13 +28,21 @@ yarn add @roadiehq/backstage-plugin-github-pull-requests
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityGithubPullRequestsContent } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityGithubPullRequestsContent,
+  isGithubPullRequestsAvailable,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
 ...
 
 const serviceEntityPage = (
   <EntityLayout>
     ...
-    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+    <EntityLayout.Route
+      path="/pull-requests"
+      title="Pull Requests"
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isGithubPullRequestsAvailable}
+    >
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
     ...
@@ -53,16 +61,20 @@ const serviceEntityPage = (
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityGithubPullRequestsOverviewCard } from '@roadiehq/backstage-plugin-github-pull-requests';
+import { EntityGithubPullRequestsOverviewCard, isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 ...
 
 const overviewContent = (
   <Grid container spacing={3}>
     ...
-    <Grid item md={6}>
-      <EntityGithubPullRequestsOverviewCard />
-    </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+        <Grid item md={6}>
+          <EntityGithubPullRequestsOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     ...
   </Grid>
 );
