@@ -20,9 +20,11 @@ import {
   GetSearchPullRequestsResponseType,
   GithubSearchPullRequestsDataItem,
 } from '../types';
+import { useBaseUrl } from './useBaseUrl';
 
 export const useGithubSearchPullRequest = (query: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
+  const baseUrl = useBaseUrl();
 
   return useAsync(async (): Promise<GithubSearchPullRequestsDataItem[]> => {
     const token = await githubAuthApi.getAccessToken(['repo']);
@@ -30,7 +32,7 @@ export const useGithubSearchPullRequest = (query: string) => {
     const pullRequestResponse: GetSearchPullRequestsResponseType =
       await new Octokit({
         auth: token,
-        baseUrl: 'https://api.github.com',
+        ...(baseUrl && { baseUrl }),
       }).search.issuesAndPullRequests({
         q: query,
         per_page: 5,

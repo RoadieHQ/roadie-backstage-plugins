@@ -17,16 +17,18 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
 import { GithubRepositoryData } from '../types';
+import { useBaseUrl } from './useBaseUrl';
 
 export const useGithuRepositoryData = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
+  const baseUrl = useBaseUrl();
 
   return useAsync(async (): Promise<GithubRepositoryData> => {
     const token = await githubAuthApi.getAccessToken(['repo']);
 
     const response = await new Octokit({
       auth: token,
-      baseUrl: 'https://api.github.com',
+      ...(baseUrl && { baseUrl }),
     }).request({ url: url });
 
     return {
