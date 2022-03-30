@@ -34,13 +34,13 @@
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
     "js-yaml": "^4.1.0",
+    "memfs": "^3.4.1",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
     "@backstage/cli": "^0.16.0",
     "@vercel/ncc": "^0.27.0",
-    "jest": "^27.0.1",
-    "memfs": "^3.4.1"
+    "jest": "^27.0.1"
   },
   "keywords": [
     "backstage",

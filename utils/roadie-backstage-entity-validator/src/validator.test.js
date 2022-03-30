@@ -1,10 +1,12 @@
 jest.mock('fs');
+
 const validator = require('./validator');
-import { vol } from 'memfs';
-import { memoryFileSystem } from './mocks';
+const { vol } = require('memfs');
+const { memoryFileSystem } = require('./mocks');
 
 describe('validator', () => {
   beforeEach(() => {
+    vol.reset();
     vol.fromJSON(memoryFileSystem);
   });
   afterEach(() => {
