@@ -16371,7 +16371,7 @@ media-typer@0.3.0:
 
 memfs@^3.1.2, memfs@^3.4.1:
   version "3.4.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.4.1.tgz#b78092f466a0dce054d63d39275b24c71d3f1305"
+  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/memfs/-/memfs-3.4.1.tgz#b78092f466a0dce054d63d39275b24c71d3f1305"
   integrity sha512-1c9VPVvW5P7I85c35zAdEr1TD5+F11IToIHIlrVIcflfnzPkJa0ZoYEoEdYDP8KgPFoSZ/opDrUsAoZWym3mtw==
   dependencies:
     fs-monkey "1.0.3"
@@ -16985,7 +16985,7 @@ mkdirp@1.x, mkdirp@^1.0.3, mkdirp@^1.0.4:
 
 mock-fs@^5.1.0, mock-fs@^5.1.2:
   version "5.1.2"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.1.2.tgz#6fa486e06d00f8793a8d2228de980eff93ce6db7"
+  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/mock-fs/-/mock-fs-5.1.2.tgz#6fa486e06d00f8793a8d2228de980eff93ce6db7"
   integrity sha512-YkjQkdLulFrz0vD4BfNQdQRVmgycXTV7ykuHMlyv+C8WCHazpkiQRDthwa02kSyo8wKnY9wRptHfQLgmf0eR+A==
 
 modify-values@^1.0.0:

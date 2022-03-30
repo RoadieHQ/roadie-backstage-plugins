@@ -125,18 +125,19 @@ export const validate = async (fileContents, verbose = true) => {
   }
 };
 
-const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
-  const fileExists = fp => {
+const relativeSpaceValidation = async (fileContents, filePath, verbose) => {
+  const fileExists = filePath => {
     let flag = true;
     try {
-      fs.accessSync(fp, fs.constants.F_OK);
+      fs.accessSync(filePath, fs.constants.F_OK);
     } catch (e) {
       flag = false;
     }
     return flag;
   };
 
-  const validateTechDocs = async (data, fp) => {
+  const validateTechDocs = async (data, filePath) => {
+    console.log(filePath, '######');
     if (
       !data?.metadata?.annotations ||
       !data?.metadata?.annotations['backstage.io/techdocs-ref']
@@ -149,15 +150,20 @@ const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
       return;
     }
 
-    const mkdocsPath = path.join(
-      path.dirname(fp),
+    const mkdocsYamlPath = path.join(
+      path.dirname(filePath),
       techDocsAnnotation.split(':')[1],
       'mkdocs.yaml',
     );
+    const mkdocsYmlPath = path.join(
+      path.dirname(filePath),
+      techDocsAnnotation.split(':')[1],
+      'mkdocs.yml',
+    );
 
-    if (await !fileExists(mkdocsPath)) {
+    if (!fileExists(mkdocsYamlPath) & !fileExists(mkdocsYmlPath)) {
       throw new Error(
-        `Techdocs annotation specifies "dir" but file under ${mkdocsPath} not found`,
+        `Techdocs annotation specifies "dir" but file under ${mkdocsYamlPath}|${mkdocsYmlPath} not found`,
       );
     }
     return;
@@ -170,7 +176,7 @@ const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
     }
     await Promise.all(
       data.map(async it => {
-        await validateTechDocs(it, filepath);
+        await validateTechDocs(it, filePath);
       }),
     );
   } catch (e) {
@@ -178,14 +184,12 @@ const relativeSpaceValidation = async (fileContents, filepath, verbose) => {
   }
 };
 
-export const validateFromFile = async (
-  filepath = './sample/catalog-info.yml',
-  verbose = true,
-) => {
+export const validateFromFile = async (filepath, verbose = true) => {
   const fileContents = fs.readFileSync(filepath, 'utf8');
   if (verbose) {
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
+
   await validate(fileContents, verbose);
   await relativeSpaceValidation(fileContents, filepath, verbose);
 };
