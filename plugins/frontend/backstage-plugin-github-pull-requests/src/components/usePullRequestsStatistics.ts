@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useAsyncRetry } from 'react-use';
+import { useAsync } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import moment from 'moment';
@@ -66,9 +66,11 @@ export function usePullRequestsStatistics({
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
 
-  const { loading, value: statsData, error } = useAsyncRetry<
-    PullRequestStats
-  >(async () => {
+  const {
+    loading,
+    value: statsData,
+    error,
+  } = useAsync(async (): Promise<PullRequestStats> => {
     const token = await auth.getAccessToken(['repo']);
     if (!repo) {
       return {
@@ -76,37 +78,36 @@ export function usePullRequestsStatistics({
         mergedToClosedRatio: '0%',
       };
     }
-    return api
-      .listPullRequests({
-        search: `state:${state}`,
-        token,
-        owner,
-        repo,
-        pageSize,
-        page: 1,
-        branch,
-        baseUrl,
-      })
-      .then(
-        ({ pullRequestsData }: { pullRequestsData: SearchPullRequestsResponseData }) => {
-          const calcResult = calculateStatistics(pullRequestsData);
-          if(calcResult.closedCount === 0 || calcResult.mergedCount === 0) return {
-            avgTimeUntilMerge: 'Never',
-            mergedToClosedRatio: '0%',
-          }
-          const avgTimeUntilMergeDiff = moment.duration(
-            calcResult.avgTimeUntilMerge / calcResult.mergedCount,
-          );
-
-          const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
-          return {
-            avgTimeUntilMerge: avgTimeUntilMerge,
-            mergedToClosedRatio: `${Math.round(
-              (calcResult.mergedCount / calcResult.closedCount) * 100,
-            )}%`,
-          }
-        },
-      );
+    const {
+      pullRequestsData,
+    }: {
+      pullRequestsData: SearchPullRequestsResponseData;
+    } = await api.listPullRequests({
+      search: `state:${state}`,
+      token,
+      owner,
+      repo,
+      pageSize,
+      page: 1,
+      branch,
+      baseUrl,
+    });
+    const calcResult = calculateStatistics(pullRequestsData);
+    if (calcResult.closedCount === 0 || calcResult.mergedCount === 0)
+      return {
+        avgTimeUntilMerge: 'Never',
+        mergedToClosedRatio: '0%',
+      };
+    const avgTimeUntilMergeDiff = moment.duration(
+      calcResult.avgTimeUntilMerge / calcResult.mergedCount,
+    );
+    const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
+    return {
+      avgTimeUntilMerge: avgTimeUntilMerge,
+      mergedToClosedRatio: `${Math.round(
+        (calcResult.mergedCount / calcResult.closedCount) * 100,
+      )}%`,
+    };
   }, [pageSize, repo, owner]);
 
   return [
