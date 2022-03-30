@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-
 import { createApiRef } from '@backstage/core-plugin-api';
-import { SearchPullRequestsResponseData } from '../types';
+import { SearchPullRequestsResponseData, GithubRepositoryData } from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
@@ -40,8 +39,18 @@ export type GithubPullRequestsApi = {
     pageSize?: number;
     page?: number;
     branch?: string;
-    baseUrl: string|undefined;
+    baseUrl: string | undefined;
   }) => Promise<{
     pullRequestsData: SearchPullRequestsResponseData;
   }>;
+
+  getRepositoryData: ({
+    baseUrl,
+    token,
+    url,
+  }: {
+    baseUrl: string | undefined;
+    token: string;
+    url: string;
+  }) => Promise<GithubRepositoryData>;
 };

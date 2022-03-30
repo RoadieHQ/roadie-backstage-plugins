@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { SearchPullRequestsResponseData } from '../types';
+import { SearchPullRequestsResponseData, GithubRepositoryData } from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
@@ -48,7 +47,30 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       page,
     });
     return {
-      pullRequestsData: (pullRequestResponse.data as any) as SearchPullRequestsResponseData,
+      pullRequestsData:
+        pullRequestResponse.data as any as SearchPullRequestsResponseData,
+    };
+  }
+  async getRepositoryData({
+    baseUrl,
+    token,
+    url,
+  }: {
+    baseUrl: string | undefined;
+    token: string;
+    url: string;
+  }): Promise<GithubRepositoryData> {
+    const response = await new Octokit({
+      auth: token,
+      ...(baseUrl && { baseUrl }),
+    }).request({ url: url });
+
+    return {
+      htmlUrl: response.data.html_url,
+      fullName: response.data.full_name,
+      additions: response.data.additions,
+      deletions: response.data.deletions,
+      changedFiles: response.data.changed_files,
     };
   }
 }

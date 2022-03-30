@@ -60,4 +60,7 @@ export type GithubSearchPullRequestsDataItem = {
 export type GithubRepositoryData = {
   htmlUrl: string;
   fullName: string;
+  additions: number;
+  deletions: number;
+  changedFiles: number;
 };

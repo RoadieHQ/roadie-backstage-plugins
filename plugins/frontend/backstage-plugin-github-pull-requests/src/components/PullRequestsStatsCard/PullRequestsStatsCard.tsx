@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React, { useState } from 'react';
 import {
   InfoCard,
@@ -86,6 +85,8 @@ const StatsCard = (props: Props) => {
   const metadata = {
     'average time of PR until merge': statsData?.avgTimeUntilMerge,
     'merged to closed ratio': statsData?.mergedToClosedRatio,
+    'average size of PR': `${statsData?.avgChangedLinesCount} lines`,
+    'average changed files of PR': `${statsData?.avgChangedFilesCount}`,
   };
 
   return (

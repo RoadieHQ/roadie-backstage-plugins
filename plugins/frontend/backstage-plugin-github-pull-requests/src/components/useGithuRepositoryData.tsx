@@ -34,6 +34,9 @@ export const useGithuRepositoryData = (url: string) => {
     return {
       htmlUrl: response.data.html_url,
       fullName: response.data.full_name,
+      additions: response.data.additions,
+      deletions: response.data.deletions,
+      changedFiles: response.data.changed_files,
     };
   }, [githubAuthApi]);
 };
