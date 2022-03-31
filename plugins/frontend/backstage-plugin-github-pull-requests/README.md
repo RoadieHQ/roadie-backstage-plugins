@@ -6,6 +6,10 @@
 
 - List Pull Requests for your repository, with filtering and search.
 - Show basic statistics widget about pull requests for your repository.
+  - Average time of PR until merge
+  - Merged to closed ratio
+  - Average size of PR (the average lines of changes in the PR)
+  - Average amount of file changed in a PR
 - It has two homepage plugin componenets
   - Review requests
   - Open pull requests
