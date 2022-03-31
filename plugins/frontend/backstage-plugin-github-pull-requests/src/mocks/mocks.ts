@@ -1278,7 +1278,7 @@ export const yourOpenPullRequests = {
     },
   ],
 };
-export const backstagePluginArgoCdMocks = {
+export const backstagePluginArgoCdMocks: Record<string, object> = {
   '85': {
     url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/pulls/467',
     id: 894318735,
