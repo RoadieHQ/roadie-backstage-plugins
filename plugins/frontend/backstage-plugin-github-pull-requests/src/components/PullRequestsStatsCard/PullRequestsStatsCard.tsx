@@ -37,6 +37,8 @@ import {
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { Tooltip } from '@material-ui/core';
+import { TooltipContent } from './components/TooltipContent';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -74,18 +76,21 @@ const StatsCard = (props: Props) => {
     },
   );
 
-  if (!projectName || projectName === '') {
-    return (
-      <MissingAnnotationEmptyState
-        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
-      />
-    );
-  }
-
   const metadata = {
     'average time of PR until merge': statsData?.avgTimeUntilMerge,
     'merged to closed ratio': statsData?.mergedToClosedRatio,
-    'average size of PR': `${statsData?.avgChangedLinesCount} lines`,
+    'average size of PR': (
+      <Tooltip
+        title={
+          <TooltipContent
+            additions={statsData?.avgAdditions}
+            deletions={statsData?.avgDeletions}
+          />
+        }
+      >
+        <div>{statsData?.avgChangedLinesCount} lines</div>
+      </Tooltip>
+    ),
     'average changed files of PR': `${statsData?.avgChangedFilesCount}`,
   };
 

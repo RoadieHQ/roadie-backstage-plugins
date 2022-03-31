@@ -21,6 +21,8 @@ import {
   repoMock,
   marketingSiteMock,
   yourOpenPullRequests,
+  closedPullsRequestMock,
+  backstagePluginArgoCdMocks,
 } from './mocks';
 
 export const handlers = [
@@ -30,6 +32,11 @@ export const handlers = [
       return res(ctx.json(requestedReviewsMock));
     } else if (query === 'is:open is:pr author:@me archived:false') {
       return res(ctx.json(yourOpenPullRequests));
+    } else if (
+      query ===
+      'state:closed in:title type:pr repo:RoadieHQ/backstage-plugin-argo-cd'
+    ) {
+      return res(ctx.json(closedPullsRequestMock));
     }
     return res(ctx.json(openPullsRequestMock));
   }),
@@ -43,6 +50,13 @@ export const handlers = [
     'https://api.github.com/repos/RoadieHQ/marketing-site',
     (_, res, ctx) => {
       return res(ctx.json(marketingSiteMock));
+    },
+  ),
+  rest.get(
+    'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls/:pullRequestId',
+    (req, res, ctx) => {
+      const { pullRequestId } = req.params;
+      return res(ctx.json(backstagePluginArgoCdMocks[pullRequestId]));
     },
   ),
 ];

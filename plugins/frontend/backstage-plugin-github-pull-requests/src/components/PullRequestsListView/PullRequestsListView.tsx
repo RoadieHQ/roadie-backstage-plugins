@@ -169,7 +169,7 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
         spacing={0}
         direction="column"
         alignItems="center"
-        justify="center"
+        justifyContent="center"
       >
         <Grid item md={12}>
           <Typography className={classes.secondaryText} variant="h6">

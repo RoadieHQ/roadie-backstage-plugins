@@ -15,13 +15,12 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import {
   configApiRef,
   githubAuthApiRef,
   AnyApiRef,
 } from '@backstage/core-plugin-api';
-import { rest } from 'msw';
 import {
   setupRequestMockHandlers,
   TestApiProvider,
@@ -29,9 +28,10 @@ import {
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
-import { closedPullsRequestMock, entityMock } from '../../mocks/mocks';
+import { entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { handlers } from '../../mocks/handlers';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -52,24 +52,22 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 describe('PullRequestsCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
-
-  beforeEach(() => {
-    worker.use(
-      rest.get('https://api.github.com/search/issues', (_, res, ctx) =>
-        res(ctx.json(closedPullsRequestMock)),
-      ),
-    );
+  afterEach(() => {
+    worker.resetHandlers();
   });
-
+  beforeEach(() => {
+    worker.use(...handlers);
+  });
   it('should display an ovreview card with the data from the requests', async () => {
-    const rendered = render(
+    render(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <PullRequestsStatsCard />
         </EntityProvider>
       </TestApiProvider>,
     );
-    expect(await rendered.findByText('2 months')).toBeInTheDocument();
-    expect(await rendered.findByText('67%')).toBeInTheDocument();
+    expect(await screen.findByText('2 months')).toBeInTheDocument();
+    expect(await screen.findByText('67%')).toBeInTheDocument();
+    expect(await screen.findByText('3309 lines')).toBeInTheDocument();
   });
 });

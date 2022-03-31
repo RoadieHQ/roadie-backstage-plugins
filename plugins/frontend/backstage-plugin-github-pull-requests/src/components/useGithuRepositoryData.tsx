@@ -17,16 +17,19 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { GithubRepositoryData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
-import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
+import { GithubPullRequestsClient } from '../api';
 
 export const useGithuRepositoryData = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
-  const api = useApi(githubPullRequestsApiRef);
   const baseUrl = useBaseUrl();
 
   return useAsync(async (): Promise<GithubRepositoryData> => {
     const token = await githubAuthApi.getAccessToken(['repo']);
 
-    return await api.getRepositoryData({ token, baseUrl, url });
+    return new GithubPullRequestsClient().getRepositoryData({
+      url,
+      baseUrl,
+      token,
+    });
   }, [githubAuthApi]);
 };

@@ -18,6 +18,7 @@ export type SearchPullRequestsResponseDataItems = {
         diff_url: string;
         patch_url: string;
         merged_at: string | null;
+        url: string;
       };
       user: {
         login: string | null;
