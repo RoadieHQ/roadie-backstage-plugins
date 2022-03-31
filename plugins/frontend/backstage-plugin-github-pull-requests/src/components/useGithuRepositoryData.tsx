@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
 import { GithubRepositoryData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
+import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 
 export const useGithuRepositoryData = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
+  const api = useApi(githubPullRequestsApiRef);
   const baseUrl = useBaseUrl();
 
   return useAsync(async (): Promise<GithubRepositoryData> => {
     const token = await githubAuthApi.getAccessToken(['repo']);
 
-    const response = await new Octokit({
-      auth: token,
-      ...(baseUrl && { baseUrl }),
-    }).request({ url: url });
-
-    return {
-      htmlUrl: response.data.html_url,
-      fullName: response.data.full_name,
-      additions: response.data.additions,
-      deletions: response.data.deletions,
-      changedFiles: response.data.changed_files,
-    };
+    return await api.getRepositoryData({ token, baseUrl, url });
   }, [githubAuthApi]);
 };

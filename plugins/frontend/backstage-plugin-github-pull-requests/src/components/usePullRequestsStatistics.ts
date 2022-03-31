@@ -25,6 +25,8 @@ export type PullRequestStats = {
   avgTimeUntilMerge: string;
   mergedToClosedRatio: string;
   avgChangedLinesCount: number;
+  avgAdditions: number;
+  avgDeletions: number;
   avgChangedFilesCount: number;
 };
 
@@ -33,20 +35,34 @@ export type PullRequestStatsCount = {
   closedCount: number;
   mergedCount: number;
   changedLinesCount: number;
+  additions: number;
+  deletions: number;
   changedFilesCount: number;
 };
-function calculateStatistics(pullRequestsData: SearchPullRequestsResponseData) {
+export type PullRequestStatsData = {
+  createdAt: string;
+  closedAt: string;
+  pullRequest: {
+    mergedAt: string | null;
+    additions: number;
+    deletions: number;
+    changedFiles: number;
+  };
+};
+function calculateStatistics(pullRequestsData: PullRequestStatsData[]) {
   const result = pullRequestsData.reduce<PullRequestStatsCount>(
     (acc, curr) => {
-      acc.avgTimeUntilMerge += curr.pull_request.merged_at
-        ? new Date(curr.pull_request.merged_at).getTime() -
-          new Date(curr.created_at).getTime()
+      acc.avgTimeUntilMerge += curr.pullRequest.mergedAt
+        ? new Date(curr.pullRequest.mergedAt).getTime() -
+          new Date(curr.createdAt).getTime()
         : 0;
-      acc.mergedCount += curr.pull_request.merged_at ? 1 : 0;
-      acc.closedCount += curr.closed_at ? 1 : 0;
+      acc.mergedCount += curr.pullRequest.mergedAt ? 1 : 0;
+      acc.closedCount += curr.closedAt ? 1 : 0;
+      acc.additions += curr.pullRequest.additions;
+      acc.deletions += curr.pullRequest.deletions;
       acc.changedLinesCount +=
-        curr.pull_request.additions + curr.pull_request.deletions;
-      acc.changedFilesCount += curr.pull_request.changedFiles;
+        curr.pullRequest.additions + curr.pullRequest.deletions;
+      acc.changedFilesCount += curr.pullRequest.changedFiles;
       return acc;
     },
     {
@@ -55,6 +71,8 @@ function calculateStatistics(pullRequestsData: SearchPullRequestsResponseData) {
       mergedCount: 0,
       changedLinesCount: 0,
       changedFilesCount: 0,
+      additions: 0,
+      deletions: 0,
     },
   );
 
@@ -66,6 +84,8 @@ function calculateStatistics(pullRequestsData: SearchPullRequestsResponseData) {
     avgChangedFilesCount: Math.round(
       result.changedFilesCount / pullRequestsData.length,
     ),
+    avgAdditions: Math.round(result.additions / pullRequestsData.length),
+    avgDeletions: Math.round(result.deletions / pullRequestsData.length),
   };
 }
 export function usePullRequestsStatistics({
@@ -97,6 +117,8 @@ export function usePullRequestsStatistics({
         mergedToClosedRatio: '0%',
         avgChangedLinesCount: 0,
         avgChangedFilesCount: 0,
+        avgAdditions: 0,
+        avgDeletions: 0,
       };
     }
     const {
@@ -122,10 +144,10 @@ export function usePullRequestsStatistics({
           token,
         });
         return {
-          created_at: pr.created_at,
-          closed_at: pr.closed_at,
-          pull_request: {
-            merged_at: pr.pull_request.merged_at,
+          createdAt: pr.created_at,
+          closedAt: pr.closed_at,
+          pullRequest: {
+            mergedAt: pr.pull_request.merged_at,
             additions: repoData.additions,
             deletions: repoData.deletions,
             changedFiles: repoData.changedFiles,
