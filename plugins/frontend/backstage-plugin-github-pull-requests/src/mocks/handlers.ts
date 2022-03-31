@@ -55,7 +55,7 @@ export const handlers = [
   rest.get(
     'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls/:pullRequestId',
     (req, res, ctx) => {
-      const { pullRequestId } = <{ pullRequestId: string }>req.params;
+      const { pullRequestId } = req.params as { pullRequestId: string };
       return res(ctx.json(backstagePluginArgoCdMocks[pullRequestId]));
     },
   ),
