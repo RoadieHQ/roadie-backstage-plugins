@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.1
+
+### Patch Changes
+
+- 1863e2a: Changed documentation to include entity switches
+
 ## 2.0.0
 
 ### Major Changes

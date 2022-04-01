@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.0.1
+
+### Patch Changes
+
+- e81b2e4: Accept yml extenstion for mkdocs files in validation
+
 ## 2.0.0
 
 ### Major Changes

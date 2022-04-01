@@ -1,5 +1,16 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.1.0
+
+### Minor Changes
+
+- d030f5f: Add avg lines of pr and avg files changed per PR metrics to the statistics card
+- 49bda3d: Add review requests and your pull requests hompage components
+
+### Patch Changes
+
+- 1863e2a: Changed documentation to include entity switches
+
 ## 2.0.0
 
 ### Major Changes
