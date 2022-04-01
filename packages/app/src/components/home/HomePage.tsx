@@ -29,9 +29,25 @@ export const HomePage = () => {
       <Grid item md={6} xs={12}>
         <HomePageRequestedReviewsCard />
       </Grid>
-
       <Grid item md={6} xs={12}>
         <HomePageYourOpenPullRequestsCard />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <HomePageMarkdown
+          title="Neeews!"
+          owner="RoadieHQ"
+          repo="roadie-backstage-plugins"
+          path=".backstage/home-page.md"
+        />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <HomePageMarkdown
+          title="History"
+          owner="RoadieHQ"
+          repo="roadie-backstage-plugins"
+          path=".backstage/home-page-test.md"
+          branch="test-two-mdown"
+        />
       </Grid>
       <Grid item xs={12} md={6}>
         <HomePageToolkit
@@ -42,24 +58,6 @@ export const HomePage = () => {
               icon: <></>,
             },
           ]}
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <HomePageMarkdown
-          title="Neeews!"
-          owner="RoadieHQ"
-          repo="roadie-backstage-plugins"
-          path=".backstage/home-page.md"
-        />
-      </Grid>
-
-      <Grid item xs={12} md={6}>
-        <HomePageMarkdown
-          title="History"
-          owner="RoadieHQ"
-          repo="roadie-backstage-plugins"
-          path=".backstage/home-page-test.md"
-          branch="test-two-mdown"
         />
       </Grid>
     </Grid>

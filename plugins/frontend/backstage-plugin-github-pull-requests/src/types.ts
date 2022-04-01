@@ -18,6 +18,7 @@ export type SearchPullRequestsResponseDataItems = {
         diff_url: string;
         patch_url: string;
         merged_at: string | null;
+        url: string;
       };
       user: {
         login: string | null;
@@ -60,4 +61,7 @@ export type GithubSearchPullRequestsDataItem = {
 export type GithubRepositoryData = {
   htmlUrl: string;
   fullName: string;
+  additions: number;
+  deletions: number;
+  changedFiles: number;
 };
