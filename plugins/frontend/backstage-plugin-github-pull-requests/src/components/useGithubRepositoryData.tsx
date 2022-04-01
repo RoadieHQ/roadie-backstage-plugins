@@ -19,7 +19,7 @@ import { GithubRepositoryData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
 import { GithubPullRequestsClient } from '../api';
 
-export const useGithuRepositoryData = (url: string) => {
+export const useGithubRepositoryData = (url: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
 

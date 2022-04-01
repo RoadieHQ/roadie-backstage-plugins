@@ -19,7 +19,7 @@ import { Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useGithuRepositoryData } from '../useGithuRepositoryData';
+import { useGithubRepositoryData } from '../useGithubRepositoryData';
 import { Progress } from '@backstage/core-components';
 import {
   GithubSearchPullRequestsDataItem,
@@ -80,7 +80,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
     value?: GithubRepositoryData;
     error?: Error;
     loading: boolean;
-  } = useGithuRepositoryData(pr.repositoryUrl);
+  } = useGithubRepositoryData(pr.repositoryUrl);
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
