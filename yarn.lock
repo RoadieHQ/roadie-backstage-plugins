@@ -3013,9 +3013,9 @@
     "@backstage/types" "^1.0.0"
 
 "@backstage/plugin-scaffolder@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder/-/plugin-scaffolder-1.0.0.tgz#775c490b31a36c536a324b07ba10973081896246"
-  integrity sha512-/e22yYiocaDXD8XuxYf3mT4bwxYFaKSHaTg/Hlvb2V4tpRiki8eEOwixFjUNBE3lhY4M6vnGlg3KPk5zDupJgQ==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder/-/plugin-scaffolder-1.0.1.tgz#d1298193fea67e19975dcf068449a0c5d642b68b"
+  integrity sha512-dmGMtI96cD4/7739TUhKlJm0jUKpgVTGzmm0tdYUyBwOxNa9OER/oos6+yHmQ/Af0mXM3+657SwLgmhzDrIfuA==
   dependencies:
     "@backstage/catalog-client" "^1.0.0"
     "@backstage/catalog-model" "^1.0.0"
@@ -3157,9 +3157,9 @@
     winston "^3.2.1"
 
 "@backstage/plugin-techdocs@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs/-/plugin-techdocs-1.0.0.tgz#150692e28b9280dac00838ade31d6249ed0201fc"
-  integrity sha512-rHHhnbN1TwnU0LYrTALdWBPZdo+Kj5uA94YeD+f+3um6gVFVGJ7p/4ckl3Gfx2+qHZkX444JpmXEr+/hCnEjEg==
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-techdocs/-/plugin-techdocs-1.0.1.tgz#e058282bb00d9208e2ceb7b629bdade7ad17c9dc"
+  integrity sha512-fl7owHWz1AI/6jgegiEF2cltKKb8iTwV1ibaicBi4KOClveRMsa+bIUqlR/xzZqJnnpVbMwcy4QcqmQVHD0pww==
   dependencies:
     "@backstage/catalog-model" "^1.0.0"
     "@backstage/config" "^1.0.0"
@@ -3176,7 +3176,7 @@
     "@material-ui/lab" "4.0.0-alpha.57"
     "@material-ui/styles" "^4.10.0"
     dompurify "^2.2.9"
-    event-source-polyfill "^1.0.25"
+    event-source-polyfill "1.0.25"
     git-url-parse "^11.6.0"
     lodash "^4.17.21"
     react-router "6.0.0-beta.0"
@@ -11576,10 +11576,10 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-event-source-polyfill@^1.0.25:
-  version "1.0.26"
-  resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.26.tgz#86c04d088ef078279168eefa028f928fec5059a4"
-  integrity sha512-IwDLs9fUTcGAyacHBeS53T8wcEkDyDn0UP4tfQqJ4wQP8AyH0mszuQf2ULTylnpI0sMquzJ4usrNV7+uztwI9A==
+event-source-polyfill@1.0.25:
+  version "1.0.25"
+  resolved "https://registry.yarnpkg.com/event-source-polyfill/-/event-source-polyfill-1.0.25.tgz#d8bb7f99cb6f8119c2baf086d9f6ee0514b6d9c8"
+  integrity sha512-hQxu6sN1Eq4JjoI7ITdQeGGUN193A2ra83qC0Ltm9I2UJVAten3OFVN6k5RX4YWeCS0BoC8xg/5czOCIHVosQg==
 
 event-stream@=3.3.4:
   version "3.3.4"
