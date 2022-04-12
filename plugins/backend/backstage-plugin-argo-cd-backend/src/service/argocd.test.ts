@@ -1,8 +1,13 @@
 jest.mock('axios');
+import { getVoidLogger } from '@backstage/backend-common';
 import { ConfigReader } from '@backstage/config';
 import axios from 'axios';
 import { mocked } from 'ts-jest/utils';
 import { ArgoService } from './argocd.service';
+import {
+  argocdCreateApplicationResp,
+  argocdCreateProjectResp,
+} from './argocdTestResponses';
 
 const config = ConfigReader.fromConfigs([
   {
@@ -90,7 +95,11 @@ describe('ArgoCD service', () => {
     const resp = argoService.findArgoApp({ name: 'testApp-nonprod' });
 
     expect(await resp).toStrictEqual([
-      { name: 'argoInstance1', url: 'https://argoInstance1.com' },
+      {
+        name: 'argoInstance1',
+        url: 'https://argoInstance1.com',
+        appName: ['testApp-nonprod'],
+      },
     ]);
   });
 
@@ -106,18 +115,26 @@ describe('ArgoCD service', () => {
   it('should return the argo instances using the app selector', async () => {
     mocked(axios.request).mockResolvedValue({
       data: {
-        metadata: {
-          name: 'testApp-nonprod',
-          namespace: 'argocd',
-          status: {},
-        },
+        items: [
+          {
+            metadata: {
+              name: 'testApp-nonprod',
+              namespace: 'argocd',
+              status: {},
+            },
+          },
+        ],
       },
     });
 
     const resp = argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
 
     expect(await resp).toStrictEqual([
-      { name: 'argoInstance1', url: 'https://argoInstance1.com' },
+      {
+        appName: ['testApp-nonprod'],
+        name: 'argoInstance1',
+        url: 'https://argoInstance1.com',
+      },
     ]);
   });
 
@@ -136,22 +153,24 @@ describe('ArgoCD service', () => {
               name: 'testApp-staging',
               namespace: 'argocd',
             },
-          }
-        ]
+          },
+        ],
       },
     });
 
-    const resp = argoService.getArgoAppData('https://argoInstance1.com',
+    const resp = argoService.getArgoAppData(
+      'https://argoInstance1.com',
       'argoInstance1',
       { selector: 'service=testApp' },
-      'testToken');
+      'testToken',
+    );
 
     expect(await resp).toStrictEqual({
       items: [
         {
           metadata: {
             instance: {
-              name: 'argoInstance1'
+              name: 'argoInstance1',
             },
             name: 'testApp-prod',
             namespace: 'argocd',
@@ -160,13 +179,294 @@ describe('ArgoCD service', () => {
         {
           metadata: {
             instance: {
-              name: 'argoInstance1'
+              name: 'argoInstance1',
             },
             name: 'testApp-staging',
             namespace: 'argocd',
           },
         },
-      ]
+      ],
     });
+  });
+
+  it('should create a project in argo', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        argocdCreateProjectResp,
+      },
+    });
+
+    const resp = argoService.createArgoProject(
+      'https://argoInstance1.com',
+      'testToken',
+      'testProject',
+      'test-namespace',
+      'https://github.com/backstage/backstage',
+    );
+
+    expect(await resp).toStrictEqual({
+      argocdCreateProjectResp,
+    });
+  });
+
+  it('should fail to create a project in argo when argo errors out', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        error: 'Failed to Create project',
+      },
+    });
+
+    const resp = argoService.createArgoProject(
+      'https://argoInstance1.com',
+      'testToken',
+      'testProject',
+      'test-namespace',
+      'https://github.com/backstage/backstage',
+    );
+
+    expect(await resp).toStrictEqual({
+      error: 'Failed to Create project',
+    });
+  });
+
+  it('should create an app in argo', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        argocdCreateApplicationResp,
+      },
+    });
+
+    const resp = argoService.createArgoApplication(
+      'https://argoInstance1.com',
+      'testToken',
+      'testApp',
+      'testProject',
+      'testNamespace',
+      'https://github.com/backstage/backstage',
+      'kubernetes/nonproduction',
+      'backstageId',
+    );
+
+    expect(await resp).toStrictEqual({
+      argocdCreateApplicationResp,
+    });
+  });
+
+  it('should fail to create an app in argo when argo errors out', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        error: 'Failed to Create application',
+      },
+    });
+
+    const resp = argoService.createArgoApplication(
+      'https://argoInstance1.com',
+      'testToken',
+      'testApp',
+      'testProject',
+      'testNamespace',
+      'https://github.com/backstage/backstage',
+      'kubernetes/nonproduction',
+      'backstageId',
+    );
+
+    expect(await resp).toStrictEqual({
+      error: 'Failed to Create application',
+    });
+  });
+
+  it('should create both app and project in argo', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        argocdCreateApplicationResp,
+      },
+    });
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        argocdCreateApplicationResp,
+      },
+    });
+
+    const resp = argoService.createArgoResources(
+      'argoInstance1',
+      'testApp',
+      'testProject',
+      'testNamespace',
+      'https://github.com/backstage/backstage',
+      'kubernetes/nonproduction',
+      'backstageId',
+      getVoidLogger(),
+    );
+
+    expect(await resp).toStrictEqual(true);
+  });
+
+  it('should fail to create both app and project in argo when argo rejects', async () => {
+    mocked(axios.request).mockRejectedValueOnce({
+      data: {
+        error: 'Failure to create project',
+      },
+    });
+
+    const resp = argoService.createArgoResources(
+      'argoInstance1',
+      'testApp',
+      'testProject',
+      'testNamespace',
+      'https://github.com/backstage/backstage',
+      'kubernetes/nonproduction',
+      'backstageId',
+      getVoidLogger(),
+    );
+
+    await expect(resp).rejects.toThrow();
+  });
+
+  it('should delete project in argo', async () => {
+    mocked(axios.request).mockResolvedValue({
+      status: 200,
+    });
+
+    const resp = argoService.deleteProject(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    expect(await resp).toStrictEqual(true);
+  });
+
+  it('should fail to delete project in argo when bad status', async () => {
+    mocked(axios.request).mockResolvedValue({
+      status: 500,
+    });
+
+    const resp = argoService.deleteProject(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    expect(await resp).toStrictEqual(false);
+  });
+
+  it('should delete app in argo', async () => {
+    mocked(axios.request).mockResolvedValue({
+      status: 200,
+    });
+
+    const resp = argoService.deleteApp(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    expect(await resp).toStrictEqual(true);
+  });
+
+  it('should fail to delete app in argo when bad status', async () => {
+    mocked(axios.request).mockResolvedValue({
+      status: 500,
+    });
+
+    const resp = argoService.deleteApp(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    expect(await resp).toStrictEqual(false);
+  });
+
+  it('should sync app', async () => {
+    mocked(axios.post).mockResolvedValue({
+      status: 200,
+    });
+
+    const resp = argoService.syncArgoApp(
+      {
+        name: 'testApp',
+        url: 'https://argoInstance1.com',
+        appName: ['testApp'],
+      },
+      'testToken',
+      'testApp',
+    );
+
+    expect(await resp).toStrictEqual({
+      message: 'Re-synced testApp on testApp',
+      status: 'Success',
+    });
+  });
+
+  it('should fail to sync app on bad status', async () => {
+    mocked(axios.post).mockResolvedValue({
+      status: 500,
+    });
+
+    const resp = argoService.syncArgoApp(
+      {
+        name: 'testApp',
+        url: 'https://argoInstance1.com',
+        appName: ['testApp'],
+      },
+      'testToken',
+      'testApp',
+    );
+
+    expect(await resp).toStrictEqual({
+      message: 'Failed to resync testApp on testApp',
+      status: 'Failure',
+    });
+  });
+
+  it('should sync all apps', async () => {
+    // token
+    mocked(axios.request).mockResolvedValueOnce({
+      data: { token: 'testToken' },
+    });
+    // findArgoApp
+    mocked(axios.request).mockResolvedValueOnce({
+      data: {
+        items: [
+          {
+            metadata: {
+              name: 'testAppName',
+              namespace: 'testNamespace',
+            },
+          },
+        ],
+      },
+    });
+    // token
+    mocked(axios.request).mockResolvedValueOnce({
+      data: { token: 'testToken' },
+    });
+    // sync
+    mocked(axios.post).mockResolvedValue({
+      status: 200,
+    });
+
+    const resp = argoService.resyncAppOnAllArgos('testApp');
+
+    expect(await resp).toStrictEqual([
+      [
+        {
+          message: 'Re-synced testAppName on argoInstance1',
+          status: 'Success',
+        },
+      ],
+    ]);
+  });
+
+  it('should fail to sync all apps when bad token', async () => {
+    // token
+    mocked(axios.request).mockResolvedValueOnce({
+      status: 401,
+    });
+
+    const resp = argoService.resyncAppOnAllArgos('testApp');
+
+    await expect(resp).rejects.toThrow();
   });
 });

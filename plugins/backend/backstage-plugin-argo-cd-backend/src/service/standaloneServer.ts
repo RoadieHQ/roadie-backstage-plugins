@@ -15,7 +15,9 @@ export interface ServerOptions {
 export async function startStandaloneServer(
   options: ServerOptions,
 ): Promise<Server> {
-  const logger = options.logger.child({ service: 'backstage-plugin-argo-cd-backend' });
+  const logger = options.logger.child({
+    service: 'backstage-plugin-argo-cd-backend',
+  });
   logger.debug('Starting application server...');
 
   const config = await loadBackendConfig({
