@@ -124,9 +124,8 @@ export function createRouter({
   router.post('/createArgo', async (request, response) => {
     const argoInstanceName = request.body.clusterName;
     const namespace = request.body.namespace;
-    let projectName = request.body.projectName as string;
-    let appName = request.body.appName as string;
-    // Save the original app name before it gets concatenated
+    const projectName = request.body.projectName as string;
+    const appName = request.body.appName as string;
     const labelValue = appName;
     const sourceRepo = request.body.sourceRepo;
     const sourcePath = request.body.sourcePath;
