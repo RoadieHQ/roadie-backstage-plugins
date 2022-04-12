@@ -103,6 +103,9 @@ import {
   EntityPrometheusContent,
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
+import {
+  EntityIFrameCard
+} from '@roadiehq/backstage-plugin-iframe';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -408,6 +411,9 @@ const systemPage = (
         </Grid>
         <Grid item md={6}>
           <EntityHasResourcesCard variant="gridItem" />
+        </Grid>
+        <Grid item md={6}>
+          <EntityIFrameCard variant="gridItem" />
         </Grid>
       </Grid>
     </EntityLayout.Route>

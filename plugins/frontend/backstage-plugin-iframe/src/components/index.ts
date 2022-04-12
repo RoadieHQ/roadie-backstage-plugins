@@ -1,0 +1,1 @@
+export { IFrameCard } from './IFrameComponent';
