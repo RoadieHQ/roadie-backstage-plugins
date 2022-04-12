@@ -57,7 +57,7 @@ export const createArgoCdResources = (config: Config, logger: Logger) => {
             type: 'string',
             title: 'Label Value',
             description:
-              'The label Runway will use to find applications in Argo CD',
+              'The label Backstage will use to find applications in Argo CD',
           },
         },
       },
