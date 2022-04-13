@@ -29,7 +29,7 @@ Configure the action:
 // packages/backend/src/plugins/scaffolder.ts
 
 const actions = [
-  createArgoCdResources({ config }),
+  createArgoCdResources({ config, logger }),
   ...createBuiltinActions({
     containerRunner,
     integrations,
