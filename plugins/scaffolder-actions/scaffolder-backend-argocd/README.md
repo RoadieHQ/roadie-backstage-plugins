@@ -13,6 +13,8 @@ https://backstage.io/docs/getting-started/create-an-app
 
 > Note: If you are using this plugin in a Backstage monorepo that contains the code for `@backstage/plugin-scaffolder-backend`, you need to modify your internal build processes to transpile files from the `node_modules` folder as well.
 
+> Note: To use this scaffolder action you need to ensure the Argo CD user you are utilizing has the `create` permission for both `projects` and `applications`
+
 You need to configure the action in your backend:
 
 ## From your Backstage root directory
