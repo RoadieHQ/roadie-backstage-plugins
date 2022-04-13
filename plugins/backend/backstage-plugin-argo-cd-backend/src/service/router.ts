@@ -246,7 +246,14 @@ export function createRouter({
           argoAppName,
           token,
         );
-      } catch {
+      } catch (e :any) {
+        if (
+          typeof(e.message) === "string"
+        ) {
+          throw new Error(
+            e.message
+          );
+        }
         return response
           .status(500)
           .send({ status: 'error with deleteing argo app' });
