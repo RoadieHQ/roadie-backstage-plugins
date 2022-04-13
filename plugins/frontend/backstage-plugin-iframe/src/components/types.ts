@@ -11,3 +11,7 @@ export type IFrameProps = {
   width?: string;
   class?: string;
 }
+
+export type IFramePageProps = {
+  frames: IFrameProps[];  
+}

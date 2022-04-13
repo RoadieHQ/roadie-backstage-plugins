@@ -45,7 +45,7 @@ export const IFrameCard = (props: IFrameProps) => {
 
   return(         
     <Content>
-      <ContentHeader title={title}></ContentHeader>
+      <ContentHeader title={title}/>
       <iframe src={src} height={height || "100%"} width={width || "100%"} title={title}/>
     </Content>
   )

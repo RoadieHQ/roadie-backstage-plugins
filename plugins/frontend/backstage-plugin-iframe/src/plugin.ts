@@ -19,6 +19,7 @@ import {
   createComponentExtension,
   createPlugin,
   createRouteRef,
+  createRoutableExtension,
 } from '@backstage/core-plugin-api';
 
 export const entityContentRouteRef = createRouteRef({
@@ -41,6 +42,15 @@ export const EntityIFrameCard = iframePlugin.provide(
           m => m.IFrameCard,
         ),
     },
+  }),
+);
+
+export const EntityIFramePage = iframePlugin.provide(
+  createRoutableExtension({
+    name: 'EntityBugsnagErrorsOverviewTable',
+    component: () =>
+      import('./components/IFramePage').then(m => m.IFramePage),
+    mountPoint: entityContentRouteRef,
   }),
 );
 

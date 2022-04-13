@@ -16,15 +16,29 @@
 
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { iframePlugin, EntityIFrameCard } from '../src';
+import { iframePlugin, EntityIFrameCard, EntityIFramePage } from '../src';
+import { IFramePageProps, IFrameProps } from '../src/components/types';
 
-const props = {
+const props: IFrameProps = {
   src: "https://example.com",
   height: "400px",
-  width: "400px"
+  width: "400px",
+  title: "Well hello there"
 }
-createDevApp().registerPlugin(iframePlugin).addPage({
+
+const pageProps: IFramePageProps = {
+  frames: [props]
+}
+
+createDevApp()
+  .registerPlugin(iframePlugin)
+  .addPage({
     element: <EntityIFrameCard {...props} />,
     title: 'Root Page',
     path: '/backstage-plugin-iframe',
+  })
+  .addPage({
+    element: <EntityIFramePage {...pageProps} />,
+    title: 'Iframe page',
+    path: 'iframe-page',
   }).render();

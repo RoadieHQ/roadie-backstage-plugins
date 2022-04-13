@@ -2500,7 +2500,7 @@
 
 "@backstage/core-plugin-api@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-1.0.0.tgz#2f12a92e93323f66ff722878facf468a95562171"
+  resolved "https://registry.npmjs.org/@backstage/core-plugin-api/-/core-plugin-api-1.0.0.tgz#2f12a92e93323f66ff722878facf468a95562171"
   integrity sha512-A1Xz6CcrRyUjoSdrhd0AWKgeATFITRwsjgi4CoVUny+wWgqU7gQ2mo42LtOmcaBRdUJz6AhRQn4IhKN/2T3G/A==
   dependencies:
     "@backstage/config" "^1.0.0"
@@ -2794,7 +2794,7 @@
 
 "@backstage/plugin-catalog-react@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-react/-/plugin-catalog-react-1.0.0.tgz#4f42c070ffe5c9690e45a5288e18bacd8d4e0e66"
+  resolved "https://registry.npmjs.org/@backstage/plugin-catalog-react/-/plugin-catalog-react-1.0.0.tgz#4f42c070ffe5c9690e45a5288e18bacd8d4e0e66"
   integrity sha512-F4HwGPD2/U6D219ivXRaRSsKUwOHrA5+yb+d6kHG0T+N5WdcBEhBv6a2bypGjkEEu/7oeTbQKjK2CKIGMlwbPA==
   dependencies:
     "@backstage/catalog-client" "^1.0.0"

@@ -14,11 +14,33 @@ yarn add @roadiehq/backstage-plugin-iframe
 
 2. Import the plugin to the [entityPage.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/components/catalog/EntityPage.tsx) source file:
 
-```tsx
+```ts
+// packages/app/src/components/catalog/EntityPage.tsx
 import { 
   iframePlugin,
-  EntityIFrameCard
+  EntityIFrameCard,
+  EntityIFramePage,
 } from '@roadiehq/backstage-plugin-iframe';
+...
+
+const iframeProps = {
+  frames: [
+    {
+      src: "https://example.com"
+    }
+  ]
+}
+const serviceEntityPage = (
+  <EntityLayoutWrapper>
+    ...
+    <EntityLayout.Route 
+      path="/mycustom-iframes"
+      title="Iframes">
+        <EntityIFramePage {...iframeProps} />
+    </EntityLayout.Route>
+    ...
+  </EntityLayoutWrapper>
+);
 
 const iframeProps = {
   src: "https://example.com"
