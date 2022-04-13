@@ -157,9 +157,14 @@ export class ArgoService implements ArgoServiceApi {
     try {
       const resp = await axios.request(options);
       return resp.data.token;
-    } catch {
+    } catch (e: any) {
+      if (e.response?.status === 401) {
+        throw new Error(
+          `Getting unauthorized for Argo CD instance ${baseUrl}`,
+        );
+      }
       throw new Error(
-        `Could not retrieve ArgoCD token for instance. ${baseUrl}`,
+        `Could not retrieve ArgoCD token for instance ${baseUrl}`,
       );
     }
   }
@@ -245,8 +250,13 @@ export class ArgoService implements ArgoServiceApi {
       console.error(error);
       if (error.response?.status === 404) {
         return error.response?.data;
-      }
-      if (
+      } else if (
+        error.response?.status === 403
+      ) {
+        throw new Error(
+          error.response?.data.message,
+        );
+      } else if (
         error.response?.data.message.includes(
           'existing project spec is different',
         )
@@ -422,11 +432,23 @@ export class ArgoService implements ArgoServiceApi {
       const resp: AxiosResponse = await axios.request(options);
       if (resp.status === 200) {
         return true;
+      } else if (
+        resp.status === 403
+      ) {
+        throw new Error(
+          resp.data.message,
+        );
       }
       return false;
     } catch (error: any) {
       if (error.response?.status === 404) {
         return error.response?.message;
+      } else if (axios.isAxiosError(error) && error.response) {
+        throw new Error(
+          `${error.response.status} ${error.response?.data.error}`,
+        );
+      } else if (error.message) {
+        throw new Error(error.message)
       }
       throw new Error('Could not delete ArgoCD app.');
     }
@@ -450,11 +472,23 @@ export class ArgoService implements ArgoServiceApi {
       const resp: AxiosResponse = await axios.request(options);
       if (resp.status === 200) {
         return true;
+      } else if (
+        resp.status === 403
+      ) {
+        throw new Error(
+          resp.data.message,
+        );
       }
       return false;
     } catch (error: any) {
       if (error.response?.status === 404) {
         return error.response?.message;
+      } else if (axios.isAxiosError(error) && error.response) {
+        throw new Error(
+          `${error.response.status} ${error.response?.data.error}`,
+        );
+      } else if (error.message) {
+        throw new Error(error.message)
       }
       throw new Error('Could not delete ArgoCD project.');
     }

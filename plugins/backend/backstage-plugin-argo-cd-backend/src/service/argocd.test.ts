@@ -229,6 +229,38 @@ describe('ArgoCD service', () => {
     });
   });
 
+  it('should fail to create a project in argo when argo user is not given enough permissions', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        response: {
+          status: 403,
+          error:
+            'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+          message:
+            'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        },
+      },
+    });
+
+    const resp = await argoService.createArgoProject(
+      'https://argoInstance1.com',
+      'testToken',
+      'testProject',
+      'test-namespace',
+      'https://github.com/backstage/backstage',
+    );
+
+    expect(resp).toStrictEqual({
+      response: {
+        error:
+          'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        status: 403,
+      },
+    });
+  });
+
   it('should create an app in argo', async () => {
     mocked(axios.request).mockResolvedValue({
       data: {
@@ -272,6 +304,41 @@ describe('ArgoCD service', () => {
 
     expect(await resp).toStrictEqual({
       error: 'Failed to Create application',
+    });
+  });
+
+  it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
+    mocked(axios.request).mockResolvedValue({
+      data: {
+        response: {
+          status: 403,
+          error:
+            'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+          message:
+            'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        },
+      },
+    });
+
+    const resp = await argoService.createArgoApplication(
+      'https://argoInstance1.com',
+      'testToken',
+      'testApp',
+      'testProject',
+      'testNamespace',
+      'https://github.com/backstage/backstage',
+      'kubernetes/nonproduction',
+      'backstageId',
+    );
+
+    expect(resp).toStrictEqual({
+      response: {
+        status: 403,
+        error:
+          'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      },
     });
   });
 
@@ -350,6 +417,28 @@ describe('ArgoCD service', () => {
     expect(await resp).toStrictEqual(false);
   });
 
+  it('should fail to delete project in argo when bad permissions', async () => {
+    mocked(axios.request).mockResolvedValueOnce({
+      status: 403,
+      data: {
+        error:
+          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      },
+    });
+
+    const resp = argoService.deleteProject(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    await expect(resp).rejects.toThrowError(
+      'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+    );
+  });
+
   it('should delete app in argo', async () => {
     mocked(axios.request).mockResolvedValue({
       status: 200,
@@ -378,6 +467,28 @@ describe('ArgoCD service', () => {
     expect(await resp).toStrictEqual(false);
   });
 
+  it('should fail to delete application in argo when bad permissions', async () => {
+    mocked(axios.request).mockResolvedValueOnce({
+      status: 403,
+      data: {
+        error:
+          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      },
+    });
+
+    const resp = argoService.deleteApp(
+      'https://argoInstance1.com',
+      'testApp',
+      'testToken',
+    );
+
+    await expect(resp).rejects.toThrowError(
+      'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+    );
+  });
+
   it('should sync app', async () => {
     mocked(axios.post).mockResolvedValue({
       status: 200,
@@ -402,6 +513,27 @@ describe('ArgoCD service', () => {
   it('should fail to sync app on bad status', async () => {
     mocked(axios.post).mockResolvedValue({
       status: 500,
+    });
+
+    const resp = argoService.syncArgoApp(
+      {
+        name: 'testApp',
+        url: 'https://argoInstance1.com',
+        appName: ['testApp'],
+      },
+      'testToken',
+      'testApp',
+    );
+
+    expect(await resp).toStrictEqual({
+      message: 'Failed to resync testApp on testApp',
+      status: 'Failure',
+    });
+  });
+
+  it('should fail to sync app on bad permissions', async () => {
+    mocked(axios.post).mockResolvedValue({
+      status: 403,
     });
 
     const resp = argoService.syncArgoApp(
@@ -461,12 +593,85 @@ describe('ArgoCD service', () => {
 
   it('should fail to sync all apps when bad token', async () => {
     // token
-    mocked(axios.request).mockResolvedValueOnce({
-      status: 401,
+    mocked(axios.request).mockRejectedValueOnce({
+      response: {
+        status: 401,
+        statusText: 'Unauthorized',
+        data: {
+          message: 'Unauthorized',
+        },
+      },
     });
 
     const resp = argoService.resyncAppOnAllArgos('testApp');
 
-    await expect(resp).rejects.toThrow();
+    await expect(resp).rejects.toThrowError(
+      'Getting unauthorized for Argo CD instance https://argoInstance1.com',
+    );
+  });
+
+  it('should fail to sync all apps when bad permissions', async () => {
+    mocked(axios.post).mockResolvedValue({
+      status: 403,
+    });
+
+    const resp = argoService.syncArgoApp(
+      {
+        name: 'testApp',
+        url: 'https://argoInstance1.com',
+        appName: ['testApp'],
+      },
+      'testToken',
+      'testApp',
+    );
+
+    expect(await resp).toStrictEqual({
+      message: 'Failed to resync testApp on testApp',
+      status: 'Failure',
+    });
+  });
+
+  it('should fail to sync all apps due to permissions', async () => {
+    // token
+    mocked(axios.request).mockResolvedValueOnce({
+      data: { token: 'testToken' },
+    });
+    // findArgoApp
+    mocked(axios.request).mockResolvedValueOnce({
+      data: {
+        items: [
+          {
+            metadata: {
+              name: 'testAppName',
+              namespace: 'testNamespace',
+            },
+          },
+        ],
+      },
+    });
+    // token
+    mocked(axios.request).mockResolvedValueOnce({
+      data: { token: 'testToken' },
+    });
+    // sync
+    mocked(axios.post).mockRejectedValueOnce({
+      status: 403,
+      error:
+        'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      message:
+        'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+    });
+
+    const resp = argoService.resyncAppOnAllArgos('testApp');
+
+    expect(await resp).toStrictEqual([
+      [
+        {
+          message:
+            'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+          status: 'Failure',
+        },
+      ],
+    ]);
   });
 });
