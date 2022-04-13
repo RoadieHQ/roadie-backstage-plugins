@@ -40,11 +40,13 @@ const mockErrorApi = {
   post: jest.fn(),
 };
 
+const mockConfig = jest.fn().mockImplementation((_: string) => undefined);
 const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_s: string) => 'test.server/url' },
-  ],
+  getOptionalStringArray: (_: string) => {
+    return mockConfig();
+  }
 };
+
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, mockErrorApi],
@@ -82,7 +84,37 @@ describe('IFrameCard', () => {
           </EntityProvider>
         </TestApiProvider>,
       );
-      expect(await rendered.findByText('No src field provided. Please pass it in as a prop to populate this field')).toBeTruthy();
+      expect(await rendered.findByText('No src field provided. Please pass it in as a prop to populate the iframe.')).toBeTruthy();
+    });
+  });
+
+  describe("when src is not in allowlist", () => {
+    it('should not render the iframe', async () => {
+      props.src = "https://example.com";
+      mockConfig.mockImplementation(() => ["hello.com"]);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(await rendered.findByText('Src https://example.com for Iframe is not included in the allowlist hello.com.')).toBeTruthy();
+    });
+  });
+
+  describe("when src is in the allowlist", () => {
+    it('should not render the iframe', async () => {
+      props.src = "https://example.com";
+      mockConfig.mockImplementation(() => ["example.com"]);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(await rendered.findByText('some title')).toBeTruthy();
     });
   });
 });

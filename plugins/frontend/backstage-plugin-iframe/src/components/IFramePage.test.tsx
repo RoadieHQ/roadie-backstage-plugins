@@ -24,9 +24,9 @@ import { ThemeProvider } from '@material-ui/core';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const config = {
-  getOptionalConfigArray: (_: string) => [
-    { getOptionalString: (_s: string) => 'test.server/url' },
-  ],
+  getOptionalStringArray: (_: string) => {
+    return undefined;
+  },
   getOptionalConfig: (_: string) => undefined
 };
 const apis: [AnyApiRef, Partial<unknown>][] = [

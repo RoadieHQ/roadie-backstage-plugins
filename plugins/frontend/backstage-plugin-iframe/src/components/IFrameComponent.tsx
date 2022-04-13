@@ -21,6 +21,7 @@ import {
   Content,
   ContentHeader,
 } from '@backstage/core-components';
+import {configApiRef, useApi} from '@backstage/core-plugin-api';
 
 /**
  * A component to render a IFrame
@@ -30,13 +31,24 @@ import {
 export const IFrameCard = (props: IFrameProps) => {
   const { src, height, width } = props;
   const title = props.title || 'Backstage IFrame (Note you can modify this with the props)'
+  const configApi = useApi(configApiRef);
+  const allowList = configApi.getOptionalStringArray('iframe.allowList');
+  let errorMessage = ""
 
   if(!src || src === ""){
+    errorMessage = "No src field provided. Please pass it in as a prop to populate the iframe."
+  }
+
+  if(src && allowList && !allowList.includes(new URL(src).hostname)){
+    errorMessage = `Src ${src} for Iframe is not included in the allowlist ${allowList.join(",")}.`
+  }
+
+  if(errorMessage !== ""){
     return (
       <Grid container>
         <Grid item xs={8}>
           <Typography>
-            No src field provided. Please pass it in as a prop to populate this field
+            {errorMessage}
           </Typography>
         </Grid>
       </Grid>
