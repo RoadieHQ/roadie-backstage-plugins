@@ -57,6 +57,16 @@ const overviewContent = (
 );
 ```
 
+## Allowlisting
+
+This particular plugin supports allowlisting. What this means is you can add a domain to the plugin's configuration that will be verified during the creation of the plugins components.
+
+The config is like so:
+```
+iframe:
+  allowList: ["some-domain.com"]
+```
+
 ## Links
 
 - [Backstage](https://backstage.io)
