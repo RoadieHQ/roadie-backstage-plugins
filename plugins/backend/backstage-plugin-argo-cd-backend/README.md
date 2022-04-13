@@ -24,4 +24,6 @@ Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `
 
 You can also use an argo session token as mentioned above in the `argocd` object as shown above. If omitted, we will use the argo username and password from the code block above.
 
+Setting permissions for the Argo CD user account can reduce the scope, but also reduce the functionality of the backend. If you choose to scope the permissions for read-only get actions will work such as the catalog plugin but creating, deleting, and resyncing applications will not be available. The error handling has been designed to alert the users when the proper permissions are not in place.
+
 ## Contributed By American Airlines
