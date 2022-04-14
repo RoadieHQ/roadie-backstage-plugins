@@ -1,0 +1,19 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-iframe
+  description: |
+    Backstage plugin to render iframes.
+  annotations:
+    github.com/project-slug: roadiehq/backstage-plugin-iframe
+  tags:
+    - plugin
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-iframe
+      title: NPM
+spec:
+  type: library
+  owner: group:engineering
+  lifecycle: production
