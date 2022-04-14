@@ -215,6 +215,7 @@ export class ArgoService implements ArgoServiceApi {
     projectName: string,
     namespace: string,
     sourceRepo: string,
+    destinationServer: string = "https://kubernetes.default.svc"
   ): Promise<object> {
     const data = {
       project: {
@@ -226,7 +227,7 @@ export class ArgoService implements ArgoServiceApi {
             {
               name: 'local',
               namespace: namespace,
-              server: 'https://kubernetes.default.svc',
+              server: destinationServer,
             },
           ],
           sourceRepos: [sourceRepo],
@@ -279,6 +280,7 @@ export class ArgoService implements ArgoServiceApi {
     sourceRepo: string,
     sourcePath: string,
     labelValue: string,
+    destinationServer: string = "https://kubernetes.default.svc"
   ): Promise<object> {
     const data = {
       metadata: {
@@ -289,7 +291,7 @@ export class ArgoService implements ArgoServiceApi {
       spec: {
         destination: {
           namespace: namespace,
-          server: 'https://kubernetes.default.svc',
+          server: destinationServer,
         },
         project: projectName,
         revisionHistoryLimit: 10,
