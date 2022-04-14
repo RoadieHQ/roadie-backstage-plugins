@@ -20,6 +20,8 @@ export function createRouter({
     config.getOptionalString('argocd.username') ?? 'argocdUsername';
   const argoPassword =
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
+    const argoWaitCycles: number =
+      config.getOptionalNumber('argocd.waitCycles') ?? 25;
 
   const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
@@ -259,7 +261,7 @@ export function createRouter({
           token,
         );
         let isAppDeployed = 'metadata' in argoApp;
-        for (let attempts = 0; attempts < 25 && isAppDeployed; attempts++) {
+        for (let attempts = 0; attempts < argoWaitCycles && isAppDeployed; attempts++) {
           await new Promise(resolve => setTimeout(resolve, 3000));
           argoApp = await argoSvc.getArgoAppData(
             matchedArgoInstance.url,
