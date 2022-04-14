@@ -21,6 +21,8 @@ export function createRouter({
   const argoPassword =
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
 
+  const argoSvc = new ArgoService(argoUserName, argoPassword, config);
+
   const argoApps = config
     .getConfigArray('argocd.appLocatorMethods')
     .filter(element => element.getString('type') === 'config');
@@ -37,7 +39,6 @@ export function createRouter({
 
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
-    const argoSvc = new ArgoService(argoUserName, argoPassword, config);
     response.send(await argoSvc.findArgoApp({ name: argoAppName }));
   });
 
@@ -47,8 +48,6 @@ export function createRouter({
       const argoInstanceName = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
-
-      const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = argoInstanceArray.find(
@@ -79,7 +78,6 @@ export function createRouter({
 
   router.get('/find/selector/:argoAppSelector', async (request, response) => {
     const argoAppSelector = request.params.argoAppSelector;
-    const argoSvc = new ArgoService(argoUserName, argoPassword, config);
     response.send(await argoSvc.findArgoApp({ selector: argoAppSelector }));
   });
 
@@ -88,9 +86,6 @@ export function createRouter({
     async (request, response) => {
       const argoInstanceName = request.params.argoInstanceName;
       const argoAppSelector = request.params.argoAppSelector;
-      logger.info(`Getting info for apps with selector ${argoAppSelector}`);
-
-      const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
       logger.info(
         `Getting apps for selector ${argoAppSelector} on ${argoInstanceName}`,
@@ -129,7 +124,6 @@ export function createRouter({
     const labelValue = appName;
     const sourceRepo = request.body.sourceRepo;
     const sourcePath = request.body.sourcePath;
-    const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
     const matchedArgoInstance = argoInstanceArray.find(
       argoInstance => argoInstance.name === argoInstanceName,
@@ -200,7 +194,6 @@ export function createRouter({
 
   router.post('/sync', async (request, response) => {
     const appSelector = request.body.appSelector;
-    const argoSvc = new ArgoService(argoUserName, argoPassword, config);
     try {
       const argoSyncResp = await argoSvc.resyncAppOnAllArgos(appSelector);
 
@@ -219,8 +212,6 @@ export function createRouter({
       const argoInstanceName = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
-
-      const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
       const matchedArgoInstance = argoInstanceArray.find(
         argoInstance => argoInstance.name === argoInstanceName,
