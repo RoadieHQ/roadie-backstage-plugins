@@ -20,8 +20,8 @@ export function createRouter({
     config.getOptionalString('argocd.username') ?? 'argocdUsername';
   const argoPassword =
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
-    const argoWaitCycles: number =
-      config.getOptionalNumber('argocd.waitCycles') ?? 25;
+  const argoWaitCycles: number =
+    config.getOptionalNumber('argocd.waitCycles') ?? 25;
 
   const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
@@ -153,13 +153,13 @@ export function createRouter({
 
     let argoProjResp = {};
     try {
-      argoProjResp = await argoSvc.createArgoProject(
-        matchedArgoInstance.url,
-        token,
+      argoProjResp = await argoSvc.createArgoProject({
+        baseUrl: matchedArgoInstance.url,
+        argoToken: token,
         projectName,
         namespace,
         sourceRepo,
-      );
+      });
     } catch (e: any) {
       logger.error(argoProjResp);
       return response.status(e.status || 500).send({
@@ -170,16 +170,16 @@ export function createRouter({
 
     let argoAppResp = {};
     try {
-      argoAppResp = await argoSvc.createArgoApplication(
-        matchedArgoInstance.url,
-        token,
+      argoAppResp = await argoSvc.createArgoApplication({
+        baseUrl: matchedArgoInstance.url,
+        argoToken: token,
         projectName,
         appName,
         namespace,
         sourceRepo,
         sourcePath,
         labelValue,
-      );
+      });
       return response.send({
         argoProjectName: projectName,
         argoAppName: appName,
@@ -234,18 +234,14 @@ export function createRouter({
 
       let argoDeleteAppResp: boolean;
       try {
-        argoDeleteAppResp = await argoSvc.deleteApp(
-          matchedArgoInstance.url,
-          argoAppName,
-          token,
-        );
-      } catch (e :any) {
-        if (
-          typeof(e.message) === "string"
-        ) {
-          throw new Error(
-            e.message
-          );
+        argoDeleteAppResp = await argoSvc.deleteApp({
+          baseUrl: matchedArgoInstance.url,
+          argoApplicationName: argoAppName,
+          argoToken: token,
+        });
+      } catch (e: any) {
+        if (typeof e.message === 'string') {
+          throw new Error(e.message);
         }
         return response
           .status(500)
@@ -261,7 +257,11 @@ export function createRouter({
           token,
         );
         let isAppDeployed = 'metadata' in argoApp;
-        for (let attempts = 0; attempts < argoWaitCycles && isAppDeployed; attempts++) {
+        for (
+          let attempts = 0;
+          attempts < argoWaitCycles && isAppDeployed;
+          attempts++
+        ) {
           await new Promise(resolve => setTimeout(resolve, 3000));
           argoApp = await argoSvc.getArgoAppData(
             matchedArgoInstance.url,
@@ -271,11 +271,11 @@ export function createRouter({
           );
           isAppDeployed = 'metadata' in argoApp;
         }
-        argoDeleteProjectResp = await argoSvc.deleteProject(
-          matchedArgoInstance.url,
-          argoAppName,
-          token,
-        );
+        argoDeleteProjectResp = await argoSvc.deleteProject({
+          baseUrl: matchedArgoInstance.url,
+          argoProjectName: argoAppName,
+          argoToken: token,
+        });
       } catch {
         return response
           .status(500)

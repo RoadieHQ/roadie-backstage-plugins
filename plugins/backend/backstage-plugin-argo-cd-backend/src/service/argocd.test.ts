@@ -196,13 +196,13 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoProject(
-      'https://argoInstance1.com',
-      'testToken',
-      'testProject',
-      'test-namespace',
-      'https://github.com/backstage/backstage',
-    );
+    const resp = argoService.createArgoProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+    });
 
     expect(await resp).toStrictEqual({
       argocdCreateProjectResp,
@@ -216,13 +216,13 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoProject(
-      'https://argoInstance1.com',
-      'testToken',
-      'testProject',
-      'test-namespace',
-      'https://github.com/backstage/backstage',
-    );
+    const resp = argoService.createArgoProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+    });
 
     expect(await resp).toStrictEqual({
       error: 'Failed to Create project',
@@ -242,13 +242,13 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = await argoService.createArgoProject(
-      'https://argoInstance1.com',
-      'testToken',
-      'testProject',
-      'test-namespace',
-      'https://github.com/backstage/backstage',
-    );
+    const resp = await argoService.createArgoProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+    });
 
     expect(resp).toStrictEqual({
       response: {
@@ -268,16 +268,16 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoApplication(
-      'https://argoInstance1.com',
-      'testToken',
-      'testApp',
-      'testProject',
-      'testNamespace',
-      'https://github.com/backstage/backstage',
-      'kubernetes/nonproduction',
-      'backstageId',
-    );
+    const resp = argoService.createArgoApplication({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      appName: 'testProject',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+      sourcePath: 'kubernetes/nonproduction',
+      labelValue: 'backstageId',
+    });
 
     expect(await resp).toStrictEqual({
       argocdCreateApplicationResp,
@@ -291,16 +291,16 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoApplication(
-      'https://argoInstance1.com',
-      'testToken',
-      'testApp',
-      'testProject',
-      'testNamespace',
-      'https://github.com/backstage/backstage',
-      'kubernetes/nonproduction',
-      'backstageId',
-    );
+    const resp = argoService.createArgoApplication({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      appName: 'testProject',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+      sourcePath: 'kubernetes/nonproduction',
+      labelValue: 'backstageId',
+    });
 
     expect(await resp).toStrictEqual({
       error: 'Failed to Create application',
@@ -308,7 +308,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
-    mocked(axios.request).mockResolvedValue({
+    mocked(axios.request).mockResolvedValueOnce({
       data: {
         response: {
           status: 403,
@@ -320,16 +320,16 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = await argoService.createArgoApplication(
-      'https://argoInstance1.com',
-      'testToken',
-      'testApp',
-      'testProject',
-      'testNamespace',
-      'https://github.com/backstage/backstage',
-      'kubernetes/nonproduction',
-      'backstageId',
-    );
+    const resp = await argoService.createArgoApplication({
+      baseUrl: 'https://argoInstance1.com',
+      argoToken: 'testToken',
+      appName: 'testProject',
+      projectName: 'testProject',
+      namespace: 'test-namespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+      sourcePath: 'kubernetes/nonproduction',
+      labelValue: 'backstageId',
+    });
 
     expect(resp).toStrictEqual({
       response: {
@@ -354,16 +354,16 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoResources(
-      'argoInstance1',
-      'testApp',
-      'testProject',
-      'testNamespace',
-      'https://github.com/backstage/backstage',
-      'kubernetes/nonproduction',
-      'backstageId',
-      getVoidLogger(),
-    );
+    const resp = argoService.createArgoResources({
+      argoInstance: 'argoInstance1',
+      appName: 'testApp',
+      projectName: 'testProject',
+      namespace: 'testNamespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+      sourcePath: 'kubernetes/nonproduction',
+      labelValue: 'backstageId',
+      logger: getVoidLogger(),
+    });
 
     expect(await resp).toStrictEqual(true);
   });
@@ -375,16 +375,16 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.createArgoResources(
-      'argoInstance1',
-      'testApp',
-      'testProject',
-      'testNamespace',
-      'https://github.com/backstage/backstage',
-      'kubernetes/nonproduction',
-      'backstageId',
-      getVoidLogger(),
-    );
+    const resp = argoService.createArgoResources({
+      argoInstance: 'argoInstance1',
+      appName: 'testApp',
+      projectName: 'testProject',
+      namespace: 'testNamespace',
+      sourceRepo: 'https://github.com/backstage/backstage',
+      sourcePath: 'kubernetes/nonproduction',
+      labelValue: 'backstageId',
+      logger: getVoidLogger(),
+    });
 
     await expect(resp).rejects.toThrow();
   });
@@ -394,11 +394,11 @@ describe('ArgoCD service', () => {
       status: 200,
     });
 
-    const resp = argoService.deleteProject(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoProjectName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     expect(await resp).toStrictEqual(true);
   });
@@ -408,11 +408,11 @@ describe('ArgoCD service', () => {
       status: 500,
     });
 
-    const resp = argoService.deleteProject(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoProjectName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     expect(await resp).toStrictEqual(false);
   });
@@ -428,11 +428,11 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.deleteProject(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoProjectName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     await expect(resp).rejects.toThrowError(
       'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
@@ -444,11 +444,11 @@ describe('ArgoCD service', () => {
       status: 200,
     });
 
-    const resp = argoService.deleteApp(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteApp({
+      baseUrl: 'https://argoInstance1.com',
+      argoApplicationName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     expect(await resp).toStrictEqual(true);
   });
@@ -458,11 +458,11 @@ describe('ArgoCD service', () => {
       status: 500,
     });
 
-    const resp = argoService.deleteApp(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteApp({
+      baseUrl: 'https://argoInstance1.com',
+      argoApplicationName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     expect(await resp).toStrictEqual(false);
   });
@@ -478,11 +478,11 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.deleteApp(
-      'https://argoInstance1.com',
-      'testApp',
-      'testToken',
-    );
+    const resp = argoService.deleteApp({
+      baseUrl: 'https://argoInstance1.com',
+      argoApplicationName: 'testApp',
+      argoToken: 'testToken',
+    });
 
     await expect(resp).rejects.toThrowError(
       'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
@@ -494,15 +494,15 @@ describe('ArgoCD service', () => {
       status: 200,
     });
 
-    const resp = argoService.syncArgoApp(
-      {
+    const resp = argoService.syncArgoApp({
+      argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
         appName: ['testApp'],
       },
-      'testToken',
-      'testApp',
-    );
+      argoToken: 'testToken',
+      appName: 'testApp',
+    });
 
     expect(await resp).toStrictEqual({
       message: 'Re-synced testApp on testApp',
@@ -515,15 +515,15 @@ describe('ArgoCD service', () => {
       status: 500,
     });
 
-    const resp = argoService.syncArgoApp(
-      {
+    const resp = argoService.syncArgoApp({
+      argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
         appName: ['testApp'],
       },
-      'testToken',
-      'testApp',
-    );
+      argoToken: 'testToken',
+      appName: 'testApp',
+    });
 
     expect(await resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
@@ -536,15 +536,15 @@ describe('ArgoCD service', () => {
       status: 403,
     });
 
-    const resp = argoService.syncArgoApp(
-      {
+    const resp = argoService.syncArgoApp({
+      argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
         appName: ['testApp'],
       },
-      'testToken',
-      'testApp',
-    );
+      argoToken: 'testToken',
+      appName: 'testApp',
+    });
 
     expect(await resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
@@ -579,7 +579,7 @@ describe('ArgoCD service', () => {
       status: 200,
     });
 
-    const resp = argoService.resyncAppOnAllArgos('testApp');
+    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
 
     expect(await resp).toStrictEqual([
       [
@@ -603,7 +603,7 @@ describe('ArgoCD service', () => {
       },
     });
 
-    const resp = argoService.resyncAppOnAllArgos('testApp');
+    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
 
     await expect(resp).rejects.toThrowError(
       'Getting unauthorized for Argo CD instance https://argoInstance1.com',
@@ -615,15 +615,15 @@ describe('ArgoCD service', () => {
       status: 403,
     });
 
-    const resp = argoService.syncArgoApp(
-      {
+    const resp = argoService.syncArgoApp({
+      argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
         appName: ['testApp'],
       },
-      'testToken',
-      'testApp',
-    );
+      argoToken: 'testToken',
+      appName: 'testApp',
+    });
 
     expect(await resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
@@ -662,7 +662,7 @@ describe('ArgoCD service', () => {
         'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
     });
 
-    const resp = argoService.resyncAppOnAllArgos('testApp');
+    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
 
     expect(await resp).toStrictEqual([
       [

@@ -13,6 +13,56 @@ export type SyncResponse = {
   message: string;
 };
 
+interface CreateArgoProjectProps {
+  baseUrl: string;
+  argoToken: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string;
+  destinationServer?: string;
+}
+
+interface CreateArgoApplicationProps {
+  baseUrl: string;
+  argoToken: string;
+  appName: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string;
+  sourcePath: string;
+  labelValue: string;
+  destinationServer?: string;
+}
+
+interface CreateArgoResourcesProps {
+  argoInstance: string;
+  appName: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string;
+  sourcePath: string;
+  labelValue: string;
+  logger: Logger;
+}
+
+interface DeleteProjectProps {
+  baseUrl: string;
+  argoProjectName: string;
+  argoToken: string;
+}
+
+interface DeleteApplicationProps {
+  baseUrl: string;
+  argoApplicationName: string;
+  argoToken: string;
+}
+
+interface SyncArgoApplicationProps {
+  argoInstance: findArgoAppResp;
+  argoToken: string;
+  appName: string;
+}
+
 export interface ArgoServiceApi {
   getArgoToken: (token: string) => Promise<string>;
   getArgoAppData: (
@@ -24,49 +74,17 @@ export interface ArgoServiceApi {
     },
     argoToken: string,
   ) => Promise<object>;
-  createArgoProject: (
-    baseUrl: string,
-    argoToken: string,
-    projectName: string,
-    namespace: string,
-    sourceRepos: string,
-  ) => Promise<object>;
-  createArgoApplication: (
-    baseUrl: string,
-    argoToken: string,
-    appName: string,
-    projectName: string,
-    namespace: string,
-    sourceRepo: string,
-    sourcePath: string,
-    labelValue: string,
-  ) => Promise<object>;
-  createArgoResources: (
-    argoInstance: string,
-    appName: string,
-    projectName: string,
-    namespace: string,
-    sourceRepo: string,
-    sourcePath: string,
-    labelValue: string,
-    logger: Logger,
-  ) => Promise<boolean>;
-  deleteProject: (
-    baseUrl: string,
-    argoAppName: string,
-    argoToken: string,
-  ) => Promise<boolean>;
-  deleteApp: (
-    baseUrl: string,
-    argoAppName: string,
-    argoToken: string,
-  ) => Promise<boolean>;
+  createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
+  createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
+  createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
+  deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
+  deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
   syncArgoApp: (
-    argoInstance: findArgoAppResp,
-    argoToken: string,
-    appName: string,
+    props: SyncArgoApplicationProps
   ) => Promise<SyncResponse>;
-  resyncAppOnAllArgos: (appSelector: string) => Promise<SyncResponse[][]>;
+  resyncAppOnAllArgos: (props: {
+    appSelector: string;
+  }) => Promise<SyncResponse[][]>;
   findArgoApp: (options: {
     name?: string;
     selector?: string;
@@ -159,9 +177,7 @@ export class ArgoService implements ArgoServiceApi {
       return resp.data.token;
     } catch (e: any) {
       if (e.response?.status === 401) {
-        throw new Error(
-          `Getting unauthorized for Argo CD instance ${baseUrl}`,
-        );
+        throw new Error(`Getting unauthorized for Argo CD instance ${baseUrl}`);
       }
       throw new Error(
         `Could not retrieve ArgoCD token for instance ${baseUrl}`,
@@ -209,14 +225,15 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async createArgoProject(
-    baseUrl: string,
-    argoToken: string,
-    projectName: string,
-    namespace: string,
-    sourceRepo: string,
-    destinationServer: string = "https://kubernetes.default.svc"
-  ): Promise<object> {
+  async createArgoProject(props: CreateArgoProjectProps): Promise<object> {
+    const {
+      baseUrl,
+      argoToken,
+      projectName,
+      namespace,
+      sourceRepo,
+      destinationServer,
+    } = props;
     const data = {
       project: {
         metadata: {
@@ -227,7 +244,9 @@ export class ArgoService implements ArgoServiceApi {
             {
               name: 'local',
               namespace: namespace,
-              server: destinationServer,
+              server: destinationServer
+                ? destinationServer
+                : 'https://kubernetes.default.svc',
             },
           ],
           sourceRepos: [sourceRepo],
@@ -251,12 +270,8 @@ export class ArgoService implements ArgoServiceApi {
       console.error(error);
       if (error.response?.status === 404) {
         return error.response?.data;
-      } else if (
-        error.response?.status === 403
-      ) {
-        throw new Error(
-          error.response?.data.message,
-        );
+      } else if (error.response?.status === 403) {
+        throw new Error(error.response?.data.message);
       } else if (
         error.response?.data.message.includes(
           'existing project spec is different',
@@ -272,16 +287,19 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   async createArgoApplication(
-    baseUrl: string,
-    argoToken: string,
-    appName: string,
-    projectName: string,
-    namespace: string,
-    sourceRepo: string,
-    sourcePath: string,
-    labelValue: string,
-    destinationServer: string = "https://kubernetes.default.svc"
+    props: CreateArgoApplicationProps,
   ): Promise<object> {
+    const {
+      baseUrl,
+      argoToken,
+      appName,
+      projectName,
+      namespace,
+      sourceRepo,
+      sourcePath,
+      labelValue,
+      destinationServer,
+    } = props;
     const data = {
       metadata: {
         name: appName,
@@ -291,7 +309,9 @@ export class ArgoService implements ArgoServiceApi {
       spec: {
         destination: {
           namespace: namespace,
-          server: destinationServer,
+          server: destinationServer
+            ? destinationServer
+            : 'https://kubernetes.default.svc',
         },
         project: projectName,
         revisionHistoryLimit: 10,
@@ -344,9 +364,11 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async resyncAppOnAllArgos(appSelector: string): Promise<SyncResponse[][]> {
+  async resyncAppOnAllArgos(props: {
+    appSelector: string;
+  }): Promise<SyncResponse[][]> {
     const findArgoAppResp: findArgoAppResp[] = await this.findArgoApp({
-      selector: appSelector,
+      selector: props.appSelector,
     });
 
     const parallelSyncCalls = findArgoAppResp.map(
@@ -356,7 +378,7 @@ export class ArgoService implements ArgoServiceApi {
           try {
             const resp = argoInstance.appName.map(
               (argoApp: any): Promise<SyncResponse> => {
-                return this.syncArgoApp(argoInstance, token, argoApp);
+                return this.syncArgoApp({argoInstance, argoToken: token, appName: argoApp});
               },
             );
             return await Promise.all(resp);
@@ -373,10 +395,11 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   async syncArgoApp(
-    argoInstance: findArgoAppResp,
-    argoToken: string,
-    appName: string,
+    props: SyncArgoApplicationProps
   ): Promise<SyncResponse> {
+    const {argoInstance,
+      argoToken,
+      appName,} = props
     const data = {
       prune: false,
       dryRun: false,
@@ -416,14 +439,11 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async deleteApp(
-    baseUrl: string,
-    argoAppName: string,
-    argoToken: string,
-  ): Promise<boolean> {
+  async deleteApp(props: DeleteApplicationProps): Promise<boolean> {
+    const { baseUrl, argoApplicationName, argoToken } = props;
     const options: AxiosRequestConfig = {
       method: 'DELETE',
-      url: `${baseUrl}/api/v1/applications/${argoAppName}`,
+      url: `${baseUrl}/api/v1/applications/${argoApplicationName}`,
       params: { cascade: 'true' },
       headers: {
         Authorization: `Bearer ${argoToken}`,
@@ -434,12 +454,8 @@ export class ArgoService implements ArgoServiceApi {
       const resp: AxiosResponse = await axios.request(options);
       if (resp.status === 200) {
         return true;
-      } else if (
-        resp.status === 403
-      ) {
-        throw new Error(
-          resp.data.message,
-        );
+      } else if (resp.status === 403) {
+        throw new Error(resp.data.message);
       }
       return false;
     } catch (error: any) {
@@ -450,20 +466,17 @@ export class ArgoService implements ArgoServiceApi {
           `${error.response.status} ${error.response?.data.error}`,
         );
       } else if (error.message) {
-        throw new Error(error.message)
+        throw new Error(error.message);
       }
       throw new Error('Could not delete ArgoCD app.');
     }
   }
 
-  async deleteProject(
-    baseUrl: string,
-    argoAppName: string,
-    argoToken: string,
-  ): Promise<boolean> {
+  async deleteProject(props: DeleteProjectProps): Promise<boolean> {
+    const { baseUrl, argoProjectName, argoToken } = props;
     const options: AxiosRequestConfig = {
       method: 'DELETE',
-      url: `${baseUrl}/api/v1/projects/${argoAppName}`,
+      url: `${baseUrl}/api/v1/projects/${argoProjectName}`,
       params: { cascade: 'true' },
       headers: {
         Authorization: `Bearer ${argoToken}`,
@@ -474,12 +487,8 @@ export class ArgoService implements ArgoServiceApi {
       const resp: AxiosResponse = await axios.request(options);
       if (resp.status === 200) {
         return true;
-      } else if (
-        resp.status === 403
-      ) {
-        throw new Error(
-          resp.data.message,
-        );
+      } else if (resp.status === 403) {
+        throw new Error(resp.data.message);
       }
       return false;
     } catch (error: any) {
@@ -490,22 +499,23 @@ export class ArgoService implements ArgoServiceApi {
           `${error.response.status} ${error.response?.data.error}`,
         );
       } else if (error.message) {
-        throw new Error(error.message)
+        throw new Error(error.message);
       }
       throw new Error('Could not delete ArgoCD project.');
     }
   }
 
-  async createArgoResources(
-    argoInstance: string,
-    appName: string,
-    projectName: string,
-    namespace: string,
-    sourceRepo: string,
-    sourcePath: string,
-    labelValue: string,
-    logger: Logger,
-  ): Promise<boolean> {
+  async createArgoResources(props: CreateArgoResourcesProps): Promise<boolean> {
+    const {
+      argoInstance,
+      appName,
+      projectName,
+      namespace,
+      sourceRepo,
+      sourcePath,
+      labelValue,
+      logger,
+    } = props;
     const argoApps = this.config
       .getConfigArray('argocd.appLocatorMethods')
       .filter(element => element.getString('type') === 'config');
@@ -535,24 +545,24 @@ export class ArgoService implements ArgoServiceApi {
       token = matchedArgoInstance.token;
     }
 
-    await this.createArgoProject(
-      matchedArgoInstance.url,
-      token,
-      projectName ? projectName : appName,
+    await this.createArgoProject({
+      baseUrl: matchedArgoInstance.url,
+      argoToken: token,
+      projectName: projectName ? projectName : appName,
       namespace,
       sourceRepo,
-    );
+    });
 
-    await this.createArgoApplication(
-      matchedArgoInstance.url,
-      token,
+    await this.createArgoApplication({
+      baseUrl: matchedArgoInstance.url,
+      argoToken: token,
       appName,
-      projectName ? projectName : appName,
+      projectName: projectName ? projectName : appName,
       namespace,
       sourceRepo,
       sourcePath,
-      labelValue ? labelValue : appName,
-    );
+      labelValue: labelValue ? labelValue : appName,
+    });
 
     return true;
   }
