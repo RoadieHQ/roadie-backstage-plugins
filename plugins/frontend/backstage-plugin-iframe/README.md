@@ -19,24 +19,26 @@ yarn add @roadiehq/backstage-plugin-iframe
 import { 
   iframePlugin,
   EntityIFrameCard,
-  EntityIFramePage,
+  EntityIFrameContent,
 } from '@roadiehq/backstage-plugin-iframe';
 ...
 
-const iframeProps = {
+const contentProps = {
   frames: [
     {
       src: "https://example.com"
     }
-  ]
+  ],
+  title: "super cool title"
 }
+
 const serviceEntityPage = (
   <EntityLayoutWrapper>
     ...
     <EntityLayout.Route 
       path="/mycustom-iframes"
       title="Iframes">
-        <EntityIFramePage {...iframeProps} />
+        <EntityIFrameContent {...iframeProps} />
     </EntityLayout.Route>
     ...
   </EntityLayoutWrapper>
@@ -63,6 +65,7 @@ This particular plugin supports allowlisting. What this means is you can add a d
 
 The config is like so:
 ```
+// app-config.yaml
 iframe:
   allowList: ["some-domain.com"]
 ```

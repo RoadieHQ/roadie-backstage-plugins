@@ -15,13 +15,14 @@
  */
 
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import {ErrorComponent} from './ErrorComponent';
 import { IFrameProps } from './types';
 import {
   Content,
   ContentHeader,
 } from '@backstage/core-components';
 import {configApiRef, useApi} from '@backstage/core-plugin-api';
+import { determineError } from './utils/helpers';
 
 /**
  * A component to render a IFrame
@@ -33,25 +34,17 @@ export const IFrameCard = (props: IFrameProps) => {
   const title = props.title || 'Backstage IFrame (Note you can modify this with the props)'
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
-  let errorMessage = ""
+  const errorMessage = determineError(src, allowList);
 
-  if(!src || src === ""){
-    errorMessage = "No src field provided. Please pass it in as a prop to populate the iframe."
-  }
-
-  if(src && allowList && !allowList.includes(new URL(src).hostname)){
-    errorMessage = `Src ${src} for Iframe is not included in the allowlist ${allowList.join(",")}.`
+  if(errorMessage !== ""){
+    return (
+      <ErrorComponent {...{errorMessage}}/>
+    )
   }
 
   if(errorMessage !== ""){
     return (
-      <Grid container>
-        <Grid item xs={8}>
-          <Typography>
-            {errorMessage}
-          </Typography>
-        </Grid>
-      </Grid>
+      <ErrorComponent {...{errorMessage}}/>
     )
   }
 

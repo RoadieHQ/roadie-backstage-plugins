@@ -16,8 +16,8 @@
 
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { iframePlugin, EntityIFrameCard, EntityIFramePage } from '../src';
-import { IFramePageProps, IFrameProps } from '../src/components/types';
+import { iframePlugin, EntityIFrameCard, EntityIFrameContent } from '../src';
+import { IFrameContentProps, IFrameProps } from '../src/components/types';
 
 const props: IFrameProps = {
   src: "https://example.com",
@@ -26,8 +26,9 @@ const props: IFrameProps = {
   title: "Well hello there"
 }
 
-const pageProps: IFramePageProps = {
-  frames: [props]
+const pageProps: IFrameContentProps = {
+  iframe: props,
+  title: 'Some amazing iframe'
 }
 
 createDevApp()
@@ -38,7 +39,7 @@ createDevApp()
     path: '/backstage-plugin-iframe',
   })
   .addPage({
-    element: <EntityIFramePage {...pageProps} />,
+    element: <EntityIFrameContent {...pageProps} />,
     title: 'Iframe page',
     path: 'iframe-page',
   }).render();

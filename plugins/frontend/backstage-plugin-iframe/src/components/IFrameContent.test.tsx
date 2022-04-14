@@ -18,9 +18,7 @@ import { render } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { setupRequestMockHandlers, TestApiProvider, wrapInTestApp } from '@backstage/test-utils';
 import { AnyApiRef, configApiRef,} from '@backstage/core-plugin-api';
-import { IFramePage } from './IFramePage';
-import { lightTheme } from '@backstage/theme';
-import { ThemeProvider } from '@material-ui/core';
+import { IFrameContent } from './IFrameContent';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const config = {
@@ -42,54 +40,62 @@ const mockEntity = {
   },
 }
 
-describe('IFramePage', () => {
+describe('IFrameContent', () => {
   const server = setupServer();
   // Enable sane handlers for network requests
   setupRequestMockHandlers(server);
   const props = {
-    frames: [{
+    iframe: {
       src: "https://example.com",
       title: "some title"
-    },
-    {
-      src: "https://example.com",
-      title: "some other title"
-    }]};
+    }
+  };
 
-  describe("when src is set", () => {
+  describe("when props are set", () => {
     it('should render container for the iframe', async () => {
       const rendered = render(
         wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <ThemeProvider theme={lightTheme}>
-            <EntityProvider
-                entity={mockEntity}
-              >
-              <IFramePage {...props}/>
-            </EntityProvider>
-          </ThemeProvider>
+          <EntityProvider
+              entity={mockEntity}
+            >
+            <IFrameContent {...props}/>
+          </EntityProvider>
         </TestApiProvider>,
       ));
       expect(await rendered.findByText('some title')).toBeTruthy();
-      expect(await rendered.findByText('some other title')).toBeTruthy();
     });
   });
 
-  describe("when src is not set", () => {
+  describe("when props are not set", () => {
     it('should not render the iframe', async () => {
       const rendered = render(
         wrapInTestApp(
           <TestApiProvider apis={apis}>
-            <ThemeProvider theme={lightTheme}>
-              <EntityProvider
-                  entity={mockEntity}
-                >
-                <IFramePage {...{frames: []}}/>
-              </EntityProvider>
-            </ThemeProvider>
+            <EntityProvider
+                entity={mockEntity}
+              >
+              <IFrameContent {...{iframe: { src: ""}}}/>
+            </EntityProvider>
           </TestApiProvider>
       ));
-      expect(await rendered.findByText('You must pass in props to render the page correctly')).toBeTruthy();
+      expect(await rendered.findByText('No src field provided. Please pass it in as a prop to populate the iframe.')).toBeTruthy();
+    });
+  });
+
+  describe("when title is overwritten", () => {
+    it('should not render the iframe', async () => {
+      const rendered = render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <EntityProvider
+                entity={mockEntity}
+              >
+              <IFrameContent {...{iframe: { src: "https://hello.com"}, title: "some title"}}/>
+            </EntityProvider>
+          </TestApiProvider>
+      ));
+      expect(await rendered.findByText("some title")).toBeTruthy();
     });
   });
 });

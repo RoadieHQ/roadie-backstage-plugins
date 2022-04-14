@@ -12,6 +12,7 @@ export type IFrameProps = {
   class?: string;
 }
 
-export type IFramePageProps = {
-  frames: IFrameProps[];  
+export type IFrameContentProps = {
+  iframe: IFrameProps;
+  title?: string;
 }

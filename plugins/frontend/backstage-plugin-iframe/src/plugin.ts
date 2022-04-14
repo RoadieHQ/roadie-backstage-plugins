@@ -22,14 +22,14 @@ import {
   createRoutableExtension,
 } from '@backstage/core-plugin-api';
 
-export const entityContentRouteRef = createRouteRef({
+export const rootRouteRef = createRouteRef({
   id: 'iframe',
 });
 
 export const iframePlugin = createPlugin({
   id: 'iframe',
   routes: {
-    entityContent: entityContentRouteRef,
+    entityContent: rootRouteRef,
   },
 });
 
@@ -45,12 +45,12 @@ export const EntityIFrameCard = iframePlugin.provide(
   }),
 );
 
-export const EntityIFramePage = iframePlugin.provide(
+export const EntityIFrameContent = iframePlugin.provide(
   createRoutableExtension({
-    name: 'EntityBugsnagErrorsOverviewTable',
+    name: 'EntityIFrameContent',
     component: () =>
-      import('./components/IFramePage').then(m => m.IFramePage),
-    mountPoint: entityContentRouteRef,
+      import('./components/IFrameContent').then(m => m.IFrameContent),
+    mountPoint: rootRouteRef,
   }),
 );
 
