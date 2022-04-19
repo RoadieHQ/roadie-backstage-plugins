@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -33,7 +33,7 @@
     "@backstage/plugin-techdocs-backend": "^1.0.0",
     "@gitbeaker/node": "^29.2.0",
     "@octokit/rest": "^18.5.3",
-    "@roadiehq/backstage-plugin-argo-cd-backend": "2.0.0",
+    "@roadiehq/backstage-plugin-argo-cd-backend": "2.1.0",
     "@roadiehq/backstage-plugin-aws-auth": "^0.3.2",
     "@roadiehq/scaffolder-backend-module-http-request": "^3.0.0",
     "@roadiehq/scaffolder-backend-module-utils": "^1.0.0",

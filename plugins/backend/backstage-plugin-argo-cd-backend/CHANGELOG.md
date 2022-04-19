@@ -1,5 +1,14 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.1.0
+
+### Minor Changes
+
+- 3ba9cb9: - Add create endpoints
+  - Add delete endpoints
+  - Add sync endpoints
+  - Add scaffolder action for create
+
 ## 2.0.0
 
 ### Major Changes
