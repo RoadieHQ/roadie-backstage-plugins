@@ -1,0 +1,8 @@
+# Stub app config needed to run with yarn start
+app:
+  title: backstage example app
+  baseUrl: http://localhost:3000
+
+proxy:
+  '/bamboohr/api':
+    target: https://${BAMBOOHR_API_KEY}:x@api.bamboohr.com/api/gateway.php/${BAMBOOHR_DOMAIN}/v1/

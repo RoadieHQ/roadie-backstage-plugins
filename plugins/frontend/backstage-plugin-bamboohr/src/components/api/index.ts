@@ -1,0 +1,1 @@
+export { useWhosOut } from './useWhosOut';
