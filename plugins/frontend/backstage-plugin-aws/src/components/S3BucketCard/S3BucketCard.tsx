@@ -80,15 +80,12 @@ export const S3BucketCard = (props: Props) => {
         });
         setBucketDetails(s3BucketDetails);
         setLoading(false);
-        return undefined;
       } else {
         setAnnotationError(ACCOUNT_ID_ANNOTATION);
         setLoading(false);
-        return undefined;
       }
-    } else {
-      return undefined;
     }
+    return undefined;
   }, [entity, setBucketDetails, bucketDetails]);
 
   const classes = useStyles();

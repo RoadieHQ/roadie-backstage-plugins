@@ -39,7 +39,7 @@ export class AwsClient implements AwsApi {
       params.region = opts.Region;
     }
     const response = await fetch(
-      `${getResourseUrl}?` + new URLSearchParams(params),
+      `${getResourseUrl}?${new URLSearchParams(params)}`
     );
     if (response.status === 200) {
       return await response.json();
