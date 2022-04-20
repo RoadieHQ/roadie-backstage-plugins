@@ -106,6 +106,9 @@ import {
 import {
   EntityIFrameCard
 } from '@roadiehq/backstage-plugin-iframe';
+import {
+  S3BucketCard
+} from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -147,6 +150,9 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+      <Grid item md={6}>
+          <S3BucketCard />
+      </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
         <Grid item md={6}>

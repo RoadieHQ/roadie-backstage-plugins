@@ -1,7 +1,7 @@
 // eslint-disable-next-line notice/notice
-import { createRouter } from '@roadiehq/backstage-plugin-aws-auth';
+import { createRouter } from '@roadiehq/backstage-plugin-aws-backend';
 import type { PluginEnvironment } from '../types';
 
-export default async function createPlugin({ logger }: PluginEnvironment) {
-  return await createRouter(logger);
+export default async function createPlugin({ logger, config }: PluginEnvironment) {
+  return await createRouter({ logger, config });
 }
