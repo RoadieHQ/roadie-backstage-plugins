@@ -7,7 +7,10 @@ metadata:
   annotations:
     github.com/project-slug: roadiehq/roadie-backstage-plugins
     github.com/project-readme-path: plugins/frontend/backstage-plugin-argo-cd/README.md
-    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/backstage-plugin-argo-cd
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-argo-cd/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/frontend/backstage-plugin-argo-cd/catalog-info.yaml
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-argo-cd
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-argo-cd
   tags:
     - plugin
     - oss
