@@ -46,8 +46,8 @@ export function createRouter({
         `received request for ${AccountId}, ${Identifier}, ${TypeName}`,
       );
       const accounts = config.getOptionalConfigArray(`aws.accounts`) || [];
-      const account = accounts.find(account => {
-        return account.getString('accountId') === AccountId;
+      const account = accounts.find(acc => {
+        return acc.getString('accountId') === AccountId;
       });
 
       if (!account) {
@@ -88,15 +88,14 @@ export function createRouter({
             response.contentType('application/json');
           }
           response.send(body);
-          return;
         } else {
           response.status(500);
           response.contentType('application/json');
           response.send(
             JSON.stringify({ error: 'an unexpected error occurred' }),
           );
-          return;
         }
+        return;
       } catch (e: any) {
         response.status(500);
         if (e.name === 'ResourceNotFoundException') {
