@@ -5,10 +5,9 @@ export interface Config {
      * The base url of the AWS instance.
      * @visibility frontend
      */
-    accounts?: {
-      [accountId: string]: {
-        roleArn?: string;
-      };
-    };
+    accounts?: [{
+      accountId: string,
+      roleArn?: string
+    }];
   };
 }

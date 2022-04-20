@@ -189,7 +189,7 @@
 
 "@aws-sdk/client-cloudcontrol@^3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-cloudcontrol/-/client-cloudcontrol-3.72.0.tgz#ebfcc5f343117c4a6b022c7a9f601189b989de61"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-cloudcontrol/-/client-cloudcontrol-3.72.0.tgz#ebfcc5f343117c4a6b022c7a9f601189b989de61"
   integrity sha512-7Q2y4gtwtKROBGsW4D816E5u5P2Xp1N2YsXAPaGOeGOJAQrZjOglol1EdGcC0Ivdlh0FwnTqIHhjkG+owwFR8A==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
@@ -230,7 +230,7 @@
 
 "@aws-sdk/client-cognito-identity@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-cognito-identity/-/client-cognito-identity-3.72.0.tgz#9b3e0fcf87060043abb6bdd24c9520cb5fd6a214"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-cognito-identity/-/client-cognito-identity-3.72.0.tgz#9b3e0fcf87060043abb6bdd24c9520cb5fd6a214"
   integrity sha512-zcvEkHVshAayTgWKBsfGVgLfz0yZwtaHvB3uiRDE9FwyfISMRbiCUUbmHms7SWdoSy5fB1dOjyDacVcAKH5eRg==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
@@ -269,7 +269,7 @@
 
 "@aws-sdk/client-lambda@^3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-lambda/-/client-lambda-3.72.0.tgz#13afaca22ff4a9bee9dc79be383e82107dd1f6e3"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-lambda/-/client-lambda-3.72.0.tgz#13afaca22ff4a9bee9dc79be383e82107dd1f6e3"
   integrity sha512-xkCG31DD6xehAB+XoEHzIE4voFVsDh0w0jO1bvn0Mx7K26Izw7ADpdEraJ7wtV7NHCNkTMSOkbzv6fhKBLMo6g==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
@@ -367,7 +367,7 @@
 
 "@aws-sdk/client-s3@^3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-s3/-/client-s3-3.72.0.tgz#b3c5def9b2ae8e0fda7f17219603bdc0cdea6c1b"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.72.0.tgz#b3c5def9b2ae8e0fda7f17219603bdc0cdea6c1b"
   integrity sha512-WQnNs++yTsBARaZqpxIAB3CX9BrqgxnLo4g/wT8cLqRilhL8OY1KPowe8SptXcXbo2AdAuAtcFK2GC+MYcCgmg==
   dependencies:
     "@aws-crypto/sha1-browser" "2.0.0"
@@ -462,7 +462,7 @@
 
 "@aws-sdk/client-sso@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-sso/-/client-sso-3.72.0.tgz#2dc30c90132a1f58c9b9330704a62d9544a3354a"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.72.0.tgz#2dc30c90132a1f58c9b9330704a62d9544a3354a"
   integrity sha512-mQ2qSy5chVTzNo17kcOtylp8gUJr2SIx7ZkaC5ZUrA9RZu673XKFm1SXvL0aBw1LQBioKU2kGNwsUSDunXulpQ==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
@@ -539,7 +539,7 @@
 
 "@aws-sdk/client-sts@3.72.0", "@aws-sdk/client-sts@^3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/client-sts/-/client-sts-3.72.0.tgz#302583a73b0587e1a37f3b14f22fd69cb4300dd7"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.72.0.tgz#302583a73b0587e1a37f3b14f22fd69cb4300dd7"
   integrity sha512-m6nEXe5wi7Cx9DHBFOji+i2tn+EXNlBC2BymlFZ+KerxAfjLyu9U16Xx9VzmfnQS5dz0Fyh0DLBIcI9DY5+ywQ==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
@@ -591,7 +591,7 @@
 
 "@aws-sdk/credential-provider-cognito-identity@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/credential-provider-cognito-identity/-/credential-provider-cognito-identity-3.72.0.tgz#cb5563236ca77fd07f29725500fbe371c90daf6b"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-cognito-identity/-/credential-provider-cognito-identity-3.72.0.tgz#cb5563236ca77fd07f29725500fbe371c90daf6b"
   integrity sha512-qsTbSSFR1YvMQ3WGVlSiDcr5twG2jggmR1SunL7UQ7wYcIUbm96VPNn1BUWvP/435+YB9G9qZIlonUWAEy3YRg==
   dependencies:
     "@aws-sdk/client-cognito-identity" "3.72.0"
@@ -635,7 +635,7 @@
 
 "@aws-sdk/credential-provider-ini@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.72.0.tgz#97af5c6c96518d7ff293568b0b89b8ad4ec697a3"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.72.0.tgz#97af5c6c96518d7ff293568b0b89b8ad4ec697a3"
   integrity sha512-KeZAywZ5CxEUIRvIpxRiOkRUwGy+rTTGTfjQz/Mz6AUj+nx+8M5WnSLRgENcwXmX59A7VdqosvD1jnRiXJjmPg==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.55.0"
@@ -665,7 +665,7 @@
 
 "@aws-sdk/credential-provider-node@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/credential-provider-node/-/credential-provider-node-3.72.0.tgz#2f3f7789bb5436dc4f4654c534fa482547dacbf5"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.72.0.tgz#2f3f7789bb5436dc4f4654c534fa482547dacbf5"
   integrity sha512-8yNNILXPAD9RlcKI0aronXOgwF9vRZQqEwPuvkurCPFQFt+OM/4/HTJns2NSVmImKDMV36sG+6Ld6aJEVW4cLQ==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.55.0"
@@ -702,7 +702,7 @@
 
 "@aws-sdk/credential-provider-sso@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.72.0.tgz#9120deda73b4ec6efa7172bd8bc29fe822c36a08"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.72.0.tgz#9120deda73b4ec6efa7172bd8bc29fe822c36a08"
   integrity sha512-2NGjF2gMls5f/9QbUQEHR9kbVGePLI7EXVOyPb1H6DvQLp54keMVdTlSzKlRIcGUNd4MBYuDJak8Slf976/UVw==
   dependencies:
     "@aws-sdk/client-sso" "3.72.0"
@@ -722,7 +722,7 @@
 
 "@aws-sdk/credential-providers@^3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/credential-providers/-/credential-providers-3.72.0.tgz#f0facf9317acbf69660ee822d409346d961a5c68"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-providers/-/credential-providers-3.72.0.tgz#f0facf9317acbf69660ee822d409346d961a5c68"
   integrity sha512-jM6eWWHYaAFI4SVwnU2+opwhvgTpvSC8pwUrOyhbVP795efGyqI3OOMZb4SqXvE83M4wUNJWTQGcetXetJ+A/Q==
   dependencies:
     "@aws-sdk/client-cognito-identity" "3.72.0"
@@ -762,7 +762,7 @@
 
 "@aws-sdk/eventstream-serde-browser@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/eventstream-serde-browser/-/eventstream-serde-browser-3.72.0.tgz#952010c75758e22f45352f08c36e49a84b24ca0c"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/eventstream-serde-browser/-/eventstream-serde-browser-3.72.0.tgz#952010c75758e22f45352f08c36e49a84b24ca0c"
   integrity sha512-UhMZ4P60mZu7G+craAdkRgR4/n3lWAgrNp1upgN2W8RLEQwhqY3qHiUdn/kp6qvontwHnxZkXNB+5Zm5pcP8bQ==
   dependencies:
     "@aws-sdk/eventstream-marshaller" "3.58.0"
@@ -790,7 +790,7 @@
 
 "@aws-sdk/eventstream-serde-node@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/eventstream-serde-node/-/eventstream-serde-node-3.72.0.tgz#8d4e8a496d415990a723db723173af3afeca5173"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/eventstream-serde-node/-/eventstream-serde-node-3.72.0.tgz#8d4e8a496d415990a723db723173af3afeca5173"
   integrity sha512-woemBkQ3O7mTiT3kdJH72s3lQLhr2B7hxRhYeaa1xQf1UjLJkKXL5PEOOrcylmxLdF6rYLsFs8Y/Hr4FZfqAqA==
   dependencies:
     "@aws-sdk/eventstream-marshaller" "3.58.0"
@@ -809,7 +809,7 @@
 
 "@aws-sdk/eventstream-serde-universal@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/eventstream-serde-universal/-/eventstream-serde-universal-3.72.0.tgz#c5aff688933d8e59250bcd67a4d4b385aa21293e"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/eventstream-serde-universal/-/eventstream-serde-universal-3.72.0.tgz#c5aff688933d8e59250bcd67a4d4b385aa21293e"
   integrity sha512-iIaDC/2xgK+2kLiOPJv8wMDCCtI2JB8bkeac6cQOfn4hZGQdP6fvRGFWD2R8//VR52H68N2vrhCXHvtjnF4iFg==
   dependencies:
     "@aws-sdk/eventstream-marshaller" "3.58.0"
@@ -923,7 +923,7 @@
 
 "@aws-sdk/middleware-flexible-checksums@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.72.0.tgz#bb10e6985295df144f66c4d743b6ca39f54af2f6"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.72.0.tgz#bb10e6985295df144f66c4d743b6ca39f54af2f6"
   integrity sha512-lrwTmpygp6bxGRi6kbMq+EtTW5nsts+B7Wj7MA8PBIQsKU06T2tYxjDBYOyHB1MiVhltlq+vebBvacT64KsbFA==
   dependencies:
     "@aws-crypto/crc32" "2.0.0"
@@ -992,7 +992,7 @@
 
 "@aws-sdk/middleware-sdk-s3@3.66.0":
   version "3.66.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.66.0.tgz#c39f401969cb4d477c3e7e2f43df501c0b10a16d"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-s3/-/middleware-sdk-s3-3.66.0.tgz#c39f401969cb4d477c3e7e2f43df501c0b10a16d"
   integrity sha512-4ACAdKAZkIjEK99UwoaKTrTGhS7qGqyLmjiGHlzR0ggMUUVmlep7EtcluImFtT6pi+ANVLDzuZGa+95MwGY/Qg==
   dependencies:
     "@aws-sdk/protocol-http" "3.58.0"
@@ -1123,7 +1123,7 @@
 
 "@aws-sdk/signature-v4-multi-region@3.66.0":
   version "3.66.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/signature-v4-multi-region/-/signature-v4-multi-region-3.66.0.tgz#e3a1366396f9b967496981b67baf149661a51760"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/signature-v4-multi-region/-/signature-v4-multi-region-3.66.0.tgz#e3a1366396f9b967496981b67baf149661a51760"
   integrity sha512-Akvc8G9Del2+umg0R/5Gc/PWgQwbxxTXdnm6YTHtDzvyPPiYWBs6au6WqJQqcqk07gcQV67MLVqFFhnFuLlcVg==
   dependencies:
     "@aws-sdk/protocol-http" "3.58.0"
@@ -1155,7 +1155,7 @@
 
 "@aws-sdk/smithy-client@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/smithy-client/-/smithy-client-3.72.0.tgz#93e2b6a22f5426e7526b06296454c0f3831ef97d"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/smithy-client/-/smithy-client-3.72.0.tgz#93e2b6a22f5426e7526b06296454c0f3831ef97d"
   integrity sha512-eQ2pEzxtS1Vz1XyNKzG4Z+mtfwRzcAs4FUQP0wrrYVJMsIdI0X4vvro8gYGoBbQtOz65uY3XqQdLuXX/SabTQg==
   dependencies:
     "@aws-sdk/middleware-stack" "3.55.0"
@@ -1239,7 +1239,7 @@
 
 "@aws-sdk/util-defaults-mode-browser@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/util-defaults-mode-browser/-/util-defaults-mode-browser-3.72.0.tgz#23ab8ab1c12ce6ca63c1416c76b6acdccd88c9fd"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/util-defaults-mode-browser/-/util-defaults-mode-browser-3.72.0.tgz#23ab8ab1c12ce6ca63c1416c76b6acdccd88c9fd"
   integrity sha512-xeoh4jdq+tpZWDwGeXeoAQI+rZaCBEicjumBcqfzkRFE3DyaeyPHn3hiKGSR13R+P6Uf86aqaRNmWAeZZjeE0w==
   dependencies:
     "@aws-sdk/property-provider" "3.55.0"
@@ -1261,7 +1261,7 @@
 
 "@aws-sdk/util-defaults-mode-node@3.72.0":
   version "3.72.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@aws-sdk/util-defaults-mode-node/-/util-defaults-mode-node-3.72.0.tgz#6690f98901b4564ea0cea9b2c379f41c1d247686"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/util-defaults-mode-node/-/util-defaults-mode-node-3.72.0.tgz#6690f98901b4564ea0cea9b2c379f41c1d247686"
   integrity sha512-Qf4BZmjWTaWaWbIhra/il8zUAdYY6G4JIcg9WMzQgnh1L/iXpCZddInfB2zT4j5rSAuBf5Ov2T6zvtw3/KOh6Q==
   dependencies:
     "@aws-sdk/config-resolver" "3.58.0"
@@ -2681,7 +2681,7 @@
 
 "@backstage/catalog-client@^0.9.0":
   version "0.9.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/catalog-client/-/catalog-client-0.9.0.tgz#3e1024fab13fd8e2000d33833d2463ea9be5df9d"
+  resolved "https://registry.yarnpkg.com/@backstage/catalog-client/-/catalog-client-0.9.0.tgz#3e1024fab13fd8e2000d33833d2463ea9be5df9d"
   integrity sha512-mr2wrb+7uAPczOOYt07C4AbXIeX0mu+Iw6RPDNg67GvPvQVcbKCrjth9VEj8rScFGmJAn66ZcronbcZSS0MJww==
   dependencies:
     "@backstage/catalog-model" "^0.13.0"
@@ -2699,7 +2699,7 @@
 
 "@backstage/catalog-model@^0.13.0":
   version "0.13.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/catalog-model/-/catalog-model-0.13.0.tgz#abeb91522ac7ef7907907ad5bc889803131db209"
+  resolved "https://registry.yarnpkg.com/@backstage/catalog-model/-/catalog-model-0.13.0.tgz#abeb91522ac7ef7907907ad5bc889803131db209"
   integrity sha512-Q+0C0LJ8niNQ4TXduUNTycZ2PLMbhKmfgWywunJLO34DZAoFnTWJEAdEYF536YyLciHhLO0dHRUaHY29Sdr+Xg==
   dependencies:
     "@backstage/config" "^0.1.15"
@@ -2730,7 +2730,7 @@
 
 "@backstage/cli@^0.15.2":
   version "0.15.3"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/cli/-/cli-0.15.3.tgz#bf10398c203f7e7010c153031826b5daaee78669"
+  resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.15.3.tgz#bf10398c203f7e7010c153031826b5daaee78669"
   integrity sha512-4PNJxGqAhWAKtVHUugj8RImHdi0PP7eFsZac4IKVosXXYHWhlJ830zsBz+KVW81L09GXAdi3fOthB9oxoLsWSA==
   dependencies:
     "@backstage/cli-common" "^0.1.8"
@@ -2939,7 +2939,7 @@
 
 "@backstage/config-loader@^0.9.7":
   version "0.9.7"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/config-loader/-/config-loader-0.9.7.tgz#b056f592b8ec1b21007eb9193ec595a9da3fb1b9"
+  resolved "https://registry.yarnpkg.com/@backstage/config-loader/-/config-loader-0.9.7.tgz#b056f592b8ec1b21007eb9193ec595a9da3fb1b9"
   integrity sha512-dt+z5MSRG4qGYPsmlxZioEpXpf4/6R6wD7NJodcV5JbXd109sPALwwxMG4KLDuBvhJnKlJmOK1ZhQGe/11jHjA==
   dependencies:
     "@backstage/cli-common" "^0.1.8"
@@ -3104,7 +3104,7 @@
 
 "@backstage/errors@^0.2.2":
   version "0.2.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/errors/-/errors-0.2.2.tgz#2113e0bc859e645b8b59bfcb435f7535739b02f8"
+  resolved "https://registry.yarnpkg.com/@backstage/errors/-/errors-0.2.2.tgz#2113e0bc859e645b8b59bfcb435f7535739b02f8"
   integrity sha512-s6Ru3NL4oFiHwNsMY1uiwqNKuOu9KQWkpse3adWZsDu1fCQKOw2omQ2qBHZ4Uj1xJ6x9Ye0yNTJ4vfHfdwiaEg==
   dependencies:
     "@backstage/types" "^0.1.3"
@@ -3150,7 +3150,7 @@
 
 "@backstage/integration@^0.8.0":
   version "0.8.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/integration/-/integration-0.8.0.tgz#d74131ad347272b4935973aa4bd098fad9548ce6"
+  resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-0.8.0.tgz#d74131ad347272b4935973aa4bd098fad9548ce6"
   integrity sha512-GfNJRdcU7NMFjVqUSJOFRRrqEjKRGmgsL+s3TDtqmqqji7XPttTKD43+Ou50hRf0dkIETe5m1XHr1Fd5ksMt9A==
   dependencies:
     "@backstage/config" "^0.1.15"
@@ -3280,7 +3280,7 @@
 
 "@backstage/plugin-catalog-backend@^0.24.0":
   version "0.24.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.24.0.tgz#6f4ce5dec28356247b4344a4848e6c4fe994d651"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-0.24.0.tgz#6f4ce5dec28356247b4344a4848e6c4fe994d651"
   integrity sha512-yPhsJMQVXpkDIRbnrd8jm9dSBcDbQGzAyXfyTNiTnTEMib645M9g1Hq0KX5SWaLgFtnE8q+AukQ5m5uYt8r3eQ==
   dependencies:
     "@backstage/backend-common" "^0.13.0"
@@ -3356,7 +3356,7 @@
 
 "@backstage/plugin-catalog-common@^0.2.2":
   version "0.2.2"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/plugin-catalog-common/-/plugin-catalog-common-0.2.2.tgz#2f039ecd829d1d8e017609cb0bbf9af7c231ab63"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-common/-/plugin-catalog-common-0.2.2.tgz#2f039ecd829d1d8e017609cb0bbf9af7c231ab63"
   integrity sha512-qJbvKNZQ0URMiS/+rizOsdSPWt8Vkdn00VcJkhjVAB+Seuts835zme5eyvrObZ4D2LLoKG6huWcpbH5FGrKyGQ==
   dependencies:
     "@backstage/plugin-permission-common" "^0.5.2"
@@ -3539,6 +3539,17 @@
     uuid "^8.0.0"
     zod "^3.11.6"
 
+"@backstage/plugin-permission-common@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-common/-/plugin-permission-common-0.6.0.tgz#85464aa10d1f271252775e5eb30ecfd88e2af152"
+  integrity sha512-wx5TUDFilRqmMJP8TxjR5GuulFFOPHNwoK6eNMuz5ESzLzPhiJDovqaXjqpxsdCVGNb2VJOUlND3SzbwjQ65aA==
+  dependencies:
+    "@backstage/config" "^1.0.0"
+    "@backstage/errors" "^1.0.0"
+    cross-fetch "^3.1.5"
+    uuid "^8.0.0"
+    zod "^3.11.6"
+
 "@backstage/plugin-permission-node@^0.5.1", "@backstage/plugin-permission-node@^0.5.4", "@backstage/plugin-permission-node@^0.5.5":
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-node/-/plugin-permission-node-0.5.5.tgz#df30428c872b0bf3d95df9826d681cd6c1d6e191"
@@ -3631,7 +3642,7 @@
 
 "@backstage/plugin-scaffolder-common@^0.3.0":
   version "0.3.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@backstage/plugin-scaffolder-common/-/plugin-scaffolder-common-0.3.0.tgz#d72539200c5afa3e7b190e98c3617fb4a7ec7d91"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-common/-/plugin-scaffolder-common-0.3.0.tgz#d72539200c5afa3e7b190e98c3617fb4a7ec7d91"
   integrity sha512-u+dG9HzCdFvD5J1rGaFzAceAUB785kHLXAyO7epesF9ZtYGLzziI043Xhb696akUPV0T7VhtIvc5KQRHqfnm8g==
   dependencies:
     "@backstage/catalog-model" "^0.13.0"
@@ -3689,12 +3700,20 @@
     yaml "^1.9.2"
     zen-observable "^0.8.15"
 
-"@backstage/plugin-search-common@0.3.2", "@backstage/plugin-search-common@^0.3.1", "@backstage/plugin-search-common@^0.3.2":
+"@backstage/plugin-search-common@0.3.2", "@backstage/plugin-search-common@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-search-common/-/plugin-search-common-0.3.2.tgz#15984ba4c14f8a9119168e8c79344ef8101863dc"
   integrity sha512-7vcpRo+5MB/QW/M77zPfcqxw0LzcQCHNXql0uxF+qBwVPJSHz9QB+YBuzGyaAlqfm5UPFXuweLQGqtoB+0DMLg==
   dependencies:
     "@backstage/plugin-permission-common" "^0.5.3"
+    "@backstage/types" "^1.0.0"
+
+"@backstage/plugin-search-common@0.3.3", "@backstage/plugin-search-common@^0.3.1":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-search-common/-/plugin-search-common-0.3.3.tgz#e9251172163731aef61626b3e1ec40504a38cb11"
+  integrity sha512-CARcpoMFEQJdpe+Rm9m/mPhMOsWM0V+zncIHOLuKlzsMrQRTcwmcFoPqBdtlfdT9wEJTu1bci2ccsDsnZiSrhA==
+  dependencies:
+    "@backstage/plugin-permission-common" "^0.6.0"
     "@backstage/types" "^1.0.0"
 
 "@backstage/plugin-search@^0.7.0", "@backstage/plugin-search@^0.7.4":
@@ -3838,7 +3857,14 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@backstage/search-common@^0.3.1", "@backstage/search-common@^0.3.2":
+"@backstage/search-common@^0.3.1":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@backstage/search-common/-/search-common-0.3.3.tgz#756af22187283b754aefdc436c651231054be269"
+  integrity sha512-DtWd1Nrpvm2fkJRkw6bW8WeB6cFOvxsJ//o/fcoMsD5NCnaFtE1kFlCEt6QuUl6chAg6d+cX0rU+DJjSIC1rgQ==
+  dependencies:
+    "@backstage/plugin-search-common" "0.3.3"
+
+"@backstage/search-common@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@backstage/search-common/-/search-common-0.3.2.tgz#608a4eddf7eae71ed807ec1f723a80c6f7cdf3e4"
   integrity sha512-CvkgpVnMrDJsZghsJiMjOWGf5O/9fROsGHnv24EHK8h724nShieALfyawfKsScnpjDLDXU0TIZFDGuXiP/wIUw==
@@ -7389,7 +7415,12 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@^4.14.151", "@types/lodash@^4.14.173", "@types/lodash@^4.14.175":
+"@types/lodash@^4.14.151":
+  version "4.14.182"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
+  integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
+
+"@types/lodash@^4.14.173", "@types/lodash@^4.14.175":
   version "4.14.181"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.181.tgz#d1d3740c379fda17ab175165ba04e2d03389385d"
   integrity sha512-n3tyKthHJbkiWhDZs3DkhkCzt2MexYHXlX0td5iMplyfwketaOeKboEVBqzceH7juqvEg3q5oUoBFxSLu7zFag==
@@ -22889,7 +22920,7 @@ typescript-json-schema@^0.51.0:
 
 typescript-json-schema@^0.52.0:
   version "0.52.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/typescript-json-schema/-/typescript-json-schema-0.52.0.tgz#954560ec90e5486e8f7a5b7706ec59286a708e29"
+  resolved "https://registry.yarnpkg.com/typescript-json-schema/-/typescript-json-schema-0.52.0.tgz#954560ec90e5486e8f7a5b7706ec59286a708e29"
   integrity sha512-3ZdHzx116gZ+D9LmMl5/+d1G3Rpt8baWngKzepYWHnXbAa8Winv64CmFRqLlMKneE1c40yugYDFcWdyX1FjGzQ==
   dependencies:
     "@types/json-schema" "^7.0.9"
@@ -22925,7 +22956,7 @@ typescript@~4.2.3:
 
 typescript@~4.4.4:
   version "4.4.4"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
 
 typescript@~4.5.0, typescript@~4.5.4:

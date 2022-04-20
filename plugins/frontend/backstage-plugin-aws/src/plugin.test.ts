@@ -1,7 +1,7 @@
-import { awsFrontendPlugin } from './plugin';
+import { awsPlugin } from './plugin';
 
 describe('aws-frontend', () => {
   it('should export plugin', () => {
-    expect(awsFrontendPlugin).toBeDefined();
+    expect(awsPlugin).toBeDefined();
   });
 });

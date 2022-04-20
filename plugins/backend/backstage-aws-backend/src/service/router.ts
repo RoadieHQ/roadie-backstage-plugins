@@ -24,8 +24,17 @@ export function createRouter({
     const TypeName = request.params.typeName;
     const Identifier = request.params.identifier;
     logger.debug(`${config}, ${AccountId} ${Identifier}, ${TypeName}`);
-    const RoleArn = config.getOptionalString(`aws.accounts.aws${AccountId}.roleArn`);
+    const accounts = config.getOptionalConfigArray(`aws.accounts`) || [];
+    const account = accounts.find((account) => {
+      return account.getString('accountId') === AccountId;
+    });
+
+    if (!account) {
+      throw new Error(`There is no configuration for the account ${AccountId}`);
+    }
+
     let credentials = undefined;
+    const RoleArn = account.getOptionalString('roleArn')
     if (RoleArn) {
       credentials = fromTemporaryCredentials({params: {RoleArn, RoleSessionName: 'backstage-plugin-aws-backend'}})
     }
