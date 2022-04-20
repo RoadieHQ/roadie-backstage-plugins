@@ -14,7 +14,6 @@ kind: Location
 metadata:
   name: roadie-backstage-plugins
 spec:
-  type: file
   targets:
     - ./plugins/**/catalog-info.yaml
     - ./utils/**/catalog-info.yaml
