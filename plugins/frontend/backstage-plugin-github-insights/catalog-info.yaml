@@ -5,14 +5,16 @@ metadata:
   description: |
     Backstage plugin to provide Readmes, Top Contributors and other widgets.
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-github-insights
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-github-insights/README.md
   tags:
     - plugin
     - oss
+    - frontend
   links:
     - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights
       title: NPM
 spec:
   type: library
-  owner: group:engineering
+  owner: group:open-source
   lifecycle: production

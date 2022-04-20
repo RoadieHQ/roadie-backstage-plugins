@@ -5,14 +5,16 @@ metadata:
   description: |
     Backstage plugin to add security insights for GitHub repos.
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-security-insights
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-security-insights/README.md
   tags:
     - plugin
     - oss
+    - frontend
   links:
     - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights
       title: NPM
 spec:
   type: library
-  owner: group:engineering
+  owner: group:open-source
   lifecycle: production

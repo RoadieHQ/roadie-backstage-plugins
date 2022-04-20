@@ -1,18 +1,18 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: backstage-plugin-aws-lambda
+  name: backstage-plugin-bugsnag
   description: |
-    Backstage plugin to show the latest releases to your AWS Lambda functions.
+    Backstage plugin bugsnag
   annotations:
     github.com/project-slug: RoadieHQ/roadie-backstage-plugins
-    github.com/project-readme-path: plugins/frontend/backstage-plugin-aws-lambda/README.md
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-bugsnag/README.md
   tags:
     - plugin
     - oss
     - frontend
   links:
-    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag
       title: NPM
 spec:
   type: library

@@ -5,15 +5,17 @@ metadata:
   description: |
     Backstage plugin to view and interact with JIRA
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-jira
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-jira/README.md
     backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/backstage-plugin-jira/tree/main
   tags:
     - plugin
     - oss
+    - frontend
   links:
     - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira
       title: NPM
 spec:
   type: library
-  owner: group:engineering
+  owner: group:open-source
   lifecycle: production
