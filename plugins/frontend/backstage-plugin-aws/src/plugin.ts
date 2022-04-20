@@ -48,3 +48,12 @@ export const S3BucketCard = awsPlugin.provide(
     },
   }),
 );
+
+export const LambdaFunctionCard = awsPlugin.provide(
+    createComponentExtension({
+      name: 'LambdaFunctionCard',
+      component: {
+        lazy: () => import('./components/LambdaFunctionCard').then(m => m.LambdaFunctionCard),
+      },
+    }),
+);

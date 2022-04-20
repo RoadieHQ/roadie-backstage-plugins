@@ -90,7 +90,7 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
           metadata: {
             annotations: {
               ...defaultAnnotations,
-              'amazon.com/lambda-arn': lambdaFunction.FunctionArn,
+              'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
             },
             name: lambdaFunction.FunctionName,
           },

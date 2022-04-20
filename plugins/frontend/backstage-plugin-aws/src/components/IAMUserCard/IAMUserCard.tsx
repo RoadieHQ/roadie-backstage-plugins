@@ -26,7 +26,7 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
-import { ACCOUNT_ID_ANNOTATION, S3_BUCKET_ARN_ANNOTATION } from '../../constants';
+import { IAM_USER_ARN_ANNOTATION } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { useAsync } from 'react-use';
 
@@ -51,42 +51,39 @@ type Props = {
   variant?: InfoCardVariants;
 };
 
-export const S3BucketCard = (props: Props) => {
+export const IAMUserCard = (props: Props) => {
   const { entity } = useEntity();
   const awsApi = useApi(awsApiRef);
-  const [bucketDetails, setBucketDetails] = useState<any | undefined>();
+  const [userDetails, setUserDetails] = useState<any | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [annotationError, setAnnotationError] = useState<string | undefined>();
 
   useAsync(async () => {
-    if (!bucketDetails) {
+    if (!userDetails) {
       if (
-        entity.metadata.annotations &&
-        entity.metadata.annotations[ACCOUNT_ID_ANNOTATION] &&
-        entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION]
+          entity.metadata.annotations &&
+          entity.metadata.annotations[IAM_USER_ARN_ANNOTATION]
       ) {
         setLoading(true);
 
-        // bucket arns do not have the account id. :( so we need an annotation.
-        const accountId = entity.metadata.annotations[ACCOUNT_ID_ANNOTATION];
-        const bucketArn = entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION];
+        const userArn = entity.metadata.annotations[IAM_USER_ARN_ANNOTATION];
 
-        const { resource } = parseArn(bucketArn);
+        const { accountId, resource } = parseArn(userArn);
         const [_, resourceId] = resource.split('/');
-        const s3BucketDetails = await awsApi.getResource({
+        const iamUserDetails = await awsApi.getResource({
           AccountId: accountId,
-          TypeName: 'AWS::S3::Bucket',
+          TypeName: 'AWS::IAM::User',
           Identifier: resourceId,
         });
-        setBucketDetails(s3BucketDetails);
+        setUserDetails(iamUserDetails);
         setLoading(false);
       } else {
-        setAnnotationError(ACCOUNT_ID_ANNOTATION);
+        setAnnotationError(IAM_USER_ARN_ANNOTATION);
         setLoading(false);
       }
     }
     return undefined;
-  }, [entity, setBucketDetails, bucketDetails]);
+  }, [entity, setUserDetails, userDetails]);
 
   const classes = useStyles();
 
@@ -96,25 +93,25 @@ export const S3BucketCard = (props: Props) => {
 
   if (annotationError) {
     return (
-      <>
-        <MissingAnnotationEmptyState annotation={annotationError} />
-      </>
+        <>
+          <MissingAnnotationEmptyState annotation={annotationError} />
+        </>
     );
   }
 
   return (
-    <InfoCard
-      title="AWS S3 Bucket Details"
-      className={classes.infoCard}
-      variant={props.variant}
-    >
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Box position="relative">
-          <StructuredMetadataTable metadata={bucketDetails} />
-        </Box>
-      )}
-    </InfoCard>
+      <InfoCard
+          title="AWS IAM User Details"
+          className={classes.infoCard}
+          variant={props.variant}
+      >
+        {loading ? (
+            <CircularProgress />
+        ) : (
+            <Box position="relative">
+              <StructuredMetadataTable metadata={userDetails} />
+            </Box>
+        )}
+      </InfoCard>
   );
 };
