@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: scaffolder-backend-argocd
+  description: |
+    Scaffolder actions to interact with argocd
+  annotations:
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/scaffolder-actions/scaffolder-backend-argocd/README.md
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/scaffolder-actions/scaffolder-backend-argocd/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/scaffolder-actions/scaffolder-backend-argocd/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-argocd
+  tags:
+    - scaffolder
+    - oss
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/scaffolder-backend-argocd
+      title: NPM
+spec:
+  type: library
+  owner: group:open-source
+  lifecycle: production

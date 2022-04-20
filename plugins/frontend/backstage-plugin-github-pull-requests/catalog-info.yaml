@@ -5,15 +5,20 @@ metadata:
   description: |
     Backstage plugin to view and interact with GitHub pull requests.
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-github-pull-requests
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-github-pull-requests/README.md
     backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/backstage-plugin-github-pull-requests/tree/main
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-github-pull-requests/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/frontend/backstage-plugin-github-pull-requests/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-github-pull-requests
   tags:
     - plugin
     - oss
+    - frontend
   links:
     - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests
       title: NPM
 spec:
   type: library
-  owner: group:engineering
+  owner: group:open-source
   lifecycle: production
