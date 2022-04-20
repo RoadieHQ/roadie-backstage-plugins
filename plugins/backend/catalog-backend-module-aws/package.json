@@ -1,5 +1,5 @@
 {
-  "name": "@roadiehq/plugin-catalog-processors-aws",
+  "name": "@roadiehq/catalog-backend-module-aws",
   "description": "A set of Backstage catalog processors for AWS",
   "version": "0.0.2",
   "main": "src/index.ts",

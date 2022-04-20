@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-
 import { createApiRef } from '@backstage/core-plugin-api';
 
 export const awsApiRef = createApiRef<AwsApi>({
-    id: 'plugin.aws.service',
+  id: 'plugin.aws.service',
 });
 
 export type GetResourceInput = {
-    AccountId: string,
-    TypeName: string,
-    Identifier: string,
-}
+  AccountId: string;
+  TypeName: string;
+  Identifier: string;
+  Region?: string;
+};
 
 export type GetResourceOutput = {
-    TypeName: string,
-    ResourceDescription: string
-}
+  TypeName: string;
+  ResourceDescription: string;
+};
 
 export type AwsApi = {
-    getResource: (opts: GetResourceInput) => Promise<any>;
+  getResource: (opts: GetResourceInput) => Promise<any>;
 };

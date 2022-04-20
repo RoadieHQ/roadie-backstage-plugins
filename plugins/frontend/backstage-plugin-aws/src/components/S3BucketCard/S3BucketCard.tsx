@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable,
   MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import {
-  Box,
-  CircularProgress,
-  makeStyles,
-} from '@material-ui/core';
-import { useApi } from "@backstage/core-plugin-api"
+import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { awsApiRef } from "../../api/AwsApi";
-import {ACCOUNT_ID_ANNOTATION, BUCKET_ARN_ANNOTATION} from "../../constants";
-import { parse as parseArn } from "@aws-sdk/util-arn-parser"
-import { useAsync } from "react-use";
+import { awsApiRef } from '../../api/AwsApi';
+import { ACCOUNT_ID_ANNOTATION, BUCKET_ARN_ANNOTATION } from '../../constants';
+import { parse as parseArn } from '@aws-sdk/util-arn-parser';
+import { useAsync } from 'react-use';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -64,22 +60,26 @@ export const S3BucketCard = (props: Props) => {
 
   useAsync(async () => {
     if (!bucketDetails) {
-      if (entity.metadata.annotations && entity.metadata.annotations[ACCOUNT_ID_ANNOTATION] && entity.metadata.annotations[BUCKET_ARN_ANNOTATION]) {
+      if (
+        entity.metadata.annotations &&
+        entity.metadata.annotations[ACCOUNT_ID_ANNOTATION] &&
+        entity.metadata.annotations[BUCKET_ARN_ANNOTATION]
+      ) {
         setLoading(true);
 
         // bucket arns do not have the account id. :( so we need an annotation.
         const accountId = entity.metadata.annotations[ACCOUNT_ID_ANNOTATION];
         const bucketArn = entity.metadata.annotations[BUCKET_ARN_ANNOTATION];
 
-        const {resource} = parseArn(bucketArn);
+        const { resource } = parseArn(bucketArn);
         const [_, resourceId] = resource.split('/');
         const s3BucketDetails = await awsApi.getResource({
           AccountId: accountId,
           TypeName: 'AWS::S3::Bucket',
-          Identifier: resourceId
+          Identifier: resourceId,
         });
         setBucketDetails(s3BucketDetails);
-        setLoading(false)
+        setLoading(false);
         return undefined;
       } else {
         setAnnotationError(ACCOUNT_ID_ANNOTATION);
@@ -87,24 +87,22 @@ export const S3BucketCard = (props: Props) => {
         return undefined;
       }
     } else {
-      return undefined
+      return undefined;
     }
   }, [entity, setBucketDetails, bucketDetails]);
-
 
   const classes = useStyles();
 
   if (loading) {
-    return <CircularProgress />
+    return <CircularProgress />;
   }
 
   if (annotationError) {
-    return (<>
-      <MissingAnnotationEmptyState
-          annotation={annotationError}
-      />
-
-    </>)
+    return (
+      <>
+        <MissingAnnotationEmptyState annotation={annotationError} />
+      </>
+    );
   }
 
   return (

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {AwsApi, GetResourceInput } from './AwsApi';
-import {DiscoveryApi} from "@backstage/core-plugin-api";
+import { AwsApi, GetResourceInput } from './AwsApi';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
 type Options = {
-  discoveryApi: DiscoveryApi
-}
+  discoveryApi: DiscoveryApi;
+};
 export class AwsClient implements AwsApi {
   private readonly discoveryApi: DiscoveryApi;
   constructor(options: Options) {
@@ -28,11 +28,24 @@ export class AwsClient implements AwsApi {
 
   async getResource(opts: GetResourceInput): Promise<any> {
     const baseUrl = new URL(await this.discoveryApi.getBaseUrl('aws'));
-    const getResourseUrl = [baseUrl, opts.AccountId, opts.TypeName, opts.Identifier].join('/');
-    const response = await fetch(getResourseUrl);
+    const getResourseUrl = [
+      baseUrl,
+      opts.AccountId,
+      opts.TypeName,
+      opts.Identifier,
+    ].join('/');
+    const params: { [name: string]: string } = {};
+    if (opts.Region) {
+      params.region = opts.Region;
+    }
+    const response = await fetch(
+      `${getResourseUrl}?` + new URLSearchParams(params),
+    );
     if (response.status === 200) {
       return await response.json();
     }
-    throw new Error(`Failed to retrieve the aws resource ${opts.TypeName}/${opts.Identifier}`)
+    throw new Error(
+      `Failed to retrieve the aws resource ${opts.TypeName}/${opts.Identifier}`,
+    );
   }
 }
