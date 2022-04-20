@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.0.2
+
+### Patch Changes
+
+- fda00fb: Updating docs for argocd scaffold action
+
 ## 1.0.1
 
 ### Patch Changes
