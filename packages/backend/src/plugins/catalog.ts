@@ -39,8 +39,6 @@ export default async function createPlugin(
   }
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());
-  // builder.addProcessor(new AwsS3BucketDiscoveryProcessor());
-  // builder.addProcessor(new AwsLambdaFunctionDiscoveryProcessor());
 
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
