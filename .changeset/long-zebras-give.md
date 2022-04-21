@@ -1,5 +1,4 @@
 ---
-'backend': patch
 '@roadiehq/catalog-backend-module-aws': patch
 '@roadiehq/backstage-plugin-aws': patch
 '@roadiehq/backstage-plugin-aws-backend': patch
