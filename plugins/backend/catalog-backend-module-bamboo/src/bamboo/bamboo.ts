@@ -9,9 +9,9 @@ export type UserObject = {
   preferredName: string | null;
   jobTitle: string | null;
   workEmail: string | null;
-  department: string | null;
-  division: string | null;
-  pronouns: string | null;
+  department: string[] | null;
+  division: string[] | null;
+  pronouns: string[] | null;
   supervisor: string;
   photoUploaded: boolean;
   photoUrl: string | null;

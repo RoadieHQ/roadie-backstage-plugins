@@ -26,6 +26,7 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(new ScaffolderEntitiesProcessor());
   builder.addProcessor(BambooHROrgProcessor.fromConfig(config, env));
+
   for (const config of env.config.getOptionalConfigArray(
     'integrations.aws',
   ) || []) {

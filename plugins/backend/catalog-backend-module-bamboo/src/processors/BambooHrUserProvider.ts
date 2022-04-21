@@ -43,9 +43,8 @@ type BambooDirectoryResp = {
 export function readConfig(config: Config, logger: Logger): ProviderConfig[] {
   const providers: ProviderConfig[] = [];
   const providerConfigs =
-    config.getOptionalConfigArray('integrations.bambooHr.providers') ??
+    config.getOptionalConfigArray('integrations.bamboohr.providers') ??
     [];
-
   for (const providerConfig of providerConfigs) {
     try {
       const apiKey = providerConfig.getString('apiKey').split('\\n').join('\n');
@@ -87,8 +86,8 @@ export class BambooHrUserProvider implements EntityProvider {
   }
 
   async run(): Promise<void> {
-    this.logger.info('Running a provider loop');
-    await Promise.all(this.providers.map(async ({apiKey, domain}) => {
+    this.logger.info(`Running ${this.getProviderName()} provider loop`);
+    await this.providers.map(async ({apiKey, domain}) => {
       if (!this.connection) {
         throw new Error('Not initialized');
       }
@@ -100,22 +99,32 @@ export class BambooHrUserProvider implements EntityProvider {
       try {
         const resp: BambooDirectoryResp = (
           await axios.get(
-            `https://${apiKey}:x@api.bamboohr.com/api/gateway.php/${domain}/v1/employees/directory`
+            `https://api.bamboohr.com/api/gateway.php/${domain}/v1/employees/directory`,
+            { 
+              headers: {
+                Accept: 'application/json',
+                Authorization: `Basic ${apiKey}`
+              } 
+            },
           )
         ).data;
         const entityUsers: UserEntity[] = processUsers(resp.employees, defaultAnnotations);
+        this.logger.info(`Creating ${entityUsers.length} users.`);
         await this.connection.applyMutation({
           type: 'full',
           //@ts-ignore
-          entities: entityUsers.map((entity: UserEntity) => ({
-            entity,
-            locationKey: annotation,
-          })),
+          entities: entityUsers.map((entity: UserEntity) => {
+            this.logger.info(`Creating ${entity.metadata.name} user with location key ${annotation}`);
+            return {
+              entity,
+              locationKey: annotation
+            }
+          }),
         });
       } catch(e:any){
         this.logger.error(`Could not create entities for provider ${this.getProviderName()}. Got error: ${e.message}`);
         throw new Error(`Provider error: ${e.message}`);
       }
-    }));
+    });
   }
 }

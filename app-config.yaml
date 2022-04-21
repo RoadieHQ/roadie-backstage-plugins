@@ -29,6 +29,11 @@ integrations:
   github:
     - host: github.com
       token: ${GITHUB_TOKEN}
+
+  bamboohr:
+    providers:
+      - apiKey: ${BAMBOOHR_API_KEY}
+        domain: ${BAMBOOHR_DOMAIN}
     ### Example for how to add your GitHub Enterprise instance using the API:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
@@ -81,6 +86,12 @@ proxy:
     headers:
       Authorization: "token ${BUGSNAG_PERSONAL_TOKEN}"
       X-version: "2"
+
+  '/bamboohr/api':
+    target: 'https://api.bamboohr.com/api/gateway.php/${BAMBOOHR_DOMAIN}/v1/'
+    headers:
+      Authorization: 'Basic ${BAMBOOHR_API_KEY}'
+      Accept: 'application/json'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
