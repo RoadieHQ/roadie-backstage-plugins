@@ -44,7 +44,7 @@ export default async function createPlugin(
   for (const [i, provider] of providers.entries()) {
     env.logger.info(`configuring ${provider.getProviderName()} schedule`);
     await env.scheduler.scheduleTask({
-      id: `run_aws_update_${i}`,
+      id: `run_${provider.getProviderName()}_${i}`,
       fn: async () => {
         await provider.run();
       },
