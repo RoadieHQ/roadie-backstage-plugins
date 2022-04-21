@@ -83,9 +83,9 @@ proxy:
       X-version: '2'
 
   '/bamboohr/api':
-    target: 'https://api.bamboohr.com/api/gateway.php/roadiehq/v1/'
+    target: 'https://api.bamboohr.com/api/gateway.php/${BAMBOOHR_DOMAIN}/v1/'
     headers:
-      Authorization: 'Basic ${BAMBOOHR_DOMAIN}'
+      Authorization: 'Basic ${BAMBOOHR_API_KEY}'
       Accept: 'application/json'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration

@@ -22,5 +22,5 @@ export default async function createPlugin({
   config,
   discovery,
 }: PluginEnvironment): Promise<Router> {
-  return await createRouter({ logger, config, discovery });
+  return await createRouter({ logger, config, discovery, skipInvalidProxies: true });
 }

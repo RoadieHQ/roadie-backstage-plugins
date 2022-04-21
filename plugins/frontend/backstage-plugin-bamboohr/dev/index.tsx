@@ -23,6 +23,6 @@ createDevApp()
   .addPage({
     element: <HomePageBambooHrWhosOut />,
     title: 'Root Page',
-    path: '/backstage-plugin-iframe',
+    path: '/backstage-plugin-bamboo',
   })
   .render();

@@ -22,6 +22,7 @@ import {
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
+import { HomePageBambooHrWhosOut } from '@roadiehq/backstage-plugin-bamboohr';
 
 export const HomePage = () => {
   return (
@@ -59,6 +60,9 @@ export const HomePage = () => {
             },
           ]}
         />
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <HomePageBambooHrWhosOut/>
       </Grid>
     </Grid>
   );
