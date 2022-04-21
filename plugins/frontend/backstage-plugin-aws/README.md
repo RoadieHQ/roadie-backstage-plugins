@@ -1,13 +1,27 @@
-# aws-frontend
+# backstage-plugin-aws
 
-Welcome to the aws-frontend plugin!
+To use this plugin, you will need to add the cards to the entity page in the frontend app.
 
-_This plugin was created through the Backstage CLI_
+Edit the `packages/app/src/components/catalog/EntityPage.tsx` and add the imports
 
-## Getting started
+```typescript jsx
+import {
+    S3BucketCard,
+    LambdaFunctionCard,
+    IAMUserCard
+} from '@roadiehq/backstage-plugin-aws';
+```
 
-Your plugin has been added to the example app in this repository, meaning you'll be able to access it by running `yarn start` in the root directory, and then navigating to [/aws-frontend](http://localhost:3000/aws-frontend).
+Then add the following components:
 
-You can also serve the plugin in isolation by running `yarn start` in the plugin directory.
-This method of serving the plugin provides quicker iteration speed and a faster startup and hot reloads.
-It is only meant for local development, and the setup for it can be found inside the [/dev](./dev) directory.
+```typescript jsx
+<Grid item md={6}>
+    <LambdaFunctionCard />
+</Grid>
+<Grid item md={6}>
+    <S3BucketCard />
+</Grid>
+<Grid item md={6}>
+    <IAMUserCard />
+</Grid>
+```

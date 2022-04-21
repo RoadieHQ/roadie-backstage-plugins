@@ -57,3 +57,12 @@ export const LambdaFunctionCard = awsPlugin.provide(
       },
     }),
 );
+
+export const IAMUserCard = awsPlugin.provide(
+    createComponentExtension({
+        name: 'IAMUserCard',
+        component: {
+            lazy: () => import('./components/IAMUserCard').then(m => m.IAMUserCard),
+        },
+    }),
+);
