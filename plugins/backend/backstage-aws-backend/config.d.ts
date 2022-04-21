@@ -15,13 +15,9 @@
  */
 
 export interface Config {
-  /** Optional configurations for the AWS plugin */
-  aws?: {
-    /**
-     * The base url of the AWS instance.
-     * @visibility frontend
-     */
-    accounts?: [
+  integrations?: {
+    /** Optional configurations for the AWS plugin */
+    aws?: [
       {
         accountId: string;
         roleArn?: string;

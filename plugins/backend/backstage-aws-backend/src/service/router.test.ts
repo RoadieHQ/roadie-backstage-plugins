@@ -29,8 +29,8 @@ const config = ConfigReader.fromConfigs([
   {
     context: '',
     data: {
-      aws: {
-        accounts: [
+      integrations: {
+        aws: [
           {
             accountId: '99999999999',
             roleArn: 'arn:aws:iam::99999999999:role/ops',

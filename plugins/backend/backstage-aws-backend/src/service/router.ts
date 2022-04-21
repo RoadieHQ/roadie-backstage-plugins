@@ -34,16 +34,16 @@ export function createRouter({
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
-  const accounts: Account[] = (config.getOptionalConfigArray('integtations.aws') || []).map((config) => {
+  const accounts: Account[] = (config.getOptionalConfigArray('integrations.aws') || []).map((cfg) => {
       return {
-          accountId: config.getString('accountId'),
-          externalId: config.getOptionalString('externalId'),
-          roleArn: config.getString('roleArn'),
-          region: config.getOptionalString('region')
+          accountId: cfg.getString('accountId'),
+          externalId: cfg.getOptionalString('externalId'),
+          roleArn: cfg.getString('roleArn'),
+          region: cfg.getOptionalString('region')
       }
   });
 
-  // TODO implement list and possibly create and delete if we are brave
+  // TODO implement list and possibly create, update and delete if we are brave
   router.get(
     '/:accountId/:typeName/:identifier',
     async (request: Request, response) => {

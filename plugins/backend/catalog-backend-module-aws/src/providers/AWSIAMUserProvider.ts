@@ -27,10 +27,11 @@ import {
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { IAM } from '@aws-sdk/client-iam';
 import { STS } from '@aws-sdk/client-sts';
-import winston from "winston";
+import * as winston from "winston";
 import {Config} from "@backstage/config";
 import {AccountConfig} from "../types";
-var link2aws = require('link2aws');
+
+const link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS IAM User service.

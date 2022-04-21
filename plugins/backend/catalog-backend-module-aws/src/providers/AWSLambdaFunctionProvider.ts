@@ -27,10 +27,11 @@ import {
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { Lambda } from '@aws-sdk/client-lambda';
 import { STS } from '@aws-sdk/client-sts';
-import winston from "winston";
+import * as winston from "winston";
 import {Config} from "@backstage/config";
 import {AccountConfig} from "../types";
-var link2aws = require('link2aws');
+
+const link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS Lambda Function service.
