@@ -9,6 +9,7 @@ import { PluginEnvironment } from '../types';
 import {
   AWSLambdaFunctionProvider,
   AWSS3BucketProvider,
+  AWSIAMUserProvider
 } from '@roadiehq/catalog-backend-module-aws';
 import { Duration } from 'luxon';
 
@@ -21,21 +22,18 @@ export default async function createPlugin(
   const builder = await CatalogBuilder.create(env);
   const providers: RunnableProvider[] = [];
   for (const config of env.config.getOptionalConfigArray(
-    'catalog.providers.aws.accounts',
+    'integrations.aws',
   ) || []) {
-    const s3Provider = new AWSS3BucketProvider(
-      config.getString('accountId'),
-      config.getString('roleArn'),
-    );
-    const lambdaProvider = new AWSLambdaFunctionProvider(
-      config.getString('accountId'),
-      config.getString('roleArn'),
-    );
+    const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
+    const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
+    const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
+    builder.addEntityProvider(iamUserProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
+    providers.push(iamUserProvider);
   }
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());

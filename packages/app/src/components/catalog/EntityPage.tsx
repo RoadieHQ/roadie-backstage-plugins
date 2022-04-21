@@ -147,6 +147,9 @@ const overviewContent = (
       <EntityAboutCard variant="gridItem" />
     </Grid>
     <Grid item md={6}>
+      <LambdaFunctionCard />
+    </Grid>
+    <Grid item md={6}>
       <S3BucketCard />
     </Grid>
     <Grid item md={6}>

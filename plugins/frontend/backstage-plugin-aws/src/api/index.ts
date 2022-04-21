@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export { AWSS3BucketProvider } from './AWSS3BucketProvider';
-export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
-export { AWSIAMUserProvider } from './AWSIAMUserProvider';
+export {awsApiRef} from "./AwsApi";
+export type { AwsApi } from './AwsApi'
+export { AwsClient } from './AwsClient'

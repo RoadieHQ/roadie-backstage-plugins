@@ -16,6 +16,7 @@
 
 import {
   ANNOTATION_LOCATION,
+  ANNOTATION_VIEW_URL,
   ANNOTATION_ORIGIN_LOCATION,
   ResourceEntity,
 } from '@backstage/catalog-model';
@@ -26,7 +27,10 @@ import {
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { S3 } from '@aws-sdk/client-s3';
 import { STS } from '@aws-sdk/client-sts';
-import { Config } from '@backstage/config';
+import winston from "winston";
+import {Config} from "@backstage/config";
+import {AccountConfig} from "../types";
+var link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -34,18 +38,27 @@ import { Config } from '@backstage/config';
 export class AWSS3BucketProvider implements EntityProvider {
   private readonly accountId: string;
   private readonly roleArn: string;
-  private connection?: EntityProviderConnection;
+  private readonly externalId?: string;
+  private readonly region: string;
 
-  static fromConfig(config: Config) {
-    return new AWSS3BucketProvider(
-      config.getString('accountId'),
-      config.getString('roleArn'),
-    );
+  private connection?: EntityProviderConnection;
+  private logger: winston.Logger;
+
+  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+    const accountId = config.getString('accountId');
+    const roleArn = config.getString('roleArn');
+    const externalId = config.getOptionalString('externalId');
+    const region = config.getString('region');
+
+    return new AWSS3BucketProvider({ accountId, roleArn, externalId, region }, options)
   }
 
-  constructor(accountId: string, roleArn: string) {
-    this.accountId = accountId;
-    this.roleArn = roleArn;
+  constructor(account: AccountConfig, options: { logger: winston.Logger }) {
+    this.accountId = account.accountId;
+    this.roleArn = account.roleArn;
+    this.externalId = account.externalId;
+    this.region = account.region;
+    this.logger = options.logger;
   }
 
   getProviderName(): string {
@@ -61,54 +74,59 @@ export class AWSS3BucketProvider implements EntityProvider {
       throw new Error('Not initialized');
     }
 
-    const s3Resources: ResourceEntity[] = [];
+    this.logger.info(`Providing s3 bucket resources from aws: ${this.accountId}`)
+      const s3Resources: ResourceEntity[] = [];
 
-    const credentials = fromTemporaryCredentials({
-      params: { RoleArn: this.roleArn },
-    });
-    const s3 = new S3({ credentials });
-    const sts = new STS({ credentials });
+      const credentials = fromTemporaryCredentials({
+        params: { RoleArn: this.roleArn, ExternalId: this.externalId },
+      });
+      const s3 = new S3({ credentials, region: this.region });
+      const sts = new STS({credentials});
 
-    const account = await sts.getCallerIdentity({});
+      const account = await sts.getCallerIdentity({});
 
-    const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-    };
+      const defaultAnnotations: { [name: string]: string } = {
+        [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+        [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+      };
 
-    if (account.Account) {
-      defaultAnnotations['amazon.com/account-id'] = account.Account;
-    }
-
-    const buckets = await s3.listBuckets({});
-
-    for (const bucket of buckets.Buckets || []) {
-      if (bucket.Name) {
-        const annotations = JSON.parse(JSON.stringify(defaultAnnotations));
-        annotations[
-          'amazon.com/s3-bucket-arn'
-        ] = `arn:aws:s3:::bucket_name/${bucket.Name}`;
-        s3Resources.push({
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations,
-            name: bucket.Name,
-          },
-          spec: {
-            owner: 'unknown',
-            type: 's3-bucket',
-          },
-        });
+      if (account.Account) {
+        defaultAnnotations['amazon.com/account-id'] = account.Account;
       }
-    }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: s3Resources.map(entity => ({
-        entity,
-        locationKey: `aws-s3-bucket-provider:${this.accountId}`,
-      })),
-    });
+      const buckets = await s3.listBuckets({});
+
+      for (const bucket of buckets.Buckets || []) {
+        if (bucket.Name) {
+          const bucketArn = `arn:aws:s3:::${bucket.Name}`;
+          const consoleLink = new link2aws.ARN(bucketArn).consoleLink;
+          const resource: ResourceEntity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations: {
+                ...defaultAnnotations,
+                "amazon.com/s3-bucket-arn": bucketArn,
+                [ANNOTATION_VIEW_URL]: consoleLink,
+              },
+              name: bucket.Name,
+            },
+            spec: {
+              owner: 'unknown',
+              type: 's3-bucket',
+            },
+          }
+
+          s3Resources.push(resource);
+        }
+      }
+
+      await this.connection.applyMutation({
+        type: 'full',
+        entities: s3Resources.map(entity => ({
+          entity,
+          locationKey: `aws-s3-bucket-provider:${this.accountId}`,
+        })),
+      });
   }
 }

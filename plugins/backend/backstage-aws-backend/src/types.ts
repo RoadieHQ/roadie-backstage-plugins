@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
-export { AWSS3BucketProvider } from './AWSS3BucketProvider';
-export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
-export { AWSIAMUserProvider } from './AWSIAMUserProvider';
+export type Account = {
+  accountId: string,
+  region?: string,
+  externalId?: string,
+  roleArn: string
+}

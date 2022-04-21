@@ -16,16 +16,16 @@
 
 import {
   ANNOTATION_LOCATION,
-  ANNOTATION_ORIGIN_LOCATION,
   ANNOTATION_VIEW_URL,
-  ComponentEntity,
+  ANNOTATION_ORIGIN_LOCATION,
+  UserEntity,
 } from '@backstage/catalog-model';
 import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-backend';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { Lambda } from '@aws-sdk/client-lambda';
+import { IAM } from '@aws-sdk/client-iam';
 import { STS } from '@aws-sdk/client-sts';
 import winston from "winston";
 import {Config} from "@backstage/config";
@@ -33,9 +33,9 @@ import {AccountConfig} from "../types";
 var link2aws = require('link2aws');
 
 /**
- * Provides entities from AWS Lambda Function service.
+ * Provides entities from AWS IAM User service.
  */
-export class AWSLambdaFunctionProvider implements EntityProvider {
+export class AWSIAMUserProvider implements EntityProvider {
   private readonly accountId: string;
   private readonly roleArn: string;
   private readonly externalId?: string;
@@ -50,7 +50,7 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSLambdaFunctionProvider({ accountId, roleArn, externalId, region }, options)
+    return new AWSIAMUserProvider({ accountId, roleArn, externalId, region }, options)
   }
 
   constructor(account: AccountConfig, options: { logger: winston.Logger }) {
@@ -62,7 +62,7 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-lambda-function-${this.accountId}`;
+    return `aws-iam-user-${this.accountId}`;
   }
 
   async connect(connection: EntityProviderConnection): Promise<void> {
@@ -74,15 +74,14 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(`Providing lambda function resources from aws: ${this.accountId}`)
-
-    const lambdaComponents: ComponentEntity[] = [];
+    this.logger.info(`Providing iam user resources from aws: ${this.accountId}`)
+      const userResources: UserEntity[] = [];
 
       const credentials = fromTemporaryCredentials({
-        params: {RoleArn: this.roleArn, ExternalId: this.externalId},
+        params: { RoleArn: this.roleArn, ExternalId: this.externalId },
       });
-      const lambda = new Lambda({ credentials, region: this.region });
-      const sts = new STS({credentials});
+      const iam = new IAM({ credentials, region: this.region });
+      const sts = new STS({ credentials });
 
       const account = await sts.getCallerIdentity({});
 
@@ -95,36 +94,40 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
         defaultAnnotations['amazon.com/account-id'] = account.Account;
       }
 
-      const functions = await lambda.listFunctions({ });
+      const users = await iam.listUsers({});
 
-      for (const lambdaFunction of functions.Functions || []) {
-        if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
-          const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn).consoleLink;
-          lambdaComponents.push({
-            kind: 'Component',
-            apiVersion: 'backstage.io/v1beta1',
+      for (const user of users.Users || []) {
+        if (user.UserName && user.Arn && user.UserId) {
+          const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
+          const userEntity: UserEntity = {
+            kind: 'User',
+            apiVersion: "backstage.io/v1alpha1",
             metadata: {
               annotations: {
                 ...defaultAnnotations,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
+                "amazon.com/iam-user-arn": user.Arn,
+                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
-              name: lambdaFunction.FunctionName,
+              name: user.UserId,
             },
             spec: {
-              owner: 'unknown',
-              type: 'lambda-function',
-              lifecycle: 'production',
+              profile: {
+                displayName: user.Arn,
+                email: user.UserName,
+              },
+              memberOf: [],
             },
-          });
+          }
+
+          userResources.push(userEntity);
         }
       }
 
       await this.connection.applyMutation({
         type: 'full',
-        entities: lambdaComponents.map(entity => ({
+        entities: userResources.map(entity => ({
           entity,
-          locationKey: `aws-lambda-function-provider:${this.accountId}`,
+          locationKey: `aws-iam-user-provider:${this.accountId}`,
         })),
       });
   }

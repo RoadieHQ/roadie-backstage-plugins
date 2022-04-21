@@ -21,6 +21,7 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { CloudControl } from '@aws-sdk/client-cloudcontrol';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+import {Account} from "../types";
 
 export interface RouterOptions {
   logger: Logger;
@@ -33,6 +34,14 @@ export function createRouter({
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
+  const accounts: Account[] = (config.getOptionalConfigArray('integtations.aws') || []).map((config) => {
+      return {
+          accountId: config.getString('accountId'),
+          externalId: config.getOptionalString('externalId'),
+          roleArn: config.getString('roleArn'),
+          region: config.getOptionalString('region')
+      }
+  });
 
   // TODO implement list and possibly create and delete if we are brave
   router.get(
@@ -45,9 +54,8 @@ export function createRouter({
       logger.debug(
         `received request for ${AccountId}, ${Identifier}, ${TypeName}`,
       );
-      const accounts = config.getOptionalConfigArray(`aws.accounts`) || [];
       const account = accounts.find(acc => {
-        return acc.getString('accountId') === AccountId;
+        return acc.accountId === AccountId;
       });
 
       if (!account) {
@@ -59,13 +67,13 @@ export function createRouter({
       const region =
         typeof request.query.region === 'string'
           ? request.query.region
-          : account.getOptionalString('defaultRegion');
+          : account.region;
       let credentials = undefined;
-      const RoleArn = account.getOptionalString('roleArn');
+      const RoleArn = account.roleArn;
       if (RoleArn) {
         credentials = fromTemporaryCredentials({
           clientConfig: { region },
-          params: { RoleArn, RoleSessionName: 'backstage-plugin-aws-backend' },
+          params: { RoleArn, RoleSessionName: 'backstage-plugin-aws-backend', ExternalId: account.externalId },
         });
       }
       const client = new CloudControl({ credentials, region });

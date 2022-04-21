@@ -23,23 +23,21 @@ export interface AWSAccountProviderConfig {
    * Role to assume for this account ID
    */
   roleArn: string;
+  /**
+   * Region to use for this account ID
+   */
+  region?: string;
+  /**
+   * External ID to use for the role assume
+   */
+  externalId?: string;
 }
 
 export interface Config {
-  catalog?: {
+  integrations?: {
     /**
-     * List of processor-specific options and attributes
+     * AWS configuration
      */
-    providers?: {
-      /**
-       * AWS configuration
-       */
-      aws?: {
-        /**
-         * The accounts for this provider
-         */
-        accounts?: AWSAccountProviderConfig[];
-      };
-    };
+    aws?: AWSAccountProviderConfig[]
   };
 }
