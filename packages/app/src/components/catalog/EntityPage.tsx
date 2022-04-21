@@ -39,7 +39,7 @@ import {
   isComponentType,
   isKind,
 } from '@backstage/plugin-catalog';
-import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph'
+import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   isGithubActionsAvailable,
   EntityGithubActionsContent,
@@ -103,9 +103,8 @@ import {
   EntityPrometheusContent,
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
-import {
-  EntityIFrameCard
-} from '@roadiehq/backstage-plugin-iframe';
+import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+import { S3BucketCard, LambdaFunctionCard, IAMUserCard } from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -146,6 +145,15 @@ const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
+    </Grid>
+    <Grid item md={6}>
+      <LambdaFunctionCard />
+    </Grid>
+    <Grid item md={6}>
+      <S3BucketCard />
+    </Grid>
+    <Grid item md={6}>
+      <IAMUserCard />
     </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
@@ -413,7 +421,7 @@ const systemPage = (
           <EntityHasResourcesCard variant="gridItem" />
         </Grid>
         <Grid item md={6}>
-          <EntityIFrameCard {...{src: "https://example.com"}}/>
+          <EntityIFrameCard {...{ src: 'https://example.com' }} />
         </Grid>
       </Grid>
     </EntityLayout.Route>
