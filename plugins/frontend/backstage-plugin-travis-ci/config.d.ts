@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export interface Config {
   /** Configuration options for the travisci plugin */
   travisci?: {

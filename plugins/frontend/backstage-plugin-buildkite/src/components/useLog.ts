@@ -25,23 +25,19 @@ export const useLog = (url: string) => {
 
   const getLogs = useCallback(async () => {
     try {
-      const build = await api.getLog(
-        url,
-      );
+      const build = await api.getLog(url);
       return Promise.resolve(build);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
       return Promise.reject(e);
     }
   }, [url, api, errorApi]);
-  
-  const [state, fetchLogs] = useAsyncFn(() => getLogs(), [
-    getLogs,
-  ]);
 
-  return { 
+  const [state, fetchLogs] = useAsyncFn(() => getLogs(), [getLogs]);
+
+  return {
     value: state.value,
     error: state.error,
-    fetchLogs
+    fetchLogs,
   };
-}
+};

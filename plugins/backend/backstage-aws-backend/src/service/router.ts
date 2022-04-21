@@ -21,7 +21,7 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { CloudControl } from '@aws-sdk/client-cloudcontrol';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import {Account} from "../types";
+import { Account } from '../types';
 
 export interface RouterOptions {
   logger: Logger;
@@ -34,13 +34,15 @@ export function createRouter({
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
-  const accounts: Account[] = (config.getOptionalConfigArray('integrations.aws') || []).map((cfg) => {
-      return {
-          accountId: cfg.getString('accountId'),
-          externalId: cfg.getOptionalString('externalId'),
-          roleArn: cfg.getString('roleArn'),
-          region: cfg.getOptionalString('region')
-      }
+  const accounts: Account[] = (
+    config.getOptionalConfigArray('integrations.aws') || []
+  ).map(cfg => {
+    return {
+      accountId: cfg.getString('accountId'),
+      externalId: cfg.getOptionalString('externalId'),
+      roleArn: cfg.getString('roleArn'),
+      region: cfg.getOptionalString('region'),
+    };
   });
 
   // TODO implement list and possibly create, update and delete if we are brave
@@ -73,7 +75,11 @@ export function createRouter({
       if (RoleArn) {
         credentials = fromTemporaryCredentials({
           clientConfig: { region },
-          params: { RoleArn, RoleSessionName: 'backstage-plugin-aws-backend', ExternalId: account.externalId },
+          params: {
+            RoleArn,
+            RoleSessionName: 'backstage-plugin-aws-backend',
+            ExternalId: account.externalId,
+          },
         });
       }
       const client = new CloudControl({ credentials, region });

@@ -1,5 +1,1 @@
-export {
-  iframePlugin,
-  EntityIFrameCard,
-  EntityIFrameContent
-} from './plugin';
+export { iframePlugin, EntityIFrameCard, EntityIFrameContent } from './plugin';

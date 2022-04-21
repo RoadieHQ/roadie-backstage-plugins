@@ -1,6 +1,7 @@
 # Jira Plugin for Backstage
 
 ![a Jira plugin for Backstage](./docs/jira-plugin.gif).
+
 ## Features
 
 - Show project details and tasks
@@ -51,7 +52,10 @@ backend:
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityJiraOverviewCard, isJiraAvailable } from '@roadiehq/backstage-plugin-jira';
+import {
+  EntityJiraOverviewCard,
+  isJiraAvailable,
+} from '@roadiehq/backstage-plugin-jira';
 
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -76,7 +80,7 @@ metadata:
   annotations:
     jira/project-key: <example-jira-project-key>
     jira/component: <example-component> # optional, you might skip value to fetch data for all components
-    jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this. 
+    jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this.
 ```
 
 Even though you can use Bearer token please keep in mind that Activity stream feed will only contain entries that are visible to anonymous users. In order to view restricted content you will need to authenticate via Basic authentication, as described in official documentation (https://developer.atlassian.com/server/framework/atlassian-sdk/consuming-an-activity-streams-feed/#authentication).
@@ -84,7 +88,7 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
 2. Get and provide `JIRA_TOKEN` as env variable:
    1. Obtain your personal token from Jira: https://id.atlassian.com/manage-profile/security/api-tokens
    2. Create a base64-encoded string by converting "your-atlassian-account-mail:your-jira-token", for example `jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F` converts to `amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg==`
-   3.  Save the environmental variable `JIRA_TOKEN` with `Basic ` prefix, eg: `JIRA_TOKEN='Basic amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg=='`
+   3. Save the environmental variable `JIRA_TOKEN` with `Basic ` prefix, eg: `JIRA_TOKEN='Basic amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg=='`
 
 ## Links
 

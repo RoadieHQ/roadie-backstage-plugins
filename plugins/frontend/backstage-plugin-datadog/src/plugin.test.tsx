@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { setupServer } from 'msw/node';
 import { datadogPlugin } from './plugin';
 

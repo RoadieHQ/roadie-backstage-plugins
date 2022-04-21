@@ -15,13 +15,10 @@
  */
 
 import React from 'react';
-import {ErrorComponent} from './ErrorComponent';
+import { ErrorComponent } from './ErrorComponent';
 import { IFrameProps } from './types';
-import {
-  Content,
-  ContentHeader,
-} from '@backstage/core-components';
-import {configApiRef, useApi} from '@backstage/core-plugin-api';
+import { Content, ContentHeader } from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { determineError } from './utils/helpers';
 
 /**
@@ -31,27 +28,29 @@ import { determineError } from './utils/helpers';
  */
 export const IFrameCard = (props: IFrameProps) => {
   const { src, height, width } = props;
-  const title = props.title || 'Backstage IFrame (Note you can modify this with the props)'
+  const title =
+    props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
 
-  if(errorMessage !== ""){
-    return (
-      <ErrorComponent {...{errorMessage}}/>
-    )
+  if (errorMessage !== '') {
+    return <ErrorComponent {...{ errorMessage }} />;
   }
 
-  if(errorMessage !== ""){
-    return (
-      <ErrorComponent {...{errorMessage}}/>
-    )
+  if (errorMessage !== '') {
+    return <ErrorComponent {...{ errorMessage }} />;
   }
 
-  return(         
+  return (
     <Content>
-      <ContentHeader title={title}/>
-      <iframe src={src} height={height || "100%"} width={width || "100%"} title={title}/>
+      <ContentHeader title={title} />
+      <iframe
+        src={src}
+        height={height || '100%'}
+        width={width || '100%'}
+        title={title}
+      />
     </Content>
-  )
+  );
 };

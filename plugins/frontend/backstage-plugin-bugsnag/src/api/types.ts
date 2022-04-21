@@ -34,7 +34,7 @@ export type Organisation = {
 
 export type Project = {
   id: string;
-  api_key:string;
+  api_key: string;
   slug: string;
   name: string;
 };

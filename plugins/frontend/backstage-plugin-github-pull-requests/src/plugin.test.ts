@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { githubPullRequestsPlugin } from './plugin';
 
 describe('github-pull-requests', () => {

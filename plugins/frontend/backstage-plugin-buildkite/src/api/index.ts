@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
 
 export const buildKiteApiRef = createApiRef<BuildkiteApi>({
@@ -49,15 +48,15 @@ export class BuildkiteApi {
     orgSlug: string,
     pipelineSlug: string,
     page: number,
-    per_page: number
+    per_page: number,
   ) {
     const ApiUrl = await this.getApiUrl();
     const request = await fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`,
     );
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -70,7 +69,7 @@ export class BuildkiteApi {
     });
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -79,15 +78,15 @@ export class BuildkiteApi {
   async getSingleBuild(
     orgSlug: string,
     pipelineSlug: string,
-    buildNumber: number
+    buildNumber: number,
   ) {
     const ApiUrl = await this.getApiUrl();
     const request = await fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds/${buildNumber}`
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds/${buildNumber}`,
     );
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -98,7 +97,7 @@ export class BuildkiteApi {
     const request = await fetch(`${ApiUrl}/${url}`);
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();

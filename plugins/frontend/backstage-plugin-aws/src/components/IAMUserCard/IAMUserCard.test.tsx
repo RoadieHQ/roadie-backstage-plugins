@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -28,23 +27,23 @@ import { setupServer } from 'msw/node';
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
 import { IAMUserCard } from './IAMUserCard';
-import { UserEntity } from "@backstage/catalog-model";
+import { UserEntity } from '@backstage/catalog-model';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 
 const entityStub: UserEntity = {
-  apiVersion: "backstage.io/v1beta1",
+  apiVersion: 'backstage.io/v1beta1',
   spec: {
-    memberOf: []
+    memberOf: [],
   },
   kind: 'User',
   metadata: {
     annotations: {},
-    name: 'fnamelname'
-  }
-}
+    name: 'fnamelname',
+  },
+};
 
 describe('IAMUserCard', () => {
   const worker = setupServer();
@@ -57,16 +56,20 @@ describe('IAMUserCard', () => {
 
   it('should display the card with the correct annotation error', async () => {
     const rendered = render(
-        <MemoryRouter>
-          <ApiProvider apis={apis}>
-            <EntityProvider entity={entityStub}>
-              <IAMUserCard/>
-            </EntityProvider>
-          </ApiProvider>
-        </MemoryRouter>,
+      <MemoryRouter>
+        <ApiProvider apis={apis}>
+          <EntityProvider entity={entityStub}>
+            <IAMUserCard />
+          </EntityProvider>
+        </ApiProvider>
+      </MemoryRouter>,
     );
 
-    expect(await rendered.findByText(/annotation is missing/)).toBeInTheDocument();
-    expect(await rendered.findByText("amazon.com/iam-user-arn")).toBeInTheDocument();
+    expect(
+      await rendered.findByText(/annotation is missing/),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('amazon.com/iam-user-arn'),
+    ).toBeInTheDocument();
   });
 });

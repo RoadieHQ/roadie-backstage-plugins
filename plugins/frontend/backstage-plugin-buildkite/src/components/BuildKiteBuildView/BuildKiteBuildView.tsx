@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useEffect } from 'react';
-import { 
+import {
   Typography,
   Grid,
   Breadcrumbs,
@@ -87,8 +87,12 @@ const useStyles = makeStyles(theme => ({
 
 const BuildName: FC<{ build: BuildkiteBuildInfo }> = ({ build }) => (
   <Box display="flex" alignItems="center">
-    #{ build?.number } - { build?.message }
-    <IconButton href={ build?.web_url as string } target="_blank" rel="noopener noreferrer">
+    #{build?.number} - {build?.message}
+    <IconButton
+      href={build?.web_url as string}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <LaunchIcon />
     </IconButton>
   </Box>
@@ -99,20 +103,19 @@ const pickClassName = (
   build: BuildkiteJob,
 ) => {
   if (build.state === 'failed') return classes.failed;
-  if (['running', 'queued', 'scheduled', 'assigned'].includes(build.state)) return classes.running;
+  if (['running', 'queued', 'scheduled', 'assigned'].includes(build.state))
+    return classes.running;
   if (build.state === 'passed') return classes.success;
   return classes.neutral;
 };
 
-const ActionsList: FC<{ jobs: BuildkiteJob[]}> = ({
-  jobs,
-}) => {
+const ActionsList: FC<{ jobs: BuildkiteJob[] }> = ({ jobs }) => {
   const classes = useStyles();
   return (
     <>
       {jobs.map((job: BuildkiteJob) => (
         <ActionOutput
-        className={pickClassName(classes, job)}
+          className={pickClassName(classes, job)}
           job={job}
           url={job.log_url || ''}
           key={job.id}
@@ -124,18 +127,23 @@ const ActionsList: FC<{ jobs: BuildkiteJob[]}> = ({
 
 const BuildsList: FC<{ build: BuildkiteBuildInfo }> = ({ build }) => (
   <Box>
-    { build.jobs
-      ? <ActionsList jobs={build.jobs} />
-      : <Alert severity="error">Jobs list is empty</Alert>
-    }
+    {build.jobs ? (
+      <ActionsList jobs={build.jobs} />
+    ) : (
+      <Alert severity="error">Jobs list is empty</Alert>
+    )}
   </Box>
 );
 
-const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
-  const classes = useStyles(); 
+const BuildkiteBuildView: FC<{ entity: Entity }> = ({ entity }) => {
+  const classes = useStyles();
   const { buildNumber } = useParams() as any;
   const { owner, repo } = useProjectEntity(entity);
-  const { value, error, fetchBuildData } = useSingleBuild({ owner, repo, buildNumber });
+  const { value, error, fetchBuildData } = useSingleBuild({
+    owner,
+    repo,
+    buildNumber,
+  });
 
   useEffect(() => {
     fetchBuildData();
@@ -143,11 +151,10 @@ const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    if(value?.state === 'running' || value?.state === 'schedudled') {
+    if (value?.state === 'running' || value?.state === 'schedudled') {
       timer = setTimeout(() => {
         fetchBuildData();
       }, 1500);
-      
     }
     return () => clearTimeout(timer);
   }, [value, fetchBuildData]);
@@ -178,5 +185,5 @@ const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
       </Content>
     </Page>
   ) : null;
-}
+};
 export default BuildkiteBuildView;

@@ -33,11 +33,11 @@ In `packages/backend/src/index.ts` add the following:
 import aws from './plugins/aws';
 // ...
 async function main() {
-    // ...
-    const awsEnv = useHotMemoize(module, () => createEnv('aws'));
-    const apiRouter = Router();
-    apiRouter.use('/aws', await aws(awsEnv));
-    // ...
+  // ...
+  const awsEnv = useHotMemoize(module, () => createEnv('aws'));
+  const apiRouter = Router();
+  apiRouter.use('/aws', await aws(awsEnv));
+  // ...
 }
 ```
 

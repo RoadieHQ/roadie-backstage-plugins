@@ -14,12 +14,10 @@ labels: kind/bug
 
 <!--- Tell us what happens instead of the expected behavior -->
 
-
 ## Steps to Reproduce
 
 <!--- Provide a link to a live example, or an unambiguous set of steps to -->
 <!--- reproduce this bug. Include code or configuration to reproduce, if relevant -->
-
 
 ## Possible Solution
 

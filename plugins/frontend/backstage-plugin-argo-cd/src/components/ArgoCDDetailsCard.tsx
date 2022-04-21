@@ -84,7 +84,8 @@ const OverviewComponent = ({
     {
       title: 'Name',
       highlight: true,
-      render: (row: any): React.ReactNode => detailsDrawerComponent(row, baseUrl)
+      render: (row: any): React.ReactNode =>
+        detailsDrawerComponent(row, baseUrl),
     },
     {
       title: 'Instance',

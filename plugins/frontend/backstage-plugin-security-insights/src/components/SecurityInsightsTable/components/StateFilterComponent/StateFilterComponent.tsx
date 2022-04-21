@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React, { FC } from 'react';
 import { Box, Paper, ButtonGroup, Button } from '@material-ui/core';
 import { StateFilterComponentProps } from '../../../../types';
@@ -32,11 +31,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'open' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'open' ? null : 'open'
+              insightsStatusFilter === 'open' ? null : 'open',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'open')
+                value.filter(entry => entry.state === 'open'),
               );
             }
           }}
@@ -47,11 +46,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'fixed' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'fixed' ? null : 'fixed'
+              insightsStatusFilter === 'fixed' ? null : 'fixed',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'fixed')
+                value.filter(entry => entry.state === 'fixed'),
               );
             }
           }}
@@ -62,11 +61,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'dismissed' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'dismissed' ? null : 'dismissed'
+              insightsStatusFilter === 'dismissed' ? null : 'dismissed',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'dismissed')
+                value.filter(entry => entry.state === 'dismissed'),
               );
             }
           }}

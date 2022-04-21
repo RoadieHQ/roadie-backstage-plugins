@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { createSubRouteRef } from '@backstage/core-plugin-api';
 import { buildViewRouteRef } from '../plugin';
 

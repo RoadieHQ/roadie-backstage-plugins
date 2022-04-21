@@ -50,19 +50,22 @@ export const S3BucketCard = awsPlugin.provide(
 );
 
 export const LambdaFunctionCard = awsPlugin.provide(
-    createComponentExtension({
-      name: 'LambdaFunctionCard',
-      component: {
-        lazy: () => import('./components/LambdaFunctionCard').then(m => m.LambdaFunctionCard),
-      },
-    }),
+  createComponentExtension({
+    name: 'LambdaFunctionCard',
+    component: {
+      lazy: () =>
+        import('./components/LambdaFunctionCard').then(
+          m => m.LambdaFunctionCard,
+        ),
+    },
+  }),
 );
 
 export const IAMUserCard = awsPlugin.provide(
-    createComponentExtension({
-        name: 'IAMUserCard',
-        component: {
-            lazy: () => import('./components/IAMUserCard').then(m => m.IAMUserCard),
-        },
-    }),
+  createComponentExtension({
+    name: 'IAMUserCard',
+    component: {
+      lazy: () => import('./components/IAMUserCard').then(m => m.IAMUserCard),
+    },
+  }),
 );

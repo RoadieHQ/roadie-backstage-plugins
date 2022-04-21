@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import {
   createComponentExtension,
   createPlugin,
@@ -38,9 +37,7 @@ export const EntityIFrameCard = iframePlugin.provide(
     name: 'EntityIFrameCard',
     component: {
       lazy: () =>
-        import('./components/IFrameComponent').then(
-          m => m.IFrameCard,
-        ),
+        import('./components/IFrameComponent').then(m => m.IFrameCard),
     },
   }),
 );
@@ -53,4 +50,3 @@ export const EntityIFrameContent = iframePlugin.provide(
     mountPoint: rootRouteRef,
   }),
 );
-

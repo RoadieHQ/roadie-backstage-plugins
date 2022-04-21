@@ -18,30 +18,45 @@
 import 'os';
 
 describe('Jira plugin', () => {
-    beforeEach(() => {
-        cy.saveGithubToken()
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST', { fixture: 'jira/project.json' }).as('getProject')
-        cy.intercept('POST', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search', { fixture: 'jira/searchresult.json' }).as('postSearchResult')
+  beforeEach(() => {
+    cy.saveGithubToken();
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST',
+      { fixture: 'jira/project.json' },
+    ).as('getProject');
+    cy.intercept(
+      'POST',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',
+      { fixture: 'jira/searchresult.json' },
+    ).as('postSearchResult');
 
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic', { fixture: 'jira/activitystream.xml' }).as('getActivity')
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST/statuses', { fixture: 'jira/statuses.json' }).as('getStatuses')
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic',
+      { fixture: 'jira/activitystream.xml' },
+    ).as('getActivity');
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST/statuses',
+      { fixture: 'jira/statuses.json' },
+    ).as('getStatuses');
 
-        cy.visit('/catalog/default/component/sample-service')
+    cy.visit('/catalog/default/component/sample-service');
 
-        cy.wait('@getProject')
-        cy.wait('@postSearchResult')
-        cy.wait(['@getActivity', '@getStatuses'])
-    })
+    cy.wait('@getProject');
+    cy.wait('@postSearchResult');
+    cy.wait(['@getActivity', '@getStatuses']);
+  });
 
-    describe('Navigating to Jira Overview', () => {
-        it('should show Jira in Overview tab', () => {
+  describe('Navigating to Jira Overview', () => {
+    it('should show Jira in Overview tab', () => {
+      cy.contains('Activity stream');
 
-            cy.contains('Activity stream');
+      cy.contains('John Doe added');
 
-            cy.contains('John Doe added')
-
-            cy.get('#select-statuses').click()
-            cy.get('[data-value="Selected for Development"]')
-        });
+      cy.get('#select-statuses').click();
+      cy.get('[data-value="Selected for Development"]');
     });
+  });
 });

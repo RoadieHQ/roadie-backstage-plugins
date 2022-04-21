@@ -24,7 +24,7 @@ proxy:
   '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
-      Authorization: 
+      Authorization:
         $env: BUILDKITE_TOKEN
 ```
 
@@ -55,7 +55,6 @@ export const cicdContent = (
 
 ## How to use Buildkite plugin in Backstage
 
-
 1. Add annotation to the yaml config file of a component:
 
 ```yaml
@@ -65,7 +64,6 @@ metadata:
 ```
 
 2. Get and provide `BUILDKITE_TOKEN` as env variable. Note that the token needs to be in format `Bearer TOKEN`
-
 
 ## Links
 

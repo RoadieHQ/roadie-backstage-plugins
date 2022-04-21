@@ -19,8 +19,8 @@ import 'os';
 
 describe('scaffolder http request', () => {
   beforeEach(() => {
-      cy.visit('/create/actions')
-  })
+    cy.visit('/create/actions');
+  });
 
   describe('Navigating to the actions page', () => {
     it('should show http:backstage:request', () => {

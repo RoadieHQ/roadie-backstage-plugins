@@ -28,8 +28,7 @@ export const alertsResponseMock = [
   {
     number: 8,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/8',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/8',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/8',
     state: 'open',
     dismissed_by: null,
@@ -48,8 +47,7 @@ export const alertsResponseMock = [
   {
     number: 7,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/7',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/7',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/7',
     state: 'open',
     dismissed_by: null,
@@ -68,8 +66,7 @@ export const alertsResponseMock = [
   {
     number: 6,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/6',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/6',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/6',
     state: 'open',
     dismissed_by: null,
@@ -88,8 +85,7 @@ export const alertsResponseMock = [
   {
     number: 5,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/5',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/5',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/5',
     state: 'open',
     dismissed_by: null,
@@ -108,8 +104,7 @@ export const alertsResponseMock = [
   {
     number: 4,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/4',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/4',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/4',
     state: 'open',
     dismissed_by: null,
@@ -128,8 +123,7 @@ export const alertsResponseMock = [
   {
     number: 3,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/3',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/3',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/3',
     state: 'open',
     dismissed_by: null,
@@ -148,8 +142,7 @@ export const alertsResponseMock = [
   {
     number: 2,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/2',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/2',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/2',
     state: 'open',
     dismissed_by: null,
@@ -168,8 +161,7 @@ export const alertsResponseMock = [
   {
     number: 1,
     created_at: '2021-01-11T13:09:12Z',
-    url:
-      'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/1',
+    url: 'https://api.github.com/repos/mcalus3/backstage/code-scanning/alerts/1',
     html_url: 'https://github.com/mcalus3/backstage/security/code-scanning/1',
     state: 'open',
     dismissed_by: null,
@@ -193,48 +185,49 @@ export const dependabotAlertsResponseMock = {
       totalCount: 2,
       nodes: [
         {
-          createdAt: "2020-10-13T14:05:11Z",
-          id: "MDI4OlJlcddsdsfererertc5QWxlcnQ0MDgyODMyyy2MDY=",
+          createdAt: '2020-10-13T14:05:11Z',
+          id: 'MDI4OlJlcddsdsfererertc5QWxlcnQ0MDgyODMyyy2MDY=',
           dismissedAt: null,
-          vulnerableManifestPath: "yarn.lock",
+          vulnerableManifestPath: 'yarn.lock',
           securityVulnerability: {
-            vulnerableVersionRange: "< 3.1.0",
+            vulnerableVersionRange: '< 3.1.0',
             package: {
-              name: "serialize-javascript"
+              name: 'serialize-javascript',
             },
             firstPatchedVersion: {
-              "identifier": "3.1.0"
+              identifier: '3.1.0',
             },
-            severity: "HIGH",
+            severity: 'HIGH',
             advisory: {
-              description: "serialize-javascript prior to 3.1.0 allows remote attackers to inject arbitrary code via the function \"deleteFunctions\" within \"index.js\". \r\n\r\nAn object such as `{\"foo\": /1\"/, \"bar\": \"a\\\"@__R-<UID>-0__@\"}` was serialized as `{\"foo\": /1\"/, \"bar\": \"a\\/1\"/}`, which allows an attacker to escape the `bar` key. This requires the attacker to control the values of both `foo` and `bar` and guess the value of `<UID>`. The UID has a keyspace of approximately 4 billion making it a realistic network attack.\r\n\r\nThe following proof-of-concept calls `console.log()` when the running `eval()`:\r\n`eval('('+ serialize({\"foo\": /1\" + console.log(1)/i, \"bar\": '\"@__R-<UID>-0__@'}) + ')');`"
-            }
-          }
+              description:
+                'serialize-javascript prior to 3.1.0 allows remote attackers to inject arbitrary code via the function "deleteFunctions" within "index.js". \r\n\r\nAn object such as `{"foo": /1"/, "bar": "a\\"@__R-<UID>-0__@"}` was serialized as `{"foo": /1"/, "bar": "a\\/1"/}`, which allows an attacker to escape the `bar` key. This requires the attacker to control the values of both `foo` and `bar` and guess the value of `<UID>`. The UID has a keyspace of approximately 4 billion making it a realistic network attack.\r\n\r\nThe following proof-of-concept calls `console.log()` when the running `eval()`:\r\n`eval(\'(\'+ serialize({"foo": /1" + console.log(1)/i, "bar": \'"@__R-<UID>-0__@\'}) + \')\');`',
+            },
+          },
         },
         {
-          createdAt: "2021-05-25T15:16:23Z",
-          id: "MDI4OlJlcG9zaXRvcnlWdWxuuuuuuZXJhYmls12lksoiurrrQ3MTE1NjQwODQ=",
+          createdAt: '2021-05-25T15:16:23Z',
+          id: 'MDI4OlJlcG9zaXRvcnlWdWxuuuuuuZXJhYmls12lksoiurrrQ3MTE1NjQwODQ=',
           dismissedAt: null,
-          vulnerableManifestPath: "yarn.lock",
+          vulnerableManifestPath: 'yarn.lock',
           securityVulnerability: {
-            vulnerableVersionRange: ">= 4.0.0, < 4.16.5",
+            vulnerableVersionRange: '>= 4.0.0, < 4.16.5',
             package: {
-              name: "browserslist"
+              name: 'browserslist',
             },
             firstPatchedVersion: {
-              identifier: "4.16.5"
+              identifier: '4.16.5',
             },
-            severity: "MODERATE",
+            severity: 'MODERATE',
             advisory: {
-              description: "The package browserslist from 4.0.0 and before 4.16.5 are vulnerable to Regular Expression Denial of Service (ReDoS) during parsing of queries."
-            }
-          }
-        }
-      ]
-    }
-
-  }
-}
+              description:
+                'The package browserslist from 4.0.0 and before 4.16.5 are vulnerable to Regular Expression Denial of Service (ReDoS) during parsing of queries.',
+            },
+          },
+        },
+      ],
+    },
+  },
+};
 
 export const entityStub: { entity: Entity } = {
   entity: {
@@ -242,10 +235,11 @@ export const entityStub: { entity: Entity } = {
       namespace: 'default',
       annotations: {
         'github.com/project-slug': 'roadiehq/sample-service',
-        'backstage.io/managed-by-location': 'url:http://roadiehq/sample-service/blob/master/catalog-info.yaml'
+        'backstage.io/managed-by-location':
+          'url:http://roadiehq/sample-service/blob/master/catalog-info.yaml',
       },
       name: 'sample-service',
-      description: 'Sample service'
+      description: 'Sample service',
     },
     apiVersion: 'backstage.io/v1alpha1',
     kind: 'Component',

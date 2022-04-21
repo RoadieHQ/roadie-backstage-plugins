@@ -19,7 +19,8 @@ yarn add @roadiehq/backstage-plugin-travis-ci
 
 2. add configuration in `app-config.yaml` file in the root directory:
 
-In the proxy object: 
+In the proxy object:
+
 ```yml
 proxy:
 
@@ -34,6 +35,7 @@ proxy:
 ```
 
 and as a separate configuration object:
+
 ```yml
 travisci:
   baseUrl: 'https://travis-ci.com/'
@@ -70,13 +72,12 @@ export const cicdContent = (
 export const cicdCard = (
   <EntitySwitch>
     <EntitySwitch.Case if={isTravisciAvailable}>
-        <Grid item sm={6}>
-          <EntityTravisCIOverviewCard />
-        </Grid>
+      <Grid item sm={6}>
+        <EntityTravisCIOverviewCard />
+      </Grid>
     </EntitySwitch.Case>
   </EntitySwitch>
 );
-
 ```
 
 ## How to use Travis-ci plugin in Backstage

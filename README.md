@@ -6,17 +6,17 @@ Amongst others, the following plugins can be found within this repo:
 
 - [Github Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights)
 
--  [AWS Lambda](https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda)
+- [AWS Lambda](https://www.npmjs.com/package/@roadiehq/backstage-plugin-aws-lambda)
 
--  [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira)
+- [Jira](https://www.npmjs.com/package/@roadiehq/backstage-plugin-jira)
 
 - [Datadog](https://www.npmjs.com/package/@roadiehq/backstage-plugin-datadog)
 
 - [Travis CI](https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci)
 
--  [Security Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights)
+- [Security Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-security-insights)
 
--  [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite)
+- [Buildkite](https://www.npmjs.com/package/@roadiehq/backstage-plugin-buildkite)
 
 - [Bugsnag](https://www.npmjs.com/package/@roadiehq/backstage-plugin-bugsnag)
 
@@ -28,10 +28,7 @@ Installation instructions for each plugin can be found in their individual READM
 
 Backstage is an open platform for creating developer portals. To learn more about the problems it can help solve, please check out our [Ultimate Guide to Backstage by Spotify](https://roadie.io/backstage-spotify/).
 
-## 
-
-
-
+##
 
 ## Getting Started
 
@@ -58,20 +55,20 @@ cd packages/app
 
 folder.
 
-
-Inside this repository you can add other plugins by running 
+Inside this repository you can add other plugins by running
 
 ```bash
 // packages/app
 yarn add <<plugin>>
 ```
 
-followed by 
+followed by
 
 ```bash
 // packages/app
 yarn install
 ```
+
 and running same command in root directory.
 
 You should be able to run application from root directory, by running
@@ -86,19 +83,20 @@ This repository is a place where all of the RoadieHQ plugins we are developed ar
 
 ### Plugins container
 
-Navigate to 
+Navigate to
 
 ```bash
 cd roadie-backstage-plugin/plugins
-cd backend/frontend 
+cd backend/frontend
 cd selected-plugin
 ```
 
-Plugin folders consist separate unit tests per every plugin, while general e2e tests are written under 
+Plugin folders consist separate unit tests per every plugin, while general e2e tests are written under
 
 ```bash
 cd roadie-backstage-plugin/packages/app/cypress/integration
 ```
+
 folder.
 
 ### Sample service
@@ -107,23 +105,24 @@ In order to make E2E testing isolated from real entities, we have created `test-
 
 ```bash
 cd roadie-backstage-plugin/plugins
-cd backend or cd frontend 
+cd backend or cd frontend
 cd selected-plugin
 ```
 
-Plugin folders consist of separate unit tests for each plugin, while general E2E tests are written under 
+Plugin folders consist of separate unit tests for each plugin, while general E2E tests are written under
 
 ```bash
 cd roadie-backstage-plugin/packages/app/cypress/integration
 ```
+
 folder.
 
 ## Community
 
-- [Discord chatroom](https://discord.gg/d9SJrQR5uH) - Get support 
+- [Discord chatroom](https://discord.gg/d9SJrQR5uH) - Get support
 - [Contributing](https://github.com/RoadieHQ/roadie-backstage-plugins/blob/master/CONTRIBUTING.md) - Start here if you want to contribute
 - Give us a star ⭐️ - If you are using Backstage or think it is an interesting project, we would love a star ❤️
 
 ## License
 
- Copyright 2022 Larder Software Limited. Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+Copyright 2022 Larder Software Limited. Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0

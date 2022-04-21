@@ -15,8 +15,8 @@
  */
 
 export type AccountConfig = {
-    accountId: string,
-    roleArn: string,
-    externalId?: string,
-    region: string,
-}
+  accountId: string;
+  roleArn: string;
+  externalId?: string;
+  region: string;
+};

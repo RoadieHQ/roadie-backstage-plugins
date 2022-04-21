@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -28,25 +27,25 @@ import { setupServer } from 'msw/node';
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
 import { S3BucketCard } from './S3BucketCard';
-import { ComponentEntity } from "@backstage/catalog-model";
+import { ComponentEntity } from '@backstage/catalog-model';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 
 const entityStub: ComponentEntity = {
-  apiVersion: "backstage.io/v1beta1",
+  apiVersion: 'backstage.io/v1beta1',
   kind: 'Component',
   spec: {
     lifecycle: 'production',
     owner: 'unknown',
-    type: 'service'
+    type: 'service',
   },
   metadata: {
     annotations: {},
-    name: 'bucket1'
-  }
-}
+    name: 'bucket1',
+  },
+};
 
 describe('S3BucketCard', () => {
   const worker = setupServer();
@@ -59,16 +58,20 @@ describe('S3BucketCard', () => {
 
   it('should display the card with the correct annotation error', async () => {
     const rendered = render(
-        <MemoryRouter>
-          <ApiProvider apis={apis}>
-            <EntityProvider entity={entityStub}>
-              <S3BucketCard/>
-            </EntityProvider>
-          </ApiProvider>
-        </MemoryRouter>,
+      <MemoryRouter>
+        <ApiProvider apis={apis}>
+          <EntityProvider entity={entityStub}>
+            <S3BucketCard />
+          </EntityProvider>
+        </ApiProvider>
+      </MemoryRouter>,
     );
 
-    expect(await rendered.findByText(/annotation is missing/)).toBeInTheDocument();
-    expect(await rendered.findByText("amazon.com/account-id")).toBeInTheDocument();
+    expect(
+      await rendered.findByText(/annotation is missing/),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('amazon.com/account-id'),
+    ).toBeInTheDocument();
   });
 });

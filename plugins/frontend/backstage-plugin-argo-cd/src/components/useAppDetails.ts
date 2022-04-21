@@ -34,7 +34,9 @@ export const useAppDetails = ({
   const configApi = useApi(configApiRef);
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {
-    const argoSearchMethod: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
+    const argoSearchMethod: boolean = Boolean(
+      configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+    );
     try {
       if (!argoSearchMethod && appName) {
         return await api.getAppDetails({ url, appName });
@@ -81,7 +83,9 @@ export const useAppDetails = ({
         });
         const output = await Promise.all(promises);
         const items = {
-          items: output.flatMap(argoCdAppList => argoCdAppList.items).filter(item => item !== null),
+          items: output
+            .flatMap(argoCdAppList => argoCdAppList.items)
+            .filter(item => item !== null),
         };
         return items;
       }

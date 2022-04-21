@@ -1,11 +1,11 @@
 # GitHub Insights Plugin for Backstage
 
 ![a preview of the GitHub insights plugin](./docs/code-insights-plugin.png)
+
 ## Features
 
 - Add GitHub Insights plugin tab.
 - Show widgets about repository contributors, languages, readme and release at overview page.
-
 
 ## Plugin Setup
 
@@ -27,7 +27,7 @@ import { EntityGithubInsightsContent } from '@roadiehq/backstage-plugin-github-i
 const serviceEntityPage = (
   <EntityLayoutWrapper>
     ...
-    <EntityLayout.Route 
+    <EntityLayout.Route
       path="/code-insights"
       title="Code Insights">
       <EntityGithubInsightsContent />
@@ -82,47 +82,48 @@ By default the plugin will use the annotation `github.com/project-slug` and get 
 ### Widgets
 
 #### Compliance Card
+
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import {
-EntityGithubInsightsComplianceCard
-} from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubInsightsComplianceCard } from '@roadiehq/backstage-plugin-github-insights';
 ```
+
 ![a preview of the compliance widget](docs/compliance-report-widget.png)
 
 #### Contributors Card
+
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import {
-EntityGithubInsightsContributorsCard
-} from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubInsightsContributorsCard } from '@roadiehq/backstage-plugin-github-insights';
 ```
+
 ![a preview of the contributors widget](docs/contributors-widget.png)
 
 #### Languages Card
+
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import {
-EntityGithubInsightsLanguagesCard
-} from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubInsightsLanguagesCard } from '@roadiehq/backstage-plugin-github-insights';
 ```
+
 ![a preview of the languages widget](docs/languages-widget.png)
 
 #### ReadMeCard
+
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import {
-EntityGithubInsightsReadmeCard
-} from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubInsightsReadmeCard } from '@roadiehq/backstage-plugin-github-insights';
 ```
+
 ![a preview of the compliance widget](docs/readme-widget.png)
+
 #### ReleasesCard
+
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import {
-EntityGithubInsightsReleasesCard
-} from '@roadiehq/backstage-plugin-github-insights';
+import { EntityGithubInsightsReleasesCard } from '@roadiehq/backstage-plugin-github-insights';
 ```
+
 ![a preview of the releases widget](docs/releases-widget.png)
 
 ## Links

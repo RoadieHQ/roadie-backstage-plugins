@@ -26,7 +26,7 @@ describe('Argo CD', () => {
       { fixture: 'ArgoCD/applications-test-app.json' },
     ).as('getArgoData');
     cy.visit('/catalog/default/component/sample-service');
-    cy.wait('@getArgoData')
+    cy.wait('@getArgoData');
   });
 
   describe('Navigate to Overview', () => {

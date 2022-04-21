@@ -4,7 +4,7 @@ about: 'Create Bug Report'
 labels: bug
 ---
 
-<!--- Provide a general summary of the issue in the Title above --> 
+<!--- Provide a general summary of the issue in the Title above -->
 
 ## Name of the plugin (in case you are reporting plugin bug)
 

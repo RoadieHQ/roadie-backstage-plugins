@@ -17,8 +17,15 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers, TestApiProvider } from '@backstage/test-utils';
-import { AnyApiRef, configApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
+import {
+  AnyApiRef,
+  configApiRef,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { PrometheusGraphEntityWrapper } from './PrometheusGraphEntityWrapper';
 import { prometheusApiRef } from '../../api';

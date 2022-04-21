@@ -38,4 +38,3 @@ spec:
       input:
         bucket: scaffolder-actions-upload-test
         region: eu-west-1
-

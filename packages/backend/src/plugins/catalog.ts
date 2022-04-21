@@ -9,7 +9,7 @@ import { PluginEnvironment } from '../types';
 import {
   AWSLambdaFunctionProvider,
   AWSS3BucketProvider,
-  AWSIAMUserProvider
+  AWSIAMUserProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { Duration } from 'luxon';
 
@@ -21,9 +21,8 @@ export default async function createPlugin(
   };
   const builder = await CatalogBuilder.create(env);
   const providers: RunnableProvider[] = [];
-  for (const config of env.config.getOptionalConfigArray(
-    'integrations.aws',
-  ) || []) {
+  for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
+    []) {
     const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
     const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
     const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);

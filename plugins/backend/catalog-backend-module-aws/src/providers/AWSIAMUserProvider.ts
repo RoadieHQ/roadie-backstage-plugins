@@ -27,9 +27,9 @@ import {
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { IAM } from '@aws-sdk/client-iam';
 import { STS } from '@aws-sdk/client-sts';
-import * as winston from "winston";
-import {Config} from "@backstage/config";
-import {AccountConfig} from "../types";
+import * as winston from 'winston';
+import { Config } from '@backstage/config';
+import { AccountConfig } from '../types';
 
 const link2aws = require('link2aws');
 
@@ -51,7 +51,10 @@ export class AWSIAMUserProvider implements EntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSIAMUserProvider({ accountId, roleArn, externalId, region }, options)
+    return new AWSIAMUserProvider(
+      { accountId, roleArn, externalId, region },
+      options,
+    );
   }
 
   constructor(account: AccountConfig, options: { logger: winston.Logger }) {
@@ -75,61 +78,63 @@ export class AWSIAMUserProvider implements EntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(`Providing iam user resources from aws: ${this.accountId}`)
-      const userResources: UserEntity[] = [];
+    this.logger.info(
+      `Providing iam user resources from aws: ${this.accountId}`,
+    );
+    const userResources: UserEntity[] = [];
 
-      const credentials = fromTemporaryCredentials({
-        params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-      });
-      const iam = new IAM({ credentials, region: this.region });
-      const sts = new STS({ credentials });
+    const credentials = fromTemporaryCredentials({
+      params: { RoleArn: this.roleArn, ExternalId: this.externalId },
+    });
+    const iam = new IAM({ credentials, region: this.region });
+    const sts = new STS({ credentials });
 
-      const account = await sts.getCallerIdentity({});
+    const account = await sts.getCallerIdentity({});
 
-      const defaultAnnotations: { [name: string]: string } = {
-        [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-        [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      };
+    const defaultAnnotations: { [name: string]: string } = {
+      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+    };
 
-      if (account.Account) {
-        defaultAnnotations['amazon.com/account-id'] = account.Account;
-      }
+    if (account.Account) {
+      defaultAnnotations['amazon.com/account-id'] = account.Account;
+    }
 
-      const users = await iam.listUsers({});
+    const users = await iam.listUsers({});
 
-      for (const user of users.Users || []) {
-        if (user.UserName && user.Arn && user.UserId) {
-          const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
-          const userEntity: UserEntity = {
-            kind: 'User',
-            apiVersion: "backstage.io/v1alpha1",
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                "amazon.com/iam-user-arn": user.Arn,
-                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
-              },
-              name: user.UserId,
+    for (const user of users.Users || []) {
+      if (user.UserName && user.Arn && user.UserId) {
+        const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
+        const userEntity: UserEntity = {
+          kind: 'User',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              'amazon.com/iam-user-arn': user.Arn,
+              [ANNOTATION_VIEW_URL]: consoleLink.toString(),
             },
-            spec: {
-              profile: {
-                displayName: user.Arn,
-                email: user.UserName,
-              },
-              memberOf: [],
+            name: user.UserId,
+          },
+          spec: {
+            profile: {
+              displayName: user.Arn,
+              email: user.UserName,
             },
-          }
+            memberOf: [],
+          },
+        };
 
-          userResources.push(userEntity);
-        }
+        userResources.push(userEntity);
       }
+    }
 
-      await this.connection.applyMutation({
-        type: 'full',
-        entities: userResources.map(entity => ({
-          entity,
-          locationKey: `aws-iam-user-provider:${this.accountId}`,
-        })),
-      });
+    await this.connection.applyMutation({
+      type: 'full',
+      entities: userResources.map(entity => ({
+        entity,
+        locationKey: `aws-iam-user-provider:${this.accountId}`,
+      })),
+    });
   }
 }

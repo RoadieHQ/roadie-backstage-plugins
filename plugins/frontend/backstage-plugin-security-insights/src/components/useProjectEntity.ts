@@ -17,7 +17,9 @@
 import { Entity } from '@backstage/catalog-model';
 
 export const useProjectEntity = (entity: Entity) => {
-  const projectSlug = entity.metadata?.annotations?.['github.com/project-slug'] as string;
+  const projectSlug = entity.metadata?.annotations?.[
+    'github.com/project-slug'
+  ] as string;
   return {
     owner: projectSlug.split('/')[0],
     repo: projectSlug.split('/')[1],

@@ -14,4 +14,9 @@
  * limitations under the License.
  */
 
-export { S3BucketCard, LambdaFunctionCard, IAMUserCard, awsPlugin } from './plugin';
+export {
+  S3BucketCard,
+  LambdaFunctionCard,
+  IAMUserCard,
+  awsPlugin,
+} from './plugin';

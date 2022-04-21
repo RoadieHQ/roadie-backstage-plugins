@@ -64,7 +64,7 @@ interface SyncArgoApplicationProps {
 }
 
 interface ResyncProps {
-  appSelector: string
+  appSelector: string;
 }
 
 export interface ArgoServiceApi {
@@ -83,9 +83,7 @@ export interface ArgoServiceApi {
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
   deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
   deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
-  syncArgoApp: (
-    props: SyncArgoApplicationProps
-  ) => Promise<SyncResponse>;
+  syncArgoApp: (props: SyncArgoApplicationProps) => Promise<SyncResponse>;
   resyncAppOnAllArgos: (props: {
     appSelector: string;
   }) => Promise<SyncResponse[][]>;
@@ -289,18 +287,17 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async createArgoApplication(
-    {
-      baseUrl,
-      argoToken,
-      appName,
-      projectName,
-      namespace,
-      sourceRepo,
-      sourcePath,
-      labelValue,
-      destinationServer}: CreateArgoApplicationProps,
-  ): Promise<object> {
+  async createArgoApplication({
+    baseUrl,
+    argoToken,
+    appName,
+    projectName,
+    namespace,
+    sourceRepo,
+    sourcePath,
+    labelValue,
+    destinationServer,
+  }: CreateArgoApplicationProps): Promise<object> {
     const data = {
       metadata: {
         name: appName,
@@ -365,7 +362,9 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async resyncAppOnAllArgos({appSelector}: ResyncProps): Promise<SyncResponse[][]> {
+  async resyncAppOnAllArgos({
+    appSelector,
+  }: ResyncProps): Promise<SyncResponse[][]> {
     const findArgoAppResp: findArgoAppResp[] = await this.findArgoApp({
       selector: appSelector,
     });
@@ -377,7 +376,11 @@ export class ArgoService implements ArgoServiceApi {
           try {
             const resp = argoInstance.appName.map(
               (argoApp: any): Promise<SyncResponse> => {
-                return this.syncArgoApp({argoInstance, argoToken: token, appName: argoApp});
+                return this.syncArgoApp({
+                  argoInstance,
+                  argoToken: token,
+                  appName: argoApp,
+                });
               },
             );
             return await Promise.all(resp);
@@ -393,11 +396,11 @@ export class ArgoService implements ArgoServiceApi {
     return await Promise.all(parallelSyncCalls);
   }
 
-  async syncArgoApp(
-    {argoInstance,
-      argoToken,
-      appName}: SyncArgoApplicationProps
-  ): Promise<SyncResponse> {
+  async syncArgoApp({
+    argoInstance,
+    argoToken,
+    appName,
+  }: SyncArgoApplicationProps): Promise<SyncResponse> {
     const data = {
       prune: false,
       dryRun: false,
@@ -437,7 +440,11 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async deleteApp({ baseUrl, argoApplicationName, argoToken }: DeleteApplicationProps): Promise<boolean> {
+  async deleteApp({
+    baseUrl,
+    argoApplicationName,
+    argoToken,
+  }: DeleteApplicationProps): Promise<boolean> {
     const options: AxiosRequestConfig = {
       method: 'DELETE',
       url: `${baseUrl}/api/v1/applications/${argoApplicationName}`,
@@ -469,7 +476,11 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
-  async deleteProject({baseUrl, argoProjectName, argoToken}: DeleteProjectProps): Promise<boolean> {
+  async deleteProject({
+    baseUrl,
+    argoProjectName,
+    argoToken,
+  }: DeleteProjectProps): Promise<boolean> {
     const options: AxiosRequestConfig = {
       method: 'DELETE',
       url: `${baseUrl}/api/v1/projects/${argoProjectName}`,

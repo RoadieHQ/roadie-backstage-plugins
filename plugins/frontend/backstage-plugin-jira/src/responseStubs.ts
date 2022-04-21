@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export const entityStub = {
   metadata: {
     namespace: 'default',
@@ -47,8 +46,7 @@ export const projectResponseStub = {
   key: 'BT',
   description: '',
   lead: {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/2/user?accountId=5f42b4ae347294003e51f83e',
+    self: 'https://backstage-test.atlassian.net/rest/api/2/user?accountId=5f42b4ae347294003e51f83e',
     accountId: '5f42b4ae347294003e51f83e',
     avatarUrls: {
       '48x48':
@@ -159,23 +157,20 @@ export const searchResponseStub = {
 
 export const statusesResponseStub = [
   {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10002',
+    self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10002',
     id: '10002',
     name: 'Task',
     subtask: false,
     statuses: [
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Backlog',
         untranslatedName: 'Backlog',
         id: '10000',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -183,16 +178,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Selected for Development',
         untranslatedName: 'Selected for Development',
         id: '10001',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -209,8 +202,7 @@ export const statusesResponseStub = [
         untranslatedName: 'In Progress',
         id: '3',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
           id: 4,
           key: 'indeterminate',
           colorName: 'yellow',
@@ -218,16 +210,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Done',
         untranslatedName: 'Done',
         id: '10002',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
           id: 3,
           key: 'done',
           colorName: 'green',
@@ -237,23 +227,20 @@ export const statusesResponseStub = [
     ],
   },
   {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10003',
+    self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10003',
     id: '10003',
     name: 'Sub-task',
     subtask: true,
     statuses: [
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Backlog',
         untranslatedName: 'Backlog',
         id: '10000',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -261,16 +248,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Selected for Development',
         untranslatedName: 'Selected for Development',
         id: '10001',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -287,8 +272,7 @@ export const statusesResponseStub = [
         untranslatedName: 'In Progress',
         id: '3',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
           id: 4,
           key: 'indeterminate',
           colorName: 'yellow',
@@ -296,16 +280,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Done',
         untranslatedName: 'Done',
         id: '10002',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
           id: 3,
           key: 'done',
           colorName: 'green',
@@ -315,23 +297,20 @@ export const statusesResponseStub = [
     ],
   },
   {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10001',
+    self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10001',
     id: '10001',
     name: 'Story',
     subtask: false,
     statuses: [
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Backlog',
         untranslatedName: 'Backlog',
         id: '10000',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -339,16 +318,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Selected for Development',
         untranslatedName: 'Selected for Development',
         id: '10001',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -365,8 +342,7 @@ export const statusesResponseStub = [
         untranslatedName: 'In Progress',
         id: '3',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
           id: 4,
           key: 'indeterminate',
           colorName: 'yellow',
@@ -374,16 +350,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Done',
         untranslatedName: 'Done',
         id: '10002',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
           id: 3,
           key: 'done',
           colorName: 'green',
@@ -393,23 +367,20 @@ export const statusesResponseStub = [
     ],
   },
   {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10004',
+    self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10004',
     id: '10004',
     name: 'Bug',
     subtask: false,
     statuses: [
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Backlog',
         untranslatedName: 'Backlog',
         id: '10000',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -417,16 +388,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Selected for Development',
         untranslatedName: 'Selected for Development',
         id: '10001',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -443,8 +412,7 @@ export const statusesResponseStub = [
         untranslatedName: 'In Progress',
         id: '3',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
           id: 4,
           key: 'indeterminate',
           colorName: 'yellow',
@@ -452,16 +420,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Done',
         untranslatedName: 'Done',
         id: '10002',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
           id: 3,
           key: 'done',
           colorName: 'green',
@@ -471,23 +437,20 @@ export const statusesResponseStub = [
     ],
   },
   {
-    self:
-      'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10000',
+    self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10000',
     id: '10000',
     name: 'Epic',
     subtask: false,
     statuses: [
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10000',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Backlog',
         untranslatedName: 'Backlog',
         id: '10000',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -495,16 +458,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10001',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Selected for Development',
         untranslatedName: 'Selected for Development',
         id: '10001',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/2',
           id: 2,
           key: 'new',
           colorName: 'blue-gray',
@@ -521,8 +482,7 @@ export const statusesResponseStub = [
         untranslatedName: 'In Progress',
         id: '3',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/4',
           id: 4,
           key: 'indeterminate',
           colorName: 'yellow',
@@ -530,16 +490,14 @@ export const statusesResponseStub = [
         },
       },
       {
-        self:
-          'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
+        self: 'https://backstage-test.atlassian.net/rest/api/latest/status/10002',
         description: '',
         iconUrl: 'https://backstage-test.atlassian.net/',
         name: 'Done',
         untranslatedName: 'Done',
         id: '10002',
         statusCategory: {
-          self:
-            'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
+          self: 'https://backstage-test.atlassian.net/rest/api/latest/statuscategory/3',
           id: 3,
           key: 'done',
           colorName: 'green',

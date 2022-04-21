@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-
 export const BUILDKITE_ANNOTATION = 'buildkite.com/project-slug';

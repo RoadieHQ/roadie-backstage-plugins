@@ -31,7 +31,7 @@ import {
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { InfoCard, Progress } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectInfo, useProjectEntity } from '../../hooks';
 import { EntityProps, ProjectDetailsProps } from '../../types';
 import { Status } from './components/Status';
@@ -79,13 +79,8 @@ export const JiraCard = (_props: EntityProps) => {
   const classes = useStyles();
   const { projectKey, component, tokenType } = useProjectEntity(entity);
   const [statusesNames, setStatusesNames] = useState<Array<string>>([]);
-  const {
-    project,
-    issues,
-    projectLoading,
-    projectError,
-    fetchProjectInfo,
-  } = useProjectInfo(projectKey, component, statusesNames);
+  const { project, issues, projectLoading, projectError, fetchProjectInfo } =
+    useProjectInfo(projectKey, component, statusesNames);
   const {
     issueTypes: displayIssues,
     type,
@@ -175,7 +170,7 @@ export const JiraCard = (_props: EntityProps) => {
             ))}
           </Grid>
           <Divider />
-          <ActivityStream projectKey={projectKey} tokenType={tokenType}/>
+          <ActivityStream projectKey={projectKey} tokenType={tokenType} />
         </div>
       ) : null}
     </InfoCard>

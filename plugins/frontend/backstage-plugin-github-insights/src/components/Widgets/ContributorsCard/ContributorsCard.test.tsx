@@ -97,7 +97,6 @@ describe('ContributorsCard', () => {
       ),
     );
 
-
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/contributors',
@@ -105,18 +104,19 @@ describe('ContributorsCard', () => {
       ),
     );
 
-    rerender(wrapInTestApp(
-      <TestApiProvider apis={apis}>
-        <ThemeProvider theme={lightTheme}>
-          <EntityProvider entity={entityMock}>
-            <ContributorsCard />
-          </EntityProvider>
-        </ThemeProvider>
-      </TestApiProvider>,
-    ))
-
+    rerender(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <ContributorsCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    );
 
     expect(await screen.findByText('People')).toBeInTheDocument();
     expect(await screen.getByAltText('Rugvip')).toBeInTheDocument();
-  })
+  });
 });

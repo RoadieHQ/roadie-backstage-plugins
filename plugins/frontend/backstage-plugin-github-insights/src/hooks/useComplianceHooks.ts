@@ -21,16 +21,20 @@ import { useAsync } from 'react-use';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { useStore } from '../components/store';
-import { RequestError } from "@octokit/request-error";
+import { RequestError } from '@octokit/request-error';
 
-export const NO_LICENSE_MSG = 'No license file found'
+export const NO_LICENSE_MSG = 'No license file found';
 
-export const useProtectedBranches = (entity: Entity): { branches?: [], error?: Error, loading: boolean } => {
+export const useProtectedBranches = (
+  entity: Entity,
+): { branches?: []; error?: Error; loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { state: branches, setState: setBranches } = useStore(state => state.branches)
+  const { state: branches, setState: setBranches } = useStore(
+    state => state.branches,
+  );
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -42,7 +46,7 @@ export const useProtectedBranches = (entity: Entity): { branches?: [], error?: E
         'GET /repos/{owner}/{repo}/branches',
         {
           headers: {
-            "if-none-match": branches.etag
+            'if-none-match': branches.etag,
           },
           baseUrl,
           owner,
@@ -51,20 +55,19 @@ export const useProtectedBranches = (entity: Entity): { branches?: [], error?: E
         },
       );
 
-      result = { data: response.data, etag: response.headers.etag ?? "" };
-
+      result = { data: response.data, etag: response.headers.etag ?? '' };
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          result = branches
+          result = branches;
         }
       }
     }
-    return result
+    return result;
   }, [baseUrl]);
 
   if (value) {
-    setBranches(value)
+    setBranches(value);
   }
 
   return {
@@ -74,17 +77,20 @@ export const useProtectedBranches = (entity: Entity): { branches?: [], error?: E
   };
 };
 
-export const useRepoLicence = (entity: Entity): { license?: string, error?: Error, loading: boolean } => {
+export const useRepoLicence = (
+  entity: Entity,
+): { license?: string; error?: Error; loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { state: license, setState: setLicense } = useStore(state => state.license)
+  const { state: license, setState: setLicense } = useStore(
+    state => state.license,
+  );
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-
     if (license.data === NO_LICENSE_MSG) {
-      return license
+      return license;
     }
 
     const token = await auth.getAccessToken(['repo']);
@@ -96,7 +102,7 @@ export const useRepoLicence = (entity: Entity): { license?: string, error?: Erro
         'GET /repos/{owner}/{repo}/contents/{path}',
         {
           headers: {
-            "if-none-match": license.etag
+            'if-none-match': license.etag,
           },
           baseUrl,
           owner,
@@ -109,21 +115,21 @@ export const useRepoLicence = (entity: Entity): { license?: string, error?: Erro
         .split('\n')
         .map(line => line.trim())
         .filter(Boolean)[0];
-      result = { etag: response.headers.etag ?? "", data: licenseData }
+      result = { etag: response.headers.etag ?? '', data: licenseData };
     } catch (e) {
       if (e instanceof RequestError) {
         if (e.status === 304) {
-          return license
+          return license;
         } else if (e.status === 404) {
-          result = { etag: "", data: NO_LICENSE_MSG }
+          result = { etag: '', data: NO_LICENSE_MSG };
         }
       }
     }
-    return result
+    return result;
   }, [baseUrl]);
 
   if (value) {
-    setLicense(value)
+    setLicense(value);
   }
 
   return {

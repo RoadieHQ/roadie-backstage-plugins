@@ -31,6 +31,6 @@
  * @type {Cypress.PluginConfig}
  */
 
- export default function loadConfig(_:any ,config:any) {
-  return config
-};
+export default function loadConfig(_: any, config: any) {
+  return config;
+}

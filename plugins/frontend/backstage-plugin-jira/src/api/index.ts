@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
 import { IssuesCounter, IssueType, Project, Status } from '../types';
 import fetch from 'cross-fetch';
@@ -139,7 +138,7 @@ export class JiraAPI {
       iconUrl: status.iconUrl,
     }));
 
-    const filteredIssues = issuesTypes.filter(el => el.name !== "Sub-task");
+    const filteredIssues = issuesTypes.filter(el => el.name !== 'Sub-task');
 
     const issuesCounter = await Promise.all(
       filteredIssues.map(issue => {
@@ -172,11 +171,17 @@ export class JiraAPI {
     };
   }
 
-  async getActivityStream(size: number, projectKey: string, isBearerAuth: boolean) {
+  async getActivityStream(
+    size: number,
+    projectKey: string,
+    isBearerAuth: boolean,
+  ) {
     const { baseUrl } = await this.getUrls();
 
     const request = await fetch(
-      isBearerAuth? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`:`${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic` ,
+      isBearerAuth
+        ? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`
+        : `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic`,
     );
     if (!request.ok) {
       throw new Error(

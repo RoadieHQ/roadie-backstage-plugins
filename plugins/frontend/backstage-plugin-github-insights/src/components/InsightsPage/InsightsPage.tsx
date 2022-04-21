@@ -16,8 +16,17 @@
 
 import React from 'react';
 import { Grid } from '@material-ui/core';
-import { Page, Content, ContentHeader, SupportButton, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { GITHUB_INSIGHTS_ANNOTATION, isGithubInsightsAvailable } from '../utils/isGithubInsightsAvailable';
+import {
+  Page,
+  Content,
+  ContentHeader,
+  SupportButton,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
+import {
+  GITHUB_INSIGHTS_ANNOTATION,
+  isGithubInsightsAvailable,
+} from '../utils/isGithubInsightsAvailable';
 import {
   ComplianceCard,
   ContributorsCard,
@@ -25,7 +34,7 @@ import {
   LanguagesCard,
   ReleasesCard,
 } from '../Widgets';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const InsightsPage = () => {
   const { entity } = useEntity();

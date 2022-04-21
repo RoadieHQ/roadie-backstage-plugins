@@ -38,6 +38,6 @@ export interface Config {
     /**
      * AWS configuration
      */
-    aws?: AWSAccountProviderConfig[]
+    aws?: AWSAccountProviderConfig[];
   };
 }

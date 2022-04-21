@@ -20,26 +20,29 @@ import 'os';
 describe('Travis CI', () => {
   beforeEach(() => {
     cy.saveGithubToken();
-    cy.intercept('GET', 'http://localhost:7007/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5', { fixture: 'travisCi/builds.json' }).as('getBuilds')
-  })
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5',
+      { fixture: 'travisCi/builds.json' },
+    ).as('getBuilds');
+  });
 
   describe('Navigate to CI/CD dashboard', () => {
     it('should show Travis CI table', () => {
-      cy.visit('/catalog/default/component/sample-service-2/ci-cd')
+      cy.visit('/catalog/default/component/sample-service-2/ci-cd');
 
-      cy.wait('@getBuilds')
+      cy.wait('@getBuilds');
 
       cy.contains('All builds');
       cy.contains('Cypress test Commit message');
     });
 
     it('should show Travis CI build card', () => {
-      cy.visit('/catalog/default/component/sample-service-2')
+      cy.visit('/catalog/default/component/sample-service-2');
 
-      cy.wait('@getBuilds')
+      cy.wait('@getBuilds');
 
       cy.contains('Recent Travis-CI Builds');
     });
-
   });
 });

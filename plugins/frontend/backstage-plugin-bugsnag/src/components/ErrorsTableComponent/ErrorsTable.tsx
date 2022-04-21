@@ -28,10 +28,15 @@ import { DateTime } from 'luxon';
 const useStyles = makeStyles({
   iconClass: {
     verticalAlign: 'middle',
-  }
+  },
 });
 
-const getDetailsUrl = (errorId: string, errorClass: string, organisationName: string, projectName: string) => {
+const getDetailsUrl = (
+  errorId: string,
+  errorClass: string,
+  organisationName: string,
+  projectName: string,
+) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const classes = useStyles();
   const url = `https://app.bugsnag.com/${organisationName}/${projectName}/errors/${errorId}`;
@@ -41,13 +46,22 @@ const getDetailsUrl = (errorId: string, errorClass: string, organisationName: st
         onClick={() => window.open(url, '_blank')}
         aria-label="View"
         fontSize="small"
-        className={classes.iconClass} />
+        className={classes.iconClass}
+      />
       {errorClass}
     </Link>
   );
-}
+};
 
-export const DenseTable = ({ errors, organisationName, projectName }: { errors: BugsnagError[], organisationName: string, projectName: string }) => {
+export const DenseTable = ({
+  errors,
+  organisationName,
+  projectName,
+}: {
+  errors: BugsnagError[];
+  organisationName: string;
+  projectName: string;
+}) => {
   const columns: TableColumn[] = [
     { title: '', field: 'class' },
     { title: 'Events', field: 'events' },
@@ -61,14 +75,19 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
   const data = errors.map(error => {
     return {
       severity: error.severity,
-      class: getDetailsUrl(error.id, error.error_class, organisationName, projectName),
+      class: getDetailsUrl(
+        error.id,
+        error.error_class,
+        organisationName,
+        projectName,
+      ),
       stage: error.release_stages,
       events: error.events,
       id: error.id,
       project_id: error.project_id,
       users: error.users,
       first_seen: DateTime.fromISO(error.first_seen).toLocaleString(),
-      last_seen: DateTime.fromISO(error.last_seen).toLocaleString()
+      last_seen: DateTime.fromISO(error.last_seen).toLocaleString(),
     };
   });
 
@@ -82,7 +101,13 @@ export const DenseTable = ({ errors, organisationName, projectName }: { errors: 
   );
 };
 
-export const ErrorsTable = ({ organisationName, project }: { organisationName: string, project: Project }) => {
+export const ErrorsTable = ({
+  organisationName,
+  project,
+}: {
+  organisationName: string;
+  project: Project;
+}) => {
   const api = useApi(bugsnagApiRef);
   const configApi = useApi(configApiRef);
   const perPage = configApi?.getOptionalNumber('bugsnag.resultsPerPage');
@@ -91,7 +116,7 @@ export const ErrorsTable = ({ organisationName, project }: { organisationName: s
       await api.fetchErrors({
         projectId: project.id,
         perPage,
-      })
+      }),
   );
   if (loading) {
     return <Progress />;
@@ -99,5 +124,11 @@ export const ErrorsTable = ({ organisationName, project }: { organisationName: s
     return <Alert severity="error">{error.message}</Alert>;
   }
 
-  return <DenseTable organisationName={organisationName} projectName={project.slug} errors={value || []} />;
+  return (
+    <DenseTable
+      organisationName={organisationName}
+      projectName={project.slug}
+      errors={value || []}
+    />
+  );
 };

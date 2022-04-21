@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { createApiRef } from '@backstage/core-plugin-api';
 import { LambdaData } from '../types';
 
@@ -27,7 +26,7 @@ export type AwsLambdaApi = {
     awsRegion,
     backendUrl,
     functionName,
-    token
+    token,
   }: {
     awsRegion: string;
     backendUrl: string;

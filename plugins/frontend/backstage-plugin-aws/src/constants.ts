@@ -18,4 +18,3 @@ export const S3_BUCKET_ARN_ANNOTATION = 'amazon.com/s3-bucket-arn';
 export const LAMBDA_FUNCTION_ARN_ANNOTATION = 'amazon.com/lambda-function-arn';
 export const IAM_USER_ARN_ANNOTATION = 'amazon.com/iam-user-arn';
 export const ACCOUNT_ID_ANNOTATION = 'amazon.com/account-id';
-

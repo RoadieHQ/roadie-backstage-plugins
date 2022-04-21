@@ -61,8 +61,8 @@ export const IAMUserCard = (props: Props) => {
   useAsync(async () => {
     if (!userDetails) {
       if (
-          entity.metadata.annotations &&
-          entity.metadata.annotations[IAM_USER_ARN_ANNOTATION]
+        entity.metadata.annotations &&
+        entity.metadata.annotations[IAM_USER_ARN_ANNOTATION]
       ) {
         setLoading(true);
 
@@ -93,25 +93,25 @@ export const IAMUserCard = (props: Props) => {
 
   if (annotationError) {
     return (
-        <>
-          <MissingAnnotationEmptyState annotation={annotationError} />
-        </>
+      <>
+        <MissingAnnotationEmptyState annotation={annotationError} />
+      </>
     );
   }
 
   return (
-      <InfoCard
-          title="AWS IAM User Details"
-          className={classes.infoCard}
-          variant={props.variant}
-      >
-        {loading ? (
-            <CircularProgress />
-        ) : (
-            <Box position="relative">
-              <StructuredMetadataTable metadata={userDetails} />
-            </Box>
-        )}
-      </InfoCard>
+    <InfoCard
+      title="AWS IAM User Details"
+      className={classes.infoCard}
+      variant={props.variant}
+    >
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <Box position="relative">
+          <StructuredMetadataTable metadata={userDetails} />
+        </Box>
+      )}
+    </InfoCard>
   );
 };

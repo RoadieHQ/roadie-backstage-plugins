@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 
 export const DATADOG_ANNOTATION_DASHBOARD_URL = 'datadoghq.com/dashboard-url';
@@ -34,9 +33,8 @@ export const useDatadogAppData = ({ entity }: { entity: Entity }) => {
       DATADOG_ANNOTATION_GRAPH_SIZE
     ] as GraphSize) ?? 'medium';
   const site: String =
-    (entity?.metadata.annotations?.[
-      DATADOG_ANNOTATION_SITE
-    ] as String) ?? 'datadoghq.eu';
+    (entity?.metadata.annotations?.[DATADOG_ANNOTATION_SITE] as String) ??
+    'datadoghq.eu';
   if (!dashboardUrl && !graphToken) {
     throw new Error("'datadog' annotation is missing");
   }

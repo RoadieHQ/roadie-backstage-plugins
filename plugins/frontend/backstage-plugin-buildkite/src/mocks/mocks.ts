@@ -27,8 +27,7 @@ export const buildsResponseMock = [
   {
     id: 'a2b1e487-7da1-49c9-977d-a191065677a2',
     graphql_id: 'QnVpbGQtLS1hMmIxZTQ4Ny03ZGExLTQ5YzktOTc3ZC1hMTkxMDY1Njc3YTI=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/141',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/141',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/141',
     number: 141,
     state: 'scheduled',
@@ -60,15 +59,13 @@ export const buildsResponseMock = [
     rebuilt_from: {
       id: 'aa9a42ea-bc24-44db-84ec-6f08f7efbcdc',
       number: 136,
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/136',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/136',
     },
     pipeline: {
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -265,8 +262,7 @@ export const buildsResponseMock = [
   {
     id: 'b4e6e2d8-4a23-40b6-95d3-ea028ebf82bd',
     graphql_id: 'QnVpbGQtLS1iNGU2ZTJkOC00YTIzLTQwYjYtOTVkMy1lYTAyOGViZjgyYmQ=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/140',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/140',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/140',
     number: 140,
     state: 'scheduled',
@@ -298,15 +294,13 @@ export const buildsResponseMock = [
     rebuilt_from: {
       id: 'f85ae8c2-3a7d-4b48-961b-f2d052f13caf',
       number: 139,
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
     },
     pipeline: {
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -503,8 +497,7 @@ export const buildsResponseMock = [
   {
     id: 'f85ae8c2-3a7d-4b48-961b-f2d052f13caf',
     graphql_id: 'QnVpbGQtLS1mODVhZThjMi0zYTdkLTRiNDgtOTYxYi1mMmQwNTJmMTNjYWY=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/139',
     number: 139,
     state: 'scheduled',
@@ -542,8 +535,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -740,8 +732,7 @@ export const buildsResponseMock = [
   {
     id: '6968869c-a0db-4f1f-a4bd-48c7d7dbead4',
     graphql_id: 'QnVpbGQtLS02OTY4ODY5Yy1hMGRiLTRmMWYtYTRiZC00OGM3ZDdkYmVhZDQ=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/138',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/138',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/138',
     number: 138,
     state: 'scheduled',
@@ -779,8 +770,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -977,8 +967,7 @@ export const buildsResponseMock = [
   {
     id: 'f15bedfb-4a8f-4f16-964c-3d10ca717891',
     graphql_id: 'QnVpbGQtLS1mMTViZWRmYi00YThmLTRmMTYtOTY0Yy0zZDEwY2E3MTc4OTE=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/137',
     number: 137,
     state: 'scheduled',
@@ -1016,8 +1005,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,

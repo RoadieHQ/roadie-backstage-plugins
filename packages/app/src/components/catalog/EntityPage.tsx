@@ -104,7 +104,11 @@ import {
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
 import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
-import { S3BucketCard, LambdaFunctionCard, IAMUserCard } from '@roadiehq/backstage-plugin-aws';
+import {
+  S3BucketCard,
+  LambdaFunctionCard,
+  IAMUserCard,
+} from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">

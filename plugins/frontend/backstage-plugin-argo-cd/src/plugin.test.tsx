@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { TableColumn } from '@backstage/core-components';
 import {
@@ -211,9 +210,13 @@ describe('argo-cd', () => {
         </TestApiProvider>,
       );
       const drawerButton = await rendered.findByTitle('guestbook');
-      fireEvent.click(drawerButton)
-      expect(await rendered.findByTitle('Open Argo CD Dashboard')).toBeInTheDocument()
-      expect(await rendered.findByTitle('Open Argo CD Dashboard')).toHaveAttribute(
+      fireEvent.click(drawerButton);
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toBeInTheDocument();
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toHaveAttribute(
         'href',
         'www.example-argocd-url.com/applications/guestbook',
       );
@@ -437,9 +440,13 @@ describe('argo-cd', () => {
         </TestApiProvider>,
       );
       const drawerButton = await rendered.findByTitle('guestbook');
-      fireEvent.click(drawerButton)
-      expect(await rendered.findByTitle('Open Argo CD Dashboard')).toBeInTheDocument()
-      expect(await rendered.findByTitle('Open Argo CD Dashboard')).toHaveAttribute(
+      fireEvent.click(drawerButton);
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toBeInTheDocument();
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toHaveAttribute(
         'href',
         'www.example-argocd-url.com/applications/guestbook',
       );

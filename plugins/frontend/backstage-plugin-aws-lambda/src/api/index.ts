@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-
 export * from './AWSLambdaApi';
 export * from './AWSLambdaClient';

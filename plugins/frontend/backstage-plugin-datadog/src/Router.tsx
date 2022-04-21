@@ -25,8 +25,8 @@ import { isDatadogDashboardAvailable } from './plugin';
 /**
  * @deprecated since v0.2.0 you should use new composability API
  */
-export const Router = () => { 
-const { entity } = useEntity();
+export const Router = () => {
+  const { entity } = useEntity();
   return !isDatadogDashboardAvailable(entity) ? (
     <MissingAnnotationEmptyState
       annotation={DATADOG_ANNOTATION_DASHBOARD_URL}
@@ -36,4 +36,4 @@ const { entity } = useEntity();
       <Route path="/" element={<DatadogDashboardPage entity={entity} />} />
     </Routes>
   );
-  }
+};
