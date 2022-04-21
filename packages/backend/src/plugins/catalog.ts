@@ -4,6 +4,7 @@ import {
   EntityProvider,
 } from '@backstage/plugin-catalog-backend';
 import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+import { BambooHrUserProvider, BambooHROrgProcessor } from "@roadiehq/catalog-backend-module-bamboohr"
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import {
@@ -16,11 +17,15 @@ import { Duration } from 'luxon';
 export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
+
   type RunnableProvider = EntityProvider & {
     run: () => Promise<void>;
   };
+  const { config } = env
   const builder = await CatalogBuilder.create(env);
   const providers: RunnableProvider[] = [];
+  builder.addProcessor(new ScaffolderEntitiesProcessor());
+  builder.addProcessor(BambooHROrgProcessor.fromConfig(config, env));
   for (const config of env.config.getOptionalConfigArray(
     'integrations.aws',
   ) || []) {
@@ -35,8 +40,11 @@ export default async function createPlugin(
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
   }
-
-  builder.addProcessor(new ScaffolderEntitiesProcessor());
+  const bamboohrUserProvider = BambooHrUserProvider.fromConfig(
+    config, env
+  );
+  builder.addEntityProvider(bamboohrUserProvider);
+  providers.push(bamboohrUserProvider);
 
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
