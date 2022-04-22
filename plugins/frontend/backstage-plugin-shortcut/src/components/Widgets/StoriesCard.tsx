@@ -39,7 +39,7 @@ const useStyles = makeStyles<BackstageTheme>(theme => ({
     borderRadius: '1rem',
     boxShadow:
       '5px 0 5px -5px rgb(0 0 0 / 70%), -5px 0 5px -5px rgb(0 0 0 / 70%)',
-    border: '1px solid #525050',
+    border: '1px solid #52505017',
     backgroundColor: theme.palette.background.default,
   },
   mainContainer: {
@@ -60,7 +60,7 @@ const useStyles = makeStyles<BackstageTheme>(theme => ({
     color: theme.palette.status.ok,
   },
   subtitleNotStarted: {
-    color: theme.palette.status.pending,
+    color: '#c9bb82',
   },
   subtitleIcon: {
     display: 'flex',
@@ -173,7 +173,11 @@ const StoriesCard = () => {
   const classes = useStyles();
 
   const { value, loading, error } = useAsync(async () => {
-    const profile = await identityApi.getProfileInfo();
+    //const profile = await identityApi.getProfileInfo();
+    const profile = {
+      email: 'irma@roadie.io',
+      displayName: 'Irma Solakovic',
+    };
     const allMembers = await api.getUsers();
     const loggedUser = allMembers?.find(
       user => user.profile.email_address === profile.email,
