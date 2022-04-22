@@ -105,6 +105,7 @@ import {
 } from '@roadiehq/backstage-plugin-prometheus';
 import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
 import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
+import { S3BucketCard, LambdaFunctionCard, IAMUserCard } from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -145,6 +146,15 @@ const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
+    </Grid>
+    <Grid item md={6}>
+      <LambdaFunctionCard />
+    </Grid>
+    <Grid item md={6}>
+      <S3BucketCard />
+    </Grid>
+    <Grid item md={6}>
+      <IAMUserCard />
     </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
