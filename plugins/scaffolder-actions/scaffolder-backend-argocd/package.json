@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
-    "@backstage/cli": "^0.16.0"
+    "@backstage/cli": "^0.17.0"
   },
   "files": [
     "dist"

@@ -38,7 +38,7 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.16.0",
+    "@backstage/cli": "^0.17.0",
     "@vercel/ncc": "^0.27.0",
     "jest": "^27.0.1"
   },
