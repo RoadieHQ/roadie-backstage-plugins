@@ -2699,6 +2699,15 @@
     "@backstage/errors" "^1.0.0"
     cross-fetch "^3.1.5"
 
+"@backstage/catalog-client@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@backstage/catalog-client/-/catalog-client-1.0.1.tgz#f19888635825b3104b0e293409d924fb5e21feb9"
+  integrity sha512-2JUEqtR3v361JM6JDjTt8k/tlZd27RB/ZQ2Vwp5seJf4QYXfR9s5AM4M35l/A5vosDKhGrxMAq3t2s4gcH9vVg==
+  dependencies:
+    "@backstage/catalog-model" "^1.0.1"
+    "@backstage/errors" "^1.0.0"
+    cross-fetch "^3.1.5"
+
 "@backstage/catalog-model@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@backstage/catalog-model/-/catalog-model-0.13.0.tgz#abeb91522ac7ef7907907ad5bc889803131db209"
@@ -2721,6 +2730,19 @@
     "@backstage/errors" "^1.0.0"
     "@backstage/types" "^1.0.0"
     ajv "^7.0.3"
+    json-schema "^0.4.0"
+    lodash "^4.17.21"
+    uuid "^8.0.0"
+
+"@backstage/catalog-model@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@backstage/catalog-model/-/catalog-model-1.0.1.tgz#16acb8cf52083dd038da7d9fae38811fd88d55e5"
+  integrity sha512-VxKQ+WzcsxAWtwWyeGw04vTefkmwxi6XweXSNRhNddXAVqsAbDcCYBUc9jylu0bYVXXWYJkEl8kiwyawUloPPQ==
+  dependencies:
+    "@backstage/config" "^1.0.0"
+    "@backstage/errors" "^1.0.0"
+    "@backstage/types" "^1.0.0"
+    ajv "^8.10.0"
     json-schema "^0.4.0"
     lodash "^4.17.21"
     uuid "^8.0.0"
@@ -3057,7 +3079,7 @@
     zen-observable "^0.8.15"
     zod "^3.11.6"
 
-"@backstage/core-components@^0.9.1":
+"@backstage/core-components@^0.9.1", "@backstage/core-components@^0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.9.3.tgz#79d8bcea06281da492730fe8eb14aa18877b27c4"
   integrity sha512-cZr6pT3Q7whzdKvB/M3P4NH2/J4+GHKLvQsnRNoel+DE6PmenyAPDslSRf62Lu17+n6qZNHPMfySK1rePnf0Kg==
@@ -3237,6 +3259,19 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@backstage/integration/-/integration-1.0.0.tgz#e307cfddea014bfb0eb2281a5ae25ea0b742e9cf"
   integrity sha512-DpEoSCQyurLSNGLAAfZzwb8IGEoxm6po6ZkKq9Gt9I63NbLhixBEnCcoPbm5+ld4MVNwg+FgzIoktsjdBt3JIw==
+  dependencies:
+    "@backstage/config" "^1.0.0"
+    "@octokit/auth-app" "^3.4.0"
+    "@octokit/rest" "^18.5.3"
+    cross-fetch "^3.1.5"
+    git-url-parse "^11.6.0"
+    lodash "^4.17.21"
+    luxon "^2.0.2"
+
+"@backstage/integration@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@backstage/integration/-/integration-1.1.0.tgz#4784fe96cca5af0e9bf6ca98ee357338c43f797d"
+  integrity sha512-2yf1ioFsbivHf/PtQy66WT7pa9Mzazc44OORDO4EFEsJT4noIZHff2NZfHvg/5dFFQPPPY/esyEf83jhsOE7Wg==
   dependencies:
     "@backstage/config" "^1.0.0"
     "@octokit/auth-app" "^3.4.0"
@@ -3442,6 +3477,14 @@
     "@backstage/plugin-permission-common" "^0.5.3"
     "@backstage/search-common" "^0.3.2"
 
+"@backstage/plugin-catalog-common@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@backstage/plugin-catalog-common/-/plugin-catalog-common-1.0.1.tgz#97d70bfb6083e576e2163af19fd096e9f97f7b88"
+  integrity sha512-zPf8OGSjH+ZftMnjBxTgwLtgapnO1L7fzulLQ2RRaWrUcXGk8N3szQBDcqwxfBFiWSIX1G4vvRi/BGXFMUMlnw==
+  dependencies:
+    "@backstage/plugin-permission-common" "^0.6.0"
+    "@backstage/search-common" "^0.3.3"
+
 "@backstage/plugin-catalog-graph@^0.2.11":
   version "0.2.15"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-graph/-/plugin-catalog-graph-0.2.15.tgz#f02a94be31248b6f8333eb010b9c7714d5c98986"
@@ -3544,6 +3587,35 @@
     yaml "^1.10.0"
     zen-observable "^0.8.15"
 
+"@backstage/plugin-catalog-react@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/@backstage/plugin-catalog-react/-/plugin-catalog-react-1.0.1.tgz#647cb19bff2885bb4e1e289bb1b751a7e9a36477"
+  integrity sha512-oDHYsU6C9/h0X1qJV8YNSQjGpL51ZdgXLuxKFYmsQv3Bw/dbxUNfoaEd1/+rQLbGW/EVZj1ma9HyF3u32wNSiA==
+  dependencies:
+    "@backstage/catalog-client" "^1.0.1"
+    "@backstage/catalog-model" "^1.0.1"
+    "@backstage/core-components" "^0.9.3"
+    "@backstage/core-plugin-api" "^1.0.1"
+    "@backstage/errors" "^1.0.0"
+    "@backstage/integration" "^1.1.0"
+    "@backstage/plugin-catalog-common" "^1.0.1"
+    "@backstage/plugin-permission-common" "^0.6.0"
+    "@backstage/plugin-permission-react" "^0.4.0"
+    "@backstage/theme" "^0.2.15"
+    "@backstage/types" "^1.0.0"
+    "@backstage/version-bridge" "^1.0.1"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.57"
+    classnames "^2.2.6"
+    jwt-decode "^3.1.0"
+    lodash "^4.17.21"
+    qs "^6.9.4"
+    react-router "6.0.0-beta.0"
+    react-use "^17.2.4"
+    yaml "^1.10.0"
+    zen-observable "^0.8.15"
+
 "@backstage/plugin-catalog@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog/-/plugin-catalog-1.0.0.tgz#69cd60f0a8a8ca47e08593d04c1e4fc8d1446dcd"
@@ -3600,6 +3672,25 @@
     "@backstage/core-plugin-api" "^1.0.0"
     "@backstage/plugin-catalog-react" "^1.0.0"
     "@backstage/plugin-search" "^0.7.4"
+    "@backstage/theme" "^0.2.15"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.57"
+    lodash "^4.17.21"
+    react-router "6.0.0-beta.0"
+    react-use "^17.2.4"
+
+"@backstage/plugin-home@^0.4.20":
+  version "0.4.20"
+  resolved "https://registry.npmjs.org/@backstage/plugin-home/-/plugin-home-0.4.20.tgz#ba66cad0c7c275a3add56fc09d3c550b4aa23d5d"
+  integrity sha512-OhOd69fZwbOMifb8+DkqJx72q8q7GB6btLho2JdGNqKv+i4hWmnodwNp6ibs32guPY6alqj7tsjUleOuVFASPA==
+  dependencies:
+    "@backstage/catalog-model" "^1.0.1"
+    "@backstage/config" "^1.0.0"
+    "@backstage/core-components" "^0.9.3"
+    "@backstage/core-plugin-api" "^1.0.1"
+    "@backstage/plugin-catalog-react" "^1.0.1"
+    "@backstage/plugin-stack-overflow" "^0.1.0"
     "@backstage/theme" "^0.2.15"
     "@material-ui/core" "^4.12.2"
     "@material-ui/icons" "^4.9.1"
@@ -3672,6 +3763,19 @@
     "@backstage/config" "^1.0.0"
     "@backstage/core-plugin-api" "^1.0.0"
     "@backstage/plugin-permission-common" "^0.5.3"
+    cross-fetch "^3.1.5"
+    react-router "6.0.0-beta.0"
+    react-use "^17.2.4"
+    swr "^1.1.2"
+
+"@backstage/plugin-permission-react@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.npmjs.org/@backstage/plugin-permission-react/-/plugin-permission-react-0.4.0.tgz#3135b8bbd0e303afafeeae7b9a0d4de7d9e1198c"
+  integrity sha512-bqyBWHKQKT7Lsk4Z3Y6m2FkczN/0I7cRHiBAqv8go8etYk+tEsud9Mk7lRMX/e4+RKg3i4bLcUHerWdEeNqagw==
+  dependencies:
+    "@backstage/config" "^1.0.0"
+    "@backstage/core-plugin-api" "^1.0.1"
+    "@backstage/plugin-permission-common" "^0.6.0"
     cross-fetch "^3.1.5"
     react-router "6.0.0-beta.0"
     react-use "^17.2.4"
@@ -3807,7 +3911,7 @@
     "@backstage/plugin-permission-common" "^0.5.3"
     "@backstage/types" "^1.0.0"
 
-"@backstage/plugin-search-common@0.3.3", "@backstage/plugin-search-common@^0.3.1":
+"@backstage/plugin-search-common@0.3.3", "@backstage/plugin-search-common@^0.3.1", "@backstage/plugin-search-common@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-search-common/-/plugin-search-common-0.3.3.tgz#e9251172163731aef61626b3e1ec40504a38cb11"
   integrity sha512-CARcpoMFEQJdpe+Rm9m/mPhMOsWM0V+zncIHOLuKlzsMrQRTcwmcFoPqBdtlfdT9wEJTu1bci2ccsDsnZiSrhA==
@@ -3836,6 +3940,25 @@
     react-router "6.0.0-beta.0"
     react-router-dom "6.0.0-beta.0"
     react-text-truncate "^0.18.0"
+    react-use "^17.2.4"
+
+"@backstage/plugin-stack-overflow@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@backstage/plugin-stack-overflow/-/plugin-stack-overflow-0.1.0.tgz#5f5ee8b30d684b7c71f746fe923c16875a62d621"
+  integrity sha512-ti0eEwkiu+cmihIISiEA5tqQil6gISyy34flQyxL0wukLNrKAOYCq+lgrN+N/MqJijXoy/FugWhX24+PKsocLQ==
+  dependencies:
+    "@backstage/config" "^1.0.0"
+    "@backstage/core-components" "^0.9.3"
+    "@backstage/core-plugin-api" "^1.0.1"
+    "@backstage/plugin-home" "^0.4.20"
+    "@backstage/plugin-search-common" "^0.3.3"
+    "@backstage/theme" "^0.2.15"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@testing-library/jest-dom" "^5.10.1"
+    cross-fetch "^3.1.5"
+    lodash "^4.17.21"
+    qs "^6.9.4"
     react-use "^17.2.4"
 
 "@backstage/plugin-tech-radar@^0.5.0":
@@ -3956,7 +4079,7 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@backstage/search-common@^0.3.1":
+"@backstage/search-common@^0.3.1", "@backstage/search-common@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@backstage/search-common/-/search-common-0.3.3.tgz#756af22187283b754aefdc436c651231054be269"
   integrity sha512-DtWd1Nrpvm2fkJRkw6bW8WeB6cFOvxsJ//o/fcoMsD5NCnaFtE1kFlCEt6QuUl6chAg6d+cX0rU+DJjSIC1rgQ==
@@ -8423,7 +8546,7 @@ ajv@^7.0.3:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-ajv@^8.0.0, ajv@^8.0.1, ajv@^8.4.0, ajv@^8.8.0:
+ajv@^8.0.0, ajv@^8.0.1, ajv@^8.10.0, ajv@^8.4.0, ajv@^8.8.0:
   version "8.11.0"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.11.0.tgz#977e91dd96ca669f54a11e23e378e33b884a565f"
   integrity sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==

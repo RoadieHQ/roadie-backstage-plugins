@@ -59,6 +59,24 @@ const overviewContent = (
 );
 ```
 
+```tsx
+// packages/app/src/components/home/HomePage.tsx
+import { HomePageIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+
+export const HomePage = () => {
+  return (
+    ...
+    <Grid item xs={12} md={6}>
+        <HomePageIFrameCard
+          title="Super cool title"
+          src="https://example.com"
+        />
+      </Grid>
+    ...
+  );
+};
+```
+
 ## Allowlisting
 
 This particular plugin supports allowlisting. What this means is you can add a domain to the plugin's configuration that will be verified during the creation of the plugins components.
