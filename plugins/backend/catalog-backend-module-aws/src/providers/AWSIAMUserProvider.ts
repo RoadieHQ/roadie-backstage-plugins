@@ -18,7 +18,9 @@ import {
   ANNOTATION_LOCATION,
   ANNOTATION_VIEW_URL,
   ANNOTATION_ORIGIN_LOCATION,
+  RELATION_OWNED_BY,
   UserEntity,
+  DEFAULT_NAMESPACE,
 } from '@backstage/catalog-model';
 import {
   EntityProvider,
@@ -30,6 +32,7 @@ import { STS } from '@aws-sdk/client-sts';
 import * as winston from "winston";
 import {Config} from "@backstage/config";
 import {AccountConfig} from "../types";
+import { parseEntityRef } from '@backstage/catalog-model';
 
 const link2aws = require('link2aws');
 
@@ -76,60 +79,94 @@ export class AWSIAMUserProvider implements EntityProvider {
     }
 
     this.logger.info(`Providing iam user resources from aws: ${this.accountId}`)
-      const userResources: UserEntity[] = [];
+    const userResources: UserEntity[] = [];
 
-      const credentials = fromTemporaryCredentials({
-        params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-      });
-      const iam = new IAM({ credentials, region: this.region });
-      const sts = new STS({ credentials });
+    const credentials = fromTemporaryCredentials({
+      params: { RoleArn: this.roleArn, ExternalId: this.externalId },
+    });
 
-      const account = await sts.getCallerIdentity({});
+    const creds = await credentials(); 
+    const iam = new IAM({ credentials: creds, region: this.region });
+    const sts = new STS({ credentials: creds });
 
-      const defaultAnnotations: { [name: string]: string } = {
-        [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-        [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      };
+    const account = await sts.getCallerIdentity({});
 
-      if (account.Account) {
-        defaultAnnotations['amazon.com/account-id'] = account.Account;
-      }
+    const defaultAnnotations: { [name: string]: string } = {
+      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+    };
 
-      const users = await iam.listUsers({});
+    if (account.Account) {
+      defaultAnnotations['amazon.com/account-id'] = account.Account;
+    }
 
-      for (const user of users.Users || []) {
-        if (user.UserName && user.Arn && user.UserId) {
-          const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
-          const userEntity: UserEntity = {
-            kind: 'User',
-            apiVersion: "backstage.io/v1alpha1",
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                "amazon.com/iam-user-arn": user.Arn,
-                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
-              },
-              name: user.UserId,
-            },
-            spec: {
-              profile: {
-                displayName: user.Arn,
-                email: user.UserName,
-              },
-              memberOf: [],
-            },
+    const users = await iam.listUsers({});
+
+    for (const user of users.Users || []) {
+      if (user.UserName && user.Arn && user.UserId) {
+        const { Tags } = await iam.listUserTags({UserName: user.UserName});
+        const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
+        const owned_by = Tags?.find((t) => {
+          if(t.Key === 'backstage.io/owned-by'){
+            return true
           }
-
-          userResources.push(userEntity);
+          return false;
+        });
+        const userEntity: UserEntity = {
+          kind: 'User',
+          apiVersion: "backstage.io/v1alpha1",
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              "amazon.com/iam-user-arn": user.Arn,
+              [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+            },
+            namespace: DEFAULT_NAMESPACE,
+            name: user.UserId,
+          },
+          spec: {
+            profile: {
+              displayName: user.Arn,
+              email: user.UserName,
+            },
+            memberOf: [],
+          },
         }
-      }
 
-      await this.connection.applyMutation({
-        type: 'full',
-        entities: userResources.map(entity => ({
+        try {
+          if(owned_by && owned_by.Value){
+            this.logger.info(owned_by.Value);
+            const target = parseEntityRef(owned_by.Value);
+            //@ts-ignore
+            userEntity.relations = [{
+              type: 'user',
+              targetRef: owned_by.Value,
+              target: {
+                kind: target.kind,
+                namespace: target.namespace,
+                name: target.name
+              }
+            }];
+          }
+        } catch(e){
+          this.logger.info(`could not parse entity ref from tag ${owned_by?.Value}`)
+        }
+
+        console.log(JSON.stringify(userEntity));
+
+        userResources.push(userEntity);
+      }
+    }
+
+    await this.connection.applyMutation({
+      type: 'full',
+      entities: userResources.map(entity => {
+        this.logger.debug(`Adding user ${entity.metadata.name} with location aws-iam-user-provider:${this.accountId}`)
+        return {
           entity,
           locationKey: `aws-iam-user-provider:${this.accountId}`,
-        })),
-      });
+        }
+      })
+    });
   }
 }

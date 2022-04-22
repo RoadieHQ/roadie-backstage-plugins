@@ -26,18 +26,23 @@ backend:
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
+  aws:
+    - accountId: '629158815888'
+      roleArn: arn:aws:sts::629158815888:role/ops
+      region: eu-west-1
+
   github:
     - host: github.com
       token: ${GITHUB_TOKEN}
+    ### Example for how to add your GitHub Enterprise instance using the API:
+    # - host: ghe.example.net
+    #   apiBaseUrl: https://ghe.example.net/api/v3
+    #   token: ${GHE_TOKEN}
 
   bamboohr:
     providers:
       - apiKey: ${BAMBOOHR_API_KEY}
         domain: ${BAMBOOHR_DOMAIN}
-    ### Example for how to add your GitHub Enterprise instance using the API:
-    # - host: ghe.example.net
-    #   apiBaseUrl: https://ghe.example.net/api/v3
-    #   token: ${GHE_TOKEN}
 
 proxy:
   "/test":

@@ -57,7 +57,7 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 1 }),
+      frequency: Duration.fromObject({ seconds: 10 }),
       timeout: Duration.fromObject({ minutes: 10 }),
     });
   }
