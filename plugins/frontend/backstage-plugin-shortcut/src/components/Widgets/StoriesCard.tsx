@@ -173,11 +173,7 @@ const StoriesCard = () => {
   const classes = useStyles();
 
   const { value, loading, error } = useAsync(async () => {
-    //const profile = await identityApi.getProfileInfo();
-    const profile = {
-      email: 'irma@roadie.io',
-      displayName: 'Irma Solakovic',
-    };
+    const profile = await identityApi.getProfileInfo();
     const allMembers = await api.getUsers();
     const loggedUser = allMembers?.find(
       user => user.profile.email_address === profile.email,
