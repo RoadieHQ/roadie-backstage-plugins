@@ -21,6 +21,7 @@ import {
   createRouteRef,
   createRoutableExtension,
 } from '@backstage/core-plugin-api';
+import { homePlugin, createCardExtension } from '@backstage/plugin-home';
 
 export const rootRouteRef = createRouteRef({
   id: 'iframe',
@@ -53,4 +54,19 @@ export const EntityIFrameContent = iframePlugin.provide(
     mountPoint: rootRouteRef,
   }),
 );
+
+export const HomePageIFrameCard = homePlugin.provide(
+  createCardExtension<{
+    src: string;
+    title?: string;
+    height?: string;
+    width?: string;
+    class?: string;
+  }>({
+    name: 'HomePageIFrameCard',
+    title: "IFrame Card",
+    components: () => import('./components/HomePageCard'),
+  }),
+);
+
 

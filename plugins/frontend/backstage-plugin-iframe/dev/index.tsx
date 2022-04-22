@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { iframePlugin, EntityIFrameCard, EntityIFrameContent } from '../src';
+import { iframePlugin, EntityIFrameCard, EntityIFrameContent, HomePageIFrameCard } from '../src';
 import { IFrameContentProps, IFrameProps } from '../src/components/types';
 
 const props: IFrameProps = {
@@ -42,4 +42,8 @@ createDevApp()
     element: <EntityIFrameContent {...pageProps} />,
     title: 'Iframe page',
     path: 'iframe-page',
+  }).addPage({
+    element: <HomePageIFrameCard {...{...props, title: '1234'}}/>,
+    title: 'Home Page',
+    path: '/home',
   }).render();
