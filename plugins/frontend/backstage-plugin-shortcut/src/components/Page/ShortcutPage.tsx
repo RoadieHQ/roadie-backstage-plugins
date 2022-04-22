@@ -29,7 +29,7 @@ export const ShortcutPage = () => {
     <Page themeId="home">
       <Content>
         <ContentHeader title="Shortcut">
-          <SupportButton>Overview of stories</SupportButton>
+          <SupportButton>Overview of shortcut stories</SupportButton>
         </ContentHeader>
         <Grid>
           <Grid item>

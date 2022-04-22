@@ -104,7 +104,7 @@ import {
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
 import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
-import { EntityShorcutPageContent } from '@roadiehq/plugin-backstage-plugin-shortcut';
+import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">

@@ -23,7 +23,7 @@ import {
   HomePageYourOpenPullRequestsCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import { Content, PageWithHeader } from '@backstage/core-components';
-import { StoriesCard } from '@roadiehq/plugin-backstage-plugin-shortcut';
+import { StoriesCard } from '@roadiehq/backstage-plugin-shortcut';
 
 export const HomePage = () => {
   return (
