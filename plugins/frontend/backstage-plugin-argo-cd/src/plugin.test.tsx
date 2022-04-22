@@ -214,7 +214,7 @@ describe('argo-cd', () => {
       fireEvent.click(drawerButton)
       expect(await rendered.findByTitle('Open Argo CD Dashboard')).toBeInTheDocument()
       expect(await rendered.findByTitle('Open Argo CD Dashboard')).toHaveAttribute(
-        'to',
+        'href',
         'www.example-argocd-url.com/applications/guestbook',
       );
     });
@@ -440,7 +440,7 @@ describe('argo-cd', () => {
       fireEvent.click(drawerButton)
       expect(await rendered.findByTitle('Open Argo CD Dashboard')).toBeInTheDocument()
       expect(await rendered.findByTitle('Open Argo CD Dashboard')).toHaveAttribute(
-        'to',
+        'href',
         'www.example-argocd-url.com/applications/guestbook',
       );
     });

@@ -8,11 +8,11 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import {
-  Button as BackstageButton,
   StructuredMetadataTable,
 } from '@backstage/core-components';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
+import MaterialButton from '@material-ui/core/Button';
 
 interface TableContent {
   [key: string]: any;
@@ -64,19 +64,17 @@ export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined
     images: rowData.status?.summary?.images,
     ...(baseUrl && {
       link: (
-        <BackstageButton
-          name="Open Argo CD Dashboard"
+        <MaterialButton
           variant="outlined"
           color="primary"
           size="small"
           title='Open Argo CD Dashboard'
           endIcon={<OpenInNewIcon />}
-          component={Button}
           target="_blank"
-          to={`${baseUrl}/applications/${rowData.metadata.name}`}
+          href={`${baseUrl}/applications/${rowData.metadata.name}`}
         >
           Open Argo CD Dashboard
-        </BackstageButton>
+        </MaterialButton>
       ),
     }),
   };

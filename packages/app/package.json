@@ -43,6 +43,7 @@
     "@roadiehq/backstage-plugin-travis-ci": "^2.0.0",
     "@roadiehq/backstage-plugin-shortcut": "^1.0.0",
     "history": "^5.0.0",
+    "@roadiehq/backstage-plugin-aws": "^0.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "6.0.0-beta.0",

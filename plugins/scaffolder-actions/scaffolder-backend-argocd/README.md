@@ -15,9 +15,9 @@ https://backstage.io/docs/getting-started/create-an-app
 
 > Note: To use this scaffolder action you need to ensure the Argo CD user you are utilizing has the `create` permission for both `projects` and `applications`
 
-You need to configure the action in your backend:
+You need to configure the action in your backend as well as your software template:
 
-## From your Backstage root directory
+### From your Backstage root directory
 
 ```
 cd packages/backend
@@ -51,5 +51,24 @@ return await createRouter({
   actions,
 });
 ```
+
+### From your software template yaml file
+
+Under `spec.steps[]` insert the below. In the below we reference items in the `spec.paramters[]` section.
+
+```
+    - id: create-argocd-resources
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.name }}-nonprod
+        argoInstance: ${{ parameters.argoinstance }}
+        namespace: ${{ parameters.namespace }}
+        repoUrl: ${{ steps.publish.output.remoteUrl }}
+        labelValue: ${{ parameters.name }}
+        path: "kubernetes/nonprod"
+```
+
+> If needed there is an optional parameter of `projectName` as well.
 
 ## Contributed By American Airlines
