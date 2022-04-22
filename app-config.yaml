@@ -10,14 +10,14 @@ backend:
   listen:
     port: 7007
   csp:
-    connect-src: ["'self'", "http:", "https:"]
+    connect-src: ["'self'", 'http:', 'https:']
   cors:
     origin: http://localhost:3000
     methods: [GET, POST, PUT, DELETE]
     credentials: true
   database:
     client: sqlite3
-    connection: ":memory:"
+    connection: ':memory:'
   cache:
     store: memory
   auth:
@@ -35,33 +35,33 @@ integrations:
     #   token: ${GHE_TOKEN}
 
 proxy:
-  "/test":
-    target: "https://example.com"
+  '/test':
+    target: 'https://example.com'
     changeOrigin: true
 
-  "/jira/api":
-    target: "https://roadie-dev.atlassian.net"
+  '/jira/api':
+    target: 'https://roadie-dev.atlassian.net'
     headers:
-      Authorization: "Basic ${JIRA_API_TOKEN}"
-      Accept: "application/json"
-      Content-Type: "application/json"
-      X-Atlassian-Token: "no-check"
-      User-Agent: "Roadie-Backstage"
+      Authorization: 'Basic ${JIRA_API_TOKEN}'
+      Accept: 'application/json'
+      Content-Type: 'application/json'
+      X-Atlassian-Token: 'no-check'
+      User-Agent: 'Roadie-Backstage'
 
-  "/travisci/api":
+  '/travisci/api':
     target: https://api.travis-ci.com
     changeOrigin: true
     headers:
-      Authorization: "token ${TRAVISCI_AUTH_TOKEN}"
-      travis-api-version: "3"
+      Authorization: 'token ${TRAVISCI_AUTH_TOKEN}'
+      travis-api-version: '3'
 
-  "/buildkite/api":
+  '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
       Authorization:
         $env: BUILDKITE_TOKEN
 
-  "/argocd/api":
+  '/argocd/api':
     # url to the api of your hosted argoCD instance
     target: https://localhost:8080/api/v1/
     changeOrigin: true
@@ -70,28 +70,28 @@ proxy:
     headers:
       Cookie: ${ARGOCD_AUTH_TOKEN}
 
-  "/prometheus/api":
+  '/prometheus/api':
     # url to the api of your hosted prometheus instance
     target: http://localhost:9090/api/v1/
     changeOrigin: true
     secure: false
 
-  "/bugsnag/api":
-    target: "https://api.bugsnag.com"
+  '/bugsnag/api':
+    target: 'https://api.bugsnag.com'
     headers:
-      Authorization: "token ${BUGSNAG_PERSONAL_TOKEN}"
-      X-version: "2"
+      Authorization: 'token ${BUGSNAG_PERSONAL_TOKEN}'
+      X-version: '2'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs
 # and an external cloud storage when deploying TechDocs for production use-case.
 # https://backstage.io/docs/features/techdocs/how-to-guides#how-to-migrate-from-techdocs-basic-to-recommended-deployment-approach
 techdocs:
-  builder: "local" # Alternatives - 'external'
+  builder: 'local' # Alternatives - 'external'
   generators:
-    techdocs: "docker" # Alternatives - 'local'
+    techdocs: 'docker' # Alternatives - 'local'
   publisher:
-    type: "local" # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
+    type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers

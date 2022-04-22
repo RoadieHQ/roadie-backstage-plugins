@@ -22,44 +22,53 @@ import {
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
+import { Content, PageWithHeader } from '@backstage/core-components';
+import { StoriesCard } from '@roadiehq/plugin-backstage-plugin-shortcut';
 
 export const HomePage = () => {
   return (
-    <Grid container spacing={3}>
-      <Grid item md={6} xs={12}>
-        <HomePageRequestedReviewsCard />
-      </Grid>
-      <Grid item md={6} xs={12}>
-        <HomePageYourOpenPullRequestsCard />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <HomePageMarkdown
-          title="Neeews!"
-          owner="RoadieHQ"
-          repo="roadie-backstage-plugins"
-          path=".backstage/home-page.md"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <HomePageMarkdown
-          title="History"
-          owner="RoadieHQ"
-          repo="roadie-backstage-plugins"
-          path=".backstage/home-page-test.md"
-          branch="test-two-mdown"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <HomePageToolkit
-          tools={[
-            {
-              label: 'Backstage',
-              url: 'https://github.com/backstage/backstage',
-              icon: <></>,
-            },
-          ]}
-        />
-      </Grid>
-    </Grid>
+    <PageWithHeader title="Home" themeId="home">
+      <Content>
+        <Grid container spacing={3}>
+          <Grid item md={6} xs={12}>
+            <StoriesCard />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <HomePageRequestedReviewsCard />
+          </Grid>
+          <Grid item md={6} xs={12}>
+            <HomePageYourOpenPullRequestsCard />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageMarkdown
+              title="Neeews!"
+              owner="RoadieHQ"
+              repo="roadie-backstage-plugins"
+              path=".backstage/home-page.md"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageMarkdown
+              title="History"
+              owner="RoadieHQ"
+              repo="roadie-backstage-plugins"
+              path=".backstage/home-page-test.md"
+              branch="test-two-mdown"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageToolkit
+              tools={[
+                {
+                  label: 'Backstage',
+                  url: 'https://github.com/backstage/backstage',
+                  icon: <></>,
+                },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      </Content>
+    </PageWithHeader>
   );
 };

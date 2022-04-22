@@ -39,7 +39,7 @@ import {
   isComponentType,
   isKind,
 } from '@backstage/plugin-catalog';
-import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph'
+import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   isGithubActionsAvailable,
   EntityGithubActionsContent,
@@ -103,9 +103,8 @@ import {
   EntityPrometheusContent,
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
-import {
-  EntityIFrameCard
-} from '@roadiehq/backstage-plugin-iframe';
+import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+import { EntityShorcutPageContent } from '@roadiehq/plugin-backstage-plugin-shortcut';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -250,6 +249,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/bugsnag" title="Bugsnag">
       <EntityBugsnagErrorsOverviewTable />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
+      <EntityShorcutPageContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
@@ -413,7 +415,7 @@ const systemPage = (
           <EntityHasResourcesCard variant="gridItem" />
         </Grid>
         <Grid item md={6}>
-          <EntityIFrameCard {...{src: "https://example.com"}}/>
+          <EntityIFrameCard {...{ src: 'https://example.com' }} />
         </Grid>
       </Grid>
     </EntityLayout.Route>
