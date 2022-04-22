@@ -21,7 +21,6 @@ import {
   UserEntity,
 } from '@backstage/catalog-model';
 import {
-  EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-backend';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
@@ -29,14 +28,14 @@ import { IAM } from '@aws-sdk/client-iam';
 import { STS } from '@aws-sdk/client-sts';
 import * as winston from "winston";
 import {Config} from "@backstage/config";
-import {AccountConfig} from "../types";
+import {AccountConfig, RunnableEntityProvider} from "../types";
 
 const link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS IAM User service.
  */
-export class AWSIAMUserProvider implements EntityProvider {
+export class AWSIAMUserProvider implements RunnableEntityProvider {
   private readonly accountId: string;
   private readonly roleArn: string;
   private readonly externalId?: string;

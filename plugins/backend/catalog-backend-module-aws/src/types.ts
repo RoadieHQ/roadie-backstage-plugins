@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import { EntityProvider } from "@backstage/plugin-catalog-backend";
+
 export type AccountConfig = {
     accountId: string,
     roleArn: string,
     externalId?: string,
     region: string,
+}
+
+export type RunnableEntityProvider = EntityProvider & {
+  run: () => Promise<void>
 }

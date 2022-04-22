@@ -15,3 +15,5 @@
  */
 
 export * from './providers';
+export * from './AWSEntityProvidersFactory'
+export * from './types'
