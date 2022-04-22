@@ -1,5 +1,15 @@
 # backend
 
+## 1.0.2
+
+### Patch Changes
+
+- Updated dependencies [e2a86ee]
+- Updated dependencies [e1e99d9]
+  - @roadiehq/catalog-backend-module-aws@0.0.3
+  - @roadiehq/backstage-plugin-aws-backend@0.0.3
+  - app@1.0.1
+
 ## 1.0.1
 
 ### Patch Changes

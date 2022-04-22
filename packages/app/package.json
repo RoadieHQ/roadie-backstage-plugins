@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "bundled": true,
   "dependencies": {
@@ -36,13 +36,13 @@
     "@roadiehq/backstage-plugin-github-insights": "^2.0.0",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.0.0",
     "@roadiehq/backstage-plugin-home-markdown": "^2.0.0",
-    "@roadiehq/backstage-plugin-iframe": "^1.0.0",
+    "@roadiehq/backstage-plugin-iframe": "^1.0.2",
     "@roadiehq/backstage-plugin-jira": "^2.0.0",
     "@roadiehq/backstage-plugin-prometheus": "^2.0.0",
     "@roadiehq/backstage-plugin-security-insights": "^2.0.0",
     "@roadiehq/backstage-plugin-travis-ci": "^2.0.0",
     "history": "^5.0.0",
-    "@roadiehq/backstage-plugin-aws": "^0.0.1",
+    "@roadiehq/backstage-plugin-aws": "^0.0.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router": "6.0.0-beta.0",
