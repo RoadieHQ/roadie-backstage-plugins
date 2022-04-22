@@ -39,12 +39,6 @@ export const Content = (props: HomeProps) => {
     )
   }
 
-  if(errorMessage !== ""){
-    return (
-      <ErrorComponent {...{errorMessage}}/>
-    )
-  }
-
   return(
     <iframe src={src} height={height || "100%"} width={width || "100%"} title="iframe homepage card"/>
   )

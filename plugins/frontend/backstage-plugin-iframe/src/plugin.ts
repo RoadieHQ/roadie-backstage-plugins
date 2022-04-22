@@ -58,7 +58,6 @@ export const EntityIFrameContent = iframePlugin.provide(
 export const HomePageIFrameCard = homePlugin.provide(
   createCardExtension<{
     src: string;
-    title?: string;
     height?: string;
     width?: string;
     class?: string;
