@@ -105,7 +105,11 @@ import {
 } from '@roadiehq/backstage-plugin-prometheus';
 import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
 import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
-import { S3BucketCard, LambdaFunctionCard, IAMUserCard } from '@roadiehq/backstage-plugin-aws';
+import {
+  S3BucketCard,
+  LambdaFunctionCard,
+  IAMUserCard,
+} from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -386,6 +390,9 @@ const userPage = (
           <EntityOwnershipCard variant="gridItem" />
         </Grid>
       </Grid>
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
+      <EntityShorcutPageContent />
     </EntityLayout.Route>
   </EntityLayout>
 );

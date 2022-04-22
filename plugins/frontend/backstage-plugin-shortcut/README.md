@@ -45,7 +45,7 @@ proxy:
 import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
 ...
 
-const serviceEntityPage = (
+const userPage = (
   <EntityLayoutWrapper>
     ...
     <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
@@ -56,7 +56,29 @@ const serviceEntityPage = (
 );
 ```
 
-4. Run backstage app with `yarn start` and navigate to services tabs.
+4. Run backstage app with `yarn start` and navigate to user tab.
+
+## How to add Shortcut stories card to Home page:
+
+In order to add the Shortcut storied card in your Home page, follow the instructions below:
+
+```ts
+// packages/app/src/components/home/HomePage.tsx
+import { StoriesCard } from '@roadiehq/backstage-plugin-shortcut';
+...
+
+export const HomePage = () => {
+  <PageWithHeader title="Home" themeId="home">
+    <Content>
+    ...
+        <Grid item md={6} xs={12}>
+            <StoriesCard />
+        </Grid>
+    ...
+    </Content>
+  </PageWithHeader>
+);
+```
 
 ## How to use Shortcut plugin in Backstage:
 

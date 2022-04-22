@@ -37,8 +37,7 @@ import { BackstageTheme } from '@backstage/theme';
 const useStyles = makeStyles<BackstageTheme>(theme => ({
   listStyle: {
     borderRadius: '1rem',
-    boxShadow:
-      '5px 0 5px -5px rgb(0 0 0 / 70%), -5px 0 5px -5px rgb(0 0 0 / 70%)',
+    boxShadow: theme.shadows[1],
     border: '1px solid #52505017',
     backgroundColor: theme.palette.background.default,
   },
