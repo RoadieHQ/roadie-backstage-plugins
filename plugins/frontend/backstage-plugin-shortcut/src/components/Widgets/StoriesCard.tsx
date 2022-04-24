@@ -142,7 +142,7 @@ const StoryItem = ({ story }: { story: Story }) => {
             </Link>
           </Typography>
         </Grid>
-        <Grid container className={classes.subtitleContainer} xs={12}>
+        <Grid container className={classes.subtitleContainer}>
           <Grid item className={`${classes[story.story_type]}`}>
             <Typography variant="caption" className={classes.subtitleIcon}>
               {getStoryTypeIcon(story.story_type)} #{story.id}
@@ -200,9 +200,7 @@ const StoriesCard = () => {
       {value?.loggedUser ? (
         <>
           <Typography variant="body1">
-            <p>
-              Hey {value?.profile.displayName}! &#128515; Here are your stories:{' '}
-            </p>
+            Hey {value?.profile.displayName}! &#128515; Here are your stories:{' '}
           </Typography>
           <Grid
             container
@@ -210,8 +208,8 @@ const StoriesCard = () => {
             spacing={1}
             direction="column"
           >
-            {value.filteredStories.map(story => (
-              <StoryItem story={story} key={story.id} />
+            {value.filteredStories.map((story, index) => (
+              <StoryItem story={story} key={index} />
             ))}
           </Grid>
         </>
@@ -224,8 +222,9 @@ const StoriesCard = () => {
         >
           <Typography variant="body1">
             {' '}
-            Hey, looks like you are not signed in. Please sign in in order to
-            get yours stories.
+            Hey, looks like you don't have any stories associated with the email
+            you currently use for sign in. Please double check you are using the
+            same email for Backstage and Shortcut profiles :).
           </Typography>
         </Grid>
       )}
