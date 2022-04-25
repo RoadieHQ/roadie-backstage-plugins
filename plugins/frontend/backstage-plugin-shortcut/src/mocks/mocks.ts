@@ -28,12 +28,12 @@ export const storiesResponseMock = {
     },
     {
       app_url: 'https://app.shortcut.com/organisation/story/12345',
-      description: 'Add some new feature.',
+      description: 'Add some new feature for CTA button',
       archived: false,
       started: true,
       entity_type: 'story',
       story_type: 'feature',
-      name: 'New feature request',
+      name: 'New feature request CTA button',
       completed: false,
     },
     {
@@ -42,7 +42,7 @@ export const storiesResponseMock = {
       started: true,
       entity_type: 'chore',
       story_type: 'bug',
-      name: 'Chore example story',
+      name: 'Completed chore for CTA button',
       completed: true,
     },
   ],

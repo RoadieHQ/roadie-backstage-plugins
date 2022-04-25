@@ -101,6 +101,23 @@ describe('Shortcut stories card', () => {
     ).toBeInTheDocument();
   });
 
+  it('should find only non-completed stories', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <StoriesCard />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findAllByText('CTA button', {
+        exact: false,
+      }),
+    ).toHaveLength(2);
+  });
+
   it('should not render the stories', async () => {
     render(
       wrapInTestApp(
