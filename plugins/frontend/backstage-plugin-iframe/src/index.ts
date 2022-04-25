@@ -1,5 +1,6 @@
 export {
   iframePlugin,
   EntityIFrameCard,
-  EntityIFrameContent
+  EntityIFrameContent,
+  HomePageIFrameCard
 } from './plugin';

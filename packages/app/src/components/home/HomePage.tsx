@@ -24,6 +24,7 @@ import {
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import { Content, PageWithHeader } from '@backstage/core-components';
 import { StoriesCard } from '@roadiehq/backstage-plugin-shortcut';
+import { HomePageIFrameCard } from '@roadiehq/backstage-plugin-iframe';
 
 export const HomePage = () => {
   return (
@@ -65,6 +66,12 @@ export const HomePage = () => {
                   icon: <></>,
                 },
               ]}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageIFrameCard
+              title="Super cool title"
+              src="https://example.com"
             />
           </Grid>
         </Grid>
