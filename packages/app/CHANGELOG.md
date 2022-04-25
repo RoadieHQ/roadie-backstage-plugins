@@ -1,5 +1,15 @@
 # app
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [8b334b5]
+- Updated dependencies [e2a86ee]
+- Updated dependencies [e1e99d9]
+  - @roadiehq/backstage-plugin-iframe@1.0.2
+  - @roadiehq/backstage-plugin-aws@0.0.2
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
-# @backstage/plugin-catalog-backend-module-aws
+# @roadiehq/backstage-plugin-aws
 
-## 0.0.3
+## 0.0.2
 
 ### Patch Changes
 
