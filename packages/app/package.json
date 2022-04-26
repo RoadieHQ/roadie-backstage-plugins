@@ -41,6 +41,7 @@
     "@roadiehq/backstage-plugin-prometheus": "^2.0.0",
     "@roadiehq/backstage-plugin-security-insights": "^2.0.0",
     "@roadiehq/backstage-plugin-travis-ci": "^2.0.0",
+    "@roadiehq/backstage-plugin-shortcut": "^1.0.0",
     "history": "^5.0.0",
     "@roadiehq/backstage-plugin-aws": "^0.0.2",
     "react": "^17.0.2",
