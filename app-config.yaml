@@ -39,6 +39,12 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
+  "/aws-news-feed":
+    target: "https://aws.amazon.com/about-aws/whats-new/recent/feed/"
+
+  "/reuters-news-feed":
+    target: "https://www.reutersagency.com/feed"
+
   '/jira/api':
     target: 'https://roadie-dev.atlassian.net'
     headers:

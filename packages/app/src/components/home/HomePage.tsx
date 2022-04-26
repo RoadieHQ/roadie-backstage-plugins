@@ -18,6 +18,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
 import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
+import { HomePageRSS } from '@roadiehq/backstage-plugin-home-rss';
 import {
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
@@ -39,6 +40,18 @@ export const HomePage = () => {
           </Grid>
           <Grid item md={6} xs={12}>
             <HomePageYourOpenPullRequestsCard />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageRSS
+                feedURL="http://localhost:7007/api/proxy/aws-news-feed/"
+                title="AWS News"
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageRSS
+                feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
+                title="Reuters News"
+            />
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageMarkdown

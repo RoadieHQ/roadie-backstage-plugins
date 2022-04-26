@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-home-rss
+  description: |
+    Homapge RSS renderer plugin
+  annotations:
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: home/backstage-plugin-home-rss/README.md
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/home/backstage-plugin-home-rss/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/home/backstage-plugin-home-rss/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/home/backstage-plugin-home-rss
+  tags:
+    - plugin
+    - oss
+    - home
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-home-rss
+      title: NPM
+spec:
+  type: library
+  owner: group:open-source
+  lifecycle: production
