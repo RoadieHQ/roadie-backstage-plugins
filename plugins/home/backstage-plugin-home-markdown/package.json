@@ -9,6 +9,9 @@
     "main": "dist/index.cjs.js",
     "types": "dist/index.d.ts"
   },
+  "backstage": {
+    "role": "backend-plugin"
+  },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",

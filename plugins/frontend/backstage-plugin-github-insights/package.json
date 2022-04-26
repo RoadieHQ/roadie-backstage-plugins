@@ -19,6 +19,9 @@
     "main": "dist/index.esm.js",
     "types": "dist/index.d.ts"
   },
+  "backstage": {
+    "role": "frontend-plugin"
+  },
   "scripts": {
     "build": "backstage-cli plugin:build",
     "tsc": "tsc",

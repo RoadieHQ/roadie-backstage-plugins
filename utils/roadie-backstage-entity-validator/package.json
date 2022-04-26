@@ -17,6 +17,9 @@
     "main": "dist/index.js",
     "types": "types.d.ts"
   },
+  "backstage": {
+    "role": "node-library"
+  },
   "scripts": {
     "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
     "lint": "backstage-cli lint",

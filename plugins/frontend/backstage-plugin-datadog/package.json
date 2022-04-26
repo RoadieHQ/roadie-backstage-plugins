@@ -9,6 +9,9 @@
     "main": "dist/index.esm.js",
     "types": "dist/index.d.ts"
   },
+  "backstage": {
+    "role": "frontend-plugin"
+  },
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
