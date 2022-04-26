@@ -10,7 +10,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "frontend-plugin"
   },
   "repository": {
     "type": "git",
