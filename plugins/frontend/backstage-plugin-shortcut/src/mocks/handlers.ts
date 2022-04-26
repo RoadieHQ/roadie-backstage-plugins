@@ -22,8 +22,13 @@ export const handlers = [
     return res(ctx.json(usersResponseMock));
   }),
   rest.get(
-    'http://exampleapi.com/shortcut/api/search/stories?page_size=25&query=owner:testuser',
-    (_, res, ctx) => {
+    'http://exampleapi.com/shortcut/api/search/stories',
+    (req, res, ctx) => {
+      const pageSize = req.url.searchParams.get('page_size');
+      const query = req.url.searchParams.get('query');
+      if (query === 'owner:testuser' && pageSize === '25') {
+        return res(ctx.json(storiesResponseMock));
+      }
       return res(ctx.json(storiesResponseMock));
     },
   ),
