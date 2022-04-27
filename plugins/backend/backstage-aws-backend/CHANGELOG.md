@@ -1,5 +1,16 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.0.0
+
+### Major Changes
+
+- 40997a1: initial release of the plugin
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+
 ## 0.0.3
 
 ### Patch Changes

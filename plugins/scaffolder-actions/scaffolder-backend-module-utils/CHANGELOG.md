@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.0.1
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+
 ## 1.0.0
 
 ### Major Changes
