@@ -21,6 +21,8 @@ import {
   identityApiRef,
   errorApiRef,
   IdentityApi,
+  discoveryApiRef,
+  configApiRef,
 } from '@backstage/core-plugin-api';
 import {
   wrapInTestApp,
@@ -30,9 +32,7 @@ import {
 import { render, screen, cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { handlers } from '../../mocks/handlers';
-import { StoriesCard } from '../..';
-import { shortcutApiRef, ShortcutClient } from '../../api';
-import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import { Content } from './StoriesCardHomepage';
 
 const errorApiMock = { post: jest.fn(), error$: jest.fn() };
 
@@ -58,18 +58,28 @@ const identityApiGuest: Partial<IdentityApi> = {
   getProfileInfo: async () => mockProfileInfoGuest,
 };
 
-const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
+const mockConfigBase = {
+  getBaseUrl: async (_: string[]) => 'http://exampleapi.com',
+};
+
+const config = {
+  getOptionalConfigArray: (_: string) => [
+    { getOptionalString: (_s: string) => undefined },
+  ],
+};
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
+  [configApiRef, config],
+  [discoveryApiRef, mockConfigBase],
   [identityApiRef, identityApi],
-  [shortcutApiRef, new ShortcutClient({ discoveryApi })],
 ];
 
 const apisGuest: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
+  [configApiRef, config],
+  [discoveryApiRef, mockConfigBase],
   [identityApiRef, identityApiGuest],
-  [shortcutApiRef, new ShortcutClient({ discoveryApi })],
 ];
 
 describe('Shortcut stories card', () => {
@@ -88,7 +98,7 @@ describe('Shortcut stories card', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <StoriesCard />
+          <Content />
         </TestApiProvider>,
       ),
       {},
@@ -105,7 +115,7 @@ describe('Shortcut stories card', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <StoriesCard />
+          <Content />
         </TestApiProvider>,
       ),
       {},
@@ -122,7 +132,7 @@ describe('Shortcut stories card', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apisGuest}>
-          <StoriesCard />
+          <Content />
         </TestApiProvider>,
       ),
       {},

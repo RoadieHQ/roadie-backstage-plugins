@@ -23,7 +23,7 @@ import {
   HomePageYourOpenPullRequestsCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 import { Content, PageWithHeader } from '@backstage/core-components';
-import { StoriesCard } from '@roadiehq/backstage-plugin-shortcut';
+import { HomepageStoriesCard } from '@roadiehq/backstage-plugin-shortcut';
 import { HomePageIFrameCard } from '@roadiehq/backstage-plugin-iframe';
 
 export const HomePage = () => {
@@ -32,7 +32,7 @@ export const HomePage = () => {
       <Content>
         <Grid container spacing={3}>
           <Grid item md={6} xs={12}>
-            <StoriesCard />
+            <HomepageStoriesCard />
           </Grid>
           <Grid item md={6} xs={12}>
             <HomePageRequestedReviewsCard />
