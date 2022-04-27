@@ -1,5 +1,5 @@
 ---
-'@roadiehq/backstage-plugin-home-rss': patch
+'@roadiehq/backstage-plugin-home-rss': major
 ---
 
 Add initial rss homepage plugin.

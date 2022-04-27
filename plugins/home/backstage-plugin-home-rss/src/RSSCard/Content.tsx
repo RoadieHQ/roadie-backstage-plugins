@@ -19,7 +19,6 @@ import {Progress, ErrorPanel, Table} from '@backstage/core-components';
 import { RSSContentProps} from './types';
 import {useAsync} from "react-use";
 import {Box} from "@material-ui/core";
-import axios from 'axios';
 
 type DataItem = {
   title: any
@@ -46,13 +45,14 @@ export const Content = (props: RSSContentProps) => {
     const headers = new Headers({
       "Accept": "application/rss+xml"
     });
+
     try {
-      const response = await axios.get(props.feedURL, {headers: headers});
+      const response = await fetch(props.feedURL, { headers: headers });
       if (response.status !== 200) {
         setError(new Error(`Failed to retrieve RSS Feed: ${response.status}`));
         return;
       }
-      const body = await response.data;
+      const body = await response.text();
       const feedData = parser.parseFromString(body, "application/xml");
       setTitle(feedData.querySelector('title')?.innerHTML);
 

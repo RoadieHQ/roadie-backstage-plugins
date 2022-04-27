@@ -26,28 +26,28 @@ import { Content } from './Content';
 import { readFileSync } from "fs";
 
 const rssFeed = readFileSync('fixtures/rssFeed.xml', "utf-8");
-jest.mock("axios", () => ({
-  get: jest.fn(async (url: string) => {
-    if (url.endsWith('test-feed')) {
-      return {
-        data: rssFeed,
-        status: 200,
-        headers: {
-          "Content-Type": "application/rss+xml"
+
+global.fetch = jest.fn(async (url: string) => {
+      if (url.endsWith('test-feed')) {
+        return {
+          text: () => rssFeed,
+          status: 200,
+          headers: {
+            "Content-Type": "application/rss+xml"
+          }
+        }
+      } else if (url.endsWith('not-found')) {
+        return {
+          data: "Not Found",
+          status: 404,
+          headers: {
+            "Content-Type": "plain/text"
+          },
         }
       }
-    } else if (url.endsWith('not-found')) {
-      return {
-        data: "Not Found",
-        status: 404,
-        headers: {
-          "Content-Type": "plain/text"
-        },
-      }
+      throw new Error('Unexpected Error');
     }
-    throw new Error('Unexpected Error');
-  })
-}));
+) as jest.Mock;
 
 // RSSContent uses rect-RSS which throws a type error in the tests so we are mocking it checking the plain text in the components.
 jest.mock('@backstage/core-components', () => ({
