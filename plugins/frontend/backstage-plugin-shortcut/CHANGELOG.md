@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.3
+
+### Patch Changes
+
+- b1b637e: Updated readme file
+
 ## 1.0.2
 
 ### Patch Changes
