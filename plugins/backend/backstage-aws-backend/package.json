@@ -9,6 +9,9 @@
     "main": "dist/index.cjs.js",
     "types": "dist/index.d.ts"
   },
+  "backstage": {
+    "role": "backend-plugin"
+  },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
@@ -36,7 +39,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.16.0",
+    "@backstage/cli": "^0.17.0",
     "@types/supertest": "^2.0.8",
     "supertest": "^4.0.2",
     "aws-sdk-client-mock": "^0.6.2",
