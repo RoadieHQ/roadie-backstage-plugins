@@ -56,7 +56,7 @@ const userPage = (
 );
 ```
 
-4. Run backstage app with `yarn start` and navigate to user tab.
+4. Run backstage app with `yarn start` and navigate to user entity.
 
 ## How to add Shortcut stories card to Home page:
 
@@ -82,7 +82,7 @@ export const HomePage = () => {
 
 ## How to use Shortcut plugin in Backstage:
 
-1. Add your Shorcut personal auth token to the environment variables of your backstage backend server (you can find it in https://app.shortcut.com/larder/settings/account/api-tokens), in the end it should look like this:
+1. Add your Shorcut personal auth token to the environment variables of your backstage backend server (you can find it in https://app.shortcut.com/{organisation}/settings/account/api-tokens), in the end it should look like this:
 
    `SHORTCUT_API_TOKEN="YOUR_API_TOKEN"`
 
