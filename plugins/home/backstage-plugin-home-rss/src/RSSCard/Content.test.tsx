@@ -22,6 +22,7 @@ import {
 } from '@backstage/test-utils';
 import { render, screen, cleanup } from '@testing-library/react';
 import { Content } from './Content';
+// eslint-disable-next-line no-restricted-imports
 import { readFileSync } from "fs";
 
 const rssFeed = readFileSync('fixtures/rssFeed.xml', "utf-8");

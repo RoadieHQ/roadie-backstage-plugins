@@ -59,12 +59,12 @@ export const Content = (props: RSSContentProps) => {
       const items = feedData.querySelectorAll("item");
       items.forEach((item) => {
         const link = item.querySelector("link")?.innerHTML;
-        const title = item.querySelector("title")?.innerHTML;
+        const itemTitle = item.querySelector("title")?.innerHTML;
 
-        if (link && title) {
+        if (link && itemTitle) {
           setData((current) => {
             return [...current, {
-              title: <a href={link} target="_blank">{title}</a>,
+              title: <a href={link} target="_blank">{itemTitle}</a>,
             }]
           })
         }
@@ -73,7 +73,6 @@ export const Content = (props: RSSContentProps) => {
       setError(new Error(`Failed to retrieve RSS Feed: ${e.message}`));
     };
   }, [data, setData])
-
 
   if (error) {
     return <ErrorPanel error={error}/>
@@ -85,7 +84,7 @@ export const Content = (props: RSSContentProps) => {
         data={data}
       columns={columns} />
     </Box>)
-  } else {
-    return <Progress/>
   }
+
+  return <Progress/>
 };
