@@ -1,5 +1,14 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.0.3
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+- Updated dependencies [6b4cc16]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.1.1
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.0.0
+
+### Major Changes
+
+- 40997a1: bump @backstage packages to 1.0.x version
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+
 ## 0.0.3
 
 ### Patch Changes

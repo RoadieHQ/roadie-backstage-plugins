@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.1.1
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+
 ## 2.1.0
 
 ### Minor Changes
