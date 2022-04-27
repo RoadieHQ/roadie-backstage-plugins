@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/roadie-backstage-entity-validator",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "RoadieHQ",
   "description": "Backstage entity validator library",
   "main": "src/index.js",
@@ -16,6 +16,9 @@
     "access": "public",
     "main": "dist/index.js",
     "types": "types.d.ts"
+  },
+  "backstage": {
+    "role": "node-library"
   },
   "scripts": {
     "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
@@ -38,7 +41,7 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.16.0",
+    "@backstage/cli": "^0.17.0",
     "@vercel/ncc": "^0.27.0",
     "jest": "^27.0.1"
   },
