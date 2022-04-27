@@ -40,7 +40,7 @@ proxy:
 
 ## How to add Shortcut stories card to Home page:
 
-In order to add the Shortcut storied card in your Home page, follow the instructions below:
+In order to add the Shortcut stories card in your Home page, follow the instructions below:
 
 ```ts
 // packages/app/src/components/home/HomePage.tsx
