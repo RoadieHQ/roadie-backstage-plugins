@@ -46,7 +46,7 @@
     "@vscode/sqlite3": "^5.0.7",
     "@types/luxon": "^2.3.1",
     "luxon": "^2.3.1",
-    "app": "^1.0.1",
+    "app": "^1.0.2",
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
