@@ -40,7 +40,8 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.45",
     "react-use": "^17.2.4",
-    "msw": "^0.35.0"
+    "msw": "^0.35.0",
+    "@backstage/plugin-home": "^0.4.19"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17.0.0"

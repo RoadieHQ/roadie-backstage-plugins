@@ -13,18 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import {
-  backstagePluginShortcutPlugin,
-  EntityShorcutPageContent,
-} from '../src/plugin';
+import { backstagePluginShortcutPlugin } from '../src/plugin';
 
-createDevApp()
-  .registerPlugin(backstagePluginShortcutPlugin)
-  .addPage({
-    element: <EntityShorcutPageContent />,
-    title: 'Root Page',
-    path: '/backstage-plugin-shortcut',
-  })
-  .render();
+createDevApp().registerPlugin(backstagePluginShortcutPlugin).render();

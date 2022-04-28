@@ -13,30 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import React from 'react';
-import { Grid } from '@material-ui/core';
-import {
-  Page,
-  Content,
-  ContentHeader,
-  SupportButton,
-} from '@backstage/core-components';
-import StoriesCard from '../Widgets/StoriesCard';
-
-export const ShortcutPage = () => {
-  return (
-    <Page themeId="home">
-      <Content>
-        <ContentHeader title="Shortcut">
-          <SupportButton>Overview of shortcut stories</SupportButton>
-        </ContentHeader>
-        <Grid>
-          <Grid item>
-            <StoriesCard />
-          </Grid>
-        </Grid>
-      </Content>
-    </Page>
-  );
-};
+export { Content } from './StoriesCardHomepage';
