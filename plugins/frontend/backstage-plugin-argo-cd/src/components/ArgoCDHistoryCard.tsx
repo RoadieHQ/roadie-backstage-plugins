@@ -46,6 +46,7 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const supportsMultipleArgoInstances: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
 
   const history = data.items
     ? data.items
@@ -80,10 +81,6 @@ const HistoryTable = ({
           row.app
         ),
       highlight: true,
-    },
-    {
-      title: 'Instance',
-      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Deploy Started',
@@ -124,6 +121,13 @@ const HistoryTable = ({
       sorting: false,
     },
   ];
+
+  if (supportsMultipleArgoInstances) {
+    columns.splice(1, 0, {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+    })
+  }
 
   return (
     <Table
