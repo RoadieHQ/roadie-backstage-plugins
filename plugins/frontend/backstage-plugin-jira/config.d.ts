@@ -16,9 +16,6 @@
 
 /** Configuration for the Jira plugin */
 export interface Config {
-  /**
-   * @visibility frontend
-   */
   jira?: {
     /**
      * The proxy path for Jira.

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  ConfigApi,
+  createApiRef,
+  DiscoveryApi,
+} from '@backstage/core-plugin-api';
 import { IssuesCounter, IssueType, Project, Status } from '../types';
 import fetch from 'cross-fetch';
 
@@ -28,11 +32,7 @@ const DONE_STATUS_CATEGORY = 'Done';
 
 type Options = {
   discoveryApi: DiscoveryApi;
-  /**
-   * Path to use for requests via the proxy, defaults to /jira/api
-   */
-  proxyPath?: string;
-  apiVersion?: number;
+  configApi: ConfigApi;
 };
 
 export class JiraAPI {
@@ -42,10 +42,13 @@ export class JiraAPI {
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    this.proxyPath = options.proxyPath ?? DEFAULT_PROXY_PATH;
 
-    this.apiVersion = options.apiVersion
-      ? options.apiVersion.toString()
+    const proxyPath = options.configApi.getOptionalString('jira.proxyPath');
+    this.proxyPath = proxyPath ?? DEFAULT_PROXY_PATH;
+
+    const apiVersion = options.configApi.getOptionalNumber('jira.apiVersion');
+    this.apiVersion = apiVersion
+      ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
   }
 
@@ -92,7 +95,6 @@ export class JiraAPI {
       jql,
       maxResults: 0,
     };
-
     const request = await fetch(`${apiUrl}search`, {
       method: 'POST',
       headers: {

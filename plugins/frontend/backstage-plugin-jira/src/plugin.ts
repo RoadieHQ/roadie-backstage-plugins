@@ -32,8 +32,7 @@ export const jiraPlugin = createPlugin({
       factory: ({ discoveryApi, configApi }) => {
         return new JiraAPI({
           discoveryApi,
-          apiVersion: configApi.getOptionalNumber('jira.apiVersion'),
-          proxyPath: configApi.getOptionalString('jira.proxyPath'),
+          configApi,
         });
       },
     }),
