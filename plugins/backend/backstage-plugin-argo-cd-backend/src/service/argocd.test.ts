@@ -531,6 +531,11 @@ describe('ArgoCD service', () => {
     });
   });
 
+  it('should fail to sync app on selector and name null', async () => {
+    const appSelector = "";
+    await expect(argoService.resyncAppOnAllArgos({appSelector})).rejects.toThrow();
+  });
+
   it('should fail to sync app on bad permissions', async () => {
     mocked(axios.post).mockResolvedValue({
       status: 403,
