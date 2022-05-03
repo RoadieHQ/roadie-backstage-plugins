@@ -7,9 +7,6 @@ organization:
 
 backend:
   baseUrl: http://localhost:7007
-  reading:
-    allow:
-      - host: gist.githubusercontent.com
 
   listen:
     port: 7007
