@@ -99,7 +99,9 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
       btoa('jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F');
       ```
 
-      Note: Do NOT use the `base64` bash command because the base64 string that it produces will not be accepted by the JIRA api.
+      ```bash
+      echo -n 'jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F' | base64
+      ```
 
       for example `jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F` converts to `amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg==`
 
