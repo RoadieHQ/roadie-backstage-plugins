@@ -15,7 +15,11 @@
  */
 
 
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  createApiRef,
+  DiscoveryApi,
+  FetchApi,
+ } from '@backstage/core-plugin-api';
 
 export const buildKiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
@@ -25,6 +29,7 @@ const DEFAULT_PROXY_PATH = '/buildkite/api';
 
 type Options = {
   discoveryApi: DiscoveryApi;
+  fetchApi: FetchApi;
   /**
    * Path to use for requests via the proxy, defaults to /buildkite/api
    */
@@ -33,10 +38,12 @@ type Options = {
 
 export class BuildkiteApi {
   private readonly discoveryApi: DiscoveryApi;
+  private readonly fetchApi: FetchApi;
   private readonly proxyPath: string;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
+    this.fetchApi = options.fetchApi;
     this.proxyPath = options.proxyPath ?? DEFAULT_PROXY_PATH;
   }
 
@@ -52,7 +59,7 @@ export class BuildkiteApi {
     per_page: number
   ) {
     const ApiUrl = await this.getApiUrl();
-    const request = await fetch(
+    const request = await this.fetchApi.fetch(
       `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`
     );
     if (!request.ok) {
@@ -65,7 +72,7 @@ export class BuildkiteApi {
 
   async restartBuild(requestUrl: string) {
     const ApiUrl = await this.getApiUrl();
-    const request = await fetch(`${ApiUrl}/${requestUrl}/rebuild`, {
+    const request = await this.fetchApi.fetch(`${ApiUrl}/${requestUrl}/rebuild`, {
       method: 'PUT',
     });
     if (!request.ok) {
@@ -82,7 +89,7 @@ export class BuildkiteApi {
     buildNumber: number
   ) {
     const ApiUrl = await this.getApiUrl();
-    const request = await fetch(
+    const request = await this.fetchApi.fetch(
       `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds/${buildNumber}`
     );
     if (!request.ok) {
@@ -95,7 +102,7 @@ export class BuildkiteApi {
 
   async getLog(url: string) {
     const ApiUrl = await this.getApiUrl();
-    const request = await fetch(`${ApiUrl}/${url}`);
+    const request = await this.fetchApi.fetch(`${ApiUrl}/${url}`);
     if (!request.ok) {
       throw new Error(
         `failed to fetch data, status ${request.status}: ${request.statusText}`
