@@ -15,11 +15,10 @@
  */
 import {
   createApiFactory,
-  createComponentExtension,
   createPlugin,
-  createRoutableExtension,
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
+import { createCardExtension } from '@backstage/plugin-home';
 import { shortcutApiRef, ShortcutClient } from './api';
 
 import { rootRouteRef } from './routes';
@@ -38,20 +37,10 @@ export const backstagePluginShortcutPlugin = createPlugin({
   },
 });
 
-export const EntityShorcutPageContent = backstagePluginShortcutPlugin.provide(
-  createRoutableExtension({
-    name: 'EntityShorcutPageContent',
-    component: () =>
-      import('./components/Page/ShortcutPage').then(m => m.ShortcutPage),
-    mountPoint: rootRouteRef,
-  }),
-);
-
-export const EntityShortcutStoriesCard = backstagePluginShortcutPlugin.provide(
-  createComponentExtension({
-    name: 'EntityShortcutStoriesCard',
-    component: {
-      lazy: () => import('./components/Widgets/index').then(m => m.StoriesCard),
-    },
+export const HomepageStoriesCard = backstagePluginShortcutPlugin.provide(
+  createCardExtension({
+    name: 'HomepageStoriesCard ',
+    title: 'Shortcut stories card',
+    components: () => import('./components/Home/StoriesCardHomepage'),
   }),
 );

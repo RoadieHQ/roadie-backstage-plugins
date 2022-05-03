@@ -23,15 +23,19 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { InfoCard, Progress } from '@backstage/core-components';
+import { Progress } from '@backstage/core-components';
 import { Story } from '../../api/types';
 import { useAsync } from 'react-use';
-import { identityApiRef, useApi } from '@backstage/core-plugin-api';
+import {
+  discoveryApiRef,
+  identityApiRef,
+  useApi,
+} from '@backstage/core-plugin-api';
 import { Alert } from '@material-ui/lab';
 import BugReport from '@material-ui/icons/BugReport';
 import Star from '@material-ui/icons/Star';
 import Build from '@material-ui/icons/Build';
-import { shortcutApiRef } from '../../api';
+import { ShortcutClient } from '../../api';
 import { BackstageTheme } from '@backstage/theme';
 
 const useStyles = makeStyles<BackstageTheme>(theme => ({
@@ -166,9 +170,10 @@ const StoryItem = ({ story }: { story: Story }) => {
   );
 };
 
-const StoriesCard = () => {
+const StoriesCardContent = () => {
   const identityApi = useApi(identityApiRef);
-  const api = useApi(shortcutApiRef);
+  const discoveryApi = useApi(discoveryApiRef);
+  const api = new ShortcutClient({ discoveryApi });
   const classes = useStyles();
 
   const { value, loading, error } = useAsync(async () => {
@@ -196,7 +201,7 @@ const StoriesCard = () => {
   }
 
   return (
-    <InfoCard title="Shortcut stories">
+    <>
       {value?.loggedUser ? (
         <>
           <Typography variant="body1">
@@ -228,8 +233,10 @@ const StoriesCard = () => {
           </Typography>
         </Grid>
       )}
-    </InfoCard>
+    </>
   );
 };
 
-export default StoriesCard;
+export const Content = () => {
+  return <StoriesCardContent />;
+};

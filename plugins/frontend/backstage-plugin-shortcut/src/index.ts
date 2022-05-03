@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-export * from './plugin';
+export { backstagePluginShortcutPlugin, HomepageStoriesCard } from './plugin';
 export * from './api';
-export * from './components/Page';
-export * from './components/Widgets';
+export * from './components/Home';

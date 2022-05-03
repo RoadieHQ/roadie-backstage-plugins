@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { ShortcutApi } from './ShortcutApi';
 import { Story, User } from './types';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
 
 const DEFAULT_PROXY_PATH = '/shortcut/api';
 
@@ -25,7 +24,11 @@ export type Options = {
   proxyPath?: string;
 };
 
-export class ShortcutClient implements ShortcutApi {
+export const shortcutApiRef = createApiRef<ShortcutClient>({
+  id: 'plugin.shortcut.service',
+});
+
+export class ShortcutClient {
   private readonly discoveryApi: DiscoveryApi;
   private readonly proxyPath: string;
 

@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.6
+
+### Patch Changes
+
+- f8dbff4: Add correct export
+
+## 1.0.5
+
+### Patch Changes
+
+- 25e8cce: Updated readme files
+
 ## 1.0.4
 
 ### Patch Changes

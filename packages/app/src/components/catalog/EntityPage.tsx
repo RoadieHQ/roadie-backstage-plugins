@@ -104,7 +104,6 @@ import {
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
 import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
-import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
 import {
   S3BucketCard,
   LambdaFunctionCard,
@@ -264,9 +263,6 @@ const serviceEntityPage = (
     <EntityLayout.Route path="/bugsnag" title="Bugsnag">
       <EntityBugsnagErrorsOverviewTable />
     </EntityLayout.Route>
-    <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
-      <EntityShorcutPageContent />
-    </EntityLayout.Route>
     <EntityLayout.Route path="/datadog" title="Datadog">
       <EntityDatadogContent />
     </EntityLayout.Route>
@@ -390,9 +386,6 @@ const userPage = (
           <EntityOwnershipCard variant="gridItem" />
         </Grid>
       </Grid>
-    </EntityLayout.Route>
-    <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
-      <EntityShorcutPageContent />
     </EntityLayout.Route>
   </EntityLayout>
 );

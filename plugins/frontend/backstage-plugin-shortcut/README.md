@@ -38,33 +38,13 @@ proxy:
       Shortcut-Token: '${SHORTCUT_API_TOKEN}'
 ```
 
-3. Add plugin to your Backstage instance:
-
-```ts
-// packages/app/src/components/catalog/EntityPage.tsx
-import { EntityShorcutPageContent } from '@roadiehq/backstage-plugin-shortcut';
-...
-
-const userPage = (
-  <EntityLayoutWrapper>
-    ...
-    <EntityLayout.Route path="/backstage-plugin-shortcut" title="Shortcut">
-      <EntityShorcutPageContent />
-    </EntityLayout.Route>
-    ...
-  </EntityLayoutWrapper>
-);
-```
-
-4. Run backstage app with `yarn start` and navigate to user entity.
-
 ## How to add Shortcut stories card to Home page:
 
-In order to add the Shortcut storied card in your Home page, follow the instructions below:
+In order to add the Shortcut stories card in your Home page, follow the instructions below:
 
 ```ts
 // packages/app/src/components/home/HomePage.tsx
-import { StoriesCard } from '@roadiehq/backstage-plugin-shortcut';
+import { HomepageStoriesCard } from '@roadiehq/backstage-plugin-shortcut';
 ...
 
 export const HomePage = () => {
@@ -72,19 +52,14 @@ export const HomePage = () => {
     <Content>
     ...
         <Grid item md={6} xs={12}>
-            <StoriesCard />
+            <HomepageStoriesCard />
         </Grid>
     ...
     </Content>
   </PageWithHeader>
 );
+
 ```
-
-## How to use Shortcut plugin in Backstage:
-
-1. Add your Shorcut personal auth token to the environment variables of your backstage backend server (you can find it in https://app.shortcut.com/{organisation}/settings/account/api-tokens), in the end it should look like this:
-
-   `SHORTCUT_API_TOKEN="YOUR_API_TOKEN"`
 
 ## Links
 
