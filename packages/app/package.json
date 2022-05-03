@@ -45,6 +45,7 @@
     "@roadiehq/backstage-plugin-security-insights": "^2.0.2",
     "@roadiehq/backstage-plugin-travis-ci": "^2.0.1",
     "@roadiehq/backstage-plugin-shortcut": "^1.0.4",
+    "@roadiehq/backstage-plugin-home-rss": "^0.0.1",
     "history": "^5.0.0",
     "@roadiehq/backstage-plugin-aws": "^1.0.0",
     "react": "^17.0.2",
