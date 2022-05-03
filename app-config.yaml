@@ -7,6 +7,10 @@ organization:
 
 backend:
   baseUrl: http://localhost:7007
+  reading:
+    allow:
+      - host: gist.githubusercontent.com
+
   listen:
     port: 7007
   csp:
@@ -58,8 +62,7 @@ proxy:
   '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
-      Authorization:
-        $env: BUILDKITE_TOKEN
+      Authorization: 'Bearer ${BUILDKITE_API_TOKEN}'
 
   '/argocd/api':
     # url to the api of your hosted argoCD instance

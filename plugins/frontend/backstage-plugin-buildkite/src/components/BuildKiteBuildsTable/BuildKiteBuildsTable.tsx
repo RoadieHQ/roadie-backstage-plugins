@@ -23,7 +23,7 @@ import SyncIcon from '@material-ui/icons/Sync';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
-import { buildKiteBuildRouteRef } from '../routeRefs';
+import { buildKiteBuildRouteRef } from '../../plugin';
 import { useBuilds } from '../useBuilds';
 import { useProjectEntity } from '../useProjectEntity';
 import { BuildkiteStatus } from './components/BuildKiteRunStatus';

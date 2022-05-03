@@ -23,12 +23,16 @@ import {
 } from '@backstage/core-plugin-api';
 import { buildKiteApiRef, BuildkiteApi } from './api';
 
-export const entityContentRouteRef = createRouteRef({
-  id: 'Buildkite Entity Content',
+export const rootRouteRef = createRouteRef({
+  id: 'buildkite',
 });
 
-export const buildViewRouteRef = createRouteRef({
-  id: 'Buildkite Build view',
+import { createSubRouteRef } from '@backstage/core-plugin-api';
+
+export const buildKiteBuildRouteRef = createSubRouteRef({
+  id: 'buildkite/build',
+  path: '/builds/:buildNumber',
+  parent: rootRouteRef,
 });
 
 export const buildkitePlugin = createPlugin({
@@ -41,8 +45,7 @@ export const buildkitePlugin = createPlugin({
     }),
   ],
   routes: {
-    entityContent: entityContentRouteRef,
-    buildView: buildViewRouteRef,
+    entityContent: rootRouteRef,
   },
 });
 
@@ -50,6 +53,6 @@ export const EntityBuildkiteContent = buildkitePlugin.provide(
   createRoutableExtension({
     name: 'EntityBuildkiteContent',
     component: () => import('./components/Router').then(m => m.Router),
-    mountPoint: entityContentRouteRef,
+    mountPoint: rootRouteRef,
   }),
 );
