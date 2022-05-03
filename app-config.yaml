@@ -39,7 +39,7 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
-  '/hurka/urak':
+  '/jira/api':
     target: 'https://roadie-dev.atlassian.net'
     headers:
       Authorization:
