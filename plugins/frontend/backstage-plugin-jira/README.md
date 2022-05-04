@@ -35,7 +35,7 @@ proxy:
 jira:
   # Defaults to /jira/api and can be omitted if proxy is configured for that url
   proxyPath: /jira/api
-  # Defaults to latest and can be omitted if you wan't to use the latest version of the api
+  # Defaults to latest and can be omitted if you want to use the latest version of the api
   apiVersion: latest
 ```
 
