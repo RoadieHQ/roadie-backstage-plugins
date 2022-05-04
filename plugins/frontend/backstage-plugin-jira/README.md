@@ -31,6 +31,12 @@ proxy:
       X-Atlassian-Token: 'no-check'
       # This is a workaround since Jira APIs reject browser origin requests. Any dummy string without whitespace works.
       User-Agent: "AnyRandomString"
+
+jira:
+  # Defaults to /jira/api and can be omitted if proxy is configured for that url
+  proxyPath: /jira/api
+  # Defaults to latest and can be omitted if you wan't to use the latest version of the api
+  apiVersion: latest
 ```
 
 3. Set img-src in Content Security Policy
@@ -46,6 +52,7 @@ backend:
       - 'data:'
       # Allow your Jira instance for @roadiehq/backstage-plugin-jira
       - 'JIRA_URL'
+
 ```
 
 4. Add plugin component to your Backstage instance:
@@ -95,11 +102,11 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
       new Buffer('jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F').toString(
         'base64',
       );
+
       // in your browser console
       btoa('jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F');
-      ```
 
-      ```bash
+      // bash
       echo -n 'jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F' | base64
       ```
 
