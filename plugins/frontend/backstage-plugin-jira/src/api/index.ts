@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import {
+  ConfigApi,
+  createApiRef,
+  DiscoveryApi,
+} from '@backstage/core-plugin-api';
 import { IssuesCounter, IssueType, Project, Status } from '../types';
 import fetch from 'cross-fetch';
 
@@ -29,11 +32,7 @@ const DONE_STATUS_CATEGORY = 'Done';
 
 type Options = {
   discoveryApi: DiscoveryApi;
-  /**
-   * Path to use for requests via the proxy, defaults to /jira/api
-   */
-  proxyPath?: string;
-  apiVersion?: number;
+  configApi: ConfigApi;
 };
 
 export class JiraAPI {
@@ -43,10 +42,13 @@ export class JiraAPI {
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    this.proxyPath = options.proxyPath ?? DEFAULT_PROXY_PATH;
 
-    this.apiVersion = options.apiVersion
-      ? options.apiVersion.toString()
+    const proxyPath = options.configApi.getOptionalString('jira.proxyPath');
+    this.proxyPath = proxyPath ?? DEFAULT_PROXY_PATH;
+
+    const apiVersion = options.configApi.getOptionalNumber('jira.apiVersion');
+    this.apiVersion = apiVersion
+      ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
   }
 
@@ -93,7 +95,6 @@ export class JiraAPI {
       jql,
       maxResults: 0,
     };
-
     const request = await fetch(`${apiUrl}search`, {
       method: 'POST',
       headers: {
@@ -139,7 +140,7 @@ export class JiraAPI {
       iconUrl: status.iconUrl,
     }));
 
-    const filteredIssues = issuesTypes.filter(el => el.name !== "Sub-task");
+    const filteredIssues = issuesTypes.filter(el => el.name !== 'Sub-task');
 
     const issuesCounter = await Promise.all(
       filteredIssues.map(issue => {
@@ -172,11 +173,17 @@ export class JiraAPI {
     };
   }
 
-  async getActivityStream(size: number, projectKey: string, isBearerAuth: boolean) {
+  async getActivityStream(
+    size: number,
+    projectKey: string,
+    isBearerAuth: boolean,
+  ) {
     const { baseUrl } = await this.getUrls();
 
     const request = await fetch(
-      isBearerAuth? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`:`${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic` ,
+      isBearerAuth
+        ? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`
+        : `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic`,
     );
     if (!request.ok) {
       throw new Error(
