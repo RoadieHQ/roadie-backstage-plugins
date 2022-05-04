@@ -197,7 +197,7 @@ export function createRouter({
   router.post('/sync', async (request, response) => {
     const appSelector = request.body.appSelector;
     try {
-      const argoSyncResp = await argoSvc.resyncAppOnAllArgos(appSelector);
+      const argoSyncResp = await argoSvc.resyncAppOnAllArgos({appSelector});
 
       return response.send(argoSyncResp);
     } catch (e: any) {
