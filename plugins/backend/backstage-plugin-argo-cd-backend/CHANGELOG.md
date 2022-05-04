@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.2.0
+
+### Minor Changes
+
+- 4259734: fix: argocd sync wasn't being sent as an object but rather a string
+
 ## 2.1.1
 
 ### Patch Changes

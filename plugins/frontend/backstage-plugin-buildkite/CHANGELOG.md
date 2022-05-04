@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.0.2
+
+### Patch Changes
+
+- 1a22089: Fix the '/builds/:buildNumber' route, to be displayed
+
 ## 2.0.1
 
 ### Patch Changes

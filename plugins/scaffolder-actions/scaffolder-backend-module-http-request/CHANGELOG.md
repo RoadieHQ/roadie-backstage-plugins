@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.0.2
+
+### Patch Changes
+
+- c60df50: added response body to log output in case an error occurred
+
 ## 3.0.1
 
 ### Patch Changes
