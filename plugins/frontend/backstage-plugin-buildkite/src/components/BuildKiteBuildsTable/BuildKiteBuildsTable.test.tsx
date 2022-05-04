@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
@@ -29,6 +28,7 @@ import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
 import { BuildkiteApi } from '../../api';
+import { rootRouteRef } from '../../plugin';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 
 const postMock = jest.fn();
@@ -59,6 +59,11 @@ describe('BuildKiteBuildsTable', () => {
         <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
         </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 
@@ -84,6 +89,11 @@ describe('BuildKiteBuildsTable', () => {
         <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
         </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 
