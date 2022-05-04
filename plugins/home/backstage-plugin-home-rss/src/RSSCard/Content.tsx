@@ -54,12 +54,12 @@ export const Content = (props: RSSContentProps) => {
       }
       const body = await response.text();
       const feedData = parser.parseFromString(body, "application/xml");
-      setTitle(feedData.querySelector('title')?.innerHTML);
+      setTitle(feedData.querySelector('title')?.textContent || undefined);
 
       const items = feedData.querySelectorAll("item");
       items.forEach((item) => {
-        const link = item.querySelector("link")?.innerHTML;
-        const itemTitle = item.querySelector("title")?.innerHTML;
+        const link = item.querySelector("link")?.textContent;
+        const itemTitle = item.querySelector("title")?.textContent;
 
         if (link && itemTitle) {
           setData((current) => {

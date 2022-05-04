@@ -26,7 +26,7 @@ export const HomePageRSS = homePlugin.provide(
     feedURL: string;
   }>({
     name: 'HomePageRSS',
-    title: 'RSS',
+    title: "",
     components: () => import('./RSSCard'),
   }),
 );
