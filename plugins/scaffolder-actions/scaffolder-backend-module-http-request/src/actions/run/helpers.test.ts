@@ -18,7 +18,7 @@ import { HttpOptions } from './types';
 import { Config, ConfigReader } from '@backstage/config';
 import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
-import winston from "winston";
+import * as winston from "winston";
 
 const mockBaseUrl = 'http://backstage.tests';
 
