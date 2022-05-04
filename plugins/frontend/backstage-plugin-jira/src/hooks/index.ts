@@ -18,6 +18,7 @@
 export { useActivityStream } from './useActivityStream';
 export { useProjectInfo } from './useProjectInfo';
 export { useStatuses } from './useStatuses';
+export { useCustomQueriesCount } from './useCustomQueriesCount';
 export {
   useProjectEntity,
   JIRA_PROJECT_KEY_ANNOTATION,

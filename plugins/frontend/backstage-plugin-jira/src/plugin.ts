@@ -43,7 +43,7 @@ export const EntityJiraOverviewCard = jiraPlugin.provide(
   createComponentExtension({
     name: 'EntityJiraOverviewCard',
     component: {
-      lazy: () => import('./components/JiraCard').then((m) => m.JiraCard),
+      lazy: () => import('./components/JiraCard').then(m => m.JiraCard),
     },
-  })
+  }),
 );

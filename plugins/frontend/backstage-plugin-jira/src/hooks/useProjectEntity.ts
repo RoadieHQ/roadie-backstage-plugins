@@ -15,6 +15,7 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
+import { CustomQuery } from '../types';
 
 export const JIRA_PROJECT_KEY_ANNOTATION = 'jira/project-key';
 const JIRA_BEARER_TOKEN_ANNOTATION = 'jira/token-type';
@@ -31,5 +32,6 @@ export const useProjectEntity = (entity: Entity) => {
     tokenType: entity.metadata?.annotations?.[
       JIRA_BEARER_TOKEN_ANNOTATION
     ] as string,
+    customQueries: entity.metadata?.jira?.count as Array<CustomQuery>,
   };
 };

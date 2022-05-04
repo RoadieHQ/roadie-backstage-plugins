@@ -31,14 +31,19 @@ import {
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { InfoCard, Progress } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
-import { useProjectInfo, useProjectEntity } from '../../hooks';
-import { EntityProps, ProjectDetailsProps } from '../../types';
+import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  useProjectInfo,
+  useProjectEntity,
+  useCustomQueriesCount,
+} from '../../hooks';
+import { EntityProps, IssuesCounter, ProjectDetailsProps } from '../../types';
 import { Status } from './components/Status';
 import { ActivityStream } from './components/ActivityStream';
 import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { CustomQueryStatus } from './components/CustomQueryStatus';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,7 +82,9 @@ const CardProjectDetails = ({
 export const JiraCard = (_props: EntityProps) => {
   const { entity } = useEntity();
   const classes = useStyles();
-  const { projectKey, component, tokenType } = useProjectEntity(entity);
+  const { projectKey, component, tokenType, customQueries } = useProjectEntity(
+    entity,
+  );
   const [statusesNames, setStatusesNames] = useState<Array<string>>([]);
   const {
     project,
@@ -86,6 +93,8 @@ export const JiraCard = (_props: EntityProps) => {
     projectError,
     fetchProjectInfo,
   } = useProjectInfo(projectKey, component, statusesNames);
+  const { customQueriesCount } = useCustomQueriesCount(customQueries);
+
   const {
     issueTypes: displayIssues,
     type,
@@ -175,7 +184,24 @@ export const JiraCard = (_props: EntityProps) => {
             ))}
           </Grid>
           <Divider />
-          <ActivityStream projectKey={projectKey} tokenType={tokenType}/>
+          <Grid container spacing={3}>
+            {customQueriesCount?.map((issueType: IssuesCounter) => (
+              <Grid item xs key={issueType.name}>
+                <Box
+                  width={100}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <CustomQueryStatus name={issueType.name} />
+                  <Typography variant="h4">{issueType.total}</Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+          <Divider />
+          <ActivityStream projectKey={projectKey} tokenType={tokenType} />
         </div>
       ) : null}
     </InfoCard>
