@@ -31,8 +31,8 @@ metadata:
     github.com/project-slug: RoadieHQ/roadie-backstage-plugins
     aws.com/lambda-function-name: HelloWorld
     aws.com/lambda-region: eu-west-1
-    jira/project-key: MIKLOSTEST
-    # jira/component: COMP
+    jira/project-key: TEST
+    jira/component: COMP
     datadoghq.com/dashboard-url: https://p.datadoghq.eu/sb/test-datadog-link
     datadoghq.com/graph-token: qwertytoken1234
     argocd/app-name: test-app
