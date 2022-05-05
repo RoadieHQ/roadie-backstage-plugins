@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.1.3
+
+### Patch Changes
+
+- 9db0101: Hide instance column in argo cards when using a single argo instance
+
 ## 2.1.2
 
 ### Patch Changes

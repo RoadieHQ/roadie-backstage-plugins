@@ -51,27 +51,26 @@ export const http = async (
 
   clearTimeout(timeoutId);
 
-  if (res.status >= 400) {
-    logger.error(
-      `There was an issue with your request. Status code: ${res.status}`,
-    );
-    throw new HttpError('Unable to complete request');
-  }
-
   const headers: any = {};
   for (const [name, value] of res.headers) {
     headers[name] = value;
   }
 
-  try {
-    const body =
-      headers['content-type'] &&
-      headers['content-type'].includes('application/json')
-        ? await res.json()
-        : { message: await res.text() };
+  const isJSON = () => headers['content-type'] &&
+      headers['content-type'].includes('application/json');
 
-    return { code: res.status, headers, body };
+  let body;
+  try {
+    body = isJSON() ? await res.json() : { message: await res.text() };
   } catch (e) {
     throw new HttpError(`Could not get response: ${e}`);
   }
+
+  if (res.status >= 400) {
+    logger.error(
+      `There was an issue with your request. Status code: ${res.status} Response body: ${JSON.stringify(body)}`
+    );
+    throw new HttpError('Unable to complete request');
+  }
+  return { code: res.status, headers, body };
 };

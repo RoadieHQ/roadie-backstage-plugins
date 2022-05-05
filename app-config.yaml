@@ -7,6 +7,7 @@ organization:
 
 backend:
   baseUrl: http://localhost:7007
+
   listen:
     port: 7007
   csp:
@@ -39,10 +40,17 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
+  "/aws-news-feed":
+    target: "https://aws.amazon.com/about-aws/whats-new/recent/feed/"
+
+  "/reuters-news-feed":
+    target: "https://www.reutersagency.com/feed"
+
   '/jira/api':
     target: 'https://roadie-dev.atlassian.net'
     headers:
-      Authorization: 'Basic ${JIRA_API_TOKEN}'
+      Authorization:
+        $env: JIRA_TOKEN
       Accept: 'application/json'
       Content-Type: 'application/json'
       X-Atlassian-Token: 'no-check'
@@ -58,8 +66,7 @@ proxy:
   '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
-      Authorization:
-        $env: BUILDKITE_TOKEN
+      Authorization: 'Bearer ${BUILDKITE_API_TOKEN}'
 
   '/argocd/api':
     # url to the api of your hosted argoCD instance

@@ -16,7 +16,9 @@
 import { generateBackstageUrl, http } from './helpers';
 import { HttpOptions } from './types';
 import { Config, ConfigReader } from '@backstage/config';
-import { getVoidLogger } from '@backstage/backend-common';
+import { getRootLogger } from '@backstage/backend-common';
+import { Writable } from 'stream';
+import * as winston from "winston";
 
 const mockBaseUrl = 'http://backstage.tests';
 
@@ -35,7 +37,17 @@ const options: HttpOptions = {
   url,
   headers: {},
 };
-const logger = getVoidLogger();
+
+// We add a transport to the winston logger so that we can assert the log contents using the stream below
+let logOutput = ''
+const logStream = new Writable()
+logStream._write = (chunk, _encoding, next) => {
+  logOutput = logOutput += chunk.toString()
+  next()
+}
+const streamTransport = new winston.transports.Stream({ stream: logStream })
+const logger = getRootLogger();
+logger.add(streamTransport)
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -152,14 +164,26 @@ describe('http', () => {
             ...mockResponse,
             ok: false,
             status: 401,
+            json: async () => ({
+              error: "bad request"
+            })
           };
-           
+
           ((fetch as unknown) as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
           await expect(
             async () => await http(options, logger),
           ).rejects.toThrowError('Unable to complete request');
+
+          const logEvents = logOutput.trim().split('\n')
+          expect(logEvents).toEqual(
+              expect.arrayContaining([
+                  expect.stringContaining(
+                      `"error":"bad request"`
+                  )
+              ])
+          )
         });
       });
 

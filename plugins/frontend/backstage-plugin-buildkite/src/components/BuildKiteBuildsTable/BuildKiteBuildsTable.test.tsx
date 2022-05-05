@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
@@ -24,21 +23,24 @@ import {
   setupRequestMockHandlers,
   TestApiProvider,
   wrapInTestApp,
+  MockFetchApi,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
 import { BuildkiteApi } from '../../api';
+import { rootRouteRef } from '../../plugin';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 
 const postMock = jest.fn();
 
 const errorApiMock = { post: postMock, error$: jest.fn() };
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
+const fetchApi = new MockFetchApi();
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
-  [buildKiteApiRef, new BuildkiteApi({ discoveryApi })],
+  [buildKiteApiRef, new BuildkiteApi({ discoveryApi, fetchApi })],
 ];
 
 describe('BuildKiteBuildsTable', () => {
@@ -59,6 +61,11 @@ describe('BuildKiteBuildsTable', () => {
         <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
         </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 
@@ -84,6 +91,11 @@ describe('BuildKiteBuildsTable', () => {
         <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
         </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 

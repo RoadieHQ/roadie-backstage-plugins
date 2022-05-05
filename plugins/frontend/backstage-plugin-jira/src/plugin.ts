@@ -32,7 +32,7 @@ export const jiraPlugin = createPlugin({
       factory: ({ discoveryApi, configApi }) => {
         return new JiraAPI({
           discoveryApi,
-          apiVersion: configApi.getOptionalNumber('jira.apiVersion'),
+          configApi,
         });
       },
     }),
@@ -43,7 +43,7 @@ export const EntityJiraOverviewCard = jiraPlugin.provide(
   createComponentExtension({
     name: 'EntityJiraOverviewCard',
     component: {
-      lazy: () => import('./components/JiraCard').then((m) => m.JiraCard),
+      lazy: () => import('./components/JiraCard').then(m => m.JiraCard),
     },
-  })
+  }),
 );

@@ -1,5 +1,21 @@
 # app
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [3c7793d]
+- Updated dependencies [c263913]
+- Updated dependencies [9db0101]
+- Updated dependencies [04170e7]
+- Updated dependencies [17d3124]
+- Updated dependencies [1a22089]
+  - @roadiehq/backstage-plugin-home-rss@1.0.0
+  - @roadiehq/backstage-plugin-jira@2.0.2
+  - @roadiehq/backstage-plugin-argo-cd@2.1.3
+  - @roadiehq/backstage-plugin-shortcut@1.0.7
+  - @roadiehq/backstage-plugin-buildkite@2.0.2
+
 ## 1.0.2
 
 ### Patch Changes

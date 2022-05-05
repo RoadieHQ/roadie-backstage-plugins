@@ -24,8 +24,7 @@ proxy:
   '/buildkite/api':
     target: https://api.buildkite.com/v2/
     headers:
-      Authorization: 
-        $env: BUILDKITE_TOKEN
+      Authorization: 'Bearer ${BUILDKITE_API_TOKEN}'
 ```
 
 3. Import it into your Backstage application:
@@ -55,7 +54,6 @@ export const cicdContent = (
 
 ## How to use Buildkite plugin in Backstage
 
-
 1. Add annotation to the yaml config file of a component:
 
 ```yaml
@@ -64,8 +62,11 @@ metadata:
     buildkite.com/project-slug: [exampleorganization/exampleproject]
 ```
 
-2. Get and provide `BUILDKITE_TOKEN` as env variable. Note that the token needs to be in format `Bearer TOKEN`
+2. Get an api token from buildkite and export it to your shell.
 
+```bash
+export BUILDKITE_API_TOKEN=xxx-xxx-xxx
+```
 
 ## Links
 

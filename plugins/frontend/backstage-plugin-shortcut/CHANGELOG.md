@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.7
+
+### Patch Changes
+
+- 04170e7: Bump @backstage deps to the latest
+
 ## 1.0.6
 
 ### Patch Changes
