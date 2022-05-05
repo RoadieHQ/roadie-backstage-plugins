@@ -18,6 +18,7 @@ import {
   createPlugin,
   createApiFactory,
   discoveryApiRef,
+  fetchApiRef,
   createRouteRef,
   createRoutableExtension,
 } from '@backstage/core-plugin-api';
@@ -40,8 +41,12 @@ export const buildkitePlugin = createPlugin({
   apis: [
     createApiFactory({
       api: buildKiteApiRef,
-      deps: { discoveryApi: discoveryApiRef },
-      factory: ({ discoveryApi }) => new BuildkiteApi({ discoveryApi }),
+      deps: {
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+      },
+      factory: ({ discoveryApi, fetchApi }) =>
+        new BuildkiteApi({ discoveryApi, fetchApi }),
     }),
   ],
   routes: {
