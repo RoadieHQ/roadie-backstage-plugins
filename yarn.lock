@@ -3307,7 +3307,7 @@
     react-router-dom "6.0.0-beta.0"
     zen-observable "^0.8.15"
 
-"@backstage/dev-utils@^1.0.0":
+"@backstage/dev-utils@^1.0.0", "@backstage/dev-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@backstage/dev-utils/-/dev-utils-1.0.1.tgz#42c8c8cd2521c7908ad4f60769709a56ae173a2c"
   integrity sha512-f3AYmGkqgKLUgWlAX9vKLjl7C86UGQlsJvYACCR4sU35TOfaL9L8uJ/Tr9jxkGT6warpaTWzpa/pyg6FGFgIOw==
@@ -4088,7 +4088,7 @@
     react-router-dom "6.0.0-beta.0"
     zen-observable "^0.8.15"
 
-"@backstage/theme@^0.2.10", "@backstage/theme@^0.2.13", "@backstage/theme@^0.2.15", "@backstage/theme@^0.2.6", "@backstage/theme@^0.2.7", "@backstage/theme@^0.2.8", "@backstage/theme@^0.2.9":
+"@backstage/theme@^0.2.10", "@backstage/theme@^0.2.15", "@backstage/theme@^0.2.6", "@backstage/theme@^0.2.7", "@backstage/theme@^0.2.8", "@backstage/theme@^0.2.9":
   version "0.2.15"
   resolved "https://registry.yarnpkg.com/@backstage/theme/-/theme-0.2.15.tgz#478491c9bca9dca85d5af08767ba512eabcd3669"
   integrity sha512-Srl5q0X47tFofw6wuElkUqtlbYSfA3J3zlfN6jcQF4801mTrFRw+pVxZmrdxayt4gUzCN+me3mO7tij6F6xQUQ==
