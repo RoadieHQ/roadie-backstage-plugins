@@ -35,6 +35,8 @@ proxy:
 jira:
   # Defaults to /jira/api and can be omitted if proxy is configured for that url
   proxyPath: /jira/api
+  # Add it in case your JIRA instance is connected to Confluence, in order to filter those activities
+  confluenceActivityFilter: wiki@uuid
   # Defaults to latest and can be omitted if you want to use the latest version of the api
   apiVersion: latest
 ```
@@ -77,6 +79,16 @@ const overviewContent = (
   </Grid>
 );
 ```
+
+## How to get the Confluence Activity Filter key
+
+To filter the Confluence activities your instance needs to have the filter to select one or more types of activity from Confluence. You can check that out by executing the following command in your bash:
+
+```bash
+curl -s -H "Authorization: <TOKEN>" <JIRA_URL>/rest/activity-stream/1.0/config | jq .
+```
+
+Then, check for a Confluence filter and copy the `key` value into the tag `jira.confluenceActivityFilter` in your Backstage's `app-config.yaml`.
 
 ## How to use Jira plugin in Backstage
 

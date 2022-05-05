@@ -47,6 +47,7 @@ export class JiraAPI {
   private readonly discoveryApi: DiscoveryApi;
   private readonly proxyPath: string;
   private readonly apiVersion: string;
+  private readonly confluenceActivityFilter: string | undefined;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
@@ -58,6 +59,8 @@ export class JiraAPI {
     this.apiVersion = apiVersion
       ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
+
+    this.confluenceActivityFilter = options.configApi.getOptionalString('jira.confluenceActivityFilter');
   }
 
   private generateProjectUrl = (url: string) => new URL(url).origin;
@@ -282,14 +285,23 @@ export class JiraAPI {
   async getActivityStream(
     size: number,
     projectKey: string,
+    componentName: string | undefined,
+    ticketIds: string[] | undefined,
     isBearerAuth: boolean,
   ) {
     const { baseUrl } = await this.getUrls();
 
+    let filterUrl = `streams=key+IS+${projectKey}`;
+    if (componentName && ticketIds) {
+      filterUrl += `&streams=issue-key+IS+${ticketIds.join('+')}`;
+      filterUrl += this.confluenceActivityFilter ? `${this.confluenceActivityFilter}=activity+IS+NOT+*` : '';
+      // Filter to remove all the changes done in Confluence, otherwise they are also shown as part of the component's activity stream
+    }
+
     const request = await fetch(
       isBearerAuth
-        ? `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}`
-        : `${baseUrl}/activity?maxResults=${size}&streams=key+IS+${projectKey}&os_authType=basic`,
+        ? `${baseUrl}/activity?maxResults=${size}&${filterUrl}`
+        : `${baseUrl}/activity?maxResults=${size}&${filterUrl}&os_authType=basic`,
     );
     if (!request.ok) {
       throw new Error(
