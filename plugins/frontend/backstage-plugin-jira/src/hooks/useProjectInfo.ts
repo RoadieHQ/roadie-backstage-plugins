@@ -48,6 +48,7 @@ export const useProjectInfo = (
     projectLoading: state.loading,
     project: state?.value?.project,
     issues: state?.value?.issues,
+    ticketIds: state?.value?.ticketIds,
     projectError: state.error,
     fetchProjectInfo,
   };

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -74,6 +73,12 @@ export type ActivityStreamKeys =
   | 'content'
   | 'id';
 
+export type ActivityStream = {
+  feed: {
+    entry: ActivityStreamEntry[];
+  };
+};
+
 export type ActivityStreamEntry = {
   updated: PropertyValue;
   title: PropertyValue;
@@ -111,4 +116,26 @@ export type ProjectDetailsProps = {
 
 export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
+};
+
+export type IssueCountSearchParams = {
+  startAt: number;
+  maxResults: number;
+  total: number;
+  issues: IssueCountElement[];
+};
+
+export type IssueCountElement = {
+  key: string;
+  fields: {
+    issuetype: {
+      iconUrl: string;
+      name: string;
+    };
+  };
+};
+
+export type IssueCountResult = {
+  next: number | undefined;
+  issues: IssueCountElement[];
 };
