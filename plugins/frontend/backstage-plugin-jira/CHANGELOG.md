@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.0.3
+
+### Patch Changes
+
+- 912993b: Update dependencies for the JIRA plugin. This fixes a theming issue in Backstage 1.1.1
+
+  WHY: Theming issue found while running the plugin with the latest version of Backstage
+
+  No breaking changes are expected here.
+
 ## 2.0.2
 
 ### Patch Changes

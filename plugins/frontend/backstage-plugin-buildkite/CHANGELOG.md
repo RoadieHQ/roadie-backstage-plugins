@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.0.3
+
+### Patch Changes
+
+- 6e0c293: Utilize fetchApi core plugin over native fetch
+
 ## 2.0.2
 
 ### Patch Changes
