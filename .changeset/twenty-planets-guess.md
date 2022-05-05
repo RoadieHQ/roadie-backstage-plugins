@@ -1,5 +1,5 @@
 ---
-'@roadiehq/backstage-plugin-jira': major
+'@roadiehq/backstage-plugin-jira': patch
 ---
 
 Update dependencies for the JIRA plugin. This fixes a theming issue in Backstage 1.1.1
