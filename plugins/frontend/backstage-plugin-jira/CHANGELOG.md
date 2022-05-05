@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.0.2
+
+### Patch Changes
+
+- c263913: Fixes the proxy path override, now you can define a `jira.proxyPath` variable in your `app-config.yaml` file to provide the path of your proxy.
+
 ## 2.0.1
 
 ### Patch Changes
