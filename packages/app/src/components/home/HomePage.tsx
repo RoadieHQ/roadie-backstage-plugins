@@ -15,23 +15,67 @@
  */
 
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import { HomePageToolkit } from '@backstage/plugin-home';
+import { HomePageToolkit, HomePageCompanyLogo } from '@backstage/plugin-home';
 import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
 import { HomePageRSS } from '@roadiehq/backstage-plugin-home-rss';
 import {
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
-import { Content, PageWithHeader } from '@backstage/core-components';
+import { Content, Page } from '@backstage/core-components';
 import { HomepageStoriesCard } from '@roadiehq/backstage-plugin-shortcut';
 import { HomePageIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+import { HomePageSearchBar as SearchBar } from '@backstage/plugin-search';
+import { SearchContextProvider } from '@backstage/plugin-search-react';
+import { Grid, makeStyles } from '@material-ui/core';
+
+const useStyles = makeStyles(theme => ({
+  searchBar: {
+    display: 'flex',
+    maxWidth: '60vw',
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[1],
+    padding: '8px 0',
+    borderRadius: '50px',
+    margin: 'auto',
+  },
+}));
+
+export const HomePageSearchBar = () => {
+  const styles = useStyles();
+  return (
+    <Grid xs={12}>
+      <SearchContextProvider>
+        <SearchBar className={styles.searchBar} classes={{ root: '' }} />
+      </SearchContextProvider>
+    </Grid>
+  );
+};
 
 export const HomePage = () => {
   return (
-    <PageWithHeader title="Home" themeId="home">
+    <Page themeId="home">
       <Content>
-        <Grid container spacing={3}>
+        <Grid container spacing={6}>
+          <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Grid item md={12} xs={12}>
+              <HomePageCompanyLogo
+                logo={
+                  <img src="https://images.ctfassets.net/fo9twyrwpveg/64ONKPtOgn9J90bL8tBBmI/7c9f264f7004d98dc88bb013a36a97e4/wordlogo1.jpeg" />
+                }
+              />
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <HomePageSearchBar />
+          </Grid>
           <Grid item md={6} xs={12}>
             <HomepageStoriesCard />
           </Grid>
@@ -43,14 +87,14 @@ export const HomePage = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageRSS
-                feedURL="http://localhost:7007/api/proxy/aws-news-feed/"
-                title="AWS News"
+              feedURL="http://localhost:7007/api/proxy/aws-news-feed/"
+              title="AWS News"
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageRSS
-                feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
-                title="Reuters News"
+              feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
+              title="Reuters News"
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -89,6 +133,6 @@ export const HomePage = () => {
           </Grid>
         </Grid>
       </Content>
-    </PageWithHeader>
+    </Page>
   );
 };
