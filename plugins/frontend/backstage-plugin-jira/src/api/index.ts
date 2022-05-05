@@ -83,7 +83,7 @@ export class JiraAPI {
     const data = {
       jql,
       maxResults: -1,
-      fields: ["key", "issueType"],
+      fields: ["key", "issuetype"],
       startAt,
     };
 
