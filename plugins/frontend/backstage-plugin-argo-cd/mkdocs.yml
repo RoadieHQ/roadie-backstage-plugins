@@ -1,7 +1,7 @@
 site_name: 'backstage-plugin-argo-cd'
 
 nav:
-  - Home: index.md
+  - Home: README.md
   - Releasing: releasing.md
 
 plugins:
