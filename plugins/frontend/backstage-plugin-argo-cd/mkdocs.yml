@@ -3,6 +3,7 @@ site_name: 'backstage-plugin-argo-cd'
 nav:
   - Home: README.md
   - Releasing: releasing.md
-
+edit_uri: plugins/frontend/backstage-plugin-argo-cd/docs/
+repo_url: https://github.com/RoadieHQ/roadie-backstage-plugins
 plugins:
   - techdocs-core
