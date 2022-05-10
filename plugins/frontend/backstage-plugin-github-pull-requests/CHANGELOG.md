@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.1.2
+
+### Patch Changes
+
+- 1069b7b: Number of PRs label mapped to the respective combobox
+
 ## 2.1.1
 
 ### Patch Changes
