@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.0.3
+
+### Patch Changes
+
+- 16a3cbe: Fix metadata about the package
+
 ## 2.0.2
 
 ### Patch Changes
