@@ -6,12 +6,15 @@
   "main": "src/index.js",
   "license": "Apache-2.0",
   "private": false,
-  "homepage": "https://github.com/RoadieHQ/backstage-entity-validator",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-entity-validator/issues",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "utils/roadie-backstage-entity-validator"
+  },
   "publishConfig": {
     "access": "public",
     "main": "dist/index.js",
