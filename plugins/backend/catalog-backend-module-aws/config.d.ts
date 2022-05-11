@@ -14,6 +14,45 @@
  * limitations under the License.
  */
 
+export interface ValueMapping {
+  entityPath: string;
+  template?: string;
+}
+
+export interface DynamoDbTableDataConfig {
+  /**
+   * Name of the DDB table
+   */
+  tableName: string;
+
+  /**
+   * Identifier column to be used as the 'name' value in the entity
+   * If omitted, the value of the first hash key of the table is used
+   */
+  identifierColumn?: string;
+
+  /**
+   * Additional column value mappings to insert data from the table row to the entity definition
+   * A key-value pairs of column name and entity value mapping.
+   * The template is using a variable called `value` which can be used to construct entity values from DDB column data
+   *
+   * Examples:
+   *
+   * // json
+   * myColumnInDdb: {
+   *   entityPath: 'metadata.annotations."backstage.io/view-url"',
+   *   template: 'https://aws.web-services.eu-west-1.some-service/{{ value }}/display'
+   * }
+   *
+   * // yaml
+   * myColumnInDdb:
+   *   entityPath: 'metadata.annotations."backstage.io/view-url"'
+   *   template: 'https://aws.web-services.eu-west-1.some-service/{{ value }}/display'
+   *
+   */
+  columnValueMapping?: { [columnName: string]: ValueMapping };
+}
+
 export interface AWSAccountProviderConfig {
   /**
    * Account ID for this Account
@@ -31,6 +70,11 @@ export interface AWSAccountProviderConfig {
    * External ID to use for the role assume
    */
   externalId?: string;
+
+  /**
+   * Configuration object for DynamoDB table data provider
+   */
+  dynamodbTableData?: DynamoDbTableDataConfig;
 }
 
 export interface Config {
@@ -38,6 +82,6 @@ export interface Config {
     /**
      * AWS configuration
      */
-    aws?: AWSAccountProviderConfig[]
+    aws?: AWSAccountProviderConfig[];
   };
 }
