@@ -142,7 +142,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
               name: row[idColumn],
             },
             spec: {
-              owner: 'unknown',
+              owner: this.accountId,
               type: 'dynamo-db-table-data',
               lifecycle: 'production',
             },
