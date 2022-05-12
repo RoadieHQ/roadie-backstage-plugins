@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.1.0
+
+### Minor Changes
+
+- dcad3c6: Add implementations for providers to handle DynamoDB tables and DynamoDB table row data.
+
 ## 1.0.0
 
 ### Major Changes
