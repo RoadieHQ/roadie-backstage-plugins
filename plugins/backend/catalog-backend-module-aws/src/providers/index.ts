@@ -17,3 +17,5 @@
 export { AWSS3BucketProvider } from './AWSS3BucketProvider';
 export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
 export { AWSIAMUserProvider } from './AWSIAMUserProvider';
+export { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
+export { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
