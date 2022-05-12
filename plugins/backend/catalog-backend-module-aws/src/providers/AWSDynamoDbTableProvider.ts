@@ -105,7 +105,7 @@ export class AWSDynamoDbTableProvider implements EntityProvider {
                     name: table.TableName.slice(0, 62),
                   },
                   spec: {
-                    owner: 'unknown',
+                    owner: this.accountId,
                     type: 'dynamo-db-table',
                     lifecycle: 'production',
                   },
