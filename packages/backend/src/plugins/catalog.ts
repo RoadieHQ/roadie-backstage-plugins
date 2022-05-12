@@ -29,21 +29,25 @@ export default async function createPlugin(
     const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
     const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
     const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
-    const ddbTableDataProvider = AWSDynamoDbTableDataProvider.fromConfig(
-      config,
-      env,
-    );
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
     builder.addEntityProvider(iamUserProvider);
     builder.addEntityProvider(ddbTableProvider);
-    builder.addEntityProvider(ddbTableDataProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
     providers.push(ddbTableProvider);
-    providers.push(ddbTableDataProvider);
+
+    const useDdbData = config.has('dynamodbTableData');
+    if (useDdbData) {
+      const ddbTableDataProvider = AWSDynamoDbTableDataProvider.fromConfig(
+        config,
+        env,
+      );
+      builder.addEntityProvider(ddbTableDataProvider);
+      providers.push(ddbTableDataProvider);
+    }
   }
 
   builder.addProcessor(new ScaffolderEntitiesProcessor());
