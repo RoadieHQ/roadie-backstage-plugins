@@ -46,6 +46,7 @@ export const BuildkiteBuildStep: FC<{
           data-testid="waiter"
         />
       );
+    default:
+      return <ActionOutput {...props} url={job.log_url || ''} />;
   }
-  return <ActionOutput {...props} url={job.log_url || ''} />;
 };
