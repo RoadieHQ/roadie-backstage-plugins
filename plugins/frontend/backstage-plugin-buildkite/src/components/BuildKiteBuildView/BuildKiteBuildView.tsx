@@ -151,7 +151,7 @@ const BuildkiteBuildView: FC<{ entity: Entity }> = ({ entity }) => {
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    if (value?.state === 'running' || value?.state === 'schedudled') {
+    if (value?.state === 'running' || value?.state === 'scheduled') {
       timer = setTimeout(() => {
         fetchBuildData();
       }, 1500);
