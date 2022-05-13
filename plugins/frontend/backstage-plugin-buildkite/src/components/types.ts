@@ -35,6 +35,6 @@ export type TableProps = {
 
 export type BuildkiteJob = {
   state: string;
-  log_url: string;
+  log_url?: string;
   id: string;
-}
+};
