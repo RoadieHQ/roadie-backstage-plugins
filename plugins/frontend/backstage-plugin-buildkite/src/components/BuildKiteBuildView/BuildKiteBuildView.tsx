@@ -33,7 +33,7 @@ import { useParams } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { Entity } from '@backstage/catalog-model';
 import LaunchIcon from '@material-ui/icons/Launch';
-import { ActionOutput } from './components/ActionOutput';
+import { BuildkiteBuildStep } from './components/BuildkiteBuildStep';
 import { useSingleBuild } from '../useSingleBuild';
 import { useProjectEntity } from '../useProjectEntity';
 import { BuildkiteBuildInfo, BuildkiteJob } from '../types';
@@ -114,10 +114,9 @@ const ActionsList: FC<{ jobs: BuildkiteJob[] }> = ({ jobs }) => {
   return (
     <>
       {jobs.map((job: BuildkiteJob) => (
-        <ActionOutput
+        <BuildkiteBuildStep
           className={pickClassName(classes, job)}
           job={job}
-          url={job.log_url || ''}
           key={job.id}
         />
       ))}
@@ -176,9 +175,8 @@ const BuildkiteBuildView: FC<{ entity: Entity }> = ({ entity }) => {
               <InfoCard
                 title={<BuildName build={value} />}
                 cardClassName={classes.cardContent}
-              >
-                <BuildsList build={value} />
-              </InfoCard>
+              />
+              <BuildsList build={value} />
             </Box>
           </Grid>
         </Grid>
@@ -186,4 +184,5 @@ const BuildkiteBuildView: FC<{ entity: Entity }> = ({ entity }) => {
     </Page>
   ) : null;
 };
+
 export default BuildkiteBuildView;
