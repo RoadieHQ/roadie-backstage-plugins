@@ -1,11 +1,10 @@
-jest.mock('axios');
-import axios from 'axios';
-import { mocked } from 'ts-jest/utils';
 import { createRouter } from './router';
 import express, { Express } from 'express';
 import { ConfigReader } from '@backstage/config';
 import request from 'supertest';
 import { getVoidLogger } from '@backstage/backend-common';
+import fetchMock from "jest-fetch-mock";
+import {argocdCreateApplicationResp, argocdCreateProjectResp} from "./argocdTestResponses";
 
 const logger = getVoidLogger();
 const config = ConfigReader.fromConfigs([
@@ -37,16 +36,17 @@ describe('router', () => {
     beforeEach(async () => {
       const router = await createRouter({ config, logger });
       app = express().use(router);
-      mocked(axios).mockClear();
-      mocked(axios).mockReset();
+      fetchMock.resetMocks();
     });
   
     it('returns the requested data', async () => {
-      mocked(axios.request).mockResolvedValue({
-        data: {
-            token: "testtoken"
-        },
-      });
+      fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({token: 'testToken'}));
+      fetchMock.mockResponseOnce(JSON.stringify({
+        argocdCreateProjectResp,
+      }));
+      fetchMock.mockResponseOnce(JSON.stringify({
+        argocdCreateApplicationResp,
+      }));
       const response = await request(app)
         .post('/createArgo')
         .send({

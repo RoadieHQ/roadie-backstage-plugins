@@ -1,13 +1,11 @@
-jest.mock('axios');
-import { getVoidLogger } from '@backstage/backend-common';
-import { ConfigReader } from '@backstage/config';
-import axios from 'axios';
-import { mocked } from 'ts-jest/utils';
-import { ArgoService } from './argocd.service';
+import {getVoidLogger} from '@backstage/backend-common';
+import {ConfigReader} from '@backstage/config';
+import {ArgoService} from './argocd.service';
 import {
   argocdCreateApplicationResp,
   argocdCreateProjectResp,
 } from './argocdTestResponses';
+import fetchMock from "jest-fetch-mock";
 
 const config = ConfigReader.fromConfigs([
   {
@@ -34,24 +32,21 @@ describe('ArgoCD service', () => {
   const argoService = new ArgoService('testusername', 'testpassword', config);
 
   beforeEach(() => {
-    mocked(axios).mockClear();
-    mocked(axios).mockReset();
+    fetchMock.resetMocks();
   });
 
   it('should get argo app data', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        metadata: {
-          name: 'testAppName',
-          namespace: 'testNamespace',
-        },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      metadata: {
+        name: 'testAppName',
+        namespace: 'testNamespace',
       },
-    });
+    }));
 
     const resp = argoService.getArgoAppData(
       'https://argoInstance1.com',
       'argoInstance1',
-      { name: 'testApp' },
+      {name: 'testApp'},
       'testToken',
     );
 
@@ -65,34 +60,29 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to get argo app data', async () => {
-    mocked(axios.request).mockRejectedValueOnce({
-      data: {
-        error: 'testError',
-      },
-    });
+    fetchMock.mockRejectOnce(new Error());
 
     await expect(
       argoService.getArgoAppData(
         'https://argoInstance1.com',
         'argoInstance1',
-        { name: 'testApp' },
+        {name: 'testApp'},
         'testToken',
       ),
     ).rejects.toThrow();
   });
 
   it('should return the argo instances an argo app is on', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        metadata: {
-          name: 'testApp-nonprod',
-          namespace: 'argocd',
-          status: {},
-        },
+    fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({token: 'testToken'}));
+    fetchMock.mockResponseOnce(JSON.stringify({
+      metadata: {
+        name: 'testApp-nonprod',
+        namespace: 'argocd',
+        status: {},
       },
-    });
+    }));
 
-    const resp = argoService.findArgoApp({ name: 'testApp-nonprod' });
+    const resp = argoService.findArgoApp({name: 'testApp-nonprod'});
 
     expect(await resp).toStrictEqual([
       {
@@ -104,30 +94,27 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to return the argo instances an argo app is on', async () => {
-    mocked(axios.request).mockRejectedValue({
-      status: 500,
-    });
+    fetchMock.mockResponseOnce('', {status: 500});
     return expect(async () => {
-      await argoService.findArgoApp({ name: 'testApp' });
+      await argoService.findArgoApp({name: 'testApp'});
     }).rejects.toThrow();
   });
 
   it('should return the argo instances using the app selector', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        items: [
-          {
-            metadata: {
-              name: 'testApp-nonprod',
-              namespace: 'argocd',
-              status: {},
-            },
+    fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({token: 'testToken'}));
+    fetchMock.mockResponseOnce(JSON.stringify({
+      items: [
+        {
+          metadata: {
+            name: 'testApp-nonprod',
+            namespace: 'argocd',
+            status: {},
           },
-        ],
-      },
-    });
+        },
+      ],
+    }));
 
-    const resp = argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
+    const resp = argoService.findArgoApp({selector: 'name=testApp-nonprod'});
 
     expect(await resp).toStrictEqual([
       {
@@ -139,29 +126,27 @@ describe('ArgoCD service', () => {
   });
 
   it('should successfully decorate the items when using the app selector', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        items: [
-          {
-            metadata: {
-              name: 'testApp-prod',
-              namespace: 'argocd',
-            },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      items: [
+        {
+          metadata: {
+            name: 'testApp-prod',
+            namespace: 'argocd',
           },
-          {
-            metadata: {
-              name: 'testApp-staging',
-              namespace: 'argocd',
-            },
+        },
+        {
+          metadata: {
+            name: 'testApp-staging',
+            namespace: 'argocd',
           },
-        ],
-      },
-    });
+        },
+      ],
+    }));
 
     const resp = argoService.getArgoAppData(
       'https://argoInstance1.com',
       'argoInstance1',
-      { selector: 'service=testApp' },
+      {selector: 'service=testApp'},
       'testToken',
     );
 
@@ -190,11 +175,9 @@ describe('ArgoCD service', () => {
   });
 
   it('should create a project in argo', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        argocdCreateProjectResp,
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      argocdCreateProjectResp,
+    }));
 
     const resp = argoService.createArgoProject({
       baseUrl: 'https://argoInstance1.com',
@@ -210,11 +193,9 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create a project in argo when argo errors out', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        error: 'Failed to Create project',
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      error: 'Failed to Create project',
+    }));
 
     const resp = argoService.createArgoProject({
       baseUrl: 'https://argoInstance1.com',
@@ -230,17 +211,15 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create a project in argo when argo user is not given enough permissions', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        response: {
-          status: 403,
-          error:
-            'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-          message:
-            'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-        },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      response: {
+        status: 403,
+        error:
+          'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: projects, create, backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
       },
-    });
+    }));
 
     const resp = await argoService.createArgoProject({
       baseUrl: 'https://argoInstance1.com',
@@ -262,11 +241,9 @@ describe('ArgoCD service', () => {
   });
 
   it('should create an app in argo', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        argocdCreateApplicationResp,
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      argocdCreateApplicationResp,
+    }));
 
     const resp = argoService.createArgoApplication({
       baseUrl: 'https://argoInstance1.com',
@@ -285,11 +262,9 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create an app in argo when argo errors out', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        error: 'Failed to Create application',
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      error: 'Failed to Create application',
+    }));
 
     const resp = argoService.createArgoApplication({
       baseUrl: 'https://argoInstance1.com',
@@ -308,17 +283,15 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
-    mocked(axios.request).mockResolvedValueOnce({
-      data: {
-        response: {
-          status: 403,
-          error:
-            'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-          message:
-            'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-        },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      response: {
+        status: 403,
+        error:
+          'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+        message:
+          'permission denied: applications, create, backstagetestmanual2/backstagetestmanual2, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
       },
-    });
+    }));
 
     const resp = await argoService.createArgoApplication({
       baseUrl: 'https://argoInstance1.com',
@@ -343,16 +316,13 @@ describe('ArgoCD service', () => {
   });
 
   it('should create both app and project in argo', async () => {
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        argocdCreateApplicationResp,
-      },
-    });
-    mocked(axios.request).mockResolvedValue({
-      data: {
-        argocdCreateApplicationResp,
-      },
-    });
+    fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({token: 'testToken'}));
+    fetchMock.mockResponseOnce(JSON.stringify({
+      argocdCreateApplicationResp,
+    }));
+    fetchMock.mockResponseOnce(JSON.stringify({
+      argocdCreateApplicationResp,
+    }));
 
     const resp = argoService.createArgoResources({
       argoInstance: 'argoInstance1',
@@ -369,11 +339,10 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create both app and project in argo when argo rejects', async () => {
-    mocked(axios.request).mockRejectedValueOnce({
-      data: {
-        error: 'Failure to create project',
-      },
-    });
+    fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({token: 'testToken'}));
+    fetchMock.mockResponseOnce(JSON.stringify({
+      error: 'Failure to create project',
+    }));
 
     const resp = argoService.createArgoResources({
       argoInstance: 'argoInstance1',
@@ -390,9 +359,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should delete project in argo', async () => {
-    mocked(axios.request).mockResolvedValue({
-      status: 200,
-    });
+    fetchMock.mockResponseOnce('');
 
     const resp = argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
@@ -404,9 +371,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to delete project in argo when bad status', async () => {
-    mocked(axios.request).mockResolvedValue({
-      status: 500,
-    });
+    fetchMock.mockResponseOnce('', {status: 500});
 
     const resp = argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
@@ -418,15 +383,12 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to delete project in argo when bad permissions', async () => {
-    mocked(axios.request).mockResolvedValueOnce({
-      status: 403,
-      data: {
-        error:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-        message:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      error:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      message:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+    }), {status: 403});
 
     const resp = argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
@@ -440,9 +402,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should delete app in argo', async () => {
-    mocked(axios.request).mockResolvedValue({
-      status: 200,
-    });
+    fetchMock.mockResponseOnce('');
 
     const resp = argoService.deleteApp({
       baseUrl: 'https://argoInstance1.com',
@@ -454,9 +414,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to delete app in argo when bad status', async () => {
-    mocked(axios.request).mockResolvedValue({
-      status: 500,
-    });
+    fetchMock.mockResponseOnce('', {status: 500});
 
     const resp = argoService.deleteApp({
       baseUrl: 'https://argoInstance1.com',
@@ -468,15 +426,12 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to delete application in argo when bad permissions', async () => {
-    mocked(axios.request).mockResolvedValueOnce({
-      status: 403,
-      data: {
-        error:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-        message:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-      },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      error:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      message:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+    }), {status: 403});
 
     const resp = argoService.deleteApp({
       baseUrl: 'https://argoInstance1.com',
@@ -490,9 +445,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should sync app', async () => {
-    mocked(axios.post).mockResolvedValue({
-      status: 200,
-    });
+    fetchMock.mockResponseOnce('');
 
     const resp = argoService.syncArgoApp({
       argoInstance: {
@@ -511,9 +464,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to sync app on bad status', async () => {
-    mocked(axios.post).mockResolvedValue({
-      status: 500,
-    });
+    fetchMock.mockResponseOnce('', {status: 500});
 
     const resp = argoService.syncArgoApp({
       argoInstance: {
@@ -537,9 +488,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to sync app on bad permissions', async () => {
-    mocked(axios.post).mockResolvedValue({
-      status: 403,
-    });
+    fetchMock.mockResponseOnce('', {status: 403});
 
     const resp = argoService.syncArgoApp({
       argoInstance: {
@@ -559,32 +508,28 @@ describe('ArgoCD service', () => {
 
   it('should sync all apps', async () => {
     // token
-    mocked(axios.request).mockResolvedValueOnce({
-      data: { token: 'testToken' },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      token: 'testToken'
+    }));
     // findArgoApp
-    mocked(axios.request).mockResolvedValueOnce({
-      data: {
-        items: [
-          {
-            metadata: {
-              name: 'testAppName',
-              namespace: 'testNamespace',
-            },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      items: [
+        {
+          metadata: {
+            name: 'testAppName',
+            namespace: 'testNamespace',
           },
-        ],
-      },
-    });
+        },
+      ],
+    }));
     // token
-    mocked(axios.request).mockResolvedValueOnce({
-      data: { token: 'testToken' },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      token: 'testToken'
+    }));
     // sync
-    mocked(axios.post).mockResolvedValue({
-      status: 200,
-    });
+    fetchMock.mockResponseOnce('');
 
-    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = argoService.resyncAppOnAllArgos({appSelector: 'testApp'});
 
     expect(await resp).toStrictEqual([
       [
@@ -598,17 +543,11 @@ describe('ArgoCD service', () => {
 
   it('should fail to sync all apps when bad token', async () => {
     // token
-    mocked(axios.request).mockRejectedValueOnce({
-      response: {
-        status: 401,
-        statusText: 'Unauthorized',
-        data: {
-          message: 'Unauthorized',
-        },
-      },
-    });
+    fetchMock.mockOnceIf(/.*\/api\/v1\/session/g, JSON.stringify({
+      message: 'Unauthorized',
+    }), {status: 401, statusText: 'Unauthorized',});
 
-    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = argoService.resyncAppOnAllArgos({appSelector: 'testApp'});
 
     await expect(resp).rejects.toThrowError(
       'Getting unauthorized for Argo CD instance https://argoInstance1.com',
@@ -616,9 +555,7 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to sync all apps when bad permissions', async () => {
-    mocked(axios.post).mockResolvedValue({
-      status: 403,
-    });
+    fetchMock.mockResponseOnce('', {status: 403});
 
     const resp = argoService.syncArgoApp({
       argoInstance: {
@@ -638,42 +575,39 @@ describe('ArgoCD service', () => {
 
   it('should fail to sync all apps due to permissions', async () => {
     // token
-    mocked(axios.request).mockResolvedValueOnce({
-      data: { token: 'testToken' },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      token: 'testToken'
+    }));
     // findArgoApp
-    mocked(axios.request).mockResolvedValueOnce({
-      data: {
-        items: [
-          {
-            metadata: {
-              name: 'testAppName',
-              namespace: 'testNamespace',
-            },
+    fetchMock.mockResponseOnce(JSON.stringify({
+      items: [
+        {
+          metadata: {
+            name: 'testAppName',
+            namespace: 'testNamespace',
           },
-        ],
-      },
-    });
+        },
+      ],
+    }));
     // token
-    mocked(axios.request).mockResolvedValueOnce({
-      data: { token: 'testToken' },
-    });
+    fetchMock.mockResponseOnce(JSON.stringify({
+      token: 'testToken'
+    }));
     // sync
-    mocked(axios.post).mockRejectedValueOnce({
-      status: 403,
+    fetchMock.mockResponseOnce(JSON.stringify({
       error:
         'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
       message:
         'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-    });
+    }), {status: 403});
 
-    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = argoService.resyncAppOnAllArgos({appSelector: 'testApp'});
 
     expect(await resp).toStrictEqual([
       [
         {
           message:
-            'permission denied: applications, sync, backstagetestmanual-nonprod/backstagetestmanual-nonprod, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+            'Failed to resync testAppName on argoInstance1',
           status: 'Failure',
         },
       ],
