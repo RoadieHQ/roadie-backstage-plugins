@@ -6,7 +6,6 @@ import express, { Express } from 'express';
 import { ConfigReader } from '@backstage/config';
 import request from 'supertest';
 import { getVoidLogger } from '@backstage/backend-common';
-import { ArgoService } from './argocd.service';
 
 const logger = getVoidLogger();
 const config = ConfigReader.fromConfigs([
