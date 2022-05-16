@@ -38,6 +38,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
         properties: {
           method: {
             title: 'Method',
+            type: 'string',
             description: 'The method type of the request',
             enum: [
               'GET',
