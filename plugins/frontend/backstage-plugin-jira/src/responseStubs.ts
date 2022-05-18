@@ -152,9 +152,23 @@ export const projectResponseStub = {
 
 export const searchResponseStub = {
   startAt: 0,
-  maxResults: 0,
+  maxResults: 50,
   total: 1,
-  issues: [],
+  issues: [
+    {
+      self:
+          'https://backstage-test.atlassian.net/rest/api/latest/status/10003',
+      id: '10003',
+      key: '10003',
+      fields: {
+        issuetype: {
+          id: 1,
+          name: 'Task',
+          iconUrl: 'http://example.com/avatar.jpg',
+        },
+      },
+    }
+  ],
 };
 
 export const statusesResponseStub = [

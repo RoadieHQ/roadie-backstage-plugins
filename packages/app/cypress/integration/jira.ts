@@ -23,7 +23,7 @@ describe('Jira plugin', () => {
         cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST', { fixture: 'jira/project.json' }).as('getProject')
         cy.intercept('POST', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search', { fixture: 'jira/searchresult.json' }).as('postSearchResult')
 
-        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&os_authType=basic', { fixture: 'jira/activitystream.xml' }).as('getActivity')
+        cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/activity?maxResults=25&streams=key+IS+TEST&streams=issue-key+IS+10003+10004&os_authType=basic', { fixture: 'jira/activitystream.xml' }).as('getActivity')
         cy.intercept('GET', 'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST/statuses', { fixture: 'jira/statuses.json' }).as('getStatuses')
 
         cy.visit('/catalog/default/component/sample-service')

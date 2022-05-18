@@ -116,7 +116,17 @@ const options = {
   },
 };
 
-export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, tokenType: string | undefined; }) => {
+export const ActivityStream = ({ 
+  projectKey,
+  tokenType,
+  componentName,
+  ticketIds,
+}: { 
+  projectKey: string;
+  tokenType: string | undefined;
+  componentName: string | undefined;
+  ticketIds: string[] | undefined;
+}) => {
   const classes = useStyles();
   const [size, setSize] = useState(25);
   const [disableButton, setDisableButton] = useState(false);
@@ -124,7 +134,9 @@ export const ActivityStream = ({ projectKey, tokenType }: { projectKey: string, 
   const { activities, activitiesLoading, activitiesError } = useActivityStream(
     size,
     projectKey,
-    isBearerAuth
+    componentName,
+    ticketIds,
+    isBearerAuth,
   );
 
   const showMore = useCallback(() => {

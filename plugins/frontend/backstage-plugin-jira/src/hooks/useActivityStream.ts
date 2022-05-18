@@ -39,18 +39,24 @@ const decodeHtml = (html: string) => {
   return txt.value;
 };
 
-export const useActivityStream = (size: number, projectKey: string, isBearerAuth: boolean) => {
+export const useActivityStream = (
+  size: number,
+  projectKey: string,
+  componentName: string | undefined,
+  ticketIds: string[] | undefined,
+  isBearerAuth: boolean
+) => {
   const api = useApi(jiraApiRef);
 
   const getActivityStream = useCallback(async () => {
     try {
-      const response = await api.getActivityStream(size, projectKey, isBearerAuth);
+      const response = await api.getActivityStream(size, projectKey, componentName, ticketIds, isBearerAuth);
       const parsedData = JSON.parse(
         convert.xml2json(response, { compact: true, spaces: 2 }),
       );
       const mappedData = parsedData.feed.entry.map(
         (entry: ActivityStreamEntry): ActivityStreamElement => {
-          const id = getPropertyValue(entry, 'id') || `urn:uuid:${uuidv4()}`
+          const id = `urn:uuid:${uuidv4()}`;
           const time = getPropertyValue(entry, 'updated');
           const iconLink = entry.link?.find(
             link =>
@@ -86,7 +92,7 @@ export const useActivityStream = (size: number, projectKey: string, isBearerAuth
     } catch (err:any) {
       return handleError(err);
     }
-  }, [api, size, projectKey, isBearerAuth]);
+  }, [api, size, projectKey, componentName, ticketIds, isBearerAuth]);
 
   const [state, fetchActivityStream] = useAsyncFn(() => getActivityStream(), [
     size,

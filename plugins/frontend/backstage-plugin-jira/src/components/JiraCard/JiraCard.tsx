@@ -82,6 +82,7 @@ export const JiraCard = (_props: EntityProps) => {
   const {
     project,
     issues,
+    ticketIds,
     projectLoading,
     projectError,
     fetchProjectInfo,
@@ -175,7 +176,12 @@ export const JiraCard = (_props: EntityProps) => {
             ))}
           </Grid>
           <Divider />
-          <ActivityStream projectKey={projectKey} tokenType={tokenType}/>
+          <ActivityStream 
+            projectKey={projectKey}
+            tokenType={tokenType}
+            componentName={component}
+            ticketIds={ticketIds}
+          />
         </div>
       ) : null}
     </InfoCard>
