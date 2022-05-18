@@ -1,5 +1,14 @@
 # backend
 
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [9bcaa85]
+- Updated dependencies [1d546fd]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.3.0
+  - @roadiehq/scaffolder-backend-module-http-request@3.0.3
+
 ## 1.0.4
 
 ### Patch Changes
