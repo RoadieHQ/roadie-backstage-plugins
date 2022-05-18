@@ -123,7 +123,7 @@ export function createRouter({
     const namespace = request.body.namespace;
     const projectName = request.body.projectName as string;
     const appName = request.body.appName as string;
-    const labelValue = appName;
+    const labelValue = request.body.labelValue as string;
     const sourceRepo = request.body.sourceRepo;
     const sourcePath = request.body.sourcePath;
 
