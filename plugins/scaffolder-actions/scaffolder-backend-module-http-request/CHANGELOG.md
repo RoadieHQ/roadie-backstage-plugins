@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.0.3
+
+### Patch Changes
+
+- 1d546fd: Adds type to method option for the http backstage request scaffolder action. This fixes the generated documentation.
+
 ## 3.0.2
 
 ### Patch Changes
