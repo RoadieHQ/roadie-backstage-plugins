@@ -106,7 +106,7 @@ export const Content = (props: RSSContentProps) => {
     return (<Box position="relative">
       <Table
           title={title}
-          options={{ search: false, paging: true, showTitle: true, padding: 'dense' }}
+          options={{ search: false, paging: true, showTitle: true, padding: 'dense', header: false }}
         data={data}
       columns={columns} />
     </Box>)
