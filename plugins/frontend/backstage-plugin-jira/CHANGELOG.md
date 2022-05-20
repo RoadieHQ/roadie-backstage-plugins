@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.1.1
+
+### Patch Changes
+
+- 942eb3a: Fixed malformed URL when the confluenceActivityFilter is being used
+
 ## 2.1.0
 
 ### Minor Changes
