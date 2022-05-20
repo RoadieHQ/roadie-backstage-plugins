@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Spotify AB
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Logger } from 'winston';
 import Router from 'express-promise-router';
 import express from 'express';
@@ -23,17 +24,19 @@ export async function createRouter(logger: Logger): Promise<express.Router> {
   router.use(express.json());
 
   const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
-  const AWS_ACCESS_KEY_SECRET = process.env.AWS_ACCESS_KEY_SECRET || process.env.AWS_SECRET_ACCESS_KEY;
+  const AWS_ACCESS_KEY_SECRET =
+    process.env.AWS_ACCESS_KEY_SECRET || process.env.AWS_SECRET_ACCESS_KEY;
   if (!AWS_ACCESS_KEY_ID || !AWS_ACCESS_KEY_SECRET) {
     logger.warn(
       'AWS_ACCESS_KEY_ID and AWS_ACCESS_KEY_SECRET (or AWS_SECRET_ACCESS_KEY) environment variables not set. Using default credentials provider chain.',
     );
   }
-  const awsApiGenerateTempCredentialsForwarder = getAwsApiGenerateTempCredentialsForwarder({
-    AWS_ACCESS_KEY_ID,
-    AWS_ACCESS_KEY_SECRET,
-    logger,
-  });
+  const awsApiGenerateTempCredentialsForwarder =
+    getAwsApiGenerateTempCredentialsForwarder({
+      AWS_ACCESS_KEY_ID,
+      AWS_ACCESS_KEY_SECRET,
+      logger,
+    });
   router.use('/credentials', awsApiGenerateTempCredentialsForwarder);
 
   return router;
