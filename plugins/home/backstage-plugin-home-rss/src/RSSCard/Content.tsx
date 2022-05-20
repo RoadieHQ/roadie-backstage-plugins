@@ -18,14 +18,27 @@ import React, { useState } from 'react';
 import {Progress, ErrorPanel, Table} from '@backstage/core-components';
 import { RSSContentProps} from './types';
 import {useAsync} from "react-use";
-import {Box} from "@material-ui/core";
+import {Box, Typography, Link, makeStyles} from "@material-ui/core";
+import {DateTime} from "luxon"
+
+const useStyles = makeStyles(theme => ({
+  newsItemDate: {
+    marginBottom: theme.spacing(0.5),
+    fontSize: "0.9rem",
+    color: "gray"
+  },
+  newsItemLink: {
+    marginBottom: theme.spacing(3),
+    fontSize: "1rem",
+  },
+}));
 
 type DataItem = {
   title: any
 }
 
 const columns = [{
-  title: "", field: "title"
+  title: "", field: "title",
 }]
 
 /**
@@ -38,6 +51,7 @@ export const Content = (props: RSSContentProps) => {
   const [data, setData] = useState<DataItem[]>([]);
   const parser = new DOMParser();
   const [title, setTitle] = useState<string | undefined>();
+  const classes = useStyles()
 
   useAsync(async () => {
     if (error) { return }
@@ -60,11 +74,27 @@ export const Content = (props: RSSContentProps) => {
       items.forEach((item) => {
         const link = item.querySelector("link")?.textContent;
         const itemTitle = item.querySelector("title")?.textContent;
+        const pubDate = item.querySelector("pubDate")?.textContent;
+        var pubDateString: string;
+        if (pubDate) {
+          const publishedAt = DateTime.fromRFC2822(pubDate);
+          pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
+        }
+
 
         if (link && itemTitle) {
+          var itemComponent;
+          if (pubDateString) {
+            itemComponent = <>
+              <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
+              <Link className={classes.newItemLink} href={link} target="_blank">{itemTitle}</Link>
+            </>
+          } else {
+            itemComponent = <a href={link} target="_blank">{itemTitle}</a>;
+          }
           setData((current) => {
             return [...current, {
-              title: <a href={link} target="_blank">{itemTitle}</a>,
+              title: itemComponent
             }]
           })
         }
