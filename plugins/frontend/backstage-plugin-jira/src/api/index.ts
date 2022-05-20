@@ -294,7 +294,7 @@ export class JiraAPI {
     let filterUrl = `streams=key+IS+${projectKey}`;
     if (componentName && ticketIds) {
       filterUrl += `&streams=issue-key+IS+${ticketIds.join('+')}`;
-      filterUrl += this.confluenceActivityFilter ? `${this.confluenceActivityFilter}=activity+IS+NOT+*` : '';
+      filterUrl += this.confluenceActivityFilter ? `&${this.confluenceActivityFilter}=activity+IS+NOT+*` : '';
       // Filter to remove all the changes done in Confluence, otherwise they are also shown as part of the component's activity stream
     }
 
