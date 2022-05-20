@@ -75,7 +75,7 @@ export const Content = (props: RSSContentProps) => {
         const link = item.querySelector("link")?.textContent;
         const itemTitle = item.querySelector("title")?.textContent;
         const pubDate = item.querySelector("pubDate")?.textContent;
-        var pubDateString: string;
+        let pubDateString: string | undefined = undefined;
         if (pubDate) {
           const publishedAt = DateTime.fromRFC2822(pubDate);
           pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
@@ -83,12 +83,12 @@ export const Content = (props: RSSContentProps) => {
 
 
         if (link && itemTitle) {
-          var itemComponent;
+          let itemComponent: any;
           if (pubDateString) {
-            itemComponent = <>
+            itemComponent = (<>
               <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
-              <Link className={classes.newItemLink} href={link} target="_blank">{itemTitle}</Link>
-            </>
+              <Link className={classes.newsItemLink} href={link} target="_blank">{itemTitle}</Link>
+            </>);
           } else {
             itemComponent = <a href={link} target="_blank">{itemTitle}</a>;
           }
