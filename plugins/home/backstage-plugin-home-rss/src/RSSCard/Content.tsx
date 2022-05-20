@@ -83,15 +83,11 @@ export const Content = (props: RSSContentProps) => {
 
 
         if (link && itemTitle) {
-          let itemComponent: any;
-          if (pubDateString) {
-            itemComponent = (<>
-              <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
-              <Link className={classes.newsItemLink} href={link} target="_blank">{itemTitle}</Link>
-            </>);
-          } else {
-            itemComponent = <a href={link} target="_blank">{itemTitle}</a>;
-          }
+          const itemComponent = (<>
+            <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
+            <Link className={classes.newsItemLink} href={link} target="_blank">{itemTitle}</Link>
+          </>);
+
           setData((current) => {
             return [...current, {
               title: itemComponent
@@ -110,7 +106,7 @@ export const Content = (props: RSSContentProps) => {
     return (<Box position="relative">
       <Table
           title={title}
-          options={{ search: false, paging: true, showTitle: true }}
+          options={{ search: false, paging: true, showTitle: true, padding: 'dense' }}
         data={data}
       columns={columns} />
     </Box>)
