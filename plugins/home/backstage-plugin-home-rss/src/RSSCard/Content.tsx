@@ -21,11 +21,11 @@ import {useAsync} from "react-use";
 import {Box, Typography, Link, makeStyles} from "@material-ui/core";
 import {DateTime} from "luxon"
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   newsItemDate: {
     marginBottom: theme.spacing(0.5),
     fontSize: "0.9rem",
-    color: "gray"
+    color: theme.palette.text.secondary
   },
   newsItemLink: {
     marginBottom: theme.spacing(3),
