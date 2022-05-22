@@ -18,14 +18,27 @@ import React, { useState } from 'react';
 import {Progress, ErrorPanel, Table} from '@backstage/core-components';
 import { RSSContentProps} from './types';
 import {useAsync} from "react-use";
-import {Box} from "@material-ui/core";
+import {Box, Typography, Link, makeStyles} from "@material-ui/core";
+import {DateTime} from "luxon"
+
+const useStyles = makeStyles((theme) => ({
+  newsItemDate: {
+    marginBottom: theme.spacing(0.5),
+    fontSize: "0.9rem",
+    color: theme.palette.text.secondary
+  },
+  newsItemLink: {
+    marginBottom: theme.spacing(3),
+    fontSize: "1rem",
+  },
+}));
 
 type DataItem = {
   title: any
 }
 
 const columns = [{
-  title: "", field: "title"
+  title: "", field: "title",
 }]
 
 /**
@@ -38,6 +51,7 @@ export const Content = (props: RSSContentProps) => {
   const [data, setData] = useState<DataItem[]>([]);
   const parser = new DOMParser();
   const [title, setTitle] = useState<string | undefined>();
+  const classes = useStyles()
 
   useAsync(async () => {
     if (error) { return }
@@ -60,11 +74,23 @@ export const Content = (props: RSSContentProps) => {
       items.forEach((item) => {
         const link = item.querySelector("link")?.textContent;
         const itemTitle = item.querySelector("title")?.textContent;
+        const pubDate = item.querySelector("pubDate")?.textContent;
+        let pubDateString: string | undefined = undefined;
+        if (pubDate) {
+          const publishedAt = DateTime.fromRFC2822(pubDate);
+          pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
+        }
+
 
         if (link && itemTitle) {
+          const itemComponent = (<>
+            <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
+            <Link className={classes.newsItemLink} href={link} target="_blank">{itemTitle}</Link>
+          </>);
+
           setData((current) => {
             return [...current, {
-              title: <a href={link} target="_blank">{itemTitle}</a>,
+              title: itemComponent
             }]
           })
         }
@@ -80,7 +106,7 @@ export const Content = (props: RSSContentProps) => {
     return (<Box position="relative">
       <Table
           title={title}
-          options={{ search: false, paging: true, showTitle: true }}
+          options={{ search: false, paging: true, showTitle: true, padding: 'dense', header: false }}
         data={data}
       columns={columns} />
     </Box>)
