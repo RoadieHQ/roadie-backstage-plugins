@@ -68,9 +68,11 @@ In general, changesets are not needed for the documentation, build utilities or 
 For more information, checkout [adding a changeset](https://github.com/atlassian/changesets/blob/master/docs/adding-a-changeset.md) documentation in the changesets repository.
 
 
-## Merging to main
+## Releasing Plugins and Packages
 
-Plugins are automatically published when a version bump is merged to the `main` branch. Please include version bumps with your pull requests if you would like them to be released.
+Please include changeset files your pull requests if you would like them to be released. To create a changeset file run `yarn changeset` and commit the resulting file to the pull request.
+
+After merging a changeset file to main, a subsequent pull request is created automatically that makes the actual version bumps of the plugins/packages based on the changeset files. When this pull request is merged, the plugins and packages are automatically published to npm. 
 
 ## Code of Conduct
 
