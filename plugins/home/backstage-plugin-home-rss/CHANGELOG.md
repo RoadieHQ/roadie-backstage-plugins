@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.1
+
+### Patch Changes
+
+- 62d820e: Adds publish date and formatting to the article item rows.
+
 ## 1.0.0
 
 ### Major Changes
