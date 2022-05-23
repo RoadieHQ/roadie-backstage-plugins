@@ -1,6 +1,6 @@
-import { Config } from '@backstage/config';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Logger } from 'winston';
+import {Config} from '@backstage/config';
+import fetch from 'cross-fetch';
+import {Logger} from 'winston';
 
 export type findArgoAppResp = {
   name: string;
@@ -164,29 +164,22 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   async getArgoToken(baseUrl: string): Promise<string> {
-    const options: AxiosRequestConfig = {
+    const options: RequestInit = {
       method: 'POST',
-      url: `${baseUrl}/api/v1/session`,
       headers: {
         'Content-Type': 'application/json',
       },
-      data: {
+      body: JSON.stringify({
         username: `${this.username}`,
         password: `${this.password}`,
-      },
+      }),
     };
-
-    try {
-      const resp = await axios.request(options);
-      return resp.data.token;
-    } catch (e: any) {
-      if (e.response?.status === 401) {
-        throw new Error(`Getting unauthorized for Argo CD instance ${baseUrl}`);
-      }
-      throw new Error(
-        `Could not retrieve ArgoCD token for instance ${baseUrl}`,
-      );
+    const resp = await fetch(`${baseUrl}/api/v1/session`, options);
+    if (resp.status === 401) {
+      throw new Error(`Getting unauthorized for Argo CD instance ${baseUrl}`);
     }
+    const data = await resp.json();
+    return data.token;
   }
 
   async getArgoAppData(
@@ -201,32 +194,29 @@ export class ArgoService implements ArgoServiceApi {
     const urlSuffix = options.name
       ? `/${options.name}`
       : `?selector=${options.selector}`;
-    const requestOptions: AxiosRequestConfig = {
+    const requestOptions: RequestInit = {
       method: 'GET',
-      url: `${baseUrl}/api/v1/applications${urlSuffix}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${argoToken}`,
       },
     };
-    try {
-      const resp = await axios.request(requestOptions);
-      if (resp.data.items) {
-        (resp.data.items as any[]).forEach(item => {
-          item.metadata.instance = { name: argoInstanceName };
-        });
-      } else if (resp.data && options.name) {
-        resp.data.instance = argoInstanceName;
-      } else {
-        throw new Error('Not found');
-      }
-      return resp.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        return error.response?.data;
-      }
+
+    const resp = await fetch(`${baseUrl}/api/v1/applications${urlSuffix}`, requestOptions);
+    if (resp.status === 404) {
       throw new Error('Could not retrieve ArgoCD app data.');
     }
+    const data = await resp.json();
+    if (data.items) {
+      (data.items as any[]).forEach(item => {
+        item.metadata.instance = {name: argoInstanceName};
+      });
+    } else if (data && options.name) {
+      data.instance = argoInstanceName;
+    } else {
+      throw new Error('Not found');
+    }
+    return data;
   }
 
   async createArgoProject({
@@ -257,36 +247,30 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    const options: AxiosRequestConfig = {
+    const options: RequestInit = {
       method: 'POST',
-      url: `${baseUrl}/api/v1/projects`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${argoToken}`,
       },
-      data: data,
+      body: JSON.stringify(data),
     };
-    try {
-      const resp = await axios.request(options);
-      return resp.data;
-    } catch (error: any) {
-      console.error(error);
-      if (error.response?.status === 404) {
-        return error.response?.data;
-      } else if (error.response?.status === 403) {
-        throw new Error(error.response?.data.message);
-      } else if (
-        error.response?.data.message.includes(
-          'existing project spec is different',
-        )
-      ) {
-        throw new Error(
-          'Duplicate project detected. Cannot overwrite existing.',
-        );
-      } else {
-        throw new Error('Could not create ArgoCD project.');
-      }
+    const resp = await fetch(`${baseUrl}/api/v1/projects`, options);
+    const responseData = await resp.json();
+    if (resp.status === 403) {
+      throw new Error(responseData.message);
+    } else if (resp.status === 404) {
+      return resp.json();
+    } else if (
+      JSON.stringify(responseData).includes(
+        'existing project spec is different',
+      )
+    ) {
+      throw new Error(
+        'Duplicate project detected. Cannot overwrite existing.',
+      );
     }
+    return responseData;
   }
 
   async createArgoApplication(
@@ -345,24 +329,17 @@ export class ArgoService implements ArgoServiceApi {
       Authorization: `Bearer ${argoToken}`,
     };
 
-    const options: AxiosRequestConfig = {
+    const options: RequestInit = {
       method: 'POST',
-      url: `${baseUrl}/api/v1/applications`,
       headers: header,
-      data: data,
+      body: JSON.stringify(data),
     };
 
-    try {
-      const resp = await axios.request(options);
-      return resp.data;
-    } catch (error: any) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          `${error.response.status} ${error.response?.data.error}`,
-        );
-      }
+    const resp = await fetch(`${baseUrl}/api/v1/applications`, options);
+    if (!resp.ok) {
       throw new Error('Could not create ArgoCD application.');
     }
+    return resp.json();
   }
 
   async resyncAppOnAllArgos({appSelector}: ResyncProps): Promise<SyncResponse[][]> {
@@ -409,96 +386,71 @@ export class ArgoService implements ArgoServiceApi {
       resources: null,
     };
 
-    try {
-      const resp = await axios.post(
-        `${argoInstance.url}/api/v1/applications/${appName}/sync`,
-        data,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${argoToken}`,
-          },
-        },
-      );
-      if (resp.status === 200) {
-        return {
-          status: 'Success',
-          message: `Re-synced ${appName} on ${argoInstance.name}`,
-        };
-      }
-      throw new Error(`Failed to resync ${appName} on ${argoInstance.name}`);
-    } catch (e: any) {
-      if (axios.isAxiosError(e) && e.response) {
-        const axiosError = `error: ${e.response.data.error}, message: ${e.response.data.message}`;
-        return { status: 'Failure', message: axiosError };
-      }
-
-      return { status: 'Failure', message: e.message };
+    const options: RequestInit = {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+    };
+    const resp = await fetch(`${argoInstance.url}/api/v1/applications/${appName}/sync`, options);
+    if (resp.ok) {
+      return {
+        status: 'Success',
+        message: `Re-synced ${appName} on ${argoInstance.name}`,
+      };
+    }
+    return {
+      message: `Failed to resync ${appName} on ${argoInstance.name}`,
+      status: 'Failure',
     }
   }
 
-  async deleteApp({ baseUrl, argoApplicationName, argoToken }: DeleteApplicationProps): Promise<boolean> {
-    const options: AxiosRequestConfig = {
+  async deleteApp({baseUrl, argoApplicationName, argoToken}: DeleteApplicationProps): Promise<boolean> {
+    const options: RequestInit = {
       method: 'DELETE',
-      url: `${baseUrl}/api/v1/applications/${argoApplicationName}`,
-      params: { cascade: 'true' },
       headers: {
         Authorization: `Bearer ${argoToken}`,
       },
     };
 
-    try {
-      const resp: AxiosResponse = await axios.request(options);
-      if (resp.status === 200) {
-        return true;
-      } else if (resp.status === 403) {
-        throw new Error(resp.data.message);
-      }
-      return false;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        return error.response?.message;
-      } else if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          `${error.response.status} ${error.response?.data.error}`,
-        );
-      } else if (error.message) {
-        throw new Error(error.message);
-      }
-      throw new Error('Could not delete ArgoCD app.');
+    const resp = await fetch(
+      `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams({
+        cascade: 'true',
+      })}`,
+      options
+    );
+    if (resp.ok) {
+      return true;
+    } else if (resp.status === 403 || resp.status === 404) {
+      const data = await resp.json();
+      throw new Error(data.message);
     }
+    return false;
   }
 
   async deleteProject({baseUrl, argoProjectName, argoToken}: DeleteProjectProps): Promise<boolean> {
-    const options: AxiosRequestConfig = {
+    const options: RequestInit = {
       method: 'DELETE',
-      url: `${baseUrl}/api/v1/projects/${argoProjectName}`,
-      params: { cascade: 'true' },
       headers: {
         Authorization: `Bearer ${argoToken}`,
       },
     };
 
-    try {
-      const resp: AxiosResponse = await axios.request(options);
-      if (resp.status === 200) {
-        return true;
-      } else if (resp.status === 403) {
-        throw new Error(resp.data.message);
-      }
-      return false;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        return error.response?.message;
-      } else if (axios.isAxiosError(error) && error.response) {
-        throw new Error(
-          `${error.response.status} ${error.response?.data.error}`,
-        );
-      } else if (error.message) {
-        throw new Error(error.message);
-      }
-      throw new Error('Could not delete ArgoCD project.');
+    const resp = await fetch(
+      `${baseUrl}/api/v1/projects/${argoProjectName}?${new URLSearchParams({
+        cascade: 'true',
+      })}`,
+      options
+    );
+    if (resp.ok) {
+      return true;
+    } else if (resp.status === 403 || resp.status === 404) {
+      const data = await resp.json();
+      throw new Error(data.message);
     }
+    return false;
   }
 
   async createArgoResources({
