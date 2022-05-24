@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.4.0
+
+### Minor Changes
+
+- 16d70f0: Use `cross-fetch` instead of `axios` for rest requests.
+
 ## 2.3.0
 
 ### Minor Changes
