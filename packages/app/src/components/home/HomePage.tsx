@@ -44,14 +44,14 @@ export const HomePage = () => {
               title="AWS News"
             />
           </Grid>
+          <Grid item md={6} xs={12}>
+            <HomepageStoriesCard />
+          </Grid>
           <Grid item xs={12} md={6}>
             <HomePageRSS
               feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
               title="Reuters News"
             />
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <HomepageStoriesCard />
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageMarkdown
