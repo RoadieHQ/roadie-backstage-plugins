@@ -20,7 +20,6 @@ import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useGithubRepositoryData } from '../useGithubRepositoryData';
-// import { Progress } from '@backstage/core-components';
 import {
   GithubSearchPullRequestsDataItem,
   GithubRepositoryData,
