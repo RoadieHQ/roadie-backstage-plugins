@@ -37,6 +37,7 @@ export const useGithubLoggedIn = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    githubApi.getAccessToken('repo', { optional: true });
     const authSubscription = githubApi.sessionState$().subscribe(state => {
       if (state === SessionState.SignedIn) {
         setIsLoggedIn(true);
