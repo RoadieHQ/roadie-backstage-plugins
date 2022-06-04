@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import { Progress, ErrorPanel, Table } from '@backstage/core-components';
+import React from 'react';
+import { ErrorPanel, Table } from '@backstage/core-components';
 import { RSSContentProps } from './types';
 import { useAsync } from 'react-use';
 import { Box, Typography, Link, makeStyles } from '@material-ui/core';
@@ -68,8 +68,6 @@ const skeletonData = [
  * @public
  */
 export const Content = (props: RSSContentProps) => {
-  // const [error, setError] = useState<Error | undefined>();
-  // const [data, setData] = useState<DataItem[]>([]);
   const parser = new DOMParser();
   const classes = useStyles();
 
@@ -128,20 +126,23 @@ export const Content = (props: RSSContentProps) => {
   if (error) {
     return <ErrorPanel error={error} />;
   }
+  let tableData: DataItem[] = [];
+  let title;
+  if (loading) {
+    tableData = skeletonData;
+    title = (
+      <Typography variant="h3">
+        <Skeleton variant="text" width={200} />
+      </Typography>
+    );
+  } else if (value) {
+    tableData = value.data;
+    title = value.title;
+  }
   return (
     <Box position="relative">
       <Table
-        title={
-          loading ? (
-            <Typography variant="h3">
-              <Skeleton variant="text" width={200} />
-            </Typography>
-          ) : value ? (
-            value.title
-          ) : (
-            <></>
-          )
-        }
+        title={title}
         options={{
           search: false,
           paging: true,
@@ -149,7 +150,7 @@ export const Content = (props: RSSContentProps) => {
           padding: 'dense',
           header: false,
         }}
-        data={loading ? skeletonData : value ? value.data : []}
+        data={tableData}
         columns={columns}
       />
     </Box>

@@ -67,6 +67,45 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+export const SkeletonPullRequestItem = () => {
+  const classes = useStyles();
+  return (
+    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
+      <Grid item xs="auto">
+        <Skeleton
+          variant="circle"
+          width={18}
+          height={18}
+          style={{ marginTop: '3px' }}
+        />
+      </Grid>
+      <Grid item xs={10} className={classes.middleColumn}>
+        <Typography variant="body1">
+          <Skeleton variant="text" />
+        </Typography>
+        <Typography variant="caption">
+          <Skeleton variant="text" width={130} />
+        </Typography>
+      </Grid>
+      <Grid
+        item
+        spacing={1}
+        xs={1}
+        style={{ flexShrink: 0, marginLeft: 'auto' }}
+        className={classes.secondaryText}
+      >
+        <Box display="flex" justifyContent="flex-end">
+          <Skeleton
+            variant="circle"
+            width={18}
+            height={18}
+            style={{ marginTop: '3px' }}
+          />
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
 type PullRequestItemProps = {
   pr: GithubSearchPullRequestsDataItem;
 };
@@ -165,55 +204,6 @@ type PullRequestListViewProps = {
   data?: GithubSearchPullRequestsDataItem[];
   emptyStateText: string;
 };
-export const SkeletonPullRequestsListView = () => {
-  const classes = useStyles();
-  return (
-    <Grid container className={classes.container} spacing={1}>
-      <SkeletonPullRequestItem />
-      <SkeletonPullRequestItem />
-      <SkeletonPullRequestItem />
-    </Grid>
-  );
-};
-const SkeletonPullRequestItem = () => {
-  const classes = useStyles();
-  return (
-    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
-      <Grid item xs="auto">
-        <Skeleton
-          variant="circle"
-          width={18}
-          height={18}
-          style={{ marginTop: '3px' }}
-        />
-      </Grid>
-      <Grid item xs={10} className={classes.middleColumn}>
-        <Typography variant="body1">
-          <Skeleton variant="text" />
-        </Typography>
-        <Typography variant="caption">
-          <Skeleton variant="text" width={130} />
-        </Typography>
-      </Grid>
-      <Grid
-        item
-        spacing={1}
-        xs={1}
-        style={{ flexShrink: 0, marginLeft: 'auto' }}
-        className={classes.secondaryText}
-      >
-        <Box display="flex" justifyContent="flex-end">
-          <Skeleton
-            variant="circle"
-            width={18}
-            height={18}
-            style={{ marginTop: '3px' }}
-          />
-        </Box>
-      </Grid>
-    </Grid>
-  );
-};
 
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
@@ -242,6 +232,17 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       {data.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
+    </Grid>
+  );
+};
+
+export const SkeletonPullRequestsListView = () => {
+  const classes = useStyles();
+  return (
+    <Grid container className={classes.container} spacing={1}>
+      <SkeletonPullRequestItem />
+      <SkeletonPullRequestItem />
+      <SkeletonPullRequestItem />
     </Grid>
   );
 };
