@@ -130,11 +130,7 @@ export const Content = (props: RSSContentProps) => {
   let title;
   if (loading) {
     tableData = skeletonData;
-    title = (
-      <Typography variant="h3">
-        <Skeleton variant="text" width={200} />
-      </Typography>
-    );
+    title = <Skeleton variant="text" width={200} />;
   } else if (value) {
     tableData = value.data;
     title = value.title;

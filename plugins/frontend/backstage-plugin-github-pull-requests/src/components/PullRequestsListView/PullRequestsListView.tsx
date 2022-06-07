@@ -89,7 +89,6 @@ export const SkeletonPullRequestItem = () => {
       </Grid>
       <Grid
         item
-        spacing={1}
         xs={1}
         style={{ flexShrink: 0, marginLeft: 'auto' }}
         className={classes.secondaryText}
