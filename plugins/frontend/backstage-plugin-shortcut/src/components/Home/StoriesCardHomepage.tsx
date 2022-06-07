@@ -220,10 +220,9 @@ const StoriesCardContent = () => {
   const { value, loading, error } = useAsync(async () => {
     const profile = await identityApi.getProfileInfo();
     const allMembers = await api.getUsers();
-    // const loggedUser = allMembers?.find(
-    //   user => user.profile.email_address === profile.email,
-    // )?.profile.mention_name;
-    const loggedUser = 'mikloskiss';
+    const loggedUser = allMembers?.find(
+      user => user.profile.email_address === profile.email,
+    )?.profile.mention_name;
 
     const stories = await api.fetchStories({
       owner: loggedUser ? loggedUser : undefined,
