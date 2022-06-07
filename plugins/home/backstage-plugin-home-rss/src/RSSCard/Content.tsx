@@ -76,52 +76,42 @@ export const Content = (props: RSSContentProps) => {
       Accept: 'application/rss+xml',
     });
 
-    try {
-      const response = await fetch(props.feedURL, { headers: headers });
-      if (response.status !== 200) {
-        throw new Error(`Failed to retrieve RSS Feed: ${response.status}`);
+    const response = await fetch(props.feedURL, { headers: headers });
+
+    const body = await response.text();
+    const feedData = parser.parseFromString(body, 'application/xml');
+    const title = feedData.querySelector('title')?.textContent || undefined;
+
+    const items = feedData.querySelectorAll('item');
+    const result: DataItem[] = [];
+    items.forEach(item => {
+      const link = item.querySelector('link')?.textContent;
+      const itemTitle = item.querySelector('title')?.textContent;
+      const pubDate = item.querySelector('pubDate')?.textContent;
+      let pubDateString: string | undefined = undefined;
+      if (pubDate) {
+        const publishedAt = DateTime.fromRFC2822(pubDate);
+        pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
       }
-      const body = await response.text();
-      const feedData = parser.parseFromString(body, 'application/xml');
-      const title = feedData.querySelector('title')?.textContent || undefined;
 
-      const items = feedData.querySelectorAll('item');
-      const result: DataItem[] = [];
-      items.forEach(item => {
-        const link = item.querySelector('link')?.textContent;
-        const itemTitle = item.querySelector('title')?.textContent;
-        const pubDate = item.querySelector('pubDate')?.textContent;
-        let pubDateString: string | undefined = undefined;
-        if (pubDate) {
-          const publishedAt = DateTime.fromRFC2822(pubDate);
-          pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
-        }
+      if (link && itemTitle) {
+        const itemComponent = (
+          <>
+            <Typography className={classes.newsItemDate}>
+              {pubDateString}
+            </Typography>
+            <Link className={classes.newsItemLink} href={link} target="_blank">
+              {itemTitle}
+            </Link>
+          </>
+        );
 
-        if (link && itemTitle) {
-          const itemComponent = (
-            <>
-              <Typography className={classes.newsItemDate}>
-                {pubDateString}
-              </Typography>
-              <Link
-                className={classes.newsItemLink}
-                href={link}
-                target="_blank"
-              >
-                {itemTitle}
-              </Link>
-            </>
-          );
-
-          result.push({
-            title: itemComponent,
-          });
-        }
-      });
-      return { data: result, title };
-    } catch (e: any) {
-      throw new Error(`Failed to retrieve RSS Feed: ${e.message}`);
-    }
+        result.push({
+          title: itemComponent,
+        });
+      }
+    });
+    return { data: result, title };
   }, []);
   if (error) {
     return <ErrorPanel error={error} />;
