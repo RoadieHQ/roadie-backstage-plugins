@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.1.3
+
+### Patch Changes
+
+- 3b8e092: Check for cached access token to determine logged in state
+
 ## 2.1.2
 
 ### Patch Changes
