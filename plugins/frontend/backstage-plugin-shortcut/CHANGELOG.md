@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.8
+
+### Patch Changes
+
+- 23fa1c0: Add skeleton as loading state instead of progress
+
 ## 1.0.7
 
 ### Patch Changes
