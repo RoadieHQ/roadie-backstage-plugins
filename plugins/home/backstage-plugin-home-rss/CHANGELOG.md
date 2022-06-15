@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.2
+
+### Patch Changes
+
+- f2f267b: Add skeleton rows as loading state
+
 ## 1.0.1
 
 ### Patch Changes

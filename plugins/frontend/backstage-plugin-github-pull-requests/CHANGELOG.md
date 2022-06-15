@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.1.4
+
+### Patch Changes
+
+- e44cd57: Add skeleton as loading state instead of a progress bar
+
 ## 2.1.3
 
 ### Patch Changes
