@@ -14,32 +14,53 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
-import {Progress, ErrorPanel, Table} from '@backstage/core-components';
-import { RSSContentProps} from './types';
-import {useAsync} from "react-use";
-import {Box, Typography, Link, makeStyles} from "@material-ui/core";
-import {DateTime} from "luxon"
+import React from 'react';
+import { ErrorPanel, Table } from '@backstage/core-components';
+import { RSSContentProps } from './types';
+import { useAsync } from 'react-use';
+import { Box, Typography, Link, makeStyles } from '@material-ui/core';
+import { DateTime } from 'luxon';
+import { Skeleton } from '@material-ui/lab';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   newsItemDate: {
     marginBottom: theme.spacing(0.5),
-    fontSize: "0.9rem",
-    color: theme.palette.text.secondary
+    fontSize: '0.9rem',
+    color: theme.palette.text.secondary,
   },
   newsItemLink: {
     marginBottom: theme.spacing(3),
-    fontSize: "1rem",
+    fontSize: '1rem',
   },
 }));
 
 type DataItem = {
-  title: any
-}
+  title: any;
+};
 
-const columns = [{
-  title: "", field: "title",
-}]
+const columns = [
+  {
+    title: '',
+    field: 'title',
+  },
+];
+const skeletonDataItem = {
+  title: (
+    <>
+      <Skeleton variant="text" width={100} />
+      <Typography variant="body1">
+        <Skeleton variant="text" />
+      </Typography>
+    </>
+  ),
+};
+const skeletonData = [
+  skeletonDataItem,
+  skeletonDataItem,
+  skeletonDataItem,
+  skeletonDataItem,
+  skeletonDataItem,
+];
 
 /**
  * A component to render a RSS feed
@@ -47,70 +68,77 @@ const columns = [{
  * @public
  */
 export const Content = (props: RSSContentProps) => {
-  const [error, setError] = useState<Error | undefined>();
-  const [data, setData] = useState<DataItem[]>([]);
   const parser = new DOMParser();
-  const [title, setTitle] = useState<string | undefined>();
-  const classes = useStyles()
+  const classes = useStyles();
 
-  useAsync(async () => {
-    if (error) { return }
-    if (data.length > 0) { return }
+  const { value, loading, error } = useAsync(async () => {
     const headers = new Headers({
-      "Accept": "application/rss+xml"
+      Accept: 'application/rss+xml',
     });
 
-    try {
-      const response = await fetch(props.feedURL, { headers: headers });
-      if (response.status !== 200) {
-        setError(new Error(`Failed to retrieve RSS Feed: ${response.status}`));
-        return;
+    const response = await fetch(props.feedURL, { headers: headers });
+
+    const body = await response.text();
+    const feedData = parser.parseFromString(body, 'application/xml');
+    const title = feedData.querySelector('title')?.textContent || undefined;
+
+    const items = feedData.querySelectorAll('item');
+    const result: DataItem[] = [];
+    items.forEach(item => {
+      const link = item.querySelector('link')?.textContent;
+      const itemTitle = item.querySelector('title')?.textContent;
+      const pubDate = item.querySelector('pubDate')?.textContent;
+      let pubDateString: string | undefined = undefined;
+      if (pubDate) {
+        const publishedAt = DateTime.fromRFC2822(pubDate);
+        pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
       }
-      const body = await response.text();
-      const feedData = parser.parseFromString(body, "application/xml");
-      setTitle(feedData.querySelector('title')?.textContent || undefined);
 
-      const items = feedData.querySelectorAll("item");
-      items.forEach((item) => {
-        const link = item.querySelector("link")?.textContent;
-        const itemTitle = item.querySelector("title")?.textContent;
-        const pubDate = item.querySelector("pubDate")?.textContent;
-        let pubDateString: string | undefined = undefined;
-        if (pubDate) {
-          const publishedAt = DateTime.fromRFC2822(pubDate);
-          pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
-        }
+      if (link && itemTitle) {
+        const itemComponent = (
+          <>
+            <Typography className={classes.newsItemDate}>
+              {pubDateString}
+            </Typography>
+            <Link className={classes.newsItemLink} href={link} target="_blank">
+              {itemTitle}
+            </Link>
+          </>
+        );
 
-
-        if (link && itemTitle) {
-          const itemComponent = (<>
-            <Typography className={classes.newsItemDate}>{pubDateString}</Typography>
-            <Link className={classes.newsItemLink} href={link} target="_blank">{itemTitle}</Link>
-          </>);
-
-          setData((current) => {
-            return [...current, {
-              title: itemComponent
-            }]
-          })
-        }
-      })
-    } catch (e: any) {
-      setError(new Error(`Failed to retrieve RSS Feed: ${e.message}`));
-    };
-  }, [data, setData])
-
+        result.push({
+          title: itemComponent,
+        });
+      }
+    });
+    return { data: result, title };
+  }, []);
   if (error) {
-    return <ErrorPanel error={error}/>
-  } else if (data) {
-    return (<Box position="relative">
-      <Table
-          title={title}
-          options={{ search: false, paging: true, showTitle: true, padding: 'dense', header: false }}
-        data={data}
-      columns={columns} />
-    </Box>)
+    return <ErrorPanel error={error} />;
   }
-
-  return <Progress/>
+  let tableData: DataItem[] = [];
+  let title;
+  if (loading) {
+    tableData = skeletonData;
+    title = <Skeleton variant="text" width={200} />;
+  } else if (value) {
+    tableData = value.data;
+    title = value.title;
+  }
+  return (
+    <Box position="relative">
+      <Table
+        title={title}
+        options={{
+          search: false,
+          paging: true,
+          showTitle: true,
+          padding: 'dense',
+          header: false,
+        }}
+        data={tableData}
+        columns={columns}
+      />
+    </Box>
+  );
 };

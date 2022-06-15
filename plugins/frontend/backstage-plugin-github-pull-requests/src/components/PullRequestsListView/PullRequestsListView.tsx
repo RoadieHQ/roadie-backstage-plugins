@@ -15,17 +15,18 @@
  */
 import React from 'react';
 
-import { Grid, Link } from '@material-ui/core';
+import { Box, Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { useGithubRepositoryData } from '../useGithubRepositoryData';
-import { Progress } from '@backstage/core-components';
 import {
   GithubSearchPullRequestsDataItem,
   GithubRepositoryData,
 } from '../../types';
 import Alert from '@material-ui/lab/Alert';
+
+import Skeleton from '@material-ui/lab/Skeleton';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -66,6 +67,44 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+export const SkeletonPullRequestItem = () => {
+  const classes = useStyles();
+  return (
+    <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
+      <Grid item xs="auto">
+        <Skeleton
+          variant="circle"
+          width={18}
+          height={18}
+          style={{ marginTop: '3px' }}
+        />
+      </Grid>
+      <Grid item xs={10} className={classes.middleColumn}>
+        <Typography variant="body1">
+          <Skeleton variant="text" />
+        </Typography>
+        <Typography variant="caption">
+          <Skeleton variant="text" width={130} />
+        </Typography>
+      </Grid>
+      <Grid
+        item
+        xs={1}
+        style={{ flexShrink: 0, marginLeft: 'auto' }}
+        className={classes.secondaryText}
+      >
+        <Box display="flex" justifyContent="flex-end">
+          <Skeleton
+            variant="circle"
+            width={18}
+            height={18}
+            style={{ marginTop: '3px' }}
+          />
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
 type PullRequestItemProps = {
   pr: GithubSearchPullRequestsDataItem;
 };
@@ -82,7 +121,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
     loading: boolean;
   } = useGithubRepositoryData(pr.repositoryUrl);
 
-  if (loading) return <Progress />;
+  if (loading) return <SkeletonPullRequestItem />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (
@@ -92,28 +131,34 @@ const PullRequestItem = (props: PullRequestItemProps) => {
       </Grid>
       <Grid item xs={10} className={classes.middleColumn}>
         <Typography variant="body1" noWrap className={classes.title}>
-          {repoData ? (
-            <Link
-              className={`${classes.secondaryText} ${classes.link}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              underline="none"
-              href={repoData.htmlUrl}
-            >
-              {repoData.fullName}
-            </Link>
+          {loading ? (
+            <Skeleton variant="text" />
           ) : (
-            <></>
+            <>
+              {repoData ? (
+                <Link
+                  className={`${classes.secondaryText} ${classes.link}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  underline="none"
+                  href={repoData.htmlUrl}
+                >
+                  {repoData.fullName}
+                </Link>
+              ) : (
+                <></>
+              )}
+              <Link
+                className={classes.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                underline="none"
+                href={pr.pullRequest.htmlUrl}
+              >
+                {pr.title}
+              </Link>
+            </>
           )}
-          <Link
-            className={classes.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="none"
-            href={pr.pullRequest.htmlUrl}
-          >
-            {pr.title}
-          </Link>
         </Typography>
         <Typography variant="caption" className={classes.secondaryText}>
           #{pr.number} opened by{' '}
@@ -135,7 +180,7 @@ const PullRequestItem = (props: PullRequestItemProps) => {
         container
         spacing={1}
         xs={1}
-        style={{ paddingRight: '1rem', flexShrink: 0 }}
+        style={{ flexShrink: 0, marginLeft: 'auto' }}
         className={classes.secondaryText}
       >
         <Grid item>
@@ -158,6 +203,7 @@ type PullRequestListViewProps = {
   data?: GithubSearchPullRequestsDataItem[];
   emptyStateText: string;
 };
+
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
   const classes = useStyles();
@@ -185,6 +231,17 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       {data.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
+    </Grid>
+  );
+};
+
+export const SkeletonPullRequestsListView = () => {
+  const classes = useStyles();
+  return (
+    <Grid container className={classes.container} spacing={1}>
+      <SkeletonPullRequestItem />
+      <SkeletonPullRequestItem />
+      <SkeletonPullRequestItem />
     </Grid>
   );
 };

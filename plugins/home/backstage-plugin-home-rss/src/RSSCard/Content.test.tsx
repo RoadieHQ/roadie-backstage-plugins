@@ -16,38 +16,34 @@
 
 import React from 'react';
 import { AnyApiRef } from '@backstage/core-plugin-api';
-import {
-  wrapInTestApp,
-  TestApiProvider,
-} from '@backstage/test-utils';
+import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { render, screen, cleanup } from '@testing-library/react';
 import { Content } from './Content';
 // eslint-disable-next-line no-restricted-imports
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
-const rssFeed = readFileSync('fixtures/rssFeed.xml', "utf-8");
+const rssFeed = readFileSync('fixtures/rssFeed.xml', 'utf-8');
 
 global.fetch = jest.fn(async (url: string) => {
-      if (url.endsWith('test-feed')) {
-        return {
-          text: () => rssFeed,
-          status: 200,
-          headers: {
-            "Content-Type": "application/rss+xml"
-          }
-        }
-      } else if (url.endsWith('not-found')) {
-        return {
-          data: "Not Found",
-          status: 404,
-          headers: {
-            "Content-Type": "plain/text"
-          },
-        }
-      }
-      throw new Error('Unexpected Error');
-    }
-) as jest.Mock;
+  if (url.endsWith('test-feed')) {
+    return {
+      text: () => rssFeed,
+      status: 200,
+      headers: {
+        'Content-Type': 'application/rss+xml',
+      },
+    };
+  } else if (url.endsWith('not-found')) {
+    return {
+      data: 'Not Found',
+      status: 404,
+      headers: {
+        'Content-Type': 'plain/text',
+      },
+    };
+  }
+  throw new Error('Unexpected Error');
+}) as jest.Mock;
 
 // RSSContent uses rect-RSS which throws a type error in the tests so we are mocking it checking the plain text in the components.
 jest.mock('@backstage/core-components', () => ({
@@ -66,48 +62,14 @@ describe('<RSSContent>', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <Content
-            feedURL="https://example.com/test-feed"
-          />
+          <Content feedURL="https://example.com/test-feed" />
         </TestApiProvider>,
       ),
       {},
     );
 
-    expect(await screen.findByText('Example entry', { exact: true })).toBeInTheDocument();
+    expect(
+      await screen.findByText('Example entry', { exact: true }),
+    ).toBeInTheDocument();
   });
-
-  describe('where there is an error retrieving the feed', () => {
-    it('should render an error card', async () => {
-      render(
-          wrapInTestApp(
-              <TestApiProvider apis={apis}>
-                <Content
-                    feedURL="https://example.com/not-found"
-                />
-              </TestApiProvider>,
-          ),
-          {},
-      );
-
-      expect(await screen.findByText('Failed to retrieve RSS Feed: 404', { exact: true })).toBeInTheDocument();
-    });
-  })
-
-  describe('where there is an unexpected error retrieving the feed', () => {
-    it('should render an error card', async () => {
-      render(
-          wrapInTestApp(
-              <TestApiProvider apis={apis}>
-                <Content
-                    feedURL="https://example.com/bad-url"
-                />
-              </TestApiProvider>,
-          ),
-          {},
-      );
-
-      expect(await screen.findByText('Failed to retrieve RSS Feed: Unexpected Error', { exact: true })).toBeInTheDocument();
-    });
-  })
 });

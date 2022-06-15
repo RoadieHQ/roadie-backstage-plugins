@@ -14,4 +14,7 @@
  * limitations under the License.
  */
 
-export { PullRequestsListView } from './PullRequestsListView';
+export {
+  PullRequestsListView,
+  SkeletonPullRequestsListView,
+} from './PullRequestsListView';

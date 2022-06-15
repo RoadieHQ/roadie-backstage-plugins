@@ -15,13 +15,15 @@
  */
 import React from 'react';
 
-import { PullRequestsListView } from '../../PullRequestsListView';
+import {
+  PullRequestsListView,
+  SkeletonPullRequestsListView,
+} from '../../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
 import {
   useGithubLoggedIn,
   GithubNotAuthorized,
 } from '../../useGithubLoggedIn';
-import { Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 
 const RequestedReviewsContet = () => {
@@ -29,7 +31,7 @@ const RequestedReviewsContet = () => {
     `is:open is:pr review-requested:@me archived:false`,
   );
 
-  if (loading) return <Progress />;
+  if (loading) return <SkeletonPullRequestsListView />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (

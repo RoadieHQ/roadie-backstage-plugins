@@ -15,9 +15,11 @@
  */
 import React from 'react';
 
-import { PullRequestsListView } from '../../PullRequestsListView';
+import {
+  PullRequestsListView,
+  SkeletonPullRequestsListView,
+} from '../../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
-import { Progress } from '@backstage/core-components';
 import {
   useGithubLoggedIn,
   GithubNotAuthorized,
@@ -29,7 +31,7 @@ const OpenPullRequestsContent = () => {
     `is:open is:pr author:@me archived:false`,
   );
 
-  if (loading) return <Progress />;
+  if (loading) return <SkeletonPullRequestsListView />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (

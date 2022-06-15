@@ -23,7 +23,6 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { Progress } from '@backstage/core-components';
 import { Story } from '../../api/types';
 import { useAsync } from 'react-use';
 import {
@@ -31,7 +30,7 @@ import {
   identityApiRef,
   useApi,
 } from '@backstage/core-plugin-api';
-import { Alert } from '@material-ui/lab';
+import { Alert, Skeleton } from '@material-ui/lab';
 import BugReport from '@material-ui/icons/BugReport';
 import Star from '@material-ui/icons/Star';
 import Build from '@material-ui/icons/Build';
@@ -169,6 +168,48 @@ const StoryItem = ({ story }: { story: Story }) => {
     </Box>
   );
 };
+const SkeletonStoryItem = () => {
+  const classes = useStyles();
+  return (
+    <Box margin={1} padding={2} className={classes.listStyle}>
+      <Grid item xs={12}>
+        <Grid item>
+          <Typography variant="body1" className={classes.title}>
+            <Skeleton variant="text" />
+          </Typography>
+        </Grid>
+        <Grid container className={classes.subtitleContainer}>
+          <Grid item>
+            <Typography variant="caption" className={classes.subtitleIcon}>
+              <Skeleton variant="text" width={100} />
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">
+              <Skeleton variant="text" width={100} />
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+const SkeletonStoryView = () => {
+  const classes = useStyles();
+  return (
+    <Grid
+      container
+      className={classes.mainContainer}
+      spacing={1}
+      direction="column"
+    >
+      <SkeletonStoryItem />
+      <SkeletonStoryItem />
+      <SkeletonStoryItem />
+      <SkeletonStoryItem />
+    </Grid>
+  );
+};
 
 const StoriesCardContent = () => {
   const identityApi = useApi(identityApiRef);
@@ -195,7 +236,12 @@ const StoriesCardContent = () => {
   });
 
   if (loading) {
-    return <Progress />;
+    return (
+      <>
+        <Skeleton variant="text" width={250} />
+        <SkeletonStoryView />
+      </>
+    );
   } else if (error) {
     return <Alert severity="error">{error?.message}</Alert>;
   }
