@@ -14,50 +14,29 @@
  * limitations under the License.
  */
 
-import {
-  ANNOTATION_LOCATION,
-  ANNOTATION_ORIGIN_LOCATION,
-} from '@backstage/catalog-model';
-import {
-  EntityProvider,
-  EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { DynamoDB } from '@aws-sdk/client-dynamodb';
-import { STS } from '@aws-sdk/client-sts';
 import { Config } from '@backstage/config';
 import * as winston from 'winston';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS DynamoDB service.
  */
-export class AWSDynamoDbTableProvider implements EntityProvider {
-  private readonly accountId: string;
-  private readonly roleArn: string;
-  private readonly logger: winston.Logger;
-
-  private connection?: EntityProviderConnection;
-
+export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
-    return new AWSDynamoDbTableProvider(
-      config.getString('accountId'),
-      config.getString('roleArn'),
-      options.logger,
-    );
-  }
+    const accountId = config.getString('accountId');
+    const roleArn = config.getString('roleArn');
+    const externalId = config.getOptionalString('externalId');
+    const region = config.getString('region');
 
-  constructor(accountId: string, roleArn: string, logger: winston.Logger) {
-    this.accountId = accountId;
-    this.roleArn = roleArn;
-    this.logger = logger;
+    return new AWSDynamoDbTableProvider(
+      { accountId, roleArn, externalId, region },
+      options,
+    );
   }
 
   getProviderName(): string {
     return `aws-dynamo-db-table-${this.accountId}`;
-  }
-
-  async connect(connection: EntityProviderConnection): Promise<void> {
-    this.connection = connection;
   }
 
   async run(): Promise<void> {
@@ -65,23 +44,12 @@ export class AWSDynamoDbTableProvider implements EntityProvider {
       throw new Error('Not initialized');
     }
 
-    const credentials = fromTemporaryCredentials({
-      params: { RoleArn: this.roleArn },
-    });
+    const credentials = this.getCredentials();
     const ddb = new DynamoDB({ credentials });
-    const account = await new STS({ credentials }).getCallerIdentity({});
-
-    const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-    };
-
-    if (account.Account) {
-      defaultAnnotations['amazon.com/account-id'] = account.Account;
-    }
+    const defaultAnnotations = await this.buildDefaultAnnotations();
 
     this.logger.info(
-      `Retrieving all DynamoDB tables for account ${account.Account}`,
+      `Retrieving all DynamoDB tables for account ${this.accountId}`,
     );
     const tables = await ddb.listTables({});
 

@@ -94,6 +94,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       }
     }
 
+    console.log(`applying mutation ${userResources.length}`);
     await this.connection.applyMutation({
       type: 'full',
       entities: userResources.map(entity => ({
@@ -101,5 +102,6 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
         locationKey: `aws-iam-user-provider:${this.accountId}`,
       })),
     });
+    console.log('applied mutation');
   }
 }
