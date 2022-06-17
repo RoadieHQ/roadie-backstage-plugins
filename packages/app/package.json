@@ -23,7 +23,7 @@
     "@backstage/plugin-home": "^0.4.16",
     "@backstage/plugin-org": "^0.5.0",
     "@backstage/plugin-scaffolder": "^1.0.0",
-    "@backstage/plugin-search": "^0.8.0",
+    "@backstage/plugin-search": "^0.9.0",
     "@backstage/plugin-tech-radar": "^0.5.0",
     "@backstage/plugin-techdocs": "^1.0.0",
     "@backstage/plugin-user-settings": "^0.4.0",
