@@ -18,7 +18,7 @@ import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-backend';
-import winston from 'winston';
+import * as winston from 'winston';
 import { AccountConfig } from '../types';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { STS } from '@aws-sdk/client-sts';
