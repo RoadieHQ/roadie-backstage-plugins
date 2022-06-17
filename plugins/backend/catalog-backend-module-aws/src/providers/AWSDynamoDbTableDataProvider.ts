@@ -31,6 +31,7 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
 import * as winston from 'winston';
+import { buildDefaultAnnotations } from '../utils/buildDefaultAnnotations';
 
 export type ValueMapping = {
   entityPath: string;
@@ -99,17 +100,11 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     );
     const dynamoDBClient = new DynamoDB({ credentials });
 
-    const account = await new STS({ credentials }).getCallerIdentity({});
-
-    const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      'amazon.com/dynamodb-table-name': this.tableDataConfig.tableName,
-    };
-
-    if (account.Account) {
-      defaultAnnotations['amazon.com/account-id'] = account.Account;
-    }
+    const defaultAnnotations = buildDefaultAnnotations({
+      credentials,
+      roleArn: this.roleArn,
+      providerName: this.getProviderName(),
+    });
 
     this.logger.info(`Querying table ${this.tableDataConfig.tableName}`);
 
@@ -130,13 +125,13 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
       }
       const tableArn = tableDescription?.Table?.TableArn;
       const entities =
-        tableRows.Items?.map(row => {
+        (await tableRows.Items?.map(async row => {
           const o = {
             kind: 'Component',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations: {
-                ...defaultAnnotations,
+                ...(await defaultAnnotations),
                 ...(tableArn ? { 'amazon.com/dynamo-db-table': tableArn } : {}),
               },
               name: row[idColumn],
@@ -154,7 +149,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
               )
             : {};
           return merge(o, mappedColumns);
-        }) ?? [];
+        })) ?? [];
 
       await this.connection.applyMutation({
         type: 'full',

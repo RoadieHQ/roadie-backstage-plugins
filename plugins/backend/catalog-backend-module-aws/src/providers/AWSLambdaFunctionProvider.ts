@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-import {
-  ANNOTATION_LOCATION,
-  ANNOTATION_ORIGIN_LOCATION,
-  ANNOTATION_VIEW_URL,
-  ComponentEntity,
-} from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, ComponentEntity } from '@backstage/catalog-model';
 import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-backend';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { Lambda } from '@aws-sdk/client-lambda';
-import { STS } from '@aws-sdk/client-sts';
-import * as winston from "winston";
-import {Config} from "@backstage/config";
-import {AccountConfig} from "../types";
+import * as winston from 'winston';
+import { Config } from '@backstage/config';
+import { AccountConfig } from '../types';
+import { buildDefaultAnnotations } from '../utils/buildDefaultAnnotations';
 
 const link2aws = require('link2aws');
 
@@ -51,7 +46,10 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSLambdaFunctionProvider({ accountId, roleArn, externalId, region }, options)
+    return new AWSLambdaFunctionProvider(
+      { accountId, roleArn, externalId, region },
+      options,
+    );
   }
 
   constructor(account: AccountConfig, options: { logger: winston.Logger }) {
@@ -75,58 +73,55 @@ export class AWSLambdaFunctionProvider implements EntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(`Providing lambda function resources from aws: ${this.accountId}`)
+    this.logger.info(
+      `Providing lambda function resources from aws: ${this.accountId}`,
+    );
 
     const lambdaComponents: ComponentEntity[] = [];
 
-      const credentials = fromTemporaryCredentials({
-        params: {RoleArn: this.roleArn, ExternalId: this.externalId},
-      });
-      const lambda = new Lambda({ credentials, region: this.region });
-      const sts = new STS({credentials});
+    const credentials = fromTemporaryCredentials({
+      params: { RoleArn: this.roleArn, ExternalId: this.externalId },
+    });
+    const lambda = new Lambda({ credentials, region: this.region });
 
-      const account = await sts.getCallerIdentity({});
+    const defaultAnnotations = buildDefaultAnnotations({
+      credentials,
+      roleArn: this.roleArn,
+      providerName: this.getProviderName(),
+    });
 
-      const defaultAnnotations: { [name: string]: string } = {
-        [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-        [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      };
+    const functions = await lambda.listFunctions({});
 
-      if (account.Account) {
-        defaultAnnotations['amazon.com/account-id'] = account.Account;
-      }
-
-      const functions = await lambda.listFunctions({ });
-
-      for (const lambdaFunction of functions.Functions || []) {
-        if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
-          const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn).consoleLink;
-          lambdaComponents.push({
-            kind: 'Component',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
-              },
-              name: lambdaFunction.FunctionName,
+    for (const lambdaFunction of functions.Functions || []) {
+      if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
+        const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn)
+          .consoleLink;
+        lambdaComponents.push({
+          kind: 'Component',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...(await defaultAnnotations),
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
             },
-            spec: {
-              owner: 'unknown',
-              type: 'lambda-function',
-              lifecycle: 'production',
-            },
-          });
-        }
+            name: lambdaFunction.FunctionName,
+          },
+          spec: {
+            owner: 'unknown',
+            type: 'lambda-function',
+            lifecycle: 'production',
+          },
+        });
       }
+    }
 
-      await this.connection.applyMutation({
-        type: 'full',
-        entities: lambdaComponents.map(entity => ({
-          entity,
-          locationKey: `aws-lambda-function-provider:${this.accountId}`,
-        })),
-      });
+    await this.connection.applyMutation({
+      type: 'full',
+      entities: lambdaComponents.map(entity => ({
+        entity,
+        locationKey: `aws-lambda-function-provider:${this.accountId}`,
+      })),
+    });
   }
 }
