@@ -19,6 +19,7 @@ import { IAM, paginateListRoles } from '@aws-sdk/client-iam';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 
 const link2aws = require('link2aws');
 
@@ -75,7 +76,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             metadata: {
               annotations: {
                 ...(await defaultAnnotations),
-                'amazon.com/iam-role-arn': role.Arn,
+                [ANNOTATION_AWS_IAM_ROLE_ARN]: role.Arn,
                 [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
               name: role.RoleId,

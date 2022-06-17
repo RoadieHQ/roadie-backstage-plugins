@@ -14,5 +14,4 @@
  * limitations under the License.
  */
 
-export * from './providers';
-export * from './processors';
+export { AWSIAMRoleProcessor } from './AWSIAMRoleProcessor';

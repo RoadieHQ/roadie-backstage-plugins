@@ -19,6 +19,10 @@ import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import {
+  ANNOTATION_AWS_IAM_ROLE_ARN,
+  ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
+} from '../annotations';
 
 const link2aws = require('link2aws');
 
@@ -74,10 +78,10 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
             [ANNOTATION_VIEW_URL]: consoleLink,
-            'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
+            [ANNOTATION_AWS_LAMBDA_FUNCTION_ARN]: lambdaFunction.FunctionArn,
           };
           if (lambdaFunction.Role) {
-            annotations['amazon.com/iam-role-arn'] = lambdaFunction.Role;
+            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = lambdaFunction.Role;
           }
           lambdaComponents.push({
             kind: 'Component',

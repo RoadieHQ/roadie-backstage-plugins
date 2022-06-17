@@ -13,6 +13,7 @@ import {
   AWSDynamoDbTableProvider,
   AWSDynamoDbTableDataProvider,
   AWSIAMRoleProvider,
+  AWSIAMRoleProcessor,
 } from '@roadiehq/catalog-backend-module-aws';
 import { Duration } from 'luxon';
 
@@ -24,6 +25,7 @@ export default async function createPlugin(
   };
   const builder = await CatalogBuilder.create(env);
   const providers: RunnableProvider[] = [];
+  builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
   for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
     []) {
     const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
@@ -66,7 +68,7 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 1 }),
+      frequency: Duration.fromObject({ minutes: 5 }),
       timeout: Duration.fromObject({ minutes: 10 }),
     });
   }

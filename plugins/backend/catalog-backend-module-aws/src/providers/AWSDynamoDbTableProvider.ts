@@ -19,6 +19,7 @@ import { Config } from '@backstage/config';
 import * as winston from 'winston';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ComponentEntity } from '@backstage/catalog-model';
+import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -79,7 +80,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 metadata: {
                   annotations: {
                     ...defaultAnnotations,
-                    'amazon.com/dynamo-db-table-arn': table.TableArn,
+                    [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
                   },
                   name: table.TableName.slice(0, 62),
                 },

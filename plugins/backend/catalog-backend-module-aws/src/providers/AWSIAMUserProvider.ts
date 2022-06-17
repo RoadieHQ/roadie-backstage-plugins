@@ -19,6 +19,7 @@ import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 
 const link2aws = require('link2aws');
 
@@ -75,7 +76,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
             metadata: {
               annotations: {
                 ...(await defaultAnnotations),
-                'amazon.com/iam-user-arn': user.Arn,
+                [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
                 [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
               name: user.UserId,
