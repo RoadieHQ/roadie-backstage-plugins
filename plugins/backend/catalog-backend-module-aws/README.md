@@ -7,32 +7,32 @@ You will need to configure the providers in your catalog.ts file in your backsta
 
 ```typescript
 import {
-    AWSLambdaFunctionProvider,
-    AWSS3BucketProvider,
-    AWSIAMUserProvider
+  AWSLambdaFunctionProvider,
+  AWSS3BucketProvider,
+  AWSIAMUserProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 
 export default async function createPlugin(
-    env: PluginEnvironment,
+  env: PluginEnvironment,
 ): Promise<Router> {
-    const builder = await CatalogBuilder.create(env);
-    const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
-    const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
-    const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
+  const builder = await CatalogBuilder.create(env);
+  const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
+  const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
+  const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
 
-    builder.addEntityProvider(s3Provider);
-    builder.addEntityProvider(lambdaProvider);
-    builder.addEntityProvider(iamUserProvider);
-    
-    s3Provider.run();
-    lambdaProvider.run();
-    iamUserProvider.run();
+  builder.addEntityProvider(s3Provider);
+  builder.addEntityProvider(lambdaProvider);
+  builder.addEntityProvider(iamUserProvider);
 
-    const { processingEngine, router } = await builder.build();
-    await processingEngine.start();
+  s3Provider.run();
+  lambdaProvider.run();
+  iamUserProvider.run();
 
-    // ...
-    
-    return router;
+  const { processingEngine, router } = await builder.build();
+  await processingEngine.start();
+
+  // ...
+
+  return router;
 }
 ```
