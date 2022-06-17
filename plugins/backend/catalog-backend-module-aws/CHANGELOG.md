@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.1.1
+
+### Patch Changes
+
+- 55c9711: update depdendencies
+
 ## 1.1.0
 
 ### Minor Changes
