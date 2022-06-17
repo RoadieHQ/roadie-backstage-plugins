@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-import { DynamoDB } from '@aws-sdk/client-dynamodb';
+import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
 import { Config } from '@backstage/config';
 import * as winston from 'winston';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ComponentEntity } from '@backstage/catalog-model';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -51,41 +52,53 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     this.logger.info(
       `Retrieving all DynamoDB tables for account ${this.accountId}`,
     );
-    const tables = await ddb.listTables({});
 
-    const ddbComponents = tables.TableNames
-      ? (
-          await Promise.all(
-            tables.TableNames.map(async tableName => {
-              const tableDescriptionResult = await ddb.describeTable({
-                TableName: tableName,
-              });
-              const table = tableDescriptionResult.Table;
-              if (table && table.TableName && table.TableArn) {
-                return {
-                  kind: 'Component',
-                  apiVersion: 'backstage.io/v1beta1',
-                  metadata: {
-                    annotations: {
-                      ...defaultAnnotations,
-                      'amazon.com/dynamo-db-table-arn': table.TableArn,
-                    },
-                    name: table.TableName.slice(0, 62),
+    const paginatorConfig = {
+      client: ddb,
+      pageSize: 25,
+    };
+
+    const tablePages = paginateListTables(paginatorConfig, {});
+
+    const ddbComponents: ComponentEntity[] = [];
+    for await (const tablePage of tablePages) {
+      if (!tablePage.TableNames) {
+        continue;
+      }
+      const newComponents = (
+        await Promise.all(
+          tablePage.TableNames.map(async tableName => {
+            const tableDescriptionResult = await ddb.describeTable({
+              TableName: tableName,
+            });
+            const table = tableDescriptionResult.Table;
+            if (table && table.TableName && table.TableArn) {
+              const component: ComponentEntity = {
+                kind: 'Component',
+                apiVersion: 'backstage.io/v1beta1',
+                metadata: {
+                  annotations: {
+                    ...defaultAnnotations,
+                    'amazon.com/dynamo-db-table-arn': table.TableArn,
                   },
-                  spec: {
-                    owner: this.accountId,
-                    type: 'dynamo-db-table',
-                    lifecycle: 'production',
-                  },
-                };
-              }
-              return null;
-            }),
-          )
+                  name: table.TableName.slice(0, 62),
+                },
+                spec: {
+                  owner: this.accountId,
+                  type: 'dynamo-db-table',
+                  lifecycle: 'production',
+                },
+              };
+              return component;
+            }
+            return null;
+          }),
         )
-          .filter(it => it)
-          .map(it => it!)
-      : [];
+      )
+        .filter(it => it)
+        .map(it => it!);
+      ddbComponents.concat(...newComponents);
+    }
 
     await this.connection.applyMutation({
       type: 'full',
