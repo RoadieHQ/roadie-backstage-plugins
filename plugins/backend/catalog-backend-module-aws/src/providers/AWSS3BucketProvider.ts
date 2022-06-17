@@ -15,31 +15,17 @@
  */
 
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
-import {
-  EntityProvider,
-  EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { S3 } from '@aws-sdk/client-s3';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
-import { AccountConfig } from '../types';
-import { buildDefaultAnnotations } from '../utils/buildDefaultAnnotations';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 const link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS S3 Bucket service.
  */
-export class AWSS3BucketProvider implements EntityProvider {
-  private readonly accountId: string;
-  private readonly roleArn: string;
-  private readonly externalId?: string;
-  private readonly region: string;
-
-  private connection?: EntityProviderConnection;
-  private logger: winston.Logger;
-
+export class AWSS3BucketProvider extends AWSEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -52,20 +38,8 @@ export class AWSS3BucketProvider implements EntityProvider {
     );
   }
 
-  constructor(account: AccountConfig, options: { logger: winston.Logger }) {
-    this.accountId = account.accountId;
-    this.roleArn = account.roleArn;
-    this.externalId = account.externalId;
-    this.region = account.region;
-    this.logger = options.logger;
-  }
-
   getProviderName(): string {
     return `aws-s3-bucket-${this.accountId}`;
-  }
-
-  async connect(connection: EntityProviderConnection): Promise<void> {
-    this.connection = connection;
   }
 
   async run(): Promise<void> {
@@ -78,16 +52,10 @@ export class AWSS3BucketProvider implements EntityProvider {
     );
     const s3Resources: ResourceEntity[] = [];
 
-    const credentials = fromTemporaryCredentials({
-      params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-    });
+    const credentials = this.getCredentials();
     const s3 = new S3({ credentials, region: this.region });
 
-    const defaultAnnotations = buildDefaultAnnotations({
-      credentials,
-      roleArn: this.roleArn,
-      providerName: this.getProviderName(),
-    });
+    const defaultAnnotations = this.buildDefaultAnnotations();
 
     const buckets = await s3.listBuckets({});
 

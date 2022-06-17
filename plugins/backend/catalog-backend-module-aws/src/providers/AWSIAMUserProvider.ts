@@ -15,31 +15,17 @@
  */
 
 import { ANNOTATION_VIEW_URL, UserEntity } from '@backstage/catalog-model';
-import {
-  EntityProvider,
-  EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
-import { AccountConfig } from '../types';
-import { buildDefaultAnnotations } from '../utils/buildDefaultAnnotations';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 const link2aws = require('link2aws');
 
 /**
  * Provides entities from AWS IAM User service.
  */
-export class AWSIAMUserProvider implements EntityProvider {
-  private readonly accountId: string;
-  private readonly roleArn: string;
-  private readonly externalId?: string;
-  private readonly region: string;
-
-  private connection?: EntityProviderConnection;
-  private logger: winston.Logger;
-
+export class AWSIAMUserProvider extends AWSEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -52,20 +38,8 @@ export class AWSIAMUserProvider implements EntityProvider {
     );
   }
 
-  constructor(account: AccountConfig, options: { logger: winston.Logger }) {
-    this.accountId = account.accountId;
-    this.roleArn = account.roleArn;
-    this.externalId = account.externalId;
-    this.region = account.region;
-    this.logger = options.logger;
-  }
-
   getProviderName(): string {
     return `aws-iam-user-${this.accountId}`;
-  }
-
-  async connect(connection: EntityProviderConnection): Promise<void> {
-    this.connection = connection;
   }
 
   async run(): Promise<void> {
@@ -78,15 +52,9 @@ export class AWSIAMUserProvider implements EntityProvider {
     );
     const userResources: UserEntity[] = [];
 
-    const credentials = fromTemporaryCredentials({
-      params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-    });
+    const credentials = this.getCredentials();
 
-    const defaultAnnotations = buildDefaultAnnotations({
-      credentials,
-      roleArn: this.roleArn,
-      providerName: this.getProviderName(),
-    });
+    const defaultAnnotations = this.buildDefaultAnnotations();
 
     const iam = new IAM({ credentials, region: this.region });
 
