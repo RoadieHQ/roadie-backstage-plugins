@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.3
+
+### Patch Changes
+
+- 55c9711: update depdendencies
+
 ## 1.0.2
 
 ### Patch Changes

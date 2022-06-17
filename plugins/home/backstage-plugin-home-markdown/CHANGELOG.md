@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.0.3
+
+### Patch Changes
+
+- 55c9711: update depdendencies
+
 ## 2.0.2
 
 ### Patch Changes

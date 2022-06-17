@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.0.1
+
+### Patch Changes
+
+- 55c9711: update depdendencies
+
 ## 1.0.0
 
 ### Major Changes
