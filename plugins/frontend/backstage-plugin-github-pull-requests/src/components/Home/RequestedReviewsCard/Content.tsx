@@ -26,10 +26,15 @@ import {
 } from '../../useGithubLoggedIn';
 import Alert from '@material-ui/lab/Alert';
 
-const RequestedReviewsContet = () => {
-  const { loading, error, value } = useGithubSearchPullRequest(
-    `is:open is:pr review-requested:@me archived:false`,
-  );
+type RequestedReviewsCardProps = {
+  query: string;
+};
+
+const defaultReviewsQuery = "is:open is:pr review-requested:@me archived:false"
+
+const RequestedReviewsContent = (props: RequestedReviewsCardProps) => {
+  const { query = defaultReviewsQuery } = props;
+  const { loading, error, value } = useGithubSearchPullRequest(query);
 
   if (loading) return <SkeletonPullRequestsListView />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
@@ -38,8 +43,8 @@ const RequestedReviewsContet = () => {
     <PullRequestsListView data={value} emptyStateText="No requested reviews." />
   );
 };
-export const Content = () => {
+export const Content = (props: RequestedReviewsCardProps) => {
   const isLoggedIn = useGithubLoggedIn();
 
-  return isLoggedIn ? <RequestedReviewsContet /> : <GithubNotAuthorized />;
+  return isLoggedIn ? <RequestedReviewsContent {...props} /> : <GithubNotAuthorized />;
 };

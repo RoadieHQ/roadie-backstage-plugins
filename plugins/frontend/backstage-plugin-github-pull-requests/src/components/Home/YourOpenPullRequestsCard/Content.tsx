@@ -26,10 +26,15 @@ import {
 } from '../../useGithubLoggedIn';
 import Alert from '@material-ui/lab/Alert';
 
-const OpenPullRequestsContent = () => {
-  const { loading, error, value } = useGithubSearchPullRequest(
-    `is:open is:pr author:@me archived:false`,
-  );
+type OpenPullRequestsCardProps = {
+  query: string;
+};
+
+const defaultPullRequestsQuery = "is:open is:pr author:@me archived:false"
+
+const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
+  const { query = defaultPullRequestsQuery } = props;
+  const { loading, error, value } = useGithubSearchPullRequest(query);
 
   if (loading) return <SkeletonPullRequestsListView />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
@@ -41,7 +46,7 @@ const OpenPullRequestsContent = () => {
     />
   );
 };
-export const Content = () => {
+export const Content = (props: OpenPullRequestsCardProps) => {
   const isLoggedIn = useGithubLoggedIn();
-  return isLoggedIn ? <OpenPullRequestsContent /> : <GithubNotAuthorized />;
+  return isLoggedIn ? <OpenPullRequestsContent {...props} /> : <GithubNotAuthorized />;
 };

@@ -63,7 +63,7 @@ describe('<RequestedReviewsCard>', () => {
       }),
     ).toBeInTheDocument();
   });
-  it('should render home card with requested reviews', async () => {
+  it('should render home card with requested reviews, using default query', async () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -76,5 +76,23 @@ describe('<RequestedReviewsCard>', () => {
     expect(
       await screen.findByText("Test PR don't merge", { exact: false }),
     ).toBeInTheDocument();
+  });
+  it('should render home card with requested reviews, using a custom query', async () => {
+    const customQuery = "is:open is:pr review-requested:@me archived:false is:draft"
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content query={customQuery} />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('Revert "Sc 7454 AWS S3 docs (#640)"', { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Test PR don't merge", { exact: false }),
+    ).not.toBeInTheDocument();
   });
 });
