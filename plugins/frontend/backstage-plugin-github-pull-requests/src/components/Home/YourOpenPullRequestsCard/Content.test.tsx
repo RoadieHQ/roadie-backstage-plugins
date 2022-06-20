@@ -62,7 +62,7 @@ describe('<YourOpenPullRequestCard>', () => {
       }),
     ).toBeInTheDocument();
   });
-  it('should render home card with requested reviews', async () => {
+  it('should render home card with requested pull requests, using default query', async () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -77,5 +77,27 @@ describe('<YourOpenPullRequestCard>', () => {
         exact: false,
       }),
     ).toBeInTheDocument();
+  });
+  it('should render home card with requested pull requests, using custom query', async () => {
+    const customQuery = "is:open is:pr author@me archived: false is:draft"
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content query={customQuery} />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('add poc', {
+        exact: false,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('add github homepage PR components', {
+        exact: false,
+      }),
+    ).not.toBeInTheDocument();
   });
 });

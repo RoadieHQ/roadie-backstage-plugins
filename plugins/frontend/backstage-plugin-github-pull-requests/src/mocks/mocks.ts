@@ -750,6 +750,87 @@ export const requestedReviewsMock = {
     },
   ],
 };
+export const requestedReviewsCustomQueryMock = {
+  total_count: 1,
+  incomplete_results: false,
+  items: [
+    {
+      url: 'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650',
+      repository_url: 'https://api.github.com/repos/RoadieHQ/marketing-site',
+      labels_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/labels{/name}',
+      comments_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/comments',
+      events_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/events',
+      html_url: 'https://github.com/RoadieHQ/marketing-site/pull/650',
+      id: 1183476633,
+      node_id: 'PR_kwDOEIx70M41KGvn',
+      number: 650,
+      title: 'Revert "Sc 7454 AWS S3 docs (#640)"',
+      user: {
+        login: 'iain-b',
+        id: 1415599,
+        node_id: 'MDQ6VXNlcjE0MTU1OTk=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1415599?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/iain-b',
+        html_url: 'https://github.com/iain-b',
+        followers_url: 'https://api.github.com/users/iain-b/followers',
+        following_url:
+          'https://api.github.com/users/iain-b/following{/other_user}',
+        gists_url: 'https://api.github.com/users/iain-b/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/iain-b/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/iain-b/subscriptions',
+        organizations_url: 'https://api.github.com/users/iain-b/orgs',
+        repos_url: 'https://api.github.com/users/iain-b/repos',
+        events_url: 'https://api.github.com/users/iain-b/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/iain-b/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      labels: [],
+      state: 'open',
+      locked: false,
+      assignee: null,
+      assignees: [],
+      milestone: null,
+      comments: 2,
+      created_at: '2022-03-28T13:51:40Z',
+      updated_at: '2022-03-28T13:52:53Z',
+      closed_at: null,
+      author_association: 'CONTRIBUTOR',
+      active_lock_reason: null,
+      draft: true,
+      pull_request: {
+        url: 'https://api.github.com/repos/RoadieHQ/marketing-site/pulls/650',
+        html_url: 'https://github.com/RoadieHQ/marketing-site/pull/650',
+        diff_url: 'https://github.com/RoadieHQ/marketing-site/pull/650.diff',
+        patch_url: 'https://github.com/RoadieHQ/marketing-site/pull/650.patch',
+        merged_at: null,
+      },
+      body: 'This reverts commit d54d9a533d48b9024b892a188e1b7102962d4d34.',
+      reactions: {
+        url: 'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/reactions',
+        total_count: 0,
+        '+1': 0,
+        '-1': 0,
+        laugh: 0,
+        hooray: 0,
+        confused: 0,
+        heart: 0,
+        rocket: 0,
+        eyes: 0,
+      },
+      timeline_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/timeline',
+      performed_via_github_app: null,
+      score: 1,
+    }
+  ],
+};
 export const repoMock = {
   id: 375261048,
   node_id: 'MDEwOlJlcG9zaXRvcnkzNzUyNjEwNDg=',
@@ -1167,7 +1248,7 @@ export const yourOpenPullRequests = {
       closed_at: null,
       author_association: 'CONTRIBUTOR',
       active_lock_reason: null,
-      draft: true,
+      draft: false,
       pull_request: {
         url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/pulls/457',
         html_url:
@@ -1196,6 +1277,92 @@ export const yourOpenPullRequests = {
       performed_via_github_app: null,
       score: 1,
     },
+    {
+      url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450',
+      repository_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins',
+      labels_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450/labels{/name}',
+      comments_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450/comments',
+      events_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450/events',
+      html_url: 'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/450',
+      id: 1166632752,
+      node_id: 'PR_kwDOFl4HeM40T37p',
+      number: 450,
+      title: 'add poc',
+      user: {
+        login: 'kissmikijr',
+        id: 24729496,
+        node_id: 'MDQ6VXNlcjI0NzI5NDk2',
+        avatar_url: 'https://avatars.githubusercontent.com/u/24729496?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/kissmikijr',
+        html_url: 'https://github.com/kissmikijr',
+        followers_url: 'https://api.github.com/users/kissmikijr/followers',
+        following_url:
+          'https://api.github.com/users/kissmikijr/following{/other_user}',
+        gists_url: 'https://api.github.com/users/kissmikijr/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/kissmikijr/starred{/owner}{/repo}',
+        subscriptions_url:
+          'https://api.github.com/users/kissmikijr/subscriptions',
+        organizations_url: 'https://api.github.com/users/kissmikijr/orgs',
+        repos_url: 'https://api.github.com/users/kissmikijr/repos',
+        events_url: 'https://api.github.com/users/kissmikijr/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/kissmikijr/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      labels: [],
+      state: 'open',
+      locked: false,
+      assignee: null,
+      assignees: [],
+      milestone: null,
+      comments: 0,
+      created_at: '2022-03-11T16:43:06Z',
+      updated_at: '2022-03-11T16:43:06Z',
+      closed_at: null,
+      author_association: 'CONTRIBUTOR',
+      active_lock_reason: null,
+      draft: true,
+      pull_request: {
+        url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/pulls/450',
+        html_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/450',
+        diff_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/450.diff',
+        patch_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/450.patch',
+        merged_at: null,
+      },
+      body: '<!-- Please describe what these changes achieve -->\r\nA POC to drive plugin behaviour based on UserEntity annotations.',
+      reactions: {
+        url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450/reactions',
+        total_count: 0,
+        '+1': 0,
+        '-1': 0,
+        laugh: 0,
+        hooray: 0,
+        confused: 0,
+        heart: 0,
+        rocket: 0,
+        eyes: 0,
+      },
+      timeline_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450/timeline',
+      performed_via_github_app: null,
+      score: 1,
+    },
+  ],
+};
+export const yourOpenDraftPullRequests = {
+  total_count: 1,
+  incomplete_results: false,
+  items: [
     {
       url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/450',
       repository_url:

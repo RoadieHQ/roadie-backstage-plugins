@@ -18,9 +18,11 @@ import { rest } from 'msw';
 import {
   openPullsRequestMock,
   requestedReviewsMock,
+  requestedReviewsCustomQueryMock,
   repoMock,
   marketingSiteMock,
   yourOpenPullRequests,
+  yourOpenDraftPullRequests,
   closedPullsRequestMock,
   backstagePluginArgoCdMocks,
 } from './mocks';
@@ -28,17 +30,20 @@ import {
 export const handlers = [
   rest.get('https://api.github.com/search/issues', (req, res, ctx) => {
     const query = req.url.searchParams.get('q');
-    if (query === 'is:open is:pr review-requested:@me archived:false') {
-      return res(ctx.json(requestedReviewsMock));
-    } else if (query === 'is:open is:pr author:@me archived:false') {
-      return res(ctx.json(yourOpenPullRequests));
-    } else if (
-      query ===
-      'state:closed in:title type:pr repo:RoadieHQ/backstage-plugin-argo-cd'
-    ) {
-      return res(ctx.json(closedPullsRequestMock));
+    switch(query) {
+      case 'is:open is:pr review-requested:@me archived:false':
+        return res(ctx.json(requestedReviewsMock))
+      case 'is:open is:pr review-requested:@me archived:false is:draft':
+        return res(ctx.json(requestedReviewsCustomQueryMock))
+      case 'is:open is:pr author:@me archived:false':
+        return res(ctx.json(yourOpenPullRequests))
+      case 'is:open is:pr author@me archived: false is:draft':
+        return res(ctx.json(yourOpenDraftPullRequests))
+      case 'state:closed in:title type:pr repo:RoadieHQ/backstage-plugin-argo-cd':
+        return res(ctx.json(closedPullsRequestMock))
+      default:
+        return res(ctx.json(openPullsRequestMock))
     }
-    return res(ctx.json(openPullsRequestMock));
   }),
   rest.get(
     'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins',

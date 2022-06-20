@@ -92,6 +92,12 @@ const overviewContent = (
 
 If you didn't set up the HomePage plugin you can see the official documentation about it [here](https://github.com/backstage/backstage/tree/master/plugins/home). You'll need to have it setup to be able to include this plugin.
 
+A reasonable default will be used as a search term for both cards but you may have reasonable to provide your own query. This can be done through the `query` prop available for both cards.
+
+**TIP**: You might want to filter by a specific Github org if you have users who share a single Github account for work and personal usage.
+
+You can build up a query using [Github Advanced Search](https://github.com/search/advanced) and once you hit "Search", the query in the search bar is what you'll want to provide as your query prop.
+
 ```tsx
 //packages/app/src/components/home/HomePage.tsx
 
@@ -110,12 +116,11 @@ export const HomePage = () => {
       </Grid>
 
       <Grid item md={6} xs={12}>
-        <HomePageYourOpenPullRequestsCard />
+        <HomePageYourOpenPullRequestsCard query="org:RoadieHQ is:pr language:CSS" />
       </Grid>
     ...
   );
 };
-
 ```
 
 ## Features
