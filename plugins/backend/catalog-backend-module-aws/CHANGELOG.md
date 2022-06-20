@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.2.0
+
+### Minor Changes
+
+- 8045ca3: Adds a new iam role provider for the aws entity providers.
+
 ## 1.1.1
 
 ### Patch Changes

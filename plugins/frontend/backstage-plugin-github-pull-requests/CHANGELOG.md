@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.2.0
+
+### Minor Changes
+
+- 3bdffc9: Added support for custom search queries for Homepage components
+
 ## 2.1.4
 
 ### Patch Changes
