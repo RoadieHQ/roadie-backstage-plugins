@@ -78,20 +78,25 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
     });
 
     relatedEntities.items.forEach(relatedEntity => {
-      emit(
-        processingResult.relation({
-          type: RELATION_DEPENDS_ON,
-          target: getCompoundEntityRef(entity),
-          source: getCompoundEntityRef(relatedEntity),
-        }),
-      );
-      emit(
-        processingResult.relation({
-          type: RELATION_DEPENDENCY_OF,
-          target: getCompoundEntityRef(relatedEntity),
-          source: getCompoundEntityRef(entity),
-        }),
-      );
+      const thisEntityRef = getCompoundEntityRef(entity);
+      const relatedEntityRef = getCompoundEntityRef(relatedEntity);
+
+      if (thisEntityRef !== relatedEntityRef) {
+        emit(
+          processingResult.relation({
+            type: RELATION_DEPENDS_ON,
+            target: thisEntityRef,
+            source: relatedEntityRef,
+          }),
+        );
+        emit(
+          processingResult.relation({
+            type: RELATION_DEPENDENCY_OF,
+            target: relatedEntityRef,
+            source: thisEntityRef,
+          }),
+        );
+      }
     });
     return resource;
   }
