@@ -14,33 +14,33 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, UserEntity } from '@backstage/catalog-model';
-import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
+import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { IAM, paginateListRoles } from '@aws-sdk/client-iam';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
+import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 
 const link2aws = require('link2aws');
 
 /**
- * Provides entities from AWS IAM User service.
+ * Provides entities from AWS IAM Role service.
  */
-export class AWSIAMUserProvider extends AWSEntityProvider {
+export class AWSIAMRoleProvider extends AWSEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSIAMUserProvider(
+    return new AWSIAMRoleProvider(
       { accountId, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-iam-user-${this.accountId}`;
+    return `aws-iam-role-${this.accountId}`;
   }
 
   async run(): Promise<void> {
@@ -49,9 +49,9 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     }
 
     this.logger.info(
-      `Providing iam user resources from aws: ${this.accountId}`,
+      `Providing iam role resources from aws: ${this.accountId}`,
     );
-    const userResources: UserEntity[] = [];
+    const roleResources: ResourceEntity[] = [];
 
     const credentials = this.getCredentials();
 
@@ -64,42 +64,39 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       pageSize: 25,
     };
 
-    const userPages = paginateListUsers(paginatorConfig, {});
+    const rolePages = paginateListRoles(paginatorConfig, {});
 
-    for await (const userPage of userPages) {
-      for (const user of userPage.Users || []) {
-        if (user.UserName && user.Arn && user.UserId) {
-          const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
-          const userEntity: UserEntity = {
-            kind: 'User',
+    for await (const rolePage of rolePages) {
+      for (const role of rolePage.Roles || []) {
+        if (role.RoleName && role.Arn && role.RoleId) {
+          const consoleLink = new link2aws.ARN(role.Arn).consoleLink;
+          const roleEntity: ResourceEntity = {
+            kind: 'Resource',
             apiVersion: 'backstage.io/v1alpha1',
             metadata: {
               annotations: {
                 ...(await defaultAnnotations),
-                [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
+                [ANNOTATION_AWS_IAM_ROLE_ARN]: role.Arn,
                 [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
-              name: user.UserId,
+              name: role.RoleId,
             },
             spec: {
-              profile: {
-                displayName: user.Arn,
-                email: user.UserName,
-              },
-              memberOf: [],
+              type: 'aws-role',
+              owner: 'unknown',
             },
           };
 
-          userResources.push(userEntity);
+          roleResources.push(roleEntity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: userResources.map(entity => ({
+      entities: roleResources.map(entity => ({
         entity,
-        locationKey: `aws-iam-user-provider:${this.accountId}`,
+        locationKey: `aws-iam-role-provider:${this.accountId}`,
       })),
     });
   }

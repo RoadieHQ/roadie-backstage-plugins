@@ -14,9 +14,4 @@
  * limitations under the License.
  */
 
-export { AWSS3BucketProvider } from './AWSS3BucketProvider';
-export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
-export { AWSIAMUserProvider } from './AWSIAMUserProvider';
-export { AWSIAMRoleProvider } from './AWSIAMRoleProvider';
-export { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
-export { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
+export { AWSIAMRoleProcessor } from './AWSIAMRoleProcessor';

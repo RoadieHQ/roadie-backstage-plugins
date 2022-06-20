@@ -15,10 +15,14 @@
  */
 
 import { ANNOTATION_VIEW_URL, ComponentEntity } from '@backstage/catalog-model';
-import { Lambda } from '@aws-sdk/client-lambda';
+import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import {
+  ANNOTATION_AWS_IAM_ROLE_ARN,
+  ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
+} from '../annotations';
 
 const link2aws = require('link2aws');
 
@@ -58,29 +62,42 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
-    const functions = await lambda.listFunctions({});
+    const paginatorConfig = {
+      client: lambda,
+      pageSize: 25,
+    };
 
-    for (const lambdaFunction of functions.Functions || []) {
-      if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
-        const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn)
-          .consoleLink;
-        lambdaComponents.push({
-          kind: 'Component',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...(await defaultAnnotations),
-              [ANNOTATION_VIEW_URL]: consoleLink,
-              'amazon.com/lambda-function-arn': lambdaFunction.FunctionArn,
+    const functionPages = paginateListFunctions(paginatorConfig, {});
+
+    for await (const functionPage of functionPages) {
+      for (const lambdaFunction of functionPage.Functions || []) {
+        if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
+          const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn)
+            .consoleLink;
+
+          const annotations: { [name: string]: string } = {
+            ...(await defaultAnnotations),
+            [ANNOTATION_VIEW_URL]: consoleLink,
+            [ANNOTATION_AWS_LAMBDA_FUNCTION_ARN]: lambdaFunction.FunctionArn,
+          };
+          if (lambdaFunction.Role) {
+            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = lambdaFunction.Role;
+          }
+          lambdaComponents.push({
+            kind: 'Component',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations,
+              name: lambdaFunction.FunctionName,
             },
-            name: lambdaFunction.FunctionName,
-          },
-          spec: {
-            owner: 'unknown',
-            type: 'lambda-function',
-            lifecycle: 'production',
-          },
-        });
+            spec: {
+              owner: 'unknown',
+              type: 'lambda-function',
+              lifecycle: 'production',
+              dependsOn: [],
+            },
+          });
+        }
       }
     }
 

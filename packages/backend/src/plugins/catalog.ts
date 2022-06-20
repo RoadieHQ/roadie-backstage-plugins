@@ -12,6 +12,8 @@ import {
   AWSIAMUserProvider,
   AWSDynamoDbTableProvider,
   AWSDynamoDbTableDataProvider,
+  AWSIAMRoleProvider,
+  AWSIAMRoleProcessor,
 } from '@roadiehq/catalog-backend-module-aws';
 import { Duration } from 'luxon';
 
@@ -23,20 +25,24 @@ export default async function createPlugin(
   };
   const builder = await CatalogBuilder.create(env);
   const providers: RunnableProvider[] = [];
+  builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
   for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
     []) {
     const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
     const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
     const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
+    const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, env);
     const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
     builder.addEntityProvider(iamUserProvider);
+    builder.addEntityProvider(iamRoleProvider);
     builder.addEntityProvider(ddbTableProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
+    providers.push(iamRoleProvider);
     providers.push(ddbTableProvider);
 
     const useDdbData = config.has('dynamodbTableData');
@@ -62,7 +68,7 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 1 }),
+      frequency: Duration.fromObject({ minutes: 5 }),
       timeout: Duration.fromObject({ minutes: 10 }),
     });
   }

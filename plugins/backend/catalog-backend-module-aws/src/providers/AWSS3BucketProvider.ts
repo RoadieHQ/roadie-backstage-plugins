@@ -19,6 +19,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 
 const link2aws = require('link2aws');
 
@@ -69,7 +70,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
           metadata: {
             annotations: {
               ...(await defaultAnnotations),
-              'amazon.com/s3-bucket-arn': bucketArn,
+              [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
               [ANNOTATION_VIEW_URL]: consoleLink,
             },
             name: bucket.Name,
