@@ -27,7 +27,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 
 type OpenPullRequestsCardProps = {
-  query: string;
+  query?: string;
 };
 
 const defaultPullRequestsQuery = "is:open is:pr author:@me archived:false"

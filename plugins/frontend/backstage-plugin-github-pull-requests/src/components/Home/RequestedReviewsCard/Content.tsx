@@ -27,7 +27,7 @@ import {
 import Alert from '@material-ui/lab/Alert';
 
 type RequestedReviewsCardProps = {
-  query: string;
+  query?: string;
 };
 
 const defaultReviewsQuery = "is:open is:pr review-requested:@me archived:false"
