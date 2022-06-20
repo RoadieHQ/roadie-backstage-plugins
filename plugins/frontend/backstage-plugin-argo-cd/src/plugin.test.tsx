@@ -573,7 +573,7 @@ describe('argo-cd', () => {
     it('should display fetched data from one instance', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/find/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -608,7 +608,7 @@ describe('argo-cd', () => {
     it('should display fetched data from multiple instances', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/find/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -652,7 +652,7 @@ describe('argo-cd', () => {
     it('should display fetched data from multiple instances with multiple apps', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/find/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -701,7 +701,7 @@ describe('argo-cd', () => {
     it('should display fetched data from an instance when scanning multiple instances', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/find/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
@@ -749,7 +749,7 @@ describe('argo-cd', () => {
     it('should display an empty table when receiving no data from multiple instances', async () => {
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/find/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/find/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(
               ctx.json([
