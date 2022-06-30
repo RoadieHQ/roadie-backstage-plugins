@@ -13,17 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createHttpBackstageAction } from './backstageRequest';
 import { Config, ConfigReader } from '@backstage/config';
 import os from 'os'; // eslint-disable-line
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream'; // eslint-disable-line
-import { http } from './helpers';
+import { createHttpBackstageAction } from './backstageRequest';
+import fetch from 'cross-fetch';
 
-jest.mock('./helpers', () => ({
-  ...jest.requireActual('./helpers.ts'),
-  http: jest.fn(),
-}));
+jest.mock('cross-fetch');
+const fetchMock = fetch as jest.MockedFunction<typeof fetch>;
+const headers = new Headers({
+  'Content-Type': 'application/json',
+  Accept: '*/*',
+});
+
+const returnBody: any = {
+  foo: 'bar',
+};
+
+const mockResponse = {
+  ok: true,
+  status: 200,
+  headers,
+  json: () => {
+    return returnBody;
+  },
+  text: async () => {
+    return JSON.stringify(returnBody) as string;
+  },
+} as Response;
 
 describe('http:backstage:request', () => {
   let config: Config;
@@ -58,11 +76,7 @@ describe('http:backstage:request', () => {
   describe('when the action runs correctly', () => {
     describe('with path simple request', () => {
       it('should create a request and add baseurl of app', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
         await action.handler({
           ...mockContext,
           input: {
@@ -70,24 +84,18 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(http).toBeCalledWith(
-          {
-            url: 'http://backstage.tests/api/proxy/foo',
+        expect(fetchMock).toBeCalledWith('http://backstage.tests/api/proxy/foo',
+          expect.objectContaining({
             method: 'GET',
             headers: {},
-          },
-          logger,
+          })
         );
       });
     });
 
     describe('with body defined as application/json', () => {
       it('should create a request and pass body parameter', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
         await action.handler({
           ...mockContext,
           input: {
@@ -101,27 +109,22 @@ describe('http:backstage:request', () => {
             },
           },
         });
-        expect(http).toBeCalledWith(
-          {
-            url: 'http://backstage.tests/api/proxy/foo',
+        expect(fetchMock).toBeCalledWith('http://backstage.tests/api/proxy/foo',
+          expect.objectContaining({
             method: 'POST',
             headers: {
               'content-type': 'application/json',
             },
             body: '{"name":"test"}',
-          },
-          logger,
+          })
         );
       });
     });
 
     describe('with body defined as a string', () => {
       it('should create a request and pass body parameter', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
+
         await action.handler({
           ...mockContext,
           input: {
@@ -130,25 +133,20 @@ describe('http:backstage:request', () => {
             body: 'test',
           },
         });
-        expect(http).toBeCalledWith(
-          {
-            url: 'http://backstage.tests/api/proxy/foo',
+        expect(fetchMock).toBeCalledWith('http://backstage.tests/api/proxy/foo',
+          expect.objectContaining({
             method: 'POST',
             headers: {},
             body: 'test',
-          },
-          logger,
+          })
         );
       });
     });
 
     describe('with body undefined', () => {
       it('should create a request and body should be undefined', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
+
         await action.handler({
           ...mockContext,
           input: {
@@ -159,27 +157,22 @@ describe('http:backstage:request', () => {
             },
           },
         });
-        expect(http).toBeCalledWith(
-          {
-            url: 'http://backstage.tests/api/proxy/foo',
+        expect(fetchMock).toBeCalledWith('http://backstage.tests/api/proxy/foo',
+          expect.objectContaining({
             method: 'POST',
             headers: {
               'content-type': 'application/json',
             },
             body: undefined,
-          },
-          logger,
+          })
         );
       });
     });
 
     describe('with a token request', () => {
       it('should create a request', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
+
         await action.handler({
           ...mockContext,
           secrets: { backstageToken: 'some-token' },
@@ -188,15 +181,45 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(http).toBeCalledWith(
-          {
-            url: `${mockBaseUrl}/api/proxy/foo`,
+        expect(fetchMock).toBeCalledWith(`${mockBaseUrl}/api/proxy/foo`,
+          expect.objectContaining({
             method: 'GET',
             headers: {
               authorization: 'Bearer some-token',
             },
+          })
+        );
+      });
+    });
+
+    describe('if I pass my own authorizer', () => {
+      it('should create a request', async () => {
+        fetchMock.mockResolvedValue(Promise.resolve(mockResponse));
+        action = createHttpBackstageAction({ config, authorizerFactory: (ctx) => {
+            return (request) => {
+              request.headers = request.headers as {}
+              const token = ctx.secrets?.backstageToken?.split('').reverse().join('');
+              request.headers.authorization = `Bearer ${token}`
+              return request;
+            }
+          }
+        });
+
+        await action.handler({
+          ...mockContext,
+          secrets: { backstageToken: 'some-token' },
+          input: {
+            path: `/api/proxy/foo`,
+            method: 'GET',
           },
-          logger,
+        });
+        expect(fetchMock).toBeCalledWith(`${mockBaseUrl}/api/proxy/foo`,
+            expect.objectContaining({
+              method: 'GET',
+              headers: {
+                authorization: 'Bearer nekot-emos',
+              },
+            })
         );
       });
     });

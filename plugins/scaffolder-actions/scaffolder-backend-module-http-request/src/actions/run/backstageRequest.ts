@@ -14,20 +14,37 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import { generateBackstageUrl, http } from './helpers';
-import { HttpOptions, Headers, Params, Methods, Body } from './types';
+import {ActionContext, createTemplateAction} from '@backstage/plugin-scaffolder-backend';
+import { generateBackstageUrl } from './helpers';
+import { Headers, Params, Methods, Body } from './types';
 import { Config } from '@backstage/config';
+import { HttpBackstageRequestAuthorizer, HttpClient } from "./HttpClient";
 
-export function createHttpBackstageAction(options: { config: Config }) {
+export type HttpBackstageRequestAuthorizerFactory = (ctx: ActionContext<HttpBackstageActionInput>) => HttpBackstageRequestAuthorizer
+
+const defaultHttpBackstageRequestAuthorizerFactory: HttpBackstageRequestAuthorizerFactory = (ctx) => {
+  return (request: RequestInit) => {
+    const token = ctx.secrets?.backstageToken;
+    request.headers = request.headers as {}
+    if (token) {
+      ctx.logger.info(`Token is defined. Setting authorization header.`);
+      request.headers.authorization = `Bearer ${token}`;
+    }
+
+    return request;
+  }
+}
+export type HttpBackstageActionInput = {
+  path: string;
+  method: Methods;
+  headers?: Headers;
+  params?: Params;
+  body?: Body;
+}
+
+export function createHttpBackstageAction(options: { config: Config, authorizerFactory?: HttpBackstageRequestAuthorizerFactory }) {
   const { config } = options;
-  return createTemplateAction<{
-    path: string;
-    method: Methods;
-    headers?: Headers;
-    params?: Params;
-    body?: Body;
-  }>({
+  return createTemplateAction<HttpBackstageActionInput>({
     id: 'http:backstage:request',
     description:
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
@@ -95,9 +112,8 @@ export function createHttpBackstageAction(options: { config: Config }) {
 
     async handler(ctx) {
       const { input } = ctx;
-      const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = await generateBackstageUrl(config, input.path);
+      let url = await generateBackstageUrl(config, input.path);
 
       ctx.logger.info(
         `Creating ${method} request with http:backstage:proxy scaffolder action against ${url}`,
@@ -120,19 +136,19 @@ export function createHttpBackstageAction(options: { config: Config }) {
         inputBody = input.body;
       }
 
-      const httpOptions: HttpOptions = {
+      url = queryParams !== '' ? `${url}?${queryParams}` : url;
+      const httpOptions: RequestInit = {
         method: input.method,
-        url: queryParams !== '' ? `${url}?${queryParams}` : url,
-        headers: input.headers ? (input.headers as Headers) : {},
         body: inputBody,
       };
 
-      if (token) {
-        ctx.logger.info(`Token is defined. Setting authorization header.`);
-        httpOptions.headers.authorization = `Bearer ${token}`;
-      }
+      httpOptions.headers = input.headers || {}
 
-      const { code, headers, body } = await http(httpOptions, ctx.logger);
+      const authorizer = (options.authorizerFactory || defaultHttpBackstageRequestAuthorizerFactory)(ctx)
+
+      const httpClient = new HttpClient({ logger: ctx.logger, authorizer });
+
+      const { code, headers, body } = await httpClient.request(url, httpOptions);
 
       ctx.output('code', code);
       ctx.output('headers', headers);
