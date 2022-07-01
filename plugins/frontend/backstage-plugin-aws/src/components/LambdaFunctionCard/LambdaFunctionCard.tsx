@@ -66,7 +66,8 @@ export const LambdaFunctionCard = (props: Props) => {
       ) {
         setLoading(true);
 
-        const lambdaArn = entity.metadata.annotations[LAMBDA_FUNCTION_ARN_ANNOTATION];
+        const lambdaArn =
+          entity.metadata.annotations[LAMBDA_FUNCTION_ARN_ANNOTATION];
 
         const { region, accountId, resource } = parseArn(lambdaArn);
         const [_, resourceId] = resource.split(/\/|:/);
@@ -75,7 +76,7 @@ export const LambdaFunctionCard = (props: Props) => {
           AccountId: accountId,
           TypeName: 'AWS::Lambda::Function',
           Identifier: resourceId,
-          Region: region
+          Region: region,
         });
         setLambdaDetails(lambdaFunctionDetails);
         setLoading(false);

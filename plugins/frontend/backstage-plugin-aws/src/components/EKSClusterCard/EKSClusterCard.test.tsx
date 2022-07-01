@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -27,25 +26,25 @@ import { setupServer } from 'msw/node';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
-import { ResourceEntity } from "@backstage/catalog-model";
-import {EKSClusterCard} from "./EKSClusterCard";
+import { ResourceEntity } from '@backstage/catalog-model';
+import { EKSClusterCard } from './EKSClusterCard';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 
 const entityStub: ResourceEntity = {
-  apiVersion: "backstage.io/v1beta1",
+  apiVersion: 'backstage.io/v1beta1',
   kind: 'Resource',
   spec: {
     owner: 'unknown',
-    type: 'service'
+    type: 'service',
   },
   metadata: {
     annotations: {},
-    name: 'cluster1'
-  }
-}
+    name: 'cluster1',
+  },
+};
 
 describe('EKSClusterCard', () => {
   const worker = setupServer();
@@ -58,16 +57,20 @@ describe('EKSClusterCard', () => {
 
   it('should display the card with the correct annotation error', async () => {
     const rendered = render(
-        <MemoryRouter>
-          <ApiProvider apis={apis}>
-            <EntityProvider entity={entityStub}>
-              <EKSClusterCard/>
-            </EntityProvider>
-          </ApiProvider>
-        </MemoryRouter>,
+      <MemoryRouter>
+        <ApiProvider apis={apis}>
+          <EntityProvider entity={entityStub}>
+            <EKSClusterCard />
+          </EntityProvider>
+        </ApiProvider>
+      </MemoryRouter>,
     );
 
-    expect(await rendered.findByText(/annotation is missing/)).toBeInTheDocument();
-    expect(await rendered.findByText("amazon.com/eks-cluster-arn")).toBeInTheDocument();
+    expect(
+      await rendered.findByText(/annotation is missing/),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('amazon.com/eks-cluster-arn'),
+    ).toBeInTheDocument();
   });
 });

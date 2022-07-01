@@ -15,57 +15,64 @@
  */
 
 import { AwsClient } from './AwsClient';
-import { UrlPatternDiscovery } from "@backstage/core-app-api";
-import fetchMock from "jest-fetch-mock";
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import fetchMock from 'jest-fetch-mock';
 
 fetchMock.enableMocks();
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 describe('AwsClient', () => {
-    let client: AwsClient;
+  let client: AwsClient;
 
+  beforeEach(() => {
+    fetchMock.resetMocks();
+    client = new AwsClient({ discoveryApi });
+  });
 
+  describe('the resource does not exist', () => {
     beforeEach(() => {
-        fetchMock.resetMocks();
-        client = new AwsClient({ discoveryApi });
-    })
+      fetchMock.resetMocks();
+      fetchMock.mockIf(/^https?:\/\/exampleapi.com.*$/, async () => {
+        return {
+          status: 404,
+          body: 'Not Found',
+        };
+      });
+    });
+    it('returns an error if the resource is not found', async () => {
+      await expect(
+        client.getResource({
+          TypeName: 'AWS::S3::Bucket',
+          Identifier: 'bucket1',
+          AccountId: '999999999',
+        }),
+      ).rejects.toEqual(
+        new Error(
+          'Failed to retrieve the aws resource AWS::S3::Bucket/bucket1',
+        ),
+      );
+    });
+  });
 
-    describe('the resource does not exist', () => {
-        beforeEach(() => {
-            fetchMock.resetMocks();
-            fetchMock.mockIf(/^https?:\/\/exampleapi.com.*$/, async () => {
-                return {
-                    status: 404,
-                    body: "Not Found"
-                }
-            })
-        })
-        it('returns an error if the resource is not found', async () => {
-            await expect(client.getResource({
-                TypeName: 'AWS::S3::Bucket',
-                Identifier: 'bucket1',
-                AccountId: '999999999'
-            })).rejects.toEqual(new Error('Failed to retrieve the aws resource AWS::S3::Bucket/bucket1'));
-        })
-    })
-
-    describe('the resource exists', () => {
-        beforeEach(() => {
-            fetchMock.resetMocks();
-            fetchMock.mockIf(/^https?:\/\/exampleapi.com.*$/, async () => {
-                return {
-                    status: 200,
-                    body: JSON.stringify({ BucketId: '1234' })
-                }
-            })
-        })
-        it('returns an error if the resource is not found', async () => {
-            await expect(client.getResource({
-                TypeName: 'AWS::S3::Bucket',
-                Identifier: 'bucket1',
-                AccountId: '999999999'
-            })).resolves.toEqual({ BucketId: '1234' });
-        })
-    })
+  describe('the resource exists', () => {
+    beforeEach(() => {
+      fetchMock.resetMocks();
+      fetchMock.mockIf(/^https?:\/\/exampleapi.com.*$/, async () => {
+        return {
+          status: 200,
+          body: JSON.stringify({ BucketId: '1234' }),
+        };
+      });
+    });
+    it('returns an error if the resource is not found', async () => {
+      await expect(
+        client.getResource({
+          TypeName: 'AWS::S3::Bucket',
+          Identifier: 'bucket1',
+          AccountId: '999999999',
+        }),
+      ).resolves.toEqual({ BucketId: '1234' });
+    });
+  });
 });

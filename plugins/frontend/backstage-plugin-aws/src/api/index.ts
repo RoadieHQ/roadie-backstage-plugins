@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export {awsApiRef} from "./AwsApi";
-export type { AwsApi } from './AwsApi'
-export { AwsClient } from './AwsClient'
+export { awsApiRef } from './AwsApi';
+export type { AwsApi } from './AwsApi';
+export { AwsClient } from './AwsClient';

@@ -26,7 +26,10 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
-import { ACCOUNT_ID_ANNOTATION, EKS_CLUSTER_ARN_ANNOTATION } from '../../constants';
+import {
+  ACCOUNT_ID_ANNOTATION,
+  EKS_CLUSTER_ARN_ANNOTATION,
+} from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { useAsync } from 'react-use';
 
@@ -66,7 +69,8 @@ export const EKSClusterCard = (props: Props) => {
       ) {
         setLoading(true);
 
-        const clusterArn = entity.metadata.annotations[EKS_CLUSTER_ARN_ANNOTATION];
+        const clusterArn =
+          entity.metadata.annotations[EKS_CLUSTER_ARN_ANNOTATION];
 
         const { region, accountId, resource } = parseArn(clusterArn);
         const [_, resourceId] = resource.split(/\/|:/);

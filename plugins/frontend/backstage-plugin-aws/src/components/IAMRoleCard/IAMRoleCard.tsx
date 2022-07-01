@@ -61,8 +61,8 @@ export const IAMRoleCard = (props: Props) => {
   useAsync(async () => {
     if (!roleDetails) {
       if (
-          entity.metadata.annotations &&
-          entity.metadata.annotations[IAM_ROLE_ARN_ANNOTATION]
+        entity.metadata.annotations &&
+        entity.metadata.annotations[IAM_ROLE_ARN_ANNOTATION]
       ) {
         setLoading(true);
 
@@ -94,25 +94,25 @@ export const IAMRoleCard = (props: Props) => {
 
   if (annotationError) {
     return (
-        <>
-          <MissingAnnotationEmptyState annotation={annotationError} />
-        </>
+      <>
+        <MissingAnnotationEmptyState annotation={annotationError} />
+      </>
     );
   }
 
   return (
-      <InfoCard
-          title="AWS IAM Role Details"
-          className={classes.infoCard}
-          variant={props.variant}
-      >
-        {loading ? (
-            <CircularProgress />
-        ) : (
-            <Box position="relative">
-              <StructuredMetadataTable metadata={roleDetails} />
-            </Box>
-        )}
-      </InfoCard>
+    <InfoCard
+      title="AWS IAM Role Details"
+      className={classes.infoCard}
+      variant={props.variant}
+    >
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <Box position="relative">
+          <StructuredMetadataTable metadata={roleDetails} />
+        </Box>
+      )}
+    </InfoCard>
   );
 };
