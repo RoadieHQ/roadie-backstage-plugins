@@ -43,7 +43,7 @@
     "@roadiehq/scaffolder-backend-module-http-request": "^3.0.4",
     "@roadiehq/scaffolder-backend-module-utils": "^1.0.2",
     "@roadiehq/scaffolder-backend-module-aws": "^2.0.2",
-    "@vscode/sqlite3": "^5.0.7",
+    "better-sqlite3": "^7.5.0",
     "@types/luxon": "^2.3.1",
     "luxon": "^2.3.1",
     "app": "^1.0.3",
