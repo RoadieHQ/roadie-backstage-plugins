@@ -17,7 +17,7 @@ backend:
     methods: [GET, POST, PUT, DELETE]
     credentials: true
   database:
-    client: sqlite3
+    client: better-sqlite3
     connection: ':memory:'
   cache:
     store: memory
