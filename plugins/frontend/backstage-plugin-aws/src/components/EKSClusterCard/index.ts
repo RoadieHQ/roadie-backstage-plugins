@@ -14,10 +14,4 @@
  * limitations under the License.
  */
 
-export const ANNOTATION_AWS_IAM_ROLE_ARN = 'amazon.com/iam-role-arn';
-export const ANNOTATION_AWS_IAM_USER_ARN = 'amazon.com/iam-user-arn';
-export const ANNOTATION_AWS_LAMBDA_FUNCTION_ARN =
-  'amazon.com/lambda-function-arn';
-export const ANNOTATION_AWS_S3_BUCKET_ARN = 'amazon.com/s3-bucket-arn';
-export const ANNOTATION_AWS_DDB_TABLE_ARN = 'amazon.com/dynamo-db-table-arn';
-export const ANNOTATION_AWS_EKS_CLUSTER_ARN = 'amazon.com/eks-cluster-arn';
+export { EKSClusterCard } from './EKSClusterCard';

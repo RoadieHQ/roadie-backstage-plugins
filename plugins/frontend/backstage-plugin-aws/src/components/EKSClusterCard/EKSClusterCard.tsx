@@ -26,7 +26,7 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
-import { ACCOUNT_ID_ANNOTATION, S3_BUCKET_ARN_ANNOTATION } from '../../constants';
+import { ACCOUNT_ID_ANNOTATION, EKS_CLUSTER_ARN_ANNOTATION } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { useAsync } from 'react-use';
 
@@ -51,33 +51,33 @@ type Props = {
   variant?: InfoCardVariants;
 };
 
-export const S3BucketCard = (props: Props) => {
+export const EKSClusterCard = (props: Props) => {
   const { entity } = useEntity();
   const awsApi = useApi(awsApiRef);
-  const [bucketDetails, setBucketDetails] = useState<any | undefined>();
+  const [clusterDetails, setClusterDetails] = useState<any | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [annotationError, setAnnotationError] = useState<string | undefined>();
 
   useAsync(async () => {
-    if (!bucketDetails) {
+    if (!clusterDetails) {
       if (
         entity.metadata.annotations &&
-        entity.metadata.annotations[ACCOUNT_ID_ANNOTATION] &&
-        entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION]
+        entity.metadata.annotations[EKS_CLUSTER_ARN_ANNOTATION]
       ) {
         setLoading(true);
 
-        // bucket arns do not have the account id. :( so we need an annotation.
-        const accountId = entity.metadata.annotations[ACCOUNT_ID_ANNOTATION];
-        const bucketArn = entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION];
+        const clusterArn = entity.metadata.annotations[EKS_CLUSTER_ARN_ANNOTATION];
 
-        const { resource } = parseArn(bucketArn);
-        const s3BucketDetails = await awsApi.getResource({
+        const { region, accountId, resource } = parseArn(clusterArn);
+        const [_, resourceId] = resource.split(/\/|:/);
+
+        const eksClusterDetails = await awsApi.getResource({
           AccountId: accountId,
-          TypeName: 'AWS::S3::Bucket',
-          Identifier: resource,
+          Region: region,
+          TypeName: 'AWS::EKS::Cluster',
+          Identifier: resourceId,
         });
-        setBucketDetails(s3BucketDetails);
+        setClusterDetails(eksClusterDetails);
         setLoading(false);
       } else {
         setAnnotationError(ACCOUNT_ID_ANNOTATION);
@@ -85,7 +85,7 @@ export const S3BucketCard = (props: Props) => {
       }
     }
     return undefined;
-  }, [entity, setBucketDetails, bucketDetails]);
+  }, [entity, setClusterDetails, clusterDetails]);
 
   const classes = useStyles();
 
@@ -103,7 +103,7 @@ export const S3BucketCard = (props: Props) => {
 
   return (
     <InfoCard
-      title="AWS S3 Bucket Details"
+      title="AWS EKS Cluster Details"
       className={classes.infoCard}
       variant={props.variant}
     >
@@ -111,7 +111,7 @@ export const S3BucketCard = (props: Props) => {
         <CircularProgress />
       ) : (
         <Box position="relative">
-          <StructuredMetadataTable metadata={bucketDetails} />
+          <StructuredMetadataTable metadata={clusterDetails} />
         </Box>
       )}
     </InfoCard>

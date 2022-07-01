@@ -40,6 +40,7 @@
     "@backstage/errors": "^1.0.0",
     "@backstage/plugin-catalog-backend": "^1.1.1",
     "@backstage/types": "^1.0.0",
+    "@aws-sdk/client-eks": "^3.72.0",
     "@aws-sdk/client-s3": "^3.72.0",
     "@aws-sdk/client-iam": "^3.72.0",
     "@aws-sdk/client-sts": "^3.72.0",

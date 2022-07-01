@@ -26,7 +26,7 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
-import { ACCOUNT_ID_ANNOTATION, S3_BUCKET_ARN_ANNOTATION } from '../../constants';
+import { IAM_ROLE_ARN_ANNOTATION } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { useAsync } from 'react-use';
 
@@ -51,41 +51,40 @@ type Props = {
   variant?: InfoCardVariants;
 };
 
-export const S3BucketCard = (props: Props) => {
+export const IAMRoleCard = (props: Props) => {
   const { entity } = useEntity();
   const awsApi = useApi(awsApiRef);
-  const [bucketDetails, setBucketDetails] = useState<any | undefined>();
+  const [roleDetails, setRoleDetails] = useState<any | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
   const [annotationError, setAnnotationError] = useState<string | undefined>();
 
   useAsync(async () => {
-    if (!bucketDetails) {
+    if (!roleDetails) {
       if (
-        entity.metadata.annotations &&
-        entity.metadata.annotations[ACCOUNT_ID_ANNOTATION] &&
-        entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION]
+          entity.metadata.annotations &&
+          entity.metadata.annotations[IAM_ROLE_ARN_ANNOTATION]
       ) {
         setLoading(true);
 
-        // bucket arns do not have the account id. :( so we need an annotation.
-        const accountId = entity.metadata.annotations[ACCOUNT_ID_ANNOTATION];
-        const bucketArn = entity.metadata.annotations[S3_BUCKET_ARN_ANNOTATION];
+        const roleArn = entity.metadata.annotations[IAM_ROLE_ARN_ANNOTATION];
 
-        const { resource } = parseArn(bucketArn);
-        const s3BucketDetails = await awsApi.getResource({
+        const { accountId, resource } = parseArn(roleArn);
+        const resourceNameParts = resource.split('/');
+
+        const iamRoleDetails = await awsApi.getResource({
           AccountId: accountId,
-          TypeName: 'AWS::S3::Bucket',
-          Identifier: resource,
+          TypeName: 'AWS::IAM::Role',
+          Identifier: resourceNameParts[resourceNameParts.length - 1],
         });
-        setBucketDetails(s3BucketDetails);
+        setRoleDetails(iamRoleDetails);
         setLoading(false);
       } else {
-        setAnnotationError(ACCOUNT_ID_ANNOTATION);
+        setAnnotationError(IAM_ROLE_ARN_ANNOTATION);
         setLoading(false);
       }
     }
     return undefined;
-  }, [entity, setBucketDetails, bucketDetails]);
+  }, [entity, setRoleDetails, roleDetails]);
 
   const classes = useStyles();
 
@@ -95,25 +94,25 @@ export const S3BucketCard = (props: Props) => {
 
   if (annotationError) {
     return (
-      <>
-        <MissingAnnotationEmptyState annotation={annotationError} />
-      </>
+        <>
+          <MissingAnnotationEmptyState annotation={annotationError} />
+        </>
     );
   }
 
   return (
-    <InfoCard
-      title="AWS S3 Bucket Details"
-      className={classes.infoCard}
-      variant={props.variant}
-    >
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <Box position="relative">
-          <StructuredMetadataTable metadata={bucketDetails} />
-        </Box>
-      )}
-    </InfoCard>
+      <InfoCard
+          title="AWS IAM Role Details"
+          className={classes.infoCard}
+          variant={props.variant}
+      >
+        {loading ? (
+            <CircularProgress />
+        ) : (
+            <Box position="relative">
+              <StructuredMetadataTable metadata={roleDetails} />
+            </Box>
+        )}
+      </InfoCard>
   );
 };

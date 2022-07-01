@@ -20,3 +20,4 @@ export { AWSIAMUserProvider } from './AWSIAMUserProvider';
 export { AWSIAMRoleProvider } from './AWSIAMRoleProvider';
 export { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
 export { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
+export { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
