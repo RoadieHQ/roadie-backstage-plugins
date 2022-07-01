@@ -27,7 +27,6 @@ import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
 import {
-  ACCOUNT_ID_ANNOTATION,
   EKS_CLUSTER_ARN_ANNOTATION,
 } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
@@ -84,7 +83,7 @@ export const EKSClusterCard = (props: Props) => {
         setClusterDetails(eksClusterDetails);
         setLoading(false);
       } else {
-        setAnnotationError(ACCOUNT_ID_ANNOTATION);
+        setAnnotationError(EKS_CLUSTER_ARN_ANNOTATION);
         setLoading(false);
       }
     }

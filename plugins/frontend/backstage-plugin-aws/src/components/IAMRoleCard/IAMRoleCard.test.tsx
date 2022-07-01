@@ -26,26 +26,27 @@ import { setupServer } from 'msw/node';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
-import { IAMUserCard } from './IAMUserCard';
-import { UserEntity } from '@backstage/catalog-model';
+import { IAMRoleCard } from './IAMRoleCard';
+import { ResourceEntity } from '@backstage/catalog-model';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 
-const entityStub: UserEntity = {
+const entityStub: ResourceEntity = {
   apiVersion: 'backstage.io/v1beta1',
   spec: {
-    memberOf: [],
+    owner: "unknown",
+    type: "iam-role"
   },
-  kind: 'User',
+  kind: 'Resource',
   metadata: {
     annotations: {},
-    name: 'fnamelname',
+    name: 'role1',
   },
 };
 
-describe('IAMUserCard', () => {
+describe('IAMRoleCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
@@ -59,7 +60,7 @@ describe('IAMUserCard', () => {
       <MemoryRouter>
         <ApiProvider apis={apis}>
           <EntityProvider entity={entityStub}>
-            <IAMUserCard />
+            <IAMRoleCard />
           </EntityProvider>
         </ApiProvider>
       </MemoryRouter>,
@@ -69,7 +70,7 @@ describe('IAMUserCard', () => {
       await rendered.findByText(/annotation is missing/),
     ).toBeInTheDocument();
     expect(
-      await rendered.findByText('amazon.com/iam-user-arn'),
+      await rendered.findByText('amazon.com/iam-role-arn'),
     ).toBeInTheDocument();
   });
 });
