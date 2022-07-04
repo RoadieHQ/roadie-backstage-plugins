@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.0.5
+
+### Patch Changes
+
+- 46c75ec: Hide the internal url from the log line in the scaffolder http action.
+
 ## 3.0.4
 
 ### Patch Changes
