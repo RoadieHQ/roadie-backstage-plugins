@@ -100,7 +100,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const url = await generateBackstageUrl(config, input.path);
 
       ctx.logger.info(
-        `Creating ${method} request with http:backstage:proxy scaffolder action against ${url}`,
+        `Creating ${method} request with http:backstage:proxy scaffolder action against ${input.path}`,
       );
 
       const queryParams: string = params
