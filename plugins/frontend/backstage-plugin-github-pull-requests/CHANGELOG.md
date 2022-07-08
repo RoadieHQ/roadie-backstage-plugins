@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.2.1
+
+### Patch Changes
+
+- 8f8bbbb: Fix the types for the new query parameter on the homepage pullrequests plugin
+
 ## 2.2.0
 
 ### Minor Changes
