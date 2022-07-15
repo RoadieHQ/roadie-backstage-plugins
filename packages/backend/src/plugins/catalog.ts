@@ -14,6 +14,7 @@ import {
   AWSDynamoDbTableDataProvider,
   AWSIAMRoleProvider,
   AWSIAMRoleProcessor,
+  AWSEKSClusterProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { Duration } from 'luxon';
 
@@ -33,17 +34,20 @@ export default async function createPlugin(
     const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
     const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, env);
     const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
+    const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, env);
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
     builder.addEntityProvider(iamUserProvider);
     builder.addEntityProvider(iamRoleProvider);
     builder.addEntityProvider(ddbTableProvider);
+    builder.addEntityProvider(eksClusterProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
     providers.push(iamRoleProvider);
     providers.push(ddbTableProvider);
+    providers.push(eksClusterProvider);
 
     const useDdbData = config.has('dynamodbTableData');
     if (useDdbData) {

@@ -26,28 +26,27 @@ import { setupServer } from 'msw/node';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
-import { LambdaFunctionCard } from './LambdaFunctionCard';
-import { ComponentEntity } from '@backstage/catalog-model';
+import { ResourceEntity } from '@backstage/catalog-model';
+import { EKSClusterCard } from './EKSClusterCard';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 
-const entityStub: ComponentEntity = {
+const entityStub: ResourceEntity = {
   apiVersion: 'backstage.io/v1beta1',
-  kind: 'Component',
+  kind: 'Resource',
   spec: {
-    lifecycle: 'production',
     owner: 'unknown',
     type: 'service',
   },
   metadata: {
     annotations: {},
-    name: 'lambda1',
+    name: 'cluster1',
   },
 };
 
-describe('LambdaFunctionCard', () => {
+describe('EKSClusterCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
@@ -61,7 +60,7 @@ describe('LambdaFunctionCard', () => {
       <MemoryRouter>
         <ApiProvider apis={apis}>
           <EntityProvider entity={entityStub}>
-            <LambdaFunctionCard />
+            <EKSClusterCard />
           </EntityProvider>
         </ApiProvider>
       </MemoryRouter>,
@@ -71,7 +70,7 @@ describe('LambdaFunctionCard', () => {
       await rendered.findByText(/annotation is missing/),
     ).toBeInTheDocument();
     expect(
-      await rendered.findByText('amazon.com/lambda-function-arn'),
+      await rendered.findByText('amazon.com/eks-cluster-arn'),
     ).toBeInTheDocument();
   });
 });

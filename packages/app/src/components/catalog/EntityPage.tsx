@@ -108,6 +108,13 @@ import {
   S3BucketCard,
   LambdaFunctionCard,
   IAMUserCard,
+  IAMRoleCard,
+  EKSClusterCard,
+  isEksClusterAvailable,
+  isIamUserAvailable,
+  isS3BucketAvailable,
+  isIamRoleAvailable,
+  isLambdaFunctionAvailable,
 } from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
@@ -150,15 +157,41 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
-    <Grid item md={6}>
-      <LambdaFunctionCard />
-    </Grid>
-    <Grid item md={6}>
-      <S3BucketCard />
-    </Grid>
-    <Grid item md={6}>
-      <IAMUserCard />
-    </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isLambdaFunctionAvailable}>
+        <Grid item md={6}>
+          <LambdaFunctionCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isS3BucketAvailable}>
+        <Grid item md={6}>
+          <S3BucketCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isIamUserAvailable}>
+        <Grid item md={6}>
+          <IAMUserCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isIamRoleAvailable}>
+        <Grid item md={6}>
+          <IAMRoleCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isEksClusterAvailable}>
+        <Grid item md={6}>
+          <EKSClusterCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
         <Grid item md={6}>

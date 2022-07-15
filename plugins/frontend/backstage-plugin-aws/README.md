@@ -6,9 +6,9 @@ Edit the `packages/app/src/components/catalog/EntityPage.tsx` and add the import
 
 ```typescript jsx
 import {
-    S3BucketCard,
-    LambdaFunctionCard,
-    IAMUserCard
+  S3BucketCard,
+  LambdaFunctionCard,
+  IAMUserCard,
 } from '@roadiehq/backstage-plugin-aws';
 ```
 
