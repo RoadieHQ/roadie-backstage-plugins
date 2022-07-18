@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.2.1
+
+### Patch Changes
+
+- 938430c: Add EKS Cluster Resource provider to the aws catalog backend plugin.
+
 ## 1.2.0
 
 ### Minor Changes
