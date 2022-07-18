@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.0.1
+
+### Patch Changes
+
+- 938430c: Added entity switcher functions and add new cards for EKS Clusters and IAM Roles.
+
 ## 1.0.0
 
 ### Major Changes
