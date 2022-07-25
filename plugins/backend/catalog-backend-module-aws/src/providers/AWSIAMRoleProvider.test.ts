@@ -89,7 +89,7 @@ describe('AWSIAMRoleProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               metadata: expect.objectContaining({
-                name: 'asdfewfwef',
+                title: 'adsf',
               }),
             }),
           }),

@@ -98,7 +98,7 @@ describe('AWSEKSClusterProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               metadata: expect.objectContaining({
-                name: 'cluster1',
+                title: 'cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
                     'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',

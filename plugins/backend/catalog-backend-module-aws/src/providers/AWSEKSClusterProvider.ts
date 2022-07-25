@@ -23,6 +23,7 @@ import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
+import { arnToName } from '../utils/arnToName';
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -88,7 +89,8 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations,
-              name,
+              name: arnToName(name),
+              title: name,
             },
             spec: {
               owner: 'unknown',

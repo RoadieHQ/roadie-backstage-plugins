@@ -89,7 +89,7 @@ describe('AWSLambdaFunctionProvider', () => {
             entity: expect.objectContaining({
               kind: 'Component',
               metadata: expect.objectContaining({
-                name: 'my-function',
+                title: 'my-function',
               }),
             }),
           }),
