@@ -46,7 +46,7 @@ export class OktaUserProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    await client.listUsers().each(user => {
+    client.listUsers().each(user => {
       const userEntity: UserEntity = {
         kind: 'User',
         apiVersion: 'backstage.io/v1alpha1',
@@ -73,7 +73,7 @@ export class OktaUserProvider extends OktaEntityProvider {
       type: 'full',
       entities: userResources.map(entity => ({
         entity,
-        locationKey: `okta-user-provider:${this.orgUrl}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

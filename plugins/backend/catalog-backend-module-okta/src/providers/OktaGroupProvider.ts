@@ -78,7 +78,7 @@ export class OktaGroupProvider extends OktaEntityProvider {
       type: 'full',
       entities: groupResources.map(entity => ({
         entity,
-        locationKey: `okta-group-provider:${this.orgUrl}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }
