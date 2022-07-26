@@ -22,12 +22,12 @@ import { OktaEntityProvider } from './OktaEntityProvider';
 /**
  * Provides entities from Okta Group service.
  */
-export class OktaGroupProvider extends OktaEntityProvider {
+export class OktaGroupEntityProvider extends OktaEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
-    return new OktaGroupProvider({ orgUrl, token }, options);
+    return new OktaGroupEntityProvider({ orgUrl, token }, options);
   }
 
   getProviderName(): string {

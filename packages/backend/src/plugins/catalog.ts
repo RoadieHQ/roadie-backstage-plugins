@@ -17,8 +17,8 @@ import {
   AWSEKSClusterProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import {
-  OktaUserProvider,
-  OktaGroupProvider,
+  OktaUserEntityProvider,
+  OktaGroupEntityProvider,
 } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
 
@@ -32,10 +32,11 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
 
-  for (const config of env.config.getOptionalConfigArray('integrations.okta') ||
-    []) {
-    const groupProvider = OktaGroupProvider.fromConfig(config, env);
-    const userProvider = OktaUserProvider.fromConfig(config, env);
+  for (const config of env.config.getOptionalConfigArray(
+    'catalog.providers.okta',
+  ) || []) {
+    const groupProvider = OktaGroupEntityProvider.fromConfig(config, env);
+    const userProvider = OktaUserEntityProvider.fromConfig(config, env);
 
     builder.addEntityProvider(groupProvider);
     builder.addEntityProvider(userProvider);

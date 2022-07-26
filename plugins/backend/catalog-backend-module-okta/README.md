@@ -9,16 +9,16 @@ You will need to configure the providers in your catalog.ts file in your backsta
 
 ```typescript
 import {
-  OktaUserProvider,
-  OktaGroupProvider,
+  OktaUserEntityProvider,
+  OktaGroupEntityProvider,
 } from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
-  const userProvider = OktaUserProvider.fromConfig(config, env);
-  const groupProvider = OktaGroupProvider.fromConfig(config, env);
+  const userProvider = OktaUserEntityProvider.fromConfig(config, env);
+  const groupProvider = OktaGroupEntityProvider.fromConfig(config, env);
 
   builder.addEntityProvider(userProvider);
   builder.addEntityProvider(groupProvider);
@@ -38,9 +38,10 @@ export default async function createPlugin(
 Then you will need to configure your okta credentials in the `app-config.yaml`.
 
 ```yaml
-integrations:
-  okta:
-    - orgUrl: 'https://tenant.okta.com'
-      token:
-        $env: OKTA_TOKEN
+catalog:
+  providers:
+    okta:
+      - orgUrl: 'https://tenant.okta.com'
+        token:
+          $env: OKTA_TOKEN
 ```

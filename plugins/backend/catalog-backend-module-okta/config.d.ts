@@ -15,10 +15,12 @@
  */
 
 export interface Config {
-  integrations?: {
-    /**
-     * Okta configuration
-     */
-    okta?: AccountConfig[];
+  catalog?: {
+    providers?: {
+      /**
+       * Okta configuration
+       */
+      okta?: AccountConfig[];
+    };
   };
 }

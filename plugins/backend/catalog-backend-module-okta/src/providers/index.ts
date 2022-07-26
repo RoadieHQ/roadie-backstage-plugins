@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-export { OktaGroupProvider } from './OktaGroupProvider';
-export { OktaUserProvider } from './OktaUserProvider';
+export { OktaGroupEntityProvider } from './OktaGroupEntityProvider';
+export { OktaUserEntityProvider } from './OktaUserEntityProvider';

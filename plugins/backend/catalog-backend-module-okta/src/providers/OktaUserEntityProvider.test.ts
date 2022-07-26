@@ -15,20 +15,19 @@
  */
 
 import { createLogger, transports } from 'winston';
-import { OktaGroupProvider } from './OktaGroupProvider';
+import { OktaUserEntityProvider } from './OktaUserEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
 
-let listGroups: () => MockOktaCollection = () => {
+let listUsers: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
 };
-
 jest.mock('@okta/okta-sdk-nodejs', () => {
   return {
     Client: jest.fn().mockImplementation(() => {
       return {
-        listGroups,
+        listUsers,
       };
     }),
   };
@@ -38,22 +37,22 @@ const logger = createLogger({
   transports: [new transports.Console({ silent: true })],
 });
 
-describe('OktaGroupProvider', () => {
+describe('AWSIAMUserProvider', () => {
   const config = new ConfigReader({
     orgUrl: 'https://okta',
     token: 'secret',
   });
 
-  describe('where there is no groups', () => {
+  describe('where there is no users', () => {
     beforeEach(() => {
-      listGroups = () => new MockOktaCollection([]);
+      listUsers = () => new MockOktaCollection([]);
     });
 
-    it('creates no okta groups', async () => {
+    it('creates no okta users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
-      const provider = OktaGroupProvider.fromConfig(config, { logger });
+      const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
@@ -63,29 +62,25 @@ describe('OktaGroupProvider', () => {
     });
   });
 
-  describe('where there are is a group', () => {
+  describe('where there are is a user', () => {
     beforeEach(() => {
-      listGroups = () => {
+      listUsers = () => {
         return new MockOktaCollection([
           {
             id: 'asdfwefwefwef',
             profile: {
-              name: 'Everyone',
-              description: 'Everyone in the company',
-            },
-            listUsers: () => {
-              return new MockOktaCollection([]);
+              email: 'fname@domain.com',
             },
           },
         ]);
       };
     });
 
-    it('creates okta groups', async () => {
+    it('creates okta users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
-      const provider = OktaGroupProvider.fromConfig(config, { logger });
+      const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
@@ -93,7 +88,7 @@ describe('OktaGroupProvider', () => {
         entities: [
           expect.objectContaining({
             entity: expect.objectContaining({
-              kind: 'Group',
+              kind: 'User',
               metadata: expect.objectContaining({
                 name: 'asdfwefwefwef',
               }),

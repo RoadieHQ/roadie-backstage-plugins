@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,12 @@ import { OktaEntityProvider } from './OktaEntityProvider';
 /**
  * Provides entities from Okta User service.
  */
-export class OktaUserProvider extends OktaEntityProvider {
+export class OktaUserEntityProvider extends OktaEntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
-    return new OktaUserProvider({ orgUrl, token }, options);
+    return new OktaUserEntityProvider({ orgUrl, token }, options);
   }
 
   getProviderName(): string {
@@ -46,7 +46,7 @@ export class OktaUserProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    client.listUsers().each(user => {
+    await client.listUsers().each(user => {
       const userEntity: UserEntity = {
         kind: 'User',
         apiVersion: 'backstage.io/v1alpha1',
