@@ -53,8 +53,8 @@ export abstract class OktaEntityProvider implements EntityProvider {
 
   protected async buildDefaultAnnotations() {
     return {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.orgUrl}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.orgUrl}`,
+      [ANNOTATION_LOCATION]: this.getProviderName(),
+      [ANNOTATION_ORIGIN_LOCATION]: this.getProviderName(),
     };
   }
 }
