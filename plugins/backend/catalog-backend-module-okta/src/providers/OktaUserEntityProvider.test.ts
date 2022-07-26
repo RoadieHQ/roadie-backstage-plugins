@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { createLogger, transports } from 'winston';
 import { OktaUserEntityProvider } from './OktaUserEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
