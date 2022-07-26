@@ -14,10 +14,10 @@
   "backstage": {
     "role": "backend-plugin-module"
   },
-  "homepage": "https://backstage.io",
+  "homepage": "https://roadie.io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/backstage/backstage",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins",
     "directory": "plugins/catalog-backend-module-okta"
   },
   "keywords": [
