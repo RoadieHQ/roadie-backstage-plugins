@@ -19,6 +19,7 @@ import { OktaUserEntityProvider } from './OktaUserEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
+import { getVoidLogger } from '@backstage/backend-common';
 
 let listUsers: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -33,9 +34,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
   };
 });
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = getVoidLogger();
 
 describe('AWSIAMUserProvider', () => {
   const config = new ConfigReader({

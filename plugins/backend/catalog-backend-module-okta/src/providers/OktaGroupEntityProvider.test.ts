@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { createLogger, transports } from 'winston';
 import { OktaGroupEntityProvider } from './OktaGroupEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
+import { getVoidLogger } from '@backstage/backend-common';
 
 let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -34,9 +34,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
   };
 });
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = getVoidLogger()
 
 describe('OktaGroupProvider', () => {
   const config = new ConfigReader({
@@ -63,7 +61,7 @@ describe('OktaGroupProvider', () => {
     });
   });
 
-  describe('where there are is a group', () => {
+  describe('where there is a group', () => {
     beforeEach(() => {
       listGroups = () => {
         return new MockOktaCollection([
