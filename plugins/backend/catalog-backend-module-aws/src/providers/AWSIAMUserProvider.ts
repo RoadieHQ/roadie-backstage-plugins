@@ -20,6 +20,7 @@ import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
+import { arnToName } from '../utils/arnToName';
 
 const link2aws = require('link2aws');
 
@@ -79,7 +80,8 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
                 [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
                 [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
-              name: user.UserId,
+              name: arnToName(user.Arn),
+              title: user.UserName,
             },
             spec: {
               profile: {

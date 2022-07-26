@@ -20,6 +20,7 @@ import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
+import { arnToName } from '../utils/arnToName';
 
 const link2aws = require('link2aws');
 
@@ -73,7 +74,8 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
               [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
               [ANNOTATION_VIEW_URL]: consoleLink,
             },
-            name: bucket.Name,
+            name: arnToName(bucketArn),
+            title: bucket.Name,
           },
           spec: {
             owner: 'unknown',

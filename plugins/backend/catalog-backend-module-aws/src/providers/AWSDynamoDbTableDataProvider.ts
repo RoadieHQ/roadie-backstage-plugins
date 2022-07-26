@@ -31,6 +31,7 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
 import * as winston from 'winston';
+import {ANNOTATION_ACCOUNT_ID, ANNOTATION_AWS_DDB_TABLE_ARN} from "../annotations";
 
 export type ValueMapping = {
   entityPath: string;
@@ -108,7 +109,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     };
 
     if (account.Account) {
-      defaultAnnotations['amazon.com/account-id'] = account.Account;
+      defaultAnnotations[ANNOTATION_ACCOUNT_ID] = account.Account;
     }
 
     this.logger.info(`Querying table ${this.tableDataConfig.tableName}`);
@@ -137,9 +138,10 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
             metadata: {
               annotations: {
                 ...defaultAnnotations,
-                ...(tableArn ? { 'amazon.com/dynamo-db-table': tableArn } : {}),
+                ...(tableArn ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn } : {}),
               },
               name: row[idColumn],
+              title: row[idColumn],
             },
             spec: {
               owner: this.accountId,

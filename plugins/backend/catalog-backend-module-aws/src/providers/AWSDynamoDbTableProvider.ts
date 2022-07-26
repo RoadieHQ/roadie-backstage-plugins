@@ -20,6 +20,7 @@ import * as winston from 'winston';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ComponentEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
+import { arnToName } from '../utils/arnToName';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -82,7 +83,8 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                     ...defaultAnnotations,
                     [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
                   },
-                  name: table.TableName.slice(0, 62),
+                  name: arnToName(table.TableArn),
+                  title: table.TableName
                 },
                 spec: {
                   owner: this.accountId,

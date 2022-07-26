@@ -88,7 +88,7 @@ describe('AWSS3BucketProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               metadata: expect.objectContaining({
-                name: 'my-bucket',
+                title: 'my-bucket',
               }),
             }),
           }),

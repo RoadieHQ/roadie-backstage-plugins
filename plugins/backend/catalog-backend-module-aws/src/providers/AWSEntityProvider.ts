@@ -26,6 +26,7 @@ import {
   ANNOTATION_ORIGIN_LOCATION,
   ANNOTATION_LOCATION,
 } from '@backstage/catalog-model';
+import {ANNOTATION_ACCOUNT_ID} from "../annotations";
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly accountId: string;
@@ -69,7 +70,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     };
 
     if (account.Account) {
-      defaultAnnotations['amazon.com/account-id'] = account.Account;
+      defaultAnnotations[ANNOTATION_ACCOUNT_ID] = account.Account;
     }
 
     return defaultAnnotations;

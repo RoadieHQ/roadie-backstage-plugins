@@ -89,7 +89,7 @@ describe('AWSIAMUserProvider', () => {
             entity: expect.objectContaining({
               kind: 'User',
               metadata: expect.objectContaining({
-                name: 'asdferfhef123asdf',
+                title: 'adsf',
               }),
             }),
           }),

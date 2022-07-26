@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { SHA256 } from 'crypto-js'
 
-export const ANNOTATION_AWS_IAM_ROLE_ARN = 'amazon.com/iam-role-arn';
-export const ANNOTATION_AWS_IAM_USER_ARN = 'amazon.com/iam-user-arn';
-export const ANNOTATION_AWS_LAMBDA_FUNCTION_ARN =
-  'amazon.com/lambda-function-arn';
-export const ANNOTATION_AWS_S3_BUCKET_ARN = 'amazon.com/s3-bucket-arn';
-export const ANNOTATION_AWS_DDB_TABLE_ARN = 'amazon.com/dynamo-db-table-arn';
-export const ANNOTATION_AWS_EKS_CLUSTER_ARN = 'amazon.com/eks-cluster-arn';
-export const ANNOTATION_ACCOUNT_ID = 'amazon.com/account-id';
-
+export function arnToName(
+  arn: string
+) {
+  return SHA256(arn).toString().slice(0, 63)
+}
