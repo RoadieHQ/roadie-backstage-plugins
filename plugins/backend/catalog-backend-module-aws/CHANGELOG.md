@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.2.2
+
+### Patch Changes
+
+- 406c702: Use a sha256 of the arn for the aws resource names.
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # backend
 
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [406c702]
+- Updated dependencies [6c73c72]
+  - @roadiehq/catalog-backend-module-aws@1.2.2
+  - @roadiehq/catalog-backend-module-okta@0.1.0
+
 ## 1.0.7
 
 ### Patch Changes
