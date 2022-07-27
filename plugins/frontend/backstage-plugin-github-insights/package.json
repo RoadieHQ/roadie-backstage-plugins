@@ -23,14 +23,14 @@
     "role": "frontend-plugin"
   },
   "scripts": {
-    "build": "backstage-cli plugin:build",
+    "build": "backstage-cli package build",
     "tsc": "tsc",
-    "start": "backstage-cli plugin:serve",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
+    "start": "backstage-cli package start",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {
