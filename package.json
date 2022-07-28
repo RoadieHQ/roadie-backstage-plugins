@@ -53,11 +53,6 @@
       "prettier --write"
     ]
   },
-  "jest": {
-    "transformModules": [
-      "@asyncapi/react-component"
-    ]
-  },
   "dependencies": {
     "@changesets/cli": "^2.18.0"
   }
