@@ -18,12 +18,12 @@
     "directory": "plugins/backend/backstage-aws-backend"
   },
   "scripts": {
-    "start": "backstage-cli backend:dev",
-    "build": "backstage-cli backend:build",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {

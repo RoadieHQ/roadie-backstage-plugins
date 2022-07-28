@@ -11,11 +11,11 @@
     "node": "14 || 16"
   },
   "scripts": {
-    "build": "backstage-cli backend:bundle",
+    "build": "backstage-cli package build",
     "build-image": "docker build ../.. -f Dockerfile --tag backstage",
-    "start": "backstage-cli backend:dev",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
+    "start": "backstage-cli package start",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
     "clean": "backstage-cli clean",
     "migrate:create": "knex migrate:make -x ts"
   },

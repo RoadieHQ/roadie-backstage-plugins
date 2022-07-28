@@ -68,10 +68,10 @@
     "start-server-and-test": "^1.10.11"
   },
   "scripts": {
-    "start": "backstage-cli app:serve",
-    "build": "backstage-cli app:build",
-    "test": "backstage-cli test",
-    "lint": "backstage-cli lint",
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build",
+    "test": "backstage-cli package test",
+    "lint": "backstage-cli package lint",
     "clean": "backstage-cli clean",
     "test:e2e": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 cy:dev",
     "test:e2e:ci": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 cy:run",
