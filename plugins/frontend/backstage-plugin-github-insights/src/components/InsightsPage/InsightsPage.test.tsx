@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { act, render, RenderResult, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
