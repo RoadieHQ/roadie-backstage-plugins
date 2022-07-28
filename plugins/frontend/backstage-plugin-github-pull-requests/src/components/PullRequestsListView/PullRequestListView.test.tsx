@@ -48,7 +48,6 @@ describe('PullRequestsTable', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {
-    worker.resetHandlers();
     cleanup();
   });
   beforeEach(() => {

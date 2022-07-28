@@ -87,7 +87,6 @@ describe('Shortcut stories card', () => {
   setupRequestMockHandlers(worker);
 
   afterEach(() => {
-    worker.resetHandlers();
     cleanup();
   });
   beforeEach(() => {
