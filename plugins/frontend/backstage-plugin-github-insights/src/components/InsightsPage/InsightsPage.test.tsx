@@ -62,9 +62,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 
 describe('Insights Page', () => {
   it('should render', async () => {
-    let renderResult: RenderResult;
-
-    renderResult = render(
+    const renderResult = render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
