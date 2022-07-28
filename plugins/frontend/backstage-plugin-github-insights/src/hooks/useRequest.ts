@@ -21,8 +21,6 @@ import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
 import { useStore } from '../components/store';
-import { RequestError } from "@octokit/request-error";
-
 
 export const useRequest = (
   entity: Entity,
@@ -34,7 +32,9 @@ export const useRequest = (
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
 
-  const { state: requestState, setState: setRequestState } = useStore(state => state.request)
+  const { state: requestState, setState: setRequestState } = useStore(
+    state => state.request,
+  );
 
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     let result;
@@ -45,29 +45,29 @@ export const useRequest = (
       const response = await octokit.request(
         `GET /repos/{owner}/{repo}/${requestName}`,
         {
-          headers: { "if-none-match": requestState[requestName].etag },
+          headers: { 'if-none-match': requestState[requestName].etag },
           baseUrl,
           owner,
           repo,
           ...(perPage && { per_page: perPage }),
         },
       );
-
       const data = response.data;
 
-      result = { data: maxResults ? data.slice(0, maxResults) : data, etag: response.headers.etag ?? "" };
-    } catch (e) {
-      if (e instanceof RequestError) {
-        if (e.status === 304) {
-          result = requestState[requestName]
-        }
+      result = {
+        data: maxResults ? data.slice(0, maxResults) : data,
+        etag: response.headers.etag ?? '',
+      };
+    } catch (e: any) {
+      if (e.status === 304) {
+        result = requestState[requestName];
       }
     }
-    return result
+    return result;
   }, [baseUrl, requestName]);
 
   if (value?.data) {
-    setRequestState(requestName, value)
+    setRequestState(requestName, value);
   }
 
   return {
