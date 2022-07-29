@@ -15,16 +15,16 @@
  */
 
 export interface Config {
-    /** Minimum severity level configurations for the Dependabot Alerts */
-    dependabotAlertsConfiguration?: {
-        /**
-         *
-         * @visibility frontend
-         */
-        /**
-         *
-         * @items.visibility frontend
-         */
-        severity: string[]
-    };
+  /** Minimum severity level configurations for the Dependabot Alerts */
+  dependabotAlertsConfiguration?: {
+    /**
+     *
+     * @visibility frontend
+     */
+    /**
+     *
+     * @items.visibility frontend
+     */
+    severity: string[];
+  };
 }

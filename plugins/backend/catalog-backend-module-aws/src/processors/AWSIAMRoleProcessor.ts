@@ -32,7 +32,7 @@ import { Config } from '@backstage/config';
 import * as winston from 'winston';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
-import { arnToName } from "../utils/arnToName";
+import { arnToName } from '../utils/arnToName';
 
 export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
   static fromConfig(
@@ -73,8 +73,9 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
 
     const relatedEntities = await this.catalogApi.getEntities({
       filter: {
-        'metadata.name':
-          arnToName(resource.metadata.annotations[ANNOTATION_AWS_IAM_ROLE_ARN]),
+        'metadata.name': arnToName(
+          resource.metadata.annotations[ANNOTATION_AWS_IAM_ROLE_ARN],
+        ),
       },
     });
 

@@ -17,6 +17,4 @@
 import { createDevApp } from '@backstage/dev-utils';
 import { backstagePluginBugsnag } from '../src/plugin';
 
-createDevApp()
-  .registerPlugin(backstagePluginBugsnag)
-  .render();
+createDevApp().registerPlugin(backstagePluginBugsnag).render();

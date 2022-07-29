@@ -19,7 +19,7 @@
  *
  * @public
  */
- export type MarkdownContentProps = {
+export type MarkdownContentProps = {
   owner: string;
   repo: string;
   path: string;

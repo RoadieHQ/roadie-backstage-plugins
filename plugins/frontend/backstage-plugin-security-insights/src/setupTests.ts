@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-
 import '@testing-library/jest-dom';
 import 'cross-fetch/polyfill';
 
 // @ts-ignore
-window.HTMLCanvasElement.prototype.getContext = () => {}
+window.HTMLCanvasElement.prototype.getContext = () => {};

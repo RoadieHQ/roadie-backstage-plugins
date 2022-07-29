@@ -26,7 +26,7 @@ import {
   IssuesCounter,
   IssueType,
   Project,
-  Status
+  Status,
 } from '../types';
 import fetch from 'cross-fetch';
 
@@ -60,7 +60,9 @@ export class JiraAPI {
       ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
 
-    this.confluenceActivityFilter = options.configApi.getOptionalString('jira.confluenceActivityFilter');
+    this.confluenceActivityFilter = options.configApi.getOptionalString(
+      'jira.confluenceActivityFilter',
+    );
   }
 
   private generateProjectUrl = (url: string) => new URL(url).origin;
@@ -79,11 +81,15 @@ export class JiraAPI {
       .map(i => `'${i}'`)
       .join(',');
 
-  private async pagedIssueCountRequest(apiUrl: string, jql: string, startAt: number): Promise<IssueCountResult> {
+  private async pagedIssueCountRequest(
+    apiUrl: string,
+    jql: string,
+    startAt: number,
+  ): Promise<IssueCountResult> {
     const data = {
       jql,
       maxResults: -1,
-      fields: ["key", "issuetype"],
+      fields: ['key', 'issuetype'],
       startAt,
     };
 
@@ -130,7 +136,7 @@ export class JiraAPI {
     let startAt: number | undefined = 0;
     const issues: IssueCountElement[] = [];
 
-    while(startAt !== undefined) {
+    while (startAt !== undefined) {
       const res: IssueCountResult = await this.pagedIssueCountRequest(
         apiUrl,
         jql,
@@ -240,11 +246,13 @@ export class JiraAPI {
     } else {
       // Get all issues, count them using reduce and generate a ticketIds array,
       // used to filter in the activity stream
-      const issuesTypes = project.issueTypes.map((status: IssueType): IssuesCounter => ({
-        name: status.name,
-        iconUrl: status.iconUrl,
-        total: 0,
-      }));
+      const issuesTypes = project.issueTypes.map(
+        (status: IssueType): IssuesCounter => ({
+          name: status.name,
+          iconUrl: status.iconUrl,
+          total: 0,
+        }),
+      );
       const foundIssues = await this.getIssueCountPaged({
         apiUrl,
         projectKey,
@@ -252,16 +260,17 @@ export class JiraAPI {
         statusesNames,
       });
 
-      issuesCounter = foundIssues.reduce((prev, curr) => {
-        const name = curr.fields.issuetype.name;
-        const idx = issuesTypes.findIndex(i => i.name === name);
-        if (idx !== -1) {
-          issuesTypes[idx].total++;
-        }
-        return prev;
-      }, issuesTypes)
-      .filter(el => el.name !== 'Sub-task');
-      
+      issuesCounter = foundIssues
+        .reduce((prev, curr) => {
+          const name = curr.fields.issuetype.name;
+          const idx = issuesTypes.findIndex(i => i.name === name);
+          if (idx !== -1) {
+            issuesTypes[idx].total++;
+          }
+          return prev;
+        }, issuesTypes)
+        .filter(el => el.name !== 'Sub-task');
+
       ticketIds = foundIssues.map(i => i.key);
     }
 
@@ -294,7 +303,9 @@ export class JiraAPI {
     let filterUrl = `streams=key+IS+${projectKey}`;
     if (componentName && ticketIds) {
       filterUrl += `&streams=issue-key+IS+${ticketIds.join('+')}`;
-      filterUrl += this.confluenceActivityFilter ? `&${this.confluenceActivityFilter}=activity+IS+NOT+*` : '';
+      filterUrl += this.confluenceActivityFilter
+        ? `&${this.confluenceActivityFilter}=activity+IS+NOT+*`
+        : '';
       // Filter to remove all the changes done in Confluence, otherwise they are also shown as part of the component's activity stream
     }
 

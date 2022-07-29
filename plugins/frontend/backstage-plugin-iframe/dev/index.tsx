@@ -16,20 +16,25 @@
 
 import React from 'react';
 import { createDevApp } from '@backstage/dev-utils';
-import { iframePlugin, EntityIFrameCard, EntityIFrameContent, HomePageIFrameCard } from '../src';
+import {
+  iframePlugin,
+  EntityIFrameCard,
+  EntityIFrameContent,
+  HomePageIFrameCard,
+} from '../src';
 import { IFrameContentProps, IFrameProps } from '../src/components/types';
 
 const props: IFrameProps = {
-  src: "https://example.com",
-  height: "400px",
-  width: "400px",
-  title: "Well hello there"
-}
+  src: 'https://example.com',
+  height: '400px',
+  width: '400px',
+  title: 'Well hello there',
+};
 
 const pageProps: IFrameContentProps = {
   iframe: props,
-  title: 'Some amazing iframe'
-}
+  title: 'Some amazing iframe',
+};
 
 createDevApp()
   .registerPlugin(iframePlugin)
@@ -42,8 +47,10 @@ createDevApp()
     element: <EntityIFrameContent {...pageProps} />,
     title: 'Iframe page',
     path: 'iframe-page',
-  }).addPage({
-    element: <HomePageIFrameCard {...{...props, title: '1234'}}/>,
+  })
+  .addPage({
+    element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,
     title: 'Home Page',
     path: '/home',
-  }).render();
+  })
+  .render();

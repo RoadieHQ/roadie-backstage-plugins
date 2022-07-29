@@ -52,26 +52,28 @@ export const EntityPrometheusContent = backstagePluginPrometheusPlugin.provide(
   }),
 );
 
-export const EntityPrometheusAlertCard = backstagePluginPrometheusPlugin.provide(
-  createComponentExtension({
-    name: 'EntityPrometheusAlertCard',
-    component: {
-      lazy: () =>
-        import('./components/PrometheusAlertStatus').then(
-          m => m.PrometheusAlertEntityWrapper,
-        ),
-    },
-  }),
-);
+export const EntityPrometheusAlertCard =
+  backstagePluginPrometheusPlugin.provide(
+    createComponentExtension({
+      name: 'EntityPrometheusAlertCard',
+      component: {
+        lazy: () =>
+          import('./components/PrometheusAlertStatus').then(
+            m => m.PrometheusAlertEntityWrapper,
+          ),
+      },
+    }),
+  );
 
-export const EntityPrometheusGraphCard = backstagePluginPrometheusPlugin.provide(
-  createComponentExtension({
-    name: 'EntityPrometheusGraphCard',
-    component: {
-      lazy: () =>
-        import('./components/PrometheusGraph').then(
-          m => m.PrometheusGraphEntityWrapper,
-        ),
-    },
-  }),
-);
+export const EntityPrometheusGraphCard =
+  backstagePluginPrometheusPlugin.provide(
+    createComponentExtension({
+      name: 'EntityPrometheusGraphCard',
+      component: {
+        lazy: () =>
+          import('./components/PrometheusGraph').then(
+            m => m.PrometheusGraphEntityWrapper,
+          ),
+      },
+    }),
+  );

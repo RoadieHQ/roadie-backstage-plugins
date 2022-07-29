@@ -7,9 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import React from 'react';
-import {
-  StructuredMetadataTable,
-} from '@backstage/core-components';
+import { StructuredMetadataTable } from '@backstage/core-components';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialButton from '@material-ui/core/Button';
@@ -39,7 +37,10 @@ const useStyles = makeStyles({
     height: '80%',
   },
 });
-export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined) => {
+export const DetailsDrawerComponent = (
+  rowData: any,
+  baseUrl: string | undefined,
+) => {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
   const toggleDrawer =
@@ -55,7 +56,7 @@ export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined
       setState(open);
     };
   const tableContent: TableContent = {
-    'Argo CD Instance': rowData.metadata?.instance?.name ?? "",
+    'Argo CD Instance': rowData.metadata?.instance?.name ?? '',
     repoUrl: rowData.spec?.source?.repoURL,
     repoPath: rowData.spec?.source?.path,
     destinationServer: rowData.spec?.destination?.server,
@@ -68,7 +69,7 @@ export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined
           variant="outlined"
           color="primary"
           size="small"
-          title='Open Argo CD Dashboard'
+          title="Open Argo CD Dashboard"
           endIcon={<OpenInNewIcon />}
           target="_blank"
           href={`${baseUrl}/applications/${rowData.metadata.name}`}
@@ -118,7 +119,7 @@ export const DetailsDrawerComponent = (rowData: any, baseUrl: string | undefined
         {rowData.metadata.name}
       </Button>
       <Drawer
-        anchor='right'
+        anchor="right"
         classes={{ paper: classes.paper }}
         open={state}
         onClose={toggleDrawer(false)}

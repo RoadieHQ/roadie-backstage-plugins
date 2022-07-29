@@ -1,2 +1,2 @@
 export * from './service/router';
-export { ArgoService } from './service/argocd.service'
+export { ArgoService } from './service/argocd.service';

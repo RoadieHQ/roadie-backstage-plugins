@@ -1,7 +1,7 @@
 name: Check bump versions
 on:
   schedule:
-  - cron: "0 6 * * 5"
+    - cron: '0 6 * * 5'
 
 jobs:
   create-pull-request:
@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-         fetch-depth: '0'
+          fetch-depth: '0'
 
       - name: Install dependencies and bump versions
         run: |

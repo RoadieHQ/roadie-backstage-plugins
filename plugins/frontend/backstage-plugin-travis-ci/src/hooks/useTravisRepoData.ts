@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const TRAVIS_ANNOTATION = 'travis-ci.com/repo-slug';
 

@@ -85,18 +85,20 @@ export const createArgoCdResources = (config: Config, logger: Logger) => {
 
       const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
-      await argoSvc.createArgoResources(
-        {
-          argoInstance: ctx.input.argoInstance,
-          appName: ctx.input.appName,
-          projectName: ctx.input.projectName ? ctx.input.projectName : ctx.input.appName,
-          namespace: ctx.input.namespace,
-          sourceRepo: ctx.input.repoUrl,
-          sourcePath: ctx.input.path,
-          labelValue: ctx.input.labelValue ? ctx.input.labelValue : ctx.input.appName,
-          logger,
-        }
-      );
+      await argoSvc.createArgoResources({
+        argoInstance: ctx.input.argoInstance,
+        appName: ctx.input.appName,
+        projectName: ctx.input.projectName
+          ? ctx.input.projectName
+          : ctx.input.appName,
+        namespace: ctx.input.namespace,
+        sourceRepo: ctx.input.repoUrl,
+        sourcePath: ctx.input.path,
+        labelValue: ctx.input.labelValue
+          ? ctx.input.labelValue
+          : ctx.input.appName,
+        logger,
+      });
     },
   });
 };

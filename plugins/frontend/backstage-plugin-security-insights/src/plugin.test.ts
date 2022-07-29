@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { securityInsightsPlugin } from './plugin';
 
 describe('github-pull-requests', () => {

@@ -117,7 +117,9 @@ const StatsCard = (props: Props) => {
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
               </Select>
-              <FormHelperText><InputLabel>Number of PRs</InputLabel></FormHelperText>
+              <FormHelperText>
+                <InputLabel>Number of PRs</InputLabel>
+              </FormHelperText>
             </FormControl>
           </Box>
         </Box>

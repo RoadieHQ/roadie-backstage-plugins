@@ -26,7 +26,7 @@ import {
   ANNOTATION_ORIGIN_LOCATION,
   ANNOTATION_LOCATION,
 } from '@backstage/catalog-model';
-import {ANNOTATION_ACCOUNT_ID} from "../annotations";
+import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly accountId: string;

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import {
   StatusPending,
   StatusRunning,
@@ -25,11 +24,7 @@ import {
 } from '@backstage/core-components';
 import React from 'react';
 
-export const BuildkiteStatus = ({
-  status,
-}: {
-  status: string | undefined;
-}) => {
+export const BuildkiteStatus = ({ status }: { status: string | undefined }) => {
   if (status === undefined) return null;
   switch (status.toLowerCase()) {
     case 'queued':

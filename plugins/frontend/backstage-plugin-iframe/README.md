@@ -16,7 +16,7 @@ yarn add @roadiehq/backstage-plugin-iframe
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { 
+import {
   iframePlugin,
   EntityIFrameCard,
   EntityIFrameContent,
@@ -35,7 +35,7 @@ const contentProps = {
 const serviceEntityPage = (
   <EntityLayoutWrapper>
     ...
-    <EntityLayout.Route 
+    <EntityLayout.Route
       path="/mycustom-iframes"
       title="Iframes">
         <EntityIFrameContent {...iframeProps} />
@@ -82,6 +82,7 @@ export const HomePage = () => {
 This particular plugin supports allowlisting. What this means is you can add a domain to the plugin's configuration that will be verified during the creation of the plugins components.
 
 The config is like so:
+
 ```
 // app-config.yaml
 iframe:

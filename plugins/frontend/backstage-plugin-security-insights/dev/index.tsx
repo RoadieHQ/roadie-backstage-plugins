@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { createDevApp } from '@backstage/dev-utils';
 import { securityInsightsPlugin } from '../src/plugin';
 

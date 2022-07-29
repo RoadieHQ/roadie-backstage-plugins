@@ -36,8 +36,8 @@ const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
 const entityStub: ResourceEntity = {
   apiVersion: 'backstage.io/v1beta1',
   spec: {
-    owner: "unknown",
-    type: "iam-role"
+    owner: 'unknown',
+    type: 'iam-role',
   },
   kind: 'Resource',
   metadata: {

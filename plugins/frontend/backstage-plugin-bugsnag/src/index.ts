@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-export *  from './plugin';
+export * from './plugin';
 export * from './api';
-export {  isBugsnagAvailable } from './components/ErrorsOverviewComponent/ErrorsOverview';
+export { isBugsnagAvailable } from './components/ErrorsOverviewComponent/ErrorsOverview';
 export * from './components/ErrorsOverviewComponent';
 export * from './components/ErrorsTableComponent';

@@ -26,9 +26,7 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
-import {
-  EKS_CLUSTER_ARN_ANNOTATION,
-} from '../../constants';
+import { EKS_CLUSTER_ARN_ANNOTATION } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { useAsync } from 'react-use';
 

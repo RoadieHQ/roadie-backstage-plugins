@@ -338,27 +338,26 @@ export const getResponseStubScanning = {
 
 export const getEmptyResponseStub = {
   metadata: {
-    resourceVersion: '7277391'
+    resourceVersion: '7277391',
   },
-  items: null
+  items: null,
 };
 
 export const getResponseStubAppListForInstanceOne = {
   metadata: {
-    resourceVersion: '7277391'
+    resourceVersion: '7277391',
   },
-  items: [getResponseStubScanning,]
+  items: [getResponseStubScanning],
 };
-
 
 export const getResponseStubAppListForInstanceTwo = () => {
   const item = JSON.parse(JSON.stringify(getResponseStubScanning));
   item.metadata.instance.name = 'argoInstance2';
   return {
     metadata: {
-      resourceVersion: '7277390'
+      resourceVersion: '7277390',
     },
-    items: [item,]
+    items: [item],
   };
 };
 
@@ -373,18 +372,17 @@ export const multipleApps = () => {
 
 export const getResponseStubAppListWithMultipleApps = {
   metadata: {
-    resourceVersion: '7277391'
+    resourceVersion: '7277391',
   },
-  items: multipleApps()
+  items: multipleApps(),
 };
-
 
 export class ArgoCDApiMock implements ArgoCDApi {
   // @ts-ignore
   // constructor(_: Options) {}
 
   // @ts-ignore
-  async listApps(_: { url: string; appSelector: string; }) {
+  async listApps(_: { url: string; appSelector: string }) {
     return {
       items: [
         {
@@ -426,7 +424,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
   }
 
   // @ts-ignore
-  async getAppDetails(_: { appName: string; }) {
+  async getAppDetails(_: { appName: string }) {
     return {
       metadata: {
         name: 'guestbook',
@@ -451,7 +449,7 @@ export const getIdentityApiStub: IdentityApi = {
   getProfileInfo: jest.fn(),
   getBackstageIdentity: jest.fn(),
   async getCredentials() {
-    return {token: 'fake-id-token'}
+    return { token: 'fake-id-token' };
   },
   signOut: jest.fn(),
 };

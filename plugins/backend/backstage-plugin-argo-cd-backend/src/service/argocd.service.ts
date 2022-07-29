@@ -1,6 +1,6 @@
-import {Config} from '@backstage/config';
+import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
-import {Logger} from 'winston';
+import { Logger } from 'winston';
 
 export type findArgoAppResp = {
   name: string;
@@ -64,7 +64,7 @@ interface SyncArgoApplicationProps {
 }
 
 interface ResyncProps {
-  appSelector: string
+  appSelector: string;
 }
 
 export interface ArgoServiceApi {
@@ -83,9 +83,7 @@ export interface ArgoServiceApi {
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
   deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
   deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
-  syncArgoApp: (
-    props: SyncArgoApplicationProps
-  ) => Promise<SyncResponse>;
+  syncArgoApp: (props: SyncArgoApplicationProps) => Promise<SyncResponse>;
   resyncAppOnAllArgos: (props: {
     appSelector: string;
   }) => Promise<SyncResponse[][]>;
@@ -202,14 +200,17 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    const resp = await fetch(`${baseUrl}/api/v1/applications${urlSuffix}`, requestOptions);
+    const resp = await fetch(
+      `${baseUrl}/api/v1/applications${urlSuffix}`,
+      requestOptions,
+    );
     if (resp.status === 404) {
       throw new Error('Could not retrieve ArgoCD app data.');
     }
     const data = await resp.json();
     if (data.items) {
       (data.items as any[]).forEach(item => {
-        item.metadata.instance = {name: argoInstanceName};
+        item.metadata.instance = { name: argoInstanceName };
       });
     } else if (data && options.name) {
       data.instance = argoInstanceName;
@@ -266,25 +267,22 @@ export class ArgoService implements ArgoServiceApi {
         'existing project spec is different',
       )
     ) {
-      throw new Error(
-        'Duplicate project detected. Cannot overwrite existing.',
-      );
+      throw new Error('Duplicate project detected. Cannot overwrite existing.');
     }
     return responseData;
   }
 
-  async createArgoApplication(
-    {
-      baseUrl,
-      argoToken,
-      appName,
-      projectName,
-      namespace,
-      sourceRepo,
-      sourcePath,
-      labelValue,
-      destinationServer}: CreateArgoApplicationProps,
-  ): Promise<object> {
+  async createArgoApplication({
+    baseUrl,
+    argoToken,
+    appName,
+    projectName,
+    namespace,
+    sourceRepo,
+    sourcePath,
+    labelValue,
+    destinationServer,
+  }: CreateArgoApplicationProps): Promise<object> {
     const data = {
       metadata: {
         name: appName,
@@ -342,7 +340,9 @@ export class ArgoService implements ArgoServiceApi {
     return resp.json();
   }
 
-  async resyncAppOnAllArgos({appSelector}: ResyncProps): Promise<SyncResponse[][]> {
+  async resyncAppOnAllArgos({
+    appSelector,
+  }: ResyncProps): Promise<SyncResponse[][]> {
     const findArgoAppResp: findArgoAppResp[] = await this.findArgoApp({
       selector: appSelector,
     });
@@ -354,7 +354,11 @@ export class ArgoService implements ArgoServiceApi {
           try {
             const resp = argoInstance.appName.map(
               (argoApp: any): Promise<SyncResponse> => {
-                return this.syncArgoApp({argoInstance, argoToken: token, appName: argoApp});
+                return this.syncArgoApp({
+                  argoInstance,
+                  argoToken: token,
+                  appName: argoApp,
+                });
               },
             );
             return await Promise.all(resp);
@@ -370,11 +374,11 @@ export class ArgoService implements ArgoServiceApi {
     return await Promise.all(parallelSyncCalls);
   }
 
-  async syncArgoApp(
-    {argoInstance,
-      argoToken,
-      appName}: SyncArgoApplicationProps
-  ): Promise<SyncResponse> {
+  async syncArgoApp({
+    argoInstance,
+    argoToken,
+    appName,
+  }: SyncArgoApplicationProps): Promise<SyncResponse> {
     const data = {
       prune: false,
       dryRun: false,
@@ -394,7 +398,10 @@ export class ArgoService implements ArgoServiceApi {
         Authorization: `Bearer ${argoToken}`,
       },
     };
-    const resp = await fetch(`${argoInstance.url}/api/v1/applications/${appName}/sync`, options);
+    const resp = await fetch(
+      `${argoInstance.url}/api/v1/applications/${appName}/sync`,
+      options,
+    );
     if (resp.ok) {
       return {
         status: 'Success',
@@ -404,10 +411,14 @@ export class ArgoService implements ArgoServiceApi {
     return {
       message: `Failed to resync ${appName} on ${argoInstance.name}`,
       status: 'Failure',
-    }
+    };
   }
 
-  async deleteApp({baseUrl, argoApplicationName, argoToken}: DeleteApplicationProps): Promise<boolean> {
+  async deleteApp({
+    baseUrl,
+    argoApplicationName,
+    argoToken,
+  }: DeleteApplicationProps): Promise<boolean> {
     const options: RequestInit = {
       method: 'DELETE',
       headers: {
@@ -416,10 +427,12 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams({
-        cascade: 'true',
-      })}`,
-      options
+      `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
+        {
+          cascade: 'true',
+        },
+      )}`,
+      options,
     );
     if (resp.ok) {
       return true;
@@ -430,7 +443,11 @@ export class ArgoService implements ArgoServiceApi {
     return false;
   }
 
-  async deleteProject({baseUrl, argoProjectName, argoToken}: DeleteProjectProps): Promise<boolean> {
+  async deleteProject({
+    baseUrl,
+    argoProjectName,
+    argoToken,
+  }: DeleteProjectProps): Promise<boolean> {
     const options: RequestInit = {
       method: 'DELETE',
       headers: {
@@ -442,7 +459,7 @@ export class ArgoService implements ArgoServiceApi {
       `${baseUrl}/api/v1/projects/${argoProjectName}?${new URLSearchParams({
         cascade: 'true',
       })}`,
-      options
+      options,
     );
     if (resp.ok) {
       return true;

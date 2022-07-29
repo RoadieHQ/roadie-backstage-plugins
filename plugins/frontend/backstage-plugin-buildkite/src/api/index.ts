@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-
 import {
   createApiRef,
   DiscoveryApi,
   FetchApi,
- } from '@backstage/core-plugin-api';
+} from '@backstage/core-plugin-api';
 
 export const buildKiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
@@ -56,15 +55,15 @@ export class BuildkiteApi {
     orgSlug: string,
     pipelineSlug: string,
     page: number,
-    per_page: number
+    per_page: number,
   ) {
     const ApiUrl = await this.getApiUrl();
     const request = await this.fetchApi.fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`,
     );
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -72,12 +71,15 @@ export class BuildkiteApi {
 
   async restartBuild(requestUrl: string) {
     const ApiUrl = await this.getApiUrl();
-    const request = await this.fetchApi.fetch(`${ApiUrl}/${requestUrl}/rebuild`, {
-      method: 'PUT',
-    });
+    const request = await this.fetchApi.fetch(
+      `${ApiUrl}/${requestUrl}/rebuild`,
+      {
+        method: 'PUT',
+      },
+    );
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -86,15 +88,15 @@ export class BuildkiteApi {
   async getSingleBuild(
     orgSlug: string,
     pipelineSlug: string,
-    buildNumber: number
+    buildNumber: number,
   ) {
     const ApiUrl = await this.getApiUrl();
     const request = await this.fetchApi.fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds/${buildNumber}`
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds/${buildNumber}`,
     );
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();
@@ -105,7 +107,7 @@ export class BuildkiteApi {
     const request = await this.fetchApi.fetch(`${ApiUrl}/${url}`);
     if (!request.ok) {
       throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     return request.json();

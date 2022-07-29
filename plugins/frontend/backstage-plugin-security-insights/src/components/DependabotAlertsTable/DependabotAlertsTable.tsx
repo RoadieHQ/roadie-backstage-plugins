@@ -23,7 +23,7 @@ import { DateTime } from 'luxon';
 import { graphql } from '@octokit/graphql';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Progress, Table, TableColumn, Link } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectName } from '../useProjectName';
 import { useUrl } from '../useUrl';
 import { useProjectEntity } from '../useProjectEntity';
@@ -36,14 +36,14 @@ type Node = {
     package: {
       name: string;
     };
-    severity: string,
+    severity: string;
     advisory: {
-      description: string,
-    },
+      description: string;
+    };
     firstPatchedVersion: {
-      identifier?: string,
-    }
-  }
+      identifier?: string;
+    };
+  };
 };
 
 type Repository = {
@@ -68,18 +68,24 @@ const capitalize = (s: string) => {
   return s.charAt(0).toLocaleUpperCase() + s.slice(1);
 };
 
-const getDetailsUrl = (packageName: string, detailsUrl: DetailsUrl, dismissedAt: string, vulnerableManifestPath: string ) => {
-  const status = dismissedAt ? "closed" : "open";
-  const url = `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot/${vulnerableManifestPath}/${packageName}/${status}`
-  return <Link to={url}>{packageName}</Link>
+const getDetailsUrl = (
+  packageName: string,
+  detailsUrl: DetailsUrl,
+  dismissedAt: string,
+  vulnerableManifestPath: string,
+) => {
+  const status = dismissedAt ? 'closed' : 'open';
+  const url = `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot/${vulnerableManifestPath}/${packageName}/${status}`;
+  return <Link to={url}>{packageName}</Link>;
 };
 
 export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const { entity } = useEntity();
   const projectName = useProjectName(entity);
-  const [filteredTableData, setFilteredTableData] = useState<Node[]>(repository.vulnerabilityAlerts.nodes);
+  const [filteredTableData, setFilteredTableData] = useState<Node[]>(
+    repository.vulnerabilityAlerts.nodes,
+  );
   const [insightsStatusFilter, setInsightsStatusFilter] = useState<any>('all');
-
 
   const filterAlerts = (statusFilter: string, issues: Node[]) => {
     setInsightsStatusFilter(statusFilter);
@@ -88,8 +94,13 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
     } else setFilteredTableData([]);
   };
 
-  const dismissedIssues = repository.vulnerabilityAlerts.nodes.filter((entry) => entry.dismissedAt !== null)
-  const openIssues = repository.vulnerabilityAlerts.nodes.filter((entry) => entry.dismissedAt === null) || null;
+  const dismissedIssues = repository.vulnerabilityAlerts.nodes.filter(
+    entry => entry.dismissedAt !== null,
+  );
+  const openIssues =
+    repository.vulnerabilityAlerts.nodes.filter(
+      entry => entry.dismissedAt === null,
+    ) || null;
 
   const columns: TableColumn[] = [
     { title: 'Name', field: 'name' },
@@ -98,15 +109,21 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
     { title: 'Severity', field: 'severity' },
     { title: 'Patched Version', field: 'patched_version' },
   ];
-  const tableData = filteredTableData.length > 0 ? filteredTableData : []
+  const tableData = filteredTableData.length > 0 ? filteredTableData : [];
 
   const structuredData = tableData.map(node => {
     return {
       createdAt: DateTime.fromISO(node.createdAt).toLocaleString(),
       state: node.dismissedAt ? 'Dismissed' : 'Open',
-      name: getDetailsUrl(node.securityVulnerability.package.name, detailsUrl, node.dismissedAt, node.vulnerableManifestPath),
-      severity: capitalize((node.securityVulnerability.severity).toLowerCase()),
-      patched_version: node?.securityVulnerability?.firstPatchedVersion?.identifier || '',
+      name: getDetailsUrl(
+        node.securityVulnerability.package.name,
+        detailsUrl,
+        node.dismissedAt,
+        node.vulnerableManifestPath,
+      ),
+      severity: capitalize(node.securityVulnerability.severity.toLowerCase()),
+      patched_version:
+        node?.securityVulnerability?.firstPatchedVersion?.identifier || '',
     };
   });
   return (
@@ -120,20 +137,32 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
           </Box>
           <Paper>
             <Box position="absolute" right={350} top={20}>
-              <ButtonGroup color="primary" aria-label="text primary button group">
+              <ButtonGroup
+                color="primary"
+                aria-label="text primary button group"
+              >
                 <Button
                   color={insightsStatusFilter === 'all' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts("all", repository.vulnerabilityAlerts.nodes)} >
+                  onClick={() =>
+                    filterAlerts('all', repository.vulnerabilityAlerts.nodes)
+                  }
+                >
                   ALL
                 </Button>
                 <Button
-                  color={insightsStatusFilter === 'open' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts("open", openIssues)} >
+                  color={
+                    insightsStatusFilter === 'open' ? 'primary' : 'default'
+                  }
+                  onClick={() => filterAlerts('open', openIssues)}
+                >
                   OPEN
                 </Button>
                 <Button
-                  color={insightsStatusFilter === 'dismissed' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts("dismissed", dismissedIssues)} >
+                  color={
+                    insightsStatusFilter === 'dismissed' ? 'primary' : 'default'
+                  }
+                  onClick={() => filterAlerts('dismissed', dismissedIssues)}
+                >
                   DISMISSED
                 </Button>
               </ButtonGroup>
@@ -144,7 +173,6 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
       options={{ search: true, paging: true, padding: 'dense' }}
       columns={columns}
       data={structuredData}
-
     />
   );
 };
@@ -183,26 +211,26 @@ export const DependabotAlertsTable: FC<{}> = () => {
     }
   }`;
 
-  const { value, loading, error } =
-    useAsync(async (): Promise<any> => {
-      const token = await auth.getAccessToken(['repo']);
-      const gqlEndpoint = graphql.defaults({
-        headers: {
-          authorization: `token ${token}`,
-        },
-      });
+  const { value, loading, error } = useAsync(async (): Promise<any> => {
+    const token = await auth.getAccessToken(['repo']);
+    const gqlEndpoint = graphql.defaults({
+      headers: {
+        authorization: `token ${token}`,
+      },
+    });
 
-      const { repository } = await gqlEndpoint(query,{
-        name: repo,
-        owner: owner
-      });
-      return repository;
-    }, []);
-
+    const { repository } = await gqlEndpoint(query, {
+      name: repo,
+      owner: owner,
+    });
+    return repository;
+  }, []);
 
   const detailsUrl = { hostname, owner, repo };
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
-   return (value && value.vulnerabilityAlerts) ? <DenseTable repository={value} detailsUrl={detailsUrl} /> : null;
+  return value && value.vulnerabilityAlerts ? (
+    <DenseTable repository={value} detailsUrl={detailsUrl} />
+  ) : null;
 };

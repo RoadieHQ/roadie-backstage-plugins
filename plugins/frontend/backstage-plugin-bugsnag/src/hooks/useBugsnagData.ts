@@ -34,6 +34,7 @@ export const useBugsnagData = () => {
 
 export const useProjectName = () => {
   const { entity } = useEntity();
-  const projectNameSlug = entity?.metadata.annotations?.[PROJECT_ANNOTATION] ?? '';
+  const projectNameSlug =
+    entity?.metadata.annotations?.[PROJECT_ANNOTATION] ?? '';
   return projectNameSlug;
 };

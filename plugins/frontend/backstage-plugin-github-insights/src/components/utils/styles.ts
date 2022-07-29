@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  makeStyles,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { BackstageTheme } from '@backstage/theme';
 
 // @ts-ignore
@@ -50,6 +48,6 @@ export const styles = makeStyles<BackstageTheme>(theme => ({
     verticalAlign: 'middle',
   },
   listItem: {
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
 }));

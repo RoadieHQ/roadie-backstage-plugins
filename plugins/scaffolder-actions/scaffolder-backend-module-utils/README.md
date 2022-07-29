@@ -2,11 +2,12 @@
 
 Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 
-This contains a collection of actions: 
- - `roadiehq:utils:zip`
- - `roadiehq:utils:sleep`
- - `roadiehq:utils:fs:write`
- - `roadiehq:utils:fs:append`
+This contains a collection of actions:
+
+- `roadiehq:utils:zip`
+- `roadiehq:utils:sleep`
+- `roadiehq:utils:fs:write`
+- `roadiehq:utils:fs:append`
 
 ## Getting started
 
@@ -96,6 +97,7 @@ spec:
   output:
     path: ${{ steps.zip.output.path }}
 ```
+
 ### Example of using sleep action
 
 ```yaml
@@ -125,6 +127,7 @@ spec:
       input:
         path: ${{ parameters.amount }}
 ```
+
 ### Example of using writeFile action
 
 ```yaml
@@ -158,6 +161,7 @@ spec:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
 ```
+
 ### Example of using appendFile action
 
 ```yaml
@@ -191,4 +195,3 @@ spec:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
 ```
-

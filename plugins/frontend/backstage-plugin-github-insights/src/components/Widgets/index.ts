@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export { default as ContributorsCard } from './ContributorsCard';
 export { default as LanguagesCard } from './LanguagesCard';
 export { default as ReadMeCard } from './ReadMeCard';

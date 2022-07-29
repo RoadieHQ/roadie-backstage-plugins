@@ -15,8 +15,8 @@
  */
 
 export type Account = {
-  accountId: string,
-  region?: string,
-  externalId?: string,
-  roleArn: string
-}
+  accountId: string;
+  region?: string;
+  externalId?: string;
+  roleArn: string;
+};

@@ -4,7 +4,7 @@ metadata:
   name: roadie-backstage-plugins
   description: An example of a Backstage application.
 spec:
-  type: website 
+  type: website
   owner: group:open-source
   lifecycle: production
 

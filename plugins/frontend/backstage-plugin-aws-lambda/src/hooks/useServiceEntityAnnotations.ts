@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 
 export const AWS_LAMBDA_ANNOTATION = 'aws.com/lambda-function-name';

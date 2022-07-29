@@ -85,7 +85,6 @@ describe('LanguagesCard', () => {
     expect(await screen.findByText(/93.73/)).toBeInTheDocument();
   });
   it('should display a card with the data from state on second render when it gets 304 response', async () => {
-
     const { rerender } = render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -114,9 +113,9 @@ describe('LanguagesCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
 
     expect(await screen.findByText(/TypeScript/)).toBeInTheDocument();
     expect(await screen.findByText(/93.73/)).toBeInTheDocument();
-  })
+  });
 });

@@ -67,9 +67,7 @@ export class PrometheusApi {
     const apiUrl = await this.getApiUrl();
 
     const end = DateTime.now().toSeconds();
-    const start = DateTime.now()
-      .minus(Duration.fromObject(range))
-      .toSeconds();
+    const start = DateTime.now().minus(Duration.fromObject(range)).toSeconds();
     const response = await fetch(
       `${apiUrl}/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
     );

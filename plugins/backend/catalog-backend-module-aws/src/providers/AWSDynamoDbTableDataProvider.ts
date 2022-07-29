@@ -31,7 +31,10 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
 import * as winston from 'winston';
-import {ANNOTATION_ACCOUNT_ID, ANNOTATION_AWS_DDB_TABLE_ARN} from "../annotations";
+import {
+  ANNOTATION_ACCOUNT_ID,
+  ANNOTATION_AWS_DDB_TABLE_ARN,
+} from '../annotations';
 
 export type ValueMapping = {
   entityPath: string;
@@ -138,7 +141,9 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
             metadata: {
               annotations: {
                 ...defaultAnnotations,
-                ...(tableArn ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn } : {}),
+                ...(tableArn
+                  ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn }
+                  : {}),
               },
               name: row[idColumn],
               title: row[idColumn],

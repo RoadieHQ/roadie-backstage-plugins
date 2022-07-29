@@ -99,7 +99,11 @@ const generatedColumns: TableColumn[] = [
     render: (row: Partial<CITableBuildInfo>) => {
       return (
         <>
-          <p>{row.finishedAt ? `${formatDistance(new Date(), new Date(row.finishedAt!))} ago` : 'In progress'}</p>
+          <p>
+            {row.finishedAt
+              ? `${formatDistance(new Date(), new Date(row.finishedAt!))} ago`
+              : 'In progress'}
+          </p>
           <p>{row.duration} sec</p>
         </>
       );

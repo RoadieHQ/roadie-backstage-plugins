@@ -69,7 +69,7 @@ metadata:
     A service for testing Buildkite and Prometheus plugins
   annotations:
     buildkite.com/project-slug: exampleorganization/exampleproject
-    prometheus.io/alert: "test alert name"
+    prometheus.io/alert: 'test alert name'
     prometheus.io/rule: node_memory_Active_bytes|instance,memUsage
 
 spec:

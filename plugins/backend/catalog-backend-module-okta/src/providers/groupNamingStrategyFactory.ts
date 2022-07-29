@@ -21,7 +21,7 @@ export type GroupNamingStrategy = (group: Group) => string;
 export type GroupNamingStrategies = 'id' | 'kebab-case-name' | undefined;
 
 export const groupNamingStrategyFactory = (
-  name: GroupNamingStrategies = "id",
+  name: GroupNamingStrategies = 'id',
 ): GroupNamingStrategy => {
   switch (name) {
     case 'id':
@@ -29,5 +29,6 @@ export const groupNamingStrategyFactory = (
     case 'kebab-case-name':
       return group => kebabCase(group.profile.name);
     default:
-      throw new Error(`Unknown naming strategy ${name}`);  }
+      throw new Error(`Unknown naming strategy ${name}`);
+  }
 };

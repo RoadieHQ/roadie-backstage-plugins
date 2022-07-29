@@ -19,6 +19,6 @@
  *
  * @public
  */
- export type RSSContentProps = {
-  feedURL: string
+export type RSSContentProps = {
+  feedURL: string;
 };

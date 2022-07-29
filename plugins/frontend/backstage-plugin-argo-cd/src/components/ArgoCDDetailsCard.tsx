@@ -79,13 +79,16 @@ const OverviewComponent = ({
 }: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
-  const supportsMultipleArgoInstances: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
+  const supportsMultipleArgoInstances: boolean = Boolean(
+    configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+  );
 
   const columns: TableColumn[] = [
     {
       title: 'Name',
       highlight: true,
-      render: (row: any): React.ReactNode => detailsDrawerComponent(row, baseUrl)
+      render: (row: any): React.ReactNode =>
+        detailsDrawerComponent(row, baseUrl),
     },
     {
       title: 'Sync Status',
@@ -112,7 +115,7 @@ const OverviewComponent = ({
     columns.splice(1, 0, {
       title: 'Instance',
       render: (row: any): React.ReactNode => row.metadata?.instance?.name,
-    })
+    });
   }
 
   return (
