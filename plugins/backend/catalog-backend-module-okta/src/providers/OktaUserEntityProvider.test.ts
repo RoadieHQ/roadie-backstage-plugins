@@ -100,7 +100,10 @@ describe('AWSIAMUserProvider', () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
-      const provider = OktaUserEntityProvider.fromConfig(config, { logger, namingStrategy: "kebab-case-email" });
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: 'kebab-case-email',
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
@@ -122,7 +125,10 @@ describe('AWSIAMUserProvider', () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
-      const provider = OktaUserEntityProvider.fromConfig(config, { logger, namingStrategy: "strip-domain-email" });
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: 'strip-domain-email',
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({

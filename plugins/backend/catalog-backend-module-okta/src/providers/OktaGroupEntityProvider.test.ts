@@ -34,7 +34,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
   };
 });
 
-const logger = getVoidLogger()
+const logger = getVoidLogger();
 
 describe('OktaGroupProvider', () => {
   const config = new ConfigReader({
@@ -101,12 +101,14 @@ describe('OktaGroupProvider', () => {
       });
     });
 
-
     it('allows kebab casing of the group name for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
-      const provider = OktaGroupEntityProvider.fromConfig(config, { logger, namingStrategy: "kebab-case-name" });
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: 'kebab-case-name',
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({

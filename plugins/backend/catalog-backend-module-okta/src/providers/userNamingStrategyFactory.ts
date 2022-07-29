@@ -14,22 +14,29 @@
  * limitations under the License.
  */
 
-import { User } from "@okta/okta-sdk-nodejs";
+import { User } from '@okta/okta-sdk-nodejs';
 import { kebabCase } from 'lodash';
 
 export type UserNamingStrategy = (user: User) => string;
-export type UserNamingStrategies = "id" | "kebab-case-email" | "strip-domain-email" | undefined;
+export type UserNamingStrategies =
+  | 'id'
+  | 'kebab-case-email'
+  | 'strip-domain-email'
+  | undefined;
 
-export const userNamingStrategyFactory = (name: UserNamingStrategies): UserNamingStrategy => {
-    switch(name) {
-        case "id":
-        case undefined:
-            return (user) => user.id
-        case "kebab-case-email":
-            return (user) => kebabCase(user.profile.email)
-        case "strip-domain-email":
-            return (user) => user.profile.email.substring(0, user.profile.email.indexOf('@'))
-        default:
-            throw new Error(`Unknown naming strategy ${name}`);
-    }
-}
+export const userNamingStrategyFactory = (
+  name: UserNamingStrategies,
+): UserNamingStrategy => {
+  switch (name) {
+    case 'id':
+    case undefined:
+      return user => user.id;
+    case 'kebab-case-email':
+      return user => kebabCase(user.profile.email);
+    case 'strip-domain-email':
+      return user =>
+        user.profile.email.substring(0, user.profile.email.indexOf('@'));
+    default:
+      throw new Error(`Unknown naming strategy ${name}`);
+  }
+};

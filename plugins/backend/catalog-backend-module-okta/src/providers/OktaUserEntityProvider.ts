@@ -18,7 +18,11 @@ import { UserEntity } from '@backstage/catalog-model';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
-import {UserNamingStrategy, userNamingStrategyFactory} from './userNamingStrategyFactory';
+import {
+  UserNamingStrategies,
+  UserNamingStrategy,
+  userNamingStrategyFactory,
+} from './userNamingStrategyFactory';
 
 /**
  * Provides entities from Okta User service.
@@ -26,17 +30,23 @@ import {UserNamingStrategy, userNamingStrategyFactory} from './userNamingStrateg
 export class OktaUserEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: UserNamingStrategy;
 
-  static fromConfig(config: Config, options: { logger: winston.Logger, namingStrategy?: string }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
+  ) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
     return new OktaUserEntityProvider({ orgUrl, token }, options);
   }
 
-  constructor(accountConfig: any, options: {  logger: winston.Logger, namingStrategy?: string }) {
+  constructor(
+    accountConfig: any,
+    options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
+  ) {
     super(accountConfig, options);
-    console.log(options.namingStrategy)
-    this.namingStrategy = userNamingStrategyFactory(options.namingStrategy || 'id')
+    console.log(options.namingStrategy);
+    this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
   }
 
   getProviderName(): string {
