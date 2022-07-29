@@ -95,5 +95,49 @@ describe('AWSIAMUserProvider', () => {
         ],
       });
     });
+
+    it('allows kebab casing of the users email for the name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, { logger, namingStrategy: "kebab-case-email" });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                name: 'fname-domain-com',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('allows stripping the domain from the users email for the name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, { logger, namingStrategy: "strip-domain-email" });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                name: 'fname',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
   });
 });

@@ -18,16 +18,25 @@ import { UserEntity } from '@backstage/catalog-model';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
+import {UserNamingStrategy, userNamingStrategyFactory} from './userNamingStrategyFactory';
 
 /**
  * Provides entities from Okta User service.
  */
 export class OktaUserEntityProvider extends OktaEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  private readonly namingStrategy: UserNamingStrategy;
+
+  static fromConfig(config: Config, options: { logger: winston.Logger, namingStrategy?: string }) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
     return new OktaUserEntityProvider({ orgUrl, token }, options);
+  }
+
+  constructor(accountConfig: any, options: {  logger: winston.Logger, namingStrategy?: string }) {
+    super(accountConfig, options);
+    console.log(options.namingStrategy)
+    this.namingStrategy = userNamingStrategyFactory(options.namingStrategy || 'id')
   }
 
   getProviderName(): string {
@@ -54,7 +63,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
           annotations: {
             ...defaultAnnotations,
           },
-          name: user.id,
+          name: this.namingStrategy(user),
           title: user.profile.email,
         },
         spec: {
