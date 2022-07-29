@@ -1,5 +1,28 @@
 # app
 
+## 1.0.4
+
+### Patch Changes
+
+- 86eca6a: Update dependencies
+- Updated dependencies [86eca6a]
+  - @roadiehq/backstage-plugin-argo-cd@2.1.5
+  - @roadiehq/backstage-plugin-aws@1.0.2
+  - @roadiehq/backstage-plugin-aws-lambda@2.0.2
+  - @roadiehq/backstage-plugin-bugsnag@2.0.2
+  - @roadiehq/backstage-plugin-buildkite@2.0.5
+  - @roadiehq/backstage-plugin-datadog@2.0.2
+  - @roadiehq/backstage-plugin-github-insights@2.0.2
+  - @roadiehq/backstage-plugin-github-pull-requests@2.2.2
+  - @roadiehq/backstage-plugin-iframe@1.0.4
+  - @roadiehq/backstage-plugin-jira@2.1.2
+  - @roadiehq/backstage-plugin-prometheus@2.0.2
+  - @roadiehq/backstage-plugin-security-insights@2.0.3
+  - @roadiehq/backstage-plugin-shortcut@1.0.9
+  - @roadiehq/backstage-plugin-travis-ci@2.0.2
+  - @roadiehq/backstage-plugin-home-markdown@2.0.4
+  - @roadiehq/backstage-plugin-home-rss@1.0.4
+
 ## 1.0.3
 
 ### Patch Changes
