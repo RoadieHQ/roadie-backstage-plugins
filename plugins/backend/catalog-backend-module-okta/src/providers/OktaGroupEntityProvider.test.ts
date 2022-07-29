@@ -34,7 +34,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
   };
 });
 
-const logger = getVoidLogger()
+const logger = getVoidLogger();
 
 describe('OktaGroupProvider', () => {
   const config = new ConfigReader({
@@ -68,7 +68,7 @@ describe('OktaGroupProvider', () => {
           {
             id: 'asdfwefwefwef',
             profile: {
-              name: 'Everyone',
+              name: 'Everyone@the-company',
               description: 'Everyone in the company',
             },
             listUsers: () => {
@@ -94,6 +94,31 @@ describe('OktaGroupProvider', () => {
               kind: 'Group',
               metadata: expect.objectContaining({
                 name: 'asdfwefwefwef',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('allows kebab casing of the group name for the name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: 'kebab-case-name',
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'everyone-the-company',
               }),
             }),
           }),

@@ -18,16 +18,34 @@ import { GroupEntity } from '@backstage/catalog-model';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
+import {
+  GroupNamingStrategies,
+  GroupNamingStrategy,
+  groupNamingStrategyFactory,
+} from './groupNamingStrategyFactory';
 
 /**
  * Provides entities from Okta Group service.
  */
 export class OktaGroupEntityProvider extends OktaEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  private readonly namingStrategy: GroupNamingStrategy;
+
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; namingStrategy?: GroupNamingStrategies },
+  ) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
     return new OktaGroupEntityProvider({ orgUrl, token }, options);
+  }
+
+  constructor(
+    accountConfig: any,
+    options: { logger: winston.Logger; namingStrategy?: GroupNamingStrategies },
+  ) {
+    super(accountConfig, options);
+    this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
   }
 
   getProviderName(): string {
@@ -60,7 +78,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           annotations: {
             ...defaultAnnotations,
           },
-          name: group.id,
+          name: this.namingStrategy(group),
           title: group.profile.name,
           description: group.profile.description,
         },
