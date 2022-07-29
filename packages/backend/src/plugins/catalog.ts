@@ -35,8 +35,14 @@ export default async function createPlugin(
   for (const config of env.config.getOptionalConfigArray(
     'catalog.providers.okta',
   ) || []) {
-    const groupProvider = OktaGroupEntityProvider.fromConfig(config, {...env, namingStrategy: "kebab-case-name" });
-    const userProvider = OktaUserEntityProvider.fromConfig(config, {...env, namingStrategy: "kebab-case-email" });
+    const groupProvider = OktaGroupEntityProvider.fromConfig(config, {
+      ...env,
+      namingStrategy: 'kebab-case-name',
+    });
+    const userProvider = OktaUserEntityProvider.fromConfig(config, {
+      ...env,
+      namingStrategy: 'kebab-case-email',
+    });
 
     builder.addEntityProvider(groupProvider);
     builder.addEntityProvider(userProvider);
