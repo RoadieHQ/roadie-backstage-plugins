@@ -29,7 +29,7 @@ async function generateCredentials(
       // Disable eqeqeq rule for next line to allow it to pick up both undefind and null
       // eslint-disable-next-line eqeqeq
       ...((options == null ? void 0 : options.token) && {
-        Authorization: `Bearer ${options == null ? void 0 : options.token}`,
+        Authorization: `Bearer ${options === null ? void 0 : options.token}`,
       }),
     },
   });
