@@ -167,7 +167,9 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const proxyUrl = await this.getBaseUrl();
     const url = options.appName
       ? `${proxyUrl}/find/name/${options.appName}`
-      : `${proxyUrl}/find/selector/${encodeURIComponent(String(options.appSelector))}`;
+      : `${proxyUrl}/find/selector/${encodeURIComponent(
+          String(options.appSelector),
+        )}`;
     return fetch(url, {
       method: 'GET',
       headers: {

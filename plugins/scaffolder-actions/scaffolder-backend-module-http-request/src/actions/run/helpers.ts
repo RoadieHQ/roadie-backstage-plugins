@@ -35,15 +35,19 @@ export const http = async (
   logger: Logger,
 ): Promise<any> => {
   let res: any;
-  const controller = new AbortController()
-  const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
   const { url, ...other } = options;
-  const httpOptions = {...other, signal: controller.signal}
+  const httpOptions = { ...other, signal: controller.signal };
 
   try {
     res = await fetch(url, httpOptions);
-    if(!res){
-      throw new HttpError(`Request was aborted as it took longer than ${DEFAULT_TIMEOUT/1000} seconds`);
+    if (!res) {
+      throw new HttpError(
+        `Request was aborted as it took longer than ${
+          DEFAULT_TIMEOUT / 1000
+        } seconds`,
+      );
     }
   } catch (e) {
     throw new HttpError(`There was an issue with the request: ${e}`);
@@ -56,8 +60,9 @@ export const http = async (
     headers[name] = value;
   }
 
-  const isJSON = () => headers['content-type'] &&
-      headers['content-type'].includes('application/json');
+  const isJSON = () =>
+    headers['content-type'] &&
+    headers['content-type'].includes('application/json');
 
   let body;
   try {
@@ -68,7 +73,9 @@ export const http = async (
 
   if (res.status >= 400) {
     logger.error(
-      `There was an issue with your request. Status code: ${res.status} Response body: ${JSON.stringify(body)}`
+      `There was an issue with your request. Status code: ${
+        res.status
+      } Response body: ${JSON.stringify(body)}`,
     );
     throw new HttpError('Unable to complete request');
   }

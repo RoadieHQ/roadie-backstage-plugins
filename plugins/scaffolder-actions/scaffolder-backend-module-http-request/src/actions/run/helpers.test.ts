@@ -18,7 +18,7 @@ import { HttpOptions } from './types';
 import { Config, ConfigReader } from '@backstage/config';
 import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
-import * as winston from "winston";
+import * as winston from 'winston';
 
 const mockBaseUrl = 'http://backstage.tests';
 
@@ -39,15 +39,15 @@ const options: HttpOptions = {
 };
 
 // We add a transport to the winston logger so that we can assert the log contents using the stream below
-let logOutput = ''
-const logStream = new Writable()
+let logOutput = '';
+const logStream = new Writable();
 logStream._write = (chunk, _encoding, next) => {
-  logOutput = logOutput += chunk.toString()
-  next()
-}
-const streamTransport = new winston.transports.Stream({ stream: logStream })
+  logOutput = logOutput += chunk.toString();
+  next();
+};
+const streamTransport = new winston.transports.Stream({ stream: logStream });
 const logger = getRootLogger();
-logger.add(streamTransport)
+logger.add(streamTransport);
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -113,7 +113,7 @@ describe('http', () => {
     describe('when the requests are good', () => {
       describe('Getting JSON', () => {
         it('returns a good response', async () => {
-          ((fetch as unknown) as jest.Mock).mockResolvedValue(
+          (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockResponse),
           );
           const response = await http(options, logger);
@@ -126,15 +126,15 @@ describe('http', () => {
         it('returns a good response', async () => {
           const mockedResponse: Response = {
             ...mockResponse,
-            headers:new Headers({
+            headers: new Headers({
               'Content-Type': 'plain/text',
             }),
-            text : async () => {
+            text: async () => {
               return 'Hello!';
             },
           };
 
-          ((fetch as unknown) as jest.Mock).mockResolvedValue(
+          (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
           const response = await http(options, logger);
@@ -147,7 +147,7 @@ describe('http', () => {
     describe('when the requests are bad', () => {
       describe("when there's an error while fetching", () => {
         it('fails with an error', async () => {
-          ((fetch as unknown) as jest.Mock).mockImplementation(() => {
+          (fetch as unknown as jest.Mock).mockImplementation(() => {
             throw new Error('fetch error');
           });
           await expect(
@@ -165,25 +165,23 @@ describe('http', () => {
             ok: false,
             status: 401,
             json: async () => ({
-              error: "bad request"
-            })
+              error: 'bad request',
+            }),
           };
 
-          ((fetch as unknown) as jest.Mock).mockResolvedValue(
+          (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
           await expect(
             async () => await http(options, logger),
           ).rejects.toThrowError('Unable to complete request');
 
-          const logEvents = logOutput.trim().split('\n')
+          const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
-              expect.arrayContaining([
-                  expect.stringContaining(
-                      `"error":"bad request"`
-                  )
-              ])
-          )
+            expect.arrayContaining([
+              expect.stringContaining(`"error":"bad request"`),
+            ]),
+          );
         });
       });
 
@@ -191,12 +189,12 @@ describe('http', () => {
         it('fails with an error', async () => {
           const mockedResponse: Response = {
             ...mockResponse,
-            json:  () => {
+            json: () => {
               throw new Error('Unable to get JSON');
-            }
+            },
           };
 
-          ((fetch as unknown) as jest.Mock).mockResolvedValue(
+          (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
           await expect(
@@ -207,9 +205,11 @@ describe('http', () => {
         });
       });
 
-      describe("when the request timesout", () => {
+      describe('when the request timesout', () => {
         it('fails with an error', async () => {
-          ((fetch as unknown) as jest.Mock).mockResolvedValue(new AbortController().abort());
+          (fetch as unknown as jest.Mock).mockResolvedValue(
+            new AbortController().abort(),
+          );
           await expect(
             async () => await http(options, logger),
           ).rejects.toThrowError(

@@ -828,7 +828,7 @@ export const requestedReviewsCustomQueryMock = {
         'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/timeline',
       performed_via_github_app: null,
       score: 1,
-    }
+    },
   ],
 };
 export const repoMock = {

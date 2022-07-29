@@ -27,7 +27,7 @@ describe('Prometheus', () => {
     ).as('getAlerts');
     cy.visit('/catalog/default/component/sample-service-3');
 
-    cy.wait('@getAlerts')
+    cy.wait('@getAlerts');
 
     cy.intercept(
       'GET',
@@ -45,7 +45,7 @@ describe('Prometheus', () => {
     it('should show Prometheus alerts table', () => {
       cy.visit('/catalog/default/component/sample-service-3/prometheus');
 
-      cy.wait(['@getGraphs', '@getGraphs2'])
+      cy.wait(['@getGraphs', '@getGraphs2']);
 
       cy.contains('firing');
       cy.contains('test alert name');
@@ -56,7 +56,7 @@ describe('Prometheus', () => {
     it('should show Prometheus graphs for two rules defined in catalog-info', () => {
       cy.visit('/catalog/default/component/sample-service-3/prometheus');
 
-      cy.wait(['@getGraphs', '@getGraphs2'])
+      cy.wait(['@getGraphs', '@getGraphs2']);
 
       cy.contains('node_memory_Active_bytes');
       cy.contains('memUsage');

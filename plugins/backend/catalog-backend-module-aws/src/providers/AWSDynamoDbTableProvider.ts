@@ -84,7 +84,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                     [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
                   },
                   name: arnToName(table.TableArn),
-                  title: table.TableName
+                  title: table.TableName,
                 },
                 spec: {
                   owner: this.accountId,

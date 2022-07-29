@@ -24,7 +24,7 @@ import ErrorBoundary from './ErrorBoundary';
 import {
   DATADOG_ANNOTATION_GRAPH_TOKEN,
   GraphSize,
-  useDatadogAppData
+  useDatadogAppData,
 } from './useDatadogAppData';
 
 const mapGraphSizeToDimensions = (graphSize: GraphSize) => {

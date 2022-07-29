@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 
 export const ARGOCD_ANNOTATION_APP_NAME = 'argocd/app-name';

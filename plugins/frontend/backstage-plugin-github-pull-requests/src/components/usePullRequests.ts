@@ -31,7 +31,7 @@ export type PullRequest = {
   createdTime: string;
   state: string;
   draft: boolean;
-  merged: string|null;
+  merged: string | null;
   creatorNickname: string;
   creatorProfileLink: string;
 };
@@ -57,9 +57,12 @@ export function usePullRequests({
     return moment(start).fromNow();
   };
 
-  const { loading, value: prData, retry, error } = useAsyncRetry<
-    PullRequest[]
-  >(async () => {
+  const {
+    loading,
+    value: prData,
+    retry,
+    error,
+  } = useAsyncRetry<PullRequest[]>(async () => {
     const token = await auth.getAccessToken(['repo']);
     if (!repo) {
       return [];
@@ -79,10 +82,7 @@ export function usePullRequests({
         })
         .then(
           ({
-            pullRequestsData: {
-              total_count, 
-              items
-            },
+            pullRequestsData: { total_count, items },
           }: {
             pullRequestsData: SearchPullRequestsResponseData;
           }) => {

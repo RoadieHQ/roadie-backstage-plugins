@@ -18,28 +18,33 @@
 import 'os';
 
 describe('Datadog', () => {
-    beforeEach(() => {
-        cy.saveGithubToken();
-        cy.intercept('GET', 'https://p.datadoghq.eu/sb/test-datadog-link', { fixture: 'datadog/datadogdashboard.json' }).as('getDashboardJson')
-        cy.intercept('GET', 'https://app.datadoghq.eu/graph/embed?token=qwertytoken1234&height=300&width=600&legend=true', { fixture: 'datadog/dashboard.html' }).as('getDashboardHtml')
-    })
+  beforeEach(() => {
+    cy.saveGithubToken();
+    cy.intercept('GET', 'https://p.datadoghq.eu/sb/test-datadog-link', {
+      fixture: 'datadog/datadogdashboard.json',
+    }).as('getDashboardJson');
+    cy.intercept(
+      'GET',
+      'https://app.datadoghq.eu/graph/embed?token=qwertytoken1234&height=300&width=600&legend=true',
+      { fixture: 'datadog/dashboard.html' },
+    ).as('getDashboardHtml');
+  });
 
-    describe('Navigate to datadog dashboard', () => {
-        it('should show Datadog dashboard', () => {
-            cy.visit('/catalog/default/component/sample-service/datadog')
+  describe('Navigate to datadog dashboard', () => {
+    it('should show Datadog dashboard', () => {
+      cy.visit('/catalog/default/component/sample-service/datadog');
 
-            cy.wait('@getDashboardJson')
+      cy.wait('@getDashboardJson');
 
-            cy.contains('Datadog dashboard');
-        });
-
-        it('should show Datadog graph', () => {
-            cy.visit('/catalog/default/component/sample-service')
-
-            cy.wait('@getDashboardHtml')
-
-            cy.contains('Datadog Graph');
-        });
-
+      cy.contains('Datadog dashboard');
     });
+
+    it('should show Datadog graph', () => {
+      cy.visit('/catalog/default/component/sample-service');
+
+      cy.wait('@getDashboardHtml');
+
+      cy.contains('Datadog Graph');
+    });
+  });
 });

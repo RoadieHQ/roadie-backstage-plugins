@@ -16,8 +16,15 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers, TestApiProvider } from '@backstage/test-utils';
-import { AnyApiRef, configApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
+import {
+  AnyApiRef,
+  configApiRef,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { Content } from './HomePageCard';
 
@@ -44,7 +51,7 @@ const mockConfig = jest.fn().mockImplementation((_: string) => undefined);
 const config = {
   getOptionalStringArray: (_: string) => {
     return mockConfig();
-  }
+  },
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
@@ -57,11 +64,11 @@ describe('HomePageContent', () => {
   // Enable sane handlers for network requests
   setupRequestMockHandlers(server);
   const props = {
-    src: "https://example.com",
-    title: "some title"
+    src: 'https://example.com',
+    title: 'some title',
   };
 
-  describe("when src is set", () => {
+  describe('when src is set', () => {
     it('should render container for the iframe', async () => {
       const rendered = render(
         <TestApiProvider apis={apis}>
@@ -74,9 +81,9 @@ describe('HomePageContent', () => {
     });
   });
 
-  describe("when src is not set", () => {
+  describe('when src is not set', () => {
     it('should not render the iframe', async () => {
-      props.src = "";
+      props.src = '';
       const rendered = render(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
@@ -84,14 +91,18 @@ describe('HomePageContent', () => {
           </EntityProvider>
         </TestApiProvider>,
       );
-      expect(await rendered.findByText('No src field provided. Please pass it in as a prop to populate the iframe.')).toBeTruthy();
+      expect(
+        await rendered.findByText(
+          'No src field provided. Please pass it in as a prop to populate the iframe.',
+        ),
+      ).toBeTruthy();
     });
   });
 
-  describe("when src is not in allowlist", () => {
+  describe('when src is not in allowlist', () => {
     it('should not render the iframe', async () => {
-      props.src = "https://example.com";
-      mockConfig.mockImplementation(() => ["hello.com"]);
+      props.src = 'https://example.com';
+      mockConfig.mockImplementation(() => ['hello.com']);
       const rendered = render(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
@@ -99,14 +110,18 @@ describe('HomePageContent', () => {
           </EntityProvider>
         </TestApiProvider>,
       );
-      expect(await rendered.findByText('Src https://example.com for Iframe is not included in the allowlist hello.com.')).toBeTruthy();
+      expect(
+        await rendered.findByText(
+          'Src https://example.com for Iframe is not included in the allowlist hello.com.',
+        ),
+      ).toBeTruthy();
     });
   });
 
-  describe("when src is in the allowlist", () => {
+  describe('when src is in the allowlist', () => {
     it('should not render the iframe', async () => {
-      props.src = "https://example.com";
-      mockConfig.mockImplementation(() => ["example.com"]);
+      props.src = 'https://example.com';
+      mockConfig.mockImplementation(() => ['example.com']);
       const rendered = render(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>

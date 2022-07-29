@@ -25,14 +25,18 @@ export default class ErrorBoundary extends Component<MyProps, MyState> {
         <Alert severity="error">
           Something went wrong. Please make sure that you installed:
           <strong>
-            <a href="https://github.com/RoadieHQ/backstage-plugin-aws-auth" target="_blank" rel="noopener noreferrer">
-             @roadiehq/backstage-plugin-aws-auth plugin
+            <a
+              href="https://github.com/RoadieHQ/backstage-plugin-aws-auth"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @roadiehq/backstage-plugin-aws-auth plugin
             </a>
-            </strong>
+          </strong>
         </Alert>
       );
     }
 
-    return this.props.children; 
+    return this.props.children;
   }
 }

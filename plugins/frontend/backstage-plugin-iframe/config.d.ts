@@ -16,16 +16,15 @@
 
 /** Configuration for the Iframe plugin */
 export interface Config {
+  /**
+   * @visibility frontend
+   */
+  iframe?: {
     /**
+     * The proxy path for Iframe.
+     * Should be used if you want to restrict the iframe domains
      * @visibility frontend
      */
-    iframe?: {
-      /**
-       * The proxy path for Iframe.
-       * Should be used if you want to restrict the iframe domains
-       * @visibility frontend
-       */
-      allowList?: string[];
-    };
-  }
-  
+    allowList?: string[];
+  };
+}

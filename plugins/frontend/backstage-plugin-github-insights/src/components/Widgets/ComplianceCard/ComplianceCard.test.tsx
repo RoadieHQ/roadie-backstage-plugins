@@ -87,7 +87,7 @@ describe('ComplianceCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
 
     expect(await screen.findByText('master')).toBeInTheDocument();
     expect(await screen.findByText('Apache License')).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe('ComplianceCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
 
     worker.use(
       rest.get(
@@ -126,9 +126,9 @@ describe('ComplianceCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
 
     expect(await screen.findByText('master')).toBeInTheDocument();
-    expect(await screen.findByText("Apache License")).toBeInTheDocument()
-  })
+    expect(await screen.findByText('Apache License')).toBeInTheDocument();
+  });
 });

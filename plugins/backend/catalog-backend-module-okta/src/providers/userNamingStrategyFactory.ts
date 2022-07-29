@@ -25,7 +25,7 @@ export type UserNamingStrategies =
   | undefined;
 
 export const userNamingStrategyFactory = (
-  name: UserNamingStrategies = "id",
+  name: UserNamingStrategies = 'id',
 ): UserNamingStrategy => {
   switch (name) {
     case 'id':

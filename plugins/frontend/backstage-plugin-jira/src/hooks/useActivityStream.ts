@@ -44,13 +44,19 @@ export const useActivityStream = (
   projectKey: string,
   componentName: string | undefined,
   ticketIds: string[] | undefined,
-  isBearerAuth: boolean
+  isBearerAuth: boolean,
 ) => {
   const api = useApi(jiraApiRef);
 
   const getActivityStream = useCallback(async () => {
     try {
-      const response = await api.getActivityStream(size, projectKey, componentName, ticketIds, isBearerAuth);
+      const response = await api.getActivityStream(
+        size,
+        projectKey,
+        componentName,
+        ticketIds,
+        isBearerAuth,
+      );
       const parsedData = JSON.parse(
         convert.xml2json(response, { compact: true, spaces: 2 }),
       );
@@ -89,14 +95,15 @@ export const useActivityStream = (
         },
       );
       return mappedData as Array<ActivityStreamElement>;
-    } catch (err:any) {
+    } catch (err: any) {
       return handleError(err);
     }
   }, [api, size, projectKey, componentName, ticketIds, isBearerAuth]);
 
-  const [state, fetchActivityStream] = useAsyncFn(() => getActivityStream(), [
-    size,
-  ]);
+  const [state, fetchActivityStream] = useAsyncFn(
+    () => getActivityStream(),
+    [size],
+  );
 
   useEffect(() => {
     fetchActivityStream();

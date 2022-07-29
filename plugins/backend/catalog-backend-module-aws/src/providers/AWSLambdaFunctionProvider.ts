@@ -23,7 +23,7 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
   ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
 } from '../annotations';
-import { arnToName } from "../utils/arnToName";
+import { arnToName } from '../utils/arnToName';
 
 const link2aws = require('link2aws');
 
@@ -90,7 +90,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             metadata: {
               annotations,
               name: arnToName(lambdaFunction.FunctionArn),
-              title: lambdaFunction.FunctionName
+              title: lambdaFunction.FunctionName,
             },
             spec: {
               owner: 'unknown',

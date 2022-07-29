@@ -17,7 +17,7 @@
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { MarkdownContentProps, BASE_URL} from './types';
+import { MarkdownContentProps, BASE_URL } from './types';
 
 export const useGithubFile = (options: MarkdownContentProps) => {
   const auth = useApi(githubAuthApiRef);
@@ -45,7 +45,7 @@ export const useGithubFile = (options: MarkdownContentProps) => {
         etag: response.headers.etag ?? '',
       };
     } catch (e: any) {
-      throw new Error(`Unable to gather markdown contents: ${e.message}`)
+      throw new Error(`Unable to gather markdown contents: ${e.message}`);
     }
     return result;
   }, []);

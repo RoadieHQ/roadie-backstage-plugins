@@ -14,7 +14,7 @@ yarn add @roadiehq/backstage-plugin-home-rss
 
 ```ts
 export type RSSContentProps = {
-  feedURL: string
+  feedURL: string;
 };
 ```
 
@@ -22,8 +22,8 @@ You will need to setup a proxy in order to bypass the CORs checks in the browser
 
 ```yaml
 proxy:
-  "/reuters-news-feed":
-    target: "https://www.reutersagency.com/feed"
+  '/reuters-news-feed':
+    target: 'https://www.reutersagency.com/feed'
 ```
 
 Then you can add a card component to your Home Page.

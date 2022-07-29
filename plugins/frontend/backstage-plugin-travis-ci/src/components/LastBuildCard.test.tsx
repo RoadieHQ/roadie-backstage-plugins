@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import React from 'react';
 import { render } from '@testing-library/react';
 import {
@@ -42,15 +41,15 @@ const identityApi: IdentityApi = {
   async getProfileInfo() {
     return { email: 'jane-fonda@spotify.com' };
   },
-  async getBackstageIdentity () {
+  async getBackstageIdentity() {
     return {
       type: 'user',
       userEntityRef: 'user:default/jane-fonda',
       ownershipEntityRefs: [],
-    }
+    };
   },
   async getCredentials() {
-    return {token: 'fake-id-token'}
+    return { token: 'fake-id-token' };
   },
   async signOut() {
     return Promise.resolve();

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 import {
   InfoCard,
@@ -46,23 +45,26 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
-  const supportsMultipleArgoInstances: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
+  const supportsMultipleArgoInstances: boolean = Boolean(
+    configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+  );
 
   const history = data.items
     ? data.items
-      .map(app => {
-        if (typeof app.status.history !== 'undefined') {
-          return app.status.history.map(entry => {
-            return {
-              app: app.metadata.name,
-              instance: app.metadata?.instance?.name,
-              ...entry,
-            };
-          });
-        }
-        return {};
-      }).filter(value => Object.keys(value).length !== 0)
-      .flat()
+        .map(app => {
+          if (typeof app.status.history !== 'undefined') {
+            return app.status.history.map(entry => {
+              return {
+                app: app.metadata.name,
+                instance: app.metadata?.instance?.name,
+                ...entry,
+              };
+            });
+          }
+          return {};
+        })
+        .filter(value => Object.keys(value).length !== 0)
+        .flat()
     : [];
   const columns: TableColumn[] = [
     {
@@ -126,7 +128,7 @@ const HistoryTable = ({
     columns.splice(1, 0, {
       title: 'Instance',
       render: (row: any): React.ReactNode => row.metadata?.instance?.name,
-    })
+    });
   }
 
   return (
@@ -179,23 +181,13 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
 
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
-      return (
-        <HistoryTable
-          data={value as ArgoCDAppList}
-          retry={retry}
-        />
-      );
+      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
     }
     if (Array.isArray(value)) {
       const wrapped: ArgoCDAppList = {
         items: value as Array<ArgoCDAppDetails>,
       };
-      return (
-        <HistoryTable
-          data={wrapped}
-          retry={retry}
-        />
-      );
+      return <HistoryTable data={wrapped} retry={retry} />;
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],

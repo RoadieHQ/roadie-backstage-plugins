@@ -1,10 +1,10 @@
 # AWS Lambda Plugin
 
 ![preview of Lambda Widget](./docs/lambda-widget.png)
+
 ## Features
 
 - AWS Lambda function overview card
-
 
 ## Plugin Setup
 

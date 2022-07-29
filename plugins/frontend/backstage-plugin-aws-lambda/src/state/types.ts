@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export type Settings = {
   identityPoolId: string;
   region: string;

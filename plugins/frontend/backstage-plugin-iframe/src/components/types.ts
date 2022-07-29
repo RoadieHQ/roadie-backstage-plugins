@@ -1,4 +1,3 @@
-
 /**
  * Props for IFrame content component {@link Content}.
  *
@@ -10,9 +9,9 @@ export type IFrameProps = {
   height?: string;
   width?: string;
   class?: string;
-}
+};
 
 export type IFrameContentProps = {
   iframe: IFrameProps;
   title?: string;
-}
+};

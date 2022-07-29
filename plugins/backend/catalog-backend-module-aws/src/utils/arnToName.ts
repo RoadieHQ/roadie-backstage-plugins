@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { SHA256 } from 'crypto-js'
+import { SHA256 } from 'crypto-js';
 
-export function arnToName(
-  arn: string
-) {
-  return SHA256(arn).toString().slice(0, 63)
+export function arnToName(arn: string) {
+  return SHA256(arn).toString().slice(0, 63);
 }

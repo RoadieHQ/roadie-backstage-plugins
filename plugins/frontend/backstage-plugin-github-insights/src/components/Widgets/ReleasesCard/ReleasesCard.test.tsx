@@ -113,7 +113,7 @@ describe('ReleasesCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
 
     expect(await screen.findAllByText('release-2021-01-09')).toHaveLength(2);
   });

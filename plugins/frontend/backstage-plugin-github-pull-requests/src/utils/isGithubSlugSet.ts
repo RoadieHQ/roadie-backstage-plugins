@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 
 export const GITHUB_PULL_REQUESTS_ANNOTATION = 'github.com/project-slug';

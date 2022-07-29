@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 import { JIRA_PROJECT_KEY_ANNOTATION } from '../hooks';
 

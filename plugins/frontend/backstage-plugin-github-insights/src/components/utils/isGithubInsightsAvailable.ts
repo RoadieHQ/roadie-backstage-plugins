@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-
 import { Entity } from '@backstage/catalog-model';
 
 export const GITHUB_INSIGHTS_ANNOTATION = 'github.com/project-slug';
 
 export const isGithubInsightsAvailable = (entity: Entity) =>
-  Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION])
+  Boolean(entity?.metadata.annotations?.[GITHUB_INSIGHTS_ANNOTATION]);

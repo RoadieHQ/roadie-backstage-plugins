@@ -1,8 +1,8 @@
-import {configApiRef, errorApiRef, useApi} from '@backstage/core-plugin-api';
-import {useCallback, useEffect, useState} from 'react';
-import {useAsyncRetry} from 'react-use';
-import {travisCIApiRef, TravisCIBuildResponse} from '../api';
-import {useTravisRepoData} from './useTravisRepoData';
+import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
+import { useCallback, useEffect, useState } from 'react';
+import { useAsyncRetry } from 'react-use';
+import { travisCIApiRef, TravisCIBuildResponse } from '../api';
+import { useTravisRepoData } from './useTravisRepoData';
 
 export type Build = {
   id: string;
@@ -24,21 +24,23 @@ export type Build = {
 const makeReadableStatus = (status: string | undefined) => {
   if (!status) return '';
   return (
-    ({
-      retried: 'Retried',
-      canceled: 'Canceled',
-      infrastructure_fail: 'Infra fail',
-      timedout: 'Timedout',
-      not_run: 'Not run',
-      running: 'Running',
-      failed: 'Failed',
-      queued: 'Queued',
-      scheduled: 'Scheduled',
-      not_running: 'Not running',
-      no_tests: 'No tests',
-      fixed: 'Fixed',
-      success: 'Success',
-    } as Record<string, string>)[status] || status
+    (
+      {
+        retried: 'Retried',
+        canceled: 'Canceled',
+        infrastructure_fail: 'Infra fail',
+        timedout: 'Timedout',
+        not_run: 'Not run',
+        running: 'Running',
+        failed: 'Failed',
+        queued: 'Queued',
+        scheduled: 'Scheduled',
+        not_running: 'Not running',
+        no_tests: 'No tests',
+        fixed: 'Fixed',
+        success: 'Success',
+      } as Record<string, string>
+    )[status] || status
   );
 };
 
@@ -52,7 +54,7 @@ export const transform = (
     id: buildData.number,
     buildName: buildData.commit.message,
     onRestartClick: () =>
-        typeof buildData.id !== 'undefined' && restartBuild(buildData.id),
+      typeof buildData.id !== 'undefined' && restartBuild(buildData.id),
     source: {
       branchName: String(buildData.branch.name),
       commit: {
@@ -76,7 +78,7 @@ export function useBuilds() {
   let baseUrl: string;
   try {
     baseUrl = configApi.getString('travisci.baseUrl');
-  } catch (e:any) {
+  } catch (e: any) {
     baseUrl = 'https://travis-ci.com/';
   }
 
@@ -92,7 +94,7 @@ export function useBuilds() {
           offset,
           repoSlug,
         });
-      } catch (e:any) {
+      } catch (e: any) {
         errorApi.post(e);
         return Promise.reject(e);
       }
@@ -103,7 +105,7 @@ export function useBuilds() {
   const restartBuild = async (buildId: number) => {
     try {
       await api.retry(buildId);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
     }
   };

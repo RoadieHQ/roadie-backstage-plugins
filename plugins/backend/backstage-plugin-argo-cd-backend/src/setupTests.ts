@@ -1,5 +1,5 @@
-import fetchMock from "jest-fetch-mock";
+import fetchMock from 'jest-fetch-mock';
 
-jest.setMock("cross-fetch", fetchMock);
+jest.setMock('cross-fetch', fetchMock);
 
 export {};

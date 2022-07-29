@@ -115,11 +115,10 @@ export function useMetrics({
 
 export function useAlerts(alerts: string[] | 'all') {
   const prometheusApi = useApi(prometheusApiRef);
-  const { value, loading, error } = useAsync(async (): Promise<
-    PrometheusRuleResponse
-  > => {
-    return await prometheusApi.getAlerts();
-  }, []);
+  const { value, loading, error } =
+    useAsync(async (): Promise<PrometheusRuleResponse> => {
+      return await prometheusApi.getAlerts();
+    }, []);
   if (value && value.status !== 'error') {
     const rules = value.data.groups.flatMap(it => it.rules);
     const displayableAlerts: PrometheusDisplayableAlert[] = rules

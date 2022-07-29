@@ -74,8 +74,9 @@ const useStyles = makeStyles((theme: Theme) =>
         borderRadius: '5px',
       },
       '&::-webkit-scrollbar-thumb': {
-        border: `1px solid ${theme.palette.type === 'dark' ? '#555' : '#F5F5F5'
-          }`,
+        border: `1px solid ${
+          theme.palette.type === 'dark' ? '#555' : '#F5F5F5'
+        }`,
         backgroundColor: theme.palette.type === 'dark' ? '#F5F5F5' : '#555',
         borderRadius: '4px',
       },
@@ -116,12 +117,12 @@ const options = {
   },
 };
 
-export const ActivityStream = ({ 
+export const ActivityStream = ({
   projectKey,
   tokenType,
   componentName,
   ticketIds,
-}: { 
+}: {
   projectKey: string;
   tokenType: string | undefined;
   componentName: string | undefined;
@@ -130,7 +131,7 @@ export const ActivityStream = ({
   const classes = useStyles();
   const [size, setSize] = useState(25);
   const [disableButton, setDisableButton] = useState(false);
-  const isBearerAuth = tokenType?.includes('Bearer') ? true: false;
+  const isBearerAuth = tokenType?.includes('Bearer') ? true : false;
   const { activities, activitiesLoading, activitiesError } = useActivityStream(
     size,
     projectKey,
@@ -147,7 +148,9 @@ export const ActivityStream = ({
   }, [size, activities]);
 
   if (activitiesError) return null; // Hide activity stream on error
-  const filteredIssues = activities?.filter(entry => !entry?.icon?.title.includes("Sub-task"))
+  const filteredIssues = activities?.filter(
+    entry => !entry?.icon?.title.includes('Sub-task'),
+  );
   return (
     <>
       <Typography variant="subtitle1">Activity stream</Typography>
@@ -163,7 +166,7 @@ export const ActivityStream = ({
                     sanitizeHtml(entry.summary || entry.content || '', {
                       disallowedTagsMode: 'escape',
                     }),
-                    options
+                    options,
                   )}
                 </Box>
                 <Box display="flex" alignItems="center" mt={1}>
@@ -173,7 +176,10 @@ export const ActivityStream = ({
                     </Tooltip>
                   ) : null}
                   <Tooltip title={entry.time.value}>
-                    <Typography variant="caption" className={entry.icon ? classes.time : classes.timeNoIcon}>
+                    <Typography
+                      variant="caption"
+                      className={entry.icon ? classes.time : classes.timeNoIcon}
+                    >
                       {entry.time.elapsed}
                     </Typography>
                   </Tooltip>

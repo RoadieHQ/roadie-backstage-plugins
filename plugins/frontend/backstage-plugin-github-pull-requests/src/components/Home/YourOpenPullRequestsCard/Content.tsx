@@ -30,7 +30,7 @@ type OpenPullRequestsCardProps = {
   query?: string;
 };
 
-const defaultPullRequestsQuery = "is:open is:pr author:@me archived:false"
+const defaultPullRequestsQuery = 'is:open is:pr author:@me archived:false';
 
 const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
   const { query = defaultPullRequestsQuery } = props;
@@ -48,5 +48,9 @@ const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
 };
 export const Content = (props: OpenPullRequestsCardProps) => {
   const isLoggedIn = useGithubLoggedIn();
-  return isLoggedIn ? <OpenPullRequestsContent {...props} /> : <GithubNotAuthorized />;
+  return isLoggedIn ? (
+    <OpenPullRequestsContent {...props} />
+  ) : (
+    <GithubNotAuthorized />
+  );
 };

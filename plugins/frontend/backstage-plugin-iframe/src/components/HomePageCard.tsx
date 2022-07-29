@@ -33,13 +33,16 @@ export const Content = (props: HomeProps) => {
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
 
-  if(errorMessage !== ""){
-    return (
-      <ErrorComponent {...{errorMessage}}/>
-    )
+  if (errorMessage !== '') {
+    return <ErrorComponent {...{ errorMessage }} />;
   }
 
-  return(
-    <iframe src={src} height={height || "100%"} width={width || "100%"} title="iframe homepage card"/>
-  )
+  return (
+    <iframe
+      src={src}
+      height={height || '100%'}
+      width={width || '100%'}
+      title="iframe homepage card"
+    />
+  );
 };

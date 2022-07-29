@@ -23,9 +23,9 @@ import { generateRequestUrl } from './utils';
 
 export const transform = (
   buildsData: BuildkiteBuildInfo[],
-  restartBuild: (requestUrl: string) => Promise<void>
+  restartBuild: (requestUrl: string) => Promise<void>,
 ): BuildkiteBuildInfo[] => {
-  return buildsData.map((buildData) => {
+  return buildsData.map(buildData => {
     const tableBuildInfo: BuildkiteBuildInfo = {
       ...buildData,
       onRestartClick: () => {
@@ -48,7 +48,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
     let builds = [];
     try {
       builds = await api.getBuilds(owner, repo, page + 1, pageSize);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
     }
     if (page === 0) setTotal(builds?.[0].number);
@@ -62,7 +62,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
       await api.restartBuild(requestUrl);
       retry();
       return;
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
       throw e;
     }

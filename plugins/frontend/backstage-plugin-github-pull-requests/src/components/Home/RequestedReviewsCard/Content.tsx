@@ -30,7 +30,7 @@ type RequestedReviewsCardProps = {
   query?: string;
 };
 
-const defaultReviewsQuery = "is:open is:pr review-requested:@me archived:false"
+const defaultReviewsQuery = 'is:open is:pr review-requested:@me archived:false';
 
 const RequestedReviewsContent = (props: RequestedReviewsCardProps) => {
   const { query = defaultReviewsQuery } = props;
@@ -46,5 +46,9 @@ const RequestedReviewsContent = (props: RequestedReviewsCardProps) => {
 export const Content = (props: RequestedReviewsCardProps) => {
   const isLoggedIn = useGithubLoggedIn();
 
-  return isLoggedIn ? <RequestedReviewsContent {...props} /> : <GithubNotAuthorized />;
+  return isLoggedIn ? (
+    <RequestedReviewsContent {...props} />
+  ) : (
+    <GithubNotAuthorized />
+  );
 };

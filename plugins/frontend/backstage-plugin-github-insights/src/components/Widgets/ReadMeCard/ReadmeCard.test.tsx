@@ -37,10 +37,10 @@ import {
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
 // MarkdownContent uses rect-markdown which throws a type error in the tests so we are mocking it checking the plain text in the components.
-jest.mock('@backstage/core-components', ()=>({
+jest.mock('@backstage/core-components', () => ({
   ...jest.requireActual('@backstage/core-components'),
- MarkdownContent:  ({ content }: { content: string }) => <span>{content}</span>,
-}))
+  MarkdownContent: ({ content }: { content: string }) => <span>{content}</span>,
+}));
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -92,8 +92,7 @@ describe('ReadmeCard', () => {
       ),
     ).toBeInTheDocument();
   });
-  it
-  ('should display a card with the data from state on second render when response is 304', async () => {
+  it('should display a card with the data from state on second render when response is 304', async () => {
     const { rerender } = render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -121,7 +120,7 @@ describe('ReadmeCard', () => {
           </ThemeProvider>
         </TestApiProvider>,
       ),
-    )
+    );
     expect(
       await screen.findByText(
         /Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end\./,

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 import '@testing-library/jest-dom';
 import fetch from 'cross-fetch';
 

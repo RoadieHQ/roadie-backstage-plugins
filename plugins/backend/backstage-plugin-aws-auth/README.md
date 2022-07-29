@@ -24,8 +24,12 @@ You can specify an AWS IAM Role Arn in the body of the request to facilitate cro
 
 ```js
 async function generateCredentials(backendUrl: string) {
-  const reqBody = JSON.stringify({ RoleArn: 'arn:aws:iam::0123456789012:role/Example' });
-  const resp = await (await fetch(`${backendUrl}/aws/credentials`, { body: reqBody })).json();
+  const reqBody = JSON.stringify({
+    RoleArn: 'arn:aws:iam::0123456789012:role/Example',
+  });
+  const resp = await (
+    await fetch(`${backendUrl}/aws/credentials`, { body: reqBody })
+  ).json();
   return new AWS.Credentials({
     accessKeyId: resp.AccessKeyId,
     secretAccessKey: resp.SecretAccessKey,
@@ -39,7 +43,7 @@ AWS.config.credentials = await generateCredentials(backendUrl);
 
 Please create an IAM user (with api keys capabilities) with permissions as little as possible to perform actions from backstage (e.g. only operation lambda:GetFunction with specified resource list)
 
-then, please set environment variables with api keys from previously create IAM user. The plugin will use default AWS credential provider chain if environment variables are not set. You can find more information about credential provider chain from [AWS docs](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html). 
+then, please set environment variables with api keys from previously create IAM user. The plugin will use default AWS credential provider chain if environment variables are not set. You can find more information about credential provider chain from [AWS docs](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html).
 
 You can run plugin locally as standalone by:
 

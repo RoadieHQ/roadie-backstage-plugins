@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
- export const generateRequestUrl = (url: string) => {
+export const generateRequestUrl = (url: string) => {
   const splitUrl = url.split('/').slice(4).join('/');
-   return splitUrl;
- }
+  return splitUrl;
+};
