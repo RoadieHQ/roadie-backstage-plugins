@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.0.3
+
+### Patch Changes
+
+- 86eca6a: Update dependencies
+
 ## 2.0.2
 
 ### Patch Changes

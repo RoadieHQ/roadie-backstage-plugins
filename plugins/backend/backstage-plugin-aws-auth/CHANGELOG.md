@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.3.7
+
+### Patch Changes
+
+- 86eca6a: Update dependencies
+
 ## 0.3.6
 
 ### Patch Changes
