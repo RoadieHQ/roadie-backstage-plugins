@@ -52,9 +52,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 describe('PullRequestsCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
-  afterEach(() => {
-    worker.resetHandlers();
-  });
+
   beforeEach(() => {
     worker.use(...handlers);
   });

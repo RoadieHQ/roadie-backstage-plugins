@@ -37,7 +37,6 @@ describe('<YourOpenPullRequestCard>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {
-    worker.resetHandlers();
     cleanup();
   });
   beforeEach(() => {
@@ -79,7 +78,7 @@ describe('<YourOpenPullRequestCard>', () => {
     ).toBeInTheDocument();
   });
   it('should render home card with requested pull requests, using custom query', async () => {
-    const customQuery = "is:open is:pr author@me archived: false is:draft"
+    const customQuery = 'is:open is:pr author@me archived: false is:draft';
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>

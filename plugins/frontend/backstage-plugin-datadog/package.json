@@ -22,18 +22,18 @@
     "directory": "plugins/frontend/backstage-plugin-datadog"
   },
   "scripts": {
-    "build": "backstage-cli plugin:build",
-    "start": "backstage-cli plugin:serve",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
+    "build": "backstage-cli package build",
+    "start": "backstage-cli package start",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {
     "@backstage/catalog-model": "^1.0.0",
-    "@backstage/core-components": "^0.9.0",
+    "@backstage/core-components": "^0.10.0",
     "@backstage/core-plugin-api": "^1.0.0",
     "@backstage/plugin-catalog-react": "^1.0.0",
     "@material-ui/core": "^4.11.0",
@@ -53,7 +53,7 @@
     "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.17.0",
+    "@backstage/cli": "^0.18.0",
     "@backstage/core-app-api": "^1.0.0",
     "@backstage/dev-utils": "^1.0.0",
     "@backstage/test-utils": "^1.0.0",

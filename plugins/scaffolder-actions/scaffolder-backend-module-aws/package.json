@@ -22,12 +22,12 @@
     "email": "support@roadie.io"
   },
   "scripts": {
-    "start": "backstage-cli backend:dev",
-    "build": "backstage-cli backend:build",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.53.0",
-    "@backstage/cli": "^0.17.0",
+    "@backstage/cli": "^0.18.0",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",

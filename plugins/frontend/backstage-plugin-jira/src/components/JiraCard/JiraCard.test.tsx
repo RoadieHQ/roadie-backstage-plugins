@@ -50,7 +50,6 @@ describe('JiraCard', () => {
   setupRequestMockHandlers(worker);
 
   beforeEach(() => {
-    worker.resetHandlers();
     jest.resetAllMocks();
   });
 

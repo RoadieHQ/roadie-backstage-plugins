@@ -31,7 +31,9 @@ jest.mock('@backstage/core-components', () => ({
   ...jest.requireActual('@backstage/core-components'),
   MarkdownContent: ({ content }: { content: string }) => <span>{content}</span>,
 }));
-const mockAccessToken = jest.fn().mockImplementation(async (_: string[]) => 'test-token');
+const mockAccessToken = jest
+  .fn()
+  .mockImplementation(async (_: string[]) => 'test-token');
 const mockGithubAuth = {
   getAccessToken: mockAccessToken,
   sessionState$: jest.fn(() => ({
@@ -49,7 +51,6 @@ describe('<MarkdownContent>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
   afterEach(() => {
-    worker.resetHandlers();
     cleanup();
   });
   beforeEach(() => {
@@ -123,12 +124,14 @@ describe('<MarkdownContent>', () => {
     ).toBeInTheDocument();
   });
 
-  describe('it fails to get the content', () =>{
+  describe('it fails to get the content', () => {
     beforeEach(() => {
-      mockAccessToken.mockImplementation(()=> { throw new Error('No :(')});
+      mockAccessToken.mockImplementation(() => {
+        throw new Error('No :(');
+      });
     });
 
-    it('shouldn\'t render the markdown card but display an error', async () => {
+    it("shouldn't render the markdown card but display an error", async () => {
       render(
         wrapInTestApp(
           <TestApiProvider apis={apis}>
@@ -141,9 +144,11 @@ describe('<MarkdownContent>', () => {
           </TestApiProvider>,
         ),
       );
-  
+
       expect(
-        await screen.findByText('Unable to gather markdown contents: No :(', { exact: false }),
+        await screen.findByText('Unable to gather markdown contents: No :(', {
+          exact: false,
+        }),
       ).toBeInTheDocument();
     });
   });

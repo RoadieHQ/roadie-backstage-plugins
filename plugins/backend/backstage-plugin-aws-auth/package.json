@@ -11,12 +11,12 @@
     "types": "dist/index.d.ts"
   },
   "scripts": {
-    "start": "backstage-cli backend:dev",
-    "build": "backstage-cli backend:build",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test --passWithNoTests",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "start": "backstage-cli package start",
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test --passWithNoTests",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "backstage": {
@@ -38,7 +38,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.17.1",
+    "@backstage/cli": "^0.18.0",
     "@backstage/dev-utils": "^1.0.2"
   },
   "files": [

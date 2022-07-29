@@ -10,7 +10,7 @@
     "dev:ci": "concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
-    "start-backend:ci": "yarn workspace backend backstage-cli build && node packages/backend",
+    "start-backend:ci": "yarn workspace backend backstage-cli package build && node packages/backend",
     "start:ci": "concurrently \"yarn start\" \"yarn start-backend:ci\"",
     "build": "lerna run build",
     "build-image": "yarn workspace backend build-image",
@@ -18,8 +18,8 @@
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli clean && lerna run clean",
     "diff": "lerna run diff --",
-    "test": "lerna run test --since origin/main -- --coverage",
-    "test:all": "lerna run test -- --coverage",
+    "test": "lerna run test --since origin/main -- --coverage --runInBand",
+    "test:all": "lerna run test -- --coverage --runInBand",
     "lint": "lerna run lint --since origin/main --",
     "lint:all": "lerna run lint --",
     "create-plugin": "backstage-cli create-plugin --scope roadiehq --no-private",
@@ -34,7 +34,7 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.17.0",
+    "@backstage/cli": "^0.18.0",
     "@spotify/prettier-config": "^12.0.0",
     "@types/webpack": "^5.28.0",
     "concurrently": "^7.0.0",
@@ -51,11 +51,6 @@
     ],
     "*.{json,md}": [
       "prettier --write"
-    ]
-  },
-  "jest": {
-    "transformModules": [
-      "@asyncapi/react-component"
     ]
   },
   "dependencies": {

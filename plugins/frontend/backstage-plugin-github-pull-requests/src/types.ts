@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { GetResponseTypeFromEndpointMethod } from '@octokit/types';
 import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
-const octokit = new Octokit();
+const octokit: Octokit = new Octokit();
 
 export type PullRequestState = 'open' | 'closed' | 'all';
 

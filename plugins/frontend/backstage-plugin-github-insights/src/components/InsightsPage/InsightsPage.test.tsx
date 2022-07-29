@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { act, render, RenderResult, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
@@ -62,37 +62,33 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 
 describe('Insights Page', () => {
   it('should render', async () => {
-    let renderResult: RenderResult;
-
-    await act(async () => {
-      renderResult = render(
-        wrapInTestApp(
-          <TestApiProvider apis={apis}>
-            <ThemeProvider theme={lightTheme}>
-              <EntityProvider
-                entity={{
-                  apiVersion: '1',
-                  kind: 'a',
-                  metadata: {
-                    name: 'Example Service',
-                    annotations: {
-                      'github.com/project-slug': 'octocat/Hello-World',
-                      'backstage.io/managed-by-location':
-                        'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
-                    },
+    const renderResult = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider
+              entity={{
+                apiVersion: '1',
+                kind: 'a',
+                metadata: {
+                  name: 'Example Service',
+                  annotations: {
+                    'github.com/project-slug': 'octocat/Hello-World',
+                    'backstage.io/managed-by-location':
+                      'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
                   },
-                }}
-              >
-                <InsightsPage />
-              </EntityProvider>
-            </ThemeProvider>
-          </TestApiProvider>,
-        ),
-      );
-    });
-
-    await waitFor(() =>
-      expect(renderResult.getByText('GitHub Insights')).toBeInTheDocument(),
+                },
+              }}
+            >
+              <InsightsPage />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
     );
+
+    expect(
+      await renderResult.findByText('GitHub Insights'),
+    ).toBeInTheDocument();
   });
 });

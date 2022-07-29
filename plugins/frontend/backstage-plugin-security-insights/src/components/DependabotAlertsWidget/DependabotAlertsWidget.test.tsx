@@ -88,7 +88,6 @@ describe('Dependabot alerts overview', () => {
   setupRequestMockHandlers(worker);
 
   beforeEach(() => {
-    worker.resetHandlers();
     jest.resetAllMocks();
   });
 
