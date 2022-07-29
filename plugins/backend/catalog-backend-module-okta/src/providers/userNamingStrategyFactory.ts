@@ -25,11 +25,10 @@ export type UserNamingStrategies =
   | undefined;
 
 export const userNamingStrategyFactory = (
-  name: UserNamingStrategies,
+  name: UserNamingStrategies = "id",
 ): UserNamingStrategy => {
   switch (name) {
     case 'id':
-    case undefined:
       return user => user.id;
     case 'kebab-case-email':
       return user => kebabCase(user.profile.email);
