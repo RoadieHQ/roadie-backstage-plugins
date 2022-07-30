@@ -35,7 +35,7 @@ export const useGithubSearchPullRequest = (query: string) => {
         ...(baseUrl && { baseUrl }),
       }).search.issuesAndPullRequests({
         q: query,
-        per_page: 5,
+        per_page: 100,
         page: 1,
       });
     return pullRequestResponse.data.items.map(pr => ({
