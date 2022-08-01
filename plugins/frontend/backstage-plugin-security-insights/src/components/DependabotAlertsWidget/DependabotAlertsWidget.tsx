@@ -210,7 +210,7 @@ export const DependabotAlertsWidget = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
-  const { hostname } = useUrl(entity);
+  const { hostname, baseUrl } = useUrl(entity);
 
   const query = `
   query GetDependabotAlertsWidget($name: String!, $owner: String!) {
@@ -243,6 +243,7 @@ export const DependabotAlertsWidget = () => {
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const gqlEndpoint = graphql.defaults({
+      baseUrl,
       headers: {
         authorization: `token ${token}`,
       },
