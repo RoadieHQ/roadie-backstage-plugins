@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.4
+
+### Patch Changes
+
+- a75d8c4: Fixes the `DependabotAlertsWidget` card to use the correct apiBaseUrl that is provided in the config.
+
 ## 2.0.3
 
 ### Patch Changes
