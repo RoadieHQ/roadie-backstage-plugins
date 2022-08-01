@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.2.3
+
+### Patch Changes
+
+- a72a2a4: The homepage componenets will list 100 PRs
+
 ## 2.2.2
 
 ### Patch Changes
