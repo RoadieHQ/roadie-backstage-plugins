@@ -33,6 +33,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
     border: '1px solid grey',
     borderRadius: '6px',
+    overflowY: 'auto',
+    maxHeight: '18rem',
   },
   pullRequestRow: {
     paddingTop: '0.5rem',
@@ -225,7 +227,6 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       </Grid>
     );
   }
-
   return (
     <Grid container className={classes.container} spacing={1}>
       {data.map(pr => (
