@@ -31,7 +31,7 @@
     "diff": "backstage-cli plugin:diff",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "clean": "backstage-cli package clean"
   },
   "dependencies": {
     "@backstage/core-components": "^0.10.0",

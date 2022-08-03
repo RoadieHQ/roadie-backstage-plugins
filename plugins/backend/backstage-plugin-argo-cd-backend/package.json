@@ -24,7 +24,7 @@
     "test": "backstage-cli package test",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "clean": "backstage-cli package clean"
   },
   "dependencies": {
     "@backstage/backend-common": "^0.14.0",

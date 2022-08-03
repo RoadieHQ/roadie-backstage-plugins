@@ -28,7 +28,7 @@
     "test": "backstage-cli package test",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "clean": "backstage-cli package clean"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.53.0",
