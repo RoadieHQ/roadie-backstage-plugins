@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.2.1
+
+### Patch Changes
+
+- 9539caf: Release plugin to trigger rebuild of package.
+
 ## 0.2.0
 
 ### Minor Changes
