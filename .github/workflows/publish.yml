@@ -84,7 +84,7 @@ jobs:
         run: yarn tsc
 
       - name: build packages
-        run: yarn build
+        run: yarn backstage-cli repo build
 
       - name: 'Login to npmjs npm repo .npmrc'
         shell: bash
