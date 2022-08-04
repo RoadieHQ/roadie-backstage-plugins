@@ -23,16 +23,26 @@ import {
   GroupNamingStrategy,
   groupNamingStrategyFactory,
 } from './groupNamingStrategyFactory';
+import {
+  UserNamingStrategies,
+  UserNamingStrategy,
+  userNamingStrategyFactory,
+} from './userNamingStrategyFactory';
 
 /**
  * Provides entities from Okta Group service.
  */
 export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
+  private readonly userNamingStrategy: UserNamingStrategy;
 
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; namingStrategy?: GroupNamingStrategies },
+    options: {
+      logger: winston.Logger;
+      namingStrategy?: GroupNamingStrategies;
+      userNamingStrategy?: UserNamingStrategies;
+    },
   ) {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
@@ -42,10 +52,17 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
 
   constructor(
     accountConfig: any,
-    options: { logger: winston.Logger; namingStrategy?: GroupNamingStrategies },
+    options: {
+      logger: winston.Logger;
+      namingStrategy?: GroupNamingStrategies;
+      userNamingStrategy?: UserNamingStrategies;
+    },
   ) {
     super(accountConfig, options);
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
+    this.userNamingStrategy = userNamingStrategyFactory(
+      options.userNamingStrategy,
+    );
   }
 
   getProviderName(): string {
@@ -69,7 +86,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     await client.listGroups().each(async group => {
       const members: string[] = [];
       await group.listUsers().each(user => {
-        members.push(user.id);
+        members.push(this.userNamingStrategy(user));
       });
       const groupEntity: GroupEntity = {
         kind: 'Group',

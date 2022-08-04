@@ -72,7 +72,14 @@ describe('OktaGroupProvider', () => {
               description: 'Everyone in the company',
             },
             listUsers: () => {
-              return new MockOktaCollection([]);
+              return new MockOktaCollection([
+                {
+                  id: 'asdfwefwefwef',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
             },
           },
         ]);
@@ -95,19 +102,23 @@ describe('OktaGroupProvider', () => {
               metadata: expect.objectContaining({
                 name: 'asdfwefwefwef',
               }),
+              spec: expect.objectContaining({
+                members: ['asdfwefwefwef'],
+              }),
             }),
           }),
         ],
       });
     });
 
-    it('allows kebab casing of the group name for the name', async () => {
+    it('allows kebab casing of the group name and user name for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, {
         logger,
         namingStrategy: 'kebab-case-name',
+        userNamingStrategy: 'strip-domain-email',
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -119,6 +130,9 @@ describe('OktaGroupProvider', () => {
               kind: 'Group',
               metadata: expect.objectContaining({
                 name: 'everyone-the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['fname'],
               }),
             }),
           }),
