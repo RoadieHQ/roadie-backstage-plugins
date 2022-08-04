@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.2.2
+
+### Patch Changes
+
+- 3c7303c: Allow using naming strategy for group -> user association.
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.2.4
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 1.2.3
 
 ### Patch Changes

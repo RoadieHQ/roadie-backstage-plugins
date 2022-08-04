@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.1.3
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.1.2
 
 ### Patch Changes

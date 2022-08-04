@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.0.6
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.0.5
 
 ### Patch Changes

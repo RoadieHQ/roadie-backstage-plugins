@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.0.3
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.0.2
 
 ### Patch Changes

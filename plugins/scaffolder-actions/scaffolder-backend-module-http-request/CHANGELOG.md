@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.0.7
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 3.0.6
 
 ### Patch Changes

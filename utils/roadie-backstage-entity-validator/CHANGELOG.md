@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.0.5
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.0.4
 
 ### Patch Changes

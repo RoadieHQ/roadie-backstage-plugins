@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.0.4
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 1.0.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.1.6
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.1.5
 
 ### Patch Changes
