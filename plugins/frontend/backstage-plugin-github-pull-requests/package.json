@@ -46,6 +46,7 @@
     "@octokit/rest": "^18.5.3",
     "@octokit/types": "^5.0.1",
     "@types/node-fetch": "^2.5.7",
+    "changeset": "^0.2.6",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
