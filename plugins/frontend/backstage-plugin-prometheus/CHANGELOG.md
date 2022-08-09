@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.1.0
+
+### Minor Changes
+
+- 5b305b9: Add ability to use multiple instances over proxy annotation.
+
 ## 2.0.3
 
 ### Patch Changes
