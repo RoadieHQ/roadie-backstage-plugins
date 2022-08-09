@@ -17,9 +17,13 @@ import { Entity } from '@backstage/catalog-model';
 
 export const PROMETHEUS_RULE_ANNOTATION = 'prometheus.io/rule';
 export const PROMETHEUS_ALERT_ANNOTATION = 'prometheus.io/alert';
+export const PROMETHEUS_SERVICE_NAME_ANNOTATION = 'prometheus.io/service-name';
 
 export const isPrometheusGraphAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[PROMETHEUS_RULE_ANNOTATION]);
 
 export const isPrometheusAlertAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[PROMETHEUS_ALERT_ANNOTATION]);
+
+export const getServiceName = (entity: Entity) =>
+  entity?.metadata.annotations?.[PROMETHEUS_SERVICE_NAME_ANNOTATION];
