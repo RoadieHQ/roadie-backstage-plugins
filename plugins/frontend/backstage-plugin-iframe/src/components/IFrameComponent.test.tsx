@@ -64,7 +64,7 @@ describe('IFrameCard', () => {
   // Enable sane handlers for network requests
   setupRequestMockHandlers(server);
   const props = {
-    src: 'https://example.com',
+    src: 'https://example.com/{{ entity.metadata.name }}',
     title: 'some title',
   };
 

@@ -37,12 +37,16 @@ export const IFrameCard = (props: IFrameProps) => {
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
+  let sanitizedSrc = ''
 
-  // In theory this might be extended to include the logged in user maybe.
-  const evaluatedSrc = renderString(src, { entity });
-
-  // The following attempts to sanitize the url before sending it to the iframe.
-  const url = new URL(evaluatedSrc);
+  try {
+    // In theory this might be extended to include the logged in user maybe.
+    const evaluatedSrc = renderString(src, { entity });
+    // The following attempts to sanitize the url before sending it to the iframe.
+    sanitizedSrc = new URL(evaluatedSrc).toString();
+  } catch(e) {
+    // pass
+  }
 
   if (errorMessage !== '') {
     return <ErrorComponent {...{ errorMessage }} />;
@@ -56,7 +60,7 @@ export const IFrameCard = (props: IFrameProps) => {
     <Content>
       <ContentHeader title={title} />
       <iframe
-        src={url.toString()}
+        src={sanitizedSrc}
         height={height || '100%'}
         width={width || '100%'}
         title={title}

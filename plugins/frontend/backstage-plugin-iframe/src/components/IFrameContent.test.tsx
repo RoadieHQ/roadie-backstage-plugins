@@ -35,7 +35,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [[configApiRef, config]];
 
 const mockEntity = {
   apiVersion: '1',
-  kind: 'a',
+  kind: 'Component',
   metadata: {
     name: 'Example Service',
     annotations: {},
@@ -48,7 +48,7 @@ describe('IFrameContent', () => {
   setupRequestMockHandlers(server);
   const props = {
     iframe: {
-      src: 'https://example.com',
+      src: "https://example.com",
       title: 'some title',
     },
   };
