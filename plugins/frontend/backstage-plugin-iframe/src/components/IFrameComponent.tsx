@@ -20,6 +20,8 @@ import { IFrameProps } from './types';
 import { Content, ContentHeader } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { determineError } from './utils/helpers';
+import { useEntity } from '@backstage/plugin-catalog-react';
+import { renderString } from 'nunjucks';
 
 /**
  * A component to render a IFrame
@@ -28,11 +30,19 @@ import { determineError } from './utils/helpers';
  */
 export const IFrameCard = (props: IFrameProps) => {
   const { src, height, width } = props;
+  const { entity } = useEntity();
+
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
+
+  // In theory this might be extended to include the logged in user maybe.
+  const evaluatedSrc = renderString(src, { entity });
+
+  // The following attempts to sanitize the url before sending it to the iframe.
+  const url = new URL(evaluatedSrc);
 
   if (errorMessage !== '') {
     return <ErrorComponent {...{ errorMessage }} />;
@@ -46,7 +56,7 @@ export const IFrameCard = (props: IFrameProps) => {
     <Content>
       <ContentHeader title={title} />
       <iframe
-        src={src}
+        src={url.toString()}
         height={height || '100%'}
         width={width || '100%'}
         title={title}
