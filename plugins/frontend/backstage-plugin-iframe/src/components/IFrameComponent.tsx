@@ -37,14 +37,14 @@ export const IFrameCard = (props: IFrameProps) => {
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
-  let sanitizedSrc = ''
+  let sanitizedSrc = '';
 
   try {
     // In theory this might be extended to include the logged in user maybe.
     const evaluatedSrc = renderString(src, { entity });
     // The following attempts to sanitize the url before sending it to the iframe.
     sanitizedSrc = new URL(evaluatedSrc).toString();
-  } catch(e) {
+  } catch (e) {
     // pass
   }
 
