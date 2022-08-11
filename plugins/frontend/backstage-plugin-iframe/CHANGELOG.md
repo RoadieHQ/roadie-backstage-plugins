@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.1.0
+
+### Minor Changes
+
+- 5c74a26: Allow iframe component card to read src from an entity annotation. The card now supports the property `srcFromAnnotation`.
+
 ## 1.0.5
 
 ### Patch Changes
