@@ -112,7 +112,7 @@ describe('IFrameCard', () => {
       );
       expect(
         await rendered.findByText(
-          'Src https://example.com for Iframe is not included in the allowlist hello.com.',
+          'Src https://example.com/ for Iframe is not included in the allowlist hello.com.',
         ),
       ).toBeTruthy();
     });
@@ -130,6 +130,40 @@ describe('IFrameCard', () => {
         </TestApiProvider>,
       );
       expect(await rendered.findByText('some title')).toBeTruthy();
+    });
+  });
+
+  describe('when src is a template string and in the allowlist', () => {
+    it('should not render the iframe', async () => {
+      props.src = 'https://example.com/{{ entity.kind }}';
+      mockConfig.mockImplementation(() => ['example.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(await rendered.findByText('some title')).toBeTruthy();
+    });
+  });
+
+  describe('when src is a template string and not in the allowlist', () => {
+    it('should not render the iframe', async () => {
+      props.src = 'https://{{ entity.kind }}';
+      mockConfig.mockImplementation(() => ['example.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText(
+          'Src https://component/ for Iframe is not included in the allowlist example.com.',
+        ),
+      ).toBeTruthy();
     });
   });
 });

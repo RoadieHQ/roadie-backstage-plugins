@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ErrorComponent } from './ErrorComponent';
 import { IFrameProps } from './types';
 import { Content, ContentHeader } from '@backstage/core-components';
@@ -22,6 +22,7 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { determineError } from './utils/helpers';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { renderString } from 'nunjucks';
+import { useAsync } from 'react-use';
 
 /**
  * A component to render a IFrame
@@ -36,24 +37,30 @@ export const IFrameCard = (props: IFrameProps) => {
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
-  const errorMessage = determineError(src, allowList);
-  let sanitizedSrc = '';
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [sanitizedSrc, setSanitizedSrc] = useState<string | undefined>();
 
-  try {
-    // In theory this might be extended to include the logged in user maybe.
-    const evaluatedSrc = renderString(src, { entity });
-    // The following attempts to sanitize the url before sending it to the iframe.
-    sanitizedSrc = new URL(evaluatedSrc).toString();
-  } catch (e) {
-    // pass
-  }
+  useAsync(async () => {
+    if (src) {
+      try {
+        // In theory this might be extended to include the logged in user maybe.
+        const evaluatedSrc = renderString(src, { entity });
+        // The following attempts to sanitize the url before sending it to the iframe.
+        const srcString = new URL(evaluatedSrc).toString();
+        setErrorMessage(determineError(srcString, allowList));
+        setSanitizedSrc(srcString);
+      } catch (e: any) {
+        setErrorMessage(`Failed to render src for iframe ${e.message}`);
+      }
+    } else {
+      setErrorMessage(
+        'No src field provided. Please pass it in as a prop to populate the iframe.',
+      );
+    }
+  });
 
-  if (errorMessage !== '') {
-    return <ErrorComponent {...{ errorMessage }} />;
-  }
-
-  if (errorMessage !== '') {
-    return <ErrorComponent {...{ errorMessage }} />;
+  if (errorMessage && errorMessage !== '') {
+    return <ErrorComponent errorMessage={errorMessage} />;
   }
 
   return (
