@@ -201,7 +201,7 @@ describe('IFrameCard', () => {
   describe('when src attempts to use the javascript protocol', () => {
     it('should not render the iframe', async () => {
       // eslint-disable-next-line no-script-url
-      props.src = "javascript:alert('JavaScript Link!');"
+      props.src = "javascript:alert('JavaScript Link!');";
       mockConfig.mockImplementation(() => ['hello.com']);
       const rendered = render(
         <TestApiProvider apis={apis}>
@@ -212,7 +212,7 @@ describe('IFrameCard', () => {
       );
       expect(
         await rendered.findByText(
-          'Src \'javascript:alert(\'JavaScript Link!\');\' for Iframe must be a https protocol but is not.',
+          "Src 'javascript:alert('JavaScript Link!');' for Iframe must be a https protocol but is not.",
         ),
       ).toBeTruthy();
     });
