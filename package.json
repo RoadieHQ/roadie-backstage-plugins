@@ -60,5 +60,10 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.18.0"
+  },
+  "volta": {
+    "//": "⚡⚡ This value exists to support Volta users. To learn more check out: https://volta.sh/ ⚡⚡",
+    "node": "16.17.0",
+    "yarn": "1.22.19"
   }
 }
