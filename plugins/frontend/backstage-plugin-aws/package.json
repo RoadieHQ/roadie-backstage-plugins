@@ -33,7 +33,7 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/core-components": "^0.10.0",
+    "@backstage/core-components": "^0.11.0",
     "@backstage/core-plugin-api": "^1.0.1",
     "@backstage/catalog-model": "^1.0.1",
     "@backstage/plugin-catalog-react": "^1.0.1",
