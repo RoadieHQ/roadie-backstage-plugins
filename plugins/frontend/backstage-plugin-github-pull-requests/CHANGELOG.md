@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.2.5
+
+### Patch Changes
+
+- dedfbc5: Fix label styling in `PullRequestsStatsCard`
+
 ## 2.2.4
 
 ### Patch Changes
