@@ -45,14 +45,6 @@ jobs:
     - name: build packages
       run: yarn build
 
-    - name: Discord notification
-      if: ${{ failure() }}
-      uses: Ilshidur/action-discord@0.2.0
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_RELEASE_WEBHOOK }}
-      with:
-        args: 'Master build failed https://github.com/{{GITHUB_REPOSITORY}}/actions/runs/{{GITHUB_RUN_ID}}'
-
   # A separate release build that is only run for commits that are the result of merging the "Version Packages" PR
   # We can't re-use the output from the above step, but we'll have a guaranteed node_modules cache and
   # only run the build steps that are necessary for publishing
