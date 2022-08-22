@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "^1.0.0",
-    "@backstage/core-components": "^0.10.0",
+    "@backstage/core-components": "^0.11.0",
     "@backstage/core-plugin-api": "^1.0.0",
     "@backstage/integration-react": "^1.0.0",
     "@backstage/plugin-catalog-react": "^1.0.0",
