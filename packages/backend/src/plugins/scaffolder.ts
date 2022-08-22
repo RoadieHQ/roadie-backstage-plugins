@@ -31,6 +31,7 @@ import {
   createWriteFileAction,
   createSleepAction,
   createAppendFileAction,
+  createMergeJSONAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
 import { createAwsS3CpAction } from '@roadiehq/scaffolder-backend-module-aws';
 import Docker from 'dockerode';
@@ -59,6 +60,7 @@ export const createActions = (options: {
     createSleepAction(),
     createWriteFileAction(),
     createAppendFileAction(),
+    createMergeJSONAction({}),
     createAwsS3CpAction(),
     createHttpBackstageAction({ config }),
     ...defaultActions,

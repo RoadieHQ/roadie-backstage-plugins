@@ -13,7 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './actions/zip';
-export * from './actions/fs';
-export * from './actions/json';
-export * from './actions/sleep';
+export { createMergeJSONAction } from './merge';
