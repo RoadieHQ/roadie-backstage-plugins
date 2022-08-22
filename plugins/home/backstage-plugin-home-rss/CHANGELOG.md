@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.6
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
 ## 1.0.5
 
 ### Patch Changes

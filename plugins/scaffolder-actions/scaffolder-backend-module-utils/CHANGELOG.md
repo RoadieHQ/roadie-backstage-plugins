@@ -1,5 +1,15 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.1.0
+
+### Minor Changes
+
+- 9890756: Add a new merge json Action to the scaffolder utils actions.
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
 ## 1.0.4
 
 ### Patch Changes
