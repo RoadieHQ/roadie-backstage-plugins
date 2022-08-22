@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.11
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
 ## 1.0.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.4.4
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
 ## 2.4.3
 
 ### Patch Changes

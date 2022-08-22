@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.0.4
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
 ## 2.0.3
 
 ### Patch Changes
