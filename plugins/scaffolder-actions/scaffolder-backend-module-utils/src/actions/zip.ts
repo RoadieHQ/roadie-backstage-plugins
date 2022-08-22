@@ -20,9 +20,9 @@ import { InputError } from '@backstage/errors';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
 
-export function createZipAction() {
+export function createZipAction(options?: { actionId: string }) {
   return createTemplateAction<{ path: string; outputPath: string }>({
-    id: 'roadiehq:utils:zip',
+    id: options?.actionId || 'roadiehq:utils:zip',
     description: 'Zips the content of the path',
     schema: {
       input: {

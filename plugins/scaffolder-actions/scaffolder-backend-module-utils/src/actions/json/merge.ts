@@ -19,9 +19,9 @@ import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { merge } from 'lodash';
 
-export function createMergeJSONAction({ actionId }: { actionId?: string }) {
+export function createMergeJSONAction(options?: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
-    id: actionId || 'roadiehq:utils:json:merge',
+    id: options?.actionId || 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
     schema: {
       input: {

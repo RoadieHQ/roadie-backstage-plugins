@@ -60,7 +60,7 @@ export const createActions = (options: {
     createSleepAction(),
     createWriteFileAction(),
     createAppendFileAction(),
-    createMergeJSONAction({}),
+    createMergeJSONAction(),
     createAwsS3CpAction(),
     createHttpBackstageAction({ config }),
     ...defaultActions,
