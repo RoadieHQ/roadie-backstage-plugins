@@ -63,8 +63,10 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
           fs.readFileSync(sourceFilepath).toString(),
         );
       } else {
-        ctx.logger.info(`The file ${sourceFilepath} does not exist, creating it.`)
-        existingContent = {}
+        ctx.logger.info(
+          `The file ${sourceFilepath} does not exist, creating it.`,
+        );
+        existingContent = {};
       }
 
       fs.writeFileSync(

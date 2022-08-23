@@ -98,7 +98,7 @@ describe('roadiehq:utils:json:merge', () => {
         path: 'fake-file.json',
         content: {
           scripts: {
-            lsltrh: "ls -ltrh"
+            lsltrh: 'ls -ltrh',
           },
         },
       },
@@ -106,7 +106,9 @@ describe('roadiehq:utils:json:merge', () => {
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
-    expect(JSON.parse(file)).toEqual({ scripts: { lsltr: "ls -ltr", lsltrh: "ls -ltrh" } });
+    expect(JSON.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
   });
 
   it('should put path on the output property', async () => {
