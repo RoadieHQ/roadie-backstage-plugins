@@ -56,17 +56,22 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
         ctx.input.path,
       );
 
-      let existingContent = {};
+      let existingContent;
 
       if (fs.existsSync(sourceFilepath)) {
         existingContent = JSON.parse(
           fs.readFileSync(sourceFilepath).toString(),
         );
+      } else {
+        ctx.logger.info(
+          `The file ${sourceFilepath} does not exist, creating it.`,
+        );
+        existingContent = {};
       }
 
       fs.writeFileSync(
         sourceFilepath,
-        JSON.stringify(merge(existingContent, ctx.input.content)),
+        JSON.stringify(merge(existingContent, ctx.input.content), null, 2),
       );
       ctx.output('path', sourceFilepath);
     },
