@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.1.1
+
+### Patch Changes
+
+- 933a028: Pretty print the json merge result to the file.
+
 ## 1.1.0
 
 ### Minor Changes
