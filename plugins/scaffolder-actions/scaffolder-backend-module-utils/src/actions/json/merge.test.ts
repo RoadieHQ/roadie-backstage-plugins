@@ -87,7 +87,7 @@ describe('roadiehq:utils:json:merge', () => {
   it('should append the content to the file if it already exists', async () => {
     mock({
       'fake-tmp-dir': {
-        'fake-file.json': '{ "stuff": "yeah" }',
+        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
       },
     });
 
@@ -97,14 +97,16 @@ describe('roadiehq:utils:json:merge', () => {
       input: {
         path: 'fake-file.json',
         content: {
-          foo: 'bar',
+          scripts: {
+            lsltrh: "ls -ltrh"
+          },
         },
       },
     });
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
-    expect(JSON.parse(file)).toEqual({ stuff: 'yeah', foo: 'bar' });
+    expect(JSON.parse(file)).toEqual({ scripts: { lsltr: "ls -ltr", lsltrh: "ls -ltrh" } });
   });
 
   it('should put path on the output property', async () => {
