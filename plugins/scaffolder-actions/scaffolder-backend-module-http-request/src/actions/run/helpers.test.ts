@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateBackstageUrl, http } from './helpers';
+import { generateBackstageUrl, http, getObjFieldCaseInsensitively } from './helpers';
 import { HttpOptions } from './types';
 import { Config, ConfigReader } from '@backstage/config';
 import { getRootLogger } from '@backstage/backend-common';
@@ -182,6 +182,38 @@ describe('http', () => {
               expect.stringContaining(`"error":"bad request"`),
             ]),
           );
+        });
+      });
+
+      describe('get auth header properly', () => {
+        const TOKEN = 'Bearer 12345';
+
+        it('finds auth token', async () => {
+          expect(
+            getObjFieldCaseInsensitively(
+              { Authorization: TOKEN },
+              'authorization',
+            ),
+          ).toEqual(TOKEN);
+          expect(
+            getObjFieldCaseInsensitively(
+              { AUTHORIZATION: TOKEN },
+              'authorization',
+            ),
+          ).toEqual(TOKEN);
+          expect(
+            getObjFieldCaseInsensitively(
+              { AuThOrIzAtIoN: TOKEN },
+              'authorization',
+            ),
+          ).toEqual(TOKEN);
+        });
+
+        it('No auth token', async () => {
+          expect(
+            getObjFieldCaseInsensitively({ Authorizatio: '' }, 'authorization'),
+          ).toEqual('');
+          expect(getObjFieldCaseInsensitively({}, 'authorization')).toEqual('');
         });
       });
 
