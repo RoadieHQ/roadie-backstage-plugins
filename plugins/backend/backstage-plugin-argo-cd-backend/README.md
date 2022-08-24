@@ -21,9 +21,13 @@ argocd:
           token: ${ARGOCD_AUTH_TOKEN}
         - name: argoInstance2
           url: https://argoInstance2.com
+          # dedicated username/password for this instance
+          username: ${ARGOCD_USERNAME_INSTANCE_2}
+          password: ${ARGOCD_PASSWORD_INSTANCE_2}
 ```
 
 Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD`.
+Define a `username` and a `password` for each instance if needed.
 
 You can also use an argo session token as mentioned above in the `argocd` object as shown above. If omitted, we will use the argo username and password from the code block above.
 

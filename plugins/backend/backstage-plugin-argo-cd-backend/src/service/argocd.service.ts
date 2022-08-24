@@ -2,7 +2,7 @@ import { Config } from '@backstage/config';
 import axios, { AxiosRequestConfig } from 'axios';
 
 export interface ArgoServiceApi {
-  getArgoToken: (token: string) => Promise<string>;
+  getArgoToken: (appConfig: { baseUrl: string, username?: string, password?: string }) => Promise<string>;
   getArgoAppData: (
     baseUrl: string,
     argoInstanceName: string,
@@ -42,12 +42,14 @@ export class ArgoService implements ArgoServiceApi {
       name: instance.getString('name'),
       url: instance.getString('url'),
       token: instance.getOptionalString('token'),
+      username: instance.getOptionalString('username'),
+    password: instance.getOptionalString('password'),
     }));
     const resp = await Promise.all(
       argoInstanceArray.map(async (argoInstance: any) => {
         let token: string;
         if (!argoInstance.token) {
-          token = await this.getArgoToken(argoInstance.url);
+          token = await this.getArgoToken(argoInstance);
         } else {
           token = argoInstance.token;
         }
@@ -74,7 +76,9 @@ export class ArgoService implements ArgoServiceApi {
     return resp.flatMap(f => (f ? [f] : []));
   }
 
-  async getArgoToken(baseUrl: string): Promise<string> {
+  async getArgoToken(appConfig: { baseUrl: string, username?: string, password?: string }): Promise<string> {
+    const { baseUrl, username, password } = appConfig
+
     const options: AxiosRequestConfig = {
       method: 'POST',
       url: `${baseUrl}/api/v1/session`,
@@ -82,8 +86,8 @@ export class ArgoService implements ArgoServiceApi {
         'Content-Type': 'application/json',
       },
       data: {
-        username: `${this.username}`,
-        password: `${this.password}`,
+        username: `${username || this.username}`,
+        password: `${password || this.password}`,
       },
     };
 
