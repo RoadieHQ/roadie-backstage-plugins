@@ -16,7 +16,7 @@ argocd:
       instances:
         - name: argoInstance1
           url: https://argoInstance1.com
-          token: ${ARGOCD_AUTH_TOKEN}
+          token: ${ARGOCD_AUTH_TOKEN} # optional 
         - name: argoInstance2
           url: https://argoInstance2.com
           # dedicated username/password for this instance
