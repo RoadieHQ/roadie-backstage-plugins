@@ -1,0 +1,15 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-aws-auth
+  description: |
+    Backstage plugin to authenticate other plugins with AWS IAM.
+  annotations:
+    github.com/project-slug: roadiehq/backstage-plugin-aws-auth
+  tags:
+    - plugin
+    - oss
+spec:
+  type: library
+  owner: group:roadie
+  lifecycle: experimental

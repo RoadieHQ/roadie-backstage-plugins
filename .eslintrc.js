@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-var path = require('path')
+var path = require('path');
 
 module.exports = {
   root: true,
@@ -33,4 +33,4 @@ module.exports = {
       },
     ],
   },
-}
+};

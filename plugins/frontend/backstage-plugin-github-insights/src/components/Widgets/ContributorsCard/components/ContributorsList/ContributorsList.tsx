@@ -24,7 +24,7 @@ type Props = {
 };
 
 const ContributorsList = ({ contributors }: Props) => (
-  <Grid container spacing={1} justify="flex-start">
+  <Grid container spacing={1} justifyContent="flex-start">
     {contributors.map(contributor => (
       <Grid key={contributor.login} item>
         <Contributor contributor={contributor} />

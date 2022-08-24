@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useEffect, useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsyncFn } from 'react-use';
@@ -30,14 +31,15 @@ export const useProjectInfo = (
     try {
       setTimeout(() => (document.activeElement as HTMLElement).blur(), 0);
       return await api.getProjectDetails(projectKey, component, statusesNames);
-    } catch (err:any) {
+    } catch (err: any) {
       return handleError(err);
     }
   }, [api, projectKey, component, statusesNames]);
 
-  const [state, fetchProjectInfo] = useAsyncFn(() => getProjectDetails(), [
-    statusesNames,
-  ]);
+  const [state, fetchProjectInfo] = useAsyncFn(
+    () => getProjectDetails(),
+    [statusesNames],
+  );
 
   useEffect(() => {
     fetchProjectInfo();
@@ -47,6 +49,7 @@ export const useProjectInfo = (
     projectLoading: state.loading,
     project: state?.value?.project,
     issues: state?.value?.issues,
+    ticketIds: state?.value?.ticketIds,
     projectError: state.error,
     fetchProjectInfo,
   };

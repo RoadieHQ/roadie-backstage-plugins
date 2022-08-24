@@ -37,7 +37,7 @@ export default {
   component: StatusOK,
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   chipRoot: {
     margin: theme.spacing(1),
     height: '100%',
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
   chipLabel: {
     overflowWrap: 'break-word',
     whiteSpace: 'normal',
-    textOverflow: 'clip'
-  }
+    textOverflow: 'clip',
+  },
 }));
 
 const state = (str: string) => {
@@ -118,7 +118,10 @@ const columns: TableColumn<PrometheusDisplayableAlert>[] = [
             key={k + v}
             label={`${k}: ${v}`}
             size="small"
-            classes={{ root: useStyles().chipRoot, label: useStyles().chipLabel, }}
+            classes={{
+              root: useStyles().chipRoot,
+              label: useStyles().chipLabel,
+            }}
           />
         ))}
       </>

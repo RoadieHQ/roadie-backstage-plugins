@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'open' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'open' ? null : 'open'
+              insightsStatusFilter === 'open' ? null : 'open',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'open')
+                value.filter(entry => entry.state === 'open'),
               );
             }
           }}
@@ -46,11 +46,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'fixed' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'fixed' ? null : 'fixed'
+              insightsStatusFilter === 'fixed' ? null : 'fixed',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'fixed')
+                value.filter(entry => entry.state === 'fixed'),
               );
             }
           }}
@@ -61,11 +61,11 @@ export const StateFilterComponent: FC<StateFilterComponentProps> = ({
           color={insightsStatusFilter === 'dismissed' ? 'primary' : 'default'}
           onClick={() => {
             setInsightsStatusFilter(
-              insightsStatusFilter === 'dismissed' ? null : 'dismissed'
+              insightsStatusFilter === 'dismissed' ? null : 'dismissed',
             );
             if (value) {
               setFilteredTableData(
-                value.filter((entry) => entry.state === 'dismissed')
+                value.filter(entry => entry.state === 'dismissed'),
               );
             }
           }}

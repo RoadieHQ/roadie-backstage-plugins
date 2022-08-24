@@ -38,8 +38,18 @@ export function createHttpBackstageAction(options: { config: Config }) {
         properties: {
           method: {
             title: 'Method',
+            type: 'string',
             description: 'The method type of the request',
-            enum: [ 'GET', 'HEAD', 'OPTIONS', 'POST', 'UPDATE', 'DELETE', 'PUT', 'PATCH' ],
+            enum: [
+              'GET',
+              'HEAD',
+              'OPTIONS',
+              'POST',
+              'UPDATE',
+              'DELETE',
+              'PUT',
+              'PATCH',
+            ],
           },
           path: {
             title: 'Request path',
@@ -84,12 +94,13 @@ export function createHttpBackstageAction(options: { config: Config }) {
     },
 
     async handler(ctx) {
-      const { input, token } = ctx;
+      const { input } = ctx;
+      const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
       const url = await generateBackstageUrl(config, input.path);
 
       ctx.logger.info(
-        `Creating ${method} request with http:backstage:proxy scaffolder action against ${url}`,
+        `Creating ${method} request with http:backstage:proxy scaffolder action against ${input.path}`,
       );
 
       const queryParams: string = params
@@ -106,7 +117,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
       ) {
         inputBody = JSON.stringify(input.body);
       } else {
-        inputBody = input.body
+        inputBody = input.body;
       }
 
       const httpOptions: HttpOptions = {

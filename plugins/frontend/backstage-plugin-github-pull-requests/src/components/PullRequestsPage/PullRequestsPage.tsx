@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,17 +23,11 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { PullRequestsTable } from '../PullRequestsTable';
-import { Entity } from '@backstage/catalog-model';
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-const PullRequestsPage = (__props: Props) => (
+const PullRequestsPage = () => (
   <Page themeId="tool">
     <Content>
-      <ContentHeader title="Pull requests plugin">
+      <ContentHeader title="GitHub Pull Requests">
         <SupportButton>
           Plugin to show a project's pull requests on GitHub
         </SupportButton>

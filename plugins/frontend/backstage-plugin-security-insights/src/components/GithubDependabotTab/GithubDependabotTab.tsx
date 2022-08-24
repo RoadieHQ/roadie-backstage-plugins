@@ -21,11 +21,11 @@ import {
   Content,
   ContentHeader,
   SupportButton,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
 import { GITHUB_REPO_ANNOTATION } from '../useProjectName';
 import { DependabotAlertsTable } from '../DependabotAlertsTable';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const GithubDependabotTab = () => {
   const { entity } = useEntity();
@@ -37,16 +37,16 @@ export const GithubDependabotTab = () => {
     <MissingAnnotationEmptyState annotation={GITHUB_REPO_ANNOTATION} />
   ) : (
     <Page themeId="tool">
-    <Content>
-      <ContentHeader title="Dependabot Alerts">
-        <SupportButton>Plugin to show Dependabot Alerts</SupportButton>
-      </ContentHeader>
-      <Grid container spacing={3} direction="column">
-        <Grid item>
-          <DependabotAlertsTable />
+      <Content>
+        <ContentHeader title="Dependabot Alerts">
+          <SupportButton>Plugin to show Dependabot Alerts</SupportButton>
+        </ContentHeader>
+        <Grid container spacing={3} direction="column">
+          <Grid item>
+            <DependabotAlertsTable />
+          </Grid>
         </Grid>
-      </Grid>
-    </Content>
-  </Page>
+      </Content>
+    </Page>
   );
 };

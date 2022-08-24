@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
 import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const isGithubPullRequestsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-
-export const Router = (_props: Props) =>{
+export const Router = () => {
   const { entity } = useEntity();
   return !isGithubPullRequestsAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
@@ -39,4 +34,4 @@ export const Router = (_props: Props) =>{
       <Route path="/" element={<PullRequestsPage />} />
     </Routes>
   );
-}
+};

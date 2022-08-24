@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,8 @@ export const useDatadogAppData = ({ entity }: { entity: Entity }) => {
       DATADOG_ANNOTATION_GRAPH_SIZE
     ] as GraphSize) ?? 'medium';
   const site: String =
-    (entity?.metadata.annotations?.[
-      DATADOG_ANNOTATION_SITE
-    ] as String) ?? 'datadoghq.eu';
+    (entity?.metadata.annotations?.[DATADOG_ANNOTATION_SITE] as String) ??
+    'datadoghq.eu';
   if (!dashboardUrl && !graphToken) {
     throw new Error("'datadog' annotation is missing");
   }

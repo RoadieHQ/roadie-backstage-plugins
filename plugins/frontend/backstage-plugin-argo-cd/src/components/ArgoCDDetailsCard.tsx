@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
-import { Box, LinearProgress, Link } from '@material-ui/core';
+import { Box, LinearProgress } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
 import {
@@ -34,12 +35,13 @@ import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const State = ({ value }: { value: string; }) => {
+const State = ({ value }: { value: string }) => {
   const colorMap: Record<string, string> = {
     Pending: '#dcbc21',
     Synced: 'green',
@@ -77,27 +79,16 @@ const OverviewComponent = ({
 }: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const supportsMultipleArgoInstances: boolean = Boolean(
+    configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+  );
 
   const columns: TableColumn[] = [
     {
       title: 'Name',
       highlight: true,
       render: (row: any): React.ReactNode =>
-        baseUrl ? (
-          <Link
-            href={`${baseUrl}/applications/${row.metadata.name}`}
-            target="_blank"
-            rel="noopener"
-          >
-            {row.metadata.name}
-          </Link>
-        ) : (
-          row.metadata.name
-        ),
-    },
-    {
-      title: 'Instance',
-      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+        detailsDrawerComponent(row, baseUrl),
     },
     {
       title: 'Sync Status',
@@ -114,9 +105,18 @@ const OverviewComponent = ({
     {
       title: 'Last Synced',
       render: (row: any): React.ReactNode =>
-        getElapsedTime(row.status.operationState.finishedAt!),
+        row.status.operationState
+          ? getElapsedTime(row.status.operationState.finishedAt!)
+          : '',
     },
   ];
+
+  if (supportsMultipleArgoInstances) {
+    columns.splice(1, 0, {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+    });
+  }
 
   return (
     <Table

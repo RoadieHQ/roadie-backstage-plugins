@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {
   configApiRef,
   createPlugin,
@@ -31,7 +32,7 @@ export const jiraPlugin = createPlugin({
       factory: ({ discoveryApi, configApi }) => {
         return new JiraAPI({
           discoveryApi,
-          apiVersion: configApi.getOptionalNumber('jira.apiVersion'),
+          configApi,
         });
       },
     }),
@@ -42,7 +43,7 @@ export const EntityJiraOverviewCard = jiraPlugin.provide(
   createComponentExtension({
     name: 'EntityJiraOverviewCard',
     component: {
-      lazy: () => import('./components/JiraCard').then((m) => m.JiraCard),
+      lazy: () => import('./components/JiraCard').then(m => m.JiraCard),
     },
-  })
+  }),
 );

@@ -1,0 +1,22 @@
+{
+  "backstageIdentity": {
+    "idToken": "test-id-token",
+    "id": "foobar",
+    "token": "test-token",
+    "identity": {
+      "type": "user",
+      "userEntityRef": "user:default/foobar",
+      "ownershipEntityRefs": ["user:default/foobar"]
+    }
+  },
+  "providerInfo": {
+    "accessToken": "foo",
+    "scope": "read:user repo",
+    "expiresInSeconds": 3600
+  },
+  "profile": {
+    "email": "foo@bar.com",
+    "picture": "awesomepicture",
+    "displayName": "Foo Bar"
+  }
+}

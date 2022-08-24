@@ -14,9 +14,10 @@ jobs:
       - name: Install Dependencies
         run: yarn --frozen-lockfile
       - name: Create Release Pull Request
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           # Calls out to `changeset version`, but also runs prettier
           version: yarn release
+          title: Version Packages - plugins
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -28,13 +28,15 @@ export const useProjectEntity = (entity: Entity) => {
     GITHUB_README_ANNOTATION
   ] as string;
 
-  if(!projectSlug && projectSlug === ''){
-    throw new Error(`No "${GITHUB_PROJECT_ANNOTATION}" annotation found for your entity ${entity.metadata.name}`)
+  if (!projectSlug && projectSlug === '') {
+    throw new Error(
+      `No "${GITHUB_PROJECT_ANNOTATION}" annotation found for your entity ${entity.metadata.name}`,
+    );
   }
 
   return {
-    owner: projectSlug?.split("/")[0] || '',
-    repo: projectSlug?.split("/")[1] || '',
+    owner: projectSlug?.split('/')[0] || '',
+    repo: projectSlug?.split('/')[1] || '',
     readmePath,
   };
 };

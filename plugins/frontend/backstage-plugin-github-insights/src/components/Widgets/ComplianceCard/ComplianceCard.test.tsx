@@ -15,11 +15,15 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiProvider, ApiRegistry, ConfigReader } from '@backstage/core-app-api';
+import { render, screen } from '@testing-library/react';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import {
   branchesResponseMock,
@@ -30,16 +34,17 @@ import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import ComplianceCard from '.';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  defaultIntegrationsConfig,
-} from '../../../mocks/scmIntegrationsApiMock';
+  scmIntegrationsApiRef,
+  ScmIntegrationsApi,
+} from '@backstage/integration-react';
+import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
@@ -52,7 +57,7 @@ const apis = ApiRegistry.from([
       ]),
     ),
   ],
-]);
+];
 
 describe('ComplianceCard', () => {
   const worker = setupServer();
@@ -65,25 +70,65 @@ describe('ComplianceCard', () => {
         (_, res, ctx) => res(ctx.json(licenseResponseMock)),
       ),
       rest.get(
-        'https://api.github.com/repos/mcalus3/backstage/branches?protected=true',
+        'https://api.github.com/repos/mcalus3/backstage/branches',
         (_, res, ctx) => res(ctx.json(branchesResponseMock)),
       ),
     );
   });
 
   it('should display a card with the data from the requests', async () => {
-    const rendered = render(
+    render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
               <ComplianceCard />
             </EntityProvider>
           </ThemeProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
-    expect(await rendered.findByText('master')).toBeInTheDocument();
-    expect(await rendered.findByText('Apache License')).toBeInTheDocument();
+
+    expect(await screen.findByText('master')).toBeInTheDocument();
+    expect(await screen.findByText('Apache License')).toBeInTheDocument();
+  });
+  it('should display card with data from state on second render', async () => {
+    const { rerender } = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <ComplianceCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    );
+
+    worker.use(
+      rest.get(
+        'https://api.github.com/repos/mcalus3/backstage/contents/LICENSE',
+        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+      ),
+      rest.get(
+        'https://api.github.com/repos/mcalus3/backstage/branches',
+        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+      ),
+    );
+
+    rerender(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <ComplianceCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    );
+
+    expect(await screen.findByText('master')).toBeInTheDocument();
+    expect(await screen.findByText('Apache License')).toBeInTheDocument();
   });
 });

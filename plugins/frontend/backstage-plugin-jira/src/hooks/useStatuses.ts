@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
@@ -25,7 +26,7 @@ export const useStatuses = (projectKey: string) => {
   const getStatuses = useCallback(async () => {
     try {
       return await api.getStatuses(projectKey);
-    } catch (err:any) {
+    } catch (err: any) {
       return handleError(err);
     }
   }, [api, projectKey]);

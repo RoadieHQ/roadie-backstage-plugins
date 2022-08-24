@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-prometheus
+  description: |
+    Backstage plugin to view and interact with JIRA
+  annotations:
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-prometheus/README.md
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-prometheus/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/frontend/backstage-plugin-prometheus/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-prometheus
+  tags:
+    - plugin
+    - oss
+    - frontend
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-prometheus
+      title: NPM
+spec:
+  type: library
+  owner: group:open-source
+  lifecycle: production

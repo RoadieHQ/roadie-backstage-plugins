@@ -26,6 +26,8 @@ import {
 } from '../types';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
+import { useEntity } from '@backstage/plugin-catalog-react';
+import { getServiceName } from '../components/util';
 
 function isMetricResult(
   resultType: ResultType,
@@ -85,9 +87,16 @@ export function useMetrics({
 }) {
   const prometheusApi = useApi(prometheusApiRef);
   const errorApi = useApi(errorApiRef);
+  const { entity } = useEntity();
   const [state, fetchGraph] = useAsyncFn(async () => {
     try {
-      const value = await prometheusApi.query({ query, range, step });
+      const serviceName = getServiceName(entity);
+      const value = await prometheusApi.query({
+        query,
+        range,
+        step,
+        serviceName,
+      });
       if (isMetricResult(value.data.resultType, value.data.result)) {
         return resultToGraphData(value.data.result, dimension);
       }
@@ -115,11 +124,12 @@ export function useMetrics({
 
 export function useAlerts(alerts: string[] | 'all') {
   const prometheusApi = useApi(prometheusApiRef);
-  const { value, loading, error } = useAsync(async (): Promise<
-    PrometheusRuleResponse
-  > => {
-    return await prometheusApi.getAlerts();
-  }, []);
+  const { entity } = useEntity();
+  const { value, loading, error } =
+    useAsync(async (): Promise<PrometheusRuleResponse> => {
+      const serviceName = getServiceName(entity);
+      return await prometheusApi.getAlerts({ serviceName });
+    }, []);
   if (value && value.status !== 'error') {
     const rules = value.data.groups.flatMap(it => it.rules);
     const displayableAlerts: PrometheusDisplayableAlert[] = rules

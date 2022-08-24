@@ -1,6 +1,8 @@
 # Bugsnag Plugin for Backstage
 
-![a preview of the Bugsnag plugin](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/frontend/backstage-plugin-bugsnag/docs/backstage-bugsnag-plugin.png)
+![a preview of the Bugsnag plugin](./docs/backstage-bugsnag-plugin.png)
+
+## Rate Limit
 
 Since Bugsnag has a policy around API rate limits (https://bugsnagapiv2.docs.apiary.io/#introduction/rate-limiting), we are not displaying error trends in the table. However, you can visit error details page in Bugsnag for more details, including error trend.
 
@@ -31,9 +33,9 @@ proxy:
         X-version: '2'
 ```
 
- Define number of results fetched per request (this is optional and if ommited it will be set to default value of 30). This will be used as a 'per_page' parameter (https://bugsnagapiv2.docs.apiary.io/#introduction/rate-limiting).
+Define number of results fetched per request (this is optional and if ommited it will be set to default value of 30). This will be used as a 'per_page' parameter (https://bugsnagapiv2.docs.apiary.io/#introduction/rate-limiting).
 
- ```yml
+```yml
 bugsnag:
   resultsPerPage: <number>
 ```
@@ -48,7 +50,7 @@ import { EntityBugsnagErrorsOverviewTable } from '@roadiehq/backstage-plugin-bug
 const serviceEntityPage = (
   <EntityLayoutWrapper>
     ...
-    <EntityLayout.Route 
+    <EntityLayout.Route
       path="/bugsnag"
       title="Bugsnag">
         <EntityBugsnagErrorsOverviewTable />

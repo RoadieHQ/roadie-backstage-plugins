@@ -17,9 +17,15 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
-import { configApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
+import {
+  configApiRef,
+  errorApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { PrometheusAlertEntityWrapper } from './PrometheusAlertEntityWrapper';
 import { prometheusApiRef } from '../../api';
@@ -53,11 +59,11 @@ const mockPrometheusApi = {
   getAlerts: () => require('../../mocks/mockAlertResponse.json'),
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, config],
   [prometheusApiRef, mockPrometheusApi],
-]);
+];
 
 describe('PrometheusAlertEntityWrapper', () => {
   const server = setupServer();
@@ -78,11 +84,11 @@ describe('PrometheusAlertEntityWrapper', () => {
   it('should render container for queries', async () => {
     const rendered = render(
       <ThemeProvider theme={lightTheme}>
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
             <PrometheusAlertEntityWrapper />
           </EntityProvider>
-        </ApiProvider>
+        </TestApiProvider>
       </ThemeProvider>,
     );
     expect(await rendered.findByText('Prometheus Alerts')).toBeInTheDocument();

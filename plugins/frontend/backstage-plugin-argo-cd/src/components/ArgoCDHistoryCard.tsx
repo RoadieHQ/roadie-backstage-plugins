@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,22 +45,26 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const supportsMultipleArgoInstances: boolean = Boolean(
+    configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+  );
 
   const history = data.items
     ? data.items
-      .map(app => {
-        if (typeof app.status.history !== 'undefined') {
-          return app.status.history.map(entry => {
-            return {
-              app: app.metadata.name,
-              instance: app.metadata?.instance?.name,
-              ...entry,
-            };
-          });
-        }
-        return {};
-      }).filter(value => Object.keys(value).length !== 0)
-      .flat()
+        .map(app => {
+          if (typeof app.status.history !== 'undefined') {
+            return app.status.history.map(entry => {
+              return {
+                app: app.metadata.name,
+                instance: app.metadata?.instance?.name,
+                ...entry,
+              };
+            });
+          }
+          return {};
+        })
+        .filter(value => Object.keys(value).length !== 0)
+        .flat()
     : [];
   const columns: TableColumn[] = [
     {
@@ -79,10 +83,6 @@ const HistoryTable = ({
           row.app
         ),
       highlight: true,
-    },
-    {
-      title: 'Instance',
-      render: (row: any): React.ReactNode => row.instance,
     },
     {
       title: 'Deploy Started',
@@ -123,6 +123,13 @@ const HistoryTable = ({
       sorting: false,
     },
   ];
+
+  if (supportsMultipleArgoInstances) {
+    columns.splice(1, 0, {
+      title: 'Instance',
+      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+    });
+  }
 
   return (
     <Table
@@ -174,23 +181,13 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
 
   if (value) {
     if ((value as ArgoCDAppList).items !== undefined) {
-      return (
-        <HistoryTable
-          data={value as ArgoCDAppList}
-          retry={retry}
-        />
-      );
+      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
     }
     if (Array.isArray(value)) {
       const wrapped: ArgoCDAppList = {
         items: value as Array<ArgoCDAppDetails>,
       };
-      return (
-        <HistoryTable
-          data={wrapped}
-          retry={retry}
-        />
-      );
+      return <HistoryTable data={wrapped} retry={retry} />;
     }
     const wrapped: ArgoCDAppList = {
       items: [value as ArgoCDAppDetails],

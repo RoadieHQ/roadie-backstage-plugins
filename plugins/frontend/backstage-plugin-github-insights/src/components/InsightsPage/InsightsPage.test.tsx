@@ -15,30 +15,29 @@
  */
 
 import React from 'react';
-import { act, render, RenderResult, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
-import { wrapInTestApp } from '@backstage/test-utils';
+import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 
 import {
-  ApiProvider,
-  ApiRegistry,
   GithubAuth,
   OAuthRequestManager,
   UrlPatternDiscovery,
   ConfigReader,
 } from '@backstage/core-app-api';
-import { scmIntegrationsApiRef, ScmIntegrationsApi } from '@backstage/integration-react';
 import {
-  defaultIntegrationsConfig,
-} from '../../mocks/scmIntegrationsApiMock';
+  scmIntegrationsApiRef,
+  ScmIntegrationsApi,
+} from '@backstage/integration-react';
+import { defaultIntegrationsConfig } from '../../mocks/scmIntegrationsApiMock';
 
 const oauthRequestApi = new OAuthRequestManager();
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [
     githubAuthApiRef,
     GithubAuth.create({
@@ -59,41 +58,37 @@ const apis = ApiRegistry.from([
       ]),
     ),
   ],
-]);
+];
 
 describe('Insights Page', () => {
   it('should render', async () => {
-    let renderResult: RenderResult;
-
-    await act(async () => {
-      renderResult = render(
-        wrapInTestApp(
-          <ApiProvider apis={apis}>
-            <ThemeProvider theme={lightTheme}>
-              <EntityProvider
-                entity={{
-                  apiVersion: '1',
-                  kind: 'a',
-                  metadata: {
-                    name: 'Example Service',
-                    annotations: {
-                      'github.com/project-slug': 'octocat/Hello-World',
-                      'backstage.io/managed-by-location':
-                        'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
-                    },
+    const renderResult = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider
+              entity={{
+                apiVersion: '1',
+                kind: 'a',
+                metadata: {
+                  name: 'Example Service',
+                  annotations: {
+                    'github.com/project-slug': 'octocat/Hello-World',
+                    'backstage.io/managed-by-location':
+                      'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
                   },
-                }}
-              >
-                <InsightsPage />
-              </EntityProvider>
-            </ThemeProvider>
-          </ApiProvider>,
-        ),
-      );
-    });
-
-    await waitFor(() =>
-      expect(renderResult.getByText('GitHub Insights')).toBeInTheDocument(),
+                },
+              }}
+            >
+              <InsightsPage />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
     );
+
+    expect(
+      await renderResult.findByText('GitHub Insights'),
+    ).toBeInTheDocument();
   });
 });

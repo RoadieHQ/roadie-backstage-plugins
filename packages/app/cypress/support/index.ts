@@ -23,10 +23,11 @@ Cypress.Commands.add('loginAsGuest', () => {
 });
 
 Cypress.Commands.add('saveGithubToken', () => {
-cy.visit('/', {
-    onLoad: (win: Window) =>
-     win.localStorage.setItem('githubSession', Cypress.env('githubSession')),
-  });
+  cy.intercept(
+    'GET',
+    'http://localhost:7007/api/auth/github/refresh?optional&env=development',
+    { fixture: 'githubLogin/login.json' },
+  );
 });
 
 export {};

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,31 +32,41 @@ import { getSeverityBadge } from '../utils';
 import {
   SecurityInsightsTabProps,
   SecurityInsight,
-  SecurityInsightFilterState
+  SecurityInsightFilterState,
 } from '../../types';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) => {
-  const [insightsStatusFilter, setInsightsStatusFilter] = useState<SecurityInsightFilterState>(null);
-  const [filteredTableData, setFilteredTableData] = useState<SecurityInsight[]>([]);
+export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({
+  entity,
+}) => {
+  const [insightsStatusFilter, setInsightsStatusFilter] =
+    useState<SecurityInsightFilterState>(null);
+  const [filteredTableData, setFilteredTableData] = useState<SecurityInsight[]>(
+    [],
+  );
   const [tableData, setTableData] = useState<SecurityInsight[]>([]);
-  const {owner, repo} = useProjectEntity(entity);
+  const { owner, repo } = useProjectEntity(entity);
   const projectName = useProjectName(entity);
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useUrl(entity);
 
-  const { value, loading, error } = useAsync(async (): Promise<SecurityInsight[]> => {
+  const { value, loading, error } = useAsync(async (): Promise<
+    SecurityInsight[]
+  > => {
     const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({auth: token});
-    const response = await octokit.request('GET /repos/{owner}/{repo}/code-scanning/alerts', {
-      baseUrl,
-      owner,
-      repo,
-      per_page: 100,
-    });
+    const octokit = new Octokit({ auth: token });
+    const response = await octokit.request(
+      'GET /repos/{owner}/{repo}/code-scanning/alerts',
+      {
+        baseUrl,
+        owner,
+        repo,
+        per_page: 100,
+      },
+    );
     const data = response.data as SecurityInsight[];
     setTableData(data);
     return data;
@@ -87,24 +97,25 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) 
       ),
     },
     {
-    title: 'Severity',
-    field: 'rule.severity',
-    highlight: true,
-    render: (row: Partial<SecurityInsight>) => {
-      const severityLevel = row?.rule?.severity;
-      return (
-        <Box display="flex" alignItems="center" fontWeight="fontWeightLight">
-          {severityLevel && getSeverityBadge(severityLevel)}
-        </Box>
-      )
-    },
+      title: 'Severity',
+      field: 'rule.severity',
+      highlight: true,
+      render: (row: Partial<SecurityInsight>) => {
+        const severityLevel = row?.rule?.severity;
+        return (
+          <Box display="flex" alignItems="center" fontWeight="fontWeightLight">
+            {severityLevel && getSeverityBadge(severityLevel)}
+          </Box>
+        );
+      },
     },
     {
       title: 'State',
       field: 'state',
       highlight: true,
-      render: (row: Partial<SecurityInsight>) => (
-        row.state && row.number && (
+      render: (row: Partial<SecurityInsight>) =>
+        row.state &&
+        row.number && (
           <UpdateSeverityStatusModal
             owner={owner}
             repo={repo}
@@ -114,8 +125,7 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) 
             setTableData={setTableData}
             entity={entity}
           />
-        )
-      ),
+        ),
     },
     {
       title: 'Tool',
@@ -126,14 +136,14 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({ entity }) 
           {row?.tool?.name}
         </Typography>
       ),
-      },
+    },
     {
       title: 'Detected',
       field: 'created_at',
       highlight: true,
       render: (row: Partial<SecurityInsight>) => (
         <Typography variant="body2" noWrap>
-          {getElapsedTime((row.created_at as string))}
+          {getElapsedTime(row.created_at as string)}
         </Typography>
       ),
     },

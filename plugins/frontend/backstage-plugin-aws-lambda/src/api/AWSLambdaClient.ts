@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,15 +18,20 @@ import AWS from 'aws-sdk';
 import { AwsLambdaApi } from './AWSLambdaApi';
 import { LambdaData } from '../types';
 
-async function generateCredentials(backendUrl: string, options: {
-  token: string | undefined
-}) {
+async function generateCredentials(
+  backendUrl: string,
+  options: {
+    token: string | undefined;
+  },
+) {
   const respData = await fetch(`${backendUrl}/api/aws/credentials`, {
     headers: {
       // Disable eqeqeq rule for next line to allow it to pick up both undefind and null
-      // eslint-disable-next-line eqeqeq 
-      ...(options == null ? void 0 : options.token) && {Authorization: `Bearer ${options == null ? void 0 : options.token}`}
-    }
+      // eslint-disable-next-line eqeqeq
+      ...((options == null ? void 0 : options.token) && {
+        Authorization: `Bearer ${options === null ? void 0 : options.token}`,
+      }),
+    },
   });
   try {
     const resp = await respData.json();
@@ -35,7 +40,7 @@ async function generateCredentials(backendUrl: string, options: {
       secretAccessKey: resp.SecretAccessKey,
       sessionToken: resp.SessionToken,
     });
-  } catch (e:any) {
+  } catch (e: any) {
     throw new Error('MissingBackendAwsAuthException');
   }
 }
@@ -44,7 +49,7 @@ export class AwsLambdaClient implements AwsLambdaApi {
     awsRegion,
     backendUrl,
     functionName,
-    token
+    token,
   }: {
     awsRegion: string;
     backendUrl: string;

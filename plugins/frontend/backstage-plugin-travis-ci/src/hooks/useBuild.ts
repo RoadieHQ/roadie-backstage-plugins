@@ -13,7 +13,7 @@ export function useBuild(buildId: number) {
     try {
       const build = await api.getBuild(buildId);
       return Promise.resolve(build);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
       return Promise.reject(e);
     }
@@ -22,7 +22,7 @@ export function useBuild(buildId: number) {
   const restartBuild = async () => {
     try {
       await api.retry(buildId);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
     }
   };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,22 @@
  */
 
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import { Entity, getEntitySourceLocation } from "@backstage/catalog-model";
+import { Entity, getEntitySourceLocation } from '@backstage/catalog-model';
 
 export const useGitHubConfig = (entity: Entity) => {
-    const config = useApi(configApiRef);
-    const providerConfigs = config.getOptionalConfigArray('integrations.github') ?? [];
+  const config = useApi(configApiRef);
+  const providerConfigs =
+    config.getOptionalConfigArray('integrations.github') ?? [];
 
-    const location = getEntitySourceLocation(entity);
+  const location = getEntitySourceLocation(entity);
 
-    if (location.type === 'url' && location.target.length > 0) {
-        // Try to match a provider config with catalog location (being a github.com or github enterprise domain)
-        const locationHost = new URL(location.target).host;
-        return providerConfigs.find(providerConfig => providerConfig?.getOptionalString("host") === locationHost);
-    }
-    return providerConfigs[0];
-}
+  if (location.type === 'url' && location.target.length > 0) {
+    // Try to match a provider config with catalog location (being a github.com or github enterprise domain)
+    const locationHost = new URL(location.target).host;
+    return providerConfigs.find(
+      providerConfig =>
+        providerConfig?.getOptionalString('host') === locationHost,
+    );
+  }
+  return providerConfigs[0];
+};

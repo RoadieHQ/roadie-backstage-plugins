@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { useCallback } from 'react';
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncFn } from 'react-use';
@@ -24,23 +25,19 @@ export const useLog = (url: string) => {
 
   const getLogs = useCallback(async () => {
     try {
-      const build = await api.getLog(
-        url,
-      );
+      const build = await api.getLog(url);
       return Promise.resolve(build);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
       return Promise.reject(e);
     }
   }, [url, api, errorApi]);
-  
-  const [state, fetchLogs] = useAsyncFn(() => getLogs(), [
-    getLogs,
-  ]);
 
-  return { 
+  const [state, fetchLogs] = useAsyncFn(() => getLogs(), [getLogs]);
+
+  return {
     value: state.value,
     error: state.error,
-    fetchLogs
+    fetchLogs,
   };
-}
+};

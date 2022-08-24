@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,24 @@ import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 import BuildkiteBuildView from './BuildKiteBuildView';
 import { BUILDKITE_ANNOTATION } from '../consts';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { buildKiteBuildRouteRef } from '../plugin';
 
 export const isBuildkiteAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[BUILDKITE_ANNOTATION]);
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const Router = (_props: Props) => {
+export const Router = () => {
   const { entity } = useEntity();
-  return !isBuildkiteAvailable(entity) ? (
-    <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />
-  ) : (
+  if (!isBuildkiteAvailable(entity)) {
+    return <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />;
+  }
+
+  return (
     <Routes>
       <Route path="/" element={<BuildkiteBuildsTable entity={entity} />} />
-      <Route element={<BuildkiteBuildView entity={entity} />} />
+      <Route
+        path={`/${buildKiteBuildRouteRef.path}`}
+        element={<BuildkiteBuildView entity={entity} />}
+      />
     </Routes>
   );
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import { AnyApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { rest } from 'msw';
 import {
   setupRequestMockHandlers,
-  TestApiRegistry,
+  TestApiProvider,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 // eslint-disable-next-line
@@ -35,17 +36,20 @@ import {
   searchResponseStub,
   statusesResponseStub,
 } from '../../responseStubs';
+import { ConfigReader } from '@backstage/config';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
+const configApi = new ConfigReader({});
 
-const apis = TestApiRegistry.from([jiraApiRef, new JiraAPI({ discoveryApi })]);
+const apis: [AnyApiRef, Partial<unknown>][] = [
+  [jiraApiRef, new JiraAPI({ discoveryApi, configApi })],
+];
 
 describe('JiraCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
   beforeEach(() => {
-    worker.resetHandlers();
     jest.resetAllMocks();
   });
 
@@ -70,11 +74,11 @@ describe('JiraCard', () => {
 
     const rendered = render(
       <MemoryRouter>
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityStub}>
             <JiraCard />
           </EntityProvider>
-        </ApiProvider>
+        </TestApiProvider>
       </MemoryRouter>,
     );
 
@@ -114,11 +118,11 @@ describe('JiraCard', () => {
     );
     const rendered = render(
       <MemoryRouter>
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityStub}>
             <JiraCard />
           </EntityProvider>
-        </ApiProvider>
+        </TestApiProvider>
       </MemoryRouter>,
     );
 

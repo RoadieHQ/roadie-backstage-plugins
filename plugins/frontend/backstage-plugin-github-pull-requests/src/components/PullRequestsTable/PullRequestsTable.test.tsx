@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
@@ -37,11 +43,11 @@ const config = {
   ],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
   [githubPullRequestsApiRef, new GithubPullRequestsClient()],
-]);
+];
 
 describe('PullRequestsTable', () => {
   const worker = setupServer();
@@ -49,28 +55,27 @@ describe('PullRequestsTable', () => {
 
   beforeEach(() => {
     worker.use(
-      rest.get(
-        'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=open&per_page=5&page=1',
-        (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
+      rest.get('https://api.github.com/search/issues', (_, res, ctx) =>
+        res(ctx.json(openPullsRequestMock)),
       ),
     );
   });
 
   it('should display a table with data from requests', async () => {
     const rendered = render(
-      <ApiProvider apis={apis}>
+      <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <PullRequestsTable />
         </EntityProvider>
-      </ApiProvider>,
+      </TestApiProvider>,
     );
     expect(
-      await rendered.findByText('add test with msw library'),
+      await rendered.findByText('Remove old instructions'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('muenchdo')).toBeInTheDocument();
-    expect(await rendered.findByText('mcalus3')).toBeInTheDocument();
+    expect(await rendered.findByText('martina-if')).toBeInTheDocument();
+    expect(await rendered.findByText('iain-b')).toBeInTheDocument();
     expect(
-      await rendered.findByText('Bump ini from 1.3.5 to 1.3.8'),
+      await rendered.findByText('Complete code migration to plugins repo'),
     ).toBeInTheDocument();
   });
 });

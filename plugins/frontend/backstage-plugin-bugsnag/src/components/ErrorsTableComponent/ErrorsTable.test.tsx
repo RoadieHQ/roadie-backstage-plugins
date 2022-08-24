@@ -16,14 +16,14 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  ApiRegistry,
-  ApiProvider,
-  UrlPatternDiscovery,
-} from '@backstage/core-app-api';
-import { errorApiRef } from '@backstage/core-plugin-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+  wrapInTestApp,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { ErrorsTable } from './ErrorsTable';
 import {
@@ -39,10 +39,10 @@ const postMock = jest.fn();
 const errorApiMock = { post: postMock, error$: jest.fn() };
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
   [bugsnagApiRef, new BugsnagClient({ discoveryApi })],
-]);
+];
 
 describe('BugsnagErrorsTable', () => {
   const worker = setupServer();
@@ -84,12 +84,12 @@ describe('BugsnagErrorsTable', () => {
 
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <ErrorsTable
             organisationName={OrganisationsMock[0].name}
             project={ProjectsMock[0]}
           />
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(await rendered.findByText('Errors overview')).toBeInTheDocument();

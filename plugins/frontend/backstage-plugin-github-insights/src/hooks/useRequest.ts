@@ -20,47 +20,58 @@ import { Entity } from '@backstage/catalog-model';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useProjectEntity } from './useProjectEntity';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
+import { useStore } from '../components/store';
 
 export const useRequest = (
   entity: Entity,
   requestName: string,
   perPage: number = 0,
   maxResults: number = 0,
-  showTotal: boolean = false,
 ) => {
   const auth = useApi(githubAuthApiRef);
   const { baseUrl } = useEntityGithubScmIntegration(entity);
   const { owner, repo } = useProjectEntity(entity);
+
+  const { state: requestState, setState: setRequestState } = useStore(
+    state => state.request,
+  );
+
   const { value, loading, error } = useAsync(async (): Promise<any> => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
+    let result;
+    try {
+      const token = await auth.getAccessToken(['repo']);
+      const octokit = new Octokit({ auth: token });
 
-    const response = await octokit.request(
-      `GET /repos/{owner}/{repo}/${requestName}`,
-      {
-        baseUrl,
-        owner,
-        repo,
-        ...(perPage && { per_page: perPage }),
-      },
-    );
+      const response = await octokit.request(
+        `GET /repos/{owner}/{repo}/${requestName}`,
+        {
+          headers: { 'if-none-match': requestState[requestName].etag },
+          baseUrl,
+          owner,
+          repo,
+          ...(perPage && { per_page: perPage }),
+        },
+      );
+      const data = response.data;
 
-    const data = response.data;
-
-    if (showTotal) {
-      if (Object.values(data).length === 0) return null;
-      return {
-        data,
-        total: Object.values(data as Record<string, number>).reduce(
-          (a, b) => a + b,
-        ),
+      result = {
+        data: maxResults ? data.slice(0, maxResults) : data,
+        etag: response.headers.etag ?? '',
       };
+    } catch (e: any) {
+      if (e.status === 304) {
+        result = requestState[requestName];
+      }
     }
-    return maxResults ? data.slice(0, maxResults) : data;
-  }, [baseUrl]);
+    return result;
+  }, [baseUrl, requestName]);
+
+  if (value?.data) {
+    setRequestState(requestName, value);
+  }
 
   return {
-    value,
+    value: value ? value.data : undefined,
     loading,
     error,
   };

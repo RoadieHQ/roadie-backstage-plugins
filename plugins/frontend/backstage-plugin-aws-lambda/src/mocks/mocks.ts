@@ -21,12 +21,6 @@ export const entityMock = {
     owner: 'david@roadie.io',
     lifecycle: 'experimental',
   },
-  relations: [
-    {
-      target: { kind: 'group', namespace: 'default', name: 'david@roadie.io' },
-      type: 'ownedBy',
-    },
-  ],
 };
 
 //  http://localhost:7007/api/aws/credentials

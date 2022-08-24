@@ -17,15 +17,18 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
-import { InfoCard, Progress, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { Entity } from '@backstage/catalog-model';
+import {
+  InfoCard,
+  Progress,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
 import ContributorsList from './components/ContributorsList';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
@@ -38,12 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-const ContributorsCard = (_props: Props) => {
+const ContributorsCard = () => {
   const { entity } = useEntity();
   const classes = useStyles();
   const { value, loading, error } = useRequest(entity, 'contributors', 10);
@@ -51,7 +49,9 @@ const ContributorsCard = (_props: Props) => {
   const projectAlert = isGithubInsightsAvailable(entity);
   const { owner, repo } = useProjectEntity(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {

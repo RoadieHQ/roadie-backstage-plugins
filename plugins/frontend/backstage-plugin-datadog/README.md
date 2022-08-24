@@ -1,24 +1,19 @@
-# [Datadog Plugin for Backstage](https://roadie.io/backstage/plugins/)
+# Datadog Plugin for Backstage
 
 Embed Datadog graphs and dashboards into Backstage.
 
-Datadog is a monitoring service for cloud-scale applications, providing monitoring of servers, databases, tools, and services through a SaaS-based data analytics platform. 
+Datadog is a monitoring service for cloud-scale applications, providing monitoring of servers, databases, tools, and services through a SaaS-based data analytics platform.
 
-This readme will show you how to 
+This readme will show you how to
 
-* Setup and integrate the plugin into Backstage.
-* Obtain the dashboard URL and graph tokens from Datadog that you will need for your metadata. 
-* Adding the annotations and the values from Datadog to your component's metadata file.
-<br/>
-<br/>
-
+- Setup and integrate the plugin into Backstage.
+- Obtain the dashboard URL and graph tokens from Datadog that you will need for your metadata.
+- Adding the annotations and the values from Datadog to your component's metadata file.
+  <br/>
+  <br/>
 
 ![dashboard](./docs/datadog-widget.png?raw=true)
 
-## Repository migration notice (June/July 2021)
-
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
 ## Setup and integrate the plugin into Backstage.
 
 1. In the [packages/app](https://github.com/backstage/backstage/blob/master/packages/app/) directory of your backstage instance, add the plugin as a package.json dependency:
@@ -33,7 +28,7 @@ $ yarn add @roadiehq/backstage-plugin-datadog
 import {
   EntityDatadogContent,
   EntityDatadogGraphCard,
-  isDatadogGraphAvailable
+  isDatadogGraphAvailable,
 } from '@roadiehq/backstage-plugin-datadog';
 ```
 
@@ -46,7 +41,7 @@ const overviewContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={isDatadogGraphAvailable}>
         <Grid item>
-         <EntityDatadogGraphCard/>
+          <EntityDatadogGraphCard />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
@@ -61,13 +56,14 @@ const overviewContent = (
 const serviceEntityPage = (
   <EntityPageLayout>
     ...
-  <EntityLayout.Route path="/datadog" title="Datadog">
-    <EntityDatadogContent />
-  </EntityLayout.Route>
+    <EntityLayout.Route path="/datadog" title="Datadog">
+      <EntityDatadogContent />
+    </EntityLayout.Route>
     ...
   </EntityPageLayout>
-)
+);
 ```
+
 ## Specify datadog domain
 
 Datadog embedded graph is using `datadoghq.eu`as default top-level domain, when other is not specified. If you are using other domain, you need to specify it with corresponding annotations `datadoghq.com/site`.
@@ -87,27 +83,25 @@ metadata:
 
 ## Embed a datadog dashboard in Backstage
 
-### Obtain the dashboard URL from Datadog that you will need for your metadata. 
+### Obtain the dashboard URL from Datadog that you will need for your metadata.
 
-* Login to your Datadog account.
+- Login to your Datadog account.
 
 ### Get the dashboard URL.
 
-* Navigate to the dashboards list by hovering over dashboards on the page's left-hand side and selecting the dashboard list.
+- Navigate to the dashboards list by hovering over dashboards on the page's left-hand side and selecting the dashboard list.
 
-* Select a dashboard from this list.
+- Select a dashboard from this list.
 
-* Within the dashboard you have chosen, click the settings cog on the screen's right-hand side, circled in red.
+- Within the dashboard you have chosen, click the settings cog on the screen's right-hand side, circled in red.
 
 ![dashboard](./docs/dd-dashboard.png?raw=true)
 
+- Copy the URL from the Sharing textbox.
 
-* Copy the URL from the Sharing textbox.
-
-* This URL is the value you need for the `datadoghq.com/dashboard-url` annotation.
+- This URL is the value you need for the `datadoghq.com/dashboard-url` annotation.
 
 ![dashboard share](./docs/dd-dashboard-share.png?raw=true)
-
 
 ### Adding the annotations and the values from Datadog to your component's metadata file.
 
@@ -124,30 +118,30 @@ metadata:
 
 ## Embed a datadog graph in Backstage
 
-* Login to your Datadog account.
+- Login to your Datadog account.
 
 ### Get the graph token.
 
-* Click on the graph pencil, circled in red, from your dashboard.
+- Click on the graph pencil, circled in red, from your dashboard.
 
 ![dashboard](./docs/dd-dashboard-2.png?raw=true)
 
-* Click on the Share tab, choose a timeframe, graph size and legend. Click generate the embedded code. 
+- Click on the Share tab, choose a timeframe, graph size and legend. Click generate the embedded code.
 
-* Copy the token value that is highlighted in the red square.
+- Copy the token value that is highlighted in the red square.
 
-* this token is the value you need for the `datadoghq.com/graph-token` annotation
+- this token is the value you need for the `datadoghq.com/graph-token` annotation
 
 ![dashboard](./docs/dd-graph-share.png?raw=true)
 
 ### Customize graph size.
 
-* In order to customize size of the graph you may specify `datadoghq.com/graph-size` annotations and specify one of the following options: 
+- In order to customize size of the graph you may specify `datadoghq.com/graph-size` annotations and specify one of the following options:
 
-* 'small'
-* 'medium'
-* 'large'
-* 'x-large';
+- 'small'
+- 'medium'
+- 'large'
+- 'x-large';
 
 If not specified, your graph will be 'medium' size per default.
 
@@ -162,8 +156,8 @@ metadata:
     A sample service
   annotations:
     datadoghq.com/graph-token: <<TOKEN>
-    
 ```
+
 ## What it looks like
 
 ### For the dashboard
@@ -186,19 +180,13 @@ This URL is public to anyone who bears it.
 
 If obtained by another actor, it is usable by them.
 
-
 ## Contributing
 
 Everyone is welcome to contribute to this repository. Feel free to raise [issues](https://github.com/RoadieHQ/backstage-plugin-datadog/issues) or to submit [Pull Requests](https://github.com/RoadieHQ/backstage-plugin-datadog/pulls).
 
-
-Join us on Discord.
-
-[![Join our Discord server!](https://invidget.switchblade.xyz/chuePWkM?theme=light)](https://discord.gg/chuePWkM)
-
+[Join our Discord server!](https://discord.gg/cjv6H6m8VN)
 
 ## Links
 
 - [Backstage](https://backstage.io)
-<!-- - [Further instructons](https://roadie.io/backstage/plugins/datadog/) -->
 - Get hosted, managed Backstage for your company: https://roadie.io

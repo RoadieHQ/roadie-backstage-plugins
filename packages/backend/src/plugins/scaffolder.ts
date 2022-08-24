@@ -17,15 +17,23 @@ import {
   DockerContainerRunner,
   SingleHostDiscovery,
   UrlReader,
-  ContainerRunner
+  ContainerRunner,
 } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
 import {
   createRouter,
   createBuiltinActions,
-  TemplateAction
+  TemplateAction,
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
+import {
+  createZipAction,
+  createWriteFileAction,
+  createSleepAction,
+  createAppendFileAction,
+  createMergeJSONAction,
+} from '@roadiehq/scaffolder-backend-module-utils';
+import { createAwsS3CpAction } from '@roadiehq/scaffolder-backend-module-aws';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
@@ -37,20 +45,25 @@ export const createActions = (options: {
   integrations: ScmIntegrations;
   config: Config;
   containerRunner: ContainerRunner;
-  catalogClient: CatalogClient
-}) : TemplateAction<any>[] => {
-  const { reader, integrations, config, containerRunner, catalogClient } = options;
+  catalogClient: CatalogClient;
+}): TemplateAction<any>[] => {
+  const { reader, integrations, config, catalogClient } = options;
   const defaultActions = createBuiltinActions({
     reader,
     integrations,
-    containerRunner,
     catalogClient,
     config,
   });
 
   return [
-    createHttpBackstageAction({config}),
-    ...defaultActions
+    createZipAction(),
+    createSleepAction(),
+    createWriteFileAction(),
+    createAppendFileAction(),
+    createMergeJSONAction({}),
+    createAwsS3CpAction(),
+    createHttpBackstageAction({ config }),
+    ...defaultActions,
   ];
 };
 
@@ -67,7 +80,6 @@ export default async function createPlugin({
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
 
   return await createRouter({
-    containerRunner,
     logger,
     config,
     database,

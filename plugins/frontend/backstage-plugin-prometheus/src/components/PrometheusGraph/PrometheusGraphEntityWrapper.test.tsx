@@ -17,9 +17,15 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
-import { configApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
+import {
+  AnyApiRef,
+  configApiRef,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { PrometheusGraphEntityWrapper } from './PrometheusGraphEntityWrapper';
 import { prometheusApiRef } from '../../api';
@@ -55,11 +61,11 @@ const mockPrometheusApi = {
   query: () => require('../../mocks/mockQueryResponse.json'),
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [prometheusApiRef, mockPrometheusApi],
   [errorApiRef, mockErrorApi],
-]);
+];
 
 describe('PrometheusGraphEntityWrapper', () => {
   const server = setupServer();
@@ -79,11 +85,11 @@ describe('PrometheusGraphEntityWrapper', () => {
   });
   it('should render container for queries', async () => {
     const rendered = render(
-      <ApiProvider apis={apis}>
+      <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <PrometheusGraphEntityWrapper />
         </EntityProvider>
-      </ApiProvider>,
+      </TestApiProvider>,
     );
     expect(await rendered.findByText('memUsage')).toBeInTheDocument();
   });

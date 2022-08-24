@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,7 @@ import {
 } from '@backstage/core-components';
 import React from 'react';
 
-export const BuildkiteStatus = ({
-  status,
-}: {
-  status: string | undefined;
-}) => {
+export const BuildkiteStatus = ({ status }: { status: string | undefined }) => {
   if (status === undefined) return null;
   switch (status.toLowerCase()) {
     case 'queued':

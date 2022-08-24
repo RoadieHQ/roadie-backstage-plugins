@@ -24,23 +24,29 @@ describe('Prometheus', () => {
       'GET',
       'http://localhost:7007/api/proxy/prometheus/api/rules?type=alert',
       { fixture: 'prometheus/alerts.json' },
-    );
+    ).as('getAlerts');
     cy.visit('/catalog/default/component/sample-service-3');
+
+    cy.wait('@getAlerts');
+
     cy.intercept(
       'GET',
       'http://localhost:7007/api/proxy/prometheus/api/query_range?query=node_memory_Active_bytes*',
       { fixture: 'prometheus/graphs.json' },
-    );
+    ).as('getGraphs');
     cy.intercept(
       'GET',
       'http://localhost:7007/api/proxy/prometheus/api/query_range?query=memUsage*',
       { fixture: 'prometheus/graphs2.json' },
-    );
+    ).as('getGraphs2');
   });
 
   describe('Navigate Prometheus tab', () => {
     it('should show Prometheus alerts table', () => {
       cy.visit('/catalog/default/component/sample-service-3/prometheus');
+
+      cy.wait(['@getGraphs', '@getGraphs2']);
+
       cy.contains('firing');
       cy.contains('test alert name');
       cy.contains('alertname: Excessive Memory Usage');
@@ -49,6 +55,8 @@ describe('Prometheus', () => {
     });
     it('should show Prometheus graphs for two rules defined in catalog-info', () => {
       cy.visit('/catalog/default/component/sample-service-3/prometheus');
+
+      cy.wait(['@getGraphs', '@getGraphs2']);
 
       cy.contains('node_memory_Active_bytes');
       cy.contains('memUsage');

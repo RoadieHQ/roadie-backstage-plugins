@@ -1,5 +1,120 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.1.7
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 2.1.6
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
+## 2.1.5
+
+### Patch Changes
+
+- 86eca6a: Update dependencies
+
+## 2.1.4
+
+### Patch Changes
+
+- e92dc3b: properly escaped app selectors
+
+## 2.1.3
+
+### Patch Changes
+
+- 9db0101: Hide instance column in argo cards when using a single argo instance
+
+## 2.1.2
+
+### Patch Changes
+
+- 6b4cc16: Update dependencies
+  Add package information to the package.jsons, to tell the backstage cli how to run the tests
+
+## 2.1.1
+
+### Patch Changes
+
+- ae873be: Fix Argo CD Dashboard button
+
+## 2.1.0
+
+### Minor Changes
+
+- 0af1e28: add additional information from argo cd in a drawer component
+
+## 2.0.0
+
+### Major Changes
+
+- df841f0: Update dependecies to follow latest upstream version. Removed deprecated props of type 'Entity' passed into components as it is grabbed from context instead.
+
+## 1.6.0
+
+### Minor Changes
+
+- f0421b4: Bumped to the latest upstream packages versions
+
+## 1.5.14
+
+### Patch Changes
+
+- 5a2757c: Change notice headers to contain Larder Software Limited
+
+## 1.5.13
+
+### Patch Changes
+
+- f5cd7e4: Update dependencies to latest Backstage packages
+
+## 1.5.12
+
+### Patch Changes
+
+- 46b19a3: Update dependencies
+
+## 1.5.11
+
+### Patch Changes
+
+- c779d9e: Update dependencies
+
+## 1.5.10
+
+### Patch Changes
+
+- 7da7bfe: Update dependencies
+
+## 1.5.9
+
+### Patch Changes
+
+- f79f2a7: Gracefully handle situation where an app is missing operationState
+
+## 1.5.8
+
+### Patch Changes
+
+- 5ae1b4b: Update README.md files
+
+## 1.5.7
+
+### Patch Changes
+
+- b5db653: Update dependecies to latest packages
+
+## 1.5.6
+
+### Patch Changes
+
+- a02dbf5: Migrating to TestApiProvider in the tests
+
 ## 1.5.5
 
 ### Patch Changes

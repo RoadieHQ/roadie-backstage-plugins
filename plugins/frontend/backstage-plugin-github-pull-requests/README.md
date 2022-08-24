@@ -1,16 +1,26 @@
 # GitHub Pull Requests Plugin for Backstage
 
-![a list of pull requests in the GitHub Pull Requests](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-github-pull-requests/main/docs/list-of-pull-requests-and-stats-tab-view.png)
+![a list of pull requests in the GitHub Pull Requests](./docs/list-of-pull-requests-and-stats-tab-view.png)
 
+## Features
 
-## Repository migration notice
-
-In order to make testing and deployment of our plugins easier we are migrating all Roadie plugins to a monorepo at https://github.com/RoadieHQ/roadie-backstage-plugins.
-The plugins will still be published to the same place on NPM and will have the same package names so nothing should change for consumers of these plugins.
+- List Pull Requests for your repository, with filtering and search.
+- Show basic statistics widget about pull requests for your repository.
+  - Average time of PR until merge
+  - Merged to closed ratio
+  - Average size of PR (the average lines of changes in the PR)
+  - Average amount of file changed in a PR
+- It has two homepage plugin componenets
+  - Review requests
+  - Open pull requests
 
 ## Plugin Configuration Requirements
 
 This plugin relies on the [GitHub Authentication Provider](https://backstage.io/docs/auth/github/provider) for its access to GitHub.
+
+Search filter works the same way it works in GitHub, but `roadie-backstage-pull-requests/default-filter` annotation needs to be provided in component configuration. Adding a filter will result in applying that filter per default.
+
+If this annotation is left out, no default filter will be applied when running the app.
 
 ## Install the plugin
 
@@ -23,13 +33,21 @@ yarn add @roadiehq/backstage-plugin-github-pull-requests
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityGithubPullRequestsContent } from '@roadiehq/backstage-plugin-github-pull-requests';
+import {
+  EntityGithubPullRequestsContent,
+  isGithubPullRequestsAvailable,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
 ...
 
 const serviceEntityPage = (
   <EntityLayout>
     ...
-    <EntityLayout.Route path="/pull-requests" title="Pull Requests">
+    <EntityLayout.Route
+      path="/pull-requests"
+      title="Pull Requests"
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isGithubPullRequestsAvailable}
+    >
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
     ...
@@ -40,7 +58,7 @@ const serviceEntityPage = (
 
 ## Widget setup
 
-![a list of pull requests in the GitHub Pull Requests](https://raw.githubusercontent.com/RoadieHQ/backstage-plugin-github-pull-requests/main/docs/github-pullrequests-widget.png)
+![a list of pull requests in the GitHub Pull Requests](./docs/github-pullrequests-widget.png)
 
 1. You must install plugin by following the steps above to add widget to your Overview
 
@@ -48,26 +66,68 @@ const serviceEntityPage = (
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityGithubPullRequestsOverviewCard } from '@roadiehq/backstage-plugin-github-pull-requests';
+import { EntityGithubPullRequestsOverviewCard, isGithubPullRequestsAvailable } from '@roadiehq/backstage-plugin-github-pull-requests';
 
 ...
 
 const overviewContent = (
   <Grid container spacing={3}>
     ...
-    <Grid item md={6}>
-      <EntityGithubPullRequestsOverviewCard />
-    </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isGithubPullRequestsAvailable}>
+        <Grid item md={6}>
+          <EntityGithubPullRequestsOverviewCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     ...
   </Grid>
 );
 
 ```
 
+## Add Homepage components to your homepage
+
+![A preview image of the components](./docs/homepage-components.png)
+
+If you didn't set up the HomePage plugin you can see the official documentation about it [here](https://github.com/backstage/backstage/tree/master/plugins/home). You'll need to have it setup to be able to include this plugin.
+
+A reasonable default will be used as a search term for both cards but you may have reasonable to provide your own query. This can be done through the `query` prop available for both cards.
+
+**TIP**: You might want to filter by a specific Github org if you have users who share a single Github account for work and personal usage.
+
+You can build up a query using [Github Advanced Search](https://github.com/search/advanced) and once you hit "Search", the query in the search bar is what you'll want to provide as your query prop.
+
+```tsx
+//packages/app/src/components/home/HomePage.tsx
+
+import {
+  HomePageRequestedReviewsCard,
+  HomePageYourOpenPullRequestsCard,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
+
+
+export const HomePage = () => {
+  return (
+    ...
+
+      <Grid item md={6} xs={12}>
+        <HomePageRequestedReviewsCard />
+      </Grid>
+
+      <Grid item md={6} xs={12}>
+        <HomePageYourOpenPullRequestsCard query="org:RoadieHQ is:pr language:CSS" />
+      </Grid>
+    ...
+  );
+};
+```
+
 ## Features
 
-- List Pull Requests for your repository, with filtering and search.
+- List Pull Requests for your repository, with filtering and search (The searchbar is working like in github).
 - Show basic statistics widget about pull requests for your repository.
+- Possibility to add a variable on the backstage configuration of a catalog entity allowing to add a default search filter on github pull requests
 
 ## Links
 

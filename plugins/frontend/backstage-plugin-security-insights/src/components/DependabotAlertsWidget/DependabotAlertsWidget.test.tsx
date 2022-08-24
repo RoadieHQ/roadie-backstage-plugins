@@ -19,11 +19,18 @@ import { Entity } from '@backstage/catalog-model';
 import { render } from '@testing-library/react';
 import { entityStub, dependabotAlertsResponseMock } from '../../mocks/mocks';
 import { graphql } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { DependabotAlertsWidget } from './DependabotAlertsWidget';
-import { ApiProvider, ApiRegistry } from '@backstage/core-app-api';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 
 let entity: { entity: Entity };
 
@@ -66,22 +73,21 @@ const configForLowSeverity = {
   getOptionalStringArray: (_: string) => ['low'],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
-]);
+];
 
-const apisLowSeverity = ApiRegistry.from([
+const apisLowSeverity: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, configForLowSeverity],
   [githubAuthApiRef, mockGithubAuth],
-]);
+];
 
 describe('Dependabot alerts overview', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
   beforeEach(() => {
-    worker.resetHandlers();
     jest.resetAllMocks();
   });
 
@@ -99,9 +105,9 @@ describe('Dependabot alerts overview', () => {
 
       const rendered = render(
         wrapInTestApp(
-          <ApiProvider apis={apis}>
+          <TestApiProvider apis={apis}>
             <DependabotAlertsWidget />
-          </ApiProvider>,
+          </TestApiProvider>,
         ),
       );
       expect(
@@ -133,9 +139,9 @@ describe('Dependabot alerts overview', () => {
 
       const rendered = render(
         wrapInTestApp(
-          <ApiProvider apis={apisLowSeverity}>
+          <TestApiProvider apis={apisLowSeverity}>
             <DependabotAlertsWidget />
-          </ApiProvider>,
+          </TestApiProvider>,
         ),
       );
       expect((await rendered.findAllByText('0')).length).toBeGreaterThan(0);

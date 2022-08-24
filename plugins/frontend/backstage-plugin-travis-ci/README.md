@@ -2,8 +2,6 @@
 
 ![a list of builds in the Travis CI plugin for Backstage](./docs/travis-ci-plugin-1642x1027.png)
 
-[https://roadie.io/backstage/plugins/travis-ci](https://roadie.io/backstage/plugins/travis-ci)
-
 ## Features
 
 - List Travis CI Builds
@@ -21,7 +19,8 @@ yarn add @roadiehq/backstage-plugin-travis-ci
 
 2. add configuration in `app-config.yaml` file in the root directory:
 
-In the proxy object: 
+In the proxy object:
+
 ```yml
 proxy:
 
@@ -36,6 +35,7 @@ proxy:
 ```
 
 and as a separate configuration object:
+
 ```yml
 travisci:
   baseUrl: 'https://travis-ci.com/'
@@ -72,13 +72,12 @@ export const cicdContent = (
 export const cicdCard = (
   <EntitySwitch>
     <EntitySwitch.Case if={isTravisciAvailable}>
-        <Grid item sm={6}>
-          <EntityTravisCIOverviewCard />
-        </Grid>
+      <Grid item sm={6}>
+        <EntityTravisCIOverviewCard />
+      </Grid>
     </EntitySwitch.Case>
   </EntitySwitch>
 );
-
 ```
 
 ## How to use Travis-ci plugin in Backstage
@@ -108,5 +107,4 @@ and run `yarn install` in the root backstage directory - it will create a symbol
 ## Links
 
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/travis-ci/)
 - Get hosted, managed Backstage for your company: https://roadie.io

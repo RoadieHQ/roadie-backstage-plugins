@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { FC } from 'react';
-import { generatePath, Link as RouterLink } from 'react-router-dom';
-import { Box, IconButton, Link, Typography, Tooltip } from '@material-ui/core';
-import { Table, TableColumn } from '@backstage/core-components';
+import { Box, IconButton, Typography, Tooltip } from '@material-ui/core';
+import { Table, Link } from '@backstage/core-components';
+import { useRouteRef } from '@backstage/core-plugin-api';
 import RetryIcon from '@material-ui/icons/Replay';
 import SyncIcon from '@material-ui/icons/Sync';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
-import { buildKiteBuildRouteRef } from '../routeRefs';
+import { buildKiteBuildRouteRef } from '../../plugin';
 import { useBuilds } from '../useBuilds';
 import { useProjectEntity } from '../useProjectEntity';
 import { BuildkiteStatus } from './components/BuildKiteRunStatus';
@@ -32,7 +33,7 @@ const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const generatedColumns: TableColumn[] = [
+const generatedColumns = [
   {
     title: 'Id',
     field: 'number',
@@ -47,17 +48,22 @@ const generatedColumns: TableColumn[] = [
     field: 'message',
     highlight: true,
     render: (row: Partial<BuildkiteBuildInfo>) => {
-      return (
-        <p>
-          {row.rebuilt_from?.id && 'retry of: '}
+      const LinkWrapper = () => {
+        const routeLink = useRouteRef(buildKiteBuildRouteRef);
+        return (
           <Link
-            component={RouterLink}
-            to={generatePath(buildKiteBuildRouteRef.path, {
+            to={routeLink({
               buildNumber: (row.number as number).toString(),
             })}
           >
             {row.message}
           </Link>
+        );
+      };
+      return (
+        <p>
+          {row.rebuilt_from?.id && 'retry of: '}
+          <LinkWrapper />
         </p>
       );
     },

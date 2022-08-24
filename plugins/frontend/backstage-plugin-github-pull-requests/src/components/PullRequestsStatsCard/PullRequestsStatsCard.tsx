@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,12 @@ import {
   InfoCard,
   InfoCardVariants,
   StructuredMetadataTable,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
 import { usePullRequestsStatistics } from '../usePullRequestsStatistics';
 import {
   Box,
@@ -33,7 +36,9 @@ import {
   makeStyles,
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
+import { Tooltip } from '@material-ui/core';
+import { TooltipContent } from './components/TooltipContent';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -71,18 +76,30 @@ const StatsCard = (props: Props) => {
     },
   );
 
-  if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
-  }
-
   const metadata = {
     'average time of PR until merge': statsData?.avgTimeUntilMerge,
     'merged to closed ratio': statsData?.mergedToClosedRatio,
+    'average size of PR': (
+      <Tooltip
+        title={
+          <TooltipContent
+            additions={statsData?.avgAdditions}
+            deletions={statsData?.avgDeletions}
+          />
+        }
+      >
+        <div>{statsData?.avgChangedLinesCount} lines</div>
+      </Tooltip>
+    ),
+    'average changed files of PR': `${statsData?.avgChangedFilesCount}`,
   };
 
   return (
     <InfoCard
-      title="Pull requests statistics" className={classes.infoCard} variant={props.variant}>
+      title="GitHub Pull Requests Statistics"
+      className={classes.infoCard}
+      variant={props.variant}
+    >
       {loadingStatistics ? (
         <CircularProgress />
       ) : (
@@ -112,9 +129,13 @@ const PullRequestsStatsCard = (props: Props) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <StatsCard {...props}/>
+  return <StatsCard {...props} />;
 };
 
 export default PullRequestsStatsCard;

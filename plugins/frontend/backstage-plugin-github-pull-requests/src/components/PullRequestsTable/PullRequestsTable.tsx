@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { FC, useState } from 'react';
-import { Typography, Box, ButtonGroup, Button } from '@material-ui/core';
+
+import React, { FC, useState, useRef } from 'react';
+import { debounce } from 'lodash';
+import {
+  InputAdornment,
+  IconButton,
+  TextField,
+  Typography,
+  Box,
+  ButtonGroup,
+  Button,
+} from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { Table, TableColumn, MissingAnnotationEmptyState } from '@backstage/core-components';
-import { isGithubSlugSet, GITHUB_PULL_REQUESTS_ANNOTATION } from '../../utils/isGithubSlugSet';
+import ClearIcon from '@material-ui/icons/Clear';
+import SearchIcon from '@material-ui/icons/Search';
+import {
+  Table,
+  TableColumn,
+  MissingAnnotationEmptyState,
+} from '@backstage/core-components';
+import {
+  isGithubSlugSet,
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+} from '../../utils/isGithubSlugSet';
+import { isRoadieBackstageDefaultFilterSet } from '../../utils/isRoadieBackstageDefaultFilterSet';
 import { usePullRequests, PullRequest } from '../usePullRequests';
 import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
@@ -32,11 +52,7 @@ const generatedColumns: TableColumn[] = [
     width: '150px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href={row.url!}
-        >
+        <a target="_blank" rel="noopener noreferrer" href={row.url!}>
           #{row.number}
         </a>
       </Box>
@@ -48,7 +64,10 @@ const generatedColumns: TableColumn[] = [
     highlight: true,
     render: (row: Partial<PullRequest>) => (
       <Typography variant="body2" noWrap>
-        {getStatusIconType(row as PullRequest)} <Box ml={1} component="span">{row.title}</Box>
+        {getStatusIconType(row as PullRequest)}{' '}
+        <Box ml={1} component="span">
+          {row.title}
+        </Box>
       </Typography>
     ),
   },
@@ -101,7 +120,8 @@ type Props = {
   total: number;
   pageSize: number;
   onChangePageSize: (pageSize: number) => void;
-  StateFilterComponent: FC<{}>;
+  StateFilterComponent?: FC<{}>;
+  SearchComponent?: FC<{}>;
 };
 
 export const PullRequestsTableView: FC<Props> = ({
@@ -114,11 +134,12 @@ export const PullRequestsTableView: FC<Props> = ({
   onChangePageSize,
   total,
   StateFilterComponent,
+  SearchComponent,
 }) => {
   return (
     <Table
       isLoading={loading}
-      options={{ paging: true, pageSize, padding: 'dense' }}
+      options={{ paging: true, search: false, pageSize, padding: 'dense' }}
       totalCount={total}
       page={page}
       actions={[]}
@@ -132,7 +153,8 @@ export const PullRequestsTableView: FC<Props> = ({
             <Box mr={1} />
             <Typography variant="h6">{projectName}</Typography>
           </Box>
-          <StateFilterComponent />
+          {StateFilterComponent ? <StateFilterComponent /> : <></>}
+          {SearchComponent ? <SearchComponent /> : <></>}
         </>
       }
       columns={generatedColumns}
@@ -149,58 +171,111 @@ type TableProps = {
 const PullRequests = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
+  const defaultFilter = isRoadieBackstageDefaultFilterSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
-  const [PRStatusFilter, setPRStatusFilter] = useState<PullRequestState>(
-    'open',
-  );
+  const [search, setSearch] = useState(`state:open ${defaultFilter}`);
+  const setSearchValueDebounced = useRef(debounce(setSearch, 500));
+  const onChangePRStatusFilter = (state: PullRequestState) => {
+    if (state === 'all') {
+      setSearch((currentSearch: string) =>
+        currentSearch.replace(/state:(open|closed)/g, '').trim(),
+      );
+    } else {
+      setSearch((currentSearch: string) =>
+        currentSearch.search(/state:(open|closed)/g) === -1
+          ? `state:${state} ${currentSearch}`
+          : currentSearch.replace(/state:(open|closed)/g, `state:${state}`),
+      );
+    }
+  };
   const [tableProps, { retry, setPage, setPageSize }] = usePullRequests({
-    state: PRStatusFilter,
+    search: search,
     owner,
     repo,
   });
-
   const StateFilterComponent = () => (
-    <Box position="absolute" right={300} top={20}>
+    <Box position="absolute" right={525} top={20}>
       <ButtonGroup color="primary" aria-label="text primary button group">
         <Button
-          color={PRStatusFilter === 'open' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('open')}
+          color={search.search('state:open') !== -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('open')}
         >
           OPEN
         </Button>
         <Button
-          color={PRStatusFilter === 'closed' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('closed')}
+          color={search.search('state:closed') !== -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('closed')}
         >
           CLOSED
         </Button>
         <Button
-          color={PRStatusFilter === 'all' ? 'primary' : 'default'}
-          onClick={() => setPRStatusFilter('all')}
+          color={search.search('state') === -1 ? 'primary' : 'default'}
+          onClick={() => onChangePRStatusFilter('all')}
         >
           ALL
         </Button>
       </ButtonGroup>
     </Box>
   );
+  const SearchComponent = () => {
+    const [draftSearch, setDraftSearch] = useState(search);
+    return (
+      <Box position="absolute" width={500} right={10} top={25}>
+        <TextField
+          fullWidth
+          onChange={event => {
+            setDraftSearch(event.target.value);
+            setSearchValueDebounced.current(event.target.value);
+          }}
+          placeholder="Filter"
+          value={draftSearch}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  disabled={!draftSearch}
+                  onClick={() => {
+                    setDraftSearch('');
+                    setSearch('');
+                  }}
+                >
+                  <ClearIcon fontSize="small" aria-label="clear" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    );
+  };
 
   return (
     <PullRequestsTableView
       {...tableProps}
       StateFilterComponent={StateFilterComponent}
+      SearchComponent={SearchComponent}
       loading={tableProps.loading}
       retry={retry}
       onChangePageSize={setPageSize}
       onChangePage={setPage}
     />
   );
-}
+};
 
 export const PullRequestsTable = (__props: TableProps) => {
   const { entity } = useEntity();
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
-    return <MissingAnnotationEmptyState annotation={GITHUB_PULL_REQUESTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState
+        annotation={GITHUB_PULL_REQUESTS_ANNOTATION}
+      />
+    );
   }
-  return <PullRequests/>
+  return <PullRequests />;
 };

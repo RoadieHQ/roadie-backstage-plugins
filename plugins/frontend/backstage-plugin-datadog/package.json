@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-datadog",
-  "version": "1.4.4",
+  "version": "2.0.4",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -8,6 +8,9 @@
     "access": "public",
     "main": "dist/index.esm.js",
     "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "frontend-plugin"
   },
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
@@ -19,20 +22,20 @@
     "directory": "plugins/frontend/backstage-plugin-datadog"
   },
   "scripts": {
-    "build": "backstage-cli plugin:build",
-    "start": "backstage-cli plugin:serve",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
+    "build": "backstage-cli package build",
+    "start": "backstage-cli package start",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/catalog-model": "^0.9.7",
-    "@backstage/core-components": "^0.8.0",
-    "@backstage/core-plugin-api": "^0.4.0",
-    "@backstage/plugin-catalog-react": "^0.6.5",
+    "@backstage/catalog-model": "^1.0.0",
+    "@backstage/core-components": "^0.11.0",
+    "@backstage/core-plugin-api": "^1.0.0",
+    "@backstage/plugin-catalog-react": "^1.0.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.57",
@@ -50,10 +53,10 @@
     "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.10.1",
-    "@backstage/core-app-api": "^0.3.0",
-    "@backstage/dev-utils": "^0.2.14",
-    "@backstage/test-utils": "^0.2.1",
+    "@backstage/cli": "^0.18.0",
+    "@backstage/core-app-api": "^1.0.0",
+    "@backstage/dev-utils": "^1.0.0",
+    "@backstage/test-utils": "^1.0.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^10.4.1",
     "@typescript-eslint/eslint-plugin": "^4.4.0",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { Entity } from '@backstage/catalog-model';
 
 export const useProjectEntity = (entity: Entity) => {
-  const projectSlug = entity.metadata?.annotations?.['github.com/project-slug'] as string;
+  const projectSlug = entity.metadata?.annotations?.[
+    'github.com/project-slug'
+  ] as string;
   return {
     owner: projectSlug.split('/')[0],
     repo: projectSlug.split('/')[1],

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useState } from 'react';
 import { useAsyncRetry } from 'react-use';
@@ -22,9 +23,9 @@ import { generateRequestUrl } from './utils';
 
 export const transform = (
   buildsData: BuildkiteBuildInfo[],
-  restartBuild: (requestUrl: string) => Promise<void>
+  restartBuild: (requestUrl: string) => Promise<void>,
 ): BuildkiteBuildInfo[] => {
-  return buildsData.map((buildData) => {
+  return buildsData.map(buildData => {
     const tableBuildInfo: BuildkiteBuildInfo = {
       ...buildData,
       onRestartClick: () => {
@@ -47,7 +48,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
     let builds = [];
     try {
       builds = await api.getBuilds(owner, repo, page + 1, pageSize);
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
     }
     if (page === 0) setTotal(builds?.[0].number);
@@ -61,7 +62,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
       await api.restartBuild(requestUrl);
       retry();
       return;
-    } catch (e:any) {
+    } catch (e: any) {
       errorApi.post(e);
       throw e;
     }

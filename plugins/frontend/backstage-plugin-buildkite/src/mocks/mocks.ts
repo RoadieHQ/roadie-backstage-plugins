@@ -20,12 +20,6 @@ export const entityMock = {
     owner: 'david@roadie.io',
     lifecycle: 'experimental',
   },
-  relations: [
-    {
-      target: { kind: 'group', namespace: 'default', name: 'david@roadie.io' },
-      type: 'ownedBy',
-    },
-  ],
 };
 
 // http://localhost:7007/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds?page=1&per_page=5
@@ -33,8 +27,7 @@ export const buildsResponseMock = [
   {
     id: 'a2b1e487-7da1-49c9-977d-a191065677a2',
     graphql_id: 'QnVpbGQtLS1hMmIxZTQ4Ny03ZGExLTQ5YzktOTc3ZC1hMTkxMDY1Njc3YTI=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/141',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/141',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/141',
     number: 141,
     state: 'scheduled',
@@ -66,15 +59,13 @@ export const buildsResponseMock = [
     rebuilt_from: {
       id: 'aa9a42ea-bc24-44db-84ec-6f08f7efbcdc',
       number: 136,
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/136',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/136',
     },
     pipeline: {
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -271,8 +262,7 @@ export const buildsResponseMock = [
   {
     id: 'b4e6e2d8-4a23-40b6-95d3-ea028ebf82bd',
     graphql_id: 'QnVpbGQtLS1iNGU2ZTJkOC00YTIzLTQwYjYtOTVkMy1lYTAyOGViZjgyYmQ=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/140',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/140',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/140',
     number: 140,
     state: 'scheduled',
@@ -304,15 +294,13 @@ export const buildsResponseMock = [
     rebuilt_from: {
       id: 'f85ae8c2-3a7d-4b48-961b-f2d052f13caf',
       number: 139,
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
     },
     pipeline: {
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -509,8 +497,7 @@ export const buildsResponseMock = [
   {
     id: 'f85ae8c2-3a7d-4b48-961b-f2d052f13caf',
     graphql_id: 'QnVpbGQtLS1mODVhZThjMi0zYTdkLTRiNDgtOTYxYi1mMmQwNTJmMTNjYWY=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/139',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/139',
     number: 139,
     state: 'scheduled',
@@ -548,8 +535,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -746,8 +732,7 @@ export const buildsResponseMock = [
   {
     id: '6968869c-a0db-4f1f-a4bd-48c7d7dbead4',
     graphql_id: 'QnVpbGQtLS02OTY4ODY5Yy1hMGRiLTRmMWYtYTRiZC00OGM3ZDdkYmVhZDQ=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/138',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/138',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/138',
     number: 138,
     state: 'scheduled',
@@ -785,8 +770,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -983,8 +967,7 @@ export const buildsResponseMock = [
   {
     id: 'f15bedfb-4a8f-4f16-964c-3d10ca717891',
     graphql_id: 'QnVpbGQtLS1mMTViZWRmYi00YThmLTRmMTYtOTY0Yy0zZDEwY2E3MTc4OTE=',
-    url:
-      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
     web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/137',
     number: 137,
     state: 'scheduled',
@@ -1022,8 +1005,7 @@ export const buildsResponseMock = [
       id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
       graphql_id:
         'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
-      url:
-        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+      url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
       web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
       name: 'example-pipeline',
       description: null,
@@ -1098,6 +1080,7 @@ export const buildsResponseMock = [
           concurrency: null,
           parallelism: null,
         },
+        { id: 'f5ac9584-3e85-4d7c-b1e5-4b7aabfac427', type: 'waiter' },
         {
           type: 'script',
           name: '',
@@ -1181,6 +1164,7 @@ export const buildsResponseMock = [
         parallel_group_index: null,
         parallel_group_total: null,
       },
+      { id: 'f5ac9584-3e85-4d7c-b1e5-4b7aabfac427', type: 'waiter' },
       {
         id: '9e6a8982-4da9-4e77-b511-ce2c177ec7ae',
         graphql_id: 'Sm9iLS0tOWU2YTg5ODItNGRhOS00ZTc3LWI1MTEtY2UyYzE3N2VjN2Fl',
@@ -1218,3 +1202,252 @@ export const buildsResponseMock = [
     ],
   },
 ];
+
+// http://localhost:7007/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds/137
+export const singleBuildResponseMock = {
+  id: 'f15bedfb-4a8f-4f16-964c-3d10ca717891',
+  graphql_id: 'QnVpbGQtLS1mMTViZWRmYi00YThmLTRmMTYtOTY0Yy0zZDEwY2E3MTc4OTE=',
+  url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+  web_url: 'https://buildkite.com/rbnetwork/example-pipeline/builds/137',
+  number: 137,
+  state: 'scheduled',
+  blocked: false,
+  blocked_state: '',
+  message: 'Create catalog-info-comp.yaml',
+  commit: 'f7b53e9b86631bb3e97727196035e495778ee9db',
+  branch: 'main',
+  tag: null,
+  env: {},
+  source: 'webhook',
+  author: {
+    username: 'lewtakm',
+    name: 'Mateusz Lewtak',
+    email: '36006588+lewtakm@users.noreply.github.com',
+  },
+  creator: {
+    id: 'b0b9d113-54e5-4a7d-8133-654af2197dd1',
+    graphql_id: 'VXNlci0tLWIwYjlkMTEzLTU0ZTUtNGE3ZC04MTMzLTY1NGFmMjE5N2RkMQ==',
+    name: 'Mateusz Lewtak',
+    email: 'lewtakm@gmail.com',
+    avatar_url:
+      'https://www.gravatar.com/avatar/38e4e65102d718fad499e1f423cc9b52',
+    created_at: '2020-10-29T11:15:55.132Z',
+  },
+  created_at: '2020-11-29T23:12:02.294Z',
+  scheduled_at: '2020-11-29T23:12:02.219Z',
+  started_at: null,
+  finished_at: null,
+  meta_data: {},
+  pull_request: null,
+  rebuilt_from: null,
+  pipeline: {
+    id: '9906d9ee-2a5f-47e2-bb6d-454b42ada0fe',
+    graphql_id:
+      'UGlwZWxpbmUtLS05OTA2ZDllZS0yYTVmLTQ3ZTItYmI2ZC00NTRiNDJhZGEwZmU=',
+    url: 'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline',
+    web_url: 'https://buildkite.com/rbnetwork/example-pipeline',
+    name: 'example-pipeline',
+    description: null,
+    slug: 'example-pipeline',
+    repository: 'https://github.com/lewtakm/example-pipeline.git',
+    cluster_id: null,
+    branch_configuration: null,
+    default_branch: 'master',
+    skip_queued_branch_builds: false,
+    skip_queued_branch_builds_filter: null,
+    cancel_running_branch_builds: false,
+    cancel_running_branch_builds_filter: null,
+    allow_rebuilds: true,
+    provider: {
+      id: 'github',
+      settings: {
+        trigger_mode: 'code',
+        build_pull_requests: true,
+        pull_request_branch_filter_enabled: false,
+        skip_builds_for_existing_commits: false,
+        skip_pull_request_builds_for_existing_commits: true,
+        build_pull_request_forks: false,
+        build_pull_request_ready_for_review: false,
+        prefix_pull_request_fork_branch_names: true,
+        build_branches: true,
+        build_tags: false,
+        cancel_deleted_branch_builds: false,
+        publish_commit_status: true,
+        publish_commit_status_per_step: false,
+        separate_pull_request_statuses: false,
+        publish_blocked_as_pending: false,
+        filter_enabled: false,
+        repository: 'lewtakm/example-pipeline',
+      },
+      webhook_url:
+        'https://webhook.buildkite.com/deliver/f6253db17451b06b0202e1b21f0359c0a9aa4b2a79ac148ecf',
+    },
+    builds_url:
+      'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds',
+    badge_url:
+      'https://badge.buildkite.com/77c84a3dfd69c996fd62d8dc47bb9472a506f4012d8997efb5.svg',
+    created_at: '2020-10-29T11:24:35.939Z',
+    env: {},
+    scheduled_builds_count: 24,
+    running_builds_count: 0,
+    scheduled_jobs_count: 72,
+    running_jobs_count: 0,
+    waiting_jobs_count: 0,
+    visibility: 'private',
+    steps: [
+      {
+        type: 'script',
+        name: 'Install Yarn',
+        command: 'apk add yarn',
+        artifact_paths: '',
+        branch_configuration: '',
+        env: {},
+        timeout_in_minutes: null,
+        agent_query_rules: [],
+        concurrency: null,
+        parallelism: null,
+      },
+      {
+        type: 'script',
+        name: 'Install Service',
+        command: 'yarn install',
+        artifact_paths: '',
+        branch_configuration: '',
+        env: {},
+        timeout_in_minutes: null,
+        agent_query_rules: [],
+        concurrency: null,
+        parallelism: null,
+      },
+      { id: 'f5ac9584-3e85-4d7c-b1e5-4b7aabfac427', type: 'waiter' },
+      {
+        type: 'script',
+        name: '',
+        command: 'yarn run env',
+        artifact_paths: '',
+        branch_configuration: '',
+        env: {},
+        timeout_in_minutes: null,
+        agent_query_rules: [],
+        concurrency: null,
+        parallelism: null,
+      },
+    ],
+  },
+  jobs: [
+    {
+      id: 'bc4ea160-49b9-484c-a8ce-18fddb99429f',
+      graphql_id: 'Sm9iLS0tYmM0ZWExNjAtNDliOS00ODRjLWE4Y2UtMThmZGRiOTk0Mjlm',
+      type: 'script',
+      name: 'Install Yarn',
+      step_key: null,
+      agent_query_rules: [],
+      state: 'scheduled',
+      build_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+      web_url:
+        'https://buildkite.com/rbnetwork/example-pipeline/builds/137#bc4ea160-49b9-484c-a8ce-18fddb99429f',
+      log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/bc4ea160-49b9-484c-a8ce-18fddb99429f/log',
+      raw_log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/bc4ea160-49b9-484c-a8ce-18fddb99429f/log.txt',
+      artifacts_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/bc4ea160-49b9-484c-a8ce-18fddb99429f/artifacts',
+      command: 'apk add yarn',
+      soft_failed: false,
+      exit_status: null,
+      artifact_paths: '',
+      agent: null,
+      created_at: '2020-11-29T23:12:02.319Z',
+      scheduled_at: '2020-11-29T23:12:02.319Z',
+      runnable_at: '2020-11-29T23:12:02.000Z',
+      started_at: null,
+      finished_at: null,
+      retried: false,
+      retried_in_job_id: null,
+      retries_count: null,
+      parallel_group_index: null,
+      parallel_group_total: null,
+    },
+    {
+      id: '8746b001-62ef-4b78-b337-493ef21be4ee',
+      graphql_id: 'Sm9iLS0tODc0NmIwMDEtNjJlZi00Yjc4LWIzMzctNDkzZWYyMWJlNGVl',
+      type: 'script',
+      name: 'Install Service',
+      step_key: null,
+      agent_query_rules: [],
+      state: 'scheduled',
+      build_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+      web_url:
+        'https://buildkite.com/rbnetwork/example-pipeline/builds/137#8746b001-62ef-4b78-b337-493ef21be4ee',
+      log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/8746b001-62ef-4b78-b337-493ef21be4ee/log',
+      raw_log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/8746b001-62ef-4b78-b337-493ef21be4ee/log.txt',
+      artifacts_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/8746b001-62ef-4b78-b337-493ef21be4ee/artifacts',
+      command: 'yarn install',
+      soft_failed: false,
+      exit_status: null,
+      artifact_paths: '',
+      agent: null,
+      created_at: '2020-11-29T23:12:02.319Z',
+      scheduled_at: '2020-11-29T23:12:02.319Z',
+      runnable_at: '2020-11-29T23:12:02.000Z',
+      started_at: null,
+      finished_at: null,
+      retried: false,
+      retried_in_job_id: null,
+      retries_count: null,
+      parallel_group_index: null,
+      parallel_group_total: null,
+    },
+    { id: 'f5ac9584-3e85-4d7c-b1e5-4b7aabfac427', type: 'waiter' },
+    {
+      id: '9e6a8982-4da9-4e77-b511-ce2c177ec7ae',
+      graphql_id: 'Sm9iLS0tOWU2YTg5ODItNGRhOS00ZTc3LWI1MTEtY2UyYzE3N2VjN2Fl',
+      type: 'script',
+      name: '',
+      step_key: null,
+      agent_query_rules: [],
+      state: 'scheduled',
+      build_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137',
+      web_url:
+        'https://buildkite.com/rbnetwork/example-pipeline/builds/137#9e6a8982-4da9-4e77-b511-ce2c177ec7ae',
+      log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/9e6a8982-4da9-4e77-b511-ce2c177ec7ae/log',
+      raw_log_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/9e6a8982-4da9-4e77-b511-ce2c177ec7ae/log.txt',
+      artifacts_url:
+        'https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/137/jobs/9e6a8982-4da9-4e77-b511-ce2c177ec7ae/artifacts',
+      command: 'yarn run env',
+      soft_failed: false,
+      exit_status: null,
+      artifact_paths: '',
+      agent: null,
+      created_at: '2020-11-29T23:12:02.319Z',
+      scheduled_at: '2020-11-29T23:12:02.319Z',
+      runnable_at: '2020-11-29T23:12:02.000Z',
+      started_at: null,
+      finished_at: null,
+      retried: false,
+      retried_in_job_id: null,
+      retries_count: null,
+      parallel_group_index: null,
+      parallel_group_total: null,
+    },
+  ],
+};
+
+export const buildLogResponseMock = (
+  buildNumber: string,
+  id: string,
+  content: string,
+) => ({
+  url: `https://api.buildkite.com/v2/organizations/rbnetwork/pipelines/example-pipeline/builds/${buildNumber}/jobs/${id}/log`,
+  content,
+  size: 1234,
+  header_times: [1652372752079541978],
+});

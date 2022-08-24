@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { FC, useEffect } from 'react';
-import { 
+import {
   Typography,
   Grid,
   Breadcrumbs,
@@ -32,7 +33,7 @@ import { useParams } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import { Entity } from '@backstage/catalog-model';
 import LaunchIcon from '@material-ui/icons/Launch';
-import { ActionOutput } from './components/ActionOutput';
+import { BuildkiteBuildStep } from './components/BuildkiteBuildStep';
 import { useSingleBuild } from '../useSingleBuild';
 import { useProjectEntity } from '../useProjectEntity';
 import { BuildkiteBuildInfo, BuildkiteJob } from '../types';
@@ -86,8 +87,12 @@ const useStyles = makeStyles(theme => ({
 
 const BuildName: FC<{ build: BuildkiteBuildInfo }> = ({ build }) => (
   <Box display="flex" alignItems="center">
-    #{ build?.number } - { build?.message }
-    <IconButton href={ build?.web_url as string } target="_blank" rel="noopener noreferrer">
+    #{build?.number} - {build?.message}
+    <IconButton
+      href={build?.web_url as string}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <LaunchIcon />
     </IconButton>
   </Box>
@@ -98,22 +103,20 @@ const pickClassName = (
   build: BuildkiteJob,
 ) => {
   if (build.state === 'failed') return classes.failed;
-  if (['running', 'queued', 'scheduled', 'assigned'].includes(build.state)) return classes.running;
+  if (['running', 'queued', 'scheduled', 'assigned'].includes(build.state))
+    return classes.running;
   if (build.state === 'passed') return classes.success;
   return classes.neutral;
 };
 
-const ActionsList: FC<{ jobs: BuildkiteJob[]}> = ({
-  jobs,
-}) => {
+const ActionsList: FC<{ jobs: BuildkiteJob[] }> = ({ jobs }) => {
   const classes = useStyles();
   return (
     <>
       {jobs.map((job: BuildkiteJob) => (
-        <ActionOutput
-        className={pickClassName(classes, job)}
+        <BuildkiteBuildStep
+          className={pickClassName(classes, job)}
           job={job}
-          url={job.log_url || ''}
           key={job.id}
         />
       ))}
@@ -123,18 +126,23 @@ const ActionsList: FC<{ jobs: BuildkiteJob[]}> = ({
 
 const BuildsList: FC<{ build: BuildkiteBuildInfo }> = ({ build }) => (
   <Box>
-    { build.jobs
-      ? <ActionsList jobs={build.jobs} />
-      : <Alert severity="error">Jobs list is empty</Alert>
-    }
+    {build.jobs ? (
+      <ActionsList jobs={build.jobs} />
+    ) : (
+      <Alert severity="error">Jobs list is empty</Alert>
+    )}
   </Box>
 );
 
-const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
-  const classes = useStyles(); 
+const BuildkiteBuildView: FC<{ entity: Entity }> = ({ entity }) => {
+  const classes = useStyles();
   const { buildNumber } = useParams() as any;
   const { owner, repo } = useProjectEntity(entity);
-  const { value, error, fetchBuildData } = useSingleBuild({ owner, repo, buildNumber });
+  const { value, error, fetchBuildData } = useSingleBuild({
+    owner,
+    repo,
+    buildNumber,
+  });
 
   useEffect(() => {
     fetchBuildData();
@@ -142,11 +150,10 @@ const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
-    if(value?.state === 'running' || value?.state === 'schedudled') {
+    if (value?.state === 'running' || value?.state === 'scheduled') {
       timer = setTimeout(() => {
         fetchBuildData();
       }, 1500);
-      
     }
     return () => clearTimeout(timer);
   }, [value, fetchBuildData]);
@@ -168,14 +175,14 @@ const BuildkiteBuildView: FC<{entity: Entity}> = ({ entity }) => {
               <InfoCard
                 title={<BuildName build={value} />}
                 cardClassName={classes.cardContent}
-              >
-                <BuildsList build={value} />
-              </InfoCard>
+              />
+              <BuildsList build={value} />
             </Box>
           </Grid>
         </Grid>
       </Content>
     </Page>
   ) : null;
-}
+};
+
 export default BuildkiteBuildView;

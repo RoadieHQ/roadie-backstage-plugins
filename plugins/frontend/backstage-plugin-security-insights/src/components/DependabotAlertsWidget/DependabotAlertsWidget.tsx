@@ -21,12 +21,12 @@ import { graphql } from '@octokit/graphql';
 import {
   useApi,
   githubAuthApiRef,
-  configApiRef
+  configApiRef,
 } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { InfoCard, Progress } from '@backstage/core-components';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   low: {
     color: theme.palette.type === 'dark' ? '#c9d1d9' : '#24292f',
-  }
+  },
 }));
 
 type Repository = {
@@ -71,14 +71,14 @@ type Node = {
     package: {
       name: string;
     };
-    severity: string,
+    severity: string;
     advisory: {
-      description: string,
-    },
+      description: string;
+    };
     firstPatchedVersion: {
-      identifier?: string,
-    }
-  }
+      identifier?: string;
+    };
+  };
 };
 
 type DependabotAlertsProps = {
@@ -86,16 +86,32 @@ type DependabotAlertsProps = {
   detailsUrl: DetailsUrl;
 };
 
-export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({ repository, detailsUrl }) => {
+export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({
+  repository,
+  detailsUrl,
+}) => {
   const classes = useStyles();
   const configApi = useApi(configApiRef);
-  const minimumConfiguredSeverities = configApi?.getOptionalStringArray('dependabotAlertsConfiguration.severity') ?? ['all'];
+  const minimumConfiguredSeverities = configApi?.getOptionalStringArray(
+    'dependabotAlertsConfiguration.severity',
+  ) ?? ['all'];
   // Filter issues so only open issues are taken into cosideration
-  const all = repository.vulnerabilityAlerts.nodes.filter((entry) => entry.dismissedAt === null) || null;
-  const criticalCount = all.filter(node => node.securityVulnerability.severity === 'CRITICAL').length;
-  const highCount = all.filter(node => node.securityVulnerability.severity === 'HIGH').length;
-  const mediumCount = all.filter(node => node.securityVulnerability.severity === 'MODERATE').length;
-  const lowCount = all.filter(node => node.securityVulnerability.severity === 'LOW').length;
+  const all =
+    repository.vulnerabilityAlerts.nodes.filter(
+      entry => entry.dismissedAt === null,
+    ) || null;
+  const criticalCount = all.filter(
+    node => node.securityVulnerability.severity === 'CRITICAL',
+  ).length;
+  const highCount = all.filter(
+    node => node.securityVulnerability.severity === 'HIGH',
+  ).length;
+  const mediumCount = all.filter(
+    node => node.securityVulnerability.severity === 'MODERATE',
+  ).length;
+  const lowCount = all.filter(
+    node => node.securityVulnerability.severity === 'LOW',
+  ).length;
 
   return (
     <InfoCard
@@ -104,48 +120,97 @@ export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({ reposit
       deepLink={{
         link: `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot`,
         title: 'More info',
-        onClick: (e) => {
+        onClick: e => {
           e.preventDefault();
-          window.open(`//${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot`);
+          window.open(
+            `//${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot`,
+          );
         },
       }}
     >
       <Box data-testid="severitiesContainer" display="flex">
-        {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('critical') || minimumConfiguredSeverities.includes('all')) &&
-          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.critical} justifyContent="center" flexDirection="column">
-            <Typography className={classes.alertsCount} variant="h1">{criticalCount}</Typography>
+        {((minimumConfiguredSeverities.length > 0 &&
+          minimumConfiguredSeverities.includes('critical')) ||
+          minimumConfiguredSeverities.includes('all')) && (
+          <Box
+            data-testid="severityLevel"
+            ml={2}
+            mr={2}
+            display="flex"
+            className={classes.critical}
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Typography className={classes.alertsCount} variant="h1">
+              {criticalCount}
+            </Typography>
             <Typography> Critical severity </Typography>
           </Box>
-        }
-        {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('high') || minimumConfiguredSeverities.includes('all')) &&
-          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.high} justifyContent="center" flexDirection="column">
-            <Typography className={classes.alertsCount} variant="h1">{highCount}</Typography>
+        )}
+        {((minimumConfiguredSeverities.length > 0 &&
+          minimumConfiguredSeverities.includes('high')) ||
+          minimumConfiguredSeverities.includes('all')) && (
+          <Box
+            data-testid="severityLevel"
+            ml={2}
+            mr={2}
+            display="flex"
+            className={classes.high}
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Typography className={classes.alertsCount} variant="h1">
+              {highCount}
+            </Typography>
             <Typography> High severity </Typography>
           </Box>
-        }
-        {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('medium') || minimumConfiguredSeverities.includes('all')) &&
-          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.medium} justifyContent="center" flexDirection="column">
-            <Typography className={classes.alertsCount} variant="h1">{mediumCount}</Typography>
+        )}
+        {((minimumConfiguredSeverities.length > 0 &&
+          minimumConfiguredSeverities.includes('medium')) ||
+          minimumConfiguredSeverities.includes('all')) && (
+          <Box
+            data-testid="severityLevel"
+            ml={2}
+            mr={2}
+            display="flex"
+            className={classes.medium}
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Typography className={classes.alertsCount} variant="h1">
+              {mediumCount}
+            </Typography>
             <Typography> Medium severity </Typography>
           </Box>
-        }
-        {(minimumConfiguredSeverities.length > 0 && minimumConfiguredSeverities.includes('low') || minimumConfiguredSeverities.includes('all')) &&
-          <Box data-testid="severityLevel" ml={2} mr={2} display="flex" className={classes.low} justifyContent="center" flexDirection="column">
-            <Typography className={classes.alertsCount} variant="h1">{lowCount}</Typography>
+        )}
+        {((minimumConfiguredSeverities.length > 0 &&
+          minimumConfiguredSeverities.includes('low')) ||
+          minimumConfiguredSeverities.includes('all')) && (
+          <Box
+            data-testid="severityLevel"
+            ml={2}
+            mr={2}
+            display="flex"
+            className={classes.low}
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <Typography className={classes.alertsCount} variant="h1">
+              {lowCount}
+            </Typography>
             <Typography> Low severity </Typography>
           </Box>
-        }
+        )}
       </Box>
     </InfoCard>
   );
 };
 
-
 export const DependabotAlertsWidget = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
-  const { hostname } = useUrl(entity);
+  const { hostname, baseUrl } = useUrl(entity);
 
   const query = `
   query GetDependabotAlertsWidget($name: String!, $owner: String!) {
@@ -175,23 +240,25 @@ export const DependabotAlertsWidget = () => {
     }
   }`;
 
-  const { value, loading, error } =
-    useAsync(async (): Promise<any> => {
-      const token = await auth.getAccessToken(['repo']);
-      const gqlEndpoint = graphql.defaults({
-        headers: {
-          authorization: `token ${token}`,
-        },
-      });
-      const { repository } = await gqlEndpoint(query,{
-        name: repo,
-        owner: owner
-      });
-      return repository;
-    }, []);
+  const { value, loading, error } = useAsync(async (): Promise<any> => {
+    const token = await auth.getAccessToken(['repo']);
+    const gqlEndpoint = graphql.defaults({
+      baseUrl,
+      headers: {
+        authorization: `token ${token}`,
+      },
+    });
+    const { repository } = await gqlEndpoint(query, {
+      name: repo,
+      owner: owner,
+    });
+    return repository;
+  }, []);
 
   const detailsUrl = { hostname, owner, repo };
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
-  return (value && value.vulnerabilityAlerts) ? <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} /> : null;
+  return value && value.vulnerabilityAlerts ? (
+    <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} />
+  ) : null;
 };

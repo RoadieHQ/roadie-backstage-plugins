@@ -5,14 +5,19 @@ metadata:
   description: |
     Backstage plugin to show Travis CI builds on the CI/CD tab and widget.
   annotations:
-    github.com/project-slug: roadiehq/backstage-plugin-travis-ci
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/frontend/backstage-plugin-travis-ci/README.md
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-travis-ci/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/frontend/backstage-plugin-travis-ci/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-travis-ci
   tags:
     - plugin
     - oss
+    - frontend
   links:
     - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-travis-ci
       title: NPM
 spec:
   type: library
-  owner: group:engineering
+  owner: group:open-source
   lifecycle: production

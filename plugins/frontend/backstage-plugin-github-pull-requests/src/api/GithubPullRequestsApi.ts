@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { PullsListResponseData } from '@octokit/types';
-import { PullRequestState } from '../types';
+import { SearchPullRequestsResponseData, GithubRepositoryData } from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
@@ -24,25 +23,34 @@ export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
 
 export type GithubPullRequestsApi = {
   listPullRequests: ({
+    search,
     token,
     owner,
     repo,
     pageSize,
     page,
     branch,
-    state,
     baseUrl,
   }: {
+    search: string;
     token: string;
     owner: string;
     repo: string;
     pageSize?: number;
     page?: number;
     branch?: string;
-    state?: PullRequestState;
-    baseUrl: string|undefined;
+    baseUrl: string | undefined;
   }) => Promise<{
-    maxTotalItems?: number;
-    pullRequestsData: PullsListResponseData;
+    pullRequestsData: SearchPullRequestsResponseData;
   }>;
+
+  getRepositoryData: ({
+    baseUrl,
+    token,
+    url,
+  }: {
+    baseUrl: string | undefined;
+    token: string;
+    url: string;
+  }) => Promise<GithubRepositoryData>;
 };

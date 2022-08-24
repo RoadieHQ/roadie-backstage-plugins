@@ -1,8 +1,13 @@
 # GitHub Security Insights Plugin for Backstage
 
-![a list of security alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-security-plugin.jpg)
+![a list of security alerts](./docs/roadie-backstage-security-plugin.jpg)
 
-![a list of dependabot alerts](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-dependabot-alerts.png)
+![a list of dependabot alerts](./docs/roadie-backstage-dependabot-alerts.png)
+
+## Features
+
+- List detected vulnerabilities for your repository, with filtering and search.
+- Show statistics widget about detected vulnerabilities for your repository.
 
 ## Plugin Setup
 
@@ -16,49 +21,57 @@ yarn add @roadiehq/backstage-plugin-security-insights
 
 ```tsx
 import {
-  EntitySecurityInsightsContent
+  EntitySecurityInsightsContent,
+  isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
-
 
 const serviceEntityPage = (
   <EntityPageLayout>
     ...
     <EntityLayout.Route
       path="/security-insights"
-      title="Security Insights">
+      title="Security Insights"
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isSecurityInsightsAvailable}
+    >
       <EntitySecurityInsightsContent />
     </EntityLayout.Route>
     ...
   </EntityPageLayout>
-)
+);
 ```
 
 3. If you want to show dependabot alerts on your Backstage instance, make sure to import following code to the [entityPage.tsx](https://github.com/backstage/backstage/blob/master/packages/app/src/components/catalog/EntityPage.tsx) source file:
 
 ```tsx
 import {
-  EntityGithubDependabotContent
+  EntityGithubDependabotContent,
+  isSecurityInsightsAvailable,
 } from '@roadiehq/backstage-plugin-security-insights';
-
 
 const serviceEntityPage = (
   <EntityPageLayout>
     ...
-    <EntityLayout.Route path="/dependabot" title="Dependabot">
-      <EntityGithubDependabotContent/>
+    <EntityLayout.Route
+      path="/dependabot"
+      title="Dependabot"
+      // Uncomment the line below if you'd like to only show the tab on entities with the correct annotations already set
+      // if={isSecurityInsightsAvailable}
+    >
+      <EntityGithubDependabotContent />
     </EntityLayout.Route>
     ...
   </EntityPageLayout>
-)
+);
 ```
 
 4. Run backstage app with `yarn start` and navigate to services tabs.
 
 ## Widget setup
 
-![security insights widget](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/backstage-plugin-security-widget-1.png)
+![security insights widget](./docs/backstage-plugin-security-widget-1.png)
 
-![dependabot alerts widget](https://raw.githubusercontent.com/RoadieHQ/roadie-backstage-plugins/main/plugins/backstage-plugin-security-insights/docs/roadie-backstage-dependabot-widget.png)
+![dependabot alerts widget](./docs/roadie-backstage-dependabot-widget.png)
 
 1. You must install plugin by following the steps above to add widgets to your Overview.
 
@@ -113,18 +126,14 @@ const overviewContent = (
 );
 
 ```
+
 4. Per default, all severity level alerts will be included and shown on the widget. However, severity level for dependabot alerts shown in Dependabot alerts widget is configurable via app-config. For example, if you want to show only high and medium severity alerts, you can do it in the following way.
 
 ```yaml
 // app-config.yaml
-dependabotAlertsConfiguration: 
+dependabotAlertsConfiguration:
   severity: [ high, medium]
-``` 
-
-## Features
-
-- List detected vulnerabilities for your repository, with filtering and search.
-- Show statistics widget about detected vulnerabilities for your repository.
+```
 
 ## Links
 

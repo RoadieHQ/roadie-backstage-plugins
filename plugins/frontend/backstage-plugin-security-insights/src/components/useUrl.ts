@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-import { Entity } from "@backstage/catalog-model";
-import { useGitHubConfig } from "./useGitHubConfig";
+import { Entity } from '@backstage/catalog-model';
+import { useGitHubConfig } from './useGitHubConfig';
 
 export const useUrl = (entity: Entity) => {
+  const targetProviderConfig = useGitHubConfig(entity);
+  const baseUrl =
+    targetProviderConfig?.getOptionalString('apiBaseUrl') ||
+    'https://api.github.com';
+  const hostname =
+    targetProviderConfig?.getOptionalString('host') || 'github.com';
 
-    const targetProviderConfig = useGitHubConfig(entity);
-    const baseUrl = targetProviderConfig?.getOptionalString('apiBaseUrl') || 'https://api.github.com';
-    const hostname = targetProviderConfig?.getOptionalString('host') || 'github.com';
-
-    return {
-        hostname,
-        baseUrl,
-    };
-}
+  return {
+    hostname,
+    baseUrl,
+  };
+};

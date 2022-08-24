@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { setupServer } from 'msw/node';
@@ -37,10 +43,10 @@ const config = {
   ],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
-]);
+];
 
 describe('Security Insights Card', () => {
   const worker = setupServer();
@@ -58,11 +64,11 @@ describe('Security Insights Card', () => {
   it('should display an ovreview card with the data from the requests', async () => {
     const rendered = render(
       <MemoryRouter>
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
             <SecurityInsightsWidget />
           </EntityProvider>
-        </ApiProvider>
+        </TestApiProvider>
       </MemoryRouter>,
     );
     expect(await rendered.findByText('8 Warning')).toBeInTheDocument();

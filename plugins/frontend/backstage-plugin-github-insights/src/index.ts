@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 export {
   /**
    * @deprecated since v0.3.0 you should use new composability API
@@ -28,13 +27,10 @@ export {
   EntityGithubInsightsReadmeCard,
   EntityGithubInsightsReleasesCard,
 } from './plugin';
-export {
-  InsightsPage,
-} from './components/InsightsPage/InsightsPage';
-export {
-  isGithubInsightsAvailable
-} from './components/utils/isGithubInsightsAvailable';
+export { InsightsPage } from './components/InsightsPage/InsightsPage';
+export { isGithubInsightsAvailable } from './components/utils/isGithubInsightsAvailable';
 /**
  * @deprecated since v0.3.0 you should use new composability API
  */
 export * from './components/Widgets';
+export * from './components/store';

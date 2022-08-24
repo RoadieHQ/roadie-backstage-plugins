@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {
   createRoutableExtension,
   createComponentExtension,
 } from '@backstage/core-plugin-api';
+import { createCardExtension } from '@backstage/plugin-home';
 
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
@@ -46,17 +47,18 @@ export const EntityGithubPullRequestsContent = githubPullRequestsPlugin.provide(
   }),
 );
 
-export const EntityGithubPullRequestsOverviewCard = githubPullRequestsPlugin.provide(
-  createComponentExtension({
-    name: 'EntityGithubPullRequestsOverviewCard',
-    component: {
-      lazy: () =>
-        import('./components/PullRequestsStatsCard').then(
-          m => m.PullRequestsStatsCard,
-        ),
-    },
-  }),
-);
+export const EntityGithubPullRequestsOverviewCard =
+  githubPullRequestsPlugin.provide(
+    createComponentExtension({
+      name: 'EntityGithubPullRequestsOverviewCard',
+      component: {
+        lazy: () =>
+          import('./components/PullRequestsStatsCard').then(
+            m => m.PullRequestsStatsCard,
+          ),
+      },
+    }),
+  );
 
 export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
   createComponentExtension({
@@ -67,3 +69,20 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
     },
   }),
 );
+
+export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
+  createCardExtension<{ query?: string }>({
+    name: 'HomePageRequestedReviewsCard',
+    title: 'Review requests',
+    components: () => import('./components/Home/RequestedReviewsCard'),
+  }),
+);
+
+export const HomePageYourOpenPullRequestsCard =
+  githubPullRequestsPlugin.provide(
+    createCardExtension<{ query?: string }>({
+      name: 'HomePageRequestedReviewsCard',
+      title: 'Your open pull requests',
+      components: () => import('./components/Home/YourOpenPullRequestsCard'),
+    }),
+  );

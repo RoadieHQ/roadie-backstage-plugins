@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useAsyncRetry } from 'react-use';
-import { useApi, errorApiRef, configApiRef, identityApiRef } from '@backstage/core-plugin-api';
+
+import { useAsync, useAsyncRetry } from 'react-use';
+import {
+  useApi,
+  errorApiRef,
+  configApiRef,
+  identityApiRef,
+} from '@backstage/core-plugin-api';
 import { LambdaData } from '../types';
 import { awsLambdaApiRef } from '../api';
 import { useCallback } from 'react';
@@ -30,14 +36,20 @@ export function useLambda({
   const errorApi = useApi(errorApiRef);
   const configApi = useApi(configApiRef);
   const identityApi = useApi(identityApiRef);
+
+  const identity = useAsync(async () => {
+    return await identityApi.getCredentials();
+  });
+
   const getFunctionByName = useCallback(
-    async () =>
-      lambdaApi.getFunctionByName({
+    async () => {
+      return await lambdaApi.getFunctionByName({
         backendUrl: configApi.getString('backend.baseUrl'),
         awsRegion: region,
         functionName: lambdaName,
-        token: identityApi?.getIdToken ? await identityApi.getIdToken() : undefined
-      }),
+        token: identity.value?.token || undefined,
+      });
+    },
     [region, lambdaName], // eslint-disable-line react-hooks/exhaustive-deps
   );
   const {
@@ -49,12 +61,14 @@ export function useLambda({
     try {
       const lambdaFunction = await getFunctionByName();
       return lambdaFunction;
-    } catch (err:any) {
-      if (err?.message === 'MissingBackendAwsAuthException') {
-        errorApi.post(new Error('Please add aws auth backend plugin'));
-        return null;
+    } catch (e) {
+      if (e instanceof Error) {
+        if (e?.message === 'MissingBackendAwsAuthException') {
+          errorApi.post(new Error('Please add aws auth backend plugin'));
+          return null;
+        }
+        errorApi.post(e);
       }
-      errorApi.post(err);
       return null;
     }
   }, []);

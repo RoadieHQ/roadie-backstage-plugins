@@ -1,12 +1,12 @@
 # Argo CD Plugin for Backstage
 
-![](./docs/argo-cd-plugin.png)
-
-[https://roadie.io/backstage/plugins/argo-cd](https://roadie.io/backstage/plugins/argo-cd)
+![](./docs/argo-cd-plugin.webp)
 
 ## Features
 
-- 
+- Last deploy time
+- Healthcheck
+- Status
 
 ## How to add argo-cd project dependency to Backstage app
 
@@ -53,7 +53,7 @@ export { argocdPlugin } from '@roadiehq/backstage-plugin-argo-cd';
 // packages/app/src/components/catalog/EntityPage.tsx
 import {
   EntityArgoCDHistoryCard,
-  isArgocdAvailable
+  isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
 
 const overviewContent = (
@@ -63,8 +63,8 @@ const overviewContent = (
       <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
         <Grid item sm={6}>
           <EntityArgoCDHistoryCard />
-        </Grid> 
-      </EntitySwitch.Case> 
+        </Grid>
+      </EntitySwitch.Case>
     </EntitySwitch>
     ...
   </Grid>
@@ -76,19 +76,24 @@ const overviewContent = (
 The Argo CD plugin is a part of the Backstage sample app. To start using it for your component, you have to:
 
 1. Add an annotation to the YAML config file of a component. If there is only a single Argo CD application for the component, you can use
-    ```yml
-    argocd/app-name: <app-name>
-    ```
-    You can also use labels to select multiple Argo CD applications for a component:
-    ```yml
-    argocd/app-selector: <app-selector>
-    ```
-    **Note:** You can only use one of the options per component.
+
+   ```yml
+   argocd/app-name: <app-name>
+   ```
+
+   You can also use labels to select multiple Argo CD applications for a component:
+
+   ```yml
+   argocd/app-selector: <app-selector>
+   ```
+
+   **Note:** You can only use one of the options per component.
 
 2. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
-    ```
-    ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
-    ```
+   ```
+   ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
+   ```
+
 ## Support for multiple ArgoCD instances - Option 1
 
 If you want to create multiple components that fetch data from different argoCD instances, you have to add a proxy config for each instance:
@@ -146,5 +151,4 @@ To run the integration tests locally `yarn workspace app cy:dev` (assuming you h
 
 - [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend)
 - [Backstage](https://backstage.io)
-- [Further instructons](https://roadie.io/backstage/plugins/argo-cd/)
 - Get hosted, managed Backstage for your company: https://roadie.io

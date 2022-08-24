@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import {
   Typography,
@@ -38,11 +39,11 @@ import {
 } from '../../hooks/useServiceEntityAnnotations';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import ErrorBoundary from '../ErrorBoundary';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 type States = 'Pending' | 'Active' | 'Inactive' | 'Failed';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   links: {
     margin: theme.spacing(2, 0),
     display: 'grid',
@@ -221,12 +222,7 @@ const AWSLambdaOverview = ({ entity }: { entity: Entity }) => {
   );
 };
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const AWSLambdaOverviewWidget = (_props: Props) => {
+export const AWSLambdaOverviewWidget = () => {
   const { entity } = useEntity();
   return !isRegionInAnnotations(entity) ? (
     <MissingAnnotationEmptyState annotation={AWS_LAMBDA_REGION_ANNOTATION} />

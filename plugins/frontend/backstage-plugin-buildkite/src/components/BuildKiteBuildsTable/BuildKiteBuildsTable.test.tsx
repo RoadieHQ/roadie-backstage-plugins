@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,32 @@
 
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { errorApiRef } from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider,
-  UrlPatternDiscovery,
-} from '@backstage/core-app-api';
+import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+  wrapInTestApp,
+  MockFetchApi,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { buildsResponseMock, entityMock } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
 import { BuildkiteApi } from '../../api';
+import { rootRouteRef } from '../../plugin';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 
 const postMock = jest.fn();
 
 const errorApiMock = { post: postMock, error$: jest.fn() };
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
+const fetchApi = new MockFetchApi();
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, errorApiMock],
-  [buildKiteApiRef, new BuildkiteApi({ discoveryApi })],
-]);
+  [buildKiteApiRef, new BuildkiteApi({ discoveryApi, fetchApi })],
+];
 
 describe('BuildKiteBuildsTable', () => {
   const worker = setupServer();
@@ -55,9 +58,14 @@ describe('BuildKiteBuildsTable', () => {
     );
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>,
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 
@@ -80,9 +88,14 @@ describe('BuildKiteBuildsTable', () => {
     );
     render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <BuildkiteBuildsTable entity={entityMock} />
-        </ApiProvider>,
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
       ),
     );
 

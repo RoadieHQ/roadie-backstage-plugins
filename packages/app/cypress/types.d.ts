@@ -25,4 +25,3 @@ declare namespace Cypress {
     saveGithubToken(): Chainable<Element>;
   }
 }
-

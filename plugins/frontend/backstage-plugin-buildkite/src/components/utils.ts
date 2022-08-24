@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- export const generateRequestUrl = (url: string) => {
+export const generateRequestUrl = (url: string) => {
   const splitUrl = url.split('/').slice(4).join('/');
-   return splitUrl;
- }
+  return splitUrl;
+};

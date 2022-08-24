@@ -18,31 +18,53 @@
 import 'os';
 
 describe('SecurityInsights', () => {
-    beforeEach(() => {
-        cy.saveGithubToken();
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts', { fixture: 'securityInsights/alerts.json' })
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100', { fixture: 'securityInsights/alerts.json' })
-        cy.intercept('POST', 'https://api.github.com/graphql', { fixture: 'securityInsights/graphql.json' })
-        cy.visit('/catalog/default/component/sample-service')
-    })
+  beforeEach(() => {
+    cy.saveGithubToken();
+  });
 
-    describe('Navigating to Security Insights', () => {
-        it('should show Security Insights Releases in Overview tab', () => {
-            cy.contains('Security Insights');
-            cy.contains('0 Warning')
-            cy.contains('0 Error')
-            cy.contains('0 Note')
-            cy.contains('Open Issues')
-        });
+  describe('Navigating to Security Insights', () => {
+    it('should show Security Insights Releases in Overview tab', () => {
+      cy.intercept(
+        'GET',
+        'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts',
+        { fixture: 'securityInsights/alerts.json' },
+      ).as('getAlerts');
 
-        it('should show dependabot issues when navigating to dependabot tab', () => {
-            cy.visit('/catalog/default/component/sample-service/dependabot')
-            cy.contains('serialize-javascript');
-        });
+      cy.visit('/catalog/default/component/sample-service');
 
-        it('should show security Insights when navigating to security insights tab', () => {
-            cy.visit('/catalog/default/component/sample-service/security-insights')
-            cy.contains('organisation/github-project-slug');
-        });
+      cy.wait('@getAlerts');
+
+      cy.contains('Security Insights');
+      cy.contains('0 Warning');
+      cy.contains('0 Error');
+      cy.contains('0 Note');
+      cy.contains('Open Issues');
     });
+
+    it('should show dependabot issues when navigating to dependabot tab', () => {
+      cy.intercept('POST', 'https://api.github.com/graphql', {
+        fixture: 'securityInsights/graphql.json',
+      }).as('postGraphql');
+
+      cy.visit('/catalog/default/component/sample-service/dependabot');
+
+      cy.wait('@postGraphql');
+
+      cy.contains('serialize-javascript');
+    });
+
+    it('should show security Insights when navigating to security insights tab', () => {
+      cy.intercept(
+        'GET',
+        'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100',
+        { fixture: 'securityInsights/alerts.json' },
+      ).as('get100Alerts');
+
+      cy.visit('/catalog/default/component/sample-service/security-insights');
+
+      cy.wait('@get100Alerts');
+
+      cy.contains('organisation/github-project-slug');
+    });
+  });
 });

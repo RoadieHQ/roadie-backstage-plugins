@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,6 +73,12 @@ export type ActivityStreamKeys =
   | 'content'
   | 'id';
 
+export type ActivityStream = {
+  feed: {
+    entry: ActivityStreamEntry[];
+  };
+};
+
 export type ActivityStreamEntry = {
   updated: PropertyValue;
   title: PropertyValue;
@@ -110,4 +116,26 @@ export type ProjectDetailsProps = {
 
 export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
+};
+
+export type IssueCountSearchParams = {
+  startAt: number;
+  maxResults: number;
+  total: number;
+  issues: IssueCountElement[];
+};
+
+export type IssueCountElement = {
+  key: string;
+  fields: {
+    issuetype: {
+      iconUrl: string;
+      name: string;
+    };
+  };
+};
+
+export type IssueCountResult = {
+  next: number | undefined;
+  issues: IssueCountElement[];
 };

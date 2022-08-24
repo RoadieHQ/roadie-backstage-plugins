@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-
 import {
   createComponentExtension,
   createPlugin,
-  createRoutableExtension
+  createRoutableExtension,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
 
@@ -32,9 +31,10 @@ export const githubInsightsPlugin = createPlugin({
 export const EntityGithubInsightsContent = githubInsightsPlugin.provide(
   createRoutableExtension({
     name: 'EntityGithubInsightsContent',
-    component: () => import('./components/InsightsPage').then(m => m.InsightsPage),
+    component: () =>
+      import('./components/InsightsPage').then(m => m.InsightsPage),
     mountPoint: rootRouteRef,
-  })
+  }),
 );
 
 export const EntityGithubInsightsComplianceCard = githubInsightsPlugin.provide(
@@ -42,39 +42,39 @@ export const EntityGithubInsightsComplianceCard = githubInsightsPlugin.provide(
     name: 'EntityGithubInsightsComplianceCard',
     component: {
       lazy: () =>
-        import('./components/Widgets/index').then((m) => m.ComplianceCard),
+        import('./components/Widgets/index').then(m => m.ComplianceCard),
     },
-  })
+  }),
 );
 
-export const EntityGithubInsightsContributorsCard = githubInsightsPlugin.provide(
-  createComponentExtension({
-    name: 'EntityGithubInsightsContributorsCard',
-    component: {
-      lazy: () =>
-        import('./components/Widgets/index').then((m) => m.ContributorsCard),
-    },
-  })
-);
+export const EntityGithubInsightsContributorsCard =
+  githubInsightsPlugin.provide(
+    createComponentExtension({
+      name: 'EntityGithubInsightsContributorsCard',
+      component: {
+        lazy: () =>
+          import('./components/Widgets/index').then(m => m.ContributorsCard),
+      },
+    }),
+  );
 
 export const EntityGithubInsightsLanguagesCard = githubInsightsPlugin.provide(
   createComponentExtension({
     name: 'EntityGithubInsightsLanguagesCard',
     component: {
       lazy: () =>
-        import('./components/Widgets/index').then((m) => m.LanguagesCard),
+        import('./components/Widgets/index').then(m => m.LanguagesCard),
     },
-  })
+  }),
 );
 
 export const EntityGithubInsightsReadmeCard = githubInsightsPlugin.provide(
   createComponentExtension({
     name: 'EntityGithubInsightsReadmeCard',
     component: {
-      lazy: () =>
-        import('./components/Widgets/index').then((m) => m.ReadMeCard),
+      lazy: () => import('./components/Widgets/index').then(m => m.ReadMeCard),
     },
-  })
+  }),
 );
 
 export const EntityGithubInsightsReleasesCard = githubInsightsPlugin.provide(
@@ -82,7 +82,7 @@ export const EntityGithubInsightsReleasesCard = githubInsightsPlugin.provide(
     name: 'EntityGithubInsightsReleasesCard',
     component: {
       lazy: () =>
-        import('./components/Widgets/index').then((m) => m.ReleasesCard),
+        import('./components/Widgets/index').then(m => m.ReleasesCard),
     },
-  })
+  }),
 );

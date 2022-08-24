@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React, { useState } from 'react';
 import {
   Avatar,
@@ -30,7 +31,7 @@ import {
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { InfoCard, Progress } from '@backstage/core-components';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectInfo, useProjectEntity } from '../../hooks';
 import { EntityProps, ProjectDetailsProps } from '../../types';
 import { Status } from './components/Status';
@@ -81,6 +82,7 @@ export const JiraCard = (_props: EntityProps) => {
   const {
     project,
     issues,
+    ticketIds,
     projectLoading,
     projectError,
     fetchProjectInfo,
@@ -174,7 +176,12 @@ export const JiraCard = (_props: EntityProps) => {
             ))}
           </Grid>
           <Divider />
-          <ActivityStream projectKey={projectKey} tokenType={tokenType}/>
+          <ActivityStream
+            projectKey={projectKey}
+            tokenType={tokenType}
+            componentName={component}
+            ticketIds={ticketIds}
+          />
         </div>
       ) : null}
     </InfoCard>

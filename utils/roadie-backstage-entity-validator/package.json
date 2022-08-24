@@ -1,42 +1,50 @@
 {
   "name": "@roadiehq/roadie-backstage-entity-validator",
-  "version": "1.2.4",
+  "version": "2.0.5",
   "author": "RoadieHQ",
   "description": "Backstage entity validator library",
   "main": "src/index.js",
   "license": "Apache-2.0",
   "private": false,
-  "homepage": "https://github.com/RoadieHQ/backstage-entity-validator",
   "bugs": {
-    "url": "https://github.com/RoadieHQ/backstage-entity-validator/issues",
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
   },
-  "repository": "https://github.com/RoadieHQ/backstage-entity-validator",
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "utils/roadie-backstage-entity-validator"
+  },
   "publishConfig": {
     "access": "public",
     "main": "dist/index.js",
     "types": "types.d.ts"
   },
+  "backstage": {
+    "role": "node-library"
+  },
   "scripts": {
     "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
-    "lint": "backstage-cli lint",
-    "test": "backstage-cli test",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
-    "prepack": "backstage-cli prepack",
-    "postpack": "backstage-cli postpack",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
     "clean": "backstage-cli clean"
   },
   "dependencies": {
     "@actions/core": "^1.2.7",
-    "@backstage/catalog-model": "^0.9.7",
+    "@backstage/catalog-model": "^1.0.0",
+    "@backstage/plugin-scaffolder-common": "^1.0.0",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
     "js-yaml": "^4.1.0",
+    "memfs": "^3.4.1",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.10.0",
+    "@backstage/cli": "^0.18.0",
     "@vercel/ncc": "^0.27.0",
     "jest": "^27.0.1"
   },

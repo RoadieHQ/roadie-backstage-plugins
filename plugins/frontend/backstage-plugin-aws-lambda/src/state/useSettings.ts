@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useContext, useEffect } from 'react';
 import { AppContext, STORAGE_KEY } from './AppState';
@@ -39,7 +40,7 @@ export function useSettings(repoName: string) {
             type: 'setCredentials',
             payload: stateFromStorage,
           });
-      } catch (error:any) {
+      } catch (error: any) {
         errorApi.post(error);
       }
     };

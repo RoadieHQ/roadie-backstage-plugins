@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import { Octokit } from '@octokit/rest';
 import { useUrl } from '../useUrl';
 import {
   UpdateSeverityStatusProps,
-  SecurityInsightFilterState
+  SecurityInsightFilterState,
 } from '../../types';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -55,12 +55,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     label: {
       color: 'inherit',
-    }
+    },
   }),
 );
 
 export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
-  owner, repo, severityData, id, tableData, setTableData, entity
+  owner,
+  repo,
+  severityData,
+  id,
+  tableData,
+  setTableData,
+  entity,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -77,73 +83,83 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
     setOpen(false);
   };
 
-  const [state, dissmiss] = useAsyncFn(async (reason) => {
-    if(reason.length === 0) return setErrorMsg('Field required');
+  const [state, dissmiss] = useAsyncFn(async reason => {
+    if (reason.length === 0) return setErrorMsg('Field required');
 
     const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({auth: token});
+    const octokit = new Octokit({ auth: token });
 
-    const response = await octokit.request('PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}', {
-      baseUrl,
-      owner: 'RoadieHQ' || owner,
-      repo: 'backstage' || repo,
-      alert_number: id,
-      state: 'dismissed',
-      dismissed_reason: reason,
-    });
+    const response = await octokit.request(
+      'PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}',
+      {
+        baseUrl,
+        owner: 'RoadieHQ' || owner,
+        repo: 'backstage' || repo,
+        alert_number: id,
+        state: 'dismissed',
+        dismissed_reason: reason,
+      },
+    );
     const data = response.data;
     handleClose();
-    setTableData(tableData.map(element => (element.number === id ? {...element, state: 'dismissed'} : element)));
+    setTableData(
+      tableData.map(element =>
+        element.number === id ? { ...element, state: 'dismissed' } : element,
+      ),
+    );
     return data;
   }, []);
 
   const getSeverityState = useCallback(
     (severityState: SecurityInsightFilterState) => {
-    switch(severityState) {
-      case 'open':
-        return (
-          <Chip
-            label="Open"
-            color="primary"
-            variant="outlined"
-            size="small"
-            classes={{
-              label: classes.label,
-            }}
-            onClick={handleClickOpen}
-          />
-        );
-      case 'dismissed':
-        return (
-          <Chip
-            label="Dismissed"
-            color="secondary"
-            variant="outlined"
-            size="small"
-            classes={{
-              label: classes.label,
-            }}
-          />
-        );
-      case 'fixed':
-        return (
-          <Chip
-            label="Fixed"
-            color="primary"
-            variant="outlined"
-            size="small"
-            classes={{
-              label: classes.label,
-            }}
-          />
-        )  ;
-      default: return 'Unknown';
-    }
-  }, []);
+      switch (severityState) {
+        case 'open':
+          return (
+            <Chip
+              label="Open"
+              color="primary"
+              variant="outlined"
+              size="small"
+              classes={{
+                label: classes.label,
+              }}
+              onClick={handleClickOpen}
+            />
+          );
+        case 'dismissed':
+          return (
+            <Chip
+              label="Dismissed"
+              color="secondary"
+              variant="outlined"
+              size="small"
+              classes={{
+                label: classes.label,
+              }}
+            />
+          );
+        case 'fixed':
+          return (
+            <Chip
+              label="Fixed"
+              color="primary"
+              variant="outlined"
+              size="small"
+              classes={{
+                label: classes.label,
+              }}
+            />
+          );
+        default:
+          return 'Unknown';
+      }
+    },
+    [],
+  );
 
   return (
     <>
-      { getSeverityState(severityData) }
+      {getSeverityState(severityData)}
       <Dialog
         open={open}
         keepMounted
@@ -152,23 +168,30 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
         aria-describedby="alert-dialog-slide-description"
         fullWidth
       >
-        <DialogTitle id="alert-dialog-slide-title">Dismiss severity #{id}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">
+          Dismiss severity #{id}
+        </DialogTitle>
         <DialogContent>
-          { state.error && (
+          {state.error && (
             <Box mb={3}>
               <Alert severity="error">{state.error.message}</Alert>
             </Box>
           )}
 
-            <FormControl error={Boolean(errorMsg)} className={classes.formControl}>
-            <InputLabel id="dissmis-type-select-error-label">Dismiss type</InputLabel>
+          <FormControl
+            error={Boolean(errorMsg)}
+            className={classes.formControl}
+          >
+            <InputLabel id="dissmis-type-select-error-label">
+              Dismiss type
+            </InputLabel>
             <Select
               labelId="dissmis-type-select-error-label"
               id="dissmis-type"
               value={dismissedReason}
-              onChange={(e) => {
+              onChange={e => {
                 setErrorMsg('');
-                setDismissedReason((e.target.value as string))
+                setDismissedReason(e.target.value as string);
               }}
               autoWidth
             >
@@ -178,14 +201,9 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
             </Select>
             <FormHelperText>{errorMsg}</FormHelperText>
           </FormControl>
-
         </DialogContent>
         <DialogActions>
-        <Button
-            onClick={handleClose}
-            variant="contained"
-            color="secondary"
-          >
+          <Button onClick={handleClose} variant="contained" color="secondary">
             Close
           </Button>
           <Button
@@ -199,4 +217,4 @@ export const UpdateSeverityStatusModal: FC<UpdateSeverityStatusProps> = ({
       </Dialog>
     </>
   );
-}
+};

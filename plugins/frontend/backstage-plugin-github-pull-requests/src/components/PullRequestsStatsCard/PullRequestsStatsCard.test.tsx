@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,23 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
-import { configApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { ApiRegistry, ApiProvider } from '@backstage/core-app-api';
-import { rest } from 'msw';
-import { setupRequestMockHandlers } from '@backstage/test-utils';
+import { render, screen } from '@testing-library/react';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  AnyApiRef,
+} from '@backstage/core-plugin-api';
+import {
+  setupRequestMockHandlers,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
 import { GithubPullRequestsClient } from '../../api';
-import { closedPullsRequestMock, entityMock } from '../../mocks/mocks';
+import { entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { handlers } from '../../mocks/handlers';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -37,34 +43,29 @@ const config = {
   ],
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [githubAuthApiRef, mockGithubAuth],
   [githubPullRequestsApiRef, new GithubPullRequestsClient()],
-]);
+];
 
 describe('PullRequestsCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
   beforeEach(() => {
-    worker.use(
-      rest.get(
-        'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls?state=closed&per_page=20&page=1',
-        (_, res, ctx) => res(ctx.json(closedPullsRequestMock)),
-      ),
-    );
+    worker.use(...handlers);
   });
-
   it('should display an ovreview card with the data from the requests', async () => {
-    const rendered = render(
-      <ApiProvider apis={apis}>
+    render(
+      <TestApiProvider apis={apis}>
         <EntityProvider entity={entityMock}>
           <PullRequestsStatsCard />
         </EntityProvider>
-      </ApiProvider>,
+      </TestApiProvider>,
     );
-    expect(await rendered.findByText('17 hours')).toBeInTheDocument();
-    expect(await rendered.findByText('100%')).toBeInTheDocument();
+    expect(await screen.findByText('2 months')).toBeInTheDocument();
+    expect(await screen.findByText('67%')).toBeInTheDocument();
+    expect(await screen.findByText('3309 lines')).toBeInTheDocument();
   });
 });

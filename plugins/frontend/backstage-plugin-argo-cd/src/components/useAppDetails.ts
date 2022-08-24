@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
 import { argoCDApiRef } from '../api';
@@ -33,7 +34,9 @@ export const useAppDetails = ({
   const configApi = useApi(configApiRef);
 
   const { loading, value, error, retry } = useAsyncRetry(async () => {
-    const argoSearchMethod: boolean = Boolean(configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length);
+    const argoSearchMethod: boolean = Boolean(
+      configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
+    );
     try {
       if (!argoSearchMethod && appName) {
         return await api.getAppDetails({ url, appName });
@@ -80,7 +83,9 @@ export const useAppDetails = ({
         });
         const output = await Promise.all(promises);
         const items = {
-          items: output.flatMap(argoCdAppList => argoCdAppList.items).filter(item => item !== null),
+          items: output
+            .flatMap(argoCdAppList => argoCdAppList.items)
+            .filter(item => item !== null),
         };
         return items;
       }

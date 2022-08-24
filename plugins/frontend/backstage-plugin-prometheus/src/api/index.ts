@@ -34,28 +34,44 @@ type Options = {
 
 export class PrometheusApi {
   private readonly discoveryApi: DiscoveryApi;
-
-  /**
-   * Path to use for requests via the proxy, defaults to /prometheus/api
-   */
-  private readonly proxyPath: string;
+  private readonly configApi: ConfigApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    this.proxyPath =
-      options.configApi.getOptionalString('prometheus.proxyPath') ||
-      DEFAULT_PROXY_PATH;
+    this.configApi = options.configApi;
   }
 
-  private async getApiUrl() {
+  private async getApiUrl({ serviceName }: { serviceName?: string }) {
     const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
-    return `${proxyUrl}${this.proxyPath}`;
+    return `${proxyUrl}${this.getProxyPath({ serviceName })}`;
+  }
+
+  private getProxyPath({ serviceName }: { serviceName?: string }) {
+    if (Boolean(serviceName)) {
+      const instances = this.configApi.getOptionalConfigArray(
+        'prometheus.instances',
+      );
+      if (instances && instances?.length > 0) {
+        const instance = instances.find(
+          value => value.getString('name') === serviceName,
+        );
+        if (Boolean(instance)) {
+          // @ts-ignore
+          return instance.getString('proxyPath');
+        }
+      }
+    }
+    return (
+      this.configApi.getOptionalString('prometheus.proxyPath') ||
+      DEFAULT_PROXY_PATH
+    );
   }
 
   async query({
     query = `up`,
     range = { hours: 1 },
     step = 14,
+    serviceName,
   }: {
     query: string;
     range: {
@@ -63,13 +79,12 @@ export class PrometheusApi {
       minutes?: number;
     };
     step?: number;
+    serviceName?: string;
   }) {
-    const apiUrl = await this.getApiUrl();
+    const apiUrl = await this.getApiUrl({ serviceName });
 
     const end = DateTime.now().toSeconds();
-    const start = DateTime.now()
-      .minus(Duration.fromObject(range))
-      .toSeconds();
+    const start = DateTime.now().minus(Duration.fromObject(range)).toSeconds();
     const response = await fetch(
       `${apiUrl}/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
     );
@@ -81,8 +96,8 @@ export class PrometheusApi {
     return response.json();
   }
 
-  async getAlerts() {
-    const apiUrl = await this.getApiUrl();
+  async getAlerts({ serviceName }: { serviceName?: string }) {
+    const apiUrl = await this.getApiUrl({ serviceName });
     const response = await fetch(`${apiUrl}/rules?type=alert`);
 
     if (!response.ok) {

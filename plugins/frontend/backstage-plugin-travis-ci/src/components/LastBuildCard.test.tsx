@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,15 @@ import {
   IdentityApi,
   errorApiRef,
   configApiRef,
+  AnyApiRef,
 } from '@backstage/core-plugin-api';
-import {
-  ApiRegistry,
-  ApiProvider,
-  UrlPatternDiscovery,
-} from '@backstage/core-app-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { rest } from 'msw';
-import { setupRequestMockHandlers, wrapInTestApp } from '@backstage/test-utils';
+import {
+  setupRequestMockHandlers,
+  wrapInTestApp,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { TravisCIApiClient, travisCIApiRef } from '../api';
 import { RecentTravisCIBuildsWidget } from '..';
@@ -37,32 +38,33 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const errorApiMock = { post: jest.fn(), error$: jest.fn() };
 const identityApi: IdentityApi = {
-  getUserId() {
-    return 'jane-fonda';
-  },
-  getProfile() {
+  async getProfileInfo() {
     return { email: 'jane-fonda@spotify.com' };
   },
-  async getIdToken() {
-    return Promise.resolve('fake-id-token');
+  async getBackstageIdentity() {
+    return {
+      type: 'user',
+      userEntityRef: 'user:default/jane-fonda',
+      ownershipEntityRefs: [],
+    };
+  },
+  async getCredentials() {
+    return { token: 'fake-id-token' };
   },
   async signOut() {
     return Promise.resolve();
   },
-  getProfileInfo: jest.fn(),
-  getBackstageIdentity: jest.fn(),
-  getCredentials: jest.fn(),
 };
 
 const config = {
   getString: (_: string) => undefined,
 };
 
-const apis = ApiRegistry.from([
+const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, errorApiMock],
   [travisCIApiRef, new TravisCIApiClient({ discoveryApi, identityApi })],
-]);
+];
 describe('LastBuildCard', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -84,11 +86,11 @@ describe('LastBuildCard', () => {
   it('should display widget with data', async () => {
     const rendered = render(
       wrapInTestApp(
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityMock}>
             <RecentTravisCIBuildsWidget entity={entityMock} />
           </EntityProvider>
-        </ApiProvider>,
+        </TestApiProvider>,
       ),
     );
     expect(

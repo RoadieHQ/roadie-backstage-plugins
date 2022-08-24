@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,18 +62,21 @@ export const ActionOutput: FC<{
   }
 
   // eslint-disable-next-line no-nested-ternary
-  const timeElapsed = job.finished_at ? (
-    moment
-    .duration(
-      moment(job.finished_at || moment()).diff(moment(job.started_at)),
-    )
-    .humanize()
-    ) : (
-      job.started_at ? 'In Progress' : 'Pending'
-    );
+  const timeElapsed = job.finished_at
+    ? moment
+        .duration(
+          moment(job.finished_at || moment()).diff(moment(job.started_at)),
+        )
+        .humanize()
+    : job.started_at
+    ? 'In Progress'
+    : 'Pending';
 
   return value ? (
-    <Accordion TransitionProps={{ unmountOnExit: true }} className={`${classes.accordion} ${className}`}>
+    <Accordion
+      TransitionProps={{ unmountOnExit: true }}
+      className={`${classes.accordion} ${className}`}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls={`panel-${name}-content`}
@@ -96,7 +99,7 @@ export const ActionOutput: FC<{
         ) : (
           <Suspense fallback={<LinearProgress />}>
             <div style={{ height: '30vh', width: '100%' }}>
-              <LogViewer text={value.content}/>
+              <LogViewer text={value.content} />
             </div>
           </Suspense>
         )}

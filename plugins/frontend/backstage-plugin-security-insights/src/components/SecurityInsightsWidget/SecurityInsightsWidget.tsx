@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,7 @@ import {
   Progress,
   StructuredMetadataTable,
 } from '@backstage/core-components';
-import {
-  useApi,
-  githubAuthApiRef,
-} from '@backstage/core-plugin-api';
+import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useProjectEntity } from '../useProjectEntity';
@@ -37,10 +34,9 @@ import {
   SeverityLevels,
   SecurityInsightFilterState,
 } from '../../types';
-import { Entity } from '@backstage/catalog-model';
-import { useEntity } from "@backstage/plugin-catalog-react";
+import { useEntity } from '@backstage/plugin-catalog-react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   infoCard: {
     marginBottom: theme.spacing(3),
   },
@@ -52,7 +48,7 @@ const IssuesCounter: FC<IssuesCounterProps> = ({
 }) => {
   const countIssues = (
     type: SecurityInsightFilterState,
-    severityLevel: SeverityLevels
+    severityLevel: SeverityLevels,
   ) =>
     issues.reduce(
       (acc, cur) =>
@@ -60,7 +56,7 @@ const IssuesCounter: FC<IssuesCounterProps> = ({
         cur.rule.severity === severityLevel
           ? ++acc
           : acc,
-      0
+      0,
     );
 
   const countWarningIssues = countIssues(issueStatus, 'warning');
@@ -75,12 +71,7 @@ const IssuesCounter: FC<IssuesCounterProps> = ({
   );
 };
 
-type Props = {
-  /** @deprecated The entity is now grabbed from context instead */
-  entity?: Entity;
-};
-
-export const SecurityInsightsWidget = (_props: Props) => {
+export const SecurityInsightsWidget = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const classes = useStyles();
@@ -99,7 +90,7 @@ export const SecurityInsightsWidget = (_props: Props) => {
         baseUrl,
         owner,
         repo,
-      }
+      },
     );
 
     const data = response.data as SecurityInsight[];
@@ -113,7 +104,7 @@ export const SecurityInsightsWidget = (_props: Props) => {
       deepLink={{
         link: `//${hostname}/${owner}/${repo}/security/code-scanning`,
         title: 'Security Insights',
-        onClick: (e) => {
+        onClick: e => {
           e.preventDefault();
           window.open(`//${hostname}/${owner}/${repo}/security/code-scanning`);
         },

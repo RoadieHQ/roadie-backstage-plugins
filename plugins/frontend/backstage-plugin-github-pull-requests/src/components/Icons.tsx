@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { makeStyles, Tooltip } from '@material-ui/core';
 import { PullRequest } from './usePullRequests';
+import { GithubSearchPullRequestsDataItem } from '../types';
 
 const useStyles = makeStyles(() => ({
   open: {
     fill: '#22863a',
+    verticalAlign: 'sub',
   },
   closed: {
     fill: '#cb2431',
+    verticalAlign: 'sub',
   },
   merged: {
     fill: '#6f42c1',
+    verticalAlign: 'sub',
   },
   draft: {
     fill: '#6a737d',
+    verticalAlign: 'sub',
+  },
+  comment: {
+    fill: '#768390',
+    verticalAlign: 'sub',
   },
 }));
 
@@ -79,8 +89,21 @@ const StatusDraft = () => {
     </svg>
   );
 };
+export const CommentIcon = () => {
+  const classes = useStyles();
+  return (
+    <svg width="16" height="16" className={classes.comment} viewBox="0 0 16 16">
+      <path
+        fillRule="evenodd"
+        d="M2.75 2.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 01.75.75v2.19l2.72-2.72a.75.75 0 01.53-.22h4.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25H2.75zM1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0113.25 12H9.06l-2.573 2.573A1.457 1.457 0 014 13.543V12H2.75A1.75 1.75 0 011 10.25v-7.5z"
+      />
+    </svg>
+  );
+};
 
-export const getStatusIconType = (row: PullRequest) => {
+export const getStatusIconType = (
+  row: PullRequest | GithubSearchPullRequestsDataItem,
+) => {
   switch (true) {
     case row.state === 'open' && row.draft:
       return (

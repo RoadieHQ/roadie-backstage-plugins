@@ -18,29 +18,52 @@ import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';
-import { ContributorData } from '../components/types';
+import { ContributorData, GithubRequestState } from '../components/types';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useStore } from '../components/store';
 
-export const useContributor = (username: string) => {
+export const useContributor = (
+  username: string,
+): { contributor?: ContributorData; error?: Error; loading: boolean } => {
   const auth = useApi(githubAuthApiRef);
   const { entity } = useEntity();
   const { baseUrl } = useEntityGithubScmIntegration(entity);
 
-  const { value, loading, error } = useAsync(async (): Promise<
-    ContributorData
-  > => {
-    const token = await auth.getAccessToken(['repo']);
-    const octokit = new Octokit({ auth: token });
+  const { state: contributorData, setState: setContributorData } = useStore(
+    state => state.contributor,
+  );
 
-    const response = await octokit.request(`GET /users/${username}`, {
-      baseUrl,
-    });
-    const data = response.data;
-    return data;
+  const { value, loading, error } = useAsync(async (): Promise<
+    GithubRequestState | undefined
+  > => {
+    let result;
+    try {
+      const token = await auth.getAccessToken(['repo']);
+      const octokit = new Octokit({ auth: token });
+
+      const response = await octokit.request(`GET /users/${username}`, {
+        headers: { 'if-none-match': contributorData[username].etag },
+        baseUrl,
+      });
+
+      result = {
+        data: response.data as ContributorData,
+        etag: response.headers.etag ?? '',
+      };
+    } catch (e: any) {
+      if (e.status === 304) {
+        result = contributorData[username];
+      }
+    }
+    return result;
   }, [username, baseUrl]);
 
+  if (value) {
+    setContributorData(username, value);
+  }
+
   return {
-    contributor: value,
+    contributor: value ? (value.data as ContributorData) : undefined,
     loading,
     error,
   };

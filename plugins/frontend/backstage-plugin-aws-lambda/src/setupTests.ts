@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ const localStorageMock = {
   removeItem: jest.fn(),
   clear: jest.fn(),
   key: jest.fn(),
-  length: 0
+  length: 0,
 };
 // noinspection JSConstantReassignment
 global.localStorage = localStorageMock;
 
 // @ts-ignore
-window.HTMLCanvasElement.prototype.getContext = () => {}
+window.HTMLCanvasElement.prototype.getContext = () => {};

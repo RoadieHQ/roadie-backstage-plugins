@@ -29,7 +29,6 @@ import {
   EntityAboutCard,
   EntityDependsOnComponentsCard,
   EntityDependsOnResourcesCard,
-  EntitySystemDiagramCard,
   EntityHasComponentsCard,
   EntityHasResourcesCard,
   EntityHasSubcomponentsCard,
@@ -40,6 +39,7 @@ import {
   isComponentType,
   isKind,
 } from '@backstage/plugin-catalog';
+import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
   isGithubActionsAvailable,
   EntityGithubActionsContent,
@@ -103,6 +103,19 @@ import {
   EntityPrometheusContent,
   EntityPrometheusGraphCard,
 } from '@roadiehq/backstage-plugin-prometheus';
+import { EntityIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+import {
+  S3BucketCard,
+  LambdaFunctionCard,
+  IAMUserCard,
+  IAMRoleCard,
+  EKSClusterCard,
+  isEksClusterAvailable,
+  isIamUserAvailable,
+  isS3BucketAvailable,
+  isIamRoleAvailable,
+  isLambdaFunctionAvailable,
+} from '@roadiehq/backstage-plugin-aws';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -144,6 +157,41 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isLambdaFunctionAvailable}>
+        <Grid item md={6}>
+          <LambdaFunctionCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isS3BucketAvailable}>
+        <Grid item md={6}>
+          <S3BucketCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isIamUserAvailable}>
+        <Grid item md={6}>
+          <IAMUserCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isIamRoleAvailable}>
+        <Grid item md={6}>
+          <IAMRoleCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isEksClusterAvailable}>
+        <Grid item md={6}>
+          <EKSClusterCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={isSecurityInsightsAvailable}>
         <Grid item md={6}>
@@ -409,10 +457,13 @@ const systemPage = (
         <Grid item md={6}>
           <EntityHasResourcesCard variant="gridItem" />
         </Grid>
+        <Grid item md={6}>
+          <EntityIFrameCard {...{ src: 'https://example.com' }} />
+        </Grid>
       </Grid>
     </EntityLayout.Route>
     <EntityLayout.Route path="/diagram" title="Diagram">
-      <EntitySystemDiagramCard />
+      <EntityCatalogGraphCard />
     </EntityLayout.Route>
   </EntityLayout>
 );

@@ -16,12 +16,12 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import {
   InfoCard,
   Progress,
   MarkdownContent,
-  MissingAnnotationEmptyState
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
 import { Entity } from '@backstage/catalog-model';
 import { useRequest } from '../../../hooks/useRequest';
@@ -29,7 +29,7 @@ import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScm
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
-  GITHUB_INSIGHTS_ANNOTATION
+  GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
@@ -78,7 +78,7 @@ function b64DecodeUnicode(str: string): string {
   return decodeURIComponent(
     Array.prototype.map
       // eslint-disable-next-line func-names
-      .call(atob(str), function(c) {
+      .call(atob(str), function (c) {
         // eslint-disable-next-line prefer-template
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
@@ -98,7 +98,9 @@ const ReadMeCard = (props: Props) => {
 
   const projectAlert = isGithubInsightsAvailable(entity);
   if (!projectAlert) {
-    return <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
   }
 
   if (loading) {
@@ -113,13 +115,13 @@ const ReadMeCard = (props: Props) => {
 
   return value?.content && owner && repo ? (
     <InfoCard
-      title="Read me"
+      title="Readme"
       className={classes.infoCard}
       deepLink={{
         link: `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
           value.url,
         )}/${path}`,
-        title: 'Read me',
+        title: 'Readme',
         onClick: e => {
           e.preventDefault();
           window.open(

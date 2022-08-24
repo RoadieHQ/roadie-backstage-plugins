@@ -18,20 +18,36 @@
 import 'os';
 
 describe('Github Pull Requests', () => {
-    beforeEach(() => {
-        cy.saveGithubToken();
-        cy.intercept('GET', 'https://api.github.com/repos/organisation/github-project-slug/pulls?state=open&per_page=5&page=1', { fixture: 'githubPRs/pull-requests.json' })
-        cy.visit('/catalog/default/component/sample-service')
-    })
+  beforeEach(() => {
+    cy.saveGithubToken();
+  });
 
-    describe('Navigating to GitHub Pull Requests', () => {
-        it('should show GitHub Pull Requests in Overview tab', () => {
-            cy.contains('Pull requests statistics');
-        });
+  describe('Navigating to GitHub Pull Requests', () => {
+    it('should show GitHub Pull Requests in Overview tab', () => {
+      cy.intercept(
+        'GET',
+        'https://api.github.com/search/issues?q=state%3Aclosed%20in%3Atitle%20type%3Apr%20repo%3Aorganisation%2Fgithub-project-slug&per_page=20&page=1',
+        { fixture: 'githubPRs/pull-requests.json' },
+      ).as('getPulls');
+      cy.visit('/catalog/default/component/sample-service');
 
-        it('should show GitHub Pull Requests when navigating to Pull Requests tab', () => {
-            cy.visit('/catalog/default/component/sample-service/pull-requests')
-            cy.contains('Pull requests plugin');
-          });
+      cy.wait('@getPulls');
+
+      cy.contains('GitHub Pull Requests Statistics');
     });
+
+    it('should show GitHub Pull Requests when navigating to Pull Requests tab', () => {
+      cy.intercept(
+        'GET',
+        'https://api.github.com/search/issues?q=state%3Aopen%20%20in%3Atitle%20type%3Apr%20repo%3Aorganisation%2Fgithub-project-slug&per_page=5&page=1',
+        { fixture: 'githubPRs/pull-requests.json' },
+      ).as('getPulls');
+
+      cy.visit('/catalog/default/component/sample-service/pull-requests');
+
+      cy.wait('@getPulls');
+
+      cy.contains('GitHub Pull Requests');
+    });
+  });
 });

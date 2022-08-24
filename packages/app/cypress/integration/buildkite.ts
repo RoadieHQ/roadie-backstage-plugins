@@ -20,16 +20,21 @@ import 'os';
 describe('Buildkite', () => {
   beforeEach(() => {
     cy.saveGithubToken();
-    cy.intercept('GET', 'http://localhost:7007/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5 ', { fixture: 'buildkite/builds.json' })
-    cy.visit('/catalog/default/component/sample-service-3')
-  })
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5 ',
+      { fixture: 'buildkite/builds.json' },
+    ).as('getBuilds');
+  });
 
   describe('Navigate to CI/CD dashboard', () => {
     it('should show Buildkite builds table', () => {
-      cy.visit('/catalog/default/component/sample-service-3/ci-cd')
+      cy.visit('/catalog/default/component/sample-service-3/ci-cd');
+
+      cy.wait('@getBuilds');
+
       cy.contains('Create PR to test');
       cy.contains('Xantier-patch-1');
     });
-
   });
 });

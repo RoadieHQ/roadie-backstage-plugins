@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@ export {
   githubPullRequestsPlugin,
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
-  EntityGithubPullRequestsTable
+  EntityGithubPullRequestsTable,
+  HomePageRequestedReviewsCard,
+  HomePageYourOpenPullRequestsCard,
 } from './plugin';
 export * from './api';
 export {
@@ -42,3 +44,5 @@ export {
    */
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
+
+export { PullRequestsTableView } from './components/PullRequestsTable';

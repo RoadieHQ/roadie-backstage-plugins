@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 RoadieHQ
+ * Copyright 2021 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,8 @@ export {
   EntitySecurityInsightsCard,
   EntityDependabotAlertsCard,
 } from './plugin';
-export {
-  /**
-   * @deprecated From 0.2.0 composability API should be used
-   */
-  SecurityInsightsWidget,
-} from './components/SecurityInsightsWidget';
-export {
-  DependabotAlertsWidget,
-} from './components/DependabotAlertsWidget';
+export { SecurityInsightsWidget } from './components/SecurityInsightsWidget';
+export { DependabotAlertsWidget } from './components/DependabotAlertsWidget';
 export {
   /**
    * @deprecated From 0.2.0 composability API should be used
