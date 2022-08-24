@@ -120,7 +120,7 @@ export class ArgoService implements ArgoServiceApi {
       url: instance.getString('url'),
       token: instance.getOptionalString('token'),
       username: instance.getOptionalString('username'),
-    password: instance.getOptionalString('password'),
+      password: instance.getOptionalString('password'),
     }));
     const resp = await Promise.all(
       argoInstanceArray.map(async (argoInstance: any) => {
