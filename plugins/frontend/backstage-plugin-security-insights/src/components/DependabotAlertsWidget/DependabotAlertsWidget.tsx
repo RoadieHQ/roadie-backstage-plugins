@@ -215,9 +215,10 @@ export const DependabotAlertsWidget = () => {
   const query = `
   query GetDependabotAlertsWidget($name: String!, $owner: String!) {
     repository(name: $name, owner: $owner) {
-      vulnerabilityAlerts(first: 100) {
+      vulnerabilityAlerts(first: 1, states: OPEN) {
         totalCount
         nodes {
+          state
           createdAt
           id
           dismissedAt
