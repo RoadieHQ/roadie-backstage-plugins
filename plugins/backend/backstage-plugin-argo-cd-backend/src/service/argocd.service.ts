@@ -354,7 +354,7 @@ export class ArgoService implements ArgoServiceApi {
     const parallelSyncCalls = findArgoAppResp.map(
       async (argoInstance: any): Promise<SyncResponse[]> => {
         try {
-          const token = await this.getArgoToken(argoInstance.url);
+          const token = await this.getArgoToken(argoInstance);
           try {
             const resp = argoInstance.appName.map(
               (argoApp: any): Promise<SyncResponse> => {
@@ -508,7 +508,7 @@ export class ArgoService implements ArgoServiceApi {
 
     let token: string;
     if (!matchedArgoInstance.token) {
-      token = await this.getArgoToken(matchedArgoInstance.url);
+      token = await this.getArgoToken(matchedArgoInstance);
     } else {
       token = matchedArgoInstance.token;
     }

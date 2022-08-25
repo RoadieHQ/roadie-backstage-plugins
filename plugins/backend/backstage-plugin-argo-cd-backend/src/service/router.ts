@@ -142,7 +142,7 @@ export function createRouter({
     let token: string;
     if (!matchedArgoInstance.token) {
       try {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
@@ -229,7 +229,7 @@ export function createRouter({
 
       let token: string;
       if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } else {
         token = matchedArgoInstance.token;
       }
