@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.7
+
+### Patch Changes
+
+- 62be7f3: Fix dependabot widget to only show open alerts.
+
 ## 2.0.6
 
 ### Patch Changes
