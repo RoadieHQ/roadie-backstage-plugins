@@ -175,7 +175,7 @@ describe('http:backstage:request', () => {
         );
       });
 
-      it('should create a request and pass custom authorization header token from input', async () => {
+      it('should create a request and pass custom authorization header from input', async () => {
         const HEADERS = {
           Authorization: '123',
           Test: 'some-test',
