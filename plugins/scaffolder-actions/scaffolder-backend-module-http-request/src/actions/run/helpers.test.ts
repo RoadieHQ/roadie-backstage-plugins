@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { generateBackstageUrl, http, getObjFieldCaseInsensitively } from './helpers';
+import {
+  generateBackstageUrl,
+  http,
+  getObjFieldCaseInsensitively,
+} from './helpers';
 import { HttpOptions } from './types';
 import { Config, ConfigReader } from '@backstage/config';
 import { getRootLogger } from '@backstage/backend-common';

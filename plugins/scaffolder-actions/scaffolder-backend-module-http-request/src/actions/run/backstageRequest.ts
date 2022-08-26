@@ -15,7 +15,11 @@
  */
 
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import { generateBackstageUrl, http, getObjFieldCaseInsensitively } from './helpers';
+import {
+  generateBackstageUrl,
+  http,
+  getObjFieldCaseInsensitively,
+} from './helpers';
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { Config } from '@backstage/config';
 
