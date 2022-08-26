@@ -142,6 +142,74 @@ describe('http:backstage:request', () => {
       });
     });
 
+    describe('with authorization header', () => {
+      const BACKSTAGE_TOKEN = 'BACKSTAGE_TOKEN';
+      it('should create a request and pass backstage token as authorization header', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          secrets: {
+            backstageToken: BACKSTAGE_TOKEN,
+          },
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            body: 'test',
+            headers: {},
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              authorization: `Bearer ${BACKSTAGE_TOKEN}`,
+            },
+            body: 'test',
+          },
+          logger,
+        );
+      });
+
+      it('should create a request and pass custom authorization header token from input', async () => {
+        const HEADERS = {
+          Authorization: '123',
+          Test: 'some-test',
+        };
+
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          secrets: {
+            backstageToken: BACKSTAGE_TOKEN,
+          },
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            body: 'test',
+            headers: HEADERS,
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: HEADERS,
+            body: 'test',
+          },
+          logger,
+        );
+      });
+    });
+
     describe('with body undefined', () => {
       it('should create a request and body should be undefined', async () => {
         (http as jest.Mock).mockReturnValue({
