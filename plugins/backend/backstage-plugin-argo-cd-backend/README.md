@@ -24,12 +24,19 @@ argocd:
           password: ${ARGOCD_PASSWORD_INSTANCE_2} # optional 
 ```
 
-Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD`.
-Define a `username` and a `password` for each instance if needed.
+### Authentication
+
+- Option 1: Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD` inside the `argocd` object. It will be use as credentials for all instances by default.
+- Option 2: Define a `username` and a `password` for each instance. It has an higher priority than **Option 1**.
+- Option 3: Define a `token` for each instance. It has an higher priority than **Option 1** and **Option 2**.
+
+### Wait Cycles
 
 Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. Between each check there is a 3 second timer. The number of cycles to wait is an optional configuration value as shown above as `waitCycles`. If `waitCycles` is set to 25, the total time the loop can last before erroring out is 75 seconds.
 
-You can also use an argo session token as mentioned above in the `argocd` object as shown above. If omitted, we will use the argo username and password from the code block above.
+
+
+### Permissions
 
 Setting permissions for the Argo CD user account can reduce the scope, but also reduce the functionality of the backend. If you choose to scope the permissions for read-only get actions will work such as the catalog plugin but creating, deleting, and resyncing applications will not be available. The error handling has been designed to alert the users when the proper permissions are not in place.
 
