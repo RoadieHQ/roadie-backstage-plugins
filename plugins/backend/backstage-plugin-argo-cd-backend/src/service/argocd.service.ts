@@ -68,7 +68,11 @@ interface ResyncProps {
 }
 
 export interface ArgoServiceApi {
-  getArgoToken: (appConfig: { baseUrl: string, username?: string, password?: string }) => Promise<string>;
+  getArgoToken: (appConfig: {
+    baseUrl: string;
+    username?: string;
+    password?: string;
+  }) => Promise<string>;
   getArgoAppData: (
     baseUrl: string,
     argoInstanceName: string,
@@ -163,8 +167,12 @@ export class ArgoService implements ArgoServiceApi {
     return resp.flatMap(f => (f ? [f] : []));
   }
 
-  async getArgoToken(appConfig: { baseUrl: string, username?: string, password?: string }): Promise<string> {
-    const { baseUrl, username, password } = appConfig
+  async getArgoToken(appConfig: {
+    baseUrl: string;
+    username?: string;
+    password?: string;
+  }): Promise<string> {
+    const { baseUrl, username, password } = appConfig;
 
     const options: RequestInit = {
       method: 'POST',

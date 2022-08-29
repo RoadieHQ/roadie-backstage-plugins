@@ -16,12 +16,12 @@ argocd:
       instances:
         - name: argoInstance1
           url: https://argoInstance1.com
-          token: ${ARGOCD_AUTH_TOKEN} # optional 
+          token: ${ARGOCD_AUTH_TOKEN} # optional
         - name: argoInstance2
           url: https://argoInstance2.com
           # dedicated username/password for this instance
-          username: ${ARGOCD_USERNAME_INSTANCE_2} # optional 
-          password: ${ARGOCD_PASSWORD_INSTANCE_2} # optional 
+          username: ${ARGOCD_USERNAME_INSTANCE_2} # optional
+          password: ${ARGOCD_PASSWORD_INSTANCE_2} # optional
 ```
 
 ### Authentication
@@ -29,6 +29,7 @@ argocd:
 **Option 1**: Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD` inside the `argocd` object. It will be use as credentials for all instances by default.
 
 _Example_
+
 ```yml
 argocd:
   username: ${ARGOCD_USERNAME}
@@ -45,6 +46,7 @@ argocd:
 **Option 2**: Define a `username` and a `password` for each instance. It has an higher priority than **Option 1**.
 
 _Example_
+
 ```yml
 argocd:
   username: ${ARGOCD_USERNAME}
@@ -64,6 +66,7 @@ argocd:
 **Option 3**: Define a `token` for each instance. It has an higher priority than **Option 1** and **Option 2**.
 
 _Example_
+
 ```yml
 argocd:
   username: ${ARGOCD_USERNAME}
@@ -79,8 +82,6 @@ argocd:
 ### Wait Cycles
 
 Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. Between each check there is a 3 second timer. The number of cycles to wait is an optional configuration value as shown above as `waitCycles`. If `waitCycles` is set to 25, the total time the loop can last before erroring out is 75 seconds.
-
-
 
 ### Permissions
 
