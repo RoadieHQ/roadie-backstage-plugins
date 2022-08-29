@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.1.0
+
+### Minor Changes
+
+- 9c7445e: If header authorization is specified in the input parameters, it is used instead of the backstage token
+
 ## 3.0.8
 
 ### Patch Changes
