@@ -26,9 +26,55 @@ argocd:
 
 ### Authentication
 
-- Option 1: Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD` inside the `argocd` object. It will be use as credentials for all instances by default.
-- Option 2: Define a `username` and a `password` for each instance. It has an higher priority than **Option 1**.
-- Option 3: Define a `token` for each instance. It has an higher priority than **Option 1** and **Option 2**.
+**Option 1**: Add the required auth tokens to environmental variables, `ARGOCD_USERNAME` and `ARGOCD_PASSWORD` inside the `argocd` object. It will be use as credentials for all instances by default.
+
+_Example_
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: https://argoInstance1.com
+        - name: argoInstance2
+          url: https://argoInstance2.com
+```
+
+**Option 2**: Define a `username` and a `password` for each instance. It has an higher priority than **Option 1**.
+
+_Example_
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: https://argoInstance1.com
+        - name: argoInstance2
+          url: https://argoInstance2.com
+          # dedicated username/password for this instance
+          username: ${ARGOCD_USERNAME_INSTANCE_2}
+          password: ${ARGOCD_PASSWORD_INSTANCE_2}
+```
+
+**Option 3**: Define a `token` for each instance. It has an higher priority than **Option 1** and **Option 2**.
+
+_Example_
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  appLocatorMethods:
+    - type: 'config'
+      instances:
+        - name: argoInstance1
+          url: https://argoInstance1.com
+          token: ${ARGOCD_AUTH_TOKEN} # Token to use to instance 1
+```
 
 ### Wait Cycles
 
