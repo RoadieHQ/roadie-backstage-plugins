@@ -17,7 +17,9 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
+import { extname } from 'path';
 import { merge } from 'lodash';
+import YAML from 'yaml';
 
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
@@ -73,6 +75,76 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
         sourceFilepath,
         JSON.stringify(merge(existingContent, ctx.input.content), null, 2),
       );
+      ctx.output('path', sourceFilepath);
+    },
+  });
+}
+
+export function createMergeAction() {
+  return createTemplateAction<{ path: string; content: any }>({
+    id: 'roadiehq:utils:merge',
+    description: 'Merges data into an existing structured file.',
+    schema: {
+      input: {
+        type: 'object',
+        required: ['content', 'path'],
+        properties: {
+          path: {
+            title: 'Path',
+            description: 'Path to existing file to append.',
+            type: 'string',
+          },
+          content: {
+            title: 'Content',
+            description: 'This will be merged into to the file',
+            type: 'object',
+          },
+        },
+      },
+      output: {
+        type: 'object',
+        properties: {
+          path: {
+            title: 'Path',
+            type: 'string',
+          },
+        },
+      },
+    },
+    async handler(ctx) {
+      const sourceFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.path,
+      );
+
+      if (!fs.existsSync(sourceFilepath)) {
+        ctx.logger.error(`The file ${sourceFilepath} does not exist.`);
+        throw new Error(`The file ${sourceFilepath} does not exist.`);
+      }
+      const originalContent = fs.readFileSync(sourceFilepath).toString();
+      let mergedContent;
+
+      switch (extname(sourceFilepath)) {
+        case '.json':
+          mergedContent = JSON.stringify(
+            merge(JSON.parse(originalContent), ctx.input.content),
+            null,
+            2,
+          );
+          break;
+        case '.yaml':
+        case '.yml':
+          mergedContent = YAML.stringify(
+            merge(YAML.parse(originalContent), ctx.input.content),
+          );
+          break;
+        default:
+          break;
+      }
+      if (!mergedContent) {
+        return;
+      }
+      fs.writeFileSync(sourceFilepath, mergedContent);
       ctx.output('path', sourceFilepath);
     },
   });

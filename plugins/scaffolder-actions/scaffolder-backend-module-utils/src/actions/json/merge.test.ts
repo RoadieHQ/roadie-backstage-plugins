@@ -15,10 +15,11 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { createMergeJSONAction } from './merge';
+import { createMergeAction, createMergeJSONAction } from './merge';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
+import YAML from 'yaml';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -112,6 +113,128 @@ describe('roadiehq:utils:json:merge', () => {
   });
 
   it('should put path on the output property', async () => {
+    const ctx = {
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: {
+          foo: 'bar',
+        },
+      },
+    };
+    await action.handler(ctx);
+
+    expect(ctx.output.mock.calls[0][0]).toEqual('path');
+    expect(ctx.output.mock.calls[0][1]).toContain(
+      '/fake-tmp-dir/fake-file.json',
+    );
+  });
+});
+
+describe('roadiehq:utils:merge', () => {
+  beforeEach(() => {
+    mock({
+      'fake-tmp-dir': {},
+    });
+  });
+  afterEach(() => mock.restore());
+  const mockContext = {
+    workspacePath: 'lol',
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+  };
+
+  const action = createMergeAction();
+
+  it('should throw error when required parameter path is not provided', async () => {
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: { content: '' } as any,
+      }),
+    ).rejects.toThrow(/"path" argument must/);
+  });
+
+  it('should throw an error when the source file does not exist', async () => {
+    await expect(
+      action.handler({
+        ...mockContext,
+        workspacePath: 'fake-tmp-dir',
+        input: {
+          path: 'fake-file.json',
+          content: {
+            foo: 'bar',
+          },
+        },
+      }),
+    ).rejects.toThrow(
+      /The file (.*)fake-tmp-dir\/fake-file.json does not exist./,
+    );
+  });
+
+  it('can merge content into a json file', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+  it('can merge content into a yaml file', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'scripts:\n  lsltr: ls -ltr\n',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
+  it('should put path on the output property', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
+      },
+    });
+
     const ctx = {
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
