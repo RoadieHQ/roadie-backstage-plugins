@@ -38,4 +38,5 @@ export interface HttpOptions {
   method: Methods;
   headers: Headers;
   body?: Body;
+  credentials?: RequestCredentials;
 }

@@ -27,6 +27,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     headers?: Headers;
     params?: Params;
     body?: Body;
+    credentials?: RequestCredentials;
   }>({
     id: 'http:backstage:request',
     description:
@@ -60,6 +61,12 @@ export function createHttpBackstageAction(options: { config: Config }) {
             title: 'Request headers',
             description: 'The headers you would like to pass to your request',
             type: 'object',
+          },
+          credentials: {
+            title: 'Request credentials',
+            description:
+              'The credentials you would like to pass to your request',
+            type: 'string',
           },
           params: {
             title: 'Request query params',
@@ -125,6 +132,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
         url: queryParams !== '' ? `${url}?${queryParams}` : url,
         headers: input.headers ? (input.headers as Headers) : {},
         body: inputBody,
+        credentials: input.credentials,
       };
 
       if (token) {
