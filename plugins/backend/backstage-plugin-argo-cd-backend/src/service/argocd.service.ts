@@ -69,7 +69,7 @@ interface ResyncProps {
 
 export interface ArgoServiceApi {
   getArgoToken: (appConfig: {
-    baseUrl: string;
+    url: string;
     username?: string;
     password?: string;
   }) => Promise<string>;
@@ -168,11 +168,11 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   async getArgoToken(appConfig: {
-    baseUrl: string;
+    url: string;
     username?: string;
     password?: string;
   }): Promise<string> {
-    const { baseUrl, username, password } = appConfig;
+    const { url, username, password } = appConfig;
 
     const options: RequestInit = {
       method: 'POST',
@@ -184,9 +184,9 @@ export class ArgoService implements ArgoServiceApi {
         password: `${password || this.password}`,
       }),
     };
-    const resp = await fetch(`${baseUrl}/api/v1/session`, options);
+    const resp = await fetch(`${url}/api/v1/session`, options);
     if (resp.status === 401) {
-      throw new Error(`Getting unauthorized for Argo CD instance ${baseUrl}`);
+      throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
     }
     const data = await resp.json();
     return data.token;
