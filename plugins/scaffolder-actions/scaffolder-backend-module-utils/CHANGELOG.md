@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.2.0
+
+### Minor Changes
+
+- 16ef290: Add merge action
+
 ## 1.1.1
 
 ### Patch Changes
