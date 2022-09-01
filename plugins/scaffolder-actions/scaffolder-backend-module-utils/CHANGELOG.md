@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.3.0
+
+### Minor Changes
+
+- 47d42d1: Export merge action
+
 ## 1.2.0
 
 ### Minor Changes
