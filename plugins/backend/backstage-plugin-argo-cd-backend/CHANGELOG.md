@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.5.0
+
+### Minor Changes
+
+- 8716dfb: Use different credentials for each instance
+
 ## 2.4.4
 
 ### Patch Changes
