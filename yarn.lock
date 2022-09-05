@@ -4052,9 +4052,9 @@
     yup "^0.32.9"
 
 "@backstage/plugin-scaffolder-backend@^1.0.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.5.0.tgz#15372a690c3c9e0897896ea073788b0546a724e6"
-  integrity sha512-e86cfOAzySMWxMKbn0YYOdRhW3Y/N5BIyyAJpbK4FpmLDUMMaDIInN3HRwUY7M/s5hacPnsVTtUW9TgH/Nd5ZA==
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.5.1.tgz#7654deda463563ef7ec59b6c9cbb2b558777500c"
+  integrity sha512-XcKFVk8yKn4FRPZeM1VqNIfuHmh79+wKmJtCr70ZwuNFa+fIYCpchp35s1QMqJKkTDpWOSP8FegpWNUlAe6zeA==
   dependencies:
     "@backstage/backend-common" "^0.15.0"
     "@backstage/backend-plugin-api" "^0.1.1"
@@ -4093,7 +4093,7 @@
     octokit-plugin-create-pull-request "^3.10.0"
     p-limit "^3.1.0"
     uuid "^8.2.0"
-    vm2 "^3.9.6"
+    vm2 "^3.9.11"
     winston "^3.2.1"
     yaml "^2.0.0"
     zen-observable "^0.8.15"
@@ -23585,10 +23585,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vm2@^3.9.6:
-  version "3.9.9"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.9.tgz#c0507bc5fbb99388fad837d228badaaeb499ddc5"
-  integrity sha512-xwTm7NLh/uOjARRBs8/95H0e8fT3Ukw5D/JJWhxMbhKzNh1Nu981jQKvkep9iKYNxzlVrdzD0mlBGkDKZWprlw==
+vm2@^3.9.11:
+  version "3.9.11"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.11.tgz#a880f510a606481719ec3f9803b940c5805a06fe"
+  integrity sha512-PFG8iJRSjvvBdisowQ7iVF580DXb1uCIiGaXgm7tynMR1uTBlv7UJlB1zdv5KJ+Tmq1f0Upnj3fayoEOPpCBKg==
   dependencies:
     acorn "^8.7.0"
     acorn-walk "^8.2.0"
