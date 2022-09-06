@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.0.5
+
+### Patch Changes
+
+- 99153fe: Move react-router and react-router-dom dependencies to peerDependencies because of the migration to the stabel version of react-router in backstage/backstage. See the migration guide [here](https://backstage.io/docs/tutorials/react-router-stable-migration#for-plugin-authors)
+
 ## 2.0.4
 
 ### Patch Changes
