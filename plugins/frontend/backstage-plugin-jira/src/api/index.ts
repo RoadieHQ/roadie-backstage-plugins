@@ -65,7 +65,9 @@ export class JiraAPI {
     );
   }
 
-  private generateProjectUrl = (url: string) => new URL(url).origin;
+  private generateProjectUrl = (url: string) =>
+    new URL(url).origin +
+    new URL(url).pathname.replace(/\/rest\/api\/.*$/g, '');
 
   private async getUrls() {
     const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
