@@ -3,8 +3,6 @@
 This custom scaffolder field, fetches an api call from the backstage backend and allows the result to be
 rendered to a list.
 
-![Alt text](images/sample.png?raw=true 'Example of the custom scaffolder field')
-
 It can be installed as follows in the `App.tsx`
 
 ```typescript jsx
@@ -57,3 +55,20 @@ spec:
             # (Optional) This selects the field in the array to use for the label of each select item.
             ui:labelSelector: 'value'
 ```
+
+The configuration above will result in an outgoing request to:
+
+With these configuration the outgoing request will be to `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
+
+The response is the following and it will extract the `count` field as the value and `value` as the label of the dropdown.
+
+```json
+{
+  "facets": [...],
+  "kind": [{count: 5, value: 'foo'}]
+}
+```
+
+This would result in the following dropdown:
+
+![Alt text](images/sample.png?raw=true 'Example of the custom scaffolder field')
