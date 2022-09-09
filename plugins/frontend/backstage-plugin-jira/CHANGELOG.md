@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.1.5
+
+### Patch Changes
+
+- 0ca1b2c: Fix project url to keep the context path of a Jira server setup.
+
 ## 2.1.4
 
 ### Patch Changes

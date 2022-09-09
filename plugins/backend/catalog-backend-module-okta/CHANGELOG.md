@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.2.4
+
+### Patch Changes
+
+- 8e003da: Fix readme
+
 ## 0.2.3
 
 ### Patch Changes
