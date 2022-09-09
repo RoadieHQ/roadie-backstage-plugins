@@ -26,7 +26,7 @@ import {
   CatalogImportPage,
   catalogImportPlugin,
 } from '@backstage/plugin-catalog-import';
-import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
+import { ScaffolderFieldExtensions, ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
 import { SearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
@@ -41,6 +41,7 @@ import { FlatRoutes } from '@backstage/core-app-api';
 import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
+import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
 
 const app = createApp({
   apis,
@@ -76,8 +77,14 @@ const routes = (
     >
       {entityPage}
     </Route>
-    <Route path="/docs" element={<TechdocsPage />} />
-    <Route path="/create" element={<ScaffolderPage />} />
+    <Route path="/docs" element={<TechdocsPage />}>
+
+    </Route>
+    <Route path="/create" element={<ScaffolderPage />}>
+      <ScaffolderFieldExtensions>
+        <SelectFieldFromApiExtension />
+      </ScaffolderFieldExtensions>
+    </Route>
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route
       path="/tech-radar"
