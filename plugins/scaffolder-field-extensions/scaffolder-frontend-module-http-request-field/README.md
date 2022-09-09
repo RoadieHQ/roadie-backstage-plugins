@@ -50,15 +50,14 @@ spec:
             # under the facets object
             ui:arraySelector: 'facets.kind'
 
-            # This selects the field in the array to use for the value of each select item.
+            # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
+            # it will use the value of the item directly.
             ui:valueSelector: 'count'
             # (Optional) This selects the field in the array to use for the label of each select item.
             ui:labelSelector: 'value'
 ```
 
-The configuration above will result in an outgoing request to:
-
-With these configuration the outgoing request will be to `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
+The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
 
 The response is the following and it will extract the `count` field as the value and `value` as the label of the dropdown.
 
@@ -75,6 +74,6 @@ The response is the following and it will extract the `count` field as the value
 }
 ```
 
-This would result in the following dropdown:
+The example template would result in the following dropdown::
 
 ![Alt text](images/sample.png?raw=true 'Example of the custom scaffolder field')

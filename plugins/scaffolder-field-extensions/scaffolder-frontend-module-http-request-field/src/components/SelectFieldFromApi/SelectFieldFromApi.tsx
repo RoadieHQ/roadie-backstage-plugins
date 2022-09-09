@@ -45,9 +45,27 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     const body = await response.json();
     const array = get(body, props.uiSchema['ui:arraySelector']);
     setDropDownData(
-      array.map((item: any) => {
-        const value = get(item, props.uiSchema['ui:valueSelector']);
-        const label = get(item, props.uiSchema['ui:labelSelector']);
+      array.map((item: unknown) => {
+        let value: string | undefined;
+        let label: string | undefined;
+
+        if (props.uiSchema['ui:valueSelector']) {
+          value = get(item, props.uiSchema['ui:valueSelector']);
+          label = get(item, props.uiSchema['ui:labelSelector']) || value;
+        } else {
+          if (!(typeof item === 'string')) {
+            throw new Error(
+              `The item provided for the select drop down "${item}" is not a string`,
+            );
+          }
+          value = item;
+          label = item;
+        }
+
+        if (!value) {
+          throw new Error(`Failed to populate SelectFieldFromApi dropdown`);
+        }
+
         return {
           value,
           label: label || value,
