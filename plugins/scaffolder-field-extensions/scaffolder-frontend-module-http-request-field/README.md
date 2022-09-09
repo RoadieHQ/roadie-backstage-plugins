@@ -64,8 +64,14 @@ The response is the following and it will extract the `count` field as the value
 
 ```json
 {
-  "facets": [...],
-  "kind": [{count: 5, value: 'foo'}]
+  "facets": {
+    "kind": [
+      {
+        "count": 5,
+        "value": "foo"
+      }
+    ]
+  }
 }
 ```
 
