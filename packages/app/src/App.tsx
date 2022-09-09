@@ -77,9 +77,7 @@ const routes = (
     >
       {entityPage}
     </Route>
-    <Route path="/docs" element={<TechdocsPage />}>
-
-    </Route>
+    <Route path="/docs" element={<TechdocsPage />} />
     <Route path="/create" element={<ScaffolderPage />}>
       <ScaffolderFieldExtensions>
         <SelectFieldFromApiExtension />
