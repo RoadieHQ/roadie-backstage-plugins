@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "backstage": {
     "role": "frontend"
@@ -47,7 +47,7 @@
     "@roadiehq/backstage-plugin-security-insights": "^2.0.3",
     "@roadiehq/backstage-plugin-shortcut": "^1.0.9",
     "@roadiehq/backstage-plugin-travis-ci": "^2.0.2",
-    "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^0.0.1",
+    "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^0.0.2",
     "history": "^5.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
