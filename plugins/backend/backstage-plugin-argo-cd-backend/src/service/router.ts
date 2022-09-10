@@ -133,32 +133,28 @@ export function createRouter({
     if (matchedArgoInstance === undefined) {
       return response.status(500).send({
         status: 'failed',
-        message: 'cannot find an argo instance to match this cluster',
-        projectCreated: false,
-        applicationCreated: false
+        message: 'cannot find an argo instance to match this cluster'
       });
     }
 
     let token: string;
-    // TODO: Uncomment Code when not testing
-    // if (!matchedArgoInstance.token) {
-    //   try {
-    //     token = await argoSvc.getArgoToken(matchedArgoInstance.url);
-    //   } catch (e: any) {
-    //     return response.status(e.status || 500).send({
-    //       status: e.status,
-    //       message: e.message,
-    //       projectCreated: false,
-    //       applicationCreated: false
-    //     });
-    //   }
-    // } else {
-    //   token = matchedArgoInstance.token;
-    // }
+    if (!matchedArgoInstance.token) {
+      try {
+        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+      } catch (e: any) {
+        return response.status(e.status || 500).send({
+          status: e.status,
+          message: e.message,
+          projectCreated: false,
+          applicationCreated: false
+        });
+      }
+    } else {
+      token = matchedArgoInstance.token;
+    }
 
-    let argoProjResp = {};
     try {
-      argoProjResp = await argoSvc.createArgoProject({
+      await argoSvc.createArgoProject({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -166,19 +162,16 @@ export function createRouter({
         sourceRepo,
       });
     } catch (e: any) {
-      logger.error(argoProjResp);
-      // TODO: Uncomment Code when not testing
-      // return response.status(e.status || 500).send({
-      //   status: e.status,
-      //   message: e.message || 'Failed to create argo project',
-      //   projectCreated: false,
-      //   applicationCreated: false
-      // });
+      logger.error(e);
+      return response.status(e.status || 500).send({
+        status: e.status,
+        message: e.message || 'Failed to create argo project'
+      });
     }
 
-    let argoAppResp = {};
+
     try {
-      argoAppResp = await argoSvc.createArgoApplication({
+      await argoSvc.createArgoApplication({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -194,12 +187,10 @@ export function createRouter({
         kubernetesNamespace: namespace,
       });
     } catch (e: any) {
-      logger.error(argoAppResp);
+      logger.error(e);
       return response.status(500).send({
         status: 500,
-        message: e.message || 'Failed to create argo app',
-        projectCreated: true,
-        applicationCreated: false
+        message: e.message || 'Failed to create argo app'
       });
     }
   });
@@ -221,8 +212,8 @@ export function createRouter({
   router.delete(
     '/argoInstance/:argoInstanceName/applications/:argoAppName',
     async (request, response) => {
-      const argoInstanceName = request.params.argoInstanceName;
-      const argoAppName = request.params.argoAppName;
+      const argoInstanceName: string = request.params.argoInstanceName;
+      const argoAppName: string = request.params.argoAppName;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
 
       const matchedArgoInstance = argoInstanceArray.find(
@@ -250,12 +241,10 @@ export function createRouter({
           argoToken: token,
         });
       } catch (e: any) {
-        if (typeof e.message === 'string') {
-          throw new Error(e.message);
-        }
+        logger.error(e)
         return response
           .status(500)
-          .send({ status: 'error with deleteing argo app' });
+          .send({ status: (typeof e.message === 'string') ? e.message : 'error with deleteing argo app' });
       }
 
       let argoDeleteProjectResp: boolean;
@@ -286,10 +275,11 @@ export function createRouter({
           argoProjectName: argoAppName,
           argoToken: token,
         });
-      } catch {
+      } catch (e: any) {
+        logger.error(e)
         return response
           .status(500)
-          .send({ status: 'error with deleteing argo project' });
+          .send({ status: (typeof e.message === 'string') ? e.message : 'error with deleteing argo project' });
       }
 
       return response.send({
