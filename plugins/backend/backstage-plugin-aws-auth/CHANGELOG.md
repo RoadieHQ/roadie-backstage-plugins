@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.3.9
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 0.3.8
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 0.3.7
 
 ### Patch Changes

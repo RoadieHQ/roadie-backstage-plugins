@@ -16,31 +16,25 @@
 
 import React from 'react';
 import { ErrorComponent } from './ErrorComponent';
-import { IFrameProps } from './types';
+import {
+  IFrameProps,
+  IFrameComponentProps,
+  IFrameFromAnnotationProps,
+} from './types';
 import { Content, ContentHeader } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { determineError } from './utils/helpers';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
-/**
- * A component to render a IFrame
- *
- * @public
- */
-export const IFrameCard = (props: IFrameProps) => {
-  const { src, height, width } = props;
-  const title =
-    props.title || 'Backstage IFrame (Note you can modify this with the props)';
-  const configApi = useApi(configApiRef);
-  const allowList = configApi.getOptionalStringArray('iframe.allowList');
-  const errorMessage = determineError(src, allowList);
+type IFrameComponentContentProps = {
+  src: string;
+  title: string;
+  height?: string;
+  width?: string;
+};
 
-  if (errorMessage !== '') {
-    return <ErrorComponent {...{ errorMessage }} />;
-  }
-
-  if (errorMessage !== '') {
-    return <ErrorComponent {...{ errorMessage }} />;
-  }
+const IFrameComponentContent = (props: IFrameComponentContentProps) => {
+  const { title, src, height, width } = props;
 
   return (
     <Content>
@@ -52,5 +46,88 @@ export const IFrameCard = (props: IFrameProps) => {
         title={title}
       />
     </Content>
+  );
+};
+
+const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
+  const { srcFromAnnotation, height, width } = props;
+  const title =
+    props.title || 'Backstage IFrame (Note you can modify this with the props)';
+  const configApi = useApi(configApiRef);
+  const allowList = configApi.getOptionalStringArray('iframe.allowList');
+  const { entity } = useEntity();
+  let errorMessage = '';
+
+  const src = entity.metadata.annotations?.[srcFromAnnotation];
+
+  if (!src) {
+    return (
+      <ErrorComponent
+        errorMessage={`Failed to get url src from the entity annotation ${srcFromAnnotation}`}
+      />
+    );
+  }
+
+  errorMessage = determineError(src, allowList);
+
+  if (errorMessage) {
+    return <ErrorComponent errorMessage={errorMessage} />;
+  }
+
+  return (
+    <IFrameComponentContent
+      src={src}
+      title={title}
+      height={height}
+      width={width}
+    />
+  );
+};
+
+const IFrameFromSrc = (props: IFrameProps) => {
+  const { src, height, width } = props;
+  const title =
+    props.title || 'Backstage IFrame (Note you can modify this with the props)';
+  const configApi = useApi(configApiRef);
+  const allowList = configApi.getOptionalStringArray('iframe.allowList');
+  const errorMessage = determineError(src, allowList);
+
+  if (errorMessage !== '') {
+    return <ErrorComponent errorMessage={errorMessage} />;
+  }
+
+  return (
+    <IFrameComponentContent
+      src={src}
+      title={title}
+      height={height}
+      width={width}
+    />
+  );
+};
+
+/**
+ * A component to render a IFrame
+ *
+ * @public
+ */
+export const IFrameCard = (props: IFrameComponentProps) => {
+  const { src, srcFromAnnotation, height, width, title } = props;
+  if (src) {
+    return (
+      <IFrameFromSrc src={src} height={height} width={width} title={title} />
+    );
+  } else if (srcFromAnnotation) {
+    return (
+      <IFrameFromAnnotation
+        srcFromAnnotation={srcFromAnnotation}
+        height={height}
+        width={width}
+        title={title}
+      />
+    );
+  }
+  return (
+    <ErrorComponent errorMessage="You must provide `src` or `srcFromAnnotation`" />
   );
 };

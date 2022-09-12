@@ -164,6 +164,25 @@ Type definition for `PrometheusAlertStatus' props is:
 }
 ```
 
+## Multiple Prometheus instances
+
+If you have multiple Prometheus instances you can use the annotation `prometheus.io/service-name`
+, which has to match an instance at your Backstage configuration.
+
+```yaml
+proxy:
+  '/prometheus/api':
+    target: http://localhost:9090/api/v1/
+  '/prometheusTeamB/api':
+    target: http://localhost:9999/api/v1/
+
+prometheus:
+  proxyPath: /prometheus/api
+  instances:
+    - name: prometheusTeamB
+      proxyPath: /prometheusTeamB/api
+```
+
 ## Links
 
 - [Backstage](https://backstage.io)

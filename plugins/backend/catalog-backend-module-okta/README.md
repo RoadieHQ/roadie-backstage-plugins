@@ -17,8 +17,12 @@ export default async function createPlugin(
   env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
-  const userProvider = OktaUserEntityProvider.fromConfig(config, env);
-  const groupProvider = OktaGroupEntityProvider.fromConfig(config, env);
+
+  const oktaConfig = env.config.getOptionalConfigArray(
+    'catalog.providers.okta',
+  );
+  const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], env);
+  const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], env);
 
   builder.addEntityProvider(userProvider);
   builder.addEntityProvider(groupProvider);

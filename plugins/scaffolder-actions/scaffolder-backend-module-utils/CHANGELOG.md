@@ -1,5 +1,39 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.3.0
+
+### Minor Changes
+
+- 47d42d1: Export merge action
+
+## 1.2.0
+
+### Minor Changes
+
+- 16ef290: Add merge action
+
+## 1.1.1
+
+### Patch Changes
+
+- 933a028: Pretty print the json merge result to the file.
+
+## 1.1.0
+
+### Minor Changes
+
+- 9890756: Add a new merge json Action to the scaffolder utils actions.
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 1.0.4
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 1.0.3
 
 ### Patch Changes

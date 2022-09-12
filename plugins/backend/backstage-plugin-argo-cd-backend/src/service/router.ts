@@ -37,6 +37,8 @@ export function createRouter({
     name: instance.getString('name'),
     url: instance.getString('url'),
     token: instance.getOptionalString('token'),
+    username: instance.getOptionalString('username'),
+    password: instance.getOptionalString('password'),
   }));
 
   router.get('/find/name/:argoAppName', async (request, response) => {
@@ -64,7 +66,7 @@ export function createRouter({
 
       let token: string;
       if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } else {
         token = matchedArgoInstance.token;
       }
@@ -104,7 +106,7 @@ export function createRouter({
 
       let token: string;
       if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } else {
         token = matchedArgoInstance.token;
       }
@@ -140,7 +142,7 @@ export function createRouter({
     let token: string;
     if (!matchedArgoInstance.token) {
       try {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
@@ -228,7 +230,7 @@ export function createRouter({
 
       let token: string;
       if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance.url);
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
       } else {
         token = matchedArgoInstance.token;
       }

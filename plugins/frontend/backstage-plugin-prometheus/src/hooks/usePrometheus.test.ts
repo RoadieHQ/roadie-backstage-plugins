@@ -17,15 +17,21 @@
 import { resultToGraphData, useAlerts } from './usePrometheus';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 jest.mock('@backstage/core-plugin-api');
 jest.mock('react-use');
+jest.mock('@backstage/plugin-catalog-react');
 
 describe('usePrometheus', () => {
   (useApi as any).mockReturnValue({
     getApiUrl: () => 'dontcare',
     query: () => ['this', 'is', 'mocked', 'via', 'other', 'hook'],
     getAlerts: () => ['alert'],
+  });
+
+  (useEntity as any).mockReturnValue({
+    entity: undefined,
   });
 
   describe('resultToGraphData', () => {

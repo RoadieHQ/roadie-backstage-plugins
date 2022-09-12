@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.5.0
+
+### Minor Changes
+
+- 8716dfb: Use different credentials for each instance
+
+## 2.4.4
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 2.4.3
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.4.2
 
 ### Patch Changes

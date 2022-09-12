@@ -1,5 +1,21 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.0.7
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+- Updated dependencies [151b46b]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.4.4
+
+## 1.0.6
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+- Updated dependencies [c9cfaad]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.4.3
+
 ## 1.0.5
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.1.1
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 1.1.0
+
+### Minor Changes
+
+- 5c74a26: Allow iframe component card to read src from an entity annotation. The card now supports the property `srcFromAnnotation`.
+
+## 1.0.5
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 1.0.4
 
 ### Patch Changes

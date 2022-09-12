@@ -1,5 +1,23 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.1.0
+
+### Minor Changes
+
+- 9c7445e: If header authorization is specified in the input parameters, it is used instead of the backstage token
+
+## 3.0.8
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 3.0.7
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 3.0.6
 
 ### Patch Changes

@@ -27,11 +27,14 @@ import {
 } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { IFrameCard } from './IFrameComponent';
+import { IFrameComponentProps } from './types';
 
 const entityMock = {
   metadata: {
     namespace: 'default',
-    annotations: {},
+    annotations: {
+      iframeSrc: 'https://example-annotation.com',
+    },
     name: 'sample-service',
     description:
       'A service for testing Backstage functionality. For example, we can trigger errors\non the sample-service, these are sent to Sentry, then we can view them in the \nBackstage plugin for Sentry.\n',
@@ -63,7 +66,7 @@ describe('IFrameCard', () => {
   const server = setupServer();
   // Enable sane handlers for network requests
   setupRequestMockHandlers(server);
-  const props = {
+  const props: IFrameComponentProps = {
     src: 'https://example.com',
     title: 'some title',
   };
@@ -93,7 +96,7 @@ describe('IFrameCard', () => {
       );
       expect(
         await rendered.findByText(
-          'No src field provided. Please pass it in as a prop to populate the iframe.',
+          'You must provide `src` or `srcFromAnnotation`',
         ),
       ).toBeTruthy();
     });
@@ -119,7 +122,7 @@ describe('IFrameCard', () => {
   });
 
   describe('when src is in the allowlist', () => {
-    it('should not render the iframe', async () => {
+    it('should render the iframe', async () => {
       props.src = 'https://example.com';
       mockConfig.mockImplementation(() => ['example.com']);
       const rendered = render(
@@ -130,6 +133,88 @@ describe('IFrameCard', () => {
         </TestApiProvider>,
       );
       expect(await rendered.findByText('some title')).toBeTruthy();
+    });
+  });
+
+  describe('when srcFromAnnotation is in the allowlist', () => {
+    it('should render the iframe', async () => {
+      mockConfig.mockImplementation(() => ['example-annotation.com']);
+      const srcFromAnnotationProps = {
+        srcFromAnnotation: 'iframeSrc',
+        title: 'some title',
+      };
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...srcFromAnnotationProps} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(await rendered.findByText('some title')).toBeTruthy();
+    });
+  });
+
+  describe('when srcFromAnnotation is not in the entity', () => {
+    it('should not render the iframe', async () => {
+      const srcFromAnnotationProps = {
+        srcFromAnnotation: 'notSet',
+        title: 'some title',
+      };
+      mockConfig.mockImplementation(() => ['hello.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...srcFromAnnotationProps} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText(
+          'Failed to get url src from the entity annotation notSet',
+        ),
+      ).toBeTruthy();
+    });
+  });
+
+  describe('when srcFromAnnotation is not in allowlist', () => {
+    it('should not render the iframe', async () => {
+      const srcFromAnnotationProps = {
+        srcFromAnnotation: 'iframeSrc',
+        title: 'some title',
+      };
+      mockConfig.mockImplementation(() => ['hello.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...srcFromAnnotationProps} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText(
+          'Src https://example-annotation.com for Iframe is not included in the allowlist hello.com.',
+        ),
+      ).toBeTruthy();
+    });
+  });
+
+  describe('when src attempts to use the javascript protocol', () => {
+    it('should not render the iframe', async () => {
+      // eslint-disable-next-line no-script-url
+      props.src = "javascript:alert('JavaScript Link!');";
+      mockConfig.mockImplementation(() => ['hello.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText(
+          "Src 'javascript:alert('JavaScript Link!');' for Iframe must be a https protocol but is not.",
+        ),
+      ).toBeTruthy();
     });
   });
 });

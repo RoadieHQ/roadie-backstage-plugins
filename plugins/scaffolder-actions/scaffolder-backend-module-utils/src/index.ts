@@ -15,4 +15,5 @@
  */
 export * from './actions/zip';
 export * from './actions/fs';
+export * from './actions/merge';
 export * from './actions/sleep';

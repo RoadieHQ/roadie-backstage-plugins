@@ -34,7 +34,6 @@ import {
   MenuItem,
   Select,
   makeStyles,
-  InputLabel,
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -117,9 +116,7 @@ const StatsCard = (props: Props) => {
                 <MenuItem value={50}>50</MenuItem>
                 <MenuItem value={100}>100</MenuItem>
               </Select>
-              <FormHelperText>
-                <InputLabel>Number of PRs</InputLabel>
-              </FormHelperText>
+              <FormHelperText>Number of PRs</FormHelperText>
             </FormControl>
           </Box>
         </Box>

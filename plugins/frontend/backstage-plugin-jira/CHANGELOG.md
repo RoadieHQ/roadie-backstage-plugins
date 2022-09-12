@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.1.5
+
+### Patch Changes
+
+- 0ca1b2c: Fix project url to keep the context path of a Jira server setup.
+
+## 2.1.4
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 2.1.3
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.1.2
 
 ### Patch Changes

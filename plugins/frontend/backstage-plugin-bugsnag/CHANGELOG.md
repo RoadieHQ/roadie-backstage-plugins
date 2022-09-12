@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.0.4
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 2.0.3
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.0.2
 
 ### Patch Changes

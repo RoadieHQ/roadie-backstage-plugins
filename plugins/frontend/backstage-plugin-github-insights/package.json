@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-github-insights",
-  "version": "2.0.2",
+  "version": "2.0.5",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "^1.0.0",
-    "@backstage/core-components": "^0.10.0",
+    "@backstage/core-components": "^0.11.0",
     "@backstage/core-plugin-api": "^1.0.0",
     "@backstage/integration-react": "^1.0.0",
     "@backstage/plugin-catalog-react": "^1.0.0",
@@ -49,12 +49,12 @@
     "history": "^5.0.0",
     "immer": "9.0.7",
     "zustand": "3.6.9",
-    "react-router": "^6.0.0-beta.0",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17.0.0",
-    "react-dom": "^16.13.1 || ^17.0.0"
+    "react-dom": "^16.13.1 || ^17.0.0",
+    "react-router": "6.0.0-beta.0 || ^6.3.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.18.0",

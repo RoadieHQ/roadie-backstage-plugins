@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.8
+
+### Patch Changes
+
+- 99153fe: Move react-router and react-router-dom dependencies to peerDependencies because of the migration to the stabel version of react-router in backstage/backstage. See the migration guide [here](https://backstage.io/docs/tutorials/react-router-stable-migration#for-plugin-authors)
+
+## 2.0.7
+
+### Patch Changes
+
+- 62be7f3: Fix dependabot widget to only show open alerts.
+
+## 2.0.6
+
+### Patch Changes
+
+- 151b46b: bump to latest backstage package versions
+
+## 2.0.5
+
+### Patch Changes
+
+- c9cfaad: Release all plugins after fixing typescript exports issue.
+
 ## 2.0.4
 
 ### Patch Changes
