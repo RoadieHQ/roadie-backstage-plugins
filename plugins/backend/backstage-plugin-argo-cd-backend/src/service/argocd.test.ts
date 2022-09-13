@@ -45,14 +45,14 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.getArgoAppData(
+    const resp = await argoService.getArgoAppData(
       'https://argoInstance1.com',
       'argoInstance1',
       { name: 'testApp' },
       'testToken',
     );
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       instance: 'argoInstance1',
       metadata: {
         name: 'testAppName',
@@ -89,9 +89,9 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.findArgoApp({ name: 'testApp-nonprod' });
+    const resp = await argoService.findArgoApp({ name: 'testApp-nonprod' });
 
-    expect(await resp).toStrictEqual([
+    expect(resp).toStrictEqual([
       {
         name: 'argoInstance1',
         url: 'https://argoInstance1.com',
@@ -126,9 +126,9 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
+    const resp = await argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
 
-    expect(await resp).toStrictEqual([
+    expect(resp).toStrictEqual([
       {
         appName: ['testApp-nonprod'],
         name: 'argoInstance1',
@@ -157,14 +157,14 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.getArgoAppData(
+    const resp = await argoService.getArgoAppData(
       'https://argoInstance1.com',
       'argoInstance1',
       { selector: 'service=testApp' },
       'testToken',
     );
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       items: [
         {
           metadata: {
@@ -195,7 +195,7 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.createArgoProject({
+    const resp = await argoService.createArgoProject({
       baseUrl: 'https://argoInstance1.com',
       argoToken: 'testToken',
       projectName: 'testProject',
@@ -203,7 +203,7 @@ describe('ArgoCD service', () => {
       sourceRepo: 'https://github.com/backstage/backstage',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       argocdCreateProjectResp,
     });
   });
@@ -215,7 +215,7 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.createArgoProject({
+    const resp = await argoService.createArgoProject({
       baseUrl: 'https://argoInstance1.com',
       argoToken: 'testToken',
       projectName: 'testProject',
@@ -223,7 +223,7 @@ describe('ArgoCD service', () => {
       sourceRepo: 'https://github.com/backstage/backstage',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       error: 'Failed to Create project',
     });
   });
@@ -267,7 +267,7 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.createArgoApplication({
+    const resp = await argoService.createArgoApplication({
       baseUrl: 'https://argoInstance1.com',
       argoToken: 'testToken',
       appName: 'testProject',
@@ -278,7 +278,7 @@ describe('ArgoCD service', () => {
       labelValue: 'backstageId',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       argocdCreateApplicationResp,
     });
   });
@@ -290,7 +290,7 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.createArgoApplication({
+    const resp = await argoService.createArgoApplication({
       baseUrl: 'https://argoInstance1.com',
       argoToken: 'testToken',
       appName: 'testProject',
@@ -301,7 +301,7 @@ describe('ArgoCD service', () => {
       labelValue: 'backstageId',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       error: 'Failed to Create application',
     });
   });
@@ -357,7 +357,7 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = argoService.createArgoResources({
+    const resp = await argoService.createArgoResources({
       argoInstance: 'argoInstance1',
       appName: 'testApp',
       projectName: 'testProject',
@@ -368,7 +368,7 @@ describe('ArgoCD service', () => {
       logger: getVoidLogger(),
     });
 
-    expect(await resp).toStrictEqual(true);
+    expect(resp).toStrictEqual(true);
   });
 
   it('should fail to create both app and project in argo when argo rejects', async () => {
@@ -397,27 +397,27 @@ describe('ArgoCD service', () => {
   });
 
   it('should delete project in argo', async () => {
-    fetchMock.mockResponseOnce('');
+    fetchMock.mockResponseOnce(JSON.stringify({}));
 
-    const resp = argoService.deleteProject({
+    const resp = await argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
       argoProjectName: 'testApp',
       argoToken: 'testToken',
     });
 
-    expect(await resp).toStrictEqual(true);
+    expect(resp).toStrictEqual(true);
   });
 
   it('should fail to delete project in argo when bad status', async () => {
-    fetchMock.mockResponseOnce('', { status: 500 });
+    fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
-    const resp = argoService.deleteProject({
+    const resp = await argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
       argoProjectName: 'testApp',
       argoToken: 'testToken',
     });
 
-    expect(await resp).toStrictEqual(false);
+    expect(resp).toStrictEqual(false);
   });
 
   it('should fail to delete project in argo when bad permissions', async () => {
@@ -442,28 +442,46 @@ describe('ArgoCD service', () => {
     );
   });
 
-  it('should delete app in argo', async () => {
-    fetchMock.mockResponseOnce('');
+  it('should throw error message when status code is not one already being handled', async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify({
+        error:
+          'something unexpected',
+        message:
+          'something unexpected',
+      }),
+      { status: 403324 },
+    );
 
-    const resp = argoService.deleteApp({
+    await expect(argoService.deleteProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoProjectName: 'testApp',
+      argoToken: 'testToken',
+    })).rejects.toThrowError('something unexpected');
+  });
+
+  it('should delete app in argo', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    const resp = await argoService.deleteApp({
       baseUrl: 'https://argoInstance1.com',
       argoApplicationName: 'testApp',
       argoToken: 'testToken',
     });
 
-    expect(await resp).toStrictEqual(true);
+    expect(resp).toStrictEqual(true);
   });
 
   it('should fail to delete app in argo when bad status', async () => {
-    fetchMock.mockResponseOnce('', { status: 500 });
+    fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
-    const resp = argoService.deleteApp({
+    const resp = await argoService.deleteApp({
       baseUrl: 'https://argoInstance1.com',
       argoApplicationName: 'testApp',
       argoToken: 'testToken',
     });
 
-    expect(await resp).toStrictEqual(false);
+    expect(resp).toStrictEqual(false);
   });
 
   it('should fail to delete application in argo when bad permissions', async () => {
@@ -491,7 +509,7 @@ describe('ArgoCD service', () => {
   it('should sync app', async () => {
     fetchMock.mockResponseOnce('');
 
-    const resp = argoService.syncArgoApp({
+    const resp = await argoService.syncArgoApp({
       argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
@@ -501,7 +519,7 @@ describe('ArgoCD service', () => {
       appName: 'testApp',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       message: 'Re-synced testApp on testApp',
       status: 'Success',
     });
@@ -510,7 +528,7 @@ describe('ArgoCD service', () => {
   it('should fail to sync app on bad status', async () => {
     fetchMock.mockResponseOnce('', { status: 500 });
 
-    const resp = argoService.syncArgoApp({
+    const resp = await argoService.syncArgoApp({
       argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
@@ -520,7 +538,7 @@ describe('ArgoCD service', () => {
       appName: 'testApp',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
       status: 'Failure',
     });
@@ -536,7 +554,7 @@ describe('ArgoCD service', () => {
   it('should fail to sync app on bad permissions', async () => {
     fetchMock.mockResponseOnce('', { status: 403 });
 
-    const resp = argoService.syncArgoApp({
+    const resp = await argoService.syncArgoApp({
       argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
@@ -546,7 +564,7 @@ describe('ArgoCD service', () => {
       appName: 'testApp',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
       status: 'Failure',
     });
@@ -581,9 +599,9 @@ describe('ArgoCD service', () => {
     // sync
     fetchMock.mockResponseOnce('');
 
-    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = await argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
 
-    expect(await resp).toStrictEqual([
+    expect(resp).toStrictEqual([
       [
         {
           message: 'Re-synced testAppName on argoInstance1',
@@ -613,7 +631,7 @@ describe('ArgoCD service', () => {
   it('should fail to sync all apps when bad permissions', async () => {
     fetchMock.mockResponseOnce('', { status: 403 });
 
-    const resp = argoService.syncArgoApp({
+    const resp = await argoService.syncArgoApp({
       argoInstance: {
         name: 'testApp',
         url: 'https://argoInstance1.com',
@@ -623,7 +641,7 @@ describe('ArgoCD service', () => {
       appName: 'testApp',
     });
 
-    expect(await resp).toStrictEqual({
+    expect(resp).toStrictEqual({
       message: 'Failed to resync testApp on testApp',
       status: 'Failure',
     });
@@ -666,9 +684,9 @@ describe('ArgoCD service', () => {
       { status: 403 },
     );
 
-    const resp = argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = await argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
 
-    expect(await resp).toStrictEqual([
+    expect(resp).toStrictEqual([
       [
         {
           message: 'Failed to resync testAppName on argoInstance1',

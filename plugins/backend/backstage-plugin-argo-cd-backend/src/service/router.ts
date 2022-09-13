@@ -264,14 +264,17 @@ export function createRouter({
           attempts++
         ) {
           await new Promise(resolve => setTimeout(resolve, 3000));
+          
           argoApp = await argoSvc.getArgoAppData(
             matchedArgoInstance.url,
             matchedArgoInstance.name,
             { name: argoAppName },
             token,
           );
+          
           isAppDeployed = 'metadata' in argoApp;
         }
+
         argoDeleteProjectResp = await argoSvc.deleteProject({
           baseUrl: matchedArgoInstance.url,
           argoProjectName: argoAppName,
