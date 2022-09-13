@@ -30,6 +30,7 @@ import {
 } from '@backstage/core-components';
 import { useAsync } from 'react-use';
 import { get } from 'lodash';
+import { selectFieldFromApiConfigSchema } from '../../types';
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
@@ -38,20 +39,25 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
-    const params = new URLSearchParams(props.uiSchema['ui:params']);
+    const options = selectFieldFromApiConfigSchema.parse(
+      props.uiSchema['ui:options'],
+    );
+    const params = new URLSearchParams(options.params);
     const response = await fetchApi.fetch(
-      `${baseUrl}${props.uiSchema['ui:path']}?${params}`,
+      `${baseUrl}${options.path}?${params}`,
     );
     const body = await response.json();
-    const array = get(body, props.uiSchema['ui:arraySelector']);
+    const array = get(body, options.arraySelector);
     setDropDownData(
       array.map((item: unknown) => {
         let value: string | undefined;
         let label: string | undefined;
 
-        if (props.uiSchema['ui:valueSelector']) {
-          value = get(item, props.uiSchema['ui:valueSelector']);
-          label = get(item, props.uiSchema['ui:labelSelector']) || value;
+        if (options.valueSelector) {
+          value = get(item, options.valueSelector);
+          label = options.labelSelector
+            ? get(item, options.labelSelector)
+            : value;
         } else {
           if (!(typeof item === 'string')) {
             throw new Error(

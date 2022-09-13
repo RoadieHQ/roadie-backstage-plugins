@@ -41,20 +41,21 @@ spec:
             # Use `SelectFieldFromApi` to configure the select field for the entry.
             ui:field: SelectFieldFromApi
 
-            # The Path on the Backstage API and the parameters to fetch the data for the dropdown
-            ui:path: 'catalog/entity-facets'
-            ui:params:
-              facet: 'kind'
+            ui:options:
+              # The Path on the Backstage API and the parameters to fetch the data for the dropdown
+              path: 'catalog/entity-facets'
+              params:
+                facet: 'kind'
 
-            # This selects the array element from the API fetch response. It finds the array with the name kind
-            # under the facets object
-            ui:arraySelector: 'facets.kind'
+              # This selects the array element from the API fetch response. It finds the array with the name kind
+              # under the facets object
+              arraySelector: 'facets.kind'
 
-            # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
-            # it will use the value of the item directly.
-            ui:valueSelector: 'count'
-            # (Optional) This selects the field in the array to use for the label of each select item.
-            ui:labelSelector: 'value'
+              # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
+              # it will use the value of the item directly.
+              valueSelector: 'count'
+              # (Optional) This selects the field in the array to use for the label of each select item.
+              labelSelector: 'value'
 ```
 
 The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
