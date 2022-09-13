@@ -146,9 +146,7 @@ export function createRouter({
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
-          message: e.message,
-          projectCreated: false,
-          applicationCreated: false
+          message: e.message
         });
       }
     } else {
