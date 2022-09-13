@@ -39,7 +39,9 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
-    const options = selectFieldFromApiConfigSchema.parse(props.uiSchema['ui:options']);
+    const options = selectFieldFromApiConfigSchema.parse(
+      props.uiSchema['ui:options'],
+    );
     const params = new URLSearchParams(options.params);
     const response = await fetchApi.fetch(
       `${baseUrl}${options.path}?${params}`,
@@ -53,7 +55,9 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
 
         if (options.valueSelector) {
           value = get(item, options.valueSelector);
-          label = options.labelSelector ? get(item, options.labelSelector) : value;
+          label = options.labelSelector
+            ? get(item, options.labelSelector)
+            : value;
         } else {
           if (!(typeof item === 'string')) {
             throw new Error(
