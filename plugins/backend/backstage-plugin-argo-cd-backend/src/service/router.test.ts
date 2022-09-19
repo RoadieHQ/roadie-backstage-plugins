@@ -72,8 +72,8 @@ describe('router', () => {
       kubernetesNamespace: 'test-namespace',
     });
   });
+  
   describe('delete application', () => {
-    // Note: case below likely does not happen
     it('successfully deletes the argo application and project', async () => {
       getArgoAppData.mockResolvedValue({})
       deleteApp.mockResolvedValue(true)
@@ -86,7 +86,6 @@ describe('router', () => {
       });
     });
 
-    // Note: Current behavior below - less than ideal. Project is abandonded
     it('fails to delete the project because application was already deleted', async () => {
       getArgoAppData.mockRejectedValue(new Error('Application not found'))
       deleteApp.mockResolvedValue(true)
@@ -98,7 +97,6 @@ describe('router', () => {
       expect(response.body).toMatchObject({status: 'Application not found'});
     });
 
-     // Note: Current behavior below - less than ideal. Project is abandonded
      it('fails to delete the project because application still exists', async () => {
       getArgoAppData.mockResolvedValue({ metadata: {} })
       deleteApp.mockResolvedValue(true)
