@@ -135,7 +135,7 @@ export function createRouter({
     if (matchedArgoInstance === undefined) {
       return response.status(500).send({
         status: 'failed',
-        message: 'cannot find an argo instance to match this cluster'
+        message: 'cannot find an argo instance to match this cluster',
       });
     }
 
@@ -146,7 +146,7 @@ export function createRouter({
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
-          message: e.message
+          message: e.message,
         });
       }
     } else {
@@ -165,10 +165,9 @@ export function createRouter({
       logger.error(e);
       return response.status(e.status || 500).send({
         status: e.status,
-        message: e.message || 'Failed to create argo project'
+        message: e.message || 'Failed to create argo project',
       });
     }
-
 
     try {
       await argoSvc.createArgoApplication({
@@ -190,7 +189,7 @@ export function createRouter({
       logger.error(e);
       return response.status(500).send({
         status: 500,
-        message: e.message || 'Failed to create argo app'
+        message: e.message || 'Failed to create argo app',
       });
     }
   });
@@ -241,10 +240,15 @@ export function createRouter({
           argoToken: token,
         });
       } catch (e: any) {
-        logger.error(e)
+        logger.error(e);
         return response
           .status(500)
-          .send({ status: (typeof e.message === 'string') ? e.message : 'error with deleteing argo app' });
+          .send({
+            status:
+              typeof e.message === 'string'
+                ? e.message
+                : 'error with deleteing argo app',
+          });
       }
 
       let argoDeleteProjectResp: boolean;
@@ -262,14 +266,14 @@ export function createRouter({
           attempts++
         ) {
           await new Promise(resolve => setTimeout(resolve, 3000));
-          
+
           argoApp = await argoSvc.getArgoAppData(
             matchedArgoInstance.url,
             matchedArgoInstance.name,
             { name: argoAppName },
             token,
           );
-          
+
           isAppDeployed = 'metadata' in argoApp;
         }
 
@@ -279,10 +283,15 @@ export function createRouter({
           argoToken: token,
         });
       } catch (e: any) {
-        logger.error(e)
+        logger.error(e);
         return response
           .status(500)
-          .send({ status: (typeof e.message === 'string') ? e.message : 'error with deleteing argo project' });
+          .send({
+            status:
+              typeof e.message === 'string'
+                ? e.message
+                : 'error with deleteing argo project',
+          });
       }
 
       return response.send({

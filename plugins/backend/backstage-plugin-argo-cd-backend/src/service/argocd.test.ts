@@ -126,7 +126,9 @@ describe('ArgoCD service', () => {
       }),
     );
 
-    const resp = await argoService.findArgoApp({ selector: 'name=testApp-nonprod' });
+    const resp = await argoService.findArgoApp({
+      selector: 'name=testApp-nonprod',
+    });
 
     expect(resp).toStrictEqual([
       {
@@ -445,19 +447,19 @@ describe('ArgoCD service', () => {
   it('should throw error message when status code is not one already being handled', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
-        error:
-          'something unexpected',
-        message:
-          'something unexpected',
+        error: 'something unexpected',
+        message: 'something unexpected',
       }),
       { status: 403324 },
     );
 
-    await expect(argoService.deleteProject({
-      baseUrl: 'https://argoInstance1.com',
-      argoProjectName: 'testApp',
-      argoToken: 'testToken',
-    })).rejects.toThrowError('something unexpected');
+    await expect(
+      argoService.deleteProject({
+        baseUrl: 'https://argoInstance1.com',
+        argoProjectName: 'testApp',
+        argoToken: 'testToken',
+      }),
+    ).rejects.toThrowError('something unexpected');
   });
 
   it('should delete app in argo', async () => {
@@ -599,7 +601,9 @@ describe('ArgoCD service', () => {
     // sync
     fetchMock.mockResponseOnce('');
 
-    const resp = await argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = await argoService.resyncAppOnAllArgos({
+      appSelector: 'testApp',
+    });
 
     expect(resp).toStrictEqual([
       [
@@ -684,7 +688,9 @@ describe('ArgoCD service', () => {
       { status: 403 },
     );
 
-    const resp = await argoService.resyncAppOnAllArgos({ appSelector: 'testApp' });
+    const resp = await argoService.resyncAppOnAllArgos({
+      appSelector: 'testApp',
+    });
 
     expect(resp).toStrictEqual([
       [
