@@ -241,14 +241,12 @@ export function createRouter({
         });
       } catch (e: any) {
         logger.error(e);
-        return response
-          .status(500)
-          .send({
-            status:
-              typeof e.message === 'string'
-                ? e.message
-                : 'error with deleteing argo app',
-          });
+        return response.status(500).send({
+          status:
+            typeof e.message === 'string'
+              ? e.message
+              : 'error with deleteing argo app',
+        });
       }
 
       let argoDeleteProjectResp: boolean;
@@ -284,14 +282,12 @@ export function createRouter({
         });
       } catch (e: any) {
         logger.error(e);
-        return response
-          .status(500)
-          .send({
-            status:
-              typeof e.message === 'string'
-                ? e.message
-                : 'error with deleteing argo project',
-          });
+        return response.status(500).send({
+          status:
+            typeof e.message === 'string'
+              ? e.message
+              : 'error with deleteing argo project',
+        });
       }
 
       return response.send({
