@@ -217,9 +217,11 @@ export class ArgoService implements ArgoServiceApi {
       requestOptions,
     );
     if (resp.status === 404) {
-      throw new Error('Could not retrieve ArgoCD app data.');
+      throw new Error(
+        'Could not retrieve ArgoCD app data. Application Not Found.',
+      );
     }
-    const data = await resp.json();
+    const data = await resp?.json();
     if (data.items) {
       (data.items as any[]).forEach(item => {
         item.metadata.instance = { name: argoInstanceName };
@@ -446,10 +448,10 @@ export class ArgoService implements ArgoServiceApi {
       )}`,
       options,
     );
+    const data = await resp?.json();
     if (resp.ok) {
       return true;
     } else if (resp.status === 403 || resp.status === 404) {
-      const data = await resp.json();
       throw new Error(data.message);
     }
     return false;
@@ -473,11 +475,14 @@ export class ArgoService implements ArgoServiceApi {
       })}`,
       options,
     );
+
+    const data = await resp?.json();
     if (resp.ok) {
       return true;
     } else if (resp.status === 403 || resp.status === 404) {
-      const data = await resp.json();
       throw new Error(data.message);
+    } else if (data.error && data.message) {
+      throw new Error(`Cannot Delete Project: ${data.message}`);
     }
     return false;
   }
