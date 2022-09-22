@@ -23,7 +23,7 @@ export function createRouter({
   const argoWaitCycles: number =
     config.getOptionalNumber('argocd.waitCycles') ?? 25;
 
-  const argoSvc = new ArgoService(argoUserName, argoPassword, config);
+  const argoSvc = new ArgoService(argoUserName, argoPassword, config, logger);
 
   const argoApps = config
     .getConfigArray('argocd.appLocatorMethods')

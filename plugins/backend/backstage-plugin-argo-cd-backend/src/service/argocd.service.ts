@@ -20,6 +20,7 @@ export class ArgoService implements ArgoServiceApi {
     private username: string,
     private password: string,
     private config: Config,
+    private logger: Logger,
   ) {}
 
   async findArgoApp(options: {
@@ -61,6 +62,7 @@ export class ArgoService implements ArgoServiceApi {
             token,
           );
         } catch (error: any) {
+          this.logger.error(`failed to fetch app data from ${argoInstance.name}: ${String(error)}`);
           getArgoAppDataResp = { error: true };
         }
         if (!getArgoAppDataResp.error) {
@@ -103,6 +105,9 @@ export class ArgoService implements ArgoServiceApi {
       }),
     };
     const resp = await fetch(`${url}/api/v1/session`, options);
+    if (!resp.ok) {
+      this.logger.error(`failed to get argo token: ${url}`);
+    }
     if (resp.status === 401) {
       throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
     }
