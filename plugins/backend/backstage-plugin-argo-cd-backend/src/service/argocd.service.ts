@@ -2,100 +2,18 @@ import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
 import { Logger } from 'winston';
 
-export type findArgoAppResp = {
-  name: string;
-  url: string;
-  appName: Array<string>;
-};
-
-export type SyncResponse = {
-  status: 'Success' | 'Failure';
-  message: string;
-};
-
-interface CreateArgoProjectProps {
-  baseUrl: string;
-  argoToken: string;
-  projectName: string;
-  namespace: string;
-  sourceRepo: string;
-  destinationServer?: string;
-}
-
-interface CreateArgoApplicationProps {
-  baseUrl: string;
-  argoToken: string;
-  appName: string;
-  projectName: string;
-  namespace: string;
-  sourceRepo: string;
-  sourcePath: string;
-  labelValue: string;
-  destinationServer?: string;
-}
-
-interface CreateArgoResourcesProps {
-  argoInstance: string;
-  appName: string;
-  projectName: string;
-  namespace: string;
-  sourceRepo: string;
-  sourcePath: string;
-  labelValue: string;
-  logger: Logger;
-}
-
-interface DeleteProjectProps {
-  baseUrl: string;
-  argoProjectName: string;
-  argoToken: string;
-}
-
-interface DeleteApplicationProps {
-  baseUrl: string;
-  argoApplicationName: string;
-  argoToken: string;
-}
-
-interface SyncArgoApplicationProps {
-  argoInstance: findArgoAppResp;
-  argoToken: string;
-  appName: string;
-}
-
-interface ResyncProps {
-  appSelector: string;
-}
-
-export interface ArgoServiceApi {
-  getArgoToken: (appConfig: {
-    url: string;
-    username?: string;
-    password?: string;
-  }) => Promise<string>;
-  getArgoAppData: (
-    baseUrl: string,
-    argoInstanceName: string,
-    options: {
-      name: string;
-      selector: string;
-    },
-    argoToken: string,
-  ) => Promise<object>;
-  createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
-  createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
-  createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
-  deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
-  deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
-  syncArgoApp: (props: SyncArgoApplicationProps) => Promise<SyncResponse>;
-  resyncAppOnAllArgos: (props: {
-    appSelector: string;
-  }) => Promise<SyncResponse[][]>;
-  findArgoApp: (options: {
-    name?: string;
-    selector?: string;
-  }) => Promise<findArgoAppResp[]>;
-}
+import {
+  ArgoServiceApi,
+  CreateArgoApplicationProps,
+  CreateArgoProjectProps,
+  CreateArgoResourcesProps,
+  DeleteApplicationProps,
+  DeleteProjectProps,
+  ResyncProps,
+  SyncArgoApplicationProps,
+  SyncResponse,
+  findArgoAppResp,
+} from './types';
 
 export class ArgoService implements ArgoServiceApi {
   constructor(
