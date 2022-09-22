@@ -29,7 +29,7 @@ export class ArgoService implements ArgoServiceApi {
     selector?: string;
   }): Promise<findArgoAppResp[]> {
     if (!options.name && !options.selector) {
-      throw new Error('name or selector are required');
+      throw new Error('name or selector is required');
     }
     const argoApps = this.config
       .getConfigArray('argocd.appLocatorMethods')
