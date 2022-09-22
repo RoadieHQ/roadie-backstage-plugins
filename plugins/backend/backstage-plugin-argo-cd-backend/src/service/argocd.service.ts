@@ -14,13 +14,14 @@ import {
   SyncResponse,
   findArgoAppResp,
 } from './types';
+import { fetcher } from './utils'
 
 export class ArgoService implements ArgoServiceApi {
   constructor(
-    private username: string,
-    private password: string,
-    private config: Config,
-    private logger: Logger,
+    private readonly username: string,
+    private readonly password: string,
+    private readonly config: Config,
+    private readonly logger: Logger,
   ) {}
 
   async findArgoApp(options: {
@@ -28,7 +29,7 @@ export class ArgoService implements ArgoServiceApi {
     selector?: string;
   }): Promise<findArgoAppResp[]> {
     if (!options.name && !options.selector) {
-      throw new Error('Neither name nor selector provided');
+      throw new Error('name or selector are required');
     }
     const argoApps = this.config
       .getConfigArray('argocd.appLocatorMethods')
@@ -47,12 +48,7 @@ export class ArgoService implements ArgoServiceApi {
     }));
     const resp = await Promise.all(
       argoInstanceArray.map(async (argoInstance: any) => {
-        let token: string;
-        if (!argoInstance.token) {
-          token = await this.getArgoToken(argoInstance);
-        } else {
-          token = argoInstance.token;
-        }
+        const token = argoInstance.token || await this.getArgoToken(argoInstance);
         let getArgoAppDataResp: any;
         try {
           getArgoAppDataResp = await this.getArgoAppData(
@@ -63,23 +59,13 @@ export class ArgoService implements ArgoServiceApi {
           );
         } catch (error: any) {
           this.logger.error(`failed to fetch app data from ${argoInstance.name}: ${String(error)}`);
-          getArgoAppDataResp = { error: true };
         }
-        if (!getArgoAppDataResp.error) {
-          const output: findArgoAppResp = {
+        if (getArgoAppDataResp.ok) {
+          return {
             name: argoInstance.name as string,
             url: argoInstance.url as string,
-            appName: [],
+            appName: options.selector ? getArgoAppDataResp.items.map(x => x.metadata.name) : [options.name],
           };
-          if (options.selector) {
-            const appNames: Array<string> = getArgoAppDataResp.items.map(
-              (appInstance: any) => appInstance.metadata.name,
-            );
-            output.appName = appNames;
-          } else if (options.name) {
-            output.appName.push(options.name);
-          }
-          return output;
         }
         return null;
       }),
@@ -100,8 +86,8 @@ export class ArgoService implements ArgoServiceApi {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username: `${username || this.username}`,
-        password: `${password || this.password}`,
+        username: username || this.username,
+        password: password || this.password,
       }),
     };
     const resp = await fetch(`${url}/api/v1/session`, options);
@@ -139,11 +125,11 @@ export class ArgoService implements ArgoServiceApi {
       `${baseUrl}/api/v1/applications${urlSuffix}`,
       requestOptions,
     );
-    if (resp.status === 404) {
-      throw new Error(
-        'Could not retrieve ArgoCD app data. Application Not Found.',
-      );
+
+    if (!resp.ok) {
+      throw new Error(`Request failed with ${resp.status} Error`);
     }
+
     const data = await resp?.json();
     if (data.items) {
       (data.items as any[]).forEach(item => {
@@ -151,8 +137,6 @@ export class ArgoService implements ArgoServiceApi {
       });
     } else if (data && options.name) {
       data.instance = argoInstanceName;
-    } else {
-      throw new Error('Not found');
     }
     return data;
   }
@@ -438,16 +422,12 @@ export class ArgoService implements ArgoServiceApi {
     const matchedArgoInstance = argoInstanceArray.find(
       argoHost => argoHost.name === argoInstance,
     );
-    if (matchedArgoInstance === undefined) {
-      throw new Error('Cannot match argo instance');
+
+    if (!matchedArgoInstance) {
+      throw new Error(`Unable to find Argo instance named "${argoInstance}"`);
     }
 
-    let token: string;
-    if (!matchedArgoInstance.token) {
-      token = await this.getArgoToken(matchedArgoInstance);
-    } else {
-      token = matchedArgoInstance.token;
-    }
+    const token = matchedArgoInstance.token || await this.getArgoToken(matchedArgoInstance);
 
     await this.createArgoProject({
       baseUrl: matchedArgoInstance.url,
