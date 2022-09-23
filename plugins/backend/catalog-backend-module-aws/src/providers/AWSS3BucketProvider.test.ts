@@ -51,6 +51,7 @@ describe('AWSS3BucketProvider', () => {
     it('creates no aws buckets', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSS3BucketProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -77,6 +78,7 @@ describe('AWSS3BucketProvider', () => {
     it('creates aws functions', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSS3BucketProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);

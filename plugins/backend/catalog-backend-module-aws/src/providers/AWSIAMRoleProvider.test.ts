@@ -51,6 +51,7 @@ describe('AWSIAMRoleProvider', () => {
     it('creates no aws users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSIAMRoleProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -78,6 +79,7 @@ describe('AWSIAMRoleProvider', () => {
     it('creates aws users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSIAMRoleProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);

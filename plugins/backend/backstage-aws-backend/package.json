@@ -39,7 +39,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.18.0",
+    "@backstage/cli": "^0.19.0",
     "@types/supertest": "^2.0.8",
     "supertest": "^4.0.2",
     "aws-sdk-client-mock": "^0.6.2",

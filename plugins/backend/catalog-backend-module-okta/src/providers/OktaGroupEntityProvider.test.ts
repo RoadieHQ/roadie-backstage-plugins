@@ -50,6 +50,7 @@ describe('OktaGroupProvider', () => {
     it('creates no okta groups', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -89,6 +90,7 @@ describe('OktaGroupProvider', () => {
     it('creates okta groups', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -114,6 +116,7 @@ describe('OktaGroupProvider', () => {
     it('allows kebab casing of the group name and user name for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, {
         logger,
