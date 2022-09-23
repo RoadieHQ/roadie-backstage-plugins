@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.2.6
+
+### Patch Changes
+
+- 0ba26af: Update dependencies
+
 ## 1.2.5
 
 ### Patch Changes
