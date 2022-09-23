@@ -264,11 +264,11 @@ export class ArgoService implements ArgoServiceApi {
   async resyncAppOnAllArgos({
     appSelector,
   }: ResyncProps): Promise<SyncResponse[][]> {
-    const findArgoAppResp: findArgoAppResp[] = await this.findArgoApp({
+    const argoAppResp: findArgoAppResp[] = await this.findArgoApp({
       selector: appSelector,
     });
 
-    const parallelSyncCalls = findArgoAppResp.map(
+    const parallelSyncCalls = argoAppResp.map(
       async (argoInstance: any): Promise<SyncResponse[]> => {
         try {
           const token = await this.getArgoToken(argoInstance);
