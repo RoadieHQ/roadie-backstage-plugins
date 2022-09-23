@@ -43,7 +43,7 @@
     "@roadiehq/backstage-plugin-aws-auth": "^0.3.9",
     "@roadiehq/scaffolder-backend-module-http-request": "^3.0.8",
     "@roadiehq/scaffolder-backend-module-utils": "^1.1.0",
-    "@roadiehq/scaffolder-backend-module-aws": "^2.0.5",
+    "@roadiehq/scaffolder-backend-module-aws": "^2.1.0",
     "better-sqlite3": "^7.5.1",
     "@types/luxon": "^2.3.1",
     "luxon": "^2.3.1",
