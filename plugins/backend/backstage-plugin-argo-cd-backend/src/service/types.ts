@@ -94,3 +94,11 @@ export interface ArgoServiceApi {
     selector?: string;
   }) => Promise<findArgoAppResp[]>;
 }
+
+export type InstanceConfig = {
+  name: string;
+  password?: string;
+  token?: string;
+  url: string;
+  username?: string;
+}

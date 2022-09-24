@@ -9,6 +9,7 @@ import {
   CreateArgoResourcesProps,
   DeleteApplicationProps,
   DeleteProjectProps,
+  InstanceConfig,
   ResyncProps,
   SyncArgoApplicationProps,
   SyncResponse,
@@ -17,12 +18,32 @@ import {
 import { fetcher } from './utils'
 
 export class ArgoService implements ArgoServiceApi {
+  instanceConfigs: InstanceConfig[];
+
   constructor(
     private readonly username: string,
     private readonly password: string,
     private readonly config: Config,
     private readonly logger: Logger,
-  ) {}
+  ) {
+    this.instanceConfigs = this.config
+      .getConfigArray('argocd.appLocatorMethods')
+      .filter(element => element.getString('type') === 'config')
+      .reduce(
+        (acc: Config[], argoApp: Config) =>
+          acc.concat(argoApp.getConfigArray('instances')
+        ),
+        [],
+      )
+      .map(instance => ({
+        name: instance.getString('name'),
+        url: instance.getString('url'),
+        token: instance.getOptionalString('token'),
+        username: instance.getOptionalString('username'),
+        password: instance.getOptionalString('password'),
+      }))
+    ;
+  }
 
   async findArgoApp(options: {
     name?: string;
@@ -31,23 +52,8 @@ export class ArgoService implements ArgoServiceApi {
     if (!options.name && !options.selector) {
       throw new Error('name or selector is required');
     }
-    const argoApps = this.config
-      .getConfigArray('argocd.appLocatorMethods')
-      .filter(element => element.getString('type') === 'config');
-    const appArray: Config[] = argoApps.reduce(
-      (acc: Config[], argoApp: Config) =>
-        acc.concat(argoApp.getConfigArray('instances')),
-      [],
-    );
-    const argoInstanceArray = appArray.map(instance => ({
-      name: instance.getString('name'),
-      url: instance.getString('url'),
-      token: instance.getOptionalString('token'),
-      username: instance.getOptionalString('username'),
-      password: instance.getOptionalString('password'),
-    }));
     const resp = await Promise.all(
-      argoInstanceArray.map(async (argoInstance: any) => {
+      this.instanceConfigs.map(async (argoInstance: any) => {
         const token = argoInstance.token || await this.getArgoToken(argoInstance);
         let getArgoAppDataResp: any;
         try {
@@ -404,22 +410,8 @@ export class ArgoService implements ArgoServiceApi {
     labelValue,
     logger,
   }: CreateArgoResourcesProps): Promise<boolean> {
-    const argoApps = this.config
-      .getConfigArray('argocd.appLocatorMethods')
-      .filter(element => element.getString('type') === 'config');
-    const appArray: Config[] = argoApps.reduce(
-      (acc: Config[], argoApp: Config) =>
-        acc.concat(argoApp.getConfigArray('instances')),
-      [],
-    );
-    const argoInstanceArray = appArray.map(instance => ({
-      name: instance.getString('name'),
-      url: instance.getString('url'),
-      token: instance.getOptionalString('token'),
-    }));
-
     logger.info(`Getting app ${appName} on ${argoInstance}`);
-    const matchedArgoInstance = argoInstanceArray.find(
+    const matchedArgoInstance = this.instanceConfigs.find(
       argoHost => argoHost.name === argoInstance,
     );
 
