@@ -15,7 +15,6 @@ import {
   SyncResponse,
   findArgoAppResp,
 } from './types';
-import { fetcher } from './utils'
 
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
