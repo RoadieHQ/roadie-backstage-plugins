@@ -57,17 +57,16 @@ export class ArgoService implements ArgoServiceApi {
             options,
             token,
           );
-        } catch (error: any) {
+        } catch (error: Error) {
           this.logger.error(`failed to fetch app data from ${argoInstance.name}: ${String(error)}`);
+          return null;
         }
-        if (getArgoAppDataResp.ok) {
-          return {
-            name: argoInstance.name as string,
-            url: argoInstance.url as string,
-            appName: options.selector ? getArgoAppDataResp.items.map(x => x.metadata.name) : [options.name],
-          };
-        }
-        return null;
+
+        return {
+          name: argoInstance.name as string,
+          url: argoInstance.url as string,
+          appName: options.selector ? getArgoAppDataResp.items.map(x => x.metadata.name) : [options.name],
+        };
       }),
     ).catch();
     return resp.flatMap(f => (f ? [f] : []));
@@ -242,15 +241,12 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    let header = {};
-    header = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${argoToken}`,
-    };
-
     const options: RequestInit = {
       method: 'POST',
-      headers: header,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
       body: JSON.stringify(data),
     };
 
@@ -358,7 +354,9 @@ export class ArgoService implements ArgoServiceApi {
     const data = await resp?.json();
     if (resp.ok) {
       return true;
-    } else if (resp.status === 403 || resp.status === 404) {
+    }
+
+    if (resp.status === 403 || resp.status === 404) {
       throw new Error(data.message);
     }
     return false;
@@ -386,7 +384,9 @@ export class ArgoService implements ArgoServiceApi {
     const data = await resp?.json();
     if (resp.ok) {
       return true;
-    } else if (resp.status === 403 || resp.status === 404) {
+    }
+
+    if (resp.status === 403 || resp.status === 404) {
       throw new Error(data.message);
     } else if (data.error && data.message) {
       throw new Error(`Cannot Delete Project: ${data.message}`);
