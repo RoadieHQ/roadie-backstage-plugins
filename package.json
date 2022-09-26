@@ -47,15 +47,6 @@
     "typescript": "~4.7.0"
   },
   "prettier": "@spotify/prettier-config",
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "@changesets/cli": "^2.18.0"
   }
