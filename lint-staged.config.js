@@ -17,6 +17,8 @@
 module.exports = {
   '*.{js,jsx,ts,tsx,mjs,cjs}': ['eslint --fix', 'prettier --write'],
   '*.{json,md}': ['prettier --write'],
+  // Externalized config due to a TSC bug
+  // https://github.com/microsoft/TypeScript/issues/27379
   '**/*.ts?(x)': function () {
     return 'tsc';
   },
