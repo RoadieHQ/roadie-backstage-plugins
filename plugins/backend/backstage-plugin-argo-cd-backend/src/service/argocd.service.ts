@@ -62,7 +62,7 @@ export class ArgoService implements ArgoServiceApi {
             options,
             token,
           );
-        } catch (error: Error) {
+        } catch (error: any) {
           this.logger.error(`failed to fetch app data from ${argoInstance.name}: ${String(error)}`);
           return null;
         }
@@ -70,7 +70,9 @@ export class ArgoService implements ArgoServiceApi {
         return {
           name: argoInstance.name as string,
           url: argoInstance.url as string,
-          appName: options.selector ? getArgoAppDataResp.items.map(x => x.metadata.name) : [options.name],
+          appName: options.selector
+            ? getArgoAppDataResp.items.map((x: any) => x.metadata.name)
+            : [options.name],
         };
       }),
     ).catch();
