@@ -30,8 +30,7 @@ export class ArgoService implements ArgoServiceApi {
       .filter(element => element.getString('type') === 'config')
       .reduce(
         (acc: Config[], argoApp: Config) =>
-          acc.concat(argoApp.getConfigArray('instances')
-        ),
+          acc.concat(argoApp.getConfigArray('instances')),
         [],
       )
       .map(instance => ({
@@ -40,8 +39,7 @@ export class ArgoService implements ArgoServiceApi {
         token: instance.getOptionalString('token'),
         username: instance.getOptionalString('username'),
         password: instance.getOptionalString('password'),
-      }))
-    ;
+      }));
   }
 
   async findArgoApp(options: {
@@ -53,7 +51,8 @@ export class ArgoService implements ArgoServiceApi {
     }
     const resp = await Promise.all(
       this.instanceConfigs.map(async (argoInstance: any) => {
-        const token = argoInstance.token || await this.getArgoToken(argoInstance);
+        const token =
+          argoInstance.token || (await this.getArgoToken(argoInstance));
         let getArgoAppDataResp: any;
         try {
           getArgoAppDataResp = await this.getArgoAppData(
@@ -63,7 +62,11 @@ export class ArgoService implements ArgoServiceApi {
             token,
           );
         } catch (error: any) {
-          this.logger.error(`failed to fetch app data from ${argoInstance.name}: ${String(error)}`);
+          this.logger.error(
+            `failed to fetch app data from ${argoInstance.name}: ${String(
+              error,
+            )}`,
+          );
           return null;
         }
 
@@ -420,7 +423,9 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error(`Unable to find Argo instance named "${argoInstance}"`);
     }
 
-    const token = matchedArgoInstance.token || await this.getArgoToken(matchedArgoInstance);
+    const token =
+      matchedArgoInstance.token ||
+      (await this.getArgoToken(matchedArgoInstance));
 
     await this.createArgoProject({
       baseUrl: matchedArgoInstance.url,

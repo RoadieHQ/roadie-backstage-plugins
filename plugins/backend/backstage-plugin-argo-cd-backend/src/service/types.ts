@@ -101,4 +101,4 @@ export type InstanceConfig = {
   token?: string;
   url: string;
   username?: string;
-}
+};
