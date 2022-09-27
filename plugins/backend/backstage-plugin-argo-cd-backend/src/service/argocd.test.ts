@@ -29,7 +29,12 @@ const config = ConfigReader.fromConfigs([
 ]);
 
 describe('ArgoCD service', () => {
-  const argoService = new ArgoService('testusername', 'testpassword', config);
+  const argoService = new ArgoService(
+    'testusername',
+    'testpassword',
+    config,
+    getVoidLogger(),
+  );
 
   beforeEach(() => {
     fetchMock.resetMocks();
@@ -105,6 +110,15 @@ describe('ArgoCD service', () => {
     return expect(async () => {
       await argoService.findArgoApp({ name: 'testApp' });
     }).rejects.toThrow();
+  });
+
+  it('should return an empty array even when the request fails', async () => {
+    fetchMock.once(JSON.stringify({ token: 'testToken' }));
+    fetchMock.mockRejectOnce(new Error());
+
+    expect(await argoService.findArgoApp({ name: 'test-app' })).toStrictEqual(
+      [],
+    );
   });
 
   it('should return the argo instances using the app selector', async () => {
