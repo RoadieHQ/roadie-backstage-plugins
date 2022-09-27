@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.5.2
+
+### Patch Changes
+
+- 231f37e: Added logging to improve visibility
+
 ## 2.5.1
 
 ### Patch Changes
