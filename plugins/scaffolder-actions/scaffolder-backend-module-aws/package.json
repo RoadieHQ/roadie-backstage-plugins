@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.53.0",
+    "@aws-sdk/client-ecr": "^3.169.0",
     "@aws-sdk/types": "^3.53.0",
     "@backstage/backend-common": "^0.15.0",
     "@backstage/config": "^1.0.0",
