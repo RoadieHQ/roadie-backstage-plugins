@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "@actions/core": "^1.2.7",
-    "@backstage/catalog-model": "^1.0.0",
-    "@backstage/plugin-scaffolder-common": "^1.0.0",
+    "@backstage/catalog-model": "^1.1.1",
+    "@backstage/plugin-scaffolder-common": "^1.2.0",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
