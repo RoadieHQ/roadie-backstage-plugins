@@ -31,9 +31,9 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.15.0",
-    "@backstage/config": "^1.0.0",
-    "@backstage/plugin-scaffolder-backend": "^1.0.0",
+    "@backstage/backend-common": "^0.15.1",
+    "@backstage/config": "^1.0.2",
+    "@backstage/plugin-scaffolder-backend": "^1.6.0",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.4.4",
     "winston": "^3.2.1"
   },
