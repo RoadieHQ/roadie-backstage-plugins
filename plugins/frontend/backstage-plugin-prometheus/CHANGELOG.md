@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.1.2
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.1.1
 
 ### Patch Changes

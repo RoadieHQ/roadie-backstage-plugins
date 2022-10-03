@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.0.5
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.9
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.8
 
 ### Patch Changes
