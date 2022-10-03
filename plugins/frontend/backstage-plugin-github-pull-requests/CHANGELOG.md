@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.2.8
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.2.7
 
 ### Patch Changes

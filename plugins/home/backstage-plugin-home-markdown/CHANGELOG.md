@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.0.7
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.6
 
 ### Patch Changes

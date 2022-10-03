@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.5.3
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.5.2
 
 ### Patch Changes

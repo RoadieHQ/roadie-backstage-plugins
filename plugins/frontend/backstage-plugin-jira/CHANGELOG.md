@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.1.6
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.1.5
 
 ### Patch Changes

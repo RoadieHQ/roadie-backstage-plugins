@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.0.12
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 1.0.11
 
 ### Patch Changes

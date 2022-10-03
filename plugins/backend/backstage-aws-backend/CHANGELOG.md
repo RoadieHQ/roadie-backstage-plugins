@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.0.5
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 1.0.4
 
 ### Patch Changes
