@@ -33,7 +33,10 @@ import {
   createAppendFileAction,
   createMergeJSONAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
-import { createAwsS3CpAction, createEcrAction } from '@roadiehq/scaffolder-backend-module-aws';
+import {
+  createAwsS3CpAction,
+  createEcrAction,
+} from '@roadiehq/scaffolder-backend-module-aws';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';

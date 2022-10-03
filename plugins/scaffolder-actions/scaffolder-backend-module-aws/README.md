@@ -91,7 +91,9 @@ return await createRouter({
 ```
 
 # Template
+
 ##### For s3 cp
+
 This is a minimum template to use this action. It accepts one required parameter `bucket`. And will upload the whole workspace context to this bucket.
 
 ```yaml
@@ -125,6 +127,7 @@ spec:
 ```
 
 ##### For ECR create action
+
 ```yaml
 ---
 apiVersion: scaffolder.backstage.io/v1beta3
@@ -180,5 +183,4 @@ spec:
         Tags: ${{parameters.Tags}}
         ImageMutability: ${{parameters.ImageMutability}}
         Region: ${{parameters.Region}}
-
 ```

@@ -19,75 +19,63 @@ import { createEcrAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { ECRClient } from '@aws-sdk/client-ecr';
 
-
 // @ts-ignore
-const ecrClient = mockClient(ECRClient)
-
+const ecrClient = mockClient(ECRClient);
 
 describe('create without tags', () => {
-
-  const mockContext = { 
+  const mockContext = {
     workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
-  }
+  };
   const action = createEcrAction();
 
-  it('should call ecr client send', async () => { 
+  it('should call ecr client send', async () => {
     await action.handler({
       ...mockContext,
-      input: { 
-        RepoName: 'test1', 
-        Region: 'us-east-1', 
-        ImageMutability: true, 
+      input: {
+        RepoName: 'test1',
+        Region: 'us-east-1',
+        ImageMutability: true,
         Tags: [],
-        values: null
-      }
+        values: null,
+      },
     });
-    expect(ecrClient.send.getCall(0).args[0].input).toMatchObject(
-      { 
-        repositoryName: 'test1', 
-        imageTagMutability: "MUTABLE", 
-        tags: [],
-      }
-    )
-  })
- 
-  
-})
+    expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
+      repositoryName: 'test1',
+      imageTagMutability: 'MUTABLE',
+      tags: [],
+    });
+  });
+});
 
 describe('create with tags', () => {
-
-  const mockContext = { 
+  const mockContext = {
     workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
-  }
+  };
   const action = createEcrAction();
 
-  it('should call ecr client with the given tags', async () => { 
+  it('should call ecr client with the given tags', async () => {
     await action.handler({
       ...mockContext,
-      input: { 
+      input: {
         RepoName: 'test2',
         ImageMutability: false,
-        Tags: [ {Key: "keytest", Value: "valuetest"} ],
+        Tags: [{ Key: 'keytest', Value: 'valuetest' }],
         values: null,
-        Region: 'us-east-1'
-      }
-    })
-    expect(ecrClient.send.getCall(1).args[0].input).toMatchObject(
-      {
-        repositoryName: 'test2', 
-        imageTagMutability: "IMMUTABLE", 
-        tags: [{Key: "keytest", Value: "valuetest"}],
-      }
-    )
-  })
- 
-  
-})
+        Region: 'us-east-1',
+      },
+    });
+    expect(ecrClient.send.getCall(1).args[0].input).toMatchObject({
+      repositoryName: 'test2',
+      imageTagMutability: 'IMMUTABLE',
+      tags: [{ Key: 'keytest', Value: 'valuetest' }],
+    });
+  });
+});

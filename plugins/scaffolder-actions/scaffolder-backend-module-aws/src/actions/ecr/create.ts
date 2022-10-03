@@ -25,10 +25,16 @@ import {
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
 
-export function createEcrAction (options?: {
+export function createEcrAction(options?: {
   credentials?: CredentialProvider;
-})  {
-  return createTemplateAction<{ RepoName: string; Tags: Array<any>; ImageMutability: boolean; Region:string; values:any }>({
+}) {
+  return createTemplateAction<{
+    RepoName: string;
+    Tags: Array<any>;
+    ImageMutability: boolean;
+    Region: string;
+    values: any;
+  }>({
     id: 'roadiehq:aws:ecr:create',
     schema: {
       input: {
@@ -43,45 +49,45 @@ export function createEcrAction (options?: {
           Tags: {
             type: 'array',
             title: 'tags',
-            description: 'list of tags'
-
+            description: 'list of tags',
           },
           ImageMutability: {
             type: 'boolean',
             title: 'ImageMutability',
-            description: 'set image mutability to true or false'
+            description: 'set image mutability to true or false',
           },
           Region: {
             type: 'string',
             title: 'aws region',
-            description: 'aws region to create ECR on'
-          }
+            description: 'aws region to create ECR on',
+          },
         },
       },
     },
     async handler(ctx) {
-      const setImageMutability = ctx.input.ImageMutability? ImageTagMutability.MUTABLE: ImageTagMutability.IMMUTABLE
+      const setImageMutability = ctx.input.ImageMutability
+        ? ImageTagMutability.MUTABLE
+        : ImageTagMutability.IMMUTABLE;
       const input: CreateRepositoryCommandInput = {
         repositoryName: ctx.input.RepoName,
         imageTagMutability: setImageMutability,
         tags: ctx.input.Tags,
       };
       const config: ECRClientConfig = {
-        region: ctx.input.Region? ctx.input.Region : 'us-east-1',
+        region: ctx.input.Region ? ctx.input.Region : 'us-east-1',
         ...(options?.credentials && {
           credentials: await options.credentials(),
         }),
       };
       const createCommand = new CreateRepositoryCommand(input);
       const client = new ECRClient(config);
-      try { 
+      try {
         const response = await client.send(createCommand);
-        ctx.logger.info(response)
-      } catch (e) { 
-        assertError(e)
-        ctx.logger.warn('unable to create ecr repository')
+        ctx.logger.info(response);
+      } catch (e) {
+        assertError(e);
+        ctx.logger.warn('unable to create ecr repository');
       }
-      
     },
   });
 }
