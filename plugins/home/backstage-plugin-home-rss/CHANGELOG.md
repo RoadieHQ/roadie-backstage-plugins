@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.7
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 1.0.6
 
 ### Patch Changes

@@ -1,12 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
-## 2.1.0
+## 2.0.6
 
-### Major Changes
+### Patch Changes
 
-- add ECR create repository action
+- eaa0bb2: update dependencies
 
-# @roadiehq/scaffolder-backend-module-aws
 
 ## 2.0.5
 

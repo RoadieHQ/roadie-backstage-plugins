@@ -30,6 +30,10 @@ const generateTemporaryCredentialsMock = jest.fn(
   }),
 );
 
+jest.mock('./generateTemporaryCredentials.ts', () => ({
+  generateTemporaryCredentials: jest.fn(),
+}));
+
 generateTemporaryCredentials.generateTemporaryCredentials =
   generateTemporaryCredentialsMock;
 

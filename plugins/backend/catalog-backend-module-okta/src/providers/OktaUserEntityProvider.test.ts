@@ -49,6 +49,7 @@ describe('AWSIAMUserProvider', () => {
     it('creates no okta users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -77,6 +78,7 @@ describe('AWSIAMUserProvider', () => {
     it('creates okta users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -99,6 +101,7 @@ describe('AWSIAMUserProvider', () => {
     it('allows kebab casing of the users email for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
@@ -124,6 +127,7 @@ describe('AWSIAMUserProvider', () => {
     it('allows stripping the domain from the users email for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
