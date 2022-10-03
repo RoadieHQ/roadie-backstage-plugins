@@ -11,24 +11,25 @@ spec:
   parameters:
     - title: Add Repository Details
       required:
-        - RepoName
+        - repoName
+        - region
       properties:
-        RepoName:
+        repoName:
           title: ECR Repository Name
           type: string
           description: The ECR repository Name
           ui:autofocus: true
-        Region:
+        region:
           title: aws region
           type: string
-          deescription: region for aws ECR
+          description: region for aws ECR
           default: 'us-east-1'
-        ImageMutability:
+        imageMutability:
           title: Enable Image Mutability
           description: set image mutability to true or false
           type: boolean
           default: false
-        Tags:
+        tags:
           type: array
           items:
             type: object
@@ -47,7 +48,7 @@ spec:
       name: Create ECR Rrepository
       action: roadiehq:aws:ecr:create
       input:
-        RepoName: ${{ parameters.RepoName }}
-        Tags: ${{parameters.Tags}}
-        ImageMutability: ${{parameters.ImageMutability}}
-        Region: ${{parameters.Region}}
+        repoName: ${{ parameters.repoName }}
+        tags: ${{parameters.tags}}
+        imageMutability: ${{parameters.imageMutability}}
+        region: ${{parameters.region}}

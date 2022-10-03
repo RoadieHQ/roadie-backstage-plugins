@@ -36,10 +36,10 @@ describe('create without tags', () => {
     await action.handler({
       ...mockContext,
       input: {
-        RepoName: 'test1',
-        Region: 'us-east-1',
-        ImageMutability: true,
-        Tags: [],
+        repoName: 'test1',
+        region: 'us-east-1',
+        imageMutability: true,
+        tags: [],
         values: null,
       },
     });
@@ -65,11 +65,11 @@ describe('create with tags', () => {
     await action.handler({
       ...mockContext,
       input: {
-        RepoName: 'test2',
-        ImageMutability: false,
-        Tags: [{ Key: 'keytest', Value: 'valuetest' }],
+        repoName: 'test2',
+        imageMutability: false,
+        tags: [{ Key: 'keytest', Value: 'valuetest' }],
         values: null,
-        Region: 'us-east-1',
+        region: 'us-east-1',
       },
     });
     expect(ecrClient.send.getCall(1).args[0].input).toMatchObject({

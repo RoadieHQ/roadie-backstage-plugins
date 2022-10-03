@@ -29,34 +29,34 @@ export function createEcrAction(options?: {
   credentials?: CredentialProvider;
 }) {
   return createTemplateAction<{
-    RepoName: string;
-    Tags: Array<any>;
-    ImageMutability: boolean;
-    Region: string;
+    repoName: string;
+    tags: Array<any>;
+    imageMutability: boolean;
+    region: string;
     values: any;
   }>({
     id: 'roadiehq:aws:ecr:create',
     schema: {
       input: {
-        required: ['RepoName'],
+        required: ['repoName', 'region'],
         type: 'object',
         properties: {
-          RepoName: {
+          repoName: {
             type: 'string',
-            title: 'RepoName',
+            title: 'repoName',
             description: 'The name of the ECR repository',
           },
-          Tags: {
+          tags: {
             type: 'array',
             title: 'tags',
             description: 'list of tags',
           },
-          ImageMutability: {
+          imageMutability: {
             type: 'boolean',
             title: 'ImageMutability',
             description: 'set image mutability to true or false',
           },
-          Region: {
+          region: {
             type: 'string',
             title: 'aws region',
             description: 'aws region to create ECR on',
@@ -65,16 +65,16 @@ export function createEcrAction(options?: {
       },
     },
     async handler(ctx) {
-      const setImageMutability = ctx.input.ImageMutability
+      const setImageMutability = ctx.input.imageMutability
         ? ImageTagMutability.MUTABLE
         : ImageTagMutability.IMMUTABLE;
       const input: CreateRepositoryCommandInput = {
-        repositoryName: ctx.input.RepoName,
+        repositoryName: ctx.input.repoName,
         imageTagMutability: setImageMutability,
-        tags: ctx.input.Tags,
+        tags: ctx.input.tags,
       };
       const config: ECRClientConfig = {
-        region: ctx.input.Region ? ctx.input.Region : 'us-east-1',
+        region: ctx.input.region,
         ...(options?.credentials && {
           credentials: await options.credentials(),
         }),
