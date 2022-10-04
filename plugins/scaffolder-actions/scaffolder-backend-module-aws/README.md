@@ -5,6 +5,7 @@ Welcome to the roadie `aws` actions for the `scaffolder-backend`.
 This contains a collection of actions:
 
 - `roadiehq:aws:s3:cp`
+- `roadiehq:aws:ecr:create`
 
 ## Getting started
 
@@ -29,11 +30,12 @@ Import the action that you'd like to register to your backstage instance.
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createAwsS3CpAction } from '@roadiehq/scaffolder-backend-module-aws';
+import { createAwsS3CpAction, createEcrAction } from '@roadiehq/scaffolder-backend-module-aws';
 ...
 
 const actions = [
   createAwsS3CpAction(),
+  createEcrAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -90,6 +92,8 @@ return await createRouter({
 
 # Template
 
+##### For s3 cp
+
 This is a minimum template to use this action. It accepts one required parameter `bucket`. And will upload the whole workspace context to this bucket.
 
 ```yaml
@@ -120,4 +124,63 @@ spec:
       input:
         region: eu-west-1
         bucket: ${{ parameters.bucket }}
+```
+
+##### For ECR create action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-ecr-repo-template
+  title: Create ECR Repository
+  description: Create ECR repository using scaffolder custom action
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Add Repository Details
+      required:
+        - RepoName
+      properties:
+        RepoName:
+          title: ECR Repository Name
+          type: string
+          description: The ECR repository Name
+          ui:autofocus: true
+        Region:
+          title: aws region
+          type: string
+          deescription: region for aws ECR
+          default: 'us-east-1'
+        ImageMutability:
+          title: Enable Image Mutability
+          description: set image mutability to true or false
+          type: boolean
+          default: false
+        Tags:
+          type: array
+          items:
+            type: object
+            description: Repository tags
+            title: tag
+            properties:
+              Key:
+                type: string
+                title: Key
+              Value:
+                type: string
+                title: Value
+
+  steps:
+    - id: create-ecr
+      name: Create ECR Rrepository
+      action: roadiehq:aws:ecr:create
+      input:
+        repoName: ${{ parameters.RepoName }}
+        tags: ${{parameters.Tags}}
+        imageMutability: ${{parameters.ImageMutability}}
+        region: ${{parameters.Region}}
 ```
