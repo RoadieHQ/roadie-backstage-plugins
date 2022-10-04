@@ -33,7 +33,6 @@ export function createEcrAction(options?: {
     tags: Array<any>;
     imageMutability: boolean;
     region: string;
-    values: any;
   }>({
     id: 'roadiehq:aws:ecr:create',
     schema: {

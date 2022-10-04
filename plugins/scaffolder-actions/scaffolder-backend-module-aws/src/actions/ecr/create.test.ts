@@ -40,7 +40,6 @@ describe('create without tags', () => {
         region: 'us-east-1',
         imageMutability: true,
         tags: [],
-        values: null,
       },
     });
     expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
@@ -68,7 +67,6 @@ describe('create with tags', () => {
         repoName: 'test2',
         imageMutability: false,
         tags: [{ Key: 'keytest', Value: 'valuetest' }],
-        values: null,
         region: 'us-east-1',
       },
     });
