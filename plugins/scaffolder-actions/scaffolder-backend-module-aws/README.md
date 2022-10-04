@@ -179,8 +179,8 @@ spec:
       name: Create ECR Rrepository
       action: roadiehq:aws:ecr:create
       input:
-        RepoName: ${{ parameters.RepoName }}
-        Tags: ${{parameters.Tags}}
-        ImageMutability: ${{parameters.ImageMutability}}
-        Region: ${{parameters.Region}}
+        repoName: ${{ parameters.RepoName }}
+        tags: ${{parameters.Tags}}
+        imageMutability: ${{parameters.ImageMutability}}
+        region: ${{parameters.Region}}
 ```
