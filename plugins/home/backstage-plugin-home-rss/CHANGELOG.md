@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.0.8
+
+### Patch Changes
+
+- 073190b9: Update luxon to version 3.
+
 ## 1.0.7
 
 ### Patch Changes

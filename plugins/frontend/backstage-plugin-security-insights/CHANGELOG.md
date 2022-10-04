@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.0.10
+
+### Patch Changes
+
+- 073190b9: Update luxon to version 3.
+
 ## 2.0.9
 
 ### Patch Changes

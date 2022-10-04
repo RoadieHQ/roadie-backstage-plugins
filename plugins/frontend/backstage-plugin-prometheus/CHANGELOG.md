@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.1.3
+
+### Patch Changes
+
+- 073190b9: Update luxon to version 3.
+
 ## 2.1.2
 
 ### Patch Changes

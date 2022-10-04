@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.0.6
+
+### Patch Changes
+
+- 073190b9: Update luxon to version 3.
+
 ## 2.0.5
 
 ### Patch Changes
