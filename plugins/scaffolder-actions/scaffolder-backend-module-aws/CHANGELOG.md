@@ -6,7 +6,6 @@
 
 - eaa0bb2: update dependencies
 
-
 ## 2.0.5
 
 ### Patch Changes

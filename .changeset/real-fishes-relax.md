@@ -1,5 +1,5 @@
 ---
-'@roadiehq/scaffolder-backend-module-aws': minor 
+'@roadiehq/scaffolder-backend-module-aws': minor
 ---
 
 add create ecr action to aws module
