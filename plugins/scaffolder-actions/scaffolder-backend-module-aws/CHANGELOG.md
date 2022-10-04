@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.1.0
+
+### Minor Changes
+
+- c1ae6c54: add create ecr action to aws module
+
 ## 2.0.6
 
 ### Patch Changes
