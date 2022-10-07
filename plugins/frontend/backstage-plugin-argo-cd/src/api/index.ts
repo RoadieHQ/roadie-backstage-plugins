@@ -132,12 +132,16 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const proxyUrl = await this.getBaseUrl();
     if (this.searchInstances) {
       return this.fetchDecode(
-        `${proxyUrl}/argoInstance/${options.instance}/applications/name/${options.appName}`,
+        `${proxyUrl}/argoInstance/${
+          options.instance
+        }/applications/name/${encodeURIComponent(options.appName as string)}`,
         argoCDAppDetails,
       );
     }
     return this.fetchDecode(
-      `${proxyUrl}${options.url}/applications/${options.appName}`,
+      `${proxyUrl}${options.url}/applications/${encodeURIComponent(
+        options.appName as string,
+      )}`,
       argoCDAppDetails,
     );
   }
@@ -150,12 +154,18 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const proxyUrl = await this.getBaseUrl();
     if (this.searchInstances) {
       return this.fetchDecode(
-        `${proxyUrl}/argoInstance/${options.instance}/applications/selector/${options.appSelector}`,
+        `${proxyUrl}/argoInstance/${
+          options.instance
+        }/applications/selector/${encodeURIComponent(
+          options.appSelector as string,
+        )}`,
         argoCDAppList,
       );
     }
     return this.fetchDecode(
-      `${proxyUrl}${options.url}/applications/selector/${options.appSelector}`,
+      `${proxyUrl}${options.url}/applications/selector/${encodeURIComponent(
+        options.appSelector as string,
+      )}`,
       argoCDAppList,
     );
   }
@@ -166,9 +176,9 @@ export class ArgoCDApiClient implements ArgoCDApi {
     }
     const proxyUrl = await this.getBaseUrl();
     const url = options.appName
-      ? `${proxyUrl}/find/name/${options.appName}`
+      ? `${proxyUrl}/find/name/${encodeURIComponent(options.appName as string)}`
       : `${proxyUrl}/find/selector/${encodeURIComponent(
-          String(options.appSelector),
+          options.appSelector as string,
         )}`;
     return fetch(url, {
       method: 'GET',
