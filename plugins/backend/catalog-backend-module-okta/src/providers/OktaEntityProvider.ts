@@ -20,7 +20,8 @@ import {
 } from '@backstage/plugin-catalog-backend';
 import { Logger } from 'winston';
 import { AccountConfig } from '../types';
-import okta from '@okta/okta-sdk-nodejs';
+import { Client } from '@okta/okta-sdk-nodejs';
+
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
@@ -40,8 +41,8 @@ export abstract class OktaEntityProvider implements EntityProvider {
     this.logger = options.logger;
   }
 
-  protected getClient() {
-    return new okta.Client({
+  protected getClient(): Client {
+    return new Client({
       orgUrl: this.orgUrl,
       token: this.token,
     });

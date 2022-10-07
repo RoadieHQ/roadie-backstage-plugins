@@ -78,7 +78,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
         },
         spec: {
           profile: {
-            displayName: user.profile.email,
+            displayName: user.profile.displayName,
             email: user.profile.email,
           },
           memberOf: [],
