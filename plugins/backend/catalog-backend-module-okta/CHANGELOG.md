@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.2.7
+
+### Patch Changes
+
+- 433291fb: Changed OktaUserEntityProvider to propogate the Okta displayName field into the Backstage displayName field (instead of email).
+
 ## 0.2.6
 
 ### Patch Changes
