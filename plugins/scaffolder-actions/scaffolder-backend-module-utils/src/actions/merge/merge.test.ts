@@ -130,6 +130,29 @@ describe('roadiehq:utils:json:merge', () => {
       '/fake-tmp-dir/fake-file.json',
     );
   });
+
+  it('can handle json text input', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: '{"scripts": { "lsltrh": "ls -ltrh" } }',
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
 });
 
 describe('roadiehq:utils:merge', () => {
@@ -201,6 +224,56 @@ describe('roadiehq:utils:merge', () => {
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
+
+  it('can handle json text input', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: '{"scripts": { "lsltrh": "ls -ltrh" } }',
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
+  it('can handle yaml text input', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'scripts:\n  lsltr: ls -ltr\n',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: `
+scripts:
+  lsltrh: 'ls -ltrh'
+`,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
   it('can merge content into a yaml file', async () => {
     mock({
       'fake-tmp-dir': {
