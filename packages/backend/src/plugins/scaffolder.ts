@@ -32,6 +32,7 @@ import {
   createSleepAction,
   createAppendFileAction,
   createMergeJSONAction,
+  createMergeAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
 import {
   createAwsS3CpAction,
@@ -64,6 +65,7 @@ export const createActions = (options: {
     createWriteFileAction(),
     createAppendFileAction(),
     createMergeJSONAction({}),
+    createMergeAction(),
     createAwsS3CpAction(),
     createEcrAction(),
     createHttpBackstageAction({ config }),
