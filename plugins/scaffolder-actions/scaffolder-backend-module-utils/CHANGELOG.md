@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.4.0
+
+### Minor Changes
+
+- 1869b466: Allow merge actions to accept string
+
 ## 1.3.1
 
 ### Patch Changes
