@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.1.10
+
+### Patch Changes
+
+- 6daac9bc: Encoded all usage of app names and selectors
+
 ## 2.1.9
 
 ### Patch Changes
