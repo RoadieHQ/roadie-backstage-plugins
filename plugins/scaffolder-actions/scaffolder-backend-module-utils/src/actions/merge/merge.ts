@@ -36,18 +36,10 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
             type: 'string',
           },
           content: {
-            oneOf: [
-              {
-                title: 'Content',
-                description: 'This will be merged into to the file',
-                type: 'object',
-              },
-              {
-                title: 'Content',
-                description: 'This will be merged into to the file',
-                type: 'string',
-              },
-            ],
+            description:
+              'This will be merged into to the file. Can be either an object or a string.',
+            title: 'Content',
+            type: ['string', 'object'],
           },
         },
       },
@@ -108,18 +100,10 @@ export function createMergeAction() {
             type: 'string',
           },
           content: {
-            oneOf: [
-              {
-                title: 'Content',
-                description: 'This will be merged into to the file',
-                type: 'object',
-              },
-              {
-                title: 'Content',
-                description: 'This will be merged into to the file',
-                type: 'string',
-              },
-            ],
+            description:
+              'This will be merged into to the file. Can be either an object or a string.',
+            title: 'Content',
+            type: ['string', 'object'],
           },
         },
       },
