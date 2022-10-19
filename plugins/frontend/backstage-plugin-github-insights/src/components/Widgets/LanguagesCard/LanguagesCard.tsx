@@ -87,7 +87,7 @@ const LanguagesCard = () => {
       </Alert>
     );
   }
-  return value && owner && repo ? (
+  return value?.length && owner && repo ? (
     <InfoCard title="Languages" className={classes.infoCard}>
       <div className={classes.barContainer}>
         {Object.entries(value as Language).map((language, index: number) => {
