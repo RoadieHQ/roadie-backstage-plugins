@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.2.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
 ## 2.1.6
 
 ### Patch Changes
