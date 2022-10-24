@@ -67,6 +67,7 @@
     "@types/lodash": "^4.14.173",
     "@types/recharts": "^1.8.14",
     "msw": "^0.35.0",
+    "jest-environment-jsdom": "^29.2.1",
     "cross-fetch": "^3.0.6"
   },
   "files": [
