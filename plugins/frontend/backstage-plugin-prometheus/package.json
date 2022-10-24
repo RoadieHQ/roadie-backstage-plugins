@@ -33,10 +33,10 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/catalog-model": "^1.1.1",
-    "@backstage/core-components": "^0.11.1",
-    "@backstage/core-plugin-api": "^1.0.6",
-    "@backstage/plugin-catalog-react": "^1.1.4",
+    "@backstage/catalog-model": "^1.1.2",
+    "@backstage/core-components": "^0.11.2",
+    "@backstage/core-plugin-api": "^1.0.7",
+    "@backstage/plugin-catalog-react": "^1.2.0",
     "@backstage/theme": "^0.2.16",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -55,10 +55,10 @@
     "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.19.0",
-    "@backstage/core-app-api": "^1.1.0",
-    "@backstage/dev-utils": "^1.0.6",
-    "@backstage/test-utils": "^1.2.0",
+    "@backstage/cli": "^0.20.0",
+    "@backstage/core-app-api": "^1.1.1",
+    "@backstage/dev-utils": "^1.0.7",
+    "@backstage/test-utils": "^1.2.1",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^13.1.8",
@@ -67,6 +67,7 @@
     "@types/lodash": "^4.14.173",
     "@types/recharts": "^1.8.14",
     "msw": "^0.35.0",
+    "jest-environment-jsdom": "^29.2.1",
     "cross-fetch": "^3.0.6"
   },
   "files": [
