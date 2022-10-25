@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.3.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
 ## 0.2.7
 
 ### Patch Changes

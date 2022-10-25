@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.1.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
 ## 1.0.8
 
 ### Patch Changes

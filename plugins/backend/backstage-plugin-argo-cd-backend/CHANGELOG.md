@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.6.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
 ## 2.5.3
 
 ### Patch Changes

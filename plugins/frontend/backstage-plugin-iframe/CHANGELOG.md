@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.2.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
 ## 1.1.2
 
 ### Patch Changes
