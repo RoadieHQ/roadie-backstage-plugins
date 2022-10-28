@@ -9,26 +9,28 @@ You will need to configure the providers in your catalog.ts file in your backsta
 
 ## OktaUserEntityProvider
 
-You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadat.name` field. The currently supported strategies are the following:
+You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadata.name` field. The currently supported strategies are the following:
 
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
-- strip-domain-email | User entities will be named by their profiel email without the domain part.
+- strip-domain-email | User entities will be named by their profile email without the domain part.
 
 ## OktaGroupEntityProvider
 
-You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadat.name` field. The currently supported strategies are the following:
+You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadata.name` field. The currently supported strategies are the following:
 
 User naming stategies:
 
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
-- strip-domain-email | User entities will be named by their profiel email without the domain part.
+- strip-domain-email | User entities will be named by their profile email without the domain part.
 
 Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+
+Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroupEntityProvider's user naming strategy.
 
 Example configuration:
 
