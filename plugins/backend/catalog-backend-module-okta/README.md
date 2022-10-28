@@ -7,6 +7,33 @@ To setup the Okta providers you will need an [Okta API Token](https://developer.
 
 You will need to configure the providers in your catalog.ts file in your backstage backend:
 
+## OktaUserEntityProvider
+
+You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entity's `metadata.name` field. The currently supported strategies are the following:
+
+- id (default) | User entities will be named by the user id.
+- kebab-case-email | User entities will be named by their profile email converted to kebab case.
+- strip-domain-email | User entities will be named by their profile email without the domain part.
+
+## OktaGroupEntityProvider
+
+You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadata.name` field. The currently supported strategies are the following:
+
+User naming stategies:
+
+- id (default) | User entities will be named by the user id.
+- kebab-case-email | User entities will be named by their profile email converted to kebab case.
+- strip-domain-email | User entities will be named by their profile email without the domain part.
+
+Group naming strategies:
+
+- id (default) | Group entities will be named by the group id.
+- kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+
+Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroupEntityProvider's user naming strategy.
+
+Example configuration:
+
 ```typescript
 import {
   OktaUserEntityProvider,
@@ -21,16 +48,24 @@ export default async function createPlugin(
   const oktaConfig = env.config.getOptionalConfigArray(
     'catalog.providers.okta',
   );
-  const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], env);
-  const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], env);
+  const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], {
+    logger: env.logger,
+    namingStrategy: 'strip-domain-email',
+  });
+  const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
+    logger: env.logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+  });
 
   builder.addEntityProvider(userProvider);
   builder.addEntityProvider(groupProvider);
 
+  const { processingEngine, router } = await builder.build();
+
   userProvider.run();
   groupProvider.run();
 
-  const { processingEngine, router } = await builder.build();
   await processingEngine.start();
 
   // ...

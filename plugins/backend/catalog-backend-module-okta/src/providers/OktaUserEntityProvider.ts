@@ -45,7 +45,6 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
   ) {
     super(accountConfig, options);
-    console.log(options.namingStrategy);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
   }
 
