@@ -9,7 +9,7 @@ You will need to configure the providers in your catalog.ts file in your backsta
 
 ## OktaUserEntityProvider
 
-You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadata.name` field. The currently supported strategies are the following:
+You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entity's `metadata.name` field. The currently supported strategies are the following:
 
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
