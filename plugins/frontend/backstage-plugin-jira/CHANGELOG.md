@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.3.0
+
+### Minor Changes
+
+- 7e45fbbe: Add support for authenticated Jira proxy via Identity API
+
 ## 2.2.0
 
 ### Minor Changes
