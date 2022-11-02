@@ -31,7 +31,7 @@ spec:
           default: false
         scanOnPush:
           title: Enable Image Scanning
-          description:  The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.
+          description: The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.
           type: boolean
           default: false
         tags:
