@@ -32,6 +32,7 @@ export function createEcrAction(options?: {
     repoName: string;
     tags: Array<any>;
     imageMutability: boolean;
+    scanOnPush: boolean;
     region: string;
   }>({
     id: 'roadiehq:aws:ecr:create',
@@ -55,6 +56,12 @@ export function createEcrAction(options?: {
             title: 'ImageMutability',
             description: 'set image mutability to true or false',
           },
+          scanOnPush: {
+            type: 'boolean',
+            title: 'Scan On Push',
+            description:
+              'The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.',
+          },
           region: {
             type: 'string',
             title: 'aws region',
@@ -69,6 +76,7 @@ export function createEcrAction(options?: {
         : ImageTagMutability.IMMUTABLE;
       const input: CreateRepositoryCommandInput = {
         repositoryName: ctx.input.repoName,
+        imageScanningConfiguration: { scanOnPush: ctx.input.scanOnPush },
         imageTagMutability: setImageMutability,
         tags: ctx.input.tags,
       };
@@ -82,10 +90,12 @@ export function createEcrAction(options?: {
       const client = new ECRClient(config);
       try {
         const response = await client.send(createCommand);
-        ctx.logger.info(response);
+        ctx.logger.info(
+          `Created ECR repository: ${response.repository?.repositoryUri}`,
+        );
       } catch (e) {
         assertError(e);
-        ctx.logger.warn('unable to create ecr repository');
+        ctx.logger.warn(`Unable to create ECR repository: ${e}`);
       }
     },
   });
