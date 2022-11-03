@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.3.0
+
+### Minor Changes
+
+- a299e429: Add AWS ECR image scanning boolean when creating a new repo. Allows toggling ECR native image scanning on ECR push
+
 ## 2.2.0
 
 ### Minor Changes
