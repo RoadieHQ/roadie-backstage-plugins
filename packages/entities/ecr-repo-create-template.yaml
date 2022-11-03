@@ -29,6 +29,11 @@ spec:
           description: set image mutability to true or false
           type: boolean
           default: false
+        scanOnPush:
+          title: Enable Image Scanning
+          description: The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.
+          type: boolean
+          default: false
         tags:
           type: array
           items:
@@ -50,5 +55,6 @@ spec:
       input:
         repoName: ${{ parameters.repoName }}
         tags: ${{parameters.tags}}
+        scanOnPush: ${{parameters.scanOnPush}}
         imageMutability: ${{parameters.imageMutability}}
         region: ${{parameters.region}}

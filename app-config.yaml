@@ -125,7 +125,11 @@ catalog:
       target: ../entities/test-template.yaml
       rules:
         - allow: [Template]
-
+    # Roadie example AWS ECR repo creation
+    - type: file
+      target: ../entities/ecr-repo-create-template.yaml
+      rules:
+        - allow: [Template]
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml

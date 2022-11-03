@@ -144,6 +144,7 @@ spec:
     - title: Add Repository Details
       required:
         - RepoName
+        - Region
       properties:
         RepoName:
           title: ECR Repository Name
@@ -153,11 +154,16 @@ spec:
         Region:
           title: aws region
           type: string
-          deescription: region for aws ECR
+          description: region for aws ECR
           default: 'us-east-1'
         ImageMutability:
           title: Enable Image Mutability
           description: set image mutability to true or false
+          type: boolean
+          default: false
+        ScanOnPush:
+          title: Enable Image Scanning
+          description: The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.
           type: boolean
           default: false
         Tags:
@@ -182,5 +188,6 @@ spec:
         repoName: ${{ parameters.RepoName }}
         tags: ${{parameters.Tags}}
         imageMutability: ${{parameters.ImageMutability}}
+        scanOnPush: ${{parameters.ScanOnPush}}
         region: ${{parameters.Region}}
 ```
