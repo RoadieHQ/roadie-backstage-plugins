@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-import { homePlugin, createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home';
+import { createPlugin } from '@backstage/core-plugin-api';
+import { rootRouteRef } from './routes';
+
+/** @public */
+export const markdownPlugin = createPlugin({
+  id: 'markdown',
+  routes: {
+    root: rootRouteRef,
+  },
+});
 
 /**
  * A component to render a predefined markdown file from github.
  *
  * @public
  */
-export const HomePageMarkdown = homePlugin.provide(
+export const HomePageMarkdown = markdownPlugin.provide(
   createCardExtension<{
     owner: string;
     repo: string;
