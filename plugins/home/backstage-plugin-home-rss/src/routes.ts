@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createRouteRef } from '@backstage/core-plugin-api';
 
-import { createCardExtension } from '@backstage/plugin-home';
-import { createPlugin } from '@backstage/core-plugin-api';
-import { rootRouteRef } from './routes';
-
-/** @public */
-export const rssPlugin = createPlugin({
+export const rootRouteRef = createRouteRef({
   id: 'rss',
-  routes: {
-    root: rootRouteRef,
-  },
 });
-
-/**
- * A component to render a predefined RSS feed.
- *
- * @public
- */
-export const HomePageRSS = rssPlugin.provide(
-  createCardExtension<{
-    feedURL: string;
-  }>({
-    name: 'HomePageRSS',
-    title: '',
-    components: () => import('./RSSCard'),
-  }),
-);
