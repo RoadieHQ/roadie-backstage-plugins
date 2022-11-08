@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.2.0
+
+### Minor Changes
+
+- 6cb85aa3: Expose markdown plugin as a plugin instead of extending the homepage plugin.
+
 ## 2.1.0
 
 ### Minor Changes

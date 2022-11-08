@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.2.0
+
+### Minor Changes
+
+- 6cb85aa3: Expose rss as a full plugin, instead of extending the home plugin.
+
 ## 1.1.0
 
 ### Minor Changes
