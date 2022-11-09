@@ -16,7 +16,6 @@
 
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
 import {
   InfoCard,
   Progress,
@@ -30,6 +29,7 @@ import {
   GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { alertApiRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -72,22 +72,19 @@ const LanguagesCard = () => {
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0);
   const projectAlert = isGithubInsightsAvailable(entity);
+  const alertApi = useApi(alertApiRef);
+
   if (!projectAlert) {
     return (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
     );
   }
 
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
-      </Alert>
-    );
+  if (loading) return <Progress />;
+  if (error) {
+    alertApi.post({ message: error.message, severity: 'error' });
   }
-  return value?.length && owner && repo ? (
+  return Object.keys(value).length && owner && repo ? (
     <InfoCard title="Languages" className={classes.infoCard}>
       <div className={classes.barContainer}>
         {Object.entries(value as Language).map((language, index: number) => {
