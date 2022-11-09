@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.2.1
+
+### Patch Changes
+
+- 1f873367: Export the rss plugin from the package
+
 ## 1.2.0
 
 ### Minor Changes

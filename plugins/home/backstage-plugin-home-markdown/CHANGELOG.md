@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.2.1
+
+### Patch Changes
+
+- 1f873367: Export the markdown plugin from the package.
+
 ## 2.2.0
 
 ### Minor Changes
