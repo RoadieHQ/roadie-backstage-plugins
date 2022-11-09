@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useAsync } from 'react-use';
 import { Typography, Box, Paper, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { graphql } from '@octokit/graphql';
-import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  useApi,
+  githubAuthApiRef,
+  alertApiRef,
+} from '@backstage/core-plugin-api';
 import { Progress, Table, TableColumn, Link } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectName } from '../useProjectName';
@@ -179,9 +182,10 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
 
 export const DependabotAlertsTable: FC<{}> = () => {
   const { entity } = useEntity();
-  const { hostname } = useUrl(entity);
+  const { hostname, baseUrl } = useUrl(entity);
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
+  const alertApi = useApi(alertApiRef);
 
   const query = `
   query GetDependabotAlerts($name: String!, $owner: String!) {
@@ -214,11 +218,11 @@ export const DependabotAlertsTable: FC<{}> = () => {
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const gqlEndpoint = graphql.defaults({
+      baseUrl,
       headers: {
         authorization: `token ${token}`,
       },
     });
-
     const { repository } = await gqlEndpoint(query, {
       name: repo,
       owner: owner,
@@ -228,9 +232,17 @@ export const DependabotAlertsTable: FC<{}> = () => {
 
   const detailsUrl = { hostname, owner, repo };
 
+  useEffect(() => {
+    if (error) {
+      alertApi.post({ severity: 'error', message: 'Hello' });
+    }
+  }, [error, alertApi]);
+
   if (loading) return <Progress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
+
   return value && value.vulnerabilityAlerts ? (
     <DenseTable repository={value} detailsUrl={detailsUrl} />
-  ) : null;
+  ) : (
+    <>Something went wrong</>
+  );
 };

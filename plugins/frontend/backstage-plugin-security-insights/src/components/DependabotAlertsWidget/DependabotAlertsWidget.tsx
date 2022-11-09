@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
-import Alert from '@material-ui/lab/Alert';
+import React, { FC, useEffect } from 'react';
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
 import {
   useApi,
   githubAuthApiRef,
   configApiRef,
+  alertApiRef,
 } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { useProjectEntity } from '../useProjectEntity';
@@ -211,6 +211,7 @@ export const DependabotAlertsWidget = () => {
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
   const { hostname, baseUrl } = useUrl(entity);
+  const alertApi = useApi(alertApiRef);
 
   const query = `
   query GetDependabotAlertsWidget($name: String!, $owner: String!) {
@@ -255,11 +256,19 @@ export const DependabotAlertsWidget = () => {
     });
     return repository;
   }, []);
+  useEffect(() => {
+    if (error) {
+      alertApi.post({ severity: 'error', message: error.message });
+    }
+  }, [error, alertApi]);
 
   const detailsUrl = { hostname, owner, repo };
+
   if (loading) return <Progress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
+
   return value && value.vulnerabilityAlerts ? (
     <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} />
-  ) : null;
+  ) : (
+    <>Something went wrong</>
+  );
 };
