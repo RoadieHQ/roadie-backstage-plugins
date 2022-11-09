@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { HomePageRSS } from './plugin';
+export { HomePageRSS, rssPlugin } from './plugin';
