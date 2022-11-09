@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.2.2
+
+### Patch Changes
+
+- eb04e57a: Fix publish configuration main path.
+
 ## 2.2.1
 
 ### Patch Changes

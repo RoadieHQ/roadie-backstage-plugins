@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.2.2
+
+### Patch Changes
+
+- eb04e57a: Fix publish configuration main path.
+
 ## 1.2.1
 
 ### Patch Changes
