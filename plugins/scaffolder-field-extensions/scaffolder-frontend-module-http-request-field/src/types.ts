@@ -18,7 +18,7 @@ import { z } from 'zod';
 export const selectFieldFromApiConfigSchema = z.object({
   params: z.record(z.string(), z.string()).optional(),
   path: z.string(),
-  arraySelector: z.string().or(z.array(z.string())),
+  arraySelector: z.string().or(z.array(z.string())).optional(),
   valueSelector: z.string().or(z.array(z.string())).optional(),
   labelSelector: z.string().or(z.array(z.string())).optional(),
 });

@@ -47,7 +47,9 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       `${baseUrl}${options.path}?${params}`,
     );
     const body = await response.json();
-    const array = get(body, options.arraySelector);
+    const array = options.arraySelector
+      ? get(body, options.arraySelector)
+      : body;
     setDropDownData(
       array.map((item: unknown) => {
         let value: string | undefined;
