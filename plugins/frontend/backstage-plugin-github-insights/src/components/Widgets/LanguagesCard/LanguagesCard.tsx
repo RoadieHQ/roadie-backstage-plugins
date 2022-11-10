@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
+// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import {
   InfoCard,
@@ -72,6 +73,7 @@ const LanguagesCard = () => {
   const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0);
   const projectAlert = isGithubInsightsAvailable(entity);
+
   if (!projectAlert) {
     return (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
@@ -87,7 +89,7 @@ const LanguagesCard = () => {
       </Alert>
     );
   }
-  return value && owner && repo ? (
+  return Object.keys(value).length && owner && repo ? (
     <InfoCard title="Languages" className={classes.infoCard}>
       <div className={classes.barContainer}>
         {Object.entries(value as Language).map((language, index: number) => {
