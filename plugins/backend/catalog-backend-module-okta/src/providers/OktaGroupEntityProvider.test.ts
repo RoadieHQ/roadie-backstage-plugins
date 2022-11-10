@@ -83,6 +83,23 @@ describe('OktaGroupProvider', () => {
               ]);
             },
           },
+          {
+            id: 'group-with-null-description',
+            profile: {
+              name: 'Everyone@the-company',
+              description: null,
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'asdfwefwefwef',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
         ]);
       };
     });
@@ -97,19 +114,32 @@ describe('OktaGroupProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [
+        entities: expect.arrayContaining([
           expect.objectContaining({
             entity: expect.objectContaining({
               kind: 'Group',
               metadata: expect.objectContaining({
                 name: 'asdfwefwefwef',
+                description: 'Everyone in the company',
               }),
               spec: expect.objectContaining({
                 members: ['asdfwefwefwef'],
               }),
             }),
           }),
-        ],
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                description: expect.stringContaining(''),
+              }),
+              spec: expect.objectContaining({
+                members: ['asdfwefwefwef'],
+              }),
+            }),
+          }),
+        ]),
       });
     });
 
@@ -127,7 +157,7 @@ describe('OktaGroupProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [
+        entities: expect.arrayContaining([
           expect.objectContaining({
             entity: expect.objectContaining({
               kind: 'Group',
@@ -139,7 +169,7 @@ describe('OktaGroupProvider', () => {
               }),
             }),
           }),
-        ],
+        ]),
       });
     });
   });

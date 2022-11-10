@@ -97,7 +97,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           },
           name: this.namingStrategy(group),
           title: group.profile.name,
-          description: group.profile.description,
+          description: group.profile.description || '',
         },
         spec: {
           members,
