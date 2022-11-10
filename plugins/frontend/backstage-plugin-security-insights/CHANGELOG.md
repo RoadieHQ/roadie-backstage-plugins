@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.1
+
+### Patch Changes
+
+- b295bde5: Fix `DependabotAlertsTable` to use the integration's base URL for fetches
+
 ## 2.1.0
 
 ### Minor Changes

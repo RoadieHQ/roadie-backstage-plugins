@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.1.1
+
+### Patch Changes
+
+- f4bf2b22: fix issue where languages card is empty when no languages are detected. empty language cards are no longer shown.
+
 ## 2.1.0
 
 ### Minor Changes
