@@ -1,5 +1,14 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.2.0
+
+### Minor Changes
+
+- 4251d8de: Make array selector optional for SelectFieldFromApi
+
+  Where the array selector is not supplied return the response as is.
+  The motivation here is to support response which are already a array.
+
 ## 1.1.0
 
 ### Minor Changes

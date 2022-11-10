@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.3.1
+
+### Patch Changes
+
+- 36e302cc: Fixed bug in OktaGroupEntityProvider when OKTA response returns a null description field.
+
 ## 0.3.0
 
 ### Minor Changes
