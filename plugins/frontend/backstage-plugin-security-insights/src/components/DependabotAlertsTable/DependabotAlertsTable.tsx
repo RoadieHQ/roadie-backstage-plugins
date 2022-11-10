@@ -18,6 +18,7 @@ import React, { FC, useState } from 'react';
 import { useAsync } from 'react-use';
 import { Typography, Box, Paper, ButtonGroup, Button } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
+// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { graphql } from '@octokit/graphql';
@@ -179,7 +180,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
 
 export const DependabotAlertsTable: FC<{}> = () => {
   const { entity } = useEntity();
-  const { hostname } = useUrl(entity);
+  const { hostname, baseUrl } = useUrl(entity);
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
 
@@ -214,11 +215,11 @@ export const DependabotAlertsTable: FC<{}> = () => {
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const gqlEndpoint = graphql.defaults({
+      baseUrl,
       headers: {
         authorization: `token ${token}`,
       },
     });
-
     const { repository } = await gqlEndpoint(query, {
       name: repo,
       owner: owner,
@@ -230,6 +231,7 @@ export const DependabotAlertsTable: FC<{}> = () => {
 
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
+
   return value && value.vulnerabilityAlerts ? (
     <DenseTable repository={value} detailsUrl={detailsUrl} />
   ) : null;

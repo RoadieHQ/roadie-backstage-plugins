@@ -15,6 +15,7 @@
  */
 
 import React, { FC } from 'react';
+// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles, Box, Typography, Theme } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
@@ -257,8 +258,10 @@ export const DependabotAlertsWidget = () => {
   }, []);
 
   const detailsUrl = { hostname, owner, repo };
+
   if (loading) return <Progress />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
+
   return value && value.vulnerabilityAlerts ? (
     <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} />
   ) : null;
