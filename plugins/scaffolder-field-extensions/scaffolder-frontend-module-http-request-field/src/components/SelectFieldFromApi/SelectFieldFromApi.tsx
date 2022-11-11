@@ -31,11 +31,13 @@ import {
 import { useAsync } from 'react-use';
 import { get } from 'lodash';
 import { selectFieldFromApiConfigSchema } from '../../types';
+import { FormHelperText } from '@material-ui/core';
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
+  const { title = 'Select', description = '' } = props.schema;
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
@@ -96,7 +98,8 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       required={props.required}
       error={props.rawErrors?.length > 0 && !props.formData}
     >
-      <Select items={dropDownData} label="Select" onChange={props.onChange} />
+      <Select items={dropDownData} label={title} onChange={props.onChange} />
+      <FormHelperText>{description}</FormHelperText>
     </FormControl>
   );
 };
