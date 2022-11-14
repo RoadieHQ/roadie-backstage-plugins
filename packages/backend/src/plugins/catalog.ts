@@ -82,8 +82,8 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 1 }),
-      timeout: Duration.fromObject({ minutes: 2 }),
+      frequency: Duration.fromObject({ minutes: 5 }),
+      timeout: Duration.fromObject({ minutes: 10 }),
     });
   }
   return router;

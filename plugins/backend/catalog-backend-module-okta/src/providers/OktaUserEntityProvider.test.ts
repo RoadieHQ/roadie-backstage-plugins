@@ -35,7 +35,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
 
 const logger = getVoidLogger();
 
-describe('AWSIAMUserProvider', () => {
+describe('OktaUserEntityProvider', () => {
   const config = new ConfigReader({
     orgUrl: 'https://okta',
     token: 'secret',
