@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.3.0
+
+### Minor Changes
+
+- 1037eeae: Add title and description options to field selector
+
 ## 1.2.0
 
 ### Minor Changes
