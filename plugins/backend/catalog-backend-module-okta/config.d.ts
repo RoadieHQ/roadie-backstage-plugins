@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
+import { AccountConfig } from './src/types';
+
 export interface Config {
   catalog?: {
     providers?: {
       /**
        * Okta configuration
        */
-      okta?: AccountConfig[];
+      okta?: {
+        [authEnv: string]: AccountConfig[];
+      };
     };
   };
 }

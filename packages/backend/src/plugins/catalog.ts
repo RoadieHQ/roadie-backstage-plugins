@@ -16,10 +16,7 @@ import {
   AWSIAMRoleProcessor,
   AWSEKSClusterProvider,
 } from '@roadiehq/catalog-backend-module-aws';
-import {
-  OktaUserEntityProvider,
-  OktaGroupEntityProvider,
-} from '@roadiehq/catalog-backend-module-okta';
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
 
 export default async function createPlugin(
@@ -35,14 +32,9 @@ export default async function createPlugin(
   for (const config of env.config.getOptionalConfigArray(
     'catalog.providers.okta',
   ) || []) {
-    const groupProvider = OktaGroupEntityProvider.fromConfig(config, env);
-    const userProvider = OktaUserEntityProvider.fromConfig(config, env);
-
-    builder.addEntityProvider(groupProvider);
-    builder.addEntityProvider(userProvider);
-
-    providers.push(groupProvider);
-    providers.push(userProvider);
+    const orgProvider = OktaOrgEntityProvider.fromConfig(config, env);
+    builder.addEntityProvider(orgProvider);
+    providers.push(orgProvider);
   }
 
   for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
@@ -90,8 +82,8 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 5 }),
-      timeout: Duration.fromObject({ minutes: 10 }),
+      frequency: Duration.fromObject({ minutes: 1 }),
+      timeout: Duration.fromObject({ minutes: 2 }),
     });
   }
   return router;

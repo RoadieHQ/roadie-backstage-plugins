@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { GroupEntity } from '@backstage/catalog-model';
+import { GroupEntity, UserEntity } from '@backstage/catalog-model';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
@@ -28,16 +28,16 @@ import {
   UserNamingStrategy,
   userNamingStrategyFactory,
 } from './userNamingStrategyFactory';
+import { userEntityFromOktaUser } from './userEntityFromOktaUser';
+import { includeGroup } from './filters/includeGroup';
+import { includeUser } from './filters/includeUser';
 import { userFiltersFromConfigArray } from './filters/userFiltersFromConfigArray';
 import { AccountConfig, GroupFilter, UserFilter } from '../types';
-import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
-import { includeUser } from './filters/includeUser';
-import { includeGroup } from './filters/includeGroup';
 
 /**
- * Provides entities from Okta Group service.
+ * Provides entities from Okta Org service.
  */
-export class OktaGroupEntityProvider extends OktaEntityProvider {
+export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
   private userFilters: UserFilter[] | undefined;
@@ -61,8 +61,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       config.getOptionalConfigArray('groupFilters'),
     );
 
-    return new OktaGroupEntityProvider(
-      { orgUrl, token, userFilters, groupFilters },
+    return new OktaOrgEntityProvider(
+      { orgUrl, token, groupFilters, userFilters },
       options,
     );
   }
@@ -80,12 +80,13 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+
     this.userFilters = accountConfig.userFilters;
     this.groupFilters = accountConfig.groupFilters;
   }
 
   getProviderName(): string {
-    return `okta-group-${this.orgUrl}`;
+    return `okta-org-${this.orgUrl}`;
   }
 
   async run(): Promise<void> {
@@ -94,9 +95,9 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     }
 
     this.logger.info(
-      `Providing okta group resources from okta: ${this.orgUrl}`,
+      `Providing okta user and group resources from okta: ${this.orgUrl}`,
     );
-    const groupResources: GroupEntity[] = [];
+    const resources: (GroupEntity | UserEntity)[] = [];
 
     const client = this.getClient();
 
@@ -107,23 +108,42 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         const members: string[] = [];
         await group.listUsers().each(user => {
           if (includeUser(user, this.userFilters)) {
+            resources.push(
+              userEntityFromOktaUser(user, this.userNamingStrategy, {
+                annotations: defaultAnnotations,
+              }),
+            );
             members.push(this.userNamingStrategy(user));
           }
         });
 
-        const groupEntity = groupEntityFromOktaGroup(
-          group,
-          this.namingStrategy,
-          { annotations: defaultAnnotations, members },
-        );
+        const groupEntity: GroupEntity = {
+          kind: 'Group',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+            },
+            name: this.namingStrategy(group),
+            title: group.profile.name,
+            description: group.profile.description || '',
+          },
+          spec: {
+            members,
+            type: 'group',
+            children: [],
+          },
+        };
 
-        groupResources.push(groupEntity);
+        if (members.length > 0) {
+          resources.push(groupEntity);
+        }
       }
     });
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: groupResources.map(entity => ({
+      entities: resources.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

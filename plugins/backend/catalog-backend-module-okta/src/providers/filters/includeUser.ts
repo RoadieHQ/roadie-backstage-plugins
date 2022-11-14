@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { User } from '@okta/okta-sdk-nodejs';
+import { UserFilter } from '../../types';
+import { get } from 'lodash';
+import { filterOperators } from './filterOperators';
 
-export type FilterOperator = 'equals' | 'startsWith';
-
-export type UserFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
-export type GroupFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
-export type AccountConfig = {
-  orgUrl: string;
-  token: string;
-  userFilters?: UserFilter[];
-  groupFilters?: GroupFilter[];
+export const includeUser = (
+  user: User,
+  userFilters?: UserFilter[],
+): boolean => {
+  return userFilters
+    ? userFilters.every(filter => {
+        const lhs = get(user, filter.key);
+        return filterOperators[filter.operator](lhs, filter.value);
+      })
+    : true;
 };

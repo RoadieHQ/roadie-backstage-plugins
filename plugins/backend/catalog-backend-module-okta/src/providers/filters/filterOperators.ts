@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { FilterOperator } from '../../types';
 
-export type FilterOperator = 'equals' | 'startsWith';
-
-export type UserFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
-export type GroupFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
-export type AccountConfig = {
-  orgUrl: string;
-  token: string;
-  userFilters?: UserFilter[];
-  groupFilters?: GroupFilter[];
+export const filterOperators: Record<
+  FilterOperator,
+  (lhs: any, rhs: any) => boolean
+> = {
+  equals: (lhs: any, rhs: any) => {
+    return lhs === rhs;
+  },
+  startsWith: (lhs: string, rhs: any) => {
+    return lhs.startsWith(rhs);
+  },
 };
