@@ -29,13 +29,9 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
 
-  for (const config of env.config.getOptionalConfigArray(
-    'catalog.providers.okta',
-  ) || []) {
-    const orgProvider = OktaOrgEntityProvider.fromConfig(config, env);
-    builder.addEntityProvider(orgProvider);
-    providers.push(orgProvider);
-  }
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, env);
+  builder.addEntityProvider(orgProvider);
+  providers.push(orgProvider);
 
   for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
     []) {

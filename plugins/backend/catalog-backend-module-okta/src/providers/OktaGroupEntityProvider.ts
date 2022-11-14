@@ -42,6 +42,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly userNamingStrategy: UserNamingStrategy;
   private userFilters: UserFilter[] | undefined;
   private groupFilters: GroupFilter[] | undefined;
+  private orgUrl: string;
 
   static fromConfig(
     config: Config,
@@ -75,11 +76,12 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
-    super(accountConfig, options);
+    super([accountConfig], options);
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.orgUrl = accountConfig.orgUrl;
     this.userFilters = accountConfig.userFilters;
     this.groupFilters = accountConfig.groupFilters;
   }
@@ -98,7 +100,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     );
     const groupResources: GroupEntity[] = [];
 
-    const client = this.getClient();
+    const client = this.getClient(this.orgUrl);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 

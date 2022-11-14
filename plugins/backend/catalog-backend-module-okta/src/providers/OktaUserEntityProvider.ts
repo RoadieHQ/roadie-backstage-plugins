@@ -34,6 +34,7 @@ import { includeUser } from './filters/includeUser';
 export class OktaUserEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: UserNamingStrategy;
   private userFilters?: UserFilter[];
+  private orgUrl: string;
 
   static fromConfig(
     config: Config,
@@ -53,9 +54,10 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     accountConfig: AccountConfig,
     options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
   ) {
-    super(accountConfig, options);
+    super([accountConfig], options);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
     this.userFilters = accountConfig.userFilters;
+    this.orgUrl = accountConfig.orgUrl;
   }
 
   getProviderName(): string {
@@ -70,7 +72,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     this.logger.info(`Providing okta user resources from okta: ${this.orgUrl}`);
     const userResources: UserEntity[] = [];
 
-    const client = this.getClient();
+    const client = this.getClient(this.orgUrl);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 

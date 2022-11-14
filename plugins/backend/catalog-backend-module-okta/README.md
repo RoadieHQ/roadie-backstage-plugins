@@ -68,11 +68,7 @@ export default async function createPlugin(
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
-  const oktaConfig = env.config.getOptionalConfigArray(
-    'catalog.providers.okta',
-  );
-
-  const orgProvider = OktaOrgEntityProvider.fromConfig(oktaConfig[0], {
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
     logger: env.logger,
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
