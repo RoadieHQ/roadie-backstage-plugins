@@ -38,7 +38,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const { title = 'Select', description = '' } = props.schema;
+  const { title = 'Select', description = '' } = props.uiSchema;
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
