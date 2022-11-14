@@ -15,7 +15,7 @@
  */
 
 import React, { FC, useState } from 'react';
-import { Typography, Box } from '@material-ui/core';
+import { Typography, Box, Grid } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { Progress, Table, TableColumn } from '@backstage/core-components';
@@ -152,7 +152,22 @@ export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({
   if (loading) {
     return <Progress />;
   } else if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
+    return (
+      <Alert severity="error">
+        <Grid container direction="row" spacing={3}>
+          <Grid item xs={12}>
+            <Typography>
+              Failed to retrieve security insights information from GitHub.
+              Security Insights plugin may require administrator access to
+              display data correctly
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Error message: {error.message}</Typography>
+          </Grid>
+        </Grid>
+      </Alert>
+    );
   }
 
   return value ? (
