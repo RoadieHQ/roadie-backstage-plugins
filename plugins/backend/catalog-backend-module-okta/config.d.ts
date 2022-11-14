@@ -22,9 +22,7 @@ export interface Config {
       /**
        * Okta configuration
        */
-      okta?: {
-        [authEnv: string]: AccountConfig[];
-      };
+      okta?: AccountConfig[];
     };
   };
 }
