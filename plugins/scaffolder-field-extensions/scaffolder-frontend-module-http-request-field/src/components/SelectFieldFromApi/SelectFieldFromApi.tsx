@@ -29,7 +29,8 @@ import {
   SelectItem,
 } from '@backstage/core-components';
 import { useAsync } from 'react-use';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import sortBy from 'lodash/sortBy';
 import { selectFieldFromApiConfigSchema } from '../../types';
 import { FormHelperText } from '@material-ui/core';
 
@@ -52,36 +53,35 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     const array = options.arraySelector
       ? get(body, options.arraySelector)
       : body;
-    setDropDownData(
-      array.map((item: unknown) => {
-        let value: string | undefined;
-        let label: string | undefined;
+    const constructedData = array.map((item: unknown) => {
+      let value: string | undefined;
+      let label: string | undefined;
 
-        if (options.valueSelector) {
-          value = get(item, options.valueSelector);
-          label = options.labelSelector
-            ? get(item, options.labelSelector)
-            : value;
-        } else {
-          if (!(typeof item === 'string')) {
-            throw new Error(
-              `The item provided for the select drop down "${item}" is not a string`,
-            );
-          }
-          value = item;
-          label = item;
+      if (options.valueSelector) {
+        value = get(item, options.valueSelector);
+        label = options.labelSelector
+          ? get(item, options.labelSelector)
+          : value;
+      } else {
+        if (!(typeof item === 'string')) {
+          throw new Error(
+            `The item provided for the select drop down "${item}" is not a string`,
+          );
         }
+        value = item;
+        label = item;
+      }
 
-        if (!value) {
-          throw new Error(`Failed to populate SelectFieldFromApi dropdown`);
-        }
+      if (!value) {
+        throw new Error(`Failed to populate SelectFieldFromApi dropdown`);
+      }
 
-        return {
-          value,
-          label: label || value,
-        };
-      }),
-    );
+      return {
+        value,
+        label: label || value,
+      };
+    });
+    setDropDownData(sortBy(constructedData, 'label'));
   });
 
   if (error) {
