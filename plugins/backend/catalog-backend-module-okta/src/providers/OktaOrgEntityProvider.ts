@@ -70,7 +70,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
-    super(accountConfig, options);
+    super(accountConfigs, options);
     this.groupNamingStrategy = groupNamingStrategyFactory(
       options.groupNamingStrategy,
     );
