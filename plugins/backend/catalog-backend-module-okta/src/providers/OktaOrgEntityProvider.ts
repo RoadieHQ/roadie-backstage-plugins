@@ -63,7 +63,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
   }
 
   constructor(
-    accountConfig: AccountConfig[],
+    accountConfigs: AccountConfig[],
     options: {
       logger: winston.Logger;
       groupNamingStrategy?: GroupNamingStrategies;
