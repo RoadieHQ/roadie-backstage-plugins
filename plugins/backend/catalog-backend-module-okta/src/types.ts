@@ -14,23 +14,9 @@
  * limitations under the License.
  */
 
-export type FilterOperator = 'equals' | 'startsWith';
-
-export type UserFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
-export type GroupFilter = {
-  key: string;
-  operator: FilterOperator;
-  value: string;
-};
-
 export type AccountConfig = {
   orgUrl: string;
   token: string;
-  userFilters?: UserFilter[];
-  groupFilters?: GroupFilter[];
+  userFilter?: string;
+  groupFilter?: string;
 };

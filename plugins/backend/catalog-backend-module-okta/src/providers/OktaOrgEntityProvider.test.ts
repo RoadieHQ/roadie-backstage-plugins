@@ -24,11 +24,16 @@ let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
 };
 
+let listUsers: () => MockOktaCollection = () => {
+  return new MockOktaCollection([]);
+};
+
 jest.mock('@okta/okta-sdk-nodejs', () => {
   return {
     Client: jest.fn().mockImplementation(() => {
       return {
         listGroups,
+        listUsers,
       };
     }),
   };
@@ -44,6 +49,7 @@ describe('OktaOrgEntityProvider', () => {
           {
             orgUrl: 'https://okta',
             token: 'secret',
+            userFilter: 'profile.organization eq "engineering"',
           },
         ],
       },
@@ -53,6 +59,7 @@ describe('OktaOrgEntityProvider', () => {
   describe('where there is no groups', () => {
     beforeEach(() => {
       listGroups = () => new MockOktaCollection([]);
+      listUsers = () => new MockOktaCollection([]);
     });
 
     it('creates no okta groups', async () => {
@@ -158,7 +165,7 @@ describe('OktaOrgEntityProvider', () => {
       };
       const provider = OktaOrgEntityProvider.fromConfig(config, {
         logger,
-        namingStrategy: 'kebab-case-name',
+        groupNamingStrategy: 'kebab-case-name',
         userNamingStrategy: 'strip-domain-email',
       });
       provider.connect(entityProviderConnection);

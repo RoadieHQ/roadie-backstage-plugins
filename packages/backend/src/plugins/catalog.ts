@@ -29,7 +29,11 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
 
-  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, env);
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
+    ...env,
+    groupNamingStrategy: 'kebab-case-name',
+    userNamingStrategy: 'strip-domain-email',
+  });
   builder.addEntityProvider(orgProvider);
   providers.push(orgProvider);
 

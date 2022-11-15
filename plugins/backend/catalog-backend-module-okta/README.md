@@ -22,6 +22,8 @@ catalog:
 
 ### Filter Users and Groups
 
+Thw provider allows configuring Okta search filtering for users and groups. See here for more details on what is possible: https://developer.okta.com/docs/reference/core-okta-api/#filter
+
 ```yaml
 catalog:
   providers:
@@ -29,14 +31,8 @@ catalog:
       - orgUrl: 'https://tenant.okta.com'
         token:
           $env: OKTA_TOKEN
-        userFilters:
-          - key: profile.department
-            operator: equals
-            value: engineering
-        groupFilters:
-          - key: profile.name
-            operator: startsWith
-            value: engineering_
+        userFilter: profile.department eq "engineering"
+        groupFilter: profile.name eq "Everyone"
 ```
 
 There are two ways that you can configure the Entity providers. You can either use the `OktaOrgEntityProvider` which loads both users and groups. Or you can load user or groups separately user the `OktaUserEntityProvider` and `OktaGroupEntityProvider` providers.

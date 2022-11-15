@@ -29,9 +29,6 @@ import {
   userNamingStrategyFactory,
 } from './userNamingStrategyFactory';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
-import { includeGroup } from './filters/includeGroup';
-import { includeUser } from './filters/includeUser';
-import { userFiltersFromConfigArray } from './filters/userFiltersFromConfigArray';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 
@@ -39,14 +36,14 @@ import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
  * Provides entities from Okta Org service.
  */
 export class OktaOrgEntityProvider extends OktaEntityProvider {
-  private readonly namingStrategy: GroupNamingStrategy;
+  private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
 
   static fromConfig(
     config: Config,
     options: {
       logger: winston.Logger;
-      namingStrategy?: GroupNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies;
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
@@ -56,14 +53,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         const orgUrl = oktaConfig.getString('orgUrl');
         const token = oktaConfig.getString('token');
 
-        const userFilters = userFiltersFromConfigArray(
-          oktaConfig.getOptionalConfigArray('userFilters'),
-        );
-        const groupFilters = userFiltersFromConfigArray(
-          oktaConfig.getOptionalConfigArray('groupFilters'),
-        );
+        const userFilter = oktaConfig.getOptionalString('userFilter');
+        const groupFilter = oktaConfig.getOptionalString('groupFilter');
 
-        return { orgUrl, token, groupFilters, userFilters };
+        return { orgUrl, token, groupFilter, userFilter };
       });
 
     return new OktaOrgEntityProvider(oktaConfigs || [], options);
@@ -73,12 +66,14 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     accountConfig: AccountConfig[],
     options: {
       logger: winston.Logger;
-      namingStrategy?: GroupNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies;
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
     super(accountConfig, options);
-    this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
+    this.groupNamingStrategy = groupNamingStrategyFactory(
+      options.groupNamingStrategy,
+    );
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
@@ -102,31 +97,32 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
 
         const defaultAnnotations = await this.buildDefaultAnnotations();
 
-        await client.listGroups().each(async group => {
-          if (includeGroup(group, account.groupFilters)) {
+        await client.listUsers({ search: account.userFilter }).each(user => {
+          resources.push(
+            userEntityFromOktaUser(user, this.userNamingStrategy, {
+              annotations: defaultAnnotations,
+            }),
+          );
+        });
+
+        await client
+          .listGroups({ search: account.groupFilter })
+          .each(async group => {
             const members: string[] = [];
             await group.listUsers().each(user => {
-              if (includeUser(user, account.userFilters)) {
-                resources.push(
-                  userEntityFromOktaUser(user, this.userNamingStrategy, {
-                    annotations: defaultAnnotations,
-                  }),
-                );
-                members.push(this.userNamingStrategy(user));
-              }
+              members.push(this.userNamingStrategy(user));
             });
 
             const groupEntity = groupEntityFromOktaGroup(
               group,
-              this.namingStrategy,
+              this.groupNamingStrategy,
               { annotations: defaultAnnotations, members },
             );
 
             if (members.length > 0) {
               resources.push(groupEntity);
             }
-          }
-        });
+          });
       }),
     );
 

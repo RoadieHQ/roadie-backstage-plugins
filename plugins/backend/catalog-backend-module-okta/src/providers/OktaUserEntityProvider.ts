@@ -23,18 +23,16 @@ import {
   UserNamingStrategy,
   userNamingStrategyFactory,
 } from './userNamingStrategyFactory';
-import { AccountConfig, UserFilter } from '../types';
+import { AccountConfig } from '../types';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
-import { userFiltersFromConfigArray } from './filters/userFiltersFromConfigArray';
-import { includeUser } from './filters/includeUser';
 
 /**
  * Provides entities from Okta User service.
  */
 export class OktaUserEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: UserNamingStrategy;
-  private userFilters?: UserFilter[];
-  private orgUrl: string;
+  private readonly userFilter?: string;
+  private readonly orgUrl: string;
 
   static fromConfig(
     config: Config,
@@ -43,11 +41,9 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
-    const userFilters = userFiltersFromConfigArray(
-      config.getOptionalConfigArray('userFilters'),
-    );
+    const userFilter = config.getOptionalString('userFilter');
 
-    return new OktaUserEntityProvider({ orgUrl, token, userFilters }, options);
+    return new OktaUserEntityProvider({ orgUrl, token, userFilter }, options);
   }
 
   constructor(
@@ -56,7 +52,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
   ) {
     super([accountConfig], options);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
-    this.userFilters = accountConfig.userFilters;
+    this.userFilter = accountConfig.userFilter;
     this.orgUrl = accountConfig.orgUrl;
   }
 
@@ -76,15 +72,13 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    const allUsers = await client.listUsers();
+    const allUsers = await client.listUsers({ search: this.userFilter });
 
     await allUsers.each(user => {
-      if (includeUser(user, this.userFilters)) {
-        const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
-          annotations: defaultAnnotations,
-        });
-        userResources.push(userEntity);
-      }
+      const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
+        annotations: defaultAnnotations,
+      });
+      userResources.push(userEntity);
     });
 
     await this.connection.applyMutation({

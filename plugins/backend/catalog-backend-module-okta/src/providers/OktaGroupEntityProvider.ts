@@ -28,11 +28,8 @@ import {
   UserNamingStrategy,
   userNamingStrategyFactory,
 } from './userNamingStrategyFactory';
-import { userFiltersFromConfigArray } from './filters/userFiltersFromConfigArray';
-import { AccountConfig, GroupFilter, UserFilter } from '../types';
+import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
-import { includeUser } from './filters/includeUser';
-import { includeGroup } from './filters/includeGroup';
 
 /**
  * Provides entities from Okta Group service.
@@ -40,8 +37,7 @@ import { includeGroup } from './filters/includeGroup';
 export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
-  private userFilters: UserFilter[] | undefined;
-  private groupFilters: GroupFilter[] | undefined;
+  private readonly groupFilter: string | undefined;
   private orgUrl: string;
 
   static fromConfig(
@@ -55,17 +51,9 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
-    const userFilters = userFiltersFromConfigArray(
-      config.getOptionalConfigArray('userFilters'),
-    );
-    const groupFilters = userFiltersFromConfigArray(
-      config.getOptionalConfigArray('groupFilters'),
-    );
+    const groupFilter = config.getOptionalString('groupFilter');
 
-    return new OktaGroupEntityProvider(
-      { orgUrl, token, userFilters, groupFilters },
-      options,
-    );
+    return new OktaGroupEntityProvider({ orgUrl, token, groupFilter }, options);
   }
 
   constructor(
@@ -82,8 +70,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       options.userNamingStrategy,
     );
     this.orgUrl = accountConfig.orgUrl;
-    this.userFilters = accountConfig.userFilters;
-    this.groupFilters = accountConfig.groupFilters;
+    this.groupFilter = accountConfig.groupFilter;
   }
 
   getProviderName(): string {
@@ -104,23 +91,18 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    await client.listGroups().each(async group => {
-      if (includeGroup(group, this.groupFilters)) {
-        const members: string[] = [];
-        await group.listUsers().each(user => {
-          if (includeUser(user, this.userFilters)) {
-            members.push(this.userNamingStrategy(user));
-          }
-        });
+    await client.listGroups({ search: this.groupFilter }).each(async group => {
+      const members: string[] = [];
+      await group.listUsers().each(user => {
+        members.push(this.userNamingStrategy(user));
+      });
 
-        const groupEntity = groupEntityFromOktaGroup(
-          group,
-          this.namingStrategy,
-          { annotations: defaultAnnotations, members },
-        );
+      const groupEntity = groupEntityFromOktaGroup(group, this.namingStrategy, {
+        annotations: defaultAnnotations,
+        members,
+      });
 
-        groupResources.push(groupEntity);
-      }
+      groupResources.push(groupEntity);
     });
 
     await this.connection.applyMutation({
