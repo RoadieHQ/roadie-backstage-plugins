@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.2
+
+### Patch Changes
+
+- d4dfc5e5: Add additional contextual information on error messages for security components
+
 ## 2.1.1
 
 ### Patch Changes
