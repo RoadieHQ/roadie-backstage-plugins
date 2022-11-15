@@ -28,23 +28,30 @@ import {
 } from '@backstage/catalog-model';
 
 export abstract class OktaEntityProvider implements EntityProvider {
-  protected readonly orgUrl: string;
-  protected readonly token: string;
+  protected readonly accounts: AccountConfig[];
   protected readonly logger: Logger;
   protected connection?: EntityProviderConnection;
 
   public abstract getProviderName(): string;
 
-  protected constructor(account: AccountConfig, options: { logger: Logger }) {
-    this.orgUrl = account.orgUrl;
-    this.token = account.token;
+  protected constructor(
+    accounts: AccountConfig[],
+    options: { logger: Logger },
+  ) {
+    this.accounts = accounts;
     this.logger = options.logger;
   }
 
-  protected getClient(): Client {
+  protected getClient(orgUrl: string): Client {
+    const account = this.accounts.find(
+      acccountConfig => acccountConfig.orgUrl === orgUrl,
+    );
+    if (!account) {
+      throw new Error(`accountConfig for ${orgUrl} not found`);
+    }
     return new Client({
-      orgUrl: this.orgUrl,
-      token: this.token,
+      orgUrl: account.orgUrl,
+      token: account.token,
     });
   }
 

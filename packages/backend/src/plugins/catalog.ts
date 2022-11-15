@@ -16,10 +16,7 @@ import {
   AWSIAMRoleProcessor,
   AWSEKSClusterProvider,
 } from '@roadiehq/catalog-backend-module-aws';
-import {
-  OktaUserEntityProvider,
-  OktaGroupEntityProvider,
-} from '@roadiehq/catalog-backend-module-okta';
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
 
 export default async function createPlugin(
@@ -32,18 +29,13 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
 
-  for (const config of env.config.getOptionalConfigArray(
-    'catalog.providers.okta',
-  ) || []) {
-    const groupProvider = OktaGroupEntityProvider.fromConfig(config, env);
-    const userProvider = OktaUserEntityProvider.fromConfig(config, env);
-
-    builder.addEntityProvider(groupProvider);
-    builder.addEntityProvider(userProvider);
-
-    providers.push(groupProvider);
-    providers.push(userProvider);
-  }
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
+    ...env,
+    groupNamingStrategy: 'kebab-case-name',
+    userNamingStrategy: 'strip-domain-email',
+  });
+  builder.addEntityProvider(orgProvider);
+  providers.push(orgProvider);
 
   for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
     []) {
