@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.0
+
+### Minor Changes
+
+- 1164f19b: Add ability to filter okta user and group data.
+
 ## 0.3.1
 
 ### Patch Changes

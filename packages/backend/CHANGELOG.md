@@ -1,5 +1,12 @@
 # backend
 
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [1164f19b]
+  - @roadiehq/catalog-backend-module-okta@0.4.0
+
 ## 1.0.17
 
 ### Patch Changes
