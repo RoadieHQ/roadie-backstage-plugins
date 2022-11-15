@@ -16,7 +16,14 @@
 
 import React, { FC, useState } from 'react';
 import { useAsync } from 'react-use';
-import { Typography, Box, Paper, ButtonGroup, Button } from '@material-ui/core';
+import {
+  Typography,
+  Box,
+  Paper,
+  ButtonGroup,
+  Button,
+  Grid,
+} from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 // eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
@@ -230,7 +237,24 @@ export const DependabotAlertsTable: FC<{}> = () => {
   const detailsUrl = { hostname, owner, repo };
 
   if (loading) return <Progress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
+  if (error) {
+    return (
+      <Alert severity="error">
+        <Grid container direction="row" spacing={3}>
+          <Grid item xs={12}>
+            <Typography>
+              Failed to retrieve Dependabot alerts from GitHub. Security
+              Insights plugin may require administrator access to display data
+              correctly
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Error message: {error.message}</Typography>
+          </Grid>
+        </Grid>
+      </Alert>
+    );
+  }
 
   return value && value.vulnerabilityAlerts ? (
     <DenseTable repository={value} detailsUrl={detailsUrl} />
