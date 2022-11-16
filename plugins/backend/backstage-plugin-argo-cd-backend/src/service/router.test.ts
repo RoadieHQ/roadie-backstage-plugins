@@ -22,6 +22,10 @@ const config = ConfigReader.fromConfigs([
                 name: 'argoInstance1',
                 url: 'https://argoInstance1.com',
               },
+              {
+                name: 'argoInstance2',
+                url: 'https://argoInstance2.com',
+              },
             ],
           },
         ],
@@ -70,6 +74,125 @@ describe('router', () => {
       argoAppName: 'test-app-nonprod',
       argoProjectName: 'test-project',
       kubernetesNamespace: 'test-namespace',
+    });
+  });
+
+  describe('find application', () => {
+    it(`successfully finds application based on name`, async () => {
+      getArgoAppData.mockResolvedValue({
+        items: [
+          {
+            metadata: {
+              name: 'test-app-prod',
+              namespace: 'argocd',
+              labels: {
+                app: 'test-app',
+              },
+            },
+          },
+          {
+            metadata: {
+              name: 'test-app-staging',
+              namespace: 'argocd',
+              labels: {
+                app: 'test-app',
+              },
+            },
+          },
+        ],
+      });
+
+      const response = await request(app).get('/find/name/test-app');
+
+      expect(getArgoToken).toBeCalledTimes(2);
+      expect(response.body).toMatchObject([
+        {
+          appName: ['test-app'],
+          name: 'argoInstance1',
+          url: 'https://argoInstance1.com',
+        },
+        {
+          appName: ['test-app'],
+          name: 'argoInstance2',
+          url: 'https://argoInstance2.com',
+        },
+      ]);
+    });
+
+    it(`successfully finds no application based on name`, async () => {
+      getArgoAppData.mockRejectedValue('error getting application');
+
+      const response = await request(app).get('/find/name/test-app');
+
+      expect(getArgoToken).toBeCalledTimes(2);
+      expect(response.body).toMatchObject([]);
+    });
+
+    it(`successfully finds application based on selector`, async () => {
+      getArgoAppData.mockResolvedValue({
+        items: [
+          {
+            metadata: {
+              name: 'test-app-prod',
+              namespace: 'argocd',
+              labels: {
+                app: 'test-app',
+              },
+            },
+          },
+          {
+            metadata: {
+              name: 'test-app-staging',
+              namespace: 'argocd',
+              labels: {
+                app: 'test-app',
+              },
+            },
+          },
+        ],
+      });
+
+      const response = await request(app).get(
+        '/find/selector/prefix/name=test-app',
+      );
+
+      expect(getArgoToken).toBeCalledTimes(2);
+      expect(response.body).toMatchObject([
+        {
+          appName: ['test-app-prod', 'test-app-staging'],
+          name: 'argoInstance1',
+          url: 'https://argoInstance1.com',
+        },
+        {
+          appName: ['test-app-prod', 'test-app-staging'],
+          name: 'argoInstance2',
+          url: 'https://argoInstance2.com',
+        },
+      ]);
+    });
+
+    it(`successfully finds no applications based on selector`, async () => {
+      getArgoAppData.mockResolvedValue({
+        items: [],
+      });
+
+      const response = await request(app).get(
+        '/find/selector/prefix/name=test-app',
+      );
+
+      expect(getArgoToken).toBeCalledTimes(2);
+      expect(response.body).toMatchObject([
+        {
+          appName: [],
+          name: 'argoInstance1',
+          url: 'https://argoInstance1.com',
+        },
+        {
+          appName: [],
+          name: 'argoInstance2',
+          url: 'https://argoInstance2.com',
+        },
+      ]);
     });
   });
 
