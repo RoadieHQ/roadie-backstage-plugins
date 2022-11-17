@@ -153,9 +153,22 @@ describe('router', () => {
       });
 
       const response = await request(app).get(
-        '/find/selector/prefix/name=test-app',
+        '/find/selector/prefix/name=test-app,other-prefix/name=some-value',
       );
 
+      expect(getArgoAppData).toBeCalledTimes(2);
+      expect(getArgoAppData).toBeCalledWith(
+        'https://argoInstance1.com',
+        'argoInstance1',
+        { selector: 'prefix/name=test-app,other-prefix/name=some-value' },
+        'testToken',
+      );
+      expect(getArgoAppData).toBeCalledWith(
+        'https://argoInstance2.com',
+        'argoInstance2',
+        { selector: 'prefix/name=test-app,other-prefix/name=some-value' },
+        'testToken',
+      );
       expect(getArgoToken).toBeCalledTimes(2);
       expect(response.body).toMatchObject([
         {
@@ -177,9 +190,22 @@ describe('router', () => {
       });
 
       const response = await request(app).get(
-        '/find/selector/prefix/name=test-app',
+        '/find/selector/prefix/name=test-app,other-prefix/name=some-value',
       );
 
+      expect(getArgoAppData).toBeCalledTimes(2);
+      expect(getArgoAppData).toBeCalledWith(
+        'https://argoInstance1.com',
+        'argoInstance1',
+        { selector: 'prefix/name=test-app,other-prefix/name=some-value' },
+        'testToken',
+      );
+      expect(getArgoAppData).toBeCalledWith(
+        'https://argoInstance2.com',
+        'argoInstance2',
+        { selector: 'prefix/name=test-app,other-prefix/name=some-value' },
+        'testToken',
+      );
       expect(getArgoToken).toBeCalledTimes(2);
       expect(response.body).toMatchObject([
         {
