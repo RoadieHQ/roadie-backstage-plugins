@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { CloudsmithStatsCardContentProps } from './types';
-import { CloudsmithClient, RepoStats } from '../../api';
+import { CloudsmithClient } from '../../api';
 import {
   discoveryApiRef,
   fetchApiRef,
@@ -47,10 +47,13 @@ export const Content = ({ owner, repo }: CloudsmithStatsCardContentProps) => {
   const fetchApi = useApi(fetchApiRef);
   const discoveryApi = useApi(discoveryApiRef);
   const cloudsmithApi = new CloudsmithClient({ fetchApi, discoveryApi });
-  const [repoStats, setRepoStats] = useState<RepoStats | undefined>();
 
-  const { loading, error } = useAsync(async () => {
-    setRepoStats(await cloudsmithApi.getRepoMetrics({ owner, repo }));
+  const {
+    value: repoStats,
+    loading,
+    error,
+  } = useAsync(async () => {
+    return await cloudsmithApi.getRepoMetrics({ owner, repo });
   });
 
   if (loading) {
