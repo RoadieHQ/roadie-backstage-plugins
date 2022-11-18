@@ -15,22 +15,62 @@
  */
 
 import { CloudsmithClient } from './CloudsmithClient';
-import fetchMock from 'jest-fetch-mock';
+import { FetchApi } from '@backstage/core-plugin-api';
 
-fetchMock.enableMocks();
+const mockResponse = {
+  packages: {
+    active: 20,
+    inactive: 180,
+    total: 200,
+  },
+};
 
 describe('CloudsmithClient', () => {
   let client: CloudsmithClient;
 
   beforeEach(() => {
-    fetchMock.resetMocks();
     client = new CloudsmithClient({
-      fetchApi: { fetch: jest.fn() },
-      discoveryApi: { getBaseUrl: jest.fn() },
+      discoveryApi: {
+        getBaseUrl: pluginId =>
+          Promise.resolve(`https://backstage/api/${pluginId}`),
+      },
+      fetchApi: {
+        fetch: async (url: string) => {
+          if (
+            url ===
+            'https://backstage/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
+          ) {
+            return {
+              ok: true,
+              json: async () => mockResponse,
+            };
+          }
+          return {
+            ok: false,
+            statusText: 'Not Found',
+          };
+        },
+      } as any as FetchApi,
     });
   });
 
   it('is an instance', () => {
     expect(client).not.toEqual(undefined);
+  });
+
+  describe('#getRepoMetrics', () => {
+    it('returns the repo metrics', async () => {
+      expect(
+        await client.getRepoMetrics({ owner: 'name', repo: 'repo-name' }),
+      ).toEqual(mockResponse);
+    });
+
+    it('throws error if the metrics are not found', async () => {
+      await expect(
+        client.getRepoMetrics({ owner: 'name', repo: 'not-a-repo-name' }),
+      ).rejects.toEqual(
+        new Error('Failed to retrieve package metrics: Not Found'),
+      );
+    });
   });
 });
