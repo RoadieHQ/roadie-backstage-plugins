@@ -28,7 +28,8 @@ import {
   Progress,
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import { bugsnagApiRef, isBugsnagAvailable } from '../..';
+import { bugsnagApiRef } from '../../api';
+import { isBugsnagAvailable } from '../../conditions';
 import { ErrorsTable } from '../ErrorsTableComponent';
 import {
   BUGSNAG_ANNOTATION,
