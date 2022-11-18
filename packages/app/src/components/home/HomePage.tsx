@@ -19,6 +19,7 @@ import Grid from '@material-ui/core/Grid';
 import { HomePageToolkit } from '@backstage/plugin-home';
 import { HomePageMarkdown } from '@roadiehq/backstage-plugin-home-markdown';
 import { HomePageRSS } from '@roadiehq/backstage-plugin-home-rss';
+import { CloudsmithStatsCard } from '@roadiehq/backstage-plugin-cloudsmith';
 import {
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
@@ -43,6 +44,9 @@ export const HomePage = () => {
               feedURL="http://localhost:7007/api/proxy/aws-news-feed/"
               title="AWS News"
             />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <CloudsmithStatsCard repo="roadie-npm" owner="roadie" />
           </Grid>
           <Grid item md={6} xs={12}>
             <HomepageStoriesCard />

@@ -40,6 +40,11 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
+  '/cloudsmith':
+    target: 'https://api.cloudsmith.io/v1'
+    headers:
+      X-Api-Key: ${CLOUDSMITH_API_KEY}
+
   '/aws-news-feed':
     target: 'https://aws.amazon.com/about-aws/whats-new/recent/feed/'
 
