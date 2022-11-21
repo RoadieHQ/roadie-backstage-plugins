@@ -152,9 +152,10 @@ describe('router', () => {
         ],
       });
 
-      const response = await request(app).get(
-        '/find/selector/prefix/name=test-app,other-prefix/name=some-value',
+      const selector = encodeURIComponent(
+        'prefix/name=test-app,other-prefix/name=some-value',
       );
+      const response = await request(app).get(`/find/selector/${selector}`);
 
       expect(getArgoAppData).toBeCalledTimes(2);
       expect(getArgoAppData).toBeCalledWith(
@@ -189,9 +190,10 @@ describe('router', () => {
         items: [],
       });
 
-      const response = await request(app).get(
-        '/find/selector/prefix/name=test-app,other-prefix/name=some-value',
+      const selector = encodeURIComponent(
+        'prefix/name=test-app,other-prefix/name=some-value',
       );
+      const response = await request(app).get(`/find/selector/${selector}`);
 
       expect(getArgoAppData).toBeCalledTimes(2);
       expect(getArgoAppData).toBeCalledWith(

@@ -80,13 +80,10 @@ export function createRouter({
     },
   );
 
-  router.get(
-    '/find/selector/:argoAppSelector([^/]*)',
-    async (request, response) => {
-      const argoAppSelector = request.params.argoAppSelector;
-      response.send(await argoSvc.findArgoApp({ selector: argoAppSelector }));
-    },
-  );
+  router.get('/find/selector/:argoAppSelector', async (request, response) => {
+    const argoAppSelector = request.params.argoAppSelector;
+    response.send(await argoSvc.findArgoApp({ selector: argoAppSelector }));
+  });
 
   router.get(
     '/argoInstance/:argoInstanceName/applications/selector/:argoAppSelector',
