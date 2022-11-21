@@ -17,8 +17,7 @@
 import React, { useState } from 'react';
 import { useAsync } from 'react-use';
 import { Grid } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import { Entity } from '@backstage/catalog-model';
+import { Alert } from '@material-ui/lab';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
   Page,
@@ -29,17 +28,14 @@ import {
   Progress,
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import { bugsnagApiRef } from '../..';
+import { bugsnagApiRef } from '../../api';
+import { isBugsnagAvailable } from '../../conditions';
 import { ErrorsTable } from '../ErrorsTableComponent';
 import {
   BUGSNAG_ANNOTATION,
   useBugsnagData,
   useProjectName,
 } from '../../hooks/useBugsnagData';
-
-export const isBugsnagAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[BUGSNAG_ANNOTATION]);
-};
 
 export const ErrorsOverview = () => {
   const { entity } = useEntity();

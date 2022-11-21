@@ -20,9 +20,8 @@ import {
   createApiFactory,
   discoveryApiRef,
 } from '@backstage/core-plugin-api';
-import { BugsnagClient } from '.';
+import { BugsnagClient, bugsnagApiRef } from './api';
 import { rootRouteRef } from './routes';
-import { bugsnagApiRef } from './api/BugsnagApi';
 
 export const backstagePluginBugsnag = createPlugin({
   id: 'bugsnag',

@@ -15,21 +15,12 @@
  */
 
 import React from 'react';
-import { Entity } from '@backstage/catalog-model';
 import { Routes, Route } from 'react-router-dom';
-import {
-  ARGOCD_ANNOTATION_APP_NAME,
-  ARGOCD_ANNOTATION_APP_SELECTOR,
-  ARGOCD_ANNOTATION_PROJECT_NAME,
-} from './components/useArgoCDAppData';
+import { ARGOCD_ANNOTATION_APP_NAME } from './components/useArgoCDAppData';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { ArgoCDHistoryCard } from './components/ArgoCDHistoryCard';
-
-export const isArgocdAvailable = (entity: Entity) =>
-  Boolean(entity?.metadata.annotations?.[ARGOCD_ANNOTATION_APP_NAME]) ||
-  Boolean(entity?.metadata.annotations?.[ARGOCD_ANNOTATION_APP_SELECTOR]) ||
-  Boolean(entity?.metadata.annotations?.[ARGOCD_ANNOTATION_PROJECT_NAME]);
+import { isArgocdAvailable } from './conditions';
 
 export const Router = () => {
   const { entity } = useEntity();
