@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.1
+
+### Patch Changes
+
+- b7a7536a: Fix circular dependencies.
+
 ## 2.2.0
 
 ### Minor Changes
