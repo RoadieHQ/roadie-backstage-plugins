@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.6.1
+
+### Patch Changes
+
+- 15af4518: Fixed using selectors to find Application across multiple ArgoCD servers
+
 ## 2.6.0
 
 ### Minor Changes
