@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.2.3
+
+### Patch Changes
+
+- eee090e2: Improve docs regarding image usage
+
 ## 2.2.2
 
 ### Patch Changes
