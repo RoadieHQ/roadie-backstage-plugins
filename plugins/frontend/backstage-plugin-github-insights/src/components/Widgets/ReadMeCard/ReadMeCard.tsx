@@ -63,9 +63,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type Props = {
+type ReadMeCardProps = {
   entity?: Entity;
   maxHeight?: number;
+  title?: string;
 };
 
 const getRepositoryDefaultBranch = (url: string) => {
@@ -86,7 +87,7 @@ function b64DecodeUnicode(str: string): string {
   );
 }
 
-const ReadMeCard = (props: Props) => {
+const ReadMeCard = (props: ReadMeCardProps) => {
   const { entity } = useEntity();
   const classes = useStyles();
   const { owner, repo, readmePath } = useProjectEntity(entity);
@@ -115,7 +116,7 @@ const ReadMeCard = (props: Props) => {
 
   return value?.content && owner && repo ? (
     <InfoCard
-      title="Readme"
+      title={props.title || 'Readme'}
       className={classes.infoCard}
       deepLink={{
         link: `//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
