@@ -53,7 +53,7 @@ const PullRequestsCard = () => {
   );
 };
 
-const GroupPullRequestsCard = () => {
+export const Content = () => {
   const { entity } = useEntity();
   const isLoggedIn = useGithubLoggedIn();
   if (!isLoggedIn) {
@@ -72,5 +72,3 @@ const GroupPullRequestsCard = () => {
   }
   return <Alert severity="error">This card can only be used on Group Entities</Alert>
 };
-
-export default GroupPullRequestsCard;
