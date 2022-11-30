@@ -38,6 +38,7 @@ export {
    */
   isGithubPullRequestsAvailable as isPluginApplicableToEntity,
   isGithubPullRequestsAvailable,
+  isGithubTeamPullRequestsAvailable,
 } from './components/Router';
 export {
   /**

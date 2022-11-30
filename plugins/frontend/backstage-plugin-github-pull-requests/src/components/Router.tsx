@@ -18,12 +18,18 @@ import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
-import { GITHUB_PULL_REQUESTS_ANNOTATION } from '../utils/isGithubSlugSet';
+import { 
+  GITHUB_PULL_REQUESTS_ANNOTATION,
+  GITHUB_PULL_REQUESTS_TEAM_ANNOTATION,
+} from '../utils/isGithubSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const isGithubPullRequestsAvailable = (entity: Entity) =>
   Boolean(entity.metadata.annotations?.[GITHUB_PULL_REQUESTS_ANNOTATION]);
+
+export const isGithubTeamPullRequestsAvailable = (entity: Entity) =>
+  Boolean(entity.metadata.annotations?.[GITHUB_PULL_REQUESTS_TEAM_ANNOTATION]);
 
 export const Router = () => {
   const { entity } = useEntity();

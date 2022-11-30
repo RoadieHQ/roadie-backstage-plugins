@@ -86,6 +86,36 @@ const overviewContent = (
 
 ```
 
+## Group Widget setup
+
+1. You must install plugin by following the steps above to add widget to your Group Entity Page
+
+2. Add widget to your group page:
+
+```ts
+import {
+  EntityGithubGroupPullRequestsCard,
+  isGithubTeamPullRequestsAvailable,
+} from '@roadiehq/backstage-plugin-github-pull-requests';
+
+...
+
+const groupPage = (
+  <Grid container spacing={3}>
+    ...
+    <EntitySwitch>
+      <EntitySwitch.Case if={isGithubTeamPullRequestsAvailable}>
+        <Grid item md={5} xs={12}>
+          <EntityGithubGroupPullRequestsCard/>
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    ...
+  </Grid>
+);
+
+```
+
 ## Add Homepage components to your homepage
 
 ![A preview image of the components](./docs/homepage-components.png)
