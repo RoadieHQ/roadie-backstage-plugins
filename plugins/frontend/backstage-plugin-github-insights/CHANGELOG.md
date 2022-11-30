@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.1.2
+
+### Patch Changes
+
+- 45d1c773: Allow setting the `README` card title.
+
 ## 2.1.1
 
 ### Patch Changes
