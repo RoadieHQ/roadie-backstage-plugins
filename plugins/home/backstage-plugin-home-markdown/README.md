@@ -1,8 +1,8 @@
 # Markdown Home page plugin
 
-A React component that renders a markdown file from Github as a Homepage component. You'll need to log in to Github to be able to fetch the markdown.
-You can configure the plugin to point to a remote markdown file in Github and it will fetch that markdown file and render it inside a card component.
-It fetches on every render, but it caches based on the etag that gets returned by the Github api.
+A React component that renders a markdown file from GitHub as a Homepage component. You'll need to log in to GitHub to be able to fetch the markdown.
+You can configure the plugin to point to a remote markdown file in GitHub and it will fetch that markdown file and render it inside a card component.
+It fetches on every render, but it caches based on the etag that gets returned by the GitHub api.
 
 For the resources (links & images) currently you should use publicly available absolute urls. For example:
 Make sure you use `raw` in the url instad of `blob` if you copy and paste from the browser.
@@ -12,7 +12,7 @@ Make sure you use `raw` in the url instad of `blob` if you copy and paste from t
 + ![](https://github.com/RoadieHQ/roadie-backstage-plugins/raw/SC-7064-add-markdown-home-plugin/plugins/home/backstage-plugin-home-markdown/docs/home-page-markdown.png)
 ```
 
-NB: Images hosted in private repositories in Github will not render as the [`react-markdown`](https://github.com/remarkjs/react-markdown) library used under the hood does not support authenticated requests.
+NB: Images hosted in private repositories in GitHub will not render as the [`react-markdown`](https://github.com/remarkjs/react-markdown) library used under the hood does not support authenticated requests.
 
 ## Preview
 
