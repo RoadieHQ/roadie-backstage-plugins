@@ -70,19 +70,6 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
   }),
 );
 
-export const EntityGithubGroupPullRequestsCard =
-  githubPullRequestsPlugin.provide(
-    createComponentExtension({
-      name: 'EntityGithubGroupPullRequestsCard',
-      component: {
-        lazy: () =>
-          import('./components/GroupPullRequestsCard').then(
-            m => m.GroupPullRequestsCard,
-          ),
-      },
-    }),
-  );
-
 export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
   createCardExtension<{ query?: string }>({
     name: 'HomePageRequestedReviewsCard',
@@ -97,5 +84,14 @@ export const HomePageYourOpenPullRequestsCard =
       name: 'HomePageRequestedReviewsCard',
       title: 'Your open pull requests',
       components: () => import('./components/Home/YourOpenPullRequestsCard'),
+    }),
+  );
+
+export const EntityGithubGroupPullRequestsCard =
+  githubPullRequestsPlugin.provide(
+    createCardExtension({
+      name: 'EntityGithubGroupPullRequestsCard',
+      title: 'Team Assigned Review requests',
+      components: () => import('./components/GroupPullRequestsCard'),
     }),
   );

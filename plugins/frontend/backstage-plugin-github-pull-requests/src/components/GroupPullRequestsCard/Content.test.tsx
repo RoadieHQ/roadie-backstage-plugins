@@ -34,7 +34,7 @@ import {
   SignedOutMockGithubAuthState,
 } from '../../mocks/githubAuthApi';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import GroupPullRequestsCard from './GroupPullRequestsCard';
+import { Content } from './Content';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, SignedInMockGithubAuthState],
@@ -56,7 +56,7 @@ describe('<GroupPullRequestCard>', () => {
       wrapInTestApp(
         <TestApiProvider apis={api}>
           <EntityProvider entity={entityMock}>
-            <GroupPullRequestsCard />
+            <Content />
           </EntityProvider>
         </TestApiProvider>,
       ),
@@ -74,7 +74,7 @@ describe('<GroupPullRequestCard>', () => {
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={groupEntityMock}>
-            <GroupPullRequestsCard />
+            <Content />
           </EntityProvider>
         </TestApiProvider>,
       ),
@@ -90,7 +90,7 @@ describe('<GroupPullRequestCard>', () => {
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={groupEntityMockWithSlug}>
-            <GroupPullRequestsCard/>
+            <Content/>
           </EntityProvider>
         </TestApiProvider>,
       ),

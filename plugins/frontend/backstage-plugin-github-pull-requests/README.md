@@ -88,6 +88,8 @@ const overviewContent = (
 
 ## Group Widget setup
 
+![a list of pull requests assigned to this team](./docs/list-of-team-assigned-prs.png)
+
 1. You must install plugin by following the steps above to add widget to your Group Entity Page
 
 2. Add widget to your group page:
