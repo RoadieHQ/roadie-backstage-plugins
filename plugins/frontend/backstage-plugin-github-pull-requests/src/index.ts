@@ -23,6 +23,7 @@ export {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
   EntityGithubPullRequestsTable,
+  EntityGithubGroupPullRequestsCard,
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
 } from './plugin';
@@ -44,5 +45,10 @@ export {
    */
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
-
+export {
+  /**
+   * @deprecated From 0.2.0 composability API should be used
+   */
+   GroupPullRequestsCard,
+} from './components/GroupPullRequestsCard';
 export { PullRequestsTableView } from './components/PullRequestsTable';

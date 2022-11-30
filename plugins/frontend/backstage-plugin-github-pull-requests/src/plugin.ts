@@ -70,6 +70,19 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
   }),
 );
 
+export const EntityGithubGroupPullRequestsCard =
+  githubPullRequestsPlugin.provide(
+    createComponentExtension({
+      name: 'EntityGithubGroupPullRequestsCard',
+      component: {
+        lazy: () =>
+          import('./components/GroupPullRequestsCard').then(
+            m => m.GroupPullRequestsCard,
+          ),
+      },
+    }),
+  );
+
 export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
   createCardExtension<{ query?: string }>({
     name: 'HomePageRequestedReviewsCard',
