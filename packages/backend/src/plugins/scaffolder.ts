@@ -33,6 +33,7 @@ import {
   createAppendFileAction,
   createMergeJSONAction,
   createMergeAction,
+  createYqAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
 import {
   createAwsS3CpAction,
@@ -69,6 +70,7 @@ export const createActions = (options: {
     createAwsS3CpAction(),
     createEcrAction(),
     createHttpBackstageAction({ config }),
+    createYqAction({}),
     ...defaultActions,
   ];
 };

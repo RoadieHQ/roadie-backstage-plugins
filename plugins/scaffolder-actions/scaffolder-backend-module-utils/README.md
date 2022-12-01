@@ -32,7 +32,7 @@ Here you can pick the actions that you'd like to register to your backstage inst
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction } from '@roadiehq/scaffolder-backend-module-utils';
+import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction, createYqAction } from '@roadiehq/scaffolder-backend-module-utils';
 ...
 
 const actions = [
@@ -40,6 +40,7 @@ const actions = [
   createSleepAction(),
   createZipAction(),
   createAppendFileAction(),
+  createYqAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -194,4 +195,31 @@ spec:
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
+```
+
+### Example of using yq action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: yq-template
+  title: YQ template
+  description: Example temaplte to append to a yaml file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+
+  steps:
+    - id: yamlmerge
+      name: YAML Merge
+      action: roadiehq:utils:yq
+      input:
+        path: catalog-info.yaml
+        writeOutputPath: catalog-info.yaml
+        query:
+          - '.metadata.name = "I did this"'
 ```

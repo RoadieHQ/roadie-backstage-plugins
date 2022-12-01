@@ -13,8 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export * from './actions/zip';
-export * from './actions/fs';
-export * from './actions/merge';
-export * from './actions/sleep';
-export * from './actions/yq';
+export { createYqAction } from './yq';
