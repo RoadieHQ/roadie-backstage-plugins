@@ -40,6 +40,7 @@ const actions = [
   createSleepAction(),
   createZipAction(),
   createAppendFileAction(),
+  createParseFileAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -194,4 +195,42 @@ spec:
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
+```
+
+### Example of using parseFile action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: parse-file-template
+  title: Parse From File
+  description: Example temaplte to parse from a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Parse From File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file
+        parser:
+          title: Parser
+          type: string
+          enum:
+            - yaml
+            - json
+            - multiyaml
+          description: The content to parse from the file
+  steps:
+    - id: parsefile
+      name: Parse File
+      action: roadiehq:utils:fs:parse
+      input:
+        path: ${{ parameters.path }}
+        parser: ${{ parameters.parser }}
 ```
