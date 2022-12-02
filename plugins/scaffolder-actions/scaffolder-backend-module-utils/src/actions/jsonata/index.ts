@@ -14,3 +14,5 @@
  * limitations under the License.
  */
 export { createJSONataAction } from './jsonata';
+export { createYamlJSONataTransformAction } from './yaml';
+export { createJsonJSONataTransformAction } from './json';
