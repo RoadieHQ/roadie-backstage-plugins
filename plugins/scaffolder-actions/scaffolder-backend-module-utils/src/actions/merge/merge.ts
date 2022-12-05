@@ -19,7 +19,7 @@ import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { extname } from 'path';
 import { merge } from 'lodash';
-import YAML from 'yaml';
+import yaml from 'js-yaml';
 
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
@@ -147,10 +147,10 @@ export function createMergeAction() {
         case '.yaml': {
           const newContent =
             typeof ctx.input.content === 'string'
-              ? YAML.parse(ctx.input.content)
+              ? yaml.load(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = YAML.stringify(
-            merge(YAML.parse(originalContent), newContent),
+          mergedContent = yaml.dump(
+            merge(yaml.load(originalContent), newContent),
           );
           break;
         }

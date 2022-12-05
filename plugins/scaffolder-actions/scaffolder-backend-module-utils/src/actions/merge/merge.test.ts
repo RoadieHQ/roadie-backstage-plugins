@@ -19,7 +19,7 @@ import { createMergeAction, createMergeJSONAction } from './merge';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
-import YAML from 'yaml';
+import yaml from 'js-yaml';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -269,7 +269,7 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(YAML.parse(file)).toEqual({
+    expect(yaml.load(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
@@ -296,7 +296,7 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(YAML.parse(file)).toEqual({
+    expect(yaml.load(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
