@@ -49,9 +49,9 @@ export function createSerializeJsonAction() {
         },
       },
       output: {
-        type: 'serialized',
+        type: 'string',
         properties: {
-          result: {
+          serialized: {
             title: 'Output result from serialization',
             type: 'string',
           },

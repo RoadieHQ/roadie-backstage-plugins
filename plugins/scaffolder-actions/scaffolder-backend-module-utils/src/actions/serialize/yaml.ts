@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import yaml from 'yaml';
+import yaml from 'js-yaml';
 
 export function createSerializeYamlAction() {
   return createTemplateAction<{
@@ -56,9 +56,9 @@ export function createSerializeYamlAction() {
         },
       },
       output: {
-        type: 'serialized',
+        type: 'string',
         properties: {
-          result: {
+          serialized: {
             title: 'Output result from serialization',
             type: 'string',
           },
@@ -67,10 +67,7 @@ export function createSerializeYamlAction() {
     },
 
     async handler(ctx) {
-      ctx.output(
-        'serialized',
-        yaml.stringify(ctx.input.data, ctx.input.options),
-      );
+      ctx.output('serialized', yaml.dump(ctx.input.data, ctx.input.options));
     },
   });
 }

@@ -32,15 +32,37 @@ Here you can pick the actions that you'd like to register to your backstage inst
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createZipAction, createWriteFileAction, createAppendFileAction, createSleepAction } from '@roadiehq/scaffolder-backend-module-utils';
+import {
+  createZipAction,
+  createSleepAction,
+  createWriteFileAction,
+  createAppendFileAction,
+  createMergeJSONAction,
+  createMergeAction,
+  createParseFileAction,
+  createSerializeYamlAction,
+  createSerializeJsonAction,
+  createJSONataAction,
+  createYamlJSONataTransformAction,
+  createJsonJSONataTransformAction,
+} from '@roadiehq/scaffolder-backend-module-utils';
 ...
 
 const actions = [
-  createFileAction(),
-  createSleepAction(),
   createZipAction(),
+  createSleepAction(),
+  createWriteFileAction(),
   createAppendFileAction(),
+  createMergeJSONAction({}),
+  createMergeAction(),
+  createAwsS3CpAction(),
+  createEcrAction(),
   createParseFileAction(),
+  createSerializeYamlAction(),
+  createSerializeJsonAction(),
+  createJSONataAction(),
+  createYamlJSONataTransformAction(),
+  createJsonJSONataTransformAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -233,4 +255,140 @@ spec:
       input:
         path: ${{ parameters.path }}
         parser: ${{ parameters.parser }}
+  output:
+    path: ${{ steps.serialize.output.content }}
+```
+
+### Example of using jsonata action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Parse File
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          items:
+            - item1
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+  output:
+    path: ${{ steps.serialize.output.result }}
+```
+
+### Example of using jsonata expression to transform a JSON file
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Parse File
+      action: roadiehq:utils:jsonata:json:transform
+      input:
+        path: input-data.jaon
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+        writeOutputPath: output-data.json
+  output:
+    path: ${{ steps.serialize.output.result }}
+```
+
+### Example of using jsonata expression to transform a YAML file
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Jsonata
+      action: roadiehq:utils:jsonata:yaml:transform
+      input:
+        path: input-data.yaml
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+        writeOutputPath: output-data.yaml
+  output:
+    path: ${{ steps.serialize.output.result }}
+```
+
+### Example of serializing data to a YAML format
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: serialize
+  title: serialize
+  description: Example template to serialize data to the YAML format
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: serialize
+      name: serialize
+      action: roadiehq:utils:serialize:yaml
+      input:
+        data:
+          hello: world
+  output:
+    path: ${{ steps.serialize.output.serialized }}
+```
+
+### Example of serializing data to a JSON format
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: serialize
+  title: Jsonata
+  description: Example template to serialize data to the JSON format
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: serialize
+      name: serialize
+      action: roadiehq:utils:serialize:json
+      input:
+        data:
+          hello: world
+  output:
+    path: ${{ steps.serialize.output.serialized }}
 ```

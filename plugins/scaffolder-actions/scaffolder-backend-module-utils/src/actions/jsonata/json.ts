@@ -28,7 +28,7 @@ export function createJsonJSONataTransformAction() {
   }>({
     id: 'roadiehq:utils:jsonata:json:transform',
     description:
-      'Allows performing jsonata opterations and transformations on objects',
+      'Allows performing jsonata opterations and transformations on a JSON file in the workspace. The result can either be read from the `result` step output or be written back to a file using the `writeOutputPath` property.',
     schema: {
       input: {
         type: 'object',
@@ -85,7 +85,7 @@ export function createJsonJSONataTransformAction() {
       const result = JSON.stringify(
         expression.evaluate(data),
         ctx.input.replacer,
-        ctx.input.space || 2,
+        ctx.input.space,
       );
 
       if (ctx.input.writeOutputPath) {

@@ -16,13 +16,12 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
-import yaml from 'yaml';
+import yaml from 'js-yaml';
 
 const parsers: Record<'yaml' | 'json' | 'multiyaml', (cnt: string) => any> = {
-  yaml: (cnt: string) => yaml.parse(cnt),
+  yaml: (cnt: string) => yaml.load(cnt),
   json: (cnt: string) => JSON.parse(cnt),
-  multiyaml: (cnt: string) =>
-    yaml.parseAllDocuments(cnt).map(parsed => parsed.toJSON()),
+  multiyaml: (cnt: string) => yaml.loadAll(cnt),
 };
 
 export function createParseFileAction() {
@@ -72,7 +71,9 @@ export function createParseFileAction() {
         parser = parsers[parserName];
       }
 
-      const content: any = parser(fs.readFileSync(sourceFilepath).toString());
+      const content: string | object = parser(
+        fs.readFileSync(sourceFilepath).toString(),
+      );
 
       ctx.output('content', content);
     },

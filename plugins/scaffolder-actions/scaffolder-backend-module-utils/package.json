@@ -40,7 +40,7 @@
     "cross-fetch": "^3.1.4",
     "fs-extra": "^10.0.0",
     "winston": "^3.2.1",
-    "yaml": "^1.9.2",
+    "js-yaml": "^4.0.0",
     "jsonata": "^1.8.6"
   },
   "devDependencies": {
@@ -49,6 +49,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^26.0.7",
     "@types/mock-fs": "^4.13.1",
+    "@types/js-yaml": "^4.0.0",
     "mock-fs": "^5.1.2"
   },
   "files": [

@@ -17,7 +17,7 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
-import yaml from 'yaml';
+import yaml from 'js-yaml';
 
 export function createYamlJSONataTransformAction() {
   return createTemplateAction<{
@@ -30,7 +30,7 @@ export function createYamlJSONataTransformAction() {
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
-      'Allows performing jsonata opterations and transformations on objects',
+      'Allows performing jsonata opterations and transformations on a YAML file in the workspace. The result can either be read from the `result` step output or be written back to a file using the `writeOutputPath` property.',
     schema: {
       input: {
         type: 'object',
@@ -79,12 +79,9 @@ export function createYamlJSONataTransformAction() {
         ctx.input.path,
       );
 
-      const data = yaml.parse(fs.readFileSync(sourceFilepath).toString());
+      const data = yaml.load(fs.readFileSync(sourceFilepath).toString());
       const expression = jsonata(ctx.input.expression);
-      const result = yaml.stringify(
-        expression.evaluate(data),
-        ctx.input.options,
-      );
+      const result = yaml.dump(expression.evaluate(data), ctx.input.options);
 
       if (ctx.input.writeOutputPath) {
         ctx.logger.info(`writing file to ${ctx.input.writeOutputPath}`);
