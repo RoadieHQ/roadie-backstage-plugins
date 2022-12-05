@@ -19,6 +19,12 @@ import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 
 describe('roadiehq:utils:jsonata:json:transform', () => {
+  beforeEach(() => {
+    mock({
+      'fake-tmp-dir': {},
+    });
+  });
+  afterEach(() => mock.restore());
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),

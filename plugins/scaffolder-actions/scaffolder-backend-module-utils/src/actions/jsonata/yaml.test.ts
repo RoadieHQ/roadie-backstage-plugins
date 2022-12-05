@@ -16,9 +16,16 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import { createYamlJSONataTransformAction } from './yaml';
 import { PassThrough } from 'stream';
+import mock from 'mock-fs';
 import yaml from 'js-yaml';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
+  beforeEach(() => {
+    mock({
+      'fake-tmp-dir': {},
+    });
+  });
+  afterEach(() => mock.restore());
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
@@ -29,6 +36,11 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const action = createYamlJSONataTransformAction();
 
   it('should write file to the workspacePath with the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'hello: [world]',
+      },
+    });
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
