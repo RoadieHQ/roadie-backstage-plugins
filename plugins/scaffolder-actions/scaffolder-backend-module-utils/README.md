@@ -160,7 +160,7 @@ kind: Template
 metadata:
   name: create-file-template
   title: Create File template
-  description: Example temaplte to create a file with on the given path with the given content in the workspace.
+  description: Example template to create a file with on the given path with the given content in the workspace.
 spec:
   owner: roadie
   type: service
@@ -194,7 +194,7 @@ kind: Template
 metadata:
   name: append-file-template
   title: Append To File template
-  description: Example temaplte to append to a file with on the given path with the given content in the workspace.
+  description: Example template to append to a file with on the given path with the given content in the workspace.
 spec:
   owner: roadie
   type: service
@@ -228,7 +228,7 @@ kind: Template
 metadata:
   name: parse-file-template
   title: Parse From File
-  description: Example temaplte to parse from a file with on the given path with the given content in the workspace.
+  description: Example template to parse from a file with on the given path with the given content in the workspace.
 spec:
   owner: roadie
   type: service
