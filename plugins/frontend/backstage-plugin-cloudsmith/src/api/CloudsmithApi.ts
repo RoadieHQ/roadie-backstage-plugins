@@ -55,4 +55,5 @@ export type CloudsmithApi = {
     owner: string;
     repo: string;
   }) => Promise<RepoStats>;
+  getAuditLog: (options: { owner: string }) => Promise<any>;
 };

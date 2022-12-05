@@ -53,4 +53,15 @@ export class CloudsmithClient implements CloudsmithApi {
     }
     return await response.json();
   }
+
+  async getAuditLog({ owner }: { owner: string }): Promise<any> {
+    const cloudsmithApiUrl = await this.getApiUrl();
+    const response = await this.fetchApi.fetch(
+      `${cloudsmithApiUrl}/audit-log/${owner}/`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to retrieve audit logs: ${response.statusText}`);
+    }
+    return await response.json();
+  }
 }

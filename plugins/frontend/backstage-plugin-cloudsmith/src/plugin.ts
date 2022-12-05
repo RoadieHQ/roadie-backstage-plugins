@@ -55,3 +55,11 @@ export const CloudsmithStatsCard = cloudsmithPlugin.provide(
     components: () => import('./components/CloudsmithStatsCard'),
   }),
 );
+
+export const CloudsmithAuditLogCard = cloudsmithPlugin.provide(
+  createCardExtension<{ owner: string }>({
+    name: 'CloudsmithAuditLogCard',
+    title: '',
+    components: () => import('./components/CloudsmithAuditLogCard'),
+  }),
+);
