@@ -309,7 +309,6 @@ spec:
       input:
         path: input-data.jaon
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
-        writeOutputPath: output-data.json
   output:
     path: ${{ steps.serialize.output.result }}
 ```
@@ -336,7 +335,6 @@ spec:
       input:
         path: input-data.yaml
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
-        writeOutputPath: output-data.yaml
   output:
     path: ${{ steps.serialize.output.result }}
 ```

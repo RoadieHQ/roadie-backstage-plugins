@@ -17,15 +17,8 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { createJsonJSONataTransformAction } from './json';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
-import fs from 'fs-extra';
 
 describe('roadiehq:utils:jsonata:json:transform', () => {
-  beforeEach(() => {
-    mock({
-      'fake-tmp-dir': {},
-    });
-  });
-  afterEach(() => mock.restore());
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
@@ -47,7 +40,6 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
       input: {
         path: 'fake-file.json',
         expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
-        writeOutputPath: 'updated-file.json',
       },
     });
 
@@ -55,8 +47,5 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
       'result',
       JSON.stringify({ hello: ['world', 'item2'] }),
     );
-    expect(fs.existsSync('fake-tmp-dir/updated-file.json')).toBe(true);
-    const file = fs.readFileSync('fake-tmp-dir/updated-file.json', 'utf-8');
-    expect(file).toEqual(JSON.stringify({ hello: ['world', 'item2'] }));
   });
 });

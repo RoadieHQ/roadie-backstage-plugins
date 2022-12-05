@@ -16,17 +16,9 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import { createYamlJSONataTransformAction } from './yaml';
 import { PassThrough } from 'stream';
-import mock from 'mock-fs';
-import fs from 'fs-extra';
 import yaml from 'js-yaml';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
-  beforeEach(() => {
-    mock({
-      'fake-tmp-dir': {},
-    });
-  });
-  afterEach(() => mock.restore());
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
@@ -37,18 +29,12 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const action = createYamlJSONataTransformAction();
 
   it('should write file to the workspacePath with the given transformation', async () => {
-    mock({
-      'fake-tmp-dir': {
-        'fake-file.yaml': 'hello: [world]',
-      },
-    });
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
       input: {
         path: 'fake-file.yaml',
         expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
-        writeOutputPath: 'updated-file.yaml',
       },
     });
 
@@ -56,8 +42,5 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       'result',
       yaml.dump({ hello: ['world', 'item2'] }),
     );
-    expect(fs.existsSync('fake-tmp-dir/updated-file.yaml')).toBe(true);
-    const file = fs.readFileSync('fake-tmp-dir/updated-file.yaml', 'utf-8');
-    expect(file).toEqual(yaml.dump({ hello: ['world', 'item2'] }));
   });
 });

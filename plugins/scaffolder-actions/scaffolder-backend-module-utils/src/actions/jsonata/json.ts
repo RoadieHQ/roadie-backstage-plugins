@@ -22,13 +22,12 @@ export function createJsonJSONataTransformAction() {
   return createTemplateAction<{
     path: string;
     expression: string;
-    writeOutputPath?: string;
     replacer?: string[];
     space?: string;
   }>({
     id: 'roadiehq:utils:jsonata:json:transform',
     description:
-      'Allows performing jsonata opterations and transformations on a JSON file in the workspace. The result can either be read from the `result` step output or be written back to a file using the `writeOutputPath` property.',
+      'Allows performing jsonata opterations and transformations on a JSON file in the workspace. The result can be read from the `result` step output.',
     schema: {
       input: {
         type: 'object',
@@ -42,11 +41,6 @@ export function createJsonJSONataTransformAction() {
           expression: {
             title: 'Expression',
             description: 'JSONata expression to perform on the input',
-            type: 'string',
-          },
-          writeOutputPath: {
-            title: 'Output Path',
-            description: 'If set this will write the serialized json here.',
             type: 'string',
           },
           replacer: {
@@ -87,15 +81,6 @@ export function createJsonJSONataTransformAction() {
         ctx.input.replacer,
         ctx.input.space,
       );
-
-      if (ctx.input.writeOutputPath) {
-        ctx.logger.info(`writing file to ${ctx.input.writeOutputPath}`);
-        const writeFilePath = resolveSafeChildPath(
-          ctx.workspacePath,
-          ctx.input.writeOutputPath,
-        );
-        fs.outputFileSync(writeFilePath, result);
-      }
 
       ctx.output('result', result);
     },
