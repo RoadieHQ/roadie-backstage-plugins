@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { createWriteFileAction } from './writeFile';
-export { createAppendFileAction } from './appendFile';
-export { createParseFileAction } from './parseFile';
+export { createJSONataAction } from './jsonata';
+export { createYamlJSONataTransformAction } from './yaml';
+export { createJsonJSONataTransformAction } from './json';

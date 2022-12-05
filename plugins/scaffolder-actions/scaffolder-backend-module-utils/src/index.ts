@@ -17,3 +17,5 @@ export * from './actions/zip';
 export * from './actions/fs';
 export * from './actions/merge';
 export * from './actions/sleep';
+export * from './actions/jsonata';
+export * from './actions/serialize';

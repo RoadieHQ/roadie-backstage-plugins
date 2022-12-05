@@ -33,6 +33,12 @@ import {
   createAppendFileAction,
   createMergeJSONAction,
   createMergeAction,
+  createParseFileAction,
+  createSerializeYamlAction,
+  createSerializeJsonAction,
+  createJSONataAction,
+  createYamlJSONataTransformAction,
+  createJsonJSONataTransformAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
 import {
   createAwsS3CpAction,
@@ -68,6 +74,12 @@ export const createActions = (options: {
     createMergeAction(),
     createAwsS3CpAction(),
     createEcrAction(),
+    createParseFileAction(),
+    createSerializeYamlAction(),
+    createSerializeJsonAction(),
+    createJSONataAction(),
+    createYamlJSONataTransformAction(),
+    createJsonJSONataTransformAction(),
     createHttpBackstageAction({ config }),
     ...defaultActions,
   ];
