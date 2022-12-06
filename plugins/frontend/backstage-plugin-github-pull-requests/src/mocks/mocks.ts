@@ -22,6 +22,63 @@ export const entityMock = {
   },
 };
 
+export const groupEntityMock = {
+  metadata: {
+    namespace: 'default',
+    annotations: {
+      'backstage.io/managed-by-location':
+        'url:https://raw.githubusercontent.com/RoadieHQ/sample-service/main/admin-group.yaml',
+    },
+    name: 'roadie-backstage-admin',
+    description: 'The Backstage Admins',
+    uid: '9a2bb4d3-db09-48c1-86fe-0b060e762484',
+    etag: 'ZTVmZThhZDctN2VkYi00OTI5LTlkZDMtZEDFNDA4ODg3ABC4',
+    generation: 1,
+  },
+  apiVersion: 'backstage.io/v1alpha1',
+  kind: 'Group',
+  spec: {
+    type: 'team',
+    profile: {
+      displayName: 'roadie-backstage-admin',
+      email: 'rroadie-backstage-admin@example.com',
+      picture:
+        'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25',
+    },
+    children: [],
+    members: ['default/brian'],
+  },
+};
+
+export const groupEntityMockWithSlug = {
+  metadata: {
+    namespace: 'default',
+    annotations: {
+      'backstage.io/managed-by-location':
+        'url:https://raw.githubusercontent.com/RoadieHQ/sample-service/main/admin-group.yaml',
+      'github.com/team-slug': 'rroadie-backstage-admin',
+    },
+    name: 'roadie-backstage-admin',
+    description: 'The Backstage Admins',
+    uid: '9a2bb4d3-db09-48c1-86fe-0b060e762484',
+    etag: 'ZTVmZThhZDctN2VkYi00OTI5LTlkZDMtZEDFNDA4ODg3ABC4',
+    generation: 1,
+  },
+  apiVersion: 'backstage.io/v1alpha1',
+  kind: 'Group',
+  spec: {
+    type: 'team',
+    profile: {
+      displayName: 'roadie-backstage-admin',
+      email: 'rroadie-backstage-admin@example.com',
+      picture:
+        'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25',
+    },
+    children: [],
+    members: ['default/brian'],
+  },
+};
+
 export const openPullsRequestMock = {
   total_count: 3,
   incomplete_results: false,
@@ -1497,4 +1554,198 @@ export const backstagePluginArgoCdMocks: Record<string, object> = {
     deletions: 1618,
     changed_files: 19,
   },
+};
+export const groupAssignedReviewsMock = {
+  total_count: 2,
+  incomplete_results: false,
+  items: [
+    {
+      url: 'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650',
+      repository_url: 'https://api.github.com/repos/RoadieHQ/marketing-site',
+      labels_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/labels{/name}',
+      comments_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/comments',
+      events_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/events',
+      html_url: 'https://github.com/RoadieHQ/marketing-site/pull/650',
+      id: 1183476633,
+      node_id: 'PR_kwDOEIx70M41KGvn',
+      number: 650,
+      title: 'Revert "Sc 7454 AWS S3 docs (#640)"',
+      user: {
+        login: 'iain-b',
+        id: 1415599,
+        node_id: 'MDQ6VXNlcjE0MTU1OTk=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/1415599?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/iain-b',
+        html_url: 'https://github.com/iain-b',
+        followers_url: 'https://api.github.com/users/iain-b/followers',
+        following_url:
+          'https://api.github.com/users/iain-b/following{/other_user}',
+        gists_url: 'https://api.github.com/users/iain-b/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/iain-b/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/iain-b/subscriptions',
+        organizations_url: 'https://api.github.com/users/iain-b/orgs',
+        repos_url: 'https://api.github.com/users/iain-b/repos',
+        events_url: 'https://api.github.com/users/iain-b/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/iain-b/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      labels: [],
+      state: 'open',
+      locked: false,
+      assignee: null,
+      assignees: [],
+      requested_teams: [
+        {
+          id: 2,
+          node_id: 'MDQ6VGVhbTE=',
+          url: 'https://api.github.com/teams/2',
+          html_url:
+            'https://github.com/orgs/github/teams/rroadie-backstage-admin',
+          name: 'Roadie Backstage Admins',
+          slug: 'rroadie-backstage-admin',
+          description: 'A great team of Admins.',
+          privacy: 'closed',
+          permission: 'admin',
+          members_url: 'https://api.github.com/teams/2/members{/member}',
+          repositories_url: 'https://api.github.com/teams/2/repos',
+          parent: null,
+        },
+      ],
+      milestone: null,
+      comments: 2,
+      created_at: '2022-03-28T13:51:40Z',
+      updated_at: '2022-03-28T13:52:53Z',
+      closed_at: null,
+      author_association: 'CONTRIBUTOR',
+      active_lock_reason: null,
+      draft: false,
+      pull_request: {
+        url: 'https://api.github.com/repos/RoadieHQ/marketing-site/pulls/650',
+        html_url: 'https://github.com/RoadieHQ/marketing-site/pull/650',
+        diff_url: 'https://github.com/RoadieHQ/marketing-site/pull/650.diff',
+        patch_url: 'https://github.com/RoadieHQ/marketing-site/pull/650.patch',
+        merged_at: null,
+      },
+      body: 'This reverts commit d54d9a533d48b9024b892a188e1b7102962d4d34.',
+      reactions: {
+        url: 'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/reactions',
+        total_count: 0,
+        '+1': 0,
+        '-1': 0,
+        laugh: 0,
+        hooray: 0,
+        confused: 0,
+        heart: 0,
+        rocket: 0,
+        eyes: 0,
+      },
+      timeline_url:
+        'https://api.github.com/repos/RoadieHQ/marketing-site/issues/650/timeline',
+      performed_via_github_app: null,
+      score: 1,
+    },
+    {
+      url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462',
+      repository_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins',
+      labels_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462/labels{/name}',
+      comments_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462/comments',
+      events_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462/events',
+      html_url: 'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/462',
+      id: 1178106595,
+      node_id: 'PR_kwDOFl4HeM404aPw',
+      number: 462,
+      title: "Test PR don't merge",
+      user: {
+        login: 'Xantier',
+        id: 2392775,
+        node_id: 'MDQ6VXNlcjIzOTI3NzU=',
+        avatar_url: 'https://avatars.githubusercontent.com/u/2392775?v=4',
+        gravatar_id: '',
+        url: 'https://api.github.com/users/Xantier',
+        html_url: 'https://github.com/Xantier',
+        followers_url: 'https://api.github.com/users/Xantier/followers',
+        following_url:
+          'https://api.github.com/users/Xantier/following{/other_user}',
+        gists_url: 'https://api.github.com/users/Xantier/gists{/gist_id}',
+        starred_url:
+          'https://api.github.com/users/Xantier/starred{/owner}{/repo}',
+        subscriptions_url: 'https://api.github.com/users/Xantier/subscriptions',
+        organizations_url: 'https://api.github.com/users/Xantier/orgs',
+        repos_url: 'https://api.github.com/users/Xantier/repos',
+        events_url: 'https://api.github.com/users/Xantier/events{/privacy}',
+        received_events_url:
+          'https://api.github.com/users/Xantier/received_events',
+        type: 'User',
+        site_admin: false,
+      },
+      labels: [],
+      state: 'open',
+      locked: false,
+      assignee: null,
+      assignees: [],
+      requested_teams: [
+        {
+          id: 2,
+          node_id: 'MDQ6VGVhbTE=',
+          url: 'https://api.github.com/teams/2',
+          html_url:
+            'https://github.com/orgs/github/teams/rroadie-backstage-admin',
+          name: 'Roadie Backstage Admins',
+          slug: 'rroadie-backstage-admin',
+          description: 'A great team of Admins.',
+          privacy: 'closed',
+          permission: 'admin',
+          members_url: 'https://api.github.com/teams/2/members{/member}',
+          repositories_url: 'https://api.github.com/teams/2/repos',
+          parent: null,
+        },
+      ],
+      milestone: null,
+      comments: 0,
+      created_at: '2022-03-23T13:13:21Z',
+      updated_at: '2022-03-23T13:13:31Z',
+      closed_at: null,
+      author_association: 'CONTRIBUTOR',
+      active_lock_reason: null,
+      draft: false,
+      pull_request: {
+        url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/pulls/462',
+        html_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/462',
+        diff_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/462.diff',
+        patch_url:
+          'https://github.com/RoadieHQ/roadie-backstage-plugins/pull/462.patch',
+        merged_at: null,
+      },
+      body: '<!-- Please describe what these changes achieve -->\r\n\r\n#### :heavy_check_mark: Checklist\r\n\r\n- [ ] Added tests for new functionality and regression tests for bug fixes\r\n- [ ] Screenshots of before and after attached (for UI changes)\r\n- [ ] Added or updated documentation (if applicable)\r\n',
+      reactions: {
+        url: 'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462/reactions',
+        total_count: 0,
+        '+1': 0,
+        '-1': 0,
+        laugh: 0,
+        hooray: 0,
+        confused: 0,
+        heart: 0,
+        rocket: 0,
+        eyes: 0,
+      },
+      timeline_url:
+        'https://api.github.com/repos/RoadieHQ/roadie-backstage-plugins/issues/462/timeline',
+      performed_via_github_app: null,
+      score: 1,
+    },
+  ],
 };

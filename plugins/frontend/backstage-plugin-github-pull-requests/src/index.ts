@@ -23,6 +23,7 @@ export {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
   EntityGithubPullRequestsTable,
+  EntityGithubGroupPullRequestsCard,
   HomePageRequestedReviewsCard,
   HomePageYourOpenPullRequestsCard,
 } from './plugin';
@@ -37,6 +38,7 @@ export {
    */
   isGithubPullRequestsAvailable as isPluginApplicableToEntity,
   isGithubPullRequestsAvailable,
+  isGithubTeamPullRequestsAvailable,
 } from './components/Router';
 export {
   /**
@@ -44,5 +46,4 @@ export {
    */
   PullRequestsStatsCard,
 } from './components/PullRequestsStatsCard';
-
 export { PullRequestsTableView } from './components/PullRequestsTable';

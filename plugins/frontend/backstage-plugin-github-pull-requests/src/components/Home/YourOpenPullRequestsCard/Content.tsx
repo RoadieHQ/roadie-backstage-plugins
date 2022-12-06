@@ -46,6 +46,7 @@ const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
     />
   );
 };
+
 export const Content = (props: OpenPullRequestsCardProps) => {
   const isLoggedIn = useGithubLoggedIn();
   return isLoggedIn ? (
