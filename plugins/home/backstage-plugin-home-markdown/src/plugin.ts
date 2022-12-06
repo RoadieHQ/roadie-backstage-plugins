@@ -37,6 +37,7 @@ export const HomePageMarkdown = markdownPlugin.provide(
     repo: string;
     path: string;
     branch?: string;
+    purgeHtmlComments?: boolean;
   }>({
     name: 'HomePageMarkdown',
     title: 'Markdown',

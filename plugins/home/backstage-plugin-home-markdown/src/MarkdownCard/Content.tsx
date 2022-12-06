@@ -15,7 +15,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import { Progress, MarkdownContent } from '@backstage/core-components';
 import { useGithubFile } from './useGithubFile';
 import {
@@ -34,11 +34,14 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   } else if (error) {
     return <Alert severity="error">{error.message}</Alert>;
   }
-  return (
-    <MarkdownContent
-      content={Buffer.from(value.content, 'base64').toString('utf8')}
-    />
-  );
+
+  let content = Buffer.from(value.content, 'base64').toString('utf8');
+
+  if (props.purgeHtmlComments) {
+    content = content.replace(/<!--.*?-->/g, '');
+  }
+
+  return <MarkdownContent content={content} />;
 };
 
 const GithubNotAuthorized = () => {
