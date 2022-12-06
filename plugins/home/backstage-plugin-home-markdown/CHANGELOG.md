@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.3.0
+
+### Minor Changes
+
+- 002bd37f: Allow html comments to be purged from the markdown content before rendering.
+
 ## 2.2.3
 
 ### Patch Changes
