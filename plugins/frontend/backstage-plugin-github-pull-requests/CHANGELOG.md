@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.4.0
+
+### Minor Changes
+
+- c0bce517: Added new Group focussed widget
+
 ## 2.3.0
 
 ### Minor Changes
