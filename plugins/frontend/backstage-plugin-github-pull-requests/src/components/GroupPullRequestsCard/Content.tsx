@@ -12,24 +12,19 @@
  * limitations under the License.
  */
 import React from 'react';
-import {
-  MissingAnnotationEmptyState,
-} from '@backstage/core-components';
+import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import {
   PullRequestsListView,
   SkeletonPullRequestsListView,
 } from '../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../useGithubSearchPullRequest';
-import {
-  useGithubLoggedIn,
-  GithubNotAuthorized,
-} from '../useGithubLoggedIn';
+import { useGithubLoggedIn, GithubNotAuthorized } from '../useGithubLoggedIn';
 import {
   isGithubTeamSlugSet,
   GITHUB_PULL_REQUESTS_TEAM_ANNOTATION,
 } from '../../utils/isGithubSlugSet';
 import Alert from '@material-ui/lab/Alert';
-import { Entity, isGroupEntity} from '@backstage/catalog-model';
+import { Entity, isGroupEntity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 export const getPullRequestsQueryForGroup = (entity: Entity) => {
@@ -39,7 +34,7 @@ export const getPullRequestsQueryForGroup = (entity: Entity) => {
 };
 
 const PullRequestsCard = () => {
-  const { entity } = useEntity()
+  const { entity } = useEntity();
   const query = getPullRequestsQueryForGroup(entity);
   const { loading, error, value } = useGithubSearchPullRequest(query);
 
@@ -55,7 +50,7 @@ export const Content = () => {
   const { entity } = useEntity();
   const isLoggedIn = useGithubLoggedIn();
   if (!isLoggedIn) {
-    return(<GithubNotAuthorized />)
+    return <GithubNotAuthorized />;
   }
   const githubTeamName = isGithubTeamSlugSet(entity);
   if (!githubTeamName || githubTeamName === '') {
@@ -66,7 +61,9 @@ export const Content = () => {
     );
   }
   if (isGroupEntity(entity)) {
-    return <PullRequestsCard/>;
+    return <PullRequestsCard />;
   }
-  return <Alert severity="error">This card can only be used on Group Entities</Alert>
+  return (
+    <Alert severity="error">This card can only be used on Group Entities</Alert>
+  );
 };

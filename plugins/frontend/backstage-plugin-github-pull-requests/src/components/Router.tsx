@@ -18,7 +18,7 @@ import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { Route, Routes } from 'react-router';
 import PullRequestsPage from './PullRequestsPage';
-import { 
+import {
   GITHUB_PULL_REQUESTS_ANNOTATION,
   GITHUB_PULL_REQUESTS_TEAM_ANNOTATION,
 } from '../utils/isGithubSlugSet';

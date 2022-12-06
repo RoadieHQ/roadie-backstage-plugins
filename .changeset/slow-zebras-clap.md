@@ -1,5 +1,5 @@
 ---
-'@roadiehq/backstage-plugin-github-pull-requests': major
+'@roadiehq/backstage-plugin-github-pull-requests': minor
 ---
 
 Added new Group focussed widget

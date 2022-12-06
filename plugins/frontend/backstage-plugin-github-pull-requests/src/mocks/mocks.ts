@@ -42,7 +42,8 @@ export const groupEntityMock = {
     profile: {
       displayName: 'roadie-backstage-admin',
       email: 'rroadie-backstage-admin@example.com',
-      picture: 'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25'
+      picture:
+        'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25',
     },
     children: [],
     members: ['default/brian'],
@@ -70,7 +71,8 @@ export const groupEntityMockWithSlug = {
     profile: {
       displayName: 'roadie-backstage-admin',
       email: 'rroadie-backstage-admin@example.com',
-      picture: 'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25'
+      picture:
+        'https://avatars.dicebear.com/api/identicon/backstage@example.com.svg?background=%23fff&margin=25',
     },
     children: [],
     members: ['default/brian'],
@@ -1604,7 +1606,8 @@ export const groupAssignedReviewsMock = {
           id: 2,
           node_id: 'MDQ6VGVhbTE=',
           url: 'https://api.github.com/teams/2',
-          html_url: 'https://github.com/orgs/github/teams/rroadie-backstage-admin',
+          html_url:
+            'https://github.com/orgs/github/teams/rroadie-backstage-admin',
           name: 'Roadie Backstage Admins',
           slug: 'rroadie-backstage-admin',
           description: 'A great team of Admins.',
@@ -1696,7 +1699,8 @@ export const groupAssignedReviewsMock = {
           id: 2,
           node_id: 'MDQ6VGVhbTE=',
           url: 'https://api.github.com/teams/2',
-          html_url: 'https://github.com/orgs/github/teams/rroadie-backstage-admin',
+          html_url:
+            'https://github.com/orgs/github/teams/rroadie-backstage-admin',
           name: 'Roadie Backstage Admins',
           slug: 'rroadie-backstage-admin',
           description: 'A great team of Admins.',

@@ -22,7 +22,7 @@ import {
 import { render, screen, cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { handlers } from '../../mocks/handlers';
-import { 
+import {
   entityMock,
   groupEntityMock,
   groupEntityMockWithSlug,
@@ -80,7 +80,10 @@ describe('<GroupPullRequestCard>', () => {
     );
 
     expect(
-      await screen.findByText("annotation is missing. You need to add the annotation to your component if you want to enable this tool.", { exact: false }),
+      await screen.findByText(
+        'annotation is missing. You need to add the annotation to your component if you want to enable this tool.',
+        { exact: false },
+      ),
     ).toBeInTheDocument();
   });
   it('should render Pull Requests card with 2 reviews with matching team-assigned', async () => {
@@ -88,7 +91,7 @@ describe('<GroupPullRequestCard>', () => {
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <EntityProvider entity={groupEntityMockWithSlug}>
-            <Content/>
+            <Content />
           </EntityProvider>
         </TestApiProvider>,
       ),
@@ -101,7 +104,9 @@ describe('<GroupPullRequestCard>', () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText('Revert "Sc 7454 AWS S3 docs (#640)"', { exact: false }),
+      screen.queryByText('Revert "Sc 7454 AWS S3 docs (#640)"', {
+        exact: false,
+      }),
     ).toBeInTheDocument();
   });
 });

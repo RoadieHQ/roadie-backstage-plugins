@@ -24,5 +24,7 @@ export const isGithubSlugSet = (entity: Entity) => {
 };
 
 export const isGithubTeamSlugSet = (entity: Entity) => {
-  return entity?.metadata.annotations?.[GITHUB_PULL_REQUESTS_TEAM_ANNOTATION] ?? '';
+  return (
+    entity?.metadata.annotations?.[GITHUB_PULL_REQUESTS_TEAM_ANNOTATION] ?? ''
+  );
 };
