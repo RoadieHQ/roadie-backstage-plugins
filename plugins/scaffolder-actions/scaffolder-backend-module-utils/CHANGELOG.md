@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.6.0
+
+### Minor Changes
+
+- 31bc03b3: Release new scaffolder task actions for parsing and editing `yaml` and `json` data.
+
 ## 1.5.1
 
 ### Patch Changes
