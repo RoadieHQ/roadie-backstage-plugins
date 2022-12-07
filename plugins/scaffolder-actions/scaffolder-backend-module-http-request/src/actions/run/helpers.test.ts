@@ -24,7 +24,8 @@ import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
 import * as winston from 'winston';
 
-const mockBaseUrl = 'http://backstage.tests';
+const mockConfigBaseUrl = 'http://backstage.tests.config.baseurl';
+const mockUserBaseUrl = 'http://backstage.tests.user.baseurl';
 
 let mockResponse: Response;
 let config: Config;
@@ -66,35 +67,47 @@ describe('http', () => {
     beforeEach(() => {
       config = new ConfigReader({
         app: {
-          baseUrl: mockBaseUrl,
+          baseUrl: mockConfigBaseUrl,
         },
         backend: {
-          baseUrl: mockBaseUrl,
+          baseUrl: mockConfigBaseUrl,
           listen: {
             port: 7007,
           },
         },
       });
-      url = `${mockBaseUrl}/api/proxy/foo`;
+      url = `${mockConfigBaseUrl}/api/proxy/foo`;
     });
 
-    describe('with happy path proxy configuration', () => {
+    describe('with happy path with baseUrl provided from config', () => {
       describe('with valid path', () => {
         it('returns the same url as passed in', async () => {
           expect(await generateBackstageUrl(config, proxyPath)).toEqual(
-            `${mockBaseUrl}/api/proxy/foo`,
+            `${mockConfigBaseUrl}/api/proxy/foo`,
           );
         });
       });
     });
 
-    describe('with non happy path', () => {
+    describe('with happy path with baseUrl provided by user', () => {
+      describe('with valid path', () => {
+        it('returns the same url as passed in', async () => {
+          expect(
+            await generateBackstageUrl(config, proxyPath, mockUserBaseUrl),
+          ).toEqual(`${mockUserBaseUrl}/api/proxy/foo`);
+        });
+      });
+    });
+
+    describe('with non happy path. No config or user provided baseUrl', () => {
       describe('when the configuration is incorrect', () => {
         it('fails', async () => {
           config = new ConfigReader({});
           await expect(
             async () => await generateBackstageUrl(config, url),
-          ).rejects.toThrowError('Unable to get base url');
+          ).rejects.toThrowError(
+            'Unable to generate Backstage Url, baseUrl not provided in scaffolder action or the app config.',
+          );
         });
       });
     });

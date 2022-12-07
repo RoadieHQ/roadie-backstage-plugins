@@ -21,11 +21,22 @@ import { HttpOptions } from './types';
 class HttpError extends Error {}
 const DEFAULT_TIMEOUT = 60_000;
 
-export const generateBackstageUrl = (config: Config, path: string): string => {
-  // ensure the request points to the correct domain
-  const externalUrl = config.getOptionalString('backend.baseUrl') || '';
-  if (externalUrl === '') {
-    throw new Error('Unable to get base url');
+export const generateBackstageUrl = (
+  config: Config,
+  path: string,
+  baseUrl?: string,
+): string => {
+  // Use the user-provided baseUrl, otherwise use the backend.baseUrl from the app config.
+  let externalUrl = '';
+  const configBaseUrl = config.getOptionalString('backend.baseUrl');
+  if (baseUrl) {
+    externalUrl = baseUrl;
+  } else if (configBaseUrl) {
+    externalUrl = configBaseUrl;
+  } else {
+    throw new Error(
+      'Unable to generate Backstage Url, baseUrl not provided in scaffolder action or the app config.',
+    );
   }
   return externalUrl + path;
 };

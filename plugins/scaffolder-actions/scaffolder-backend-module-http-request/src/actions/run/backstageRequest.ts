@@ -31,6 +31,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     headers?: Headers;
     params?: Params;
     body?: Body;
+    baseUrl?: string;
   }>({
     id: 'http:backstage:request',
     description:
@@ -76,6 +77,12 @@ export function createHttpBackstageAction(options: { config: Config }) {
             description: 'The body you would like to pass to your request',
             type: 'object',
           },
+          baseUrl: {
+            title: 'Base Url',
+            description:
+              'Override the backend URL provided by the app config. In some deployment models this may need to be set explicitly',
+            type: 'string',
+          },
         },
       },
       output: {
@@ -101,7 +108,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = await generateBackstageUrl(config, input.path);
+      const url = await generateBackstageUrl(config, input.path, input.baseUrl);
 
       ctx.logger.info(
         `Creating ${method} request with http:backstage:proxy scaffolder action against ${input.path}`,

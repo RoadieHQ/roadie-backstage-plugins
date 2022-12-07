@@ -28,17 +28,18 @@ jest.mock('./helpers', () => ({
 describe('http:backstage:request', () => {
   let config: Config;
   let action: any;
-  const mockBaseUrl = 'http://backstage.tests';
+  const mockConfigBaseUrl = 'http://backstage.tests.config.baseurl';
+  const mockUserBaseUrl = 'http://backstage.tests.user.baseurl';
   const logger = getVoidLogger();
 
   beforeEach(() => {
     jest.resetAllMocks();
     config = new ConfigReader({
       app: {
-        baseUrl: mockBaseUrl,
+        baseUrl: mockConfigBaseUrl,
       },
       backend: {
-        baseUrl: mockBaseUrl,
+        baseUrl: mockConfigBaseUrl,
         listen: {
           port: 7007,
         },
@@ -72,7 +73,33 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
+            method: 'GET',
+            headers: {},
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with a user provided baseUrl', () => {
+      it('should create a request', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+            baseUrl: mockUserBaseUrl,
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: `${mockUserBaseUrl}/api/proxy/foo`,
             method: 'GET',
             headers: {},
           },
@@ -103,7 +130,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -132,7 +159,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'POST',
             headers: {},
             body: 'test',
@@ -164,7 +191,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'POST',
             headers: {
               authorization: `Bearer ${BACKSTAGE_TOKEN}`,
@@ -200,7 +227,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'POST',
             headers: HEADERS,
             body: 'test',
@@ -229,7 +256,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -258,7 +285,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toBeCalledWith(
           {
-            url: `${mockBaseUrl}/api/proxy/foo`,
+            url: `${mockConfigBaseUrl}/api/proxy/foo`,
             method: 'GET',
             headers: {
               authorization: 'Bearer some-token',
@@ -284,7 +311,9 @@ describe('http:backstage:request', () => {
                 method: 'GET',
               },
             }),
-        ).rejects.toThrowError('Unable to get base url');
+        ).rejects.toThrowError(
+          'Unable to generate Backstage Url, baseUrl not provided in scaffolder action or the app config.',
+        );
       });
     });
   });
