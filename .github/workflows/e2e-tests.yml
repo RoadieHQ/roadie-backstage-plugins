@@ -47,6 +47,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   verify:
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+
     runs-on: ubuntu-latest
 
     strategy:
