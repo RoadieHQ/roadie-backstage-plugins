@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.2.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
 ## 3.2.0
 
 ### Minor Changes

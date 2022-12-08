@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
 ## 0.4.0
 
 ### Minor Changes

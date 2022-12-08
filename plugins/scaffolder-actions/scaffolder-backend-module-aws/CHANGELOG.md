@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.3.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
 ## 2.3.0
 
 ### Minor Changes
