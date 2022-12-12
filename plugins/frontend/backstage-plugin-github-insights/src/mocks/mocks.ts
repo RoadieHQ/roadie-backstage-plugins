@@ -1272,3 +1272,34 @@ export const contributorsResponseMock = [
     contributions: 177,
   },
 ];
+
+// https://api.github.com/repos/mcalus3/backstage/releases
+export const environmentsResponseMock = {
+  total_count: 2,
+  environments: [
+    {
+      id: 1,
+      node_id: 'EN_1',
+      name: 'env1',
+      url: 'https://api.github.com/repos/mcalus3/backstage/environments/env1',
+      html_url:
+        'https://github.com/mcalus3/backstage/deployments/activity_log?environments_filter=env1',
+      created_at: '2022-12-12T17:29:00Z',
+      updated_at: '2022-12-12T17:29:00Z',
+      protection_rules: [],
+      deployment_branch_policy: null,
+    },
+    {
+      id: 2,
+      node_id: 'EN_kwDOIMPWKc4tYEnr',
+      name: 'env2',
+      url: 'https://api.github.com/repos/mcalus3/backstage/environments/env2',
+      html_url:
+        'https://github.com/mcalus3/backstage/deployments/activity_log?environments_filter=env2',
+      created_at: '2022-12-12T17:29:08Z',
+      updated_at: '2022-12-12T17:29:08Z',
+      protection_rules: [],
+      deployment_branch_policy: null,
+    },
+  ],
+};

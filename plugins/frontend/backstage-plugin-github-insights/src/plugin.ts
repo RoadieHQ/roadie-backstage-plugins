@@ -86,3 +86,14 @@ export const EntityGithubInsightsReleasesCard = githubInsightsPlugin.provide(
     },
   }),
 );
+
+export const EntityGithubInsightsEnvironmentsCard =
+  githubInsightsPlugin.provide(
+    createComponentExtension({
+      name: 'EntityGithubInsightsEnvironmentsCard',
+      component: {
+        lazy: () =>
+          import('./components/Widgets/index').then(m => m.EnvironmentsCard),
+      },
+    }),
+  );

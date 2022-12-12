@@ -26,6 +26,7 @@ export {
   EntityGithubInsightsLanguagesCard,
   EntityGithubInsightsReadmeCard,
   EntityGithubInsightsReleasesCard,
+  EntityGithubInsightsEnvironmentsCard,
 } from './plugin';
 export { InsightsPage } from './components/InsightsPage/InsightsPage';
 export { isGithubInsightsAvailable } from './components/utils/isGithubInsightsAvailable';
