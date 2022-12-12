@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.2.2
+
+### Patch Changes
+
+- 279cf613: Fix incorrect action name in log line.
+
 ## 3.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.3.2
+
+### Patch Changes
+
+- bc1c983f: Minor change to import for `link2aws`.
+
 ## 1.3.1
 
 ### Patch Changes

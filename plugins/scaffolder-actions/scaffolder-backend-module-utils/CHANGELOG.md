@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.7.0
+
+### Minor Changes
+
+- 67ea499f: Allow `roadiehq:utils:jsonata` action to process any type.
+
 ## 1.6.1
 
 ### Patch Changes
