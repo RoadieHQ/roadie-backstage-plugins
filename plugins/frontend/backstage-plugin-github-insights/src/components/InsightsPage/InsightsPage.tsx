@@ -51,10 +51,10 @@ export const InsightsPage = () => {
             <ContributorsCard />
             <LanguagesCard />
             <ReleasesCard />
+            <EnvironmentsCard />
             <ComplianceCard />
           </Grid>
           <Grid item sm={12} md={6} lg={8}>
-            <EnvironmentsCard />
             <ReadMeCard maxHeight={450} />
           </Grid>
         </Grid>

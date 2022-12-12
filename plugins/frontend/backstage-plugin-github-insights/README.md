@@ -5,7 +5,7 @@
 ## Features
 
 - Add GitHub Insights plugin tab.
-- Show widgets about repository contributors, languages, readme and release at overview page.
+- Show widgets about repository contributors, languages, readme, environments and release at overview page.
 
 ## Plugin Setup
 
@@ -125,6 +125,15 @@ import { EntityGithubInsightsReleasesCard } from '@roadiehq/backstage-plugin-git
 ```
 
 ![a preview of the releases widget](docs/releases-widget.png)
+
+#### EnvironmentsCard
+
+```ts
+// packages/app/src/components/catalog/EntityPage.tsx
+import { EntityGithubInsightsEnvironmentsCard } from '@roadiehq/backstage-plugin-github-insights';
+```
+
+![a preview of the releases widget](docs/environments-widget.png)
 
 ## Links
 
