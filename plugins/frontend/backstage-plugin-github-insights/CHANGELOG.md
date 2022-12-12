@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.2.0
+
+### Minor Changes
+
+- 3686f93c: Fix languages card causing crash when undefined
+
 ## 2.1.3
 
 ### Patch Changes
