@@ -32,7 +32,15 @@ export function createJSONataAction() {
           data: {
             title: 'Data',
             description: 'Input data to perform JSONata expression.',
-            type: 'object',
+            type: [
+              'object',
+              'array',
+              'string',
+              'number',
+              'integer',
+              'boolean',
+              'null',
+            ],
           },
           expression: {
             title: 'Expression',
