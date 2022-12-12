@@ -101,10 +101,10 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = await generateBackstageUrl(config, input.path);
+      const url = generateBackstageUrl(config, input.path);
 
       ctx.logger.info(
-        `Creating ${method} request with http:backstage:proxy scaffolder action against ${input.path}`,
+        `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
       );
 
       const queryParams: string = params
