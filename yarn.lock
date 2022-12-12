@@ -8931,6 +8931,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/link2aws@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/link2aws/-/link2aws-1.0.0.tgz#0db4ce2333937f42eb27769614c57e907644681d"
+  integrity sha512-oahtCDxJoOuulS0QFUYbDbLAee2Uy+TJuFAvqvOrE9l168UQK32rvAQAUZA8rsKv5XCKZ4jehBVixNnRwNCm8g==
+
 "@types/linkify-it@*":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.2.tgz#fd2cd2edbaa7eaac7e7f3c1748b52a19143846c9"

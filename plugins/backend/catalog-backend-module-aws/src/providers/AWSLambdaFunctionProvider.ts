@@ -24,8 +24,7 @@ import {
   ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-
-const link2aws = require('link2aws');
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS Lambda Function service.
@@ -73,8 +72,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
     for await (const functionPage of functionPages) {
       for (const lambdaFunction of functionPage.Functions || []) {
         if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
-          const consoleLink = new link2aws.ARN(lambdaFunction.FunctionArn)
-            .consoleLink;
+          const consoleLink = new ARN(lambdaFunction.FunctionArn).consoleLink;
 
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
