@@ -21,8 +21,7 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-
-const link2aws = require('link2aws');
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS IAM User service.
@@ -70,7 +69,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     for await (const userPage of userPages) {
       for (const user of userPage.Users || []) {
         if (user.UserName && user.Arn && user.UserId) {
-          const consoleLink = new link2aws.ARN(user.Arn).consoleLink;
+          const consoleLink = new ARN(user.Arn).consoleLink;
           const userEntity: UserEntity = {
             kind: 'User',
             apiVersion: 'backstage.io/v1alpha1',
