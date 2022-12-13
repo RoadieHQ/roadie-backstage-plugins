@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.2.1
+
+### Patch Changes
+
+- a49f724f: added card presenting environments lists
+
 ## 2.2.0
 
 ### Minor Changes

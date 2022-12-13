@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.2
+
+### Patch Changes
+
+- 067afec4: Use environment variable substitution in docs example.
+
 ## 0.4.1
 
 ### Patch Changes
