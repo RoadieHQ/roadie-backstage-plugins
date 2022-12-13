@@ -16,8 +16,7 @@ catalog:
   providers:
     okta:
       - orgUrl: 'https://tenant.okta.com'
-        token:
-          $env: OKTA_TOKEN
+        token: ${OKTA_TOKEN}
 ```
 
 ### Filter Users and Groups
@@ -29,8 +28,7 @@ catalog:
   providers:
     okta:
       - orgUrl: 'https://tenant.okta.com'
-        token:
-          $env: OKTA_TOKEN
+        token: ${OKTA_TOKEN}
         userFilter: profile.department eq "engineering"
         groupFilter: profile.name eq "Everyone"
 ```
