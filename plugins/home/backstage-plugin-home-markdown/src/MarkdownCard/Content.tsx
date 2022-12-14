@@ -37,9 +37,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
 
   let content = Buffer.from(value.content, 'base64').toString('utf8');
 
-  if (props.purgeHtmlComments) {
-    content = content.replace(/<!--.*?-->/g, '');
-  }
+  content = content.replace(/<!--.*?-->/g, '');
 
   return <MarkdownContent content={content} />;
 };
