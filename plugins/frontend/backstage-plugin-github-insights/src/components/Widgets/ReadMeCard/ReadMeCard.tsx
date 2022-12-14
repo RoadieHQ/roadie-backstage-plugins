@@ -142,7 +142,7 @@ const ReadMeCard = (props: ReadMeCardProps) => {
         <MarkdownContent
           content={b64DecodeUnicode(value.content)
             .replace(
-              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp)(.*)\)/gim,
+              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
               '[$1]' +
                 `(//${hostname}/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
                   value.url,
