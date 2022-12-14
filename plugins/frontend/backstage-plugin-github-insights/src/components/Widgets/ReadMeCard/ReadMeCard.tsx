@@ -67,6 +67,8 @@ type ReadMeCardProps = {
   entity?: Entity;
   maxHeight?: number;
   title?: string;
+  dontStripHtmlCommentsBeforeRendering?: boolean;
+  dontReplaceRelativeUrls?: boolean;
 };
 
 const getRepositoryDefaultBranch = (url: string) => {
@@ -74,20 +76,9 @@ const getRepositoryDefaultBranch = (url: string) => {
   return repositoryUrl;
 };
 
-// Decoding base64 ⇢ UTF8
-function b64DecodeUnicode(str: string): string {
-  return decodeURIComponent(
-    Array.prototype.map
-      // eslint-disable-next-line func-names
-      .call(atob(str), function (c) {
-        // eslint-disable-next-line prefer-template
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join(''),
-  );
-}
-
 const ReadMeCard = (props: ReadMeCardProps) => {
+  const { dontStripHtmlCommentsBeforeRendering, dontReplaceRelativeUrls } =
+    props;
   const { entity } = useEntity();
   const classes = useStyles();
   const { owner, repo, readmePath } = useProjectEntity(entity);
@@ -114,7 +105,40 @@ const ReadMeCard = (props: ReadMeCardProps) => {
     );
   }
 
-  return value?.content && owner && repo ? (
+  if (!(value?.content && owner && repo)) {
+    return <></>;
+  }
+
+  let content = Buffer.from(value.content, 'base64').toString('utf8');
+
+  if (!dontStripHtmlCommentsBeforeRendering) {
+    content = content.replace(/<!--.*?-->/g, '');
+  }
+
+  if (!dontReplaceRelativeUrls) {
+    content = content
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
+        '[$1]' +
+          `(//github.com/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
+            value.url,
+          )}/` +
+          '$2$3$4)',
+      )
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)docs\/(.*?)(\.md)\)/gim,
+        '[$1](docs/$2/)',
+      )
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.md)\)/gim,
+        '[$1]' +
+          `(//github.com/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
+            value.url,
+          )}/` +
+          '$2$3)',
+      );
+  }
+  return (
     <InfoCard
       title={props.title || 'Readme'}
       className={classes.infoCard}
@@ -139,33 +163,9 @@ const ReadMeCard = (props: ReadMeCardProps) => {
           maxHeight: `${props.maxHeight}px`,
         }}
       >
-        <MarkdownContent
-          content={b64DecodeUnicode(value.content)
-            .replace(
-              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
-              '[$1]' +
-                `(//${hostname}/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
-                  value.url,
-                )}/` +
-                '$2$3$4)',
-            )
-            .replace(
-              /\[([^\[\]]*)\]\((?!https?:\/\/)docs\/(.*?)(\.md)\)/gim,
-              '[$1](docs/$2/)',
-            )
-            .replace(
-              /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.md)\)/gim,
-              '[$1]' +
-                `(//${hostname}/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-                  value.url,
-                )}/` +
-                '$2$3)',
-            )}
-        />
+        <MarkdownContent content={content} />
       </div>
     </InfoCard>
-  ) : (
-    <></>
   );
 };
 

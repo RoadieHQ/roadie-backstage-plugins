@@ -105,6 +105,85 @@ describe('<MarkdownContent>', () => {
 
     expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
   });
+  it('should rewrites relative links', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content
+            owner="test"
+            path=".backstage/file-with-relative-image.md"
+            repo="roadie-backstage-plugins"
+          />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText(
+        '(//github.com/test/roadie-backstage-plugins/raw/master/image.svg)',
+        { exact: false },
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('should not rewrite relative links', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content
+            owner="test"
+            path=".backstage/file-with-relative-image.md"
+            repo="roadie-backstage-plugins"
+            dontReplaceRelativeUrls
+          />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText('(image.svg)', { exact: false }),
+    ).toBeInTheDocument();
+  });
+
+  it('should not strip out html comments', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content
+            owner="test"
+            path=".backstage/file-with-html-comments.md"
+            repo="roadie-backstage-plugins"
+            dontStripHtmlCommentsBeforeRendering
+          />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.findByText(/blah blah/, { exact: false }),
+    ).toBeInTheDocument();
+  });
+  it('should strip out html comments', async () => {
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <Content
+            owner="test"
+            path=".backstage/file-with-html-comments.md"
+            repo="roadie-backstage-plugins"
+          />
+        </TestApiProvider>,
+      ),
+      {},
+    );
+
+    expect(
+      await screen.queryByText(/blah blah/, { exact: false }),
+    ).not.toBeInTheDocument();
+  });
   it('should render markdown card from a different branch', async () => {
     render(
       wrapInTestApp(

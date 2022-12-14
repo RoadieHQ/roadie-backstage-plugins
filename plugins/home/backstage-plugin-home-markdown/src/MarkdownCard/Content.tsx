@@ -26,7 +26,18 @@ import {
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 
+const getRepositoryDefaultBranch = (url: string) => {
+  const repositoryUrl = new URL(url).searchParams.get('ref');
+  return repositoryUrl;
+};
+
 const GithubFileContent = (props: MarkdownContentProps) => {
+  const {
+    owner,
+    repo,
+    dontStripHtmlCommentsBeforeRendering,
+    dontReplaceRelativeUrls,
+  } = props;
   const { value, loading, error } = useGithubFile({ ...props });
 
   if (loading) {
@@ -35,9 +46,39 @@ const GithubFileContent = (props: MarkdownContentProps) => {
     return <Alert severity="error">{error.message}</Alert>;
   }
 
+  if (!value) {
+    return <Progress />;
+  }
+
   let content = Buffer.from(value.content, 'base64').toString('utf8');
 
-  content = content.replace(/<!--.*?-->/g, '');
+  if (!dontStripHtmlCommentsBeforeRendering) {
+    content = content.replace(/<!--.*?-->/g, '');
+  }
+
+  if (!dontReplaceRelativeUrls) {
+    content = content
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
+        '[$1]' +
+          `(//github.com/${owner}/${repo}/raw/${getRepositoryDefaultBranch(
+            value.url,
+          )}/` +
+          '$2$3$4)',
+      )
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)docs\/(.*?)(\.md)\)/gim,
+        '[$1](docs/$2/)',
+      )
+      .replace(
+        /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.md)\)/gim,
+        '[$1]' +
+          `(//github.com/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
+            value.url,
+          )}/` +
+          '$2$3)',
+      );
+  }
 
   return <MarkdownContent content={content} />;
 };
