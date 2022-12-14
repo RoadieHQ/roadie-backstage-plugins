@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.2.2
+
+### Patch Changes
+
+- fbe578a4: Allow rendering svgs on readme plugin.
+
 ## 2.2.1
 
 ### Patch Changes
