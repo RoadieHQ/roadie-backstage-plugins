@@ -112,5 +112,6 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+    this.logger.info(`Finished providing okta group resources from okta: ${this.orgUrl}`);
   }
 }

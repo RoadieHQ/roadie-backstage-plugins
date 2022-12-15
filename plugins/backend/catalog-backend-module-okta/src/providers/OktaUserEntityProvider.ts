@@ -88,5 +88,6 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+    this.logger.info(`Finished providing okta user resources from okta: ${this.orgUrl}`);
   }
 }
