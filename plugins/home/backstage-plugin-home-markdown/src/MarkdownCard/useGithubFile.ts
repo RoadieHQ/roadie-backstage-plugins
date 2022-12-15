@@ -29,7 +29,7 @@ export const useGithubFile = (options: MarkdownContentProps) => {
       const octokit = new Octokit({ auth: token });
 
       const response = await octokit.request(
-        `GET /repos/{owner}/{repo}/contents/${path}`,
+        `GET /repos/${owner}/${repo}/contents/${path}`,
         {
           baseUrl: BASE_URL,
           owner,

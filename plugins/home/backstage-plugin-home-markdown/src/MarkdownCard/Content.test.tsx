@@ -25,12 +25,13 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
 import { handlers } from '../mocks/handlers';
+import {
+  GetContentProps,
+  GetContentResponse,
+  GithubApi,
+  githubApiRef,
+} from '../apis';
 
-// MarkdownContent uses rect-markdown which throws a type error in the tests so we are mocking it checking the plain text in the components.
-jest.mock('@backstage/core-components', () => ({
-  ...jest.requireActual('@backstage/core-components'),
-  MarkdownContent: ({ content }: { content: string }) => <span>{content}</span>,
-}));
 const mockAccessToken = jest
   .fn()
   .mockImplementation(async (_: string[]) => 'test-token');
@@ -44,9 +45,47 @@ const mockGithubAuth = {
   })),
 };
 
+const mockGithubApi: GithubApi = {
+  async getContent(props: GetContentProps): Promise<GetContentResponse> {
+    const { owner, repo, path, branch } = props;
+
+    if (
+      owner === 'test' &&
+      path === '.backstage/home-page.md' &&
+      repo === 'roadie-backstage-plugins' &&
+      branch === undefined
+    ) {
+      return {
+        content: '⭐',
+        links: {},
+        media: {},
+      };
+    }
+
+    if (
+      owner === 'test' &&
+      path === '.backstage/file-with-relative-image.md' &&
+      repo === 'roadie-backstage-plugins' &&
+      branch === undefined
+    ) {
+      return {
+        content: '[![Image](image.svg)](https://asdf.com)',
+        links: {},
+        media: {
+          'image.svg': 'data:image/svg+xml;base64,adfwefwef',
+        },
+      };
+    }
+
+    throw new Error('not found');
+  },
+};
+
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
+  [githubApiRef, mockGithubApi],
 ];
+
 describe('<MarkdownContent>', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
@@ -104,52 +143,5 @@ describe('<MarkdownContent>', () => {
     );
 
     expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
-  });
-  it('should render markdown card from a different branch', async () => {
-    render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <Content
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="foo-bar"
-            branch="not-default"
-          />
-        </TestApiProvider>,
-      ),
-    );
-
-    expect(
-      await screen.findByText('# Awesome test markdown', { exact: false }),
-    ).toBeInTheDocument();
-  });
-
-  describe('it fails to get the content', () => {
-    beforeEach(() => {
-      mockAccessToken.mockImplementation(() => {
-        throw new Error('No :(');
-      });
-    });
-
-    it("shouldn't render the markdown card but display an error", async () => {
-      render(
-        wrapInTestApp(
-          <TestApiProvider apis={apis}>
-            <Content
-              owner="test"
-              path=".backstage/home-page.md"
-              repo="foo-bar"
-              branch="not-default"
-            />
-          </TestApiProvider>,
-        ),
-      );
-
-      expect(
-        await screen.findByText('Unable to gather markdown contents: No :(', {
-          exact: false,
-        }),
-      ).toBeInTheDocument();
-    });
   });
 });

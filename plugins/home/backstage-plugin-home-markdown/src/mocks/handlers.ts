@@ -15,7 +15,12 @@
  */
 
 import { rest } from 'msw';
-import { mockFileResponse, mockResponseFromBranch } from './mock';
+import {
+  mockFileResponse,
+  mockResponseFromBranch,
+  mockCommentsFileResponse,
+  mockRelativeImage,
+} from './mock';
 
 export const handlers = [
   rest.get(
@@ -28,6 +33,32 @@ export const handlers = [
       return res(
         ctx.set('etag', 'random-generated-etag'),
         ctx.json(mockFileResponse),
+      );
+    },
+  ),
+  rest.get(
+    'https://api.github.com/repos/test/roadie-backstage-plugins/contents/.backstage/file-with-html-comments.md',
+    (req, res, ctx) => {
+      if (req.headers.get('if-none-match') === 'random-generated-etag') {
+        return res(ctx.status(304), ctx.json({}));
+      }
+
+      return res(
+        ctx.set('etag', 'random-generated-etag'),
+        ctx.json(mockCommentsFileResponse),
+      );
+    },
+  ),
+  rest.get(
+    'https://api.github.com/repos/test/roadie-backstage-plugins/contents/.backstage/file-with-relative-image.md',
+    (req, res, ctx) => {
+      if (req.headers.get('if-none-match') === 'random-generated-etag') {
+        return res(ctx.status(304), ctx.json({}));
+      }
+
+      return res(
+        ctx.set('etag', 'random-generated-etag'),
+        ctx.json(mockRelativeImage),
       );
     },
   ),
