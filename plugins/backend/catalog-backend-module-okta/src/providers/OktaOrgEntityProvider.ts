@@ -88,8 +88,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info('Providing okta user and group resources from okta');
+    this.logger.info('Providing user and group resources from okta');
     const resources: (GroupEntity | UserEntity)[] = [];
+    let providedUserCount = 0;
+    let providedGroupCount = 0;
 
     await Promise.all(
       this.accounts.map(async account => {
@@ -104,6 +106,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
             }),
           );
         });
+
+        providedUserCount = resources.length;
 
         await client
           .listGroups({ search: account.groupFilter })
@@ -126,6 +130,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       }),
     );
 
+    providedGroupCount = resources.length - providedUserCount;
+
     await this.connection.applyMutation({
       type: 'full',
       entities: resources.map(entity => ({
@@ -133,6 +139,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
-    this.logger.info('Finished providing okta user and group resources from okta');
+    this.logger.info(
+      `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta`,
+    );
   }
 }

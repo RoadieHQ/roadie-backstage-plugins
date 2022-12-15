@@ -65,7 +65,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(`Providing okta user resources from okta: ${this.orgUrl}`);
+    this.logger.info(`Providing user resources from okta: ${this.orgUrl}`);
     const userResources: UserEntity[] = [];
 
     const client = this.getClient(this.orgUrl);
@@ -88,6 +88,8 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
-    this.logger.info(`Finished providing okta user resources from okta: ${this.orgUrl}`);
+    this.logger.info(
+      `Finished providing ${userResources.length} user resources from okta: ${this.orgUrl}`,
+    );
   }
 }

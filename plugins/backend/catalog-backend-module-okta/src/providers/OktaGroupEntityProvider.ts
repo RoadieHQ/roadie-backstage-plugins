@@ -82,9 +82,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(
-      `Providing okta group resources from okta: ${this.orgUrl}`,
-    );
+    this.logger.info(`Providing group resources from okta: ${this.orgUrl}`);
     const groupResources: GroupEntity[] = [];
 
     const client = this.getClient(this.orgUrl);
@@ -112,6 +110,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
-    this.logger.info(`Finished providing okta group resources from okta: ${this.orgUrl}`);
+    this.logger.info(
+      `Finished providing ${groupResources.length} group resources from okta: ${this.orgUrl}`,
+    );
   }
 }
