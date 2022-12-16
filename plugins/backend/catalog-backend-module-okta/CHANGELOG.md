@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.3
+
+### Patch Changes
+
+- a77f47f2: Emit an info-level log upon completion of Okta provider execution in addition to start of execution.
+
 ## 0.4.2
 
 ### Patch Changes
