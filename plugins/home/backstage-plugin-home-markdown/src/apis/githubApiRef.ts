@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { GithubClient } from './GithubClient';
-export * from './GithubApi';
-export { githubApiRef } from './githubApiRef';
+import { createApiRef } from '@backstage/core-plugin-api';
+import { GithubApi } from './GithubApi';
+
+export const githubApiRef = createApiRef<GithubApi>({
+  id: 'plugin.github.service',
+});

@@ -13,6 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { GithubClient } from './GithubClient';
-export * from './GithubApi';
-export { githubApiRef } from './githubApiRef';
+
+export type GetContentResponse = {
+  content: string;
+  media: Record<string, string>;
+  links: Record<string, string>;
+};
+
+export type GetContentProps = {
+  owner: string;
+  repo: string;
+  branch?: string;
+  path: string;
+};
+
+export interface GithubApi {
+  getContent(props: GetContentProps): Promise<GetContentResponse>;
+}

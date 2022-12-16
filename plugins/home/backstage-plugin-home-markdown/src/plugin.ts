@@ -21,7 +21,8 @@ import {
   githubAuthApiRef,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
-import { githubApiRef, GithubClient } from './apis';
+import { githubApiRef } from './apis';
+import { GithubClient } from './apis/GithubClient';
 
 /** @public */
 export const markdownPlugin = createPlugin({

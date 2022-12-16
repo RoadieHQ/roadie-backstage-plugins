@@ -19,12 +19,8 @@ import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
 import { Content } from './Content';
-import {
-  GetContentProps,
-  GetContentResponse,
-  GithubApi,
-  githubApiRef,
-} from '../apis';
+import { GetContentProps, GetContentResponse, githubApiRef } from '../apis';
+import { GithubApi } from '../apis/GithubApi';
 
 const mockAccessToken = jest
   .fn()
