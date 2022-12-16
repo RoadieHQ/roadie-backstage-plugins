@@ -38,7 +38,9 @@ const getGithubClient = (apiHolder: ApiHolder) => {
     }
   }
   if (!githubClient) {
-    throw new Error(`Failed to get the github client`);
+    throw new Error(
+      'The MarkdownCard component Failed to get the github client',
+    );
   }
   return githubClient;
 };
