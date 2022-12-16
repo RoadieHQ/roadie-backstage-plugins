@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     env:
-      CI: true
       NODE_OPTIONS: --max-old-space-size=4096
 
     runs-on: ubuntu-latest
