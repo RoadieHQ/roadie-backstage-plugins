@@ -15,12 +15,27 @@
  */
 
 import { createCardExtension } from '@backstage/plugin-home';
-import { createPlugin } from '@backstage/core-plugin-api';
+import {
+  createApiFactory,
+  createPlugin,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
+import { githubApiRef, GithubClient } from './apis';
+import { MarkdownContentProps } from './MarkdownCard/types';
 
 /** @public */
 export const markdownPlugin = createPlugin({
   id: 'markdown',
+  apis: [
+    createApiFactory({
+      api: githubApiRef,
+      deps: {
+        githubAuthApi: githubAuthApiRef,
+      },
+      factory: deps => new GithubClient(deps),
+    }),
+  ],
   routes: {
     root: rootRouteRef,
   },
@@ -32,13 +47,7 @@ export const markdownPlugin = createPlugin({
  * @public
  */
 export const HomePageMarkdown = markdownPlugin.provide(
-  createCardExtension<{
-    owner: string;
-    repo: string;
-    path: string;
-    branch?: string;
-    purgeHtmlComments?: boolean;
-  }>({
+  createCardExtension<MarkdownContentProps>({
     name: 'HomePageMarkdown',
     title: 'Markdown',
     components: () => import('./MarkdownCard'),
