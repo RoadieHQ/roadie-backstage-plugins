@@ -50,7 +50,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   const { value, loading, error } = useAsync(async () => {
     const githubClient = getGithubClient(apiHolder);
     return githubClient.getContent({ ...props });
-  });
+  }, [apiHolder]);
 
   const transformImageUri = useCallback(
     (href: string) => {
