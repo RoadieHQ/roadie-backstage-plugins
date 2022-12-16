@@ -16,15 +16,9 @@
 
 import React from 'react';
 import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import {
-  wrapInTestApp,
-  setupRequestMockHandlers,
-  TestApiProvider,
-} from '@backstage/test-utils';
-import { render, screen, cleanup } from '@testing-library/react';
-import { setupServer } from 'msw/node';
+import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
+import { render, screen } from '@testing-library/react';
 import { Content } from './Content';
-import { handlers } from '../mocks/handlers';
 import {
   GetContentProps,
   GetContentResponse,
@@ -87,14 +81,6 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 ];
 
 describe('<MarkdownContent>', () => {
-  const worker = setupServer();
-  setupRequestMockHandlers(worker);
-  afterEach(() => {
-    cleanup();
-  });
-  beforeEach(() => {
-    worker.use(...handlers);
-  });
   it('should render sign in page', async () => {
     const mockGithubUnAuth = {
       getAccessToken: async (_: string[]) => 'test-token',
