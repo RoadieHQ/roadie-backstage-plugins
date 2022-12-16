@@ -44,7 +44,7 @@ const getGithubClient = (apiHolder: ApiHolder) => {
 };
 
 const GithubFileContent = (props: MarkdownContentProps) => {
-  const { dontStripHtmlCommentsBeforeRendering } = props;
+  const { preserveHtmlComments } = props;
   const apiHolder = useApiHolder();
 
   const { value, loading, error } = useAsync(async () => {
@@ -77,7 +77,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   }
 
   let content = value.content;
-  if (!dontStripHtmlCommentsBeforeRendering) {
+  if (!preserveHtmlComments) {
     content = content.replace(/<!--.*?-->/g, '');
   }
 

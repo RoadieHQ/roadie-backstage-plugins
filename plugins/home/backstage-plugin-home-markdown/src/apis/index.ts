@@ -15,7 +15,6 @@
  */
 import { createApiRef, OAuthApi } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
-import { BASE_URL } from '../MarkdownCard/types';
 
 export type GetContentResponse = {
   content: string;
@@ -57,6 +56,7 @@ const getRepositoryDefaultBranch = (url: string) => {
   return new URL(url).searchParams.get('ref');
 };
 
+const baseUrl = 'https://api.github.com';
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
 
@@ -76,11 +76,10 @@ export class GithubClient implements GithubApi {
   }> {
     const { path, repo, owner, branch } = props;
     const token = await this.githubAuthApi.getAccessToken();
-    const octokit = new Octokit({ auth: token });
+    const octokit = new Octokit({ auth: token, baseUrl });
     const response = await octokit.request(
-      `GET /repos/${owner}/${repo}/contents/${path}`,
+      `GET /repos/{owner}/{repo}/contents/${path}`,
       {
-        baseUrl: BASE_URL,
         owner,
         repo,
         ...(branch && { ref: branch }),
