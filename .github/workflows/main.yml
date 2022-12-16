@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,5 +26,3 @@ jobs:
       - run: yarn tsc
       - run: yarn test
       - run: yarn build
-        env:
-          CI: true
