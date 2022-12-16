@@ -21,8 +21,8 @@ import {
   githubAuthApiRef,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
-import { githubApiRef } from './apis';
-import { GithubClient } from './apis/GithubClient';
+import { githubApiRef, GithubClient } from './apis';
+import { MarkdownContentProps } from './MarkdownCard/types';
 
 /** @public */
 export const markdownPlugin = createPlugin({
@@ -47,13 +47,7 @@ export const markdownPlugin = createPlugin({
  * @public
  */
 export const HomePageMarkdown = markdownPlugin.provide(
-  createCardExtension<{
-    owner: string;
-    repo: string;
-    path: string;
-    branch?: string;
-    dontStripHtmlCommentsBeforeRendering?: boolean;
-  }>({
+  createCardExtension<MarkdownContentProps>({
     name: 'HomePageMarkdown',
     title: 'Markdown',
     components: () => import('./MarkdownCard'),
