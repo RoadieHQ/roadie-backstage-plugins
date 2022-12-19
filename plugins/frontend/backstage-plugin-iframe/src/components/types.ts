@@ -11,6 +11,14 @@ export type IFrameProps = {
   class?: string;
 };
 
+export type IFrameComponentContentProps = {
+  class?: string;
+  src: string;
+  title: string;
+  height?: string;
+  width?: string;
+};
+
 export type IFrameComponentProps = {
   src?: string;
   srcFromAnnotation?: string;
