@@ -112,7 +112,13 @@ export const IFrameCard = (props: IFrameComponentProps) => {
   const { src, srcFromAnnotation, height, width, title } = props;
   if (src) {
     return (
-      <IFrameFromSrc class={props.class} src={src} height={height} width={width} title={title} />
+      <IFrameFromSrc
+        class={props.class}
+        src={src}
+        height={height}
+        width={width}
+        title={title}
+      />
     );
   }
 
