@@ -15,7 +15,7 @@
  */
 
 import { GithubApi } from './GithubApi';
-import { OAuthApi } from '@backstage/core-plugin-api';
+import { ErrorApi, OAuthApi } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 
 const mimeTypeMap: Record<string, string> = {
@@ -28,7 +28,7 @@ const mimeTypeMap: Record<string, string> = {
 };
 
 const mimeTypeLookup = (href: string): string | undefined => {
-  const match = href.match(/\.(\S+)$/);
+  const match = href.match(/\.([a-zA-Z]*)$/);
   const extension = match ? match[1] : undefined;
   return extension ? mimeTypeMap[extension.toLowerCase()] : undefined;
 };
@@ -41,9 +41,11 @@ const baseUrl = 'https://api.github.com';
 
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
+  private errorApi: ErrorApi;
 
-  constructor(deps: { githubAuthApi: OAuthApi }) {
+  constructor(deps: { githubAuthApi: OAuthApi; errorApi: ErrorApi }) {
     this.githubAuthApi = deps.githubAuthApi;
+    this.errorApi = deps.errorApi;
   }
 
   async getContent(props: {
@@ -73,7 +75,7 @@ export class GithubClient implements GithubApi {
 
     const mediaLinks = [
       ...content.matchAll(
-        /\[([^\[\]]*)\]\((?!https?:\/\/)(.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
+        /\[([^\[\]]*)\]\((.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
       ),
     ].map(match => [match[2], match[3]].join(''));
 
@@ -81,17 +83,24 @@ export class GithubClient implements GithubApi {
 
     for (const href of mediaLinks) {
       const mimeType = mimeTypeLookup(href);
+      const url = new URL(href, response.url);
 
-      if (mimeType) {
-        const contentResponse = await octokit.request(
-          `GET /repos/${owner}/${repo}/contents/${href}`,
+      if (mimeType && url.host.includes('github.com')) {
+        const requestPath = url.pathname.replace(
+          new RegExp(`/${owner}/${repo}/blob/(main|master)`),
+          `/repos/${owner}/${repo}/contents`,
         );
-        media[
-          href
-        ] = `data:${mimeType};base64,${contentResponse.data.content.replaceAll(
-          '\n',
-          '',
-        )}`;
+        try {
+          const contentResponse = await octokit.request(`GET ${requestPath}`);
+          media[
+            href
+          ] = `data:${mimeType};base64,${contentResponse.data.content.replaceAll(
+            '\n',
+            '',
+          )}`;
+        } catch (e: any) {
+          this.errorApi.post(e);
+        }
       }
     }
 

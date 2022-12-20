@@ -23,18 +23,20 @@ import {
   SessionState,
   useApiHolder,
   ApiHolder,
+  errorApiRef,
+  ErrorApi,
 } from '@backstage/core-plugin-api';
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
 import { githubApiRef, GithubClient, GithubApi } from '../apis';
 
-const getGithubClient = (apiHolder: ApiHolder) => {
+const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
   let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
   if (!githubClient) {
     const auth = apiHolder.get(githubAuthApiRef);
     if (auth) {
-      githubClient = new GithubClient({ githubAuthApi: auth });
+      githubClient = new GithubClient({ githubAuthApi: auth, errorApi });
     }
   }
   if (!githubClient) {
@@ -48,9 +50,10 @@ const getGithubClient = (apiHolder: ApiHolder) => {
 const GithubFileContent = (props: MarkdownContentProps) => {
   const { preserveHtmlComments } = props;
   const apiHolder = useApiHolder();
+  const errorApi = useApi(errorApiRef);
 
   const { value, loading, error } = useAsync(async () => {
-    const githubClient = getGithubClient(apiHolder);
+    const githubClient = getGithubClient(apiHolder, errorApi);
     return githubClient.getContent({ ...props });
   }, [apiHolder]);
 
