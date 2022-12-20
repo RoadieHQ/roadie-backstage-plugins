@@ -63,18 +63,18 @@ const ReadMeCard = (props: ReadMeCardProps) => {
   const { hostname } = useEntityGithubScmIntegration(entity);
   const classes = useStyles();
 
-  const path = readmePath || 'README.md';
+  const linkPath = readmePath || 'README.md';
 
   return (
     <InfoCard
       title={props.title || 'Readme'}
       className={classes.infoCard}
       deepLink={{
-        link: `//${hostname}/${owner}/${repo}/blob/HEAD/${path}`,
+        link: `//${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`,
         title: 'Readme',
         onClick: e => {
           e.preventDefault();
-          window.open(`//${hostname}/${owner}/${repo}/blob/HEAD/${path}`);
+          window.open(`//${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`);
         },
       }}
     >
@@ -84,7 +84,7 @@ const ReadMeCard = (props: ReadMeCardProps) => {
           maxHeight: `${props.maxHeight}px`,
         }}
       >
-        <MarkdownContent owner={owner} repo={repo} path={path} />
+        <MarkdownContent owner={owner} repo={repo} path={readmePath} />
       </div>
     </InfoCard>
   );

@@ -52,7 +52,7 @@ export class GithubClient implements GithubApi {
     owner: string;
     repo: string;
     branch?: string;
-    path: string;
+    path?: string;
   }): Promise<{
     content: string;
     media: Record<string, string>;
@@ -61,8 +61,12 @@ export class GithubClient implements GithubApi {
     const { path, repo, owner, branch } = props;
     const token = await this.githubAuthApi.getAccessToken();
     const octokit = new Octokit({ auth: token, baseUrl });
+    let query = 'readme';
+    if (path) {
+      query = `contents/${path}`;
+    }
     const response = await octokit.request(
-      `GET /repos/{owner}/{repo}/contents/${path}`,
+      `GET /repos/{owner}/{repo}/${query}`,
       {
         owner,
         repo,
@@ -83,7 +87,7 @@ export class GithubClient implements GithubApi {
 
     for (const href of mediaLinks) {
       const mimeType = mimeTypeLookup(href);
-      const url = new URL(href, response.url);
+      const url = new URL(href, response.data.url);
 
       if (mimeType && url.host.includes('github.com')) {
         const requestPath = url.pathname.replace(
