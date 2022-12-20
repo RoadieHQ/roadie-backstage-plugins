@@ -19,7 +19,7 @@ export const entityMock = {
     annotations: {
       'backstage.io/source-location':
         'url:https://github.com/test/sample-service/blob/master/backstage5.yaml',
-      'github.com/project-slug': 'test/roadie-backstage-plugins',
+      'github.com/project-slug': 'mcalus3/backstage',
     },
     name: 'sample-service',
     description:

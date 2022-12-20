@@ -47,9 +47,9 @@ const mockGithubApi: GithubApi = {
     const { owner, repo, path, branch } = props;
 
     if (
-      owner === 'test' &&
+      owner === 'mcalus3' &&
       path === 'README.md' &&
-      repo === 'roadie-backstage-plugins' &&
+      repo === 'backstage' &&
       branch === undefined
     ) {
       return {
