@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-export { default as ContributorsCard } from './ContributorsCard';
-export { default as LanguagesCard } from './LanguagesCard';
-export { default as ReadMeCard } from './ReadMeCard';
-export { default as MarkdownContent } from './MarkdownContent';
-export { default as ReleasesCard } from './ReleasesCard';
-export { default as ComplianceCard } from './ComplianceCard';
-export { default as EnvironmentsCard } from './EnvironmentsCard';
+export type GetContentResponse = {
+  content: string;
+  media: Record<string, string>;
+  links: Record<string, string>;
+};
+
+export type GetContentProps = {
+  owner: string;
+  repo: string;
+  branch?: string;
+  path: string;
+};
+
+export interface GithubApi {
+  getContent(props: GetContentProps): Promise<GetContentResponse>;
+}
