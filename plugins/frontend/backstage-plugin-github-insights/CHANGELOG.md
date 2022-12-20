@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.0
+
+### Minor Changes
+
+- 8c8864eb: Fix the readme card to support relative and absolute urls in the readme file. This also includes a major refactor of the code in this area.
+
 ## 2.2.2
 
 ### Patch Changes
