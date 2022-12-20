@@ -66,31 +66,28 @@ const ReadMeCard = (props: ReadMeCardProps) => {
   const path = readmePath || 'README.md';
 
   return (
-  <InfoCard
-    title={props.title || 'Readme'}
-    className={classes.infoCard}
-    deepLink={{
-      link: `//${hostname}/${owner}/${repo}/blob/HEAD/${path}`,
-      title: 'Readme',
-      onClick: e => {
-        e.preventDefault();
-        window.open(
-          `//${hostname}/${owner}/${repo}/blob/HEAD/${path}`,
-        );
-      },
-    }}
-  >
-    <div
-      className={classes.readMe}
-      style={{
-        maxHeight: `${props.maxHeight}px`,
+    <InfoCard
+      title={props.title || 'Readme'}
+      className={classes.infoCard}
+      deepLink={{
+        link: `//${hostname}/${owner}/${repo}/blob/HEAD/${path}`,
+        title: 'Readme',
+        onClick: e => {
+          e.preventDefault();
+          window.open(`//${hostname}/${owner}/${repo}/blob/HEAD/${path}`);
+        },
       }}
     >
-
-
-  <MarkdownContent owner={owner} repo={repo} path={path} />
-    </div>
-  </InfoCard>)
+      <div
+        className={classes.readMe}
+        style={{
+          maxHeight: `${props.maxHeight}px`,
+        }}
+      >
+        <MarkdownContent owner={owner} repo={repo} path={path} />
+      </div>
+    </InfoCard>
+  );
 };
 
 export default ReadMeCard;

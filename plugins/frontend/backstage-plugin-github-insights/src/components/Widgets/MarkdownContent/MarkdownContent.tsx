@@ -16,7 +16,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert } from '@material-ui/lab';
-import { Progress, MarkdownContent as RawMarkdownContent } from '@backstage/core-components';
+import {
+  Progress,
+  MarkdownContent as RawMarkdownContent,
+} from '@backstage/core-components';
 import {
   useApi,
   githubAuthApiRef,
@@ -148,4 +151,4 @@ const MarkdownContent = (props: MarkdownContentProps) => {
   );
 };
 
-export default MarkdownContent
+export default MarkdownContent;
