@@ -18,6 +18,7 @@ import { createCardExtension } from '@backstage/plugin-home';
 import {
   createApiFactory,
   createPlugin,
+  errorApiRef,
   githubAuthApiRef,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
@@ -32,6 +33,7 @@ export const markdownPlugin = createPlugin({
       api: githubApiRef,
       deps: {
         githubAuthApi: githubAuthApiRef,
+        errorApi: errorApiRef,
       },
       factory: deps => new GithubClient(deps),
     }),
