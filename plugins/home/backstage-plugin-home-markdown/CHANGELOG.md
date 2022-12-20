@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.0
+
+### Minor Changes
+
+- 32547453: Support relative and absolute references to images in markdown homepage plugin.
+
 ## 2.4.0
 
 ### Minor Changes
