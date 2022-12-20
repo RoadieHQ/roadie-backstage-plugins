@@ -44,14 +44,9 @@ jest.mock('@backstage/core-components', () => ({
 
 const mockGithubApi: GithubApi = {
   async getContent(props: GetContentProps): Promise<GetContentResponse> {
-    const { owner, repo, path, branch } = props;
+    const { owner, repo, branch } = props;
 
-    if (
-      owner === 'mcalus3' &&
-      path === 'README.md' &&
-      repo === 'backstage' &&
-      branch === undefined
-    ) {
+    if (owner === 'mcalus3' && repo === 'backstage' && branch === undefined) {
       return {
         content: '⭐',
         links: {},
