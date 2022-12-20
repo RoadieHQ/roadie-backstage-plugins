@@ -15,14 +15,28 @@
  */
 
 import {
+  createApiFactory,
   createComponentExtension,
   createPlugin,
   createRoutableExtension,
+  errorApiRef,
+  githubAuthApiRef,
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
+import { githubApiRef, GithubClient } from './apis';
 
 export const githubInsightsPlugin = createPlugin({
   id: 'code-insights',
+  apis: [
+    createApiFactory({
+      api: githubApiRef,
+      deps: {
+        githubAuthApi: githubAuthApiRef,
+        errorApi: errorApiRef,
+      },
+      factory: deps => new GithubClient(deps),
+    }),
+  ],
   routes: {
     root: rootRouteRef,
   },
@@ -97,3 +111,13 @@ export const EntityGithubInsightsEnvironmentsCard =
       },
     }),
   );
+
+export const GithubInsightsMarkdownContent = githubInsightsPlugin.provide(
+  createComponentExtension({
+    name: 'GithubInsightsMarkdownContent',
+    component: {
+      lazy: () =>
+        import('./components/Widgets/index').then(m => m.MarkdownContent),
+    },
+  }),
+);
