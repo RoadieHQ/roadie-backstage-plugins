@@ -14,112 +14,9 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { Alert } from '@material-ui/lab';
-import { Progress, MarkdownContent } from '@backstage/core-components';
-import {
-  useApi,
-  githubAuthApiRef,
-  SessionState,
-  useApiHolder,
-  ApiHolder,
-  errorApiRef,
-  ErrorApi,
-} from '@backstage/core-plugin-api';
+import React from 'react';
 import { MarkdownContentProps } from './types';
-import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
-import useAsync from 'react-use/lib/useAsync';
-import { githubApiRef, GithubClient, GithubApi } from '../apis';
-
-const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
-  let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
-  if (!githubClient) {
-    const auth = apiHolder.get(githubAuthApiRef);
-    if (auth) {
-      githubClient = new GithubClient({ githubAuthApi: auth, errorApi });
-    }
-  }
-  if (!githubClient) {
-    throw new Error(
-      'The MarkdownCard component Failed to get the github client',
-    );
-  }
-  return githubClient;
-};
-
-const GithubFileContent = (props: MarkdownContentProps) => {
-  const { preserveHtmlComments } = props;
-  const apiHolder = useApiHolder();
-  const errorApi = useApi(errorApiRef);
-
-  const { value, loading, error } = useAsync(async () => {
-    const githubClient = getGithubClient(apiHolder, errorApi);
-    return githubClient.getContent({ ...props });
-  }, [apiHolder]);
-
-  const transformImageUri = useCallback(
-    (href: string) => {
-      return value?.media[href] || href;
-    },
-    [value?.media],
-  );
-
-  const transformLinkUri = useCallback(
-    (href: string) => {
-      return value?.links[href] || href;
-    },
-    [value?.links],
-  );
-
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return <Alert severity="error">{error.message}</Alert>;
-  }
-
-  if (!value) {
-    return <Progress />;
-  }
-
-  let content = value.content;
-  if (!preserveHtmlComments) {
-    content = content.replace(/<!--.*?-->/g, '');
-  }
-
-  return (
-    <MarkdownContent
-      transformImageUri={transformImageUri}
-      transformLinkUri={transformLinkUri}
-      content={content}
-    />
-  );
-};
-
-const GithubNotAuthorized = () => {
-  const githubApi = useApi(githubAuthApiRef);
-  return (
-    <Grid container>
-      <Grid item xs={8}>
-        <Typography>
-          You are not logged into github. You need to be signed in to see the
-          content of this card.
-        </Typography>
-      </Grid>
-      <Grid item xs={4} container justifyContent="flex-end">
-        <Tooltip placement="top" arrow title="Sign in to Github">
-          <Button
-            variant="outlined"
-            color="primary"
-            // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
-            onClick={() => githubApi.getAccessToken('repo')}
-          >
-            Sign in
-          </Button>
-        </Tooltip>
-      </Grid>
-    </Grid>
-  );
-};
+import { MarkdownContent } from '@roadiehq/backstage-plugin-github-insights';
 
 /**
  * A component to render a markdown file from github
@@ -127,23 +24,5 @@ const GithubNotAuthorized = () => {
  * @public
  */
 export const Content = (props: MarkdownContentProps) => {
-  const githubApi = useApi(githubAuthApiRef);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const authSubscription = githubApi.sessionState$().subscribe(state => {
-      if (state === SessionState.SignedIn) {
-        setIsLoggedIn(true);
-      }
-    });
-    return () => {
-      authSubscription.unsubscribe();
-    };
-  }, [githubApi]);
-
-  return isLoggedIn ? (
-    <GithubFileContent {...props} />
-  ) : (
-    <GithubNotAuthorized />
-  );
+  return <MarkdownContent {...props} />;
 };

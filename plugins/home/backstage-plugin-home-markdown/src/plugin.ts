@@ -15,29 +15,13 @@
  */
 
 import { createCardExtension } from '@backstage/plugin-home';
-import {
-  createApiFactory,
-  createPlugin,
-  errorApiRef,
-  githubAuthApiRef,
-} from '@backstage/core-plugin-api';
+import { createPlugin } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
-import { githubApiRef, GithubClient } from './apis';
 import { MarkdownContentProps } from './MarkdownCard/types';
 
 /** @public */
 export const markdownPlugin = createPlugin({
   id: 'markdown',
-  apis: [
-    createApiFactory({
-      api: githubApiRef,
-      deps: {
-        githubAuthApi: githubAuthApiRef,
-        errorApi: errorApiRef,
-      },
-      factory: deps => new GithubClient(deps),
-    }),
-  ],
   routes: {
     root: rootRouteRef,
   },

@@ -35,3 +35,4 @@ export { isGithubInsightsAvailable } from './components/utils/isGithubInsightsAv
  */
 export * from './components/Widgets';
 export * from './components/store';
+export * from './apis';

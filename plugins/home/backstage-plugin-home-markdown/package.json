@@ -36,6 +36,7 @@
     "@backstage/core-components": "^0.12.0",
     "@backstage/core-plugin-api": "^1.1.0",
     "@backstage/plugin-home": "^0.4.27",
+    "@roadiehq/backstage-plugin-github-insights": "^2.2.2",
     "@material-ui/core": "^4.12.3",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@octokit/rest": "^18.12.0",

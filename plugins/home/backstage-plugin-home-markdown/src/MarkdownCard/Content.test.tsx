@@ -24,7 +24,7 @@ import {
   GetContentResponse,
   githubApiRef,
   GithubApi,
-} from '../apis';
+} from '@roadiehq/backstage-plugin-github-insights';
 
 const mockAccessToken = jest
   .fn()
