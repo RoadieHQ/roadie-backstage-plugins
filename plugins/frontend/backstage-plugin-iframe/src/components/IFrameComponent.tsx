@@ -28,13 +28,13 @@ import { determineError } from './utils/helpers';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 const IFrameComponentContent = (props: IFrameComponentContentProps) => {
-  const { class: className, height, src, title, width } = props;
+  const { classes, height, src, title, width } = props;
 
   return (
     <Content>
       <ContentHeader title={title} />
       <iframe
-        className={className || ''}
+        className={classes || ''}
         src={src}
         height={height || '100%'}
         width={width || '100%'}
@@ -71,7 +71,7 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
 
   return (
     <IFrameComponentContent
-      class={props.class}
+      classes={props.classes}
       src={src}
       title={title}
       height={height}
@@ -94,7 +94,7 @@ const IFrameFromSrc = (props: IFrameProps) => {
 
   return (
     <IFrameComponentContent
-      class={props.class}
+      classes={props.classes}
       src={src}
       title={title}
       height={height}
@@ -113,7 +113,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
   if (src) {
     return (
       <IFrameFromSrc
-        class={props.class}
+        classes={props.classes}
         src={src}
         height={height}
         width={width}
@@ -125,7 +125,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
   if (srcFromAnnotation) {
     return (
       <IFrameFromAnnotation
-        class={props.class}
+        classes={props.classes}
         srcFromAnnotation={srcFromAnnotation}
         height={height}
         width={width}

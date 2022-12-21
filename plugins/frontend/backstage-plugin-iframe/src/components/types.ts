@@ -8,11 +8,11 @@ export type IFrameProps = {
   title?: string;
   height?: string;
   width?: string;
-  class?: string;
+  classes?: string;
 };
 
 export type IFrameComponentContentProps = {
-  class?: string;
+  classes?: string;
   src: string;
   title: string;
   height?: string;
@@ -25,7 +25,7 @@ export type IFrameComponentProps = {
   title?: string;
   height?: string;
   width?: string;
-  class?: string;
+  classes?: string;
 };
 
 export type IFrameFromAnnotationProps = {
@@ -33,7 +33,7 @@ export type IFrameFromAnnotationProps = {
   title?: string;
   height?: string;
   width?: string;
-  class?: string;
+  classes?: string;
 };
 
 export type IFrameContentProps = {

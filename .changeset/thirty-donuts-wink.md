@@ -2,4 +2,4 @@
 '@roadiehq/backstage-plugin-iframe': patch
 ---
 
-passing `class` prop to elements
+passing `classes` prop down to elements
