@@ -115,6 +115,40 @@ describe('http:backstage:request', () => {
       });
     });
 
+    describe('with body defined as application/json and passing a string', () => {
+      it('should create a request and pass body parameter', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify({
+              name: 'test',
+            }),
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: '{"name":"test"}',
+          },
+          logger,
+        );
+      });
+    });
+
     describe('with body defined as a string', () => {
       it('should create a request and pass body parameter', async () => {
         (http as jest.Mock).mockReturnValue({
@@ -136,6 +170,33 @@ describe('http:backstage:request', () => {
             method: 'POST',
             headers: {},
             body: 'test',
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with body defined as a string xml', () => {
+      it('should create a request and pass body parameter', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
+          },
+        });
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {},
+            body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
           logger,
         );
