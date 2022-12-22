@@ -21,6 +21,7 @@ export type GetContentResponse = {
 };
 
 export type GetContentProps = {
+  baseUrl?: string;
   owner: string;
   repo: string;
   branch?: string;
