@@ -37,7 +37,7 @@ const getRepositoryDefaultBranch = (url: string) => {
   return new URL(url).searchParams.get('ref');
 };
 
-const baseUrl = 'https://api.github.com';
+const defaultBaseUrl = 'https://api.github.com';
 
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
@@ -49,6 +49,7 @@ export class GithubClient implements GithubApi {
   }
 
   async getContent(props: {
+    baseUrl?: string;
     owner: string;
     repo: string;
     branch?: string;
@@ -58,7 +59,7 @@ export class GithubClient implements GithubApi {
     media: Record<string, string>;
     links: Record<string, string>;
   }> {
-    const { path, repo, owner, branch } = props;
+    const { path, repo, owner, branch, baseUrl = defaultBaseUrl } = props;
     const token = await this.githubAuthApi.getAccessToken();
     const octokit = new Octokit({ auth: token, baseUrl });
     let query = 'readme';
