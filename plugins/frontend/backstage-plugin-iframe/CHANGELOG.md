@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.2.2
+
+### Patch Changes
+
+- 4c0f3341: passing `classes` prop down to elements
+
 ## 1.2.1
 
 ### Patch Changes
