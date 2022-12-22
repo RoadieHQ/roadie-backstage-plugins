@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.1
+
+### Patch Changes
+
+- 8afcb30a: Fix the readme plugin to support readme files from github enterprise.
+
 ## 2.3.0
 
 ### Minor Changes
