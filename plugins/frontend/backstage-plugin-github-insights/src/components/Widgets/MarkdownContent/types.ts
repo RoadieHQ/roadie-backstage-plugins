@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-export { default as ContributorsCard } from './ContributorsCard';
-export { default as LanguagesCard } from './LanguagesCard';
-export { default as ReadMeCard } from './ReadMeCard';
-export { default as MarkdownContent } from './MarkdownContent';
-export { default as ReleasesCard } from './ReleasesCard';
-export { default as ComplianceCard } from './ComplianceCard';
-export { default as EnvironmentsCard } from './EnvironmentsCard';
+/**
+ * Props for Markdown content component {@link Content}.
+ *
+ * @public
+ */
+export type MarkdownContentProps = {
+  baseUrl?: string;
+  owner: string;
+  repo: string;
+  path: string;
+  branch?: string;
+  preserveHtmlComments?: boolean;
+};

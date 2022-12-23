@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.3.0
+
+### Minor Changes
+
+- 4df3165c: Allow posting string data via the `http:backstage:request` action.
+
 ## 3.2.2
 
 ### Patch Changes

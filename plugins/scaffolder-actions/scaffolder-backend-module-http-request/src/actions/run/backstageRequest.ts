@@ -30,7 +30,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     method: Methods;
     headers?: Headers;
     params?: Params;
-    body?: Body;
+    body?: any;
   }>({
     id: 'http:backstage:request',
     description:
@@ -74,7 +74,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
           body: {
             title: 'Request body',
             description: 'The body you would like to pass to your request',
-            type: 'object',
+            type: ['object', 'string'],
           },
         },
       },
@@ -115,6 +115,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
 
       if (
         input.body &&
+        typeof input.body !== 'string' &&
         input.headers &&
         input.headers['content-type'] &&
         input.headers['content-type'].includes('application/json')

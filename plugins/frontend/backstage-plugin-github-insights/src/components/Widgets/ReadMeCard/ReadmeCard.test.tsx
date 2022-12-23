@@ -18,14 +18,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { ConfigReader } from '@backstage/core-app-api';
-import { rest } from 'msw';
-import {
-  setupRequestMockHandlers,
-  wrapInTestApp,
-  TestApiProvider,
-} from '@backstage/test-utils';
-import { setupServer } from 'msw/node';
-import { entityMock, readmeResponseMock } from '../../../mocks/mocks';
+import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
+import { entityMock } from '../../../mocks/mocks';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { ReadMeCard } from '..';
@@ -35,6 +29,12 @@ import {
   ScmIntegrationsApi,
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
+import {
+  GetContentProps,
+  GetContentResponse,
+  GithubApi,
+  githubApiRef,
+} from '../../../apis';
 
 // MarkdownContent uses rect-markdown which throws a type error in the tests so we are mocking it checking the plain text in the components.
 jest.mock('@backstage/core-components', () => ({
@@ -42,11 +42,33 @@ jest.mock('@backstage/core-components', () => ({
   MarkdownContent: ({ content }: { content: string }) => <span>{content}</span>,
 }));
 
+const mockGithubApi: GithubApi = {
+  async getContent(props: GetContentProps): Promise<GetContentResponse> {
+    const { owner, repo, branch } = props;
+
+    if (owner === 'mcalus3' && repo === 'backstage' && branch === undefined) {
+      return {
+        content: '⭐',
+        links: {},
+        media: {},
+      };
+    }
+
+    throw new Error(`${JSON.stringify(props)} NotFound`);
+  },
+};
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
+  [githubApiRef, mockGithubApi],
   [githubAuthApiRef, mockGithubAuth],
   [
     scmIntegrationsApiRef,
@@ -62,71 +84,21 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 ];
 
 describe('ReadmeCard', () => {
-  const worker = setupServer();
-  setupRequestMockHandlers(worker);
-
-  beforeEach(() => {
-    worker.use(
-      rest.get(
-        'https://api.github.com/repos/mcalus3/backstage/readme',
-        (_, res, ctx) => res(ctx.json(readmeResponseMock)),
-      ),
-    );
-  });
-
-  it('should display a card with the data from the requests', async () => {
+  it('should display the title header', async () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
             <EntityProvider entity={entityMock}>
-              <ReadMeCard />
+              <ReadMeCard title="hello" />
             </EntityProvider>
           </ThemeProvider>
         </TestApiProvider>,
       ),
     );
-    expect(
-      await screen.findByText(
-        /Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end\./,
-      ),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/hello/)).toBeInTheDocument();
   });
-  it('should display a card with the data from state on second render when response is 304', async () => {
-    const { rerender } = render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <ThemeProvider theme={lightTheme}>
-            <EntityProvider entity={entityMock}>
-              <ReadMeCard />
-            </EntityProvider>
-          </ThemeProvider>
-        </TestApiProvider>,
-      ),
-    );
-    worker.use(
-      rest.get(
-        'https://api.github.com/repos/mcalus3/backstage/readme',
-        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
-      ),
-    );
-    rerender(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <ThemeProvider theme={lightTheme}>
-            <EntityProvider entity={entityMock}>
-              <ReadMeCard />
-            </EntityProvider>
-          </ThemeProvider>
-        </TestApiProvider>,
-      ),
-    );
-    expect(
-      await screen.findByText(
-        /Backstage unifies all your infrastructure tooling, services, and documentation to create a streamlined development environment from end to end\./,
-      ),
-    ).toBeInTheDocument();
-  });
+
   it('should render unicode correctly', async () => {
     const rendered = render(
       wrapInTestApp(

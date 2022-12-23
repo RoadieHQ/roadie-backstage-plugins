@@ -1,5 +1,17 @@
 ## 1.1.0
 
+## 2.5.0
+
+### Minor Changes
+
+- 32547453: Support relative and absolute references to images in markdown homepage plugin.
+
+## 2.4.0
+
+### Minor Changes
+
+- cb318c6d: This changes how the urls for relative urls and markdown links are rendered to the markdown home page plugin. Now it will attempt to retrieve the image content from github and write the content directly to the image tags. For markdown links in the docs directory, it will link to the techdocs pages.
+
 ## 2.3.1
 
 ### Patch Changes
