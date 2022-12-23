@@ -201,4 +201,3 @@ prometheus:
 
 bugsnag:
   resultsPerPage: 50
-  
