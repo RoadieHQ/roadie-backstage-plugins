@@ -35,6 +35,7 @@ export class CloudsmithClient implements CloudsmithApi {
     return `${await this.discoveryApi.getBaseUrl('proxy')}/cloudsmith`;
   }
 
+  // get data from Cloudsmith metrics endpoint (https://help.cloudsmith.io/reference/metrics_packages_list)
   async getRepoMetrics({
     owner,
     repo,
@@ -49,6 +50,58 @@ export class CloudsmithClient implements CloudsmithApi {
     if (!response.ok) {
       throw new Error(
         `Failed to retrieve package metrics: ${response.statusText}`,
+      );
+    }
+    return await response.json();
+  }
+
+  // get data from Cloudsmith quota endpoint (https://help.cloudsmith.io/reference/quota_read)
+  async getQuota({ owner }: { owner: string }): Promise<any> {
+    const cloudsmithApiUrl = await this.getApiUrl();
+    const response = await this.fetchApi.fetch(
+      `${cloudsmithApiUrl}/quota/${owner}/`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to retrieve quota: ${response.statusText}`);
+    }
+    return await response.json();
+  }
+
+  // get repository audit logs from Cloudsmith audit repo logs endpoint (https://help.cloudsmith.io/reference/audit_log_repo_list) and support pagniation
+
+  async getRepoAuditLogs({
+    owner,
+    repo,
+  }: {
+    owner: string;
+    repo: string;
+  }): Promise<any> {
+    const cloudsmithApiUrl = await this.getApiUrl();
+    const response = await this.fetchApi.fetch(
+      `${cloudsmithApiUrl}/audit-log/${owner}/${repo}/?page_size=100`,
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to retrieve audit logs: ${response.statusText}`);
+    }
+    return await response.json();
+  }
+
+  // get repository security scan logs for a Cloudsmith repository endpoint (https://help.cloudsmith.io/reference/vulnerabilities_repo_list)
+
+  async getRepoSecurityScanLogs({
+    owner,
+    repo,
+  }: {
+    owner: string;
+    repo: string;
+  }): Promise<any> {
+    const cloudsmithApiUrl = await this.getApiUrl();
+    const response = await this.fetchApi.fetch(
+      `${cloudsmithApiUrl}/vulnerabilities/${owner}/${repo}/?page_size=100`,
+    );
+    if (!response.ok) {
+      throw new Error(
+        `Failed to retrieve security scan logs: ${response.statusText}`,
       );
     }
     return await response.json();
