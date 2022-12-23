@@ -18,13 +18,13 @@ import React from 'react';
 import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
-import { Content } from './Content';
+import MarkdownContent from './MarkdownContent';
 import {
   GetContentProps,
   GetContentResponse,
   githubApiRef,
   GithubApi,
-} from '../apis';
+} from '../../../apis';
 
 const mockAccessToken = jest
   .fn()
@@ -98,7 +98,7 @@ describe('<MarkdownContent>', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={api}>
-          <Content
+          <MarkdownContent
             owner="test"
             path=".backstage/home-page.md"
             repo="roadie-backstage-plugins"
@@ -118,7 +118,7 @@ describe('<MarkdownContent>', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <Content
+          <MarkdownContent
             owner="test"
             path=".backstage/home-page.md"
             repo="roadie-backstage-plugins"

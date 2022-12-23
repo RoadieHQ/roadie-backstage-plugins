@@ -24,7 +24,5 @@ export type MarkdownContentProps = {
   repo: string;
   path: string;
   branch?: string;
-  purgeHtmlComments?: boolean;
+  preserveHtmlComments?: boolean;
 };
-
-export const BASE_URL = 'https://api.github.com';

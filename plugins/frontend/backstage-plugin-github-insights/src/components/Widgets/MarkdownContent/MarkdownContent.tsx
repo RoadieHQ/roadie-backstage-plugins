@@ -16,7 +16,10 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert } from '@material-ui/lab';
-import { Progress, MarkdownContent } from '@backstage/core-components';
+import {
+  Progress,
+  MarkdownContent as RawMarkdownContent,
+} from '@backstage/core-components';
 import {
   useApi,
   githubAuthApiRef,
@@ -29,7 +32,7 @@ import {
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
-import { githubApiRef, GithubClient, GithubApi } from '../apis';
+import { githubApiRef, GithubClient, GithubApi } from '../../../apis';
 
 const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
   let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
@@ -87,7 +90,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   }
 
   return (
-    <MarkdownContent
+    <RawMarkdownContent
       transformImageUri={transformImageUri}
       transformLinkUri={transformLinkUri}
       content={content}
@@ -126,7 +129,7 @@ const GithubNotAuthorized = () => {
  *
  * @public
  */
-export const Content = (props: MarkdownContentProps) => {
+const MarkdownContent = (props: MarkdownContentProps) => {
   const githubApi = useApi(githubAuthApiRef);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -147,3 +150,5 @@ export const Content = (props: MarkdownContentProps) => {
     <GithubNotAuthorized />
   );
 };
+
+export default MarkdownContent;
