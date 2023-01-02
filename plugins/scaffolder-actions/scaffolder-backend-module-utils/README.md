@@ -8,13 +8,13 @@ This contains a collection of actions to use in scaffolder templates:
 
 - [Zip](#zip)
 - [Sleep](#sleep)
-- [De-serialise a file](#de-serialise)
+- [Deserialise a file](#deserialise)
 - [Serialise to json or yaml](#serialise)
 - [Extract values from Json](#parse-json)
 
 ## Setup
 
-##¢ Setting up Backstage
+## Setting up Backstage
 
 Create your Backstage application using the Backstage CLI as described here:
 https://backstage.io/docs/getting-started/create-an-app
@@ -171,9 +171,9 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-### De-serialise - `roadiehq:utils:fs:parse`
+### Deserialise - `roadiehq:utils:fs:parse`
 
-This action de-serialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
+This action deserialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
 
 Required params:
 
