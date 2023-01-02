@@ -8,9 +8,9 @@ This contains a collection of actions to use in scaffolder templates:
 
 - [Zip](#zip)
 - [Sleep](#sleep)
-- [Parse a file](#parse-a-file)
+- [De-serialise a file](#de-serialise)
 - [Serialise to json or yaml](#serialise)
-- [Jsonata](#jsonata)
+- [Extract values from Json](#parse-json)
 
 ## Setup
 
@@ -171,7 +171,7 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-## Parse a file
+### De-serialise - `roadiehq:utils:fs:parse`
 
 This action de-serialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
 
@@ -218,13 +218,11 @@ spec:
     content: ${{ steps.serialize.output.content }}
 ```
 
-## Jsonata - `roadiehq:utils:jsonata`
-
-[Jsonata](https://jsonata.org/) is a Json query and transformation library.
+### Parse JSON - `roadiehq:utils:jsonata`
 
 This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
 
-You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
+This action uses [Jsonata](https://jsonata.org/) to parse Json. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
 
 ```yaml
 ---
@@ -252,7 +250,7 @@ spec:
     result: ${{ steps.serialize.output.result }}
 ```
 
-### Example of using jsonata expression to transform a JSON file
+Transform a JSON file:
 
 ```yaml
 ---
@@ -278,7 +276,7 @@ spec:
     result: ${{ steps.serialize.output.result }}
 ```
 
-### Example of using jsonata expression to transform a YAML file
+Transform a YAML file:
 
 ```yaml
 ---
@@ -445,7 +443,7 @@ spec:
 hello: world
 ```
 
-### To JSON:
+#### To JSON:
 
 ```yaml
 ---
