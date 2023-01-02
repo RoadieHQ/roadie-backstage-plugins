@@ -16,7 +16,7 @@
 
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
-import { createAwsSecretsManagerCreateSecretAction } from './create';
+import { createAwsSecretsManagerCreateAction as createAwsSecretsManagerCreateAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
 
@@ -34,7 +34,7 @@ describe('Create secret without tags', () => {
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
-  const action = createAwsSecretsManagerCreateSecretAction();
+  const action = createAwsSecretsManagerCreateAction();
 
   it('Should call Secrets Manager client send', async () => {
     await action.handler({
@@ -65,7 +65,7 @@ describe('Create secret without optional properties', () => {
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
-  const action = createAwsSecretsManagerCreateSecretAction();
+  const action = createAwsSecretsManagerCreateAction();
 
   it('Should call Secrets Manager client send', async () => {
     await action.handler({
@@ -95,7 +95,7 @@ describe('Create secret with optional properties', () => {
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
-  const action = createAwsSecretsManagerCreateSecretAction();
+  const action = createAwsSecretsManagerCreateAction();
 
   it('Should call Secrets Manager client send', async () => {
     await action.handler({

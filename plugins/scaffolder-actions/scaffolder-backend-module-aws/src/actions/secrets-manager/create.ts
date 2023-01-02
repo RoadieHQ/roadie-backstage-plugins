@@ -23,7 +23,7 @@ import {
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
 
-export function createAwsSecretsManagerCreateSecretAction(options?: {
+export function createAwsSecretsManagerCreateAction(options?: {
   credentials?: CredentialProvider;
 }) {
   return createTemplateAction<{
@@ -34,7 +34,7 @@ export function createAwsSecretsManagerCreateSecretAction(options?: {
     profile: string;
     region: string;
   }>({
-    id: 'loadsmart:aws:secrets-manager:create',
+    id: 'roadiehq:aws:secrets-manager:create',
     description: 'Creates a new secret in AWS Secrets Manager',
     schema: {
       input: {
