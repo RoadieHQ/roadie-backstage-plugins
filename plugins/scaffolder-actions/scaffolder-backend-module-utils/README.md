@@ -1,15 +1,20 @@
 # scaffolder-backend-module-utils actions package
 
+## Intro
+
 Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 
-This contains a collection of actions:
+This contains a collection of actions to use in scaffolder templates:
 
-- `roadiehq:utils:zip`
-- `roadiehq:utils:sleep`
-- `roadiehq:utils:fs:write`
-- `roadiehq:utils:fs:append`
+- [Zip](#zip)
+- [Sleep](#sleep)
+- [Deserialise a file](#deserialise)
+- [Serialise to json or yaml](#serialise)
+- [Extract values from Json](#parse-json)
 
-## Getting started
+## Setup
+
+## Setting up Backstage
 
 Create your Backstage application using the Backstage CLI as described here:
 https://backstage.io/docs/getting-started/create-an-app
@@ -18,7 +23,7 @@ https://backstage.io/docs/getting-started/create-an-app
 
 You need to configure the action in your backend:
 
-## From your Backstage root directory
+### Installing the actions
 
 ```
 cd packages/backend
@@ -83,7 +88,16 @@ return await createRouter({
 });
 ```
 
-### Example of using zip action
+## Actions:
+
+### Zip - `roadiehq:utils:zip`
+
+Compress files and store them to the temporary workspace in .zip format.
+
+_Required Params:_
+
+- path: The path in your workspace of the file you want to zip
+- outputPath: The path you want to use to save the generated zip file.
 
 ```yaml
 ---
@@ -118,10 +132,16 @@ spec:
         outputPath: ${{ parameters.outputPath }}
 
   output:
-    path: ${{ steps.zip.output.path }}
+    outputPath: ${{ steps.zip.output.path }}
 ```
 
-### Example of using sleep action
+### Sleep - `roadiehq:utils:sleep`
+
+Waits a number of seconds before continuing to the next scaffolder step.
+
+_Required params:_
+
+- amount: Number of seconds to sleep
 
 ```yaml
 ---
@@ -151,75 +171,14 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-### Example of using writeFile action
+### Deserialise - `roadiehq:utils:fs:parse`
 
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: create-file-template
-  title: Create File template
-  description: Example template to create a file with on the given path with the given content in the workspace.
-spec:
-  owner: roadie
-  type: service
+This action deserialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
 
-  parameters:
-    - title: Create File
-      properties:
-        path:
-          title: Path
-          type: string
-          description: The path to the desired new file
-        content:
-          title: Content
-          type: string
-          description: The content of the newly created file
-  steps:
-    - id: writeFile
-      name: Create File
-      action: roadiehq:utils:fs:write
-      input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
-```
+Required params:
 
-### Example of using appendFile action
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: append-file-template
-  title: Append To File template
-  description: Example template to append to a file with on the given path with the given content in the workspace.
-spec:
-  owner: roadie
-  type: service
-
-  parameters:
-    - title: Append To File
-      properties:
-        path:
-          title: Path
-          type: string
-          description: The path to the file
-        content:
-          title: Content
-          type: string
-          description: The content to append to the file
-  steps:
-    - id: appendFile
-      name: Append To File
-      action: roadiehq:utils:fs:append
-      input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
-```
-
-### Example of using parseFile action
+- path: The path to the file in the temporary scaffolder workspace that you want to de-serialaise
+- parser: The type of content found in the file you want to de-serialise
 
 ```yaml
 ---
@@ -256,10 +215,14 @@ spec:
         path: ${{ parameters.path }}
         parser: ${{ parameters.parser }}
   output:
-    path: ${{ steps.serialize.output.content }}
+    content: ${{ steps.serialize.output.content }}
 ```
 
-### Example of using jsonata action
+### Parse JSON - `roadiehq:utils:jsonata`
+
+This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
+
+This action uses [Jsonata](https://jsonata.org/) to parse Json. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
 
 ```yaml
 ---
@@ -284,10 +247,10 @@ spec:
             - item1
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    path: ${{ steps.serialize.output.result }}
+    result: ${{ steps.serialize.output.result }}
 ```
 
-### Example of using jsonata expression to transform a JSON file
+Transform a JSON file:
 
 ```yaml
 ---
@@ -310,10 +273,10 @@ spec:
         path: input-data.jaon
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    path: ${{ steps.serialize.output.result }}
+    result: ${{ steps.serialize.output.result }}
 ```
 
-### Example of using jsonata expression to transform a YAML file
+Transform a YAML file:
 
 ```yaml
 ---
@@ -336,10 +299,110 @@ spec:
         path: input-data.yaml
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    path: ${{ steps.serialize.output.result }}
+    result: ${{ steps.serialize.output.result }}
 ```
 
-### Example of serializing data to a YAML format
+### Write - `roadiehq:utils:fs:write`
+
+This action writes a string to a temporary file in the scaffolder workspace.
+
+_Required params:_
+
+- path: The file path you want to save your new file at in the workspace.
+- content: The string content you want to write.
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-file-template
+  title: Create File template
+  description: Example template to create a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Create File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the desired new file
+        content:
+          title: Content
+          type: string
+          description: The content of the newly created file
+  steps:
+    - id: writeFile
+      name: Create File
+      action: roadiehq:utils:fs:write
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
+
+### Append - `roadiehq:utils:fs:append`
+
+This action adds content to the end of an existing file or creates a new one if it doesn't already exist.
+
+_Required params:_
+
+- path: The path of the file you want to add content to in the workspace.
+- content: The string content you want to append.
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: append-file-template
+  title: Append To File template
+  description: Example template to append to a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Append To File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file
+        content:
+          title: Text area input
+          type: string
+          description: Add your new entity
+          ui:widget: textarea
+          ui:options:
+            rows: 10
+          ui:help: 'Make sure it is valid by checking the schema at `/tools/entity-preview`'
+          ui:placeholder: |
+            ---
+            apiVersion: backstage.io/v1alpha1
+              kind: Component
+              metadata:
+                name: backstage
+              spec:
+                type: library
+                owner: CNCF
+                lifecycle: experimental
+  steps:
+    - id: appendFile
+      name: Append To File
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
+
+### Serialise to json or yaml - `roadiehq:utils:serialize:[json|yaml]`
+
+This action creates a json or yaml formatted string representation of key value pairs written in yaml under the data input field.
+
+#### To yaml:
 
 ```yaml
 ---
@@ -362,10 +425,25 @@ spec:
         data:
           hello: world
   output:
-    path: ${{ steps.serialize.output.serialized }}
+    yaml: ${{ steps.serialize.output.serialized }}
 ```
 
-### Example of serializing data to a JSON format
+// input:
+
+```js
+{
+  hello: 'world';
+}
+```
+
+// output:
+
+```yaml
+---
+hello: world
+```
+
+#### To JSON:
 
 ```yaml
 ---
@@ -388,5 +466,15 @@ spec:
         data:
           hello: world
   output:
-    path: ${{ steps.serialize.output.serialized }}
+    json: ${{ steps.serialize.output.serialized }}
 ```
+
+// input:
+
+```js
+{
+  hello: 'world';
+}
+```
+
+// output: `"\"hello\": \"world\""`
