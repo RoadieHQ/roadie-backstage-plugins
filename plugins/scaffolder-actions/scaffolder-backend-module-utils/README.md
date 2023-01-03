@@ -11,6 +11,7 @@ This contains a collection of actions to use in scaffolder templates:
 - [Deserialise a file](#deserialise)
 - [Serialise to json or yaml](#serialise)
 - [Extract values from Json](#parse-json)
+- [Merge new data into an existing JSON file](#merge-json)
 
 ## Setup
 
@@ -90,7 +91,9 @@ return await createRouter({
 
 ## Actions:
 
-### Zip - `roadiehq:utils:zip`
+### Zip
+
+**Action name**: `roadiehq:utils:zip`
 
 Compress files and store them to the temporary workspace in .zip format.
 
@@ -135,7 +138,9 @@ spec:
     outputPath: ${{ steps.zip.output.path }}
 ```
 
-### Sleep - `roadiehq:utils:sleep`
+### Sleep
+
+**Action name**: `roadiehq:utils:sleep`
 
 Waits a number of seconds before continuing to the next scaffolder step.
 
@@ -171,7 +176,9 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-### Deserialise - `roadiehq:utils:fs:parse`
+### Deserialise
+
+**Action name**: `roadiehq:utils:fs:parse`
 
 This action deserialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
 
@@ -218,7 +225,9 @@ spec:
     content: ${{ steps.serialize.output.content }}
 ```
 
-### Parse JSON - `roadiehq:utils:jsonata`
+### Parse JSON
+
+**Action name**: `roadiehq:utils:jsonata`
 
 This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
 
@@ -302,7 +311,9 @@ spec:
     result: ${{ steps.serialize.output.result }}
 ```
 
-### Write - `roadiehq:utils:fs:write`
+### Write
+
+**Action name**: `roadiehq:utils:fs:write`
 
 This action writes a string to a temporary file in the scaffolder workspace.
 
@@ -343,7 +354,9 @@ spec:
         content: ${{ parameters.content }}
 ```
 
-### Append - `roadiehq:utils:fs:append`
+### Append
+
+**Action name**: `roadiehq:utils:fs:append`
 
 This action adds content to the end of an existing file or creates a new one if it doesn't already exist.
 
@@ -398,7 +411,9 @@ spec:
         content: ${{ parameters.content }}
 ```
 
-### Serialise to json or yaml - `roadiehq:utils:serialize:[json|yaml]`
+### Serialise to json or yaml
+
+Action: `roadiehq:utils:serialize:[json|yaml]`
 
 This action creates a json or yaml formatted string representation of key value pairs written in yaml under the data input field.
 
@@ -478,3 +493,61 @@ spec:
 ```
 
 // output: `"\"hello\": \"world\""`
+
+### Merge Json
+
+Action: `roadiehq:utils:json:merge`
+
+**Required params:**
+
+- path: The file path for the json you want to edit.
+- content: The Json you want to merge in. Can be either an object or a string.
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: merge-json-into-file
+  title: Merge Json Template
+  description: Merge some user defined json into a file in a repo and raise a PR for the change.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    properties:
+      repository:
+        title: Repository name
+        type: string
+        description: The name of the repository
+      org:
+        title: Repository Organisation
+        type: string
+        description: The Github org that the repository is in
+      path:
+        title: Path
+        type: string
+        description: The path to the desired new file
+      content:
+        title: Json
+        type: string
+        description: Json to merge in
+        ui:widget: textarea
+        ui:options:
+          rows: 10
+        ui:placeholder: |
+          {"hello": "world"}
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: https://github.com/${{ parameters.org }}/${{ parameters.repository }}
+    - id: writeFile
+      name: Create File
+      action: roadiehq:utils:fs:write
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
