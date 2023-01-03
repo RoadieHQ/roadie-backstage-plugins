@@ -502,9 +502,75 @@ spec:
 **Required params:**
 
 - path: The file path for the JSON you want to edit.
-- content: The JSON you want to merge in.
+- content: The JSON you want to merge in, as a string or a YAML object.
 
-#### Example template
+#### Example template using string input
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: merge-json-template
+  title: Add Node Engine constraints to package.json
+  description: Merge in some JSON to an existing file and open a pull request for it.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    properties:
+      repository:
+        title: Repository name
+        type: string
+        description: The name of the repository
+      org:
+        title: Repository Organisation
+        type: string
+        description: The Github org that the repository is in
+      pr_branch:
+        title: PR Branch
+        type: string
+        description: The new branch to make a pr from
+      path:
+        title: Path
+        type: string
+        description: The path to the desired new file
+      version:
+        title: Node Engine Version
+        type: string
+        description: Add an engine version constraint to the package.json
+
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
+    - id: merge
+      name: Merge JSON
+      action: roadiehq:utils:json:merge
+      input:
+        path: ${{ parameters.path }}
+        content:
+          engines:
+            node: ${{ parameters.version }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Specify Node Engine Versions ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
+
+#### Example template using an object input
 
 ```yaml
 ---
@@ -578,7 +644,7 @@ spec:
 
 **Required params:**
 
-- path: The file path for the JSON you want to edit.
+- path: The file path for the content you want to write.
 - content: The content you want to write.
 
 #### Example template
