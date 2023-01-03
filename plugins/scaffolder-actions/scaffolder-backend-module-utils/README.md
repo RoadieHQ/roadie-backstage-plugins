@@ -497,12 +497,14 @@ spec:
 
 ### Merge Json
 
-Action: `roadiehq:utils:json:merge`
+**Action name**: `roadiehq:utils:json:merge`
 
 **Required params:**
 
 - path: The file path for the json you want to edit.
 - content: The Json you want to merge in.
+
+#### Example template
 
 ```yaml
 ---
@@ -551,7 +553,7 @@ spec:
         url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
     - id: merge
       name: Merge json
-      action: json:merge
+      action: roadiehq:utils:json:merge
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
@@ -572,12 +574,14 @@ spec:
 
 ### Write to File
 
-Action: `roadiehq:utils:fs:write`
+**Action name:** `roadiehq:utils:fs:write`
 
 **Required params:**
 
 - path: The file path for the json you want to edit.
 - content: The content you want to write.
+
+#### Example template
 
 ```yaml
 ---
