@@ -504,7 +504,7 @@ spec:
 - path: The file path for the JSON you want to edit.
 - content: The JSON you want to merge in, as a string or a YAML object.
 
-#### Example template using string input
+#### Example template using an object input
 
 ```yaml
 ---
@@ -570,7 +570,7 @@ spec:
         message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
 ```
 
-#### Example template using an object input
+#### Example template using string input
 
 ```yaml
 ---
