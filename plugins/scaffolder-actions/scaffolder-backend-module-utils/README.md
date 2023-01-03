@@ -9,8 +9,8 @@ This contains a collection of actions to use in scaffolder templates:
 - [Zip](#zip)
 - [Sleep](#sleep)
 - [Deserialise a file](#deserialise)
-- [Serialise to json or yaml](#serialise)
-- [Extract values from Json](#parse-json)
+- [Serialise to JSON or YAML](#serialise)
+- [Extract values from JSON](#parse-json)
 - [Merge new data into an existing JSON file](#merge-json)
 - [Write content to a file](#write-to-file)
 
@@ -181,7 +181,7 @@ spec:
 
 **Action name**: `roadiehq:utils:fs:parse`
 
-This action deserialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
+This action deserialises JSON or YAML files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
 
 Required params:
 
@@ -232,7 +232,7 @@ spec:
 
 This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
 
-This action uses [Jsonata](https://jsonata.org/) to parse Json. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
+This action uses [Jsonata](https://jsonata.org/) to parse JSON. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
 
 ```yaml
 ---
@@ -412,11 +412,11 @@ spec:
         content: ${{ parameters.content }}
 ```
 
-### Serialise to json or yaml
+### Serialise to JSON or YAML
 
 Action: `roadiehq:utils:serialize:[json|yaml]`
 
-This action creates a json or yaml formatted string representation of key value pairs written in yaml under the data input field.
+This action creates a JSON or YAML formatted string representation of key value pairs written in yaml under the data input field.
 
 #### To yaml:
 
@@ -495,14 +495,14 @@ spec:
 
 // output: `"\"hello\": \"world\""`
 
-### Merge Json
+### Merge JSON
 
 **Action name**: `roadiehq:utils:json:merge`
 
 **Required params:**
 
-- path: The file path for the json you want to edit.
-- content: The Json you want to merge in.
+- path: The file path for the JSON you want to edit.
+- content: The JSON you want to merge in.
 
 #### Example template
 
@@ -512,8 +512,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: merge-json-template
-  title: Merge in Json
-  description: Merge in some json to an existing file and open a pull request for it.
+  title: Merge in JSON
+  description: Merge in some JSON to an existing file and open a pull request for it.
 spec:
   owner: roadie
   type: service
@@ -537,9 +537,9 @@ spec:
         type: string
         description: The path to the desired new file
       content:
-        title: Json
+        title: JSON
         type: string
-        description: Json to merge in
+        description: JSON to merge in
         ui:widget: textarea
         ui:options:
           rows: 10
@@ -552,7 +552,7 @@ spec:
       input:
         url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
     - id: merge
-      name: Merge json
+      name: Merge JSON
       action: roadiehq:utils:json:merge
       input:
         path: ${{ parameters.path }}
@@ -563,7 +563,7 @@ spec:
       input:
         repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
         branchName: ${{ parameters.pr_branch }}
-        title: Merge json into ${{ parameters.path }}
+        title: Merge JSON into ${{ parameters.path }}
         description: This PR was created by a Backstage scaffolder task
     - id: log-message
       name: Log PR URL
@@ -578,7 +578,7 @@ spec:
 
 **Required params:**
 
-- path: The file path for the json you want to edit.
+- path: The file path for the JSON you want to edit.
 - content: The content you want to write.
 
 #### Example template
