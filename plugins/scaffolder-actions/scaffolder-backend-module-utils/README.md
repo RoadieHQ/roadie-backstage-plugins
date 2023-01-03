@@ -12,6 +12,7 @@ This contains a collection of actions to use in scaffolder templates:
 - [Serialise to json or yaml](#serialise)
 - [Extract values from Json](#parse-json)
 - [Merge new data into an existing JSON file](#merge-json)
+- [Write content to a file](#write-to-file)
 
 ## Setup
 
@@ -501,16 +502,16 @@ Action: `roadiehq:utils:json:merge`
 **Required params:**
 
 - path: The file path for the json you want to edit.
-- content: The Json you want to merge in. Can be either an object or a string.
+- content: The Json you want to merge in.
 
 ```yaml
 ---
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: merge-json-into-file
-  title: Merge Json Template
-  description: Merge some user defined json into a file in a repo and raise a PR for the change.
+  name: merge-json-template
+  title: Merge in Json
+  description: Merge in some json to an existing file and open a pull request for it.
 spec:
   owner: roadie
   type: service
@@ -525,6 +526,10 @@ spec:
         title: Repository Organisation
         type: string
         description: The Github org that the repository is in
+      pr_branch:
+        title: PR Branch
+        type: string
+        description: The new branch to make a pr from
       path:
         title: Path
         type: string
@@ -543,11 +548,112 @@ spec:
       name: Fetch repo
       action: fetch:plain
       input:
+        url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
+    - id: merge
+      name: Merge json
+      action: json:merge
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Merge json into ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
+
+### Write to File
+
+Action: `roadiehq:utils:fs:write`
+
+**Required params:**
+
+- path: The file path for the json you want to edit.
+- content: The content you want to write.
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: overwrite-file-template-example
+  title: Write content to a file
+  description: Write a file with the given content.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: PR Data
+      properties:
+        repository:
+          title: Repository name
+          type: string
+          description: The name of the repository
+        org:
+          title: Repository Organisation
+          type: string
+          description: The Github org that the repository is in
+        pr_branch:
+          title: PR Branch
+          type: string
+          description: The new branch to make a pr from
+    - title: Append content
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file you want to append this content to in the scaffolder workspace
+        content:
+          title: Text area input
+          type: string
+          description: Add your new entity
+          ui:widget: textarea
+          ui:options:
+            rows: 10
+          ui:help: 'Make sure it is valid by checking the schema at `/tools/entity-preview`'
+          ui:placeholder: |
+            ---
+            apiVersion: backstage.io/v1alpha1
+              kind: Component
+              metadata:
+                name: backstage
+              spec:
+                type: library
+                owner: CNCF
+                lifecycle: experimental
+
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
         url: https://github.com/${{ parameters.org }}/${{ parameters.repository }}
-    - id: writeFile
-      name: Create File
+    - id: write-to-file
+      name: Overwrite File Or Create New
       action: roadiehq:utils:fs:write
       input:
         path: ${{ parameters.path }}
         content: ${{ parameters.content }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Write content to ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
 ```
