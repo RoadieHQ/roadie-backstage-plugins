@@ -101,7 +101,6 @@ export function createAwsSecretsManagerCreateAction(options?: {
         region: ctx.input.region,
       };
 
-      ctx.logger.info(config);
       const secretsManagerClient = new SecretsManagerClient(config);
 
       try {
