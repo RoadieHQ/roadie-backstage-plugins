@@ -9,8 +9,10 @@ This contains a collection of actions to use in scaffolder templates:
 - [Zip](#zip)
 - [Sleep](#sleep)
 - [Deserialise a file](#deserialise)
-- [Serialise to json or yaml](#serialise)
-- [Extract values from Json](#parse-json)
+- [Serialise to JSON or YAML](#serialise)
+- [Extract values from JSON](#parse-json)
+- [Merge new data into an existing JSON file](#merge-json)
+- [Write content to a file](#write-to-file)
 
 ## Setup
 
@@ -90,7 +92,9 @@ return await createRouter({
 
 ## Actions:
 
-### Zip - `roadiehq:utils:zip`
+### Zip
+
+**Action name**: `roadiehq:utils:zip`
 
 Compress files and store them to the temporary workspace in .zip format.
 
@@ -135,7 +139,9 @@ spec:
     outputPath: ${{ steps.zip.output.path }}
 ```
 
-### Sleep - `roadiehq:utils:sleep`
+### Sleep
+
+**Action name**: `roadiehq:utils:sleep`
 
 Waits a number of seconds before continuing to the next scaffolder step.
 
@@ -171,9 +177,11 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-### Deserialise - `roadiehq:utils:fs:parse`
+### Deserialise
 
-This action deserialises json or yaml files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
+**Action name**: `roadiehq:utils:fs:parse`
+
+This action deserialises JSON or YAML files in the temporary scaffolder workspace to a JavaScript object in memory that can then be passed to another step.
 
 Required params:
 
@@ -218,11 +226,13 @@ spec:
     content: ${{ steps.serialize.output.content }}
 ```
 
-### Parse JSON - `roadiehq:utils:jsonata`
+### Parse JSON
+
+**Action name**: `roadiehq:utils:jsonata`
 
 This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
 
-This action uses [Jsonata](https://jsonata.org/) to parse Json. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
+This action uses [Jsonata](https://jsonata.org/) to parse JSON. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
 
 ```yaml
 ---
@@ -302,7 +312,9 @@ spec:
     result: ${{ steps.serialize.output.result }}
 ```
 
-### Write - `roadiehq:utils:fs:write`
+### Write
+
+**Action name**: `roadiehq:utils:fs:write`
 
 This action writes a string to a temporary file in the scaffolder workspace.
 
@@ -343,7 +355,9 @@ spec:
         content: ${{ parameters.content }}
 ```
 
-### Append - `roadiehq:utils:fs:append`
+### Append
+
+**Action name**: `roadiehq:utils:fs:append`
 
 This action adds content to the end of an existing file or creates a new one if it doesn't already exist.
 
@@ -398,9 +412,11 @@ spec:
         content: ${{ parameters.content }}
 ```
 
-### Serialise to json or yaml - `roadiehq:utils:serialize:[json|yaml]`
+### Serialise to JSON or YAML
 
-This action creates a json or yaml formatted string representation of key value pairs written in yaml under the data input field.
+Action: `roadiehq:utils:serialize:[json|yaml]`
+
+This action creates a JSON or YAML formatted string representation of key value pairs written in yaml under the data input field.
 
 #### To yaml:
 
@@ -478,3 +494,236 @@ spec:
 ```
 
 // output: `"\"hello\": \"world\""`
+
+### Merge JSON
+
+**Action name**: `roadiehq:utils:json:merge`
+
+**Required params:**
+
+- path: The file path for the JSON you want to edit.
+- content: The JSON you want to merge in, as a string or a YAML object.
+
+#### Example template using an object input
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: merge-json-template
+  title: Add Node Engine constraints to package.json
+  description: Merge in some JSON to an existing file and open a pull request for it.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    properties:
+      repository:
+        title: Repository name
+        type: string
+        description: The name of the repository
+      org:
+        title: Repository Organisation
+        type: string
+        description: The Github org that the repository is in
+      pr_branch:
+        title: PR Branch
+        type: string
+        description: The new branch to make a pr from
+      path:
+        title: Path
+        type: string
+        description: The path to the desired new file
+      version:
+        title: Node Engine Version
+        type: string
+        description: Add an engine version constraint to the package.json
+
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
+    - id: merge
+      name: Merge JSON
+      action: roadiehq:utils:json:merge
+      input:
+        path: ${{ parameters.path }}
+        content:
+          engines:
+            node: ${{ parameters.version }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Specify Node Engine Versions ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
+
+#### Example template using string input
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: merge-json-template
+  title: Merge in JSON
+  description: Merge in some JSON to an existing file and open a pull request for it.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    properties:
+      repository:
+        title: Repository name
+        type: string
+        description: The name of the repository
+      org:
+        title: Repository Organisation
+        type: string
+        description: The Github org that the repository is in
+      pr_branch:
+        title: PR Branch
+        type: string
+        description: The new branch to make a pr from
+      path:
+        title: Path
+        type: string
+        description: The path to the desired new file
+      content:
+        title: JSON
+        type: string
+        description: JSON to merge in
+        ui:widget: textarea
+        ui:options:
+          rows: 10
+        ui:placeholder: |
+          {"hello": "world"}
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: 'https://github.com/${{ parameters.org }}/${{ parameters.repository }}'
+    - id: merge
+      name: Merge JSON
+      action: roadiehq:utils:json:merge
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Merge JSON into ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
+
+### Write to File
+
+**Action name:** `roadiehq:utils:fs:write`
+
+**Required params:**
+
+- path: The file path for the content you want to write.
+- content: The content you want to write.
+
+#### Example template
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: overwrite-file-template-example
+  title: Write content to a file
+  description: Write a file with the given content.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: PR Data
+      properties:
+        repository:
+          title: Repository name
+          type: string
+          description: The name of the repository
+        org:
+          title: Repository Organisation
+          type: string
+          description: The Github org that the repository is in
+        pr_branch:
+          title: PR Branch
+          type: string
+          description: The new branch to make a pr from
+    - title: Append content
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file you want to append this content to in the scaffolder workspace
+        content:
+          title: Text area input
+          type: string
+          description: Add your new entity
+          ui:widget: textarea
+          ui:options:
+            rows: 10
+          ui:help: 'Make sure it is valid by checking the schema at `/tools/entity-preview`'
+          ui:placeholder: |
+            ---
+            apiVersion: backstage.io/v1alpha1
+              kind: Component
+              metadata:
+                name: backstage
+              spec:
+                type: library
+                owner: CNCF
+                lifecycle: experimental
+
+  steps:
+    - id: fetch-repo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: https://github.com/${{ parameters.org }}/${{ parameters.repository }}
+    - id: write-to-file
+      name: Overwrite File Or Create New
+      action: roadiehq:utils:fs:write
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+    - id: publish-pr
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repository }}&owner=${{ parameters.org }}
+        branchName: ${{ parameters.pr_branch }}
+        title: Write content to ${{ parameters.path }}
+        description: This PR was created by a Backstage scaffolder task
+    - id: log-message
+      name: Log PR URL
+      action: debug:log
+      input:
+        message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
