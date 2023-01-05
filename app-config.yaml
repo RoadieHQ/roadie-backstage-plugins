@@ -43,7 +43,7 @@ proxy:
   '/cloudsmith':
     target: 'https://api.cloudsmith.io/v1'
     headers:
-      X-Api-Key: 609f7b5cdfa88a3abec751af141fc0e29cbe4a37
+      X-Api-Key: ${CLOUDSMITH_API_KEY}
 
   '/aws-news-feed':
     target: 'https://aws.amazon.com/about-aws/whats-new/recent/feed/'
