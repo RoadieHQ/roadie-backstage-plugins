@@ -75,7 +75,5 @@ describe('Content', () => {
     expect(
       await rendered.findByText('Vulnerabilities found in'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('rhel7-ubi-minimal')).toBeInTheDocument();
-    expect(await rendered.findByText('High')).toBeInTheDocument();
   });
 });

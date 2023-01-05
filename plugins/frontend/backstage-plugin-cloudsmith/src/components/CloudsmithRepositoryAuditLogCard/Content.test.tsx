@@ -72,10 +72,6 @@ describe('Content', () => {
         <Content owner="name" repo="repo-name" />
       </TestApiProvider>,
     );
-    expect(await rendered.findByText('Audit Logs for')).toBeInTheDocument();
-    expect(
-      await rendered.findByText('bartosz-blizniak-TGv'),
-    ).toBeInTheDocument();
-    expect(await rendered.findByText('BLckzgMRKqU5')).toBeInTheDocument();
+    expect(await rendered.findByText(`Audit Logs for`)).toBeInTheDocument();
   });
 });

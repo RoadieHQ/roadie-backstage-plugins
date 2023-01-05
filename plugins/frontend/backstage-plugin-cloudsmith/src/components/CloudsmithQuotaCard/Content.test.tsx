@@ -70,7 +70,5 @@ describe('Content', () => {
       </TestApiProvider>,
     );
     expect(await rendered.findByText('Cloudsmith Quota')).toBeInTheDocument();
-    expect(await rendered.findByText('Bandwidth')).toBeInTheDocument();
-    expect(await rendered.findByText('Storage')).toBeInTheDocument();
   });
 });

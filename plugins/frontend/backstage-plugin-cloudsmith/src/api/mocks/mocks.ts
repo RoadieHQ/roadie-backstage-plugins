@@ -67,9 +67,23 @@ export const repoVulnerabilityResponse = [
 
 export const quotaResponse = {
   usage: {
+    raw: {
+      bandwidth: {
+        used: 45,
+        configured: 100,
+        plan_limit: 100,
+        percentage_used: 4.5,
+      },
+      storage: {
+        used: 60,
+        configured: 100,
+        plan_limit: 100,
+        percentage_used: 6,
+      },
+    },
     display: {
       bandwidth: {
-        used: '59.8 KB',
+        used: '175.7 KB',
         configured: '3.9 TB',
         plan_limit: '2 TB',
         percentage_used: '0.0%',

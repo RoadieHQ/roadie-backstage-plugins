@@ -50,7 +50,7 @@ export type RepoStats = {
   };
 };
 
-export type cloudsmithUsage = {
+export type CloudsmithUsage = {
   usage: {
     raw: {
       bandwidth: {
@@ -83,7 +83,7 @@ export type cloudsmithUsage = {
   };
 };
 
-export type repoVulnerability = [
+export type RepoVulnerability = [
   {
     [x: string]: any;
     identifier: string;
@@ -101,7 +101,7 @@ export type repoVulnerability = [
   },
 ];
 
-export type repoAuditLog = [
+export type RepoAuditLog = [
   {
     [x: string]: any;
     actor: string;
@@ -134,15 +134,15 @@ export type CloudsmithApi = {
     repo: string;
   }) => Promise<RepoStats>;
 
-  getQuota: (options: { owner: string }) => Promise<cloudsmithUsage>;
+  getQuota: (options: { owner: string }) => Promise<CloudsmithUsage>;
 
   getRepoAuditLogs: (options: {
     owner: string;
     repo: string;
-  }) => Promise<repoAuditLog>;
+  }) => Promise<RepoAuditLog>;
 
   getRepoSecurityScanLogs: (options: {
     owner: string;
     repo: string;
-  }) => Promise<repoVulnerability>;
+  }) => Promise<RepoVulnerability>;
 };

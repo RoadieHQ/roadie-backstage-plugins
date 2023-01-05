@@ -17,9 +17,9 @@
 import {
   CloudsmithApi,
   RepoStats,
-  repoAuditLog,
-  repoVulnerability,
-  cloudsmithUsage,
+  RepoAuditLog,
+  RepoVulnerability,
+  CloudsmithUsage,
 } from './CloudsmithApi';
 import { FetchApi, DiscoveryApi } from '@backstage/core-plugin-api';
 
@@ -69,13 +69,17 @@ export class CloudsmithClient implements CloudsmithApi {
   }
 
   // get data from Cloudsmith quota endpoint (https://help.cloudsmith.io/reference/quota_read)
-  async getQuota({ owner }: { owner: string }): Promise<cloudsmithUsage> {
+  async getQuota({ owner }: { owner: string }): Promise<CloudsmithUsage> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/quota/${owner}/`,
     );
     if (!response.ok) {
       throw new Error(`Failed to retrieve quota: ${response.statusText}`);
+    } else {
+      if (response.status === 402) {
+        throw new Error(`Payment Required: ${response.statusText}`);
+      }
     }
     return await response.json();
   }
@@ -87,7 +91,7 @@ export class CloudsmithClient implements CloudsmithApi {
   }: {
     owner: string;
     repo: string;
-  }): Promise<repoAuditLog> {
+  }): Promise<RepoAuditLog> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/audit-log/${owner}/${repo}/?page_size=100`,
@@ -105,7 +109,7 @@ export class CloudsmithClient implements CloudsmithApi {
   }: {
     owner: string;
     repo: string;
-  }): Promise<repoVulnerability> {
+  }): Promise<RepoVulnerability> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/vulnerabilities/${owner}/${repo}/?page_size=100`,

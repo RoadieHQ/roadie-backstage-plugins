@@ -24,18 +24,7 @@ import {
 } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
 import { ErrorPanel, Progress, Gauge } from '@backstage/core-components';
-import {
-  Paper,
-  Table,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableBody,
-  Card,
-  CardHeader,
-  Avatar,
-} from '@material-ui/core';
+import { Card, CardHeader, Avatar, Grid, Typography } from '@material-ui/core';
 
 /**
  * A component to render the stats about a cloudsmith usage quota.
@@ -73,7 +62,7 @@ export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
   }
 
   return (
-    <Card>
+    <Card variant="outlined">
       <CardHeader
         avatar={
           <Avatar
@@ -82,37 +71,28 @@ export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
           />
         }
         title="Cloudsmith Quota"
+        subheader={owner}
       />
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Bandwidth</TableCell>
-              <TableCell align="right">Storage</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">
-                <Gauge
-                  value={calculatePercentage(
-                    quotaStats.usage.raw.bandwidth.used,
-                    quotaStats.usage.raw.bandwidth.configured,
-                  )}
-                />
-              </TableCell>
-              <TableCell align="right">
-                <Gauge
-                  value={calculatePercentage(
-                    quotaStats.usage.raw.storage.used,
-                    quotaStats.usage.raw.storage.configured,
-                  )}
-                />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container>
+        <Grid item>
+          <Typography>Bandwidth</Typography>
+          <Gauge
+            value={calculatePercentage(
+              quotaStats.usage.raw.bandwidth.used,
+              quotaStats.usage.raw.bandwidth.configured,
+            )}
+          />
+        </Grid>
+        <Grid item>
+          <Typography>Storage</Typography>
+          <Gauge
+            value={calculatePercentage(
+              quotaStats.usage.raw.storage.used,
+              quotaStats.usage.raw.storage.configured,
+            )}
+          />
+        </Grid>
+      </Grid>
     </Card>
   );
 };
