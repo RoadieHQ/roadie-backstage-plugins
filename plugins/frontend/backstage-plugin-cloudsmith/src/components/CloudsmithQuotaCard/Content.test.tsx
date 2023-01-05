@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
 import {
   AnyApiRef,
   discoveryApiRef,
@@ -24,6 +23,7 @@ import {
   errorApiRef,
 } from '@backstage/core-plugin-api';
 import {
+  renderInTestApp,
   setupRequestMockHandlers,
   TestApiProvider,
 } from '@backstage/test-utils';
@@ -64,11 +64,13 @@ describe('Content', () => {
   setupRequestMockHandlers(worker);
 
   it('should display an ovreview card with the data from the requests', async () => {
-    const rendered = render(
+    const rendered = renderInTestApp(
       <TestApiProvider apis={apis}>
         <Content owner="name" />
       </TestApiProvider>,
     );
-    expect(await rendered.findByText('Cloudsmith Quota')).toBeInTheDocument();
+    expect(
+      await (await rendered).findByText('Cloudsmith Quota'),
+    ).toBeInTheDocument();
   });
 });

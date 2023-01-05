@@ -36,8 +36,8 @@ describe('CloudsmithClient', () => {
       fetchApi: {
         fetch: async (url: string) => {
           if (
-            url ===
-            'https://backstage/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
+            new URL(url).pathname ===
+            '/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
           ) {
             return {
               ok: true,
@@ -45,8 +45,8 @@ describe('CloudsmithClient', () => {
             };
           }
           if (
-            url ===
-            'https://backstage/api/proxy/cloudsmith/audit-log/name/repo-name/?page=1&page_size=1'
+            new URL(url).pathname ===
+            '/api/proxy/cloudsmith/audit-log/name/repo-name/'
           ) {
             return {
               ok: true,
@@ -54,8 +54,8 @@ describe('CloudsmithClient', () => {
             };
           }
           if (
-            url ===
-            'https://backstage/api/proxy/cloudsmith/vulnerabilities/name/repo-name/?page=1&page_size=1'
+            new URL(url).pathname ===
+            '/api/proxy/cloudsmith/vulnerabilities/name/repo-name/'
           ) {
             return {
               ok: true,
@@ -139,7 +139,7 @@ describe('CloudsmithClient', () => {
     });
 
     it('throws error if the quota is not found', async () => {
-      await expect(client.getQuota({ owner: 'name' })).rejects.toEqual(
+      await expect(client.getQuota({ owner: 'not-a-name' })).rejects.toEqual(
         new Error('Failed to retrieve quota: Not Found'),
       );
     });
