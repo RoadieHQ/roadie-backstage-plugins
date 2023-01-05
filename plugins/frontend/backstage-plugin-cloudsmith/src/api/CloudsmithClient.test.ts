@@ -46,7 +46,7 @@ describe('CloudsmithClient', () => {
           }
           if (
             url ===
-            'https://backstage/api/proxy/cloudsmith/audit-log/name/repo-name/'
+            'https://backstage/api/proxy/cloudsmith/audit-log/name/repo-name/?page=1&page_size=1'
           ) {
             return {
               ok: true,
@@ -55,14 +55,14 @@ describe('CloudsmithClient', () => {
           }
           if (
             url ===
-            'https://backstage/api/proxy/cloudsmith/vulnerabilities/name/repo-name/'
+            'https://backstage/api/proxy/cloudsmith/vulnerabilities/name/repo-name/?page=1&page_size=1'
           ) {
             return {
               ok: true,
               json: async () => repoVulnerabilityResponse,
             };
           }
-          if (url === 'https://backstage/api/proxy/cloudsmith/quota/name') {
+          if (url === 'https://backstage/api/proxy/cloudsmith/quota/name/') {
             return {
               ok: true,
               json: async () => quotaResponse,
@@ -107,9 +107,7 @@ describe('CloudsmithClient', () => {
     it('throws error if the audit logs are not found', async () => {
       await expect(
         client.getRepoAuditLogs({ owner: 'name', repo: 'not-a-repo-name' }),
-      ).rejects.toEqual(
-        new Error('Failed to retrieve package audit logs: Not Found'),
-      );
+      ).rejects.toEqual(new Error('Failed to retrieve audit logs: Not Found'));
     });
   });
 
@@ -130,7 +128,7 @@ describe('CloudsmithClient', () => {
           repo: 'not-a-repo-name',
         }),
       ).rejects.toEqual(
-        new Error('Failed to retrieve package vulnerabilities: Not Found'),
+        new Error('Failed to retrieve security scan logs: Not Found'),
       );
     });
   });

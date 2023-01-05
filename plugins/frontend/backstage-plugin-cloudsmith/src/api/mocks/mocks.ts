@@ -23,12 +23,27 @@ export const repoMetricResponse = {
 
 export const repoAuditLogsResponse = [
   {
-    actor: 'bartosz-blizniak-TGv',
-    event: 'create.repository_gpg_key_created',
-    event_at: '2022-11-14T11:03:15.369843Z',
-    object: 'BLckzgMRKqU5',
-    object_kind: 'repository_gpg_key',
-    object_slug_perm: 'BLckzgMRKqU5',
+    actor: 'aspeed',
+    actor_ip_address: '111.111.111.111',
+    actor_kind: 'user',
+    actor_location: {
+      city: 'XXXX',
+      continent: 'XXXX',
+      country: 'XXXX',
+      country_code: 'XXXX',
+      latitude: '1',
+      longitude: '-1',
+      postal_code: 'XXXX',
+    },
+    actor_slug_perm: 'XXXXXXX',
+    actor_url: 'https://api.cloudsmith.io/v1/users/profile/foo/',
+    context: '',
+    event: 'create.entitlement_created',
+    event_at: '2022-12-07T16:19:46.246956Z',
+    object: 'f113f13f13',
+    object_kind: 'repository_token',
+    object_slug_perm: '3f1f13f31f',
+    uuid: 'feqfeqfeq',
   },
 ];
 
@@ -37,12 +52,15 @@ export const repoVulnerabilityResponse = [
     identifier: 'XkBX1JBveOzyzqb0',
     created_at: '2022-12-06T10:39:43.505180Z',
     package: {
+      identifier: 'dNZbXot2ZLHX',
       name: 'rhel7-ubi-minimal',
       version:
         'e2ccab8d1b005db223ed6a319a1631f2a9db8225396129d77bc2f8b2c31d21ca',
       url: 'https://api.cloudsmith.io/v1/packages/cloudsmith-test/bartosz-testing/dNZbXot2ZLHX/',
     },
+    scan_id: 1,
     has_vulnerabilities: true,
+    num_vulnerabilities: 470,
     max_severity: 'High',
   },
 ];

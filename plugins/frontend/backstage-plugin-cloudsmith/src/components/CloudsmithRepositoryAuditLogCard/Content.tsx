@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { CloudsmithRepositoryAuditLogContentProps } from './types';
-import { CloudsmithClient } from '../../api';
+import { CloudsmithApi, CloudsmithClient } from '../../api';
 import {
   discoveryApiRef,
   fetchApiRef,
@@ -38,7 +38,10 @@ export const Content = ({
 }: CloudsmithRepositoryAuditLogContentProps) => {
   const fetchApi = useApi(fetchApiRef);
   const discoveryApi = useApi(discoveryApiRef);
-  const cloudsmithApi = new CloudsmithClient({ fetchApi, discoveryApi });
+  const cloudsmithApi: CloudsmithApi = new CloudsmithClient({
+    fetchApi,
+    discoveryApi,
+  });
 
   const {
     value: getRepoAuditLogs,

@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { CloudsmithStatsCardContentProps } from './types';
-import { CloudsmithClient } from '../../api';
+import { CloudsmithApi, CloudsmithClient } from '../../api';
 import {
   discoveryApiRef,
   fetchApiRef,
@@ -46,7 +46,10 @@ import {
 export const Content = ({ owner, repo }: CloudsmithStatsCardContentProps) => {
   const fetchApi = useApi(fetchApiRef);
   const discoveryApi = useApi(discoveryApiRef);
-  const cloudsmithApi = new CloudsmithClient({ fetchApi, discoveryApi });
+  const cloudsmithApi: CloudsmithApi = new CloudsmithClient({
+    fetchApi,
+    discoveryApi,
+  });
 
   const {
     value: repoStats,

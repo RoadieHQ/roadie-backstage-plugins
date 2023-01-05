@@ -29,14 +29,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-
-const mockResponse = {
-  packages: {
-    active: 20,
-    inactive: 180,
-    total: 200,
-  },
-};
+import { repoMetricResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -57,7 +50,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
         ) {
           return {
             ok: true,
-            json: async () => mockResponse,
+            json: async () => repoMetricResponse,
           };
         }
         return {
@@ -83,8 +76,7 @@ describe('Content', () => {
       await rendered.findByText('Cloudsmith Repo Stats'),
     ).toBeInTheDocument();
     expect(await rendered.findByText('name/repo-name')).toBeInTheDocument();
-    expect(await rendered.findByText('20')).toBeInTheDocument();
-    expect(await rendered.findByText('180')).toBeInTheDocument();
-    expect(await rendered.findByText('200')).toBeInTheDocument();
+    expect(await rendered.findByText('52')).toBeInTheDocument();
+    expect(await rendered.findByText('23')).toBeInTheDocument();
   });
 });

@@ -29,14 +29,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-
-const mockResponse = {
-  packages: {
-    active: 20,
-    inactive: 180,
-    total: 200,
-  },
-};
+import { quotaResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -51,10 +44,10 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
     fetchApiRef,
     {
       fetch: async (url: string) => {
-        if (url === 'https://backstage/api/proxy/cloudsmith/quota/name') {
+        if (url === 'https://backstage/api/proxy/cloudsmith/quota/name/') {
           return {
             ok: true,
-            json: async () => mockResponse,
+            json: async () => quotaResponse,
           };
         }
         return {
@@ -76,12 +69,8 @@ describe('Content', () => {
         <Content owner="name" />
       </TestApiProvider>,
     );
-    expect(
-      await rendered.findByText('Cloudsmith Quota Stats'),
-    ).toBeInTheDocument();
-    expect(await rendered.findByText('name')).toBeInTheDocument();
-    expect(await rendered.findByText('20')).toBeInTheDocument();
-    expect(await rendered.findByText('180')).toBeInTheDocument();
-    expect(await rendered.findByText('200')).toBeInTheDocument();
+    expect(await rendered.findByText('Cloudsmith Quota')).toBeInTheDocument();
+    expect(await rendered.findByText('Bandwidth')).toBeInTheDocument();
+    expect(await rendered.findByText('Storage')).toBeInTheDocument();
   });
 });

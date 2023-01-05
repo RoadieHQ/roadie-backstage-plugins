@@ -29,14 +29,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-
-const mockResponse = {
-  packages: {
-    active: 20,
-    inactive: 180,
-    total: 200,
-  },
-};
+import { repoVulnerabilityResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -52,12 +45,12 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
     {
       fetch: async (url: string) => {
         if (
-          url ===
-          'https://backstage/api/proxy/cloudsmith/vulnerabilities/name/repo-name/'
+          new URL(url).pathname ===
+          '/api/proxy/cloudsmith/vulnerabilities/name/repo-name/'
         ) {
           return {
             ok: true,
-            json: async () => mockResponse,
+            json: async () => repoVulnerabilityResponse,
           };
         }
         return {
@@ -80,11 +73,9 @@ describe('Content', () => {
       </TestApiProvider>,
     );
     expect(
-      await rendered.findByText('Cloudsmith Security Scan results'),
+      await rendered.findByText('Vulnerabilities found in'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('name')).toBeInTheDocument();
-    expect(await rendered.findByText('20')).toBeInTheDocument();
-    expect(await rendered.findByText('180')).toBeInTheDocument();
-    expect(await rendered.findByText('200')).toBeInTheDocument();
+    expect(await rendered.findByText('rhel7-ubi-minimal')).toBeInTheDocument();
+    expect(await rendered.findByText('High')).toBeInTheDocument();
   });
 });

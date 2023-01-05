@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-import { CloudsmithApi, RepoStats } from './CloudsmithApi';
+import {
+  CloudsmithApi,
+  RepoStats,
+  repoAuditLog,
+  repoVulnerability,
+  cloudsmithUsage,
+} from './CloudsmithApi';
 import { FetchApi, DiscoveryApi } from '@backstage/core-plugin-api';
 
 type Options = {
@@ -31,8 +37,15 @@ export class CloudsmithClient implements CloudsmithApi {
     this.discoveryApi = options.discoveryApi;
   }
 
+  // create async getApiUrl function to cache the Cloudsmith API URL and create a cache object
   private async getApiUrl(): Promise<string> {
-    return `${await this.discoveryApi.getBaseUrl('proxy')}/cloudsmith`;
+    const cache = new Map();
+    if (cache.has('apiUrl')) {
+      return cache.get('apiUrl');
+    }
+    const apiUrl = `${await this.discoveryApi.getBaseUrl('proxy')}/cloudsmith`;
+    cache.set('apiUrl', apiUrl);
+    return apiUrl;
   }
 
   // get data from Cloudsmith metrics endpoint (https://help.cloudsmith.io/reference/metrics_packages_list)
@@ -56,7 +69,7 @@ export class CloudsmithClient implements CloudsmithApi {
   }
 
   // get data from Cloudsmith quota endpoint (https://help.cloudsmith.io/reference/quota_read)
-  async getQuota({ owner }: { owner: string }): Promise<any> {
+  async getQuota({ owner }: { owner: string }): Promise<cloudsmithUsage> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/quota/${owner}/`,
@@ -68,14 +81,13 @@ export class CloudsmithClient implements CloudsmithApi {
   }
 
   // get repository audit logs from Cloudsmith audit repo logs endpoint (https://help.cloudsmith.io/reference/audit_log_repo_list) and support pagniation
-
   async getRepoAuditLogs({
     owner,
     repo,
   }: {
     owner: string;
     repo: string;
-  }): Promise<any> {
+  }): Promise<repoAuditLog> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/audit-log/${owner}/${repo}/?page_size=100`,
@@ -87,14 +99,13 @@ export class CloudsmithClient implements CloudsmithApi {
   }
 
   // get repository security scan logs for a Cloudsmith repository endpoint (https://help.cloudsmith.io/reference/vulnerabilities_repo_list)
-
   async getRepoSecurityScanLogs({
     owner,
     repo,
   }: {
     owner: string;
     repo: string;
-  }): Promise<any> {
+  }): Promise<repoVulnerability> {
     const cloudsmithApiUrl = await this.getApiUrl();
     const response = await this.fetchApi.fetch(
       `${cloudsmithApiUrl}/vulnerabilities/${owner}/${repo}/?page_size=100`,

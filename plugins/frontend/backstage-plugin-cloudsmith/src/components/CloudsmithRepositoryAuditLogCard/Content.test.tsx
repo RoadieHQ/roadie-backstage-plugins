@@ -29,14 +29,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-
-const mockResponse = {
-  packages: {
-    active: 20,
-    inactive: 180,
-    total: 200,
-  },
-};
+import { repoAuditLogsResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -52,12 +45,12 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
     {
       fetch: async (url: string) => {
         if (
-          url ===
-          'https://backstage/api/proxy/cloudsmith/audit-log/name/repo-name/'
+          new URL(url).pathname ===
+          '/api/proxy/cloudsmith/audit-log/name/repo-name/'
         ) {
           return {
             ok: true,
-            json: async () => mockResponse,
+            json: async () => repoAuditLogsResponse,
           };
         }
         return {
@@ -79,12 +72,10 @@ describe('Content', () => {
         <Content owner="name" repo="repo-name" />
       </TestApiProvider>,
     );
+    expect(await rendered.findByText('Audit Logs for')).toBeInTheDocument();
     expect(
-      await rendered.findByText('Cloudsmith Repo Audit Logs'),
+      await rendered.findByText('bartosz-blizniak-TGv'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('name')).toBeInTheDocument();
-    expect(await rendered.findByText('20')).toBeInTheDocument();
-    expect(await rendered.findByText('180')).toBeInTheDocument();
-    expect(await rendered.findByText('200')).toBeInTheDocument();
+    expect(await rendered.findByText('BLckzgMRKqU5')).toBeInTheDocument();
   });
 });

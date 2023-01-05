@@ -16,14 +16,14 @@
 
 import React from 'react';
 import { CloudsmithQuotaCardContentProps } from './types';
-import { CloudsmithClient } from '../../api';
+import { CloudsmithApi, CloudsmithClient } from '../../api';
 import {
   discoveryApiRef,
   fetchApiRef,
   useApi,
 } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
-import { ErrorPanel, Progress } from '@backstage/core-components';
+import { ErrorPanel, Progress, Gauge } from '@backstage/core-components';
 import {
   Paper,
   Table,
@@ -45,7 +45,10 @@ import {
 export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
   const fetchApi = useApi(fetchApiRef);
   const discoveryApi = useApi(discoveryApiRef);
-  const cloudsmithApi = new CloudsmithClient({ fetchApi, discoveryApi });
+  const cloudsmithApi: CloudsmithApi = new CloudsmithClient({
+    fetchApi,
+    discoveryApi,
+  });
 
   const {
     value: quotaStats,
@@ -65,58 +68,46 @@ export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
     );
   }
 
+  function calculatePercentage(used: number, limit: number) {
+    return (used / limit) * 100;
+  }
+
   return (
     <Card>
       <CardHeader
         avatar={
           <Avatar
+            aria-label="cloudsmith"
             src="https://cloudsmith.com/img/cloudsmith-mini-dark.svg"
-            style={{ backgroundColor: 'black' }}
           />
         }
         title="Cloudsmith Quota"
       />
       <TableContainer component={Paper}>
-        <Table>
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>Bandwidth</TableCell>
-              <TableCell>Storage</TableCell>
+              <TableCell align="right">Storage</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell>
-                Used: {quotaStats.usage.display.bandwidth.used}
+              <TableCell component="th" scope="row">
+                <Gauge
+                  value={calculatePercentage(
+                    quotaStats.usage.raw.bandwidth.used,
+                    quotaStats.usage.raw.bandwidth.configured,
+                  )}
+                />
               </TableCell>
-              <TableCell>
-                Used: {quotaStats.usage.display.storage.used}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Configured: {quotaStats.usage.display.bandwidth.configured}
-              </TableCell>
-              <TableCell>
-                Configured: {quotaStats.usage.display.storage.configured}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Plan Limit: {quotaStats.usage.display.bandwidth.plan_limit}
-              </TableCell>
-              <TableCell>
-                Plan Limit: {quotaStats.usage.display.storage.plan_limit}
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                Percentage Used:{' '}
-                {quotaStats.usage.display.bandwidth.percentage_used}
-              </TableCell>
-              <TableCell>
-                Percentage Used:{' '}
-                {quotaStats.usage.display.storage.percentage_used}
+              <TableCell align="right">
+                <Gauge
+                  value={calculatePercentage(
+                    quotaStats.usage.raw.storage.used,
+                    quotaStats.usage.raw.storage.configured,
+                  )}
+                />
               </TableCell>
             </TableRow>
           </TableBody>
