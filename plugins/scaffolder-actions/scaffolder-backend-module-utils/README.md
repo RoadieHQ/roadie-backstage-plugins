@@ -610,7 +610,6 @@ This action writes a string to a temporary file in the Scaffolder workspace.
 - content: The content you want to write.
 
 ```yaml
-
 ---
 parameters:
   path:
