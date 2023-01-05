@@ -181,7 +181,7 @@ spec:
 
 **Action name**: `roadiehq:utils:fs:parse`
 
-This action deserialises JSON or YAML files in the temporary scaffolder workspace to a javascript object in memory that can then be passed to another step.
+This action deserialises JSON or YAML files in the temporary scaffolder workspace to a JavaScript object in memory that can then be passed to another step.
 
 Required params:
 
