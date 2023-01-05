@@ -2,7 +2,7 @@
 
 This plugin allows you to display statistics about a Cloudsmith repository to the homepage of Backstage.
 
-![homepage-cloudsmith.png](homepage-cloudsmith.png)
+![homepage-cloudsmith.png](https://files.readme.io/8ae2f47-210829090-6a2c7da5-12b4-4702-92f0-0093f87887ef.png)
 
 To use this plugin, you will need to add the card to the home page in the frontend app and also set up a backend proxy for the
 
