@@ -78,6 +78,7 @@ export class CloudsmithClient implements CloudsmithApi {
       throw new Error(`Failed to retrieve quota: ${response.statusText}`);
     } else {
       if (response.status === 402) {
+        window.location.href = 'https://cloudsmith.com/product/pricing/';
         throw new Error(`Payment Required: ${response.statusText}`);
       }
     }
