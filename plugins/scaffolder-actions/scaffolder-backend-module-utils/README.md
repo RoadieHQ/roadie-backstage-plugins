@@ -10,8 +10,9 @@ This contains a collection of actions to use in scaffolder templates:
 - [Sleep](#sleep)
 - [Deserialise a file](#deserialise)
 - [Serialise to JSON or YAML](#serialise)
-- [Extract values from JSON](#parse-json)
+- [Parse and Transform JSON or YAML](#parse-and-transform-json-or-yaml)
 - [Merge new data into an existing JSON file](#merge-json)
+- [Append content to a file](#append)
 - [Write content to a file](#write-to-file)
 
 ## Setup
@@ -226,192 +227,6 @@ spec:
     content: ${{ steps.serialize.output.content }}
 ```
 
-### Parse JSON
-
-**Action name**: `roadiehq:utils:jsonata`
-
-This action allows you to parse a file in your workspace or output from a previous step and extract values from Json to output or use in subsequent actions.
-
-This action uses [Jsonata](https://jsonata.org/) to parse JSON. You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: Jsonata
-  title: Jsonata
-  description: Example template to perform a jsonata expression on input data
-spec:
-  owner: roadie
-  type: service
-
-  parameters: []
-  steps:
-    - id: jsonata
-      name: Parse File
-      action: roadiehq:utils:jsonata
-      input:
-        data:
-          items:
-            - item1
-        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
-  output:
-    result: ${{ steps.serialize.output.result }}
-```
-
-Transform a JSON file:
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: Jsonata
-  title: Jsonata
-  description: Example template to perform a jsonata expression on input data
-spec:
-  owner: roadie
-  type: service
-
-  parameters: []
-  steps:
-    - id: jsonata
-      name: Parse File
-      action: roadiehq:utils:jsonata:json:transform
-      input:
-        path: input-data.jaon
-        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
-  output:
-    result: ${{ steps.serialize.output.result }}
-```
-
-Transform a YAML file:
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: Jsonata
-  title: Jsonata
-  description: Example template to perform a jsonata expression on input data
-spec:
-  owner: roadie
-  type: service
-
-  parameters: []
-  steps:
-    - id: jsonata
-      name: Jsonata
-      action: roadiehq:utils:jsonata:yaml:transform
-      input:
-        path: input-data.yaml
-        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
-  output:
-    result: ${{ steps.serialize.output.result }}
-```
-
-### Write
-
-**Action name**: `roadiehq:utils:fs:write`
-
-This action writes a string to a temporary file in the scaffolder workspace.
-
-_Required params:_
-
-- path: The file path you want to save your new file at in the workspace.
-- content: The string content you want to write.
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: create-file-template
-  title: Create File template
-  description: Example template to create a file with on the given path with the given content in the workspace.
-spec:
-  owner: roadie
-  type: service
-
-  parameters:
-    - title: Create File
-      properties:
-        path:
-          title: Path
-          type: string
-          description: The path to the desired new file
-        content:
-          title: Content
-          type: string
-          description: The content of the newly created file
-  steps:
-    - id: writeFile
-      name: Create File
-      action: roadiehq:utils:fs:write
-      input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
-```
-
-### Append
-
-**Action name**: `roadiehq:utils:fs:append`
-
-This action adds content to the end of an existing file or creates a new one if it doesn't already exist.
-
-_Required params:_
-
-- path: The path of the file you want to add content to in the workspace.
-- content: The string content you want to append.
-
-```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: append-file-template
-  title: Append To File template
-  description: Example template to append to a file with on the given path with the given content in the workspace.
-spec:
-  owner: roadie
-  type: service
-
-  parameters:
-    - title: Append To File
-      properties:
-        path:
-          title: Path
-          type: string
-          description: The path to the file
-        content:
-          title: Text area input
-          type: string
-          description: Add your new entity
-          ui:widget: textarea
-          ui:options:
-            rows: 10
-          ui:help: 'Make sure it is valid by checking the schema at `/tools/entity-preview`'
-          ui:placeholder: |
-            ---
-            apiVersion: backstage.io/v1alpha1
-              kind: Component
-              metadata:
-                name: backstage
-              spec:
-                type: library
-                owner: CNCF
-                lifecycle: experimental
-  steps:
-    - id: appendFile
-      name: Append To File
-      action: roadiehq:utils:fs:append
-      input:
-        path: ${{ parameters.path }}
-        content: ${{ parameters.content }}
-```
-
 ### Serialise to JSON or YAML
 
 Action: `roadiehq:utils:serialize:[json|yaml]`
@@ -495,6 +310,94 @@ spec:
 
 // output: `"\"hello\": \"world\""`
 
+### Parse and Transform JSON or YAML
+
+**Action name**: `roadiehq:utils:jsonata`
+
+This action allows you to use [Jsonata](https://jsonata.org/) to parse and transform JSON or YAML for use in subsequent actions.
+
+NB: You can test Jsonata expressions [here](https://try.jsonata.org/) while writing your template.
+
+Transform a JSON object:
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Parse File
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          items:
+            - item1
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+  output:
+    result: ${{ steps.serialize.output.result }}
+```
+
+Transform a JSON file:
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Parse File
+      action: roadiehq:utils:jsonata:json:transform
+      input:
+        path: input-data.jaon
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+  output:
+    result: ${{ steps.serialize.output.result }}
+```
+
+Transform a YAML file:
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Jsonata
+  title: Jsonata
+  description: Example template to perform a jsonata expression on input data
+spec:
+  owner: roadie
+  type: service
+
+  parameters: []
+  steps:
+    - id: jsonata
+      name: Jsonata
+      action: roadiehq:utils:jsonata:yaml:transform
+      input:
+        path: input-data.yaml
+        expression: '$ ~> | $ | { "items": [items, "item2"] }|'
+  output:
+    result: ${{ steps.serialize.output.result }}
+```
+
 ### Merge JSON
 
 **Action name**: `roadiehq:utils:json:merge`
@@ -504,7 +407,7 @@ spec:
 - path: The file path for the JSON you want to edit.
 - content: The JSON you want to merge in, as a string or a YAML object.
 
-#### Example template using an object input
+#### Example Merge JSON template using an object input
 
 ```yaml
 ---
@@ -570,7 +473,7 @@ spec:
         message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
 ```
 
-#### Example template using string input
+#### Example Merge JSON template using string input
 
 ```yaml
 ---
@@ -638,14 +541,94 @@ spec:
         message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
 ```
 
+### Append
+
+**Action name**: `roadiehq:utils:fs:append`
+
+This action adds content to the end of an existing file or creates a new one if it doesn't already exist.
+
+_Required params:_
+
+- path: The path of the file you want to add content to in the workspace.
+- content: The string content you want to append.
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: append-file-template
+  title: Append To File template
+  description: Example template to append to a file with on the given path with the given content in the workspace.
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Append To File
+      properties:
+        path:
+          title: Path
+          type: string
+          description: The path to the file
+        content:
+          title: Text area input
+          type: string
+          description: Add your new entity
+          ui:widget: textarea
+          ui:options:
+            rows: 10
+          ui:help: 'Make sure it is valid by checking the schema at `/tools/entity-preview`'
+          ui:placeholder: |
+            ---
+            apiVersion: backstage.io/v1alpha1
+              kind: Component
+              metadata:
+                name: backstage
+              spec:
+                type: library
+                owner: CNCF
+                lifecycle: experimental
+  steps:
+    - id: appendFile
+      name: Append To File
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.path }}
+        content: ${{ parameters.content }}
+```
+
 ### Write to File
 
 **Action name:** `roadiehq:utils:fs:write`
+
+This action writes a string to a temporary file in the Scaffolder workspace.
 
 **Required params:**
 
 - path: The file path for the content you want to write.
 - content: The content you want to write.
+
+```yaml
+
+---
+parameters:
+  path:
+    title: Path
+    type: string
+    description: The path to the desired new file
+  content:
+    title: Content
+    type: string
+    description: The content of the newly created file
+steps:
+  - id: writeFile
+    name: Create File
+    action: roadiehq:utils:fs:write
+    input:
+      path: ${{ parameters.path }}
+      content: ${{ parameters.content }}
+```
 
 #### Example template
 
