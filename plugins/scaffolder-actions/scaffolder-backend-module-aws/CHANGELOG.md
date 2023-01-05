@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.0
+
+### Minor Changes
+
+- 2c1df1d2: add create secrets manager action to aws module
+
 ## 2.3.2
 
 ### Patch Changes
