@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.4
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
 ## 2.1.3
 
 ### Patch Changes

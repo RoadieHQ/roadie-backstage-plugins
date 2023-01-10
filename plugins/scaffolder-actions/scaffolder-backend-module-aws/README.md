@@ -6,6 +6,7 @@ This contains a collection of actions:
 
 - `roadiehq:aws:s3:cp`
 - `roadiehq:aws:ecr:create`
+- `roadiehq:aws:secrets-manager:create`
 
 ## Getting started
 
@@ -30,12 +31,13 @@ Import the action that you'd like to register to your backstage instance.
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-import { createAwsS3CpAction, createEcrAction } from '@roadiehq/scaffolder-backend-module-aws';
+import { createAwsS3CpAction, createEcrAction, createAwsSecretsManagerCreateAction } from '@roadiehq/scaffolder-backend-module-aws';
 ...
 
 const actions = [
   createAwsS3CpAction(),
   createEcrAction(),
+  createAwsSecretsManagerCreateAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -189,5 +191,75 @@ spec:
         tags: ${{parameters.Tags}}
         imageMutability: ${{parameters.ImageMutability}}
         scanOnPush: ${{parameters.ScanOnPush}}
+        region: ${{parameters.Region}}
+```
+
+##### For Secrets Manager create action
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-secret-repo-template
+  title: Create Secret
+  description: Create secret in Secrets Manager using scaffolder custom action
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Add Secret Details
+      required:
+        - Name
+        - Region
+      properties:
+        Name:
+          title: Secret name
+          type: string
+          description: name of the secret to be created
+          ui:autofocus: true
+        Description:
+          title: Description
+          type: string
+          description: description of the secret
+        Value:
+          title: Value
+          description: secret string value
+          type: string
+        Tags:
+          type: array
+          items:
+            type: object
+            description: Secret tags
+            title: tag
+            properties:
+              Key:
+                type: string
+                title: Key
+              Value:
+                type: string
+                title: Value
+        Profile:
+          title: AWS profile
+          description: AWS profile
+          type: string
+          default: 'default'
+        Region:
+          title: AWS region
+          type: string
+          description: region for aws secrets manager
+          default: 'us-east-1'
+
+  steps:
+    - id: createSecret
+      name: create secret - prod
+      action: roadiehq:aws:secrets-manager:create
+      input:
+        name: ${{ parameters.Name }}
+        description: ${{ parameters.Description }}
+        value: ${{ parameters.Value }}
+        tags: ${{parameters.Tags}}
+        profile: ${{parameters.Profile}}
         region: ${{parameters.Region}}
 ```

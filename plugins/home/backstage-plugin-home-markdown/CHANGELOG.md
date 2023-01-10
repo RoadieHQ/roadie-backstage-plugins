@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.1
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
 ## 2.5.0
 
 ### Minor Changes

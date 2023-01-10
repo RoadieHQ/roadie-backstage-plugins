@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.0
+
+### Minor Changes
+
+- 2c1df1d2: add create secrets manager action to aws module
+
+## 2.3.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
 ## 2.3.1
 
 ### Patch Changes
