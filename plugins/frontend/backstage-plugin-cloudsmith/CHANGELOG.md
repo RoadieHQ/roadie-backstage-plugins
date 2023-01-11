@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.0
+
+### Major Changes
+
+- 0227adf3: Added, Quota, Security Scan logs and Audit Logs
+
 ## 0.1.3
 
 ### Patch Changes
