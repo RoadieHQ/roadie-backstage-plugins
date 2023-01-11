@@ -55,3 +55,27 @@ export const CloudsmithStatsCard = cloudsmithPlugin.provide(
     components: () => import('./components/CloudsmithStatsCard'),
   }),
 );
+
+export const CloudsmithQuotaCard = cloudsmithPlugin.provide(
+  createCardExtension<{ owner: string }>({
+    name: 'CloudsmithQuotaCard',
+    title: '',
+    components: () => import('./components/CloudsmithQuotaCard'),
+  }),
+);
+
+export const CloudsmithRepositoryAuditLogCard = cloudsmithPlugin.provide(
+  createCardExtension<{ owner: string; repo: string }>({
+    name: 'CloudsmithRepositoryAuditLogCard',
+    title: '',
+    components: () => import('./components/CloudsmithRepositoryAuditLogCard'),
+  }),
+);
+
+export const CloudsmithRepositorySecurityCard = cloudsmithPlugin.provide(
+  createCardExtension<{ owner: string; repo: string }>({
+    name: 'CloudsmithRepositorySecurityCard',
+    title: '',
+    components: () => import('./components/CloudsmithRepositorySecurityCard'),
+  }),
+);

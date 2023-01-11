@@ -29,7 +29,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-import { repoMetricResponse } from '../../api/mocks/mocks';
+import { repoAuditLogsResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -45,12 +45,12 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
     {
       fetch: async (url: string) => {
         if (
-          url ===
-          'https://backstage/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
+          new URL(url).pathname ===
+          '/api/proxy/cloudsmith/audit-log/name/repo-name/'
         ) {
           return {
             ok: true,
-            json: async () => repoMetricResponse,
+            json: async () => repoAuditLogsResponse,
           };
         }
         return {
@@ -72,11 +72,6 @@ describe('Content', () => {
         <Content owner="name" repo="repo-name" />
       </TestApiProvider>,
     );
-    expect(
-      await rendered.findByText('Cloudsmith Repo Stats'),
-    ).toBeInTheDocument();
-    expect(await rendered.findByText('name/repo-name')).toBeInTheDocument();
-    expect(await rendered.findByText('52')).toBeInTheDocument();
-    expect(await rendered.findByText('23')).toBeInTheDocument();
+    expect(await rendered.findByText(`Audit Logs for`)).toBeInTheDocument();
   });
 });

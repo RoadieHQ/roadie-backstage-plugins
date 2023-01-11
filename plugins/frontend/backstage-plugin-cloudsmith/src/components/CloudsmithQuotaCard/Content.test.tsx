@@ -15,7 +15,6 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
 import {
   AnyApiRef,
   discoveryApiRef,
@@ -24,12 +23,13 @@ import {
   errorApiRef,
 } from '@backstage/core-plugin-api';
 import {
+  renderInTestApp,
   setupRequestMockHandlers,
   TestApiProvider,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
-import { repoMetricResponse } from '../../api/mocks/mocks';
+import { quotaResponse } from '../../api/mocks/mocks';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -44,13 +44,10 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
     fetchApiRef,
     {
       fetch: async (url: string) => {
-        if (
-          url ===
-          'https://backstage/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
-        ) {
+        if (url === 'https://backstage/api/proxy/cloudsmith/quota/name/') {
           return {
             ok: true,
-            json: async () => repoMetricResponse,
+            json: async () => quotaResponse,
           };
         }
         return {
@@ -67,16 +64,13 @@ describe('Content', () => {
   setupRequestMockHandlers(worker);
 
   it('should display an ovreview card with the data from the requests', async () => {
-    const rendered = render(
+    const rendered = renderInTestApp(
       <TestApiProvider apis={apis}>
-        <Content owner="name" repo="repo-name" />
+        <Content owner="name" />
       </TestApiProvider>,
     );
     expect(
-      await rendered.findByText('Cloudsmith Repo Stats'),
+      await (await rendered).findByText('Cloudsmith Quota'),
     ).toBeInTheDocument();
-    expect(await rendered.findByText('name/repo-name')).toBeInTheDocument();
-    expect(await rendered.findByText('52')).toBeInTheDocument();
-    expect(await rendered.findByText('23')).toBeInTheDocument();
   });
 });
