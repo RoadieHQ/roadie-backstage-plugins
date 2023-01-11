@@ -1,5 +1,12 @@
 # app
 
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [0227adf3]
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.0
+
 ## 1.0.8
 
 ### Patch Changes
