@@ -120,7 +120,9 @@ export class ArgoService implements ArgoServiceApi {
   ): Promise<any> {
     const urlSuffix = options.name
       ? `/${options.name}`
-      : `?selector${options.selector!.includes(" ") ? encodeURIComponent(" ") : "="}${encodeURIComponent(options.selector!)}`;
+      : `?selector${
+          options.selector!.includes(' ') ? encodeURIComponent(' ') : '='
+        }${encodeURIComponent(options.selector!)}`;
     const requestOptions: RequestInit = {
       method: 'GET',
       headers: {

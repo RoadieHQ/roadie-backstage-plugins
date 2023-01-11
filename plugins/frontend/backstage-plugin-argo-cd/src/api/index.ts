@@ -113,12 +113,12 @@ export class ArgoCDApiClient implements ArgoCDApi {
     };
     const query = Object.keys(params)
       .filter(key => params[key] !== undefined)
-      .map(
-        k => {
-          const prefix = params[k]!.includes(" ") ? encodeURIComponent(" ") : "=";
-          return `${encodeURIComponent(k)}${prefix}${encodeURIComponent(params[k] as string)}`
-        }
-      )
+      .map(k => {
+        const prefix = params[k]!.includes(' ') ? encodeURIComponent(' ') : '=';
+        return `${encodeURIComponent(k)}${prefix}${encodeURIComponent(
+          params[k] as string,
+        )}`;
+      })
       .join('&');
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications?${query}`,
