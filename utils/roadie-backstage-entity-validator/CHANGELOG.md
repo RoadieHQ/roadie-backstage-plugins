@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.2.0
+
+### Minor Changes
+
+- 897f1e84: Add openapi and asyncapi placeholder support
+
 ## 2.1.2
 
 ### Patch Changes
