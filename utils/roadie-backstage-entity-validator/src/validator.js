@@ -40,7 +40,7 @@ function modifyPlaceholders(obj) {
   for (const k in obj) {
     if (typeof obj[k] === 'object') {
       try {
-        if (obj[k].$text) {
+        if (obj[k].$text || obj[k].$openapi || obj[k].$asyncapi) {
           obj[k] = 'DUMMY TEXT';
           return;
         }

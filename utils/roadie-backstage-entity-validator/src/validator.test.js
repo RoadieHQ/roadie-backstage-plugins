@@ -48,6 +48,32 @@ spec:
   definition:
     $text: "./openapi/v1.oas3.yaml"
 `,
+      'catalog-info-with-openapi-placeholder.yml': `
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: test-service-api
+  description: API for test-service
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:team-atools
+  definition:
+    $openapi: "./openapi/v1.oas3.yaml"
+`,
+      'catalog-info-with-asyncapi-placeholder.yml': `
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: test-service-api
+  description: API for test-service
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:team-atools
+  definition:
+    $asyncapi: "./asyncapi/some-spec.yaml"
+`,
       'catalog-info.yml': `
 ---
 apiVersion: backstage.io/v1alpha1
@@ -154,6 +180,12 @@ spec:
   it('Should successfully validate catalog info with replacements', async () => {
     await expect(
       validator.validateFromFile('catalog-info-with-replacement.yml'),
+    ).resolves.toBeUndefined();
+    await expect(
+      validator.validateFromFile('catalog-info-with-openapi-placeholder.yml'),
+    ).resolves.toBeUndefined();
+    await expect(
+      validator.validateFromFile('catalog-info-with-asyncapi-placeholder.yml'),
     ).resolves.toBeUndefined();
   });
 
