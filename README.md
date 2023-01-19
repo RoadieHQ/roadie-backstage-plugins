@@ -24,6 +24,8 @@ Amongst others, the following plugins can be found within this repo:
 
 - [Argo CD Backend](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) (contributed by [American Airlines](https://github.com/AmericanAirlines))
 
+- [Cloudsmith](https://www.npmjs.com/package/@roadiehq/backstage-plugin-cloudsmith) 
+
 Installation instructions for each plugin can be found in their individual README files.
 
 Backstage is an open platform for creating developer portals. To learn more about the problems it can help solve, please check out our [Ultimate Guide to Backstage by Spotify](https://roadie.io/backstage-spotify/).

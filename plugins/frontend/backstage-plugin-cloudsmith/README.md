@@ -57,6 +57,7 @@ proxy:
     target: 'https://api.cloudsmith.io/v1'
     headers:
       X-Api-Key: ${CLOUDSMITH_API_KEY}
+      User-Agent: 'Roadie-Backstage'
 ```
 
 When you run the backstage backend, you will need to set the `CLOUDSMITH_API_KEY` environment variable.

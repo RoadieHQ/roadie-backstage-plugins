@@ -44,6 +44,7 @@ proxy:
     target: 'https://api.cloudsmith.io/v1'
     headers:
       X-Api-Key: ${CLOUDSMITH_API_KEY}
+      User-Agent: 'Roadie-Backstage'
 
   '/aws-news-feed':
     target: 'https://aws.amazon.com/about-aws/whats-new/recent/feed/'
