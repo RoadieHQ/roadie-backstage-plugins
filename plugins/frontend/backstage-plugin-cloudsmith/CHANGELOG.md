@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.1
+
+### Patch Changes
+
+- 8c20e43a: Added 'User-Agent' header to Cloudsmith API request
+
 ## 1.0.0
 
 ### Major Changes
