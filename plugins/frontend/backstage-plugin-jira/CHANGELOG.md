@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.3.3
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
 ## 2.3.2
 
 ### Patch Changes
