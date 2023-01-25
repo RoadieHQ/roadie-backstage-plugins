@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.2
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
 ## 2.5.1
 
 ### Patch Changes
