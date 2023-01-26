@@ -18,9 +18,9 @@ import { useEffect, useState } from 'react';
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import moment from 'moment';
 import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
+import { DateTime } from 'luxon';
 
 export type PullRequest = {
   id: number;
@@ -54,7 +54,7 @@ export function usePullRequests({
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const getElapsedTime = (start: string) => {
-    return moment(start).fromNow();
+    return DateTime.fromISO(start).toRelative();
   };
 
   const {

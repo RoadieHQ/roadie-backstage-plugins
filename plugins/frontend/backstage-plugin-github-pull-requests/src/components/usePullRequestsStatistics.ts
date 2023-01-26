@@ -17,9 +17,10 @@
 import { useAsync } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import moment from 'moment';
 import { useBaseUrl } from './useBaseUrl';
 import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { Duration } from 'luxon';
+import humanizeDuration from 'humanize-duration';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
@@ -164,10 +165,10 @@ export function usePullRequestsStatistics({
         avgTimeUntilMerge: 'Never',
         mergedToClosedRatio: '0%',
       };
-    const avgTimeUntilMergeDiff = moment.duration(
+    const avgTimeUntilMergeDiff = Duration.fromMillis(
       calcResult.avgTimeUntilMerge / calcResult.mergedCount,
     );
-    const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
+    const avgTimeUntilMerge = humanizeDuration(avgTimeUntilMergeDiff);
     return {
       ...calcResult,
       avgTimeUntilMerge: avgTimeUntilMerge,
