@@ -27,7 +27,7 @@ import {
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { getServiceName } from '../components/util';
+import { getLabels, getServiceName } from '../components/util';
 
 function isMetricResult(
   resultType: ResultType,
@@ -132,10 +132,23 @@ export function useAlerts(alerts: string[] | 'all') {
     }, []);
   if (value && value.status !== 'error') {
     const rules = value.data.groups.flatMap(it => it.rules);
+    const labels = getLabels(entity);
+    const parsedLabels =
+      labels &&
+      Object.fromEntries(labels.split(',').map(label => label.split(/=(.*)/s)));
     const displayableAlerts: PrometheusDisplayableAlert[] = rules
       .filter(rule => alerts === 'all' || alerts.includes(rule.name))
       .flatMap(rule =>
         rule.alerts.map(alert => ({ ...rule, ...alert, id: rule.name })),
+      )
+      .filter(
+        alert =>
+          !parsedLabels ||
+          Object.keys(parsedLabels).every(
+            key =>
+              alert.labels[key as keyof typeof alert.labels] ===
+              parsedLabels[key],
+          ),
       );
     return { loading, error, displayableAlerts };
   } else if (value && value.status === 'error') {

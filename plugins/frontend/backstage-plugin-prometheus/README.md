@@ -137,6 +137,14 @@ Example annotation
 `prometheus.io/alert: 'Excessive Memory Usage'` produces the following table.
 ![Alert table](./docs/prom_alert.png)
 
+#### `prometheus.io/labels`
+
+The 'labels' annotation expects a comma-separated list of labels and values. The plugin displays alerts that contain all these labels. This label is optional and requires `prometheus.io/alert` annotation to be present. If `prometheus.io/labels` is not defined, alerts are not filtered by labels.
+
+Example annotation
+`prometheus.io/labels: "managed_cluster_id=524488a7-05f1-42cc-abcd-3171478"` produces the following table.
+![Filtered alert table](./docs/prom_alert_filtered.png)
+
 ## Custom Graphs and Tables
 
 For more customisability the package exports both `PrometheusGraph` and `PrometheusAlertStatus` as individual components. It is possible to create more customized graphs and/or tables using these directly by dynamically constructing props that these component are expecting.
