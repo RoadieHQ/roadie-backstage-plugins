@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-prometheus
+  title: Backstage Plugin Prometheus
   description: |
     Backstage plugin to view and interact with JIRA
   annotations:

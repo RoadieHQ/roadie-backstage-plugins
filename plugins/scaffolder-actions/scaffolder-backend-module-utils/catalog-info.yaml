@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: scaffolder-backend-module-utils
+  title: Utils Scaffolder Module
   description: |
     Some utility scaffolder actions
   annotations:

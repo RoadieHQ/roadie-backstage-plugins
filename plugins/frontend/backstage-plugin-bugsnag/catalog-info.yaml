@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-bugsnag
+  title: Backstage Plugin Bugsnag
   description: |
     Backstage plugin bugsnag
   annotations:

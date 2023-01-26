@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-home-rss
+  title: Backstage Plugin Home RSS
   description: |
     Homapge RSS renderer plugin
   annotations:

@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-argo-cd
+  title: Backstage Plugin Argo CD
   description: |
     Backstage plugin to view and interact with Argo CD.
   annotations:

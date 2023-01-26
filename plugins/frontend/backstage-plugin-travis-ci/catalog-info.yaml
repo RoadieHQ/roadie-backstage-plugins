@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-travis-ci
+  title: Backstage Plugin Travis CI
   description: |
     Backstage plugin to show Travis CI builds on the CI/CD tab and widget.
   annotations:
