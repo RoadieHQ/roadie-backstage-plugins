@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: roadie-backstage-entity-validator
+  title: Backstage Entity Validator
   description: |
     Backstage entity validator library
   annotations:
