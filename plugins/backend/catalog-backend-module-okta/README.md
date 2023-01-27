@@ -21,7 +21,7 @@ catalog:
 
 ### Filter Users and Groups
 
-Thw provider allows configuring Okta search filtering for users and groups. See here for more details on what is possible: https://developer.okta.com/docs/reference/core-okta-api/#filter
+The provider allows configuring Okta search filtering for users and groups. See here for more details on what is possible: https://developer.okta.com/docs/reference/core-okta-api/#filter
 
 ```yaml
 catalog:
