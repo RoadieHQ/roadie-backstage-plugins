@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.6
+
+### Patch Changes
+
+- db03675e: Fixed typo in README
+
 ## 0.4.5
 
 ### Patch Changes
