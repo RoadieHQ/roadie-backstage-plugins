@@ -34,6 +34,7 @@ export type PullRequest = {
   merged: string | null;
   creatorNickname: string;
   creatorProfileLink: string;
+  body: string;
 };
 
 export function usePullRequests({
@@ -101,11 +102,13 @@ export function usePullRequests({
                 state: pr_state,
                 draft,
                 pull_request: { merged_at },
+                body,
               }) => ({
                 url: html_url,
                 id,
                 number,
                 title,
+                body,
                 state: pr_state,
                 draft,
                 merged: merged_at,
