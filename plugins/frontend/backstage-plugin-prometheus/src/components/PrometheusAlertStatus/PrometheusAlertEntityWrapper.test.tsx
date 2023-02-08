@@ -94,4 +94,24 @@ describe('PrometheusAlertEntityWrapper', () => {
     expect(await rendered.findByText('Prometheus Alerts')).toBeInTheDocument();
     expect(await rendered.findByText('firing')).toBeInTheDocument();
   });
+
+  it('should render compontent with clickable rows', async () => {
+    const dummyCallback = jest.fn();
+    const rendered = render(
+      <ThemeProvider theme={lightTheme}>
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <PrometheusAlertEntityWrapper onRowClick={dummyCallback} />
+          </EntityProvider>
+        </TestApiProvider>
+      </ThemeProvider>,
+    );
+
+    const cell = await rendered.findByText('firing');
+    const row = await cell.closest('tr');
+    expect(cell).toBeInTheDocument();
+    expect(row).toBeInTheDocument();
+    expect(row?.onclick).toBeTruthy();
+    expect(row).toHaveStyle('cursor: pointer');
+  });
 });
