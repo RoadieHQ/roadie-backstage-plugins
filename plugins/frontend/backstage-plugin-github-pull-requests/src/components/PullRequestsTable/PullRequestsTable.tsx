@@ -31,6 +31,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import {
   Table,
   TableColumn,
+  MarkdownContent,
   MissingAnnotationEmptyState,
 } from '@backstage/core-components';
 import {
@@ -44,7 +45,7 @@ import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
-const generatedColumns: TableColumn[] = [
+const generatedColumns: TableColumn<PullRequest>[] = [
   {
     title: 'ID',
     field: 'number',
@@ -137,7 +138,15 @@ export const PullRequestsTableView: FC<Props> = ({
   SearchComponent,
 }) => {
   return (
-    <Table
+    <Table<PullRequest>
+      detailPanel={({ rowData }) => (
+        <Box marginLeft="14px">
+          <MarkdownContent
+            content={rowData.body ?? '_No description provided._'}
+            dialect="gfm"
+          />
+        </Box>
+      )}
       isLoading={loading}
       options={{ paging: true, search: false, pageSize, padding: 'dense' }}
       totalCount={total}
