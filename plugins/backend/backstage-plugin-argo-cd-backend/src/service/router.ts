@@ -10,6 +10,11 @@ export interface RouterOptions {
   config: Config;
 }
 
+export type Response = {
+  status: string
+  message: string
+}
+
 export function createRouter({
   logger,
   config,
@@ -21,7 +26,7 @@ export function createRouter({
   const argoPassword =
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
   const argoWaitCycles: number =
-    config.getOptionalNumber('argocd.waitCycles') ?? 25;
+    config.getOptionalNumber('argocd.waitCycles') ?? 5;
 
   const argoSvc = new ArgoService(argoUserName, argoPassword, config);
 
@@ -234,54 +239,64 @@ export function createRouter({
         token = matchedArgoInstance.token;
       }
 
-      let argoDeleteAppResp: boolean;
+      let argoDeleteAppResp: Response;
+      let isAppexist: boolean = true
       try {
-        argoDeleteAppResp = await argoSvc.deleteApp({
+        await argoSvc.deleteApp({
           baseUrl: matchedArgoInstance.url,
           argoApplicationName: argoAppName,
           argoToken: token,
         });
       } catch (e: any) {
         if (typeof e.message === 'string') {
-          throw new Error(e.message);
+          isAppexist = false;
+          argoDeleteAppResp.status = "failed";
+          argoDeleteAppResp.message = e.message;
         }
-        return response
-          .status(500)
-          .send({ status: 'error with deleteing argo app' });
+        argoDeleteAppResp.status = "failed";
+        argoDeleteAppResp.message = 'error with deleteing argo app';
       }
 
-      let argoDeleteProjectResp: boolean;
+      let argoDeleteProjectResp: Response;
+      let isAppPendingDelete: boolean = false
       try {
-        let argoApp = await argoSvc.getArgoAppData(
-          matchedArgoInstance.url,
-          matchedArgoInstance.name,
-          { name: argoAppName },
-          token,
-        );
-        let isAppDeployed = 'metadata' in argoApp;
-        for (
-          let attempts = 0;
-          attempts < argoWaitCycles && isAppDeployed;
-          attempts++
-        ) {
-          await new Promise(resolve => setTimeout(resolve, 3000));
-          argoApp = await argoSvc.getArgoAppData(
-            matchedArgoInstance.url,
-            matchedArgoInstance.name,
-            { name: argoAppName },
-            token,
-          );
-          isAppDeployed = 'metadata' in argoApp;
+        if (isAppexist) {
+          for (let attempts = 0; attempts < argoWaitCycles; attempts++) {
+            let argoApp = await argoSvc.getArgoAppData(
+              matchedArgoInstance.url,
+              matchedArgoInstance.name,
+              { name: argoAppName },
+              token,
+            );
+            isAppPendingDelete = 'metadata' in argoApp;
+            if (!isAppPendingDelete) { 
+              argoDeleteAppResp.status = "sucess"
+              argoDeleteAppResp.message = 'application is deleted successfully'; 
+              break;
+            };
+            await new Promise(resolve => setTimeout(resolve, 5000));
+          }
         }
-        argoDeleteProjectResp = await argoSvc.deleteProject({
-          baseUrl: matchedArgoInstance.url,
-          argoProjectName: argoAppName,
-          argoToken: token,
-        });
-      } catch {
-        return response
-          .status(500)
-          .send({ status: 'error with deleteing argo project' });
+
+        if (isAppPendingDelete) {
+            argoDeleteAppResp.status = "failed"
+            argoDeleteAppResp.message = 'application pending delete';            
+        } else {
+            await argoSvc.deleteProject({
+              baseUrl: matchedArgoInstance.url,
+              argoProjectName: argoAppName,
+              argoToken: token,          
+          });
+          argoDeleteProjectResp.status = "success";
+          argoDeleteProjectResp.message = 'project is deleted successfully';
+        }
+      } catch (e: any) {
+        if (typeof e.message === 'string') {
+          argoDeleteProjectResp.status = "failed";
+          argoDeleteProjectResp.message = e.message;
+        }
+        argoDeleteProjectResp.status = "failed";
+        argoDeleteProjectResp.message = 'error with deleteing argo project';
       }
 
       return response.send({
