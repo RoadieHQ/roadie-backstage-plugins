@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.0
+
+### Minor Changes
+
+- 7dcfffa0: Display pull request descriptions on `PullRequestTable`
+
 ## 2.4.3
 
 ### Patch Changes
