@@ -27,9 +27,8 @@ Configure the action:
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-const discovery = UrlPatternDiscovery.compile(config.getOptionalString("backend.baseUrl") + "/{{pluginId}}") 
 const actions = [
-  createHttpBackstageAction({ discovery }),
+  createHttpBackstageAction({discovery: env.discovery}),
   ...createBuiltinActions({
     containerRunner,
     integrations,
