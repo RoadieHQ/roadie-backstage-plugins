@@ -16,7 +16,12 @@
 
 export type AccountConfig = {
   orgUrl: string;
-  token: string;
+  token?: string;
+  oauth?: {
+    clientId?: string;
+    keyId?: string;
+    privateKey?: string;
+  };
   userFilter?: string;
   groupFilter?: string;
 };

@@ -42,17 +42,43 @@ export abstract class OktaEntityProvider implements EntityProvider {
     this.logger = options.logger;
   }
 
-  protected getClient(orgUrl: string): Client {
+  protected getClient(
+    orgUrl: string,
+    oauthScopes: string[] | undefined = undefined,
+  ): Client {
     const account = this.accounts.find(
       acccountConfig => acccountConfig.orgUrl === orgUrl,
     );
     if (!account) {
       throw new Error(`accountConfig for ${orgUrl} not found`);
     }
-    return new Client({
-      orgUrl: account.orgUrl,
-      token: account.token,
-    });
+
+    if (
+      account.oauth &&
+      account.oauth.keyId &&
+      account.oauth.privateKey &&
+      account.oauth.clientId &&
+      oauthScopes
+    ) {
+      // use OAuth authentication strategy
+      return new Client({
+        orgUrl: account.orgUrl,
+        authorizationMode: 'PrivateKey',
+        clientId: account.oauth.clientId,
+        scopes: oauthScopes,
+        privateKey: account.oauth.privateKey,
+        keyId: account.oauth.keyId,
+      });
+    } else if (account.token) {
+      // use api token authentication strategy
+      return new Client({
+        orgUrl: account.orgUrl,
+        token: account.token,
+      });
+    }
+    throw new Error(
+      `accountConfig for ${orgUrl} missing api token or oath key`,
+    );
   }
 
   public async connect(connection: EntityProviderConnection): Promise<void> {
