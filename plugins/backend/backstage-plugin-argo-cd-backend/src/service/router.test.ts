@@ -8,6 +8,9 @@ import {
   argocdCreateApplicationResp,
   argocdCreateProjectResp,
 } from './argocdTestResponses';
+import { timer } from './timer.services';
+import { mocked } from 'ts-jest/utils'
+
 const mockDeleteApp = jest.fn();
 const mockDeleteProject = jest.fn();
 const mockGetArgoAppData =jest.fn();
@@ -27,8 +30,10 @@ jest.mock('./argocd.service', () => {
         
       };
     }),
-  };
+    };
 });
+jest.mock('./timer.services')
+
 const logger = getVoidLogger();
 const config = ConfigReader.fromConfigs([
   {
@@ -61,6 +66,7 @@ describe('router', () => {
   beforeEach(async () => {
     const router = await createRouter({ config, logger });
     app = express().use(router);
+    mocked(timer).mockResolvedValue(0);
     fetchMock.resetMocks();
     mockDeleteProject.mockReset();
     mockDeleteApp.mockReset();

@@ -4,6 +4,7 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { ArgoService } from './argocd.service';
+import { timer } from './timer.services';
 export interface RouterOptions {
   logger: Logger;
   config: Config;
@@ -259,7 +260,7 @@ export function createRouter({
               argoDeleteAppResp.message = 'application is deleted successfully'; 
               break;
             };
-            await new Promise(resolve => setTimeout(resolve, 5000));
+           await timer(5000);
           } catch (e: any) { 
             if (attempts === argoWaitCycles){
               argoDeleteAppResp.status = "failed";
