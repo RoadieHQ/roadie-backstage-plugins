@@ -9,7 +9,7 @@ To setup the Okta providers you will need an [Okta API Token](https://developer.
 
 You will need to configure your okta credentials in the `app-config.yaml`.
 
-### Basic Config
+### Basic Config via an API Token
 
 ```yaml
 catalog:
@@ -17,6 +17,22 @@ catalog:
     okta:
       - orgUrl: 'https://tenant.okta.com'
         token: ${OKTA_TOKEN}
+```
+
+### OAuth 2.0 Scoped Authentication
+
+API tokens have god-like scope, so to limit the risk profile you can alternatively [create an OAuth app](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/#create-an-oauth-2-0-app-in-okta) in Okta. You will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum. In the following example the `oauth.privateKey` maye be passed as either a string encoded PEM or stringified JWK.
+
+```yaml
+catalog:
+  providers:
+    okta:
+      - orgUrl: 'https://tenant.okta.com'
+        ouath: {
+          clientId: ${OKTA_OAUTH_CLIENT_ID},
+          keyId: ${OKTA_OAUTH_KEY_ID},
+          privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
+        }
 ```
 
 ### Filter Users and Groups
