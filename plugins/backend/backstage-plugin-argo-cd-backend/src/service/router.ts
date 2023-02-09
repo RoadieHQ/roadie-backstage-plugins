@@ -259,7 +259,7 @@ export function createRouter({
               argoDeleteAppResp.message = 'application is deleted successfully'; 
               break;
             };
-            // await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
           } catch (e: any) { 
             if (attempts === argoWaitCycles){
               argoDeleteAppResp.status = "failed";
