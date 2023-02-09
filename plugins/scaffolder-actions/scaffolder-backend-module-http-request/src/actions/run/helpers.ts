@@ -23,7 +23,9 @@ const DEFAULT_TIMEOUT = 60_000;
 
 export const generateBackstageUrl = (config: Config, path: string): string => {
   // ensure the request points to the correct domain
-  const externalUrl = config.getOptionalString('backend.baseUrl') || '';
+  const externalUrl = (
+    config.getOptionalString('plugin.scaffolder-backend-module-http-request.baseUrl') || config.getOptionalString('backend.baseUrl') || ''
+  );
   if (externalUrl === '') {
     throw new Error('Unable to get base url');
   }

@@ -138,3 +138,8 @@ Headers
 ```
 
 You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.
+
+## Configuration options
+
+By default, the plugin will use `backend.baseUrl` as the Backstage backend address. 
+This can be overriden by setting `plugin.scaffolder-backend-module-http-request.baseUrl`.
