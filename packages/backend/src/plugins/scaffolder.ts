@@ -15,7 +15,6 @@
  */
 import {
   DockerContainerRunner,
-  SingleHostDiscovery,
   UrlReader,
   ContainerRunner,
 } from '@backstage/backend-common';
