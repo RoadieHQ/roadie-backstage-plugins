@@ -21,7 +21,7 @@ catalog:
 
 ### OAuth 2.0 Scoped Authentication
 
-API tokens have god-like scope, so to limit the risk profile you can alternatively [create an OAuth app](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/#create-an-oauth-2-0-app-in-okta) in Okta. You will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum. In the following example the `oauth.privateKey` maye be passed as either a string encoded PEM or stringified JWK.
+API tokens have god-like scope so to limit the risk profile you can alternatively [create an OAuth app](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/#create-an-oauth-2-0-app-in-okta) in Okta. You will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum. In the following example the `oauth.privateKey` may be passed as either a string encoded PEM or stringified JWK.
 
 ```yaml
 catalog:
