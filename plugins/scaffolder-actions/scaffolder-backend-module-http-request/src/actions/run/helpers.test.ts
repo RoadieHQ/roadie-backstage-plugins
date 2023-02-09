@@ -25,6 +25,7 @@ import { Writable } from 'stream';
 import * as winston from 'winston';
 
 const mockBaseUrl = 'http://backstage.tests';
+const mockCustomBaseUrl = 'http://localhost:7007';
 
 let mockResponse: Response;
 let config: Config;
@@ -95,6 +96,32 @@ describe('http', () => {
           await expect(
             async () => await generateBackstageUrl(config, url),
           ).rejects.toThrowError('Unable to get base url');
+        });
+      });
+    });
+
+    describe('with override', () => {
+      describe('when the override is in place', () => {
+        it('returns the same url as passed in', async () => {
+          config = new ConfigReader({
+            app: {
+              baseUrl: mockBaseUrl,
+            },
+            backend: {
+              baseUrl: mockBaseUrl,
+              listen: {
+                port: 7007,
+              },
+            },
+            plugin: {
+              'scaffolder-backend-module-http-request': {
+                baseUrl: mockCustomBaseUrl,
+              },
+            }
+          });
+          expect(await generateBackstageUrl(config, proxyPath)).toEqual(
+            `${mockCustomBaseUrl}/api/proxy/foo`,
+          );
         });
       });
     });
