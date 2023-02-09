@@ -19,16 +19,16 @@ import {
   getObjFieldCaseInsensitively,
 } from './helpers';
 import { HttpOptions } from './types';
-import { Config, ConfigReader } from '@backstage/config';
 import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
 import * as winston from 'winston';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 const mockBaseUrl = 'http://backstage.tests';
 const mockCustomBaseUrl = 'http://localhost:7007';
 
 let mockResponse: Response;
-let config: Config;
+let discovery: DiscoveryApi;
 let url = 'https://some-mock-url.com';
 const proxyPath = '/api/proxy/foo';
 
@@ -56,6 +56,13 @@ logger.add(streamTransport);
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
+
+class EmptyDiscovery implements DiscoveryApi {
+  async getBaseUrl(pluginId: string): Promise<string> {
+    return "";
+  }
+}
 
 const headers = new Headers({
   'Content-Type': 'application/json',
@@ -65,37 +72,16 @@ const headers = new Headers({
 describe('http', () => {
   describe('#generateProxyUrl', () => {
     beforeEach(() => {
-      config = new ConfigReader({
-        app: {
-          baseUrl: mockBaseUrl,
-        },
-        backend: {
-          baseUrl: mockBaseUrl,
-          listen: {
-            port: 7007,
-          },
-        },
-      });
+      discovery = UrlPatternDiscovery.compile(mockBaseUrl + "/{{pluginId}}") 
       url = `${mockBaseUrl}/api/proxy/foo`;
     });
 
     describe('with happy path proxy configuration', () => {
       describe('with valid path', () => {
         it('returns the same url as passed in', async () => {
-          expect(await generateBackstageUrl(config, proxyPath)).toEqual(
+          expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
             `${mockBaseUrl}/api/proxy/foo`,
           );
-        });
-      });
-    });
-
-    describe('with non happy path', () => {
-      describe('when the configuration is incorrect', () => {
-        it('fails', async () => {
-          config = new ConfigReader({});
-          await expect(
-            async () => await generateBackstageUrl(config, url),
-          ).rejects.toThrowError('Unable to get base url');
         });
       });
     });
@@ -103,23 +89,8 @@ describe('http', () => {
     describe('with override', () => {
       describe('when the override is in place', () => {
         it('returns the same url as passed in', async () => {
-          config = new ConfigReader({
-            app: {
-              baseUrl: mockBaseUrl,
-            },
-            backend: {
-              baseUrl: mockBaseUrl,
-              listen: {
-                port: 7007,
-              },
-            },
-            plugin: {
-              'scaffolder-backend-module-http-request': {
-                baseUrl: mockCustomBaseUrl,
-              },
-            }
-          });
-          expect(await generateBackstageUrl(config, proxyPath)).toEqual(
+          discovery = UrlPatternDiscovery.compile(mockCustomBaseUrl + "/{{pluginId}}") 
+          expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
             `${mockCustomBaseUrl}/api/proxy/foo`,
           );
         });

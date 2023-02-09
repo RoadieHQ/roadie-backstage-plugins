@@ -21,10 +21,10 @@ import {
   getObjFieldCaseInsensitively,
 } from './helpers';
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
-import { Config } from '@backstage/config';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 
-export function createHttpBackstageAction(options: { config: Config }) {
-  const { config } = options;
+export function createHttpBackstageAction(options: { discovery: DiscoveryApi }) {
+  const { discovery } = options;
   return createTemplateAction<{
     path: string;
     method: Methods;
@@ -101,7 +101,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = generateBackstageUrl(config, input.path);
+      const url = await generateBackstageUrl(discovery, input.path);
 
       ctx.logger.info(
         `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
