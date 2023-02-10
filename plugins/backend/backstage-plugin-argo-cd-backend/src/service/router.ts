@@ -26,7 +26,7 @@ export function createRouter({
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
   const argoWaitCycles: number =
     config.getOptionalNumber('argocd.waitCycles') ?? 5;
-  const argoSvc = new ArgoService(argoUserName, argoPassword, config);
+  const argoSvc = new ArgoService(argoUserName, argoPassword, config, logger);
   const argoApps = config
     .getConfigArray('argocd.appLocatorMethods')
     .filter(element => element.getString('type') === 'config');

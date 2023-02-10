@@ -4,10 +4,6 @@ import { ConfigReader } from '@backstage/config';
 import request from 'supertest';
 import { getVoidLogger } from '@backstage/backend-common';
 import fetchMock from 'jest-fetch-mock';
-import {
-  argocdCreateApplicationResp,
-  argocdCreateProjectResp,
-} from './argocdTestResponses';
 import { timer } from './timer.services';
 import { mocked } from 'ts-jest/utils'
 
