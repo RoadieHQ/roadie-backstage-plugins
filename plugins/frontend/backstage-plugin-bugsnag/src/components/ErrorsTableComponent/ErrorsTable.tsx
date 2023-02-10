@@ -17,11 +17,11 @@
 import React from 'react';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Table, TableColumn, Link, Progress } from '@backstage/core-components';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import { makeStyles } from '@material-ui/core';
 import { useAsync } from 'react-use';
-import { bugsnagApiRef } from '../..';
+import { bugsnagApiRef } from '../../api';
 import { BugsnagError, Project } from '../../api/types';
 import { DateTime } from 'luxon';
 

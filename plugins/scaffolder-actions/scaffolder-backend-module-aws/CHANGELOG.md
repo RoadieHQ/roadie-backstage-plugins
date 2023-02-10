@@ -1,5 +1,53 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.1
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.4.0
+
+### Minor Changes
+
+- 2c1df1d2: add create secrets manager action to aws module
+
+## 2.3.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.3.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.3.0
+
+### Minor Changes
+
+- a299e429: Add AWS ECR image scanning boolean when creating a new repo. Allows toggling ECR native image scanning on ECR push
+
+## 2.2.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.1.0
+
+### Minor Changes
+
+- c1ae6c54: add create ecr action to aws module
+
+## 2.0.6
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.5
 
 ### Patch Changes

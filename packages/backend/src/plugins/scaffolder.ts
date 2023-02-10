@@ -32,8 +32,18 @@ import {
   createSleepAction,
   createAppendFileAction,
   createMergeJSONAction,
+  createMergeAction,
+  createParseFileAction,
+  createSerializeYamlAction,
+  createSerializeJsonAction,
+  createJSONataAction,
+  createYamlJSONataTransformAction,
+  createJsonJSONataTransformAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
-import { createAwsS3CpAction } from '@roadiehq/scaffolder-backend-module-aws';
+import {
+  createAwsS3CpAction,
+  createEcrAction,
+} from '@roadiehq/scaffolder-backend-module-aws';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
@@ -61,7 +71,15 @@ export const createActions = (options: {
     createWriteFileAction(),
     createAppendFileAction(),
     createMergeJSONAction({}),
+    createMergeAction(),
     createAwsS3CpAction(),
+    createEcrAction(),
+    createParseFileAction(),
+    createSerializeYamlAction(),
+    createSerializeJsonAction(),
+    createJSONataAction(),
+    createYamlJSONataTransformAction(),
+    createJsonJSONataTransformAction(),
     createHttpBackstageAction({ config }),
     ...defaultActions,
   ];

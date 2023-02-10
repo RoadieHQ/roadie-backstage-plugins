@@ -83,7 +83,12 @@ export const createArgoCdResources = (config: Config, logger: Logger) => {
       const argoPassword =
         config.getOptionalString('argocd.password') ?? 'argocdPassword';
 
-      const argoSvc = new ArgoService(argoUserName, argoPassword, config);
+      const argoSvc = new ArgoService(
+        argoUserName,
+        argoPassword,
+        config,
+        logger,
+      );
 
       await argoSvc.createArgoResources({
         argoInstance: ctx.input.argoInstance,

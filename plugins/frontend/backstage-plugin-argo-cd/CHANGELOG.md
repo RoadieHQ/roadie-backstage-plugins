@@ -1,5 +1,47 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.4
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.2.3
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.2.2
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.2.1
+
+### Patch Changes
+
+- b7a7536a: Fix circular dependencies.
+
+## 2.2.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.1.10
+
+### Patch Changes
+
+- 6daac9bc: Encoded all usage of app names and selectors
+
+## 2.1.9
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.1.8
 
 ### Patch Changes

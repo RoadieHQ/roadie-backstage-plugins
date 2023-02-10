@@ -1,5 +1,103 @@
 # backend
 
+## 1.0.22
+
+### Patch Changes
+
+- Updated dependencies [6d186f0f]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.3
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.6.4
+  - @roadiehq/backstage-plugin-aws-auth@0.4.3
+  - @roadiehq/catalog-backend-module-aws@1.3.4
+  - @roadiehq/catalog-backend-module-okta@0.4.5
+  - @roadiehq/scaffolder-backend-module-aws@2.4.1
+  - @roadiehq/scaffolder-backend-module-http-request@3.3.2
+  - @roadiehq/scaffolder-backend-module-utils@1.7.2
+
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [054d585b]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.2
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.6.3
+  - @roadiehq/backstage-plugin-aws-auth@0.4.2
+  - @roadiehq/catalog-backend-module-aws@1.3.3
+  - @roadiehq/catalog-backend-module-okta@0.4.4
+  - @roadiehq/scaffolder-backend-module-aws@2.3.2
+  - @roadiehq/scaffolder-backend-module-http-request@3.3.1
+  - @roadiehq/scaffolder-backend-module-utils@1.7.1
+
+## 1.0.20
+
+### Patch Changes
+
+- Updated dependencies [7084d814]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.1
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.6.2
+  - @roadiehq/backstage-plugin-aws-auth@0.4.1
+  - @roadiehq/catalog-backend-module-aws@1.3.1
+  - @roadiehq/catalog-backend-module-okta@0.4.1
+  - @roadiehq/scaffolder-backend-module-aws@2.3.1
+  - @roadiehq/scaffolder-backend-module-http-request@3.2.1
+  - @roadiehq/scaffolder-backend-module-utils@1.6.1
+
+## 1.0.19
+
+### Patch Changes
+
+- Updated dependencies [15af4518]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.6.1
+
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [1164f19b]
+  - @roadiehq/catalog-backend-module-okta@0.4.0
+
+## 1.0.17
+
+### Patch Changes
+
+- Updated dependencies [015aebdf]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.6.0
+  - @roadiehq/backstage-plugin-aws-auth@0.4.0
+  - @roadiehq/catalog-backend-module-aws@1.3.0
+  - @roadiehq/catalog-backend-module-okta@0.3.0
+  - @roadiehq/scaffolder-backend-module-aws@2.2.0
+  - @roadiehq/scaffolder-backend-module-http-request@3.2.0
+  - @roadiehq/scaffolder-backend-module-utils@1.5.0
+
+## 1.0.16
+
+### Patch Changes
+
+- Updated dependencies [eaa0bb2]
+  - @roadiehq/backstage-plugin-aws-backend@1.0.5
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.5.3
+  - @roadiehq/backstage-plugin-aws-auth@0.3.10
+  - @roadiehq/catalog-backend-module-aws@1.2.7
+  - @roadiehq/catalog-backend-module-okta@0.2.6
+  - @roadiehq/scaffolder-backend-module-aws@2.0.6
+  - @roadiehq/scaffolder-backend-module-http-request@3.1.1
+  - @roadiehq/scaffolder-backend-module-utils@1.3.1
+
+## 1.0.15
+
+### Patch Changes
+
+- Updated dependencies [231f37e]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.5.2
+
+## 1.0.14
+
+### Patch Changes
+
+- Updated dependencies [e017302]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.5.1
+
 ## 1.0.13
 
 ### Patch Changes

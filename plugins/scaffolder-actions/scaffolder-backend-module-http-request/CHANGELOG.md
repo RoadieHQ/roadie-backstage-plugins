@@ -1,5 +1,47 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 3.3.2
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 3.3.1
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 3.3.0
+
+### Minor Changes
+
+- 4df3165c: Allow posting string data via the `http:backstage:request` action.
+
+## 3.2.2
+
+### Patch Changes
+
+- 279cf613: Fix incorrect action name in log line.
+
+## 3.2.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 3.2.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 3.1.1
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 3.1.0
 
 ### Minor Changes

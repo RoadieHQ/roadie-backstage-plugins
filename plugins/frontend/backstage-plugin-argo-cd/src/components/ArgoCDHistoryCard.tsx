@@ -26,7 +26,7 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { LinearProgress, Tooltip, Link } from '@material-ui/core';
 import React from 'react';
-import { isArgocdAvailable } from '../Router';
+import { isArgocdAvailable } from '../conditions';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import {

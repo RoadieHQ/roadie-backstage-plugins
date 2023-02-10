@@ -57,7 +57,7 @@ export const HomePageIFrameCard = homePlugin.provide(
     src: string;
     height?: string;
     width?: string;
-    class?: string;
+    classes?: string;
   }>({
     name: 'HomePageIFrameCard',
     title: 'IFrame Card',

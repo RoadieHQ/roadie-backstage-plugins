@@ -25,6 +25,7 @@ import {
   yourOpenDraftPullRequests,
   closedPullsRequestMock,
   backstagePluginArgoCdMocks,
+  groupAssignedReviewsMock,
 } from './mocks';
 
 export const handlers = [
@@ -41,6 +42,8 @@ export const handlers = [
         return res(ctx.json(yourOpenDraftPullRequests));
       case 'state:closed in:title type:pr repo:RoadieHQ/backstage-plugin-argo-cd':
         return res(ctx.json(closedPullsRequestMock));
+      case 'is:open is:pr team-review-requested:rroadie-backstage-admin archived:false':
+        return res(ctx.json(groupAssignedReviewsMock));
       default:
         return res(ctx.json(openPullsRequestMock));
     }

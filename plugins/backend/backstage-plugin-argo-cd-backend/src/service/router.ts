@@ -143,7 +143,7 @@ export function createRouter({
     }
     let argoProjResp = {};
     try {
-      argoProjResp = await argoSvc.createArgoProject({
+      await argoSvc.createArgoProject({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -151,7 +151,7 @@ export function createRouter({
         sourceRepo,
       });
     } catch (e: any) {
-      logger.error(argoProjResp);
+      logger.error(e);
       return response.status(e.status || 500).send({
         status: e.status,
         message: e.message || 'Failed to create argo project',
@@ -159,7 +159,7 @@ export function createRouter({
     }
     let argoAppResp = {};
     try {
-      argoAppResp = await argoSvc.createArgoApplication({
+      await argoSvc.createArgoApplication({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -175,7 +175,7 @@ export function createRouter({
         kubernetesNamespace: namespace,
       });
     } catch (e: any) {
-      logger.error(argoAppResp);
+      logger.error(e);
       return response.status(500).send({
         status: 500,
         message: e.message || 'Failed to create argo app',
@@ -197,8 +197,8 @@ export function createRouter({
   router.delete(
     '/argoInstance/:argoInstanceName/applications/:argoAppName',
     async (request, response) => {
-      const argoInstanceName = request.params.argoInstanceName;
-      const argoAppName = request.params.argoAppName;
+      const argoInstanceName: string = request.params.argoInstanceName;
+      const argoAppName: string = request.params.argoAppName;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
       const matchedArgoInstance = argoInstanceArray.find(
         argoInstance => argoInstance.name === argoInstanceName,

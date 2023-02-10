@@ -19,7 +19,7 @@ import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { extname } from 'path';
 import { merge } from 'lodash';
-import YAML from 'yaml';
+import yaml from 'js-yaml';
 
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
@@ -36,9 +36,10 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
             type: 'string',
           },
           content: {
+            description:
+              'This will be merged into to the file. Can be either an object or a string.',
             title: 'Content',
-            description: 'This will be merged into to the file',
-            type: 'object',
+            type: ['string', 'object'],
           },
         },
       },
@@ -70,10 +71,14 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
         );
         existingContent = {};
       }
+      const content =
+        typeof ctx.input.content === 'string'
+          ? JSON.parse(ctx.input.content)
+          : ctx.input.content;
 
       fs.writeFileSync(
         sourceFilepath,
-        JSON.stringify(merge(existingContent, ctx.input.content), null, 2),
+        JSON.stringify(merge(existingContent, content), null, 2),
       );
       ctx.output('path', sourceFilepath);
     },
@@ -95,9 +100,10 @@ export function createMergeAction() {
             type: 'string',
           },
           content: {
+            description:
+              'This will be merged into to the file. Can be either an object or a string.',
             title: 'Content',
-            description: 'This will be merged into to the file',
-            type: 'object',
+            type: ['string', 'object'],
           },
         },
       },
@@ -125,19 +131,29 @@ export function createMergeAction() {
       let mergedContent;
 
       switch (extname(sourceFilepath)) {
-        case '.json':
+        case '.json': {
+          const newContent =
+            typeof ctx.input.content === 'string'
+              ? JSON.parse(ctx.input.content)
+              : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = JSON.stringify(
-            merge(JSON.parse(originalContent), ctx.input.content),
+            merge(JSON.parse(originalContent), newContent),
             null,
             2,
           );
           break;
-        case '.yaml':
+        }
         case '.yml':
-          mergedContent = YAML.stringify(
-            merge(YAML.parse(originalContent), ctx.input.content),
+        case '.yaml': {
+          const newContent =
+            typeof ctx.input.content === 'string'
+              ? yaml.load(ctx.input.content)
+              : ctx.input.content; // This supports the case where dynamic keys are required
+          mergedContent = yaml.dump(
+            merge(yaml.load(originalContent), newContent),
           );
           break;
+        }
         default:
           break;
       }

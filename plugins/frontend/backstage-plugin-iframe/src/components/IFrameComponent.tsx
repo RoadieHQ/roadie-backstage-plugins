@@ -18,6 +18,7 @@ import React from 'react';
 import { ErrorComponent } from './ErrorComponent';
 import {
   IFrameProps,
+  IFrameComponentContentProps,
   IFrameComponentProps,
   IFrameFromAnnotationProps,
 } from './types';
@@ -26,20 +27,14 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { determineError } from './utils/helpers';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
-type IFrameComponentContentProps = {
-  src: string;
-  title: string;
-  height?: string;
-  width?: string;
-};
-
 const IFrameComponentContent = (props: IFrameComponentContentProps) => {
-  const { title, src, height, width } = props;
+  const { classes, height, src, title, width } = props;
 
   return (
     <Content>
       <ContentHeader title={title} />
       <iframe
+        className={classes || ''}
         src={src}
         height={height || '100%'}
         width={width || '100%'}
@@ -76,6 +71,7 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
 
   return (
     <IFrameComponentContent
+      classes={props.classes}
       src={src}
       title={title}
       height={height}
@@ -98,6 +94,7 @@ const IFrameFromSrc = (props: IFrameProps) => {
 
   return (
     <IFrameComponentContent
+      classes={props.classes}
       src={src}
       title={title}
       height={height}
@@ -115,11 +112,20 @@ export const IFrameCard = (props: IFrameComponentProps) => {
   const { src, srcFromAnnotation, height, width, title } = props;
   if (src) {
     return (
-      <IFrameFromSrc src={src} height={height} width={width} title={title} />
+      <IFrameFromSrc
+        classes={props.classes}
+        src={src}
+        height={height}
+        width={width}
+        title={title}
+      />
     );
-  } else if (srcFromAnnotation) {
+  }
+
+  if (srcFromAnnotation) {
     return (
       <IFrameFromAnnotation
+        classes={props.classes}
         srcFromAnnotation={srcFromAnnotation}
         height={height}
         width={width}
@@ -127,6 +133,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
       />
     );
   }
+
   return (
     <ErrorComponent errorMessage="You must provide `src` or `srcFromAnnotation`" />
   );

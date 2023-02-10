@@ -1,5 +1,77 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.3
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.3.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.3.1
+
+### Patch Changes
+
+- 8afcb30a: Fix the readme plugin to support readme files from github enterprise.
+
+## 2.3.0
+
+### Minor Changes
+
+- 8c8864eb: Fix the readme card to support relative and absolute urls in the readme file. This also includes a major refactor of the code in this area.
+
+## 2.2.2
+
+### Patch Changes
+
+- fbe578a4: Allow rendering svgs on readme plugin.
+
+## 2.2.1
+
+### Patch Changes
+
+- a49f724f: added card presenting environments lists
+
+## 2.2.0
+
+### Minor Changes
+
+- 3686f93c: Fix languages card causing crash when undefined
+
+## 2.1.3
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.1.2
+
+### Patch Changes
+
+- 45d1c773: Allow setting the `README` card title.
+
+## 2.1.1
+
+### Patch Changes
+
+- f4bf2b22: fix issue where languages card is empty when no languages are detected. empty language cards are no longer shown.
+
+## 2.1.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.0.6
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.5
 
 ### Patch Changes

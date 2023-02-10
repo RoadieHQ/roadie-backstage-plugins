@@ -6,4 +6,4 @@ export {
   EntityArgoCDHistoryCard,
 } from './plugin';
 export * from './api';
-export { isArgocdAvailable } from './Router';
+export { isArgocdAvailable } from './conditions';

@@ -14,29 +14,83 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
-import Alert from '@material-ui/lab/Alert';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert } from '@material-ui/lab';
 import { Progress, MarkdownContent } from '@backstage/core-components';
-import { useGithubFile } from './useGithubFile';
 import {
   useApi,
   githubAuthApiRef,
   SessionState,
+  useApiHolder,
+  ApiHolder,
+  errorApiRef,
+  ErrorApi,
 } from '@backstage/core-plugin-api';
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
+import useAsync from 'react-use/lib/useAsync';
+import { githubApiRef, GithubClient, GithubApi } from '../apis';
+
+const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
+  let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
+  if (!githubClient) {
+    const auth = apiHolder.get(githubAuthApiRef);
+    if (auth) {
+      githubClient = new GithubClient({ githubAuthApi: auth, errorApi });
+    }
+  }
+  if (!githubClient) {
+    throw new Error(
+      'The MarkdownCard component Failed to get the github client',
+    );
+  }
+  return githubClient;
+};
 
 const GithubFileContent = (props: MarkdownContentProps) => {
-  const { value, loading, error } = useGithubFile({ ...props });
+  const { preserveHtmlComments } = props;
+  const apiHolder = useApiHolder();
+  const errorApi = useApi(errorApiRef);
+
+  const { value, loading, error } = useAsync(async () => {
+    const githubClient = getGithubClient(apiHolder, errorApi);
+    return githubClient.getContent({ ...props });
+  }, [apiHolder]);
+
+  const transformImageUri = useCallback(
+    (href: string) => {
+      return value?.media[href] || href;
+    },
+    [value?.media],
+  );
+
+  const transformLinkUri = useCallback(
+    (href: string) => {
+      return value?.links[href] || href;
+    },
+    [value?.links],
+  );
 
   if (loading) {
     return <Progress />;
   } else if (error) {
     return <Alert severity="error">{error.message}</Alert>;
   }
+
+  if (!value) {
+    return <Progress />;
+  }
+
+  let content = value.content;
+  if (!preserveHtmlComments) {
+    content = content.replace(/<!--.*?-->/g, '');
+  }
+
   return (
     <MarkdownContent
-      content={Buffer.from(value.content, 'base64').toString('utf8')}
+      transformImageUri={transformImageUri}
+      transformLinkUri={transformLinkUri}
+      content={content}
     />
   );
 };

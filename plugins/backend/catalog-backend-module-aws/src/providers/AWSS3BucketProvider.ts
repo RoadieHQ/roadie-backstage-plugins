@@ -21,8 +21,7 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-
-const link2aws = require('link2aws');
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -64,7 +63,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     for (const bucket of buckets.Buckets || []) {
       if (bucket.Name) {
         const bucketArn = `arn:aws:s3:::${bucket.Name}`;
-        const consoleLink = new link2aws.ARN(bucketArn).consoleLink;
+        const consoleLink = new ARN(bucketArn).consoleLink;
         const resource: ResourceEntity = {
           kind: 'Resource',
           apiVersion: 'backstage.io/v1beta1',

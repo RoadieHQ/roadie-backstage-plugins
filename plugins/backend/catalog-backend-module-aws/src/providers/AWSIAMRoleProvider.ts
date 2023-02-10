@@ -21,8 +21,7 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-
-const link2aws = require('link2aws');
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -70,7 +69,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     for await (const rolePage of rolePages) {
       for (const role of rolePage.Roles || []) {
         if (role.RoleName && role.Arn && role.RoleId) {
-          const consoleLink = new link2aws.ARN(role.Arn).consoleLink;
+          const consoleLink = new ARN(role.Arn).consoleLink;
           const roleEntity: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1alpha1',

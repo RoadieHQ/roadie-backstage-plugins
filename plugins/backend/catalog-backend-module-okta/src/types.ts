@@ -17,4 +17,6 @@
 export type AccountConfig = {
   orgUrl: string;
   token: string;
+  userFilter?: string;
+  groupFilter?: string;
 };

@@ -14,3 +14,4 @@
  * limitations under the License.
  */
 export * from './actions/s3';
+export * from './actions/ecr';

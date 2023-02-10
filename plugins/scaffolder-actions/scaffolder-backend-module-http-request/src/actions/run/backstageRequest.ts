@@ -30,7 +30,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
     method: Methods;
     headers?: Headers;
     params?: Params;
-    body?: Body;
+    body?: any;
   }>({
     id: 'http:backstage:request',
     description:
@@ -74,7 +74,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
           body: {
             title: 'Request body',
             description: 'The body you would like to pass to your request',
-            type: 'object',
+            type: ['object', 'string'],
           },
         },
       },
@@ -101,10 +101,10 @@ export function createHttpBackstageAction(options: { config: Config }) {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
-      const url = await generateBackstageUrl(config, input.path);
+      const url = generateBackstageUrl(config, input.path);
 
       ctx.logger.info(
-        `Creating ${method} request with http:backstage:proxy scaffolder action against ${input.path}`,
+        `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
       );
 
       const queryParams: string = params
@@ -115,6 +115,7 @@ export function createHttpBackstageAction(options: { config: Config }) {
 
       if (
         input.body &&
+        typeof input.body !== 'string' &&
         input.headers &&
         input.headers['content-type'] &&
         input.headers['content-type'].includes('application/json')

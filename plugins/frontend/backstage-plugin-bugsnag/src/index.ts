@@ -16,6 +16,6 @@
 
 export * from './plugin';
 export * from './api';
-export { isBugsnagAvailable } from './components/ErrorsOverviewComponent/ErrorsOverview';
+export { isBugsnagAvailable } from './conditions';
 export * from './components/ErrorsOverviewComponent';
 export * from './components/ErrorsTableComponent';

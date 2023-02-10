@@ -59,6 +59,7 @@ describe('AWSEKSClusterProvider', () => {
     it('creates no clusters', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -87,6 +88,7 @@ describe('AWSEKSClusterProvider', () => {
     it('creates eks cluster', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);

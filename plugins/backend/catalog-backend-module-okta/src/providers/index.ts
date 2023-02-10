@@ -16,3 +16,4 @@
 
 export { OktaGroupEntityProvider } from './OktaGroupEntityProvider';
 export { OktaUserEntityProvider } from './OktaUserEntityProvider';
+export { OktaOrgEntityProvider } from './OktaOrgEntityProvider';

@@ -50,6 +50,7 @@ describe('OktaGroupProvider', () => {
     it('creates no okta groups', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -82,6 +83,23 @@ describe('OktaGroupProvider', () => {
               ]);
             },
           },
+          {
+            id: 'group-with-null-description',
+            profile: {
+              name: 'Everyone@the-company',
+              description: null,
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'asdfwefwefwef',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
         ]);
       };
     });
@@ -89,31 +107,46 @@ describe('OktaGroupProvider', () => {
     it('creates okta groups', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [
+        entities: expect.arrayContaining([
           expect.objectContaining({
             entity: expect.objectContaining({
               kind: 'Group',
               metadata: expect.objectContaining({
                 name: 'asdfwefwefwef',
+                description: 'Everyone in the company',
               }),
               spec: expect.objectContaining({
                 members: ['asdfwefwefwef'],
               }),
             }),
           }),
-        ],
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                description: expect.stringContaining(''),
+              }),
+              spec: expect.objectContaining({
+                members: ['asdfwefwefwef'],
+              }),
+            }),
+          }),
+        ]),
       });
     });
 
     it('allows kebab casing of the group name and user name for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, {
         logger,
@@ -124,7 +157,7 @@ describe('OktaGroupProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [
+        entities: expect.arrayContaining([
           expect.objectContaining({
             entity: expect.objectContaining({
               kind: 'Group',
@@ -136,7 +169,7 @@ describe('OktaGroupProvider', () => {
               }),
             }),
           }),
-        ],
+        ]),
       });
     });
   });

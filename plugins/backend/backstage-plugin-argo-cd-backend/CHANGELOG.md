@@ -1,5 +1,53 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.6.4
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.6.3
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.6.2
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.6.1
+
+### Patch Changes
+
+- 15af4518: Fixed using selectors to find Application across multiple ArgoCD servers
+
+## 2.6.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.5.3
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
+## 2.5.2
+
+### Patch Changes
+
+- 231f37e: Added logging to improve visibility
+
+## 2.5.1
+
+### Patch Changes
+
+- e017302: 1. Get Application App Data has a changed thrown error message. 2. Failing on a wider spectrum of error messages when deleting projects. If you were expecting a false when the project failed to delete for these other possible reasons, now the function will throw for those other possible reasons. 3. Logging thrown errors for the endpoints that create an argo configuration, or delete an argo configuration. 4. Added unit tests.
+
 ## 2.5.0
 
 ### Minor Changes

@@ -40,6 +40,12 @@ proxy:
     target: 'https://example.com'
     changeOrigin: true
 
+  '/cloudsmith':
+    target: 'https://api.cloudsmith.io/v1'
+    headers:
+      X-Api-Key: ${CLOUDSMITH_API_KEY}
+      User-Agent: 'Backstage'
+
   '/aws-news-feed':
     target: 'https://aws.amazon.com/about-aws/whats-new/recent/feed/'
 
@@ -125,7 +131,11 @@ catalog:
       target: ../entities/test-template.yaml
       rules:
         - allow: [Template]
-
+    # Roadie example AWS ECR repo creation
+    - type: file
+      target: ../entities/ecr-repo-create-template.yaml
+      rules:
+        - allow: [Template]
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml

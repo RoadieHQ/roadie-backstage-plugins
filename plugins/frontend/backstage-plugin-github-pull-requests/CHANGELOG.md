@@ -1,5 +1,47 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.0
+
+### Minor Changes
+
+- 7dcfffa0: Display pull request descriptions on `PullRequestTable`
+
+## 2.4.3
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.4.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.4.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.4.0
+
+### Minor Changes
+
+- c0bce517: Added new Group focussed widget
+
+## 2.3.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.2.8
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.2.7
 
 ### Patch Changes

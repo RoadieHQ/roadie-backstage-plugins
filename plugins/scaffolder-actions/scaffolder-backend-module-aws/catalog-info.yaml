@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: scaffolder-backend-module-aws
+  title: Scaffolder Backend Module AWS
   description: |
     Scaffolder actions to interact with AWS
   annotations:

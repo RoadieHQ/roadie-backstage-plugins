@@ -14,20 +14,42 @@
  * limitations under the License.
  */
 
-import { homePlugin, createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home';
+import {
+  createApiFactory,
+  createPlugin,
+  errorApiRef,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
+import { rootRouteRef } from './routes';
+import { githubApiRef, GithubClient } from './apis';
+import { MarkdownContentProps } from './MarkdownCard/types';
+
+/** @public */
+export const markdownPlugin = createPlugin({
+  id: 'markdown',
+  apis: [
+    createApiFactory({
+      api: githubApiRef,
+      deps: {
+        githubAuthApi: githubAuthApiRef,
+        errorApi: errorApiRef,
+      },
+      factory: deps => new GithubClient(deps),
+    }),
+  ],
+  routes: {
+    root: rootRouteRef,
+  },
+});
 
 /**
  * A component to render a predefined markdown file from github.
  *
  * @public
  */
-export const HomePageMarkdown = homePlugin.provide(
-  createCardExtension<{
-    owner: string;
-    repo: string;
-    path: string;
-    branch?: string;
-  }>({
+export const HomePageMarkdown = markdownPlugin.provide(
+  createCardExtension<MarkdownContentProps>({
     name: 'HomePageMarkdown',
     title: 'Markdown',
     components: () => import('./MarkdownCard'),

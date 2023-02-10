@@ -18,10 +18,12 @@ import { resultToGraphData, useAlerts } from './usePrometheus';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { getLabels } from '../components/util';
 
 jest.mock('@backstage/core-plugin-api');
 jest.mock('react-use');
 jest.mock('@backstage/plugin-catalog-react');
+jest.mock('../components/util');
 
 describe('usePrometheus', () => {
   (useApi as any).mockReturnValue({
@@ -80,6 +82,42 @@ describe('usePrometheus', () => {
 
       const { displayableAlerts } = useAlerts(['not existing alert']);
       expect(displayableAlerts).toHaveLength(0);
+    });
+
+    it('should filter alerts with label severity=page', () => {
+      (useAsync as any).mockReturnValue({
+        value: require('../mocks/mockAlertResponse.json'),
+        loading: false,
+      });
+
+      (getLabels as any).mockReturnValue('severity=page');
+
+      const { displayableAlerts } = useAlerts('all');
+      expect(displayableAlerts).toHaveLength(1);
+    });
+
+    it('should filter alerts with label severity=noalerts', () => {
+      (useAsync as any).mockReturnValue({
+        value: require('../mocks/mockAlertResponse.json'),
+        loading: false,
+      });
+
+      (getLabels as any).mockReturnValue('severity=noalerts');
+
+      const { displayableAlerts } = useAlerts('all');
+      expect(displayableAlerts).toHaveLength(0);
+    });
+
+    it('No label selector is defined', () => {
+      (useAsync as any).mockReturnValue({
+        value: require('../mocks/mockAlertResponse.json'),
+        loading: false,
+      });
+
+      (getLabels as any).mockReturnValue(undefined);
+
+      const { displayableAlerts } = useAlerts('all');
+      expect(displayableAlerts).toHaveLength(1);
     });
   });
 });

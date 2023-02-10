@@ -28,6 +28,8 @@ import {
   UserNamingStrategy,
   userNamingStrategyFactory,
 } from './userNamingStrategyFactory';
+import { AccountConfig } from '../types';
+import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 
 /**
  * Provides entities from Okta Group service.
@@ -35,6 +37,8 @@ import {
 export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly groupFilter: string | undefined;
+  private orgUrl: string;
 
   static fromConfig(
     config: Config,
@@ -47,22 +51,26 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     const orgUrl = config.getString('orgUrl');
     const token = config.getString('token');
 
-    return new OktaGroupEntityProvider({ orgUrl, token }, options);
+    const groupFilter = config.getOptionalString('groupFilter');
+
+    return new OktaGroupEntityProvider({ orgUrl, token, groupFilter }, options);
   }
 
   constructor(
-    accountConfig: any,
+    accountConfig: AccountConfig,
     options: {
       logger: winston.Logger;
       namingStrategy?: GroupNamingStrategies;
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
-    super(accountConfig, options);
+    super([accountConfig], options);
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.orgUrl = accountConfig.orgUrl;
+    this.groupFilter = accountConfig.groupFilter;
   }
 
   getProviderName(): string {
@@ -74,37 +82,23 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(
-      `Providing okta group resources from okta: ${this.orgUrl}`,
-    );
+    this.logger.info(`Providing group resources from okta: ${this.orgUrl}`);
     const groupResources: GroupEntity[] = [];
 
-    const client = this.getClient();
+    const client = this.getClient(this.orgUrl);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    await client.listGroups().each(async group => {
+    await client.listGroups({ search: this.groupFilter }).each(async group => {
       const members: string[] = [];
       await group.listUsers().each(user => {
         members.push(this.userNamingStrategy(user));
       });
-      const groupEntity: GroupEntity = {
-        kind: 'Group',
-        apiVersion: 'backstage.io/v1alpha1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-          },
-          name: this.namingStrategy(group),
-          title: group.profile.name,
-          description: group.profile.description,
-        },
-        spec: {
-          members,
-          type: 'group',
-          children: [],
-        },
-      };
+
+      const groupEntity = groupEntityFromOktaGroup(group, this.namingStrategy, {
+        annotations: defaultAnnotations,
+        members,
+      });
 
       groupResources.push(groupEntity);
     });
@@ -116,5 +110,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+    this.logger.info(
+      `Finished providing ${groupResources.length} group resources from okta: ${this.orgUrl}`,
+    );
   }
 }

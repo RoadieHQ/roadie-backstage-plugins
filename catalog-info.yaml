@@ -3,6 +3,7 @@ kind: Component
 metadata:
   name: roadie-backstage-plugins
   description: An example of a Backstage application.
+  title: Roadie Backstage Plugins
 spec:
   type: website
   owner: group:open-source

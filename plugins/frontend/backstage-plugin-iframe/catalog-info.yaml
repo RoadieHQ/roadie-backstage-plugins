@@ -3,6 +3,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-iframe
+  title: Backstage Plugin Iframe
   description: |
     Backstage plugin to render iframes.
   annotations:

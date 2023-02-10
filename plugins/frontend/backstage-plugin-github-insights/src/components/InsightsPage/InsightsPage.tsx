@@ -33,6 +33,7 @@ import {
   ReadMeCard,
   LanguagesCard,
   ReleasesCard,
+  EnvironmentsCard,
 } from '../Widgets';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
@@ -50,6 +51,7 @@ export const InsightsPage = () => {
             <ContributorsCard />
             <LanguagesCard />
             <ReleasesCard />
+            <EnvironmentsCard />
             <ComplianceCard />
           </Grid>
           <Grid item sm={12} md={6} lg={8}>

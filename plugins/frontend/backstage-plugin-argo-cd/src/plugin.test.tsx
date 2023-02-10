@@ -594,7 +594,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
         ),
       );
@@ -633,13 +633,13 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
         ),
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
         ),
@@ -677,14 +677,14 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListWithMultipleApps)),
         ),
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
         ),
@@ -726,14 +726,14 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListWithMultipleApps)),
         ),
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
       );
@@ -774,13 +774,13 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name=guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
       );

@@ -1,5 +1,35 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.1.3
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 2.1.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 2.1.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 2.1.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 2.0.6
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 2.0.5
 
 ### Patch Changes

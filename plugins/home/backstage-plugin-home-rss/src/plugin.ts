@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-import { homePlugin, createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home';
+import { createPlugin } from '@backstage/core-plugin-api';
+import { rootRouteRef } from './routes';
+
+/** @public */
+export const rssPlugin = createPlugin({
+  id: 'rss',
+  routes: {
+    root: rootRouteRef,
+  },
+});
 
 /**
  * A component to render a predefined RSS feed.
  *
  * @public
  */
-export const HomePageRSS = homePlugin.provide(
+export const HomePageRSS = rssPlugin.provide(
   createCardExtension<{
     feedURL: string;
   }>({

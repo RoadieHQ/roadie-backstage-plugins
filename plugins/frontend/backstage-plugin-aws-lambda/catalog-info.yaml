@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-aws-lambda
+  title: Backstage Plugin AWS Lambda
   description: |
     Backstage plugin to show the latest releases to your AWS Lambda functions.
   annotations:

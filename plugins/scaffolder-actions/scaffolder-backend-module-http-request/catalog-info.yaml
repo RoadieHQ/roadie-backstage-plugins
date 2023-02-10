@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: scaffolder-backend-module-http-request
+  title: Scaffolder HTTP Request Module
   description: |
     Scaffolder action to send an arbitrary http request
   annotations:

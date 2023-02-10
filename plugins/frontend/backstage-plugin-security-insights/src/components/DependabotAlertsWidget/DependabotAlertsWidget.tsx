@@ -15,8 +15,9 @@
  */
 
 import React, { FC } from 'react';
+// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
-import { makeStyles, Box, Typography, Theme } from '@material-ui/core';
+import { makeStyles, Box, Typography, Theme, Grid } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
 import {
   useApi,
@@ -257,8 +258,27 @@ export const DependabotAlertsWidget = () => {
   }, []);
 
   const detailsUrl = { hostname, owner, repo };
+
   if (loading) return <Progress />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
+  if (error) {
+    return (
+      <Alert severity="error">
+        <Grid container direction="row" spacing={3}>
+          <Grid item xs={12}>
+            <Typography>
+              Failed to retrieve Dependabot information from GitHub. Security
+              Insights plugin may require administrator access to display data
+              correctly
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>Error message: {error.message}</Typography>
+          </Grid>
+        </Grid>
+      </Alert>
+    );
+  }
+
   return value && value.vulnerabilityAlerts ? (
     <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} />
   ) : null;

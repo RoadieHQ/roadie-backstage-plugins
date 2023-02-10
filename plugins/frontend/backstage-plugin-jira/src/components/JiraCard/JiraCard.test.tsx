@@ -37,12 +37,16 @@ import {
   statusesResponseStub,
 } from '../../responseStubs';
 import { ConfigReader } from '@backstage/config';
+import { getIdentityApiStub } from '../../identityStubs';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const configApi = new ConfigReader({});
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
-  [jiraApiRef, new JiraAPI({ discoveryApi, configApi })],
+  [
+    jiraApiRef,
+    new JiraAPI({ discoveryApi, configApi, identityApi: getIdentityApiStub }),
+  ],
 ];
 
 describe('JiraCard', () => {

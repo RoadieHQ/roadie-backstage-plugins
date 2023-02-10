@@ -51,6 +51,7 @@ describe('AWSLambdaFunctionProvider', () => {
     it('creates no aws functions', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
@@ -78,6 +79,7 @@ describe('AWSLambdaFunctionProvider', () => {
     it('creates aws functions', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
+        refresh: jest.fn(),
       };
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);

@@ -20,30 +20,38 @@ import {
 } from '@backstage/plugin-catalog-backend';
 import { Logger } from 'winston';
 import { AccountConfig } from '../types';
-import okta from '@okta/okta-sdk-nodejs';
+import { Client } from '@okta/okta-sdk-nodejs';
+
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
 
 export abstract class OktaEntityProvider implements EntityProvider {
-  protected readonly orgUrl: string;
-  protected readonly token: string;
+  protected readonly accounts: AccountConfig[];
   protected readonly logger: Logger;
   protected connection?: EntityProviderConnection;
 
   public abstract getProviderName(): string;
 
-  protected constructor(account: AccountConfig, options: { logger: Logger }) {
-    this.orgUrl = account.orgUrl;
-    this.token = account.token;
+  protected constructor(
+    accounts: AccountConfig[],
+    options: { logger: Logger },
+  ) {
+    this.accounts = accounts;
     this.logger = options.logger;
   }
 
-  protected getClient() {
-    return new okta.Client({
-      orgUrl: this.orgUrl,
-      token: this.token,
+  protected getClient(orgUrl: string): Client {
+    const account = this.accounts.find(
+      acccountConfig => acccountConfig.orgUrl === orgUrl,
+    );
+    if (!account) {
+      throw new Error(`accountConfig for ${orgUrl} not found`);
+    }
+    return new Client({
+      orgUrl: account.orgUrl,
+      token: account.token,
     });
   }
 

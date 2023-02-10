@@ -1,5 +1,35 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.3
+
+### Patch Changes
+
+- 6d186f0f: Bump plugin's version to backstage version 1.10.1
+
+## 0.4.2
+
+### Patch Changes
+
+- 054d585b: Bump plugin versions to be compatible by backstage 1.9.1
+
+## 0.4.1
+
+### Patch Changes
+
+- 7084d814: Bump plugins version to backstage 1.8.3
+
+## 0.4.0
+
+### Minor Changes
+
+- 015aebdf: Bump plugins version to be compatible by backstage 1.7
+
+## 0.3.10
+
+### Patch Changes
+
+- eaa0bb2: update dependencies
+
 ## 0.3.9
 
 ### Patch Changes

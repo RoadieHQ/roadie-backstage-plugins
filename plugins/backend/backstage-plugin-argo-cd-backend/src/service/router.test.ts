@@ -40,6 +40,7 @@ const config = ConfigReader.fromConfigs([
     context: '',
     data: {
       argocd: {
+        waitCycles: 0,
         username: 'testusername',
         password: 'testpassword',
         appLocatorMethods: [
@@ -52,6 +53,10 @@ const config = ConfigReader.fromConfigs([
                 username: 'testusername',
                 password: 'testpassword',
                 token: 'token'
+              },
+              {
+                name: 'argoInstance2',
+                url: 'https://argoInstance2.com',
               },
             ],
           },
@@ -73,20 +78,6 @@ describe('router', () => {
     mockGetArgoAppData.mockReset();
   });
   it('returns the requested data', async () => {
-    fetchMock.mockOnceIf(
-      /.*\/api\/v1\/session/g,
-      JSON.stringify({ token: 'testToken' }),
-    );
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        argocdCreateProjectResp,
-      }),
-    );
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        argocdCreateApplicationResp,
-      }),
-    );
     const response = await request(app).post('/createArgo').send({
       clusterName: 'argoInstance1',
       namespace: 'test-namespace',
@@ -96,6 +87,10 @@ describe('router', () => {
       sourcePath: 'k8s/test',
       labelValue: 'test-app',
     });
+
+    expect(getArgoToken).toBeCalledTimes(1);
+    expect(createArgoProject).toBeCalledTimes(1);
+    expect(createArgoApplication).toBeCalledTimes(1);
     expect(response.body).toMatchObject({
       argoAppName: 'test-app-nonprod',
       argoProjectName: 'test-project',

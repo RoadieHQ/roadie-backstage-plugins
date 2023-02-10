@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-aws-auth
+  title: Backstage Plugin AWS Auth
   description: |
     Backstage plugin to authenticate other plugins with AWS IAM.
   annotations:
