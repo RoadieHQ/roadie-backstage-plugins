@@ -25,12 +25,15 @@ import {
 } from '@backstage/core-components';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
-import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -66,31 +69,25 @@ type Language = {
   [key: string]: number;
 };
 
-const LanguagesCard = () => {
+const LanguagesCardContent = () => {
   const { entity } = useEntity();
+
   let barWidth = 0;
   const classes = useStyles();
-  const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'languages', 0, 0);
-  const projectAlert = isGithubInsightsAvailable(entity);
-
-  if (!projectAlert) {
-    return (
-      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
-    );
-  }
-
   if (loading) {
     return <Progress />;
-  } else if (error) {
+  }
+
+  if (error) {
     return (
       <Alert severity="error" className={classes.infoCard}>
         {error.message}
       </Alert>
     );
   }
-  return value && Object.keys(value).length && owner && repo ? (
-    <InfoCard title="Languages" className={classes.infoCard}>
+  return (
+    <>
       <div className={classes.barContainer}>
         {Object.entries(value as Language).map((language, index: number) => {
           barWidth =
@@ -148,9 +145,28 @@ const LanguagesCard = () => {
           key={language[0]}
         />
       ))}
+    </>
+  );
+};
+
+const LanguagesCard = (props: PromptableLoginProps) => {
+  const { autoPromptLogin = true } = props;
+  const { entity } = useEntity();
+  const projectAlert = isGithubInsightsAvailable(entity);
+  const classes = useStyles();
+
+  if (!projectAlert) {
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
+  }
+
+  return (
+    <InfoCard title="Languages" className={classes.infoCard}>
+      <GithubAuthPromptWrapper scope={['repo']} autoPrompt={autoPromptLogin}>
+        <LanguagesCardContent />
+      </GithubAuthPromptWrapper>
     </InfoCard>
-  ) : (
-    <></>
   );
 };
 

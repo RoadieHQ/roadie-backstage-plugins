@@ -31,6 +31,10 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
 type Environment = {
   id: number;
@@ -38,12 +42,46 @@ type Environment = {
   name: string;
 };
 
-const EnvironmentsCard = () => {
+const EnvironmentsCardContent = () => {
+  const classes = useStyles();
+  const { entity } = useEntity();
+
+  const { value, loading, error } = useRequest(entity, 'environments', 0, 0);
+
+  if (loading) {
+    return <Progress />;
+  } else if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  if (!value) {
+    return <Alert severity="info">No environments were found.</Alert>;
+  }
+
+  return (
+    <List>
+      {value.environments.map((environment: Environment) => (
+        <ListItem className={classes.listItem} key={environment.id}>
+          <Link
+            href={environment.html_url}
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <p className={classes.releaseTitle}>{environment.name}</p>
+          </Link>
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+const EnvironmentsCard = (props: PromptableLoginProps) => {
+  const { autoPromptLogin = true } = props;
   const classes = useStyles();
   const { entity } = useEntity();
 
   const { owner, repo } = useProjectEntity(entity);
-  const { value, loading, error } = useRequest(entity, 'environments', 0, 0);
   const { hostname } = useEntityGithubScmIntegration(entity);
 
   const projectAlert = isGithubInsightsAvailable(entity);
@@ -53,17 +91,7 @@ const EnvironmentsCard = () => {
     );
   }
 
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
-      </Alert>
-    );
-  }
-
-  return value.environments.length && owner && repo ? (
+  return (
     <InfoCard
       title="Environments"
       deepLink={{
@@ -76,23 +104,10 @@ const EnvironmentsCard = () => {
       }}
       className={classes.infoCard}
     >
-      <List>
-        {value.environments.map((environment: Environment) => (
-          <ListItem className={classes.listItem} key={environment.id}>
-            <Link
-              href={environment.html_url}
-              color="inherit"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className={classes.releaseTitle}>{environment.name}</p>
-            </Link>
-          </ListItem>
-        ))}
-      </List>
+      <GithubAuthPromptWrapper scope={['repo']} autoPrompt={autoPromptLogin}>
+        <EnvironmentsCardContent />
+      </GithubAuthPromptWrapper>
     </InfoCard>
-  ) : (
-    <></>
   );
 };
 

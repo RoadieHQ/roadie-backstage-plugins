@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Box, List, ListItem } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import {
   InfoCard,
   Progress,
@@ -36,23 +36,22 @@ import {
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
-const ComplianceCard = () => {
+const ComplianceCardContent = () => {
   const { entity } = useEntity();
+  const classes = useStyles();
+  const { owner, repo } = useProjectEntity(entity);
+
   const { branches, loading, error } = useProtectedBranches(entity);
   const {
     license,
     loading: licenseLoading,
     error: licenseError,
   } = useRepoLicence(entity);
-  const classes = useStyles();
-  const { owner, repo } = useProjectEntity(entity);
-  const projectAlert = isGithubInsightsAvailable(entity);
-  if (!projectAlert) {
-    return (
-      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
-    );
-  }
 
   if (loading || licenseLoading) {
     return <Progress />;
@@ -66,45 +65,63 @@ const ComplianceCard = () => {
   }
 
   return (
+    <StructuredMetadataTable
+      metadata={{
+        'Protected branches':
+          branches?.length && owner && repo ? (
+            <List className={classes.listStyle}>
+              {branches.map((branch: any) => (
+                <ListItem key={branch.name}>{branch.name}</ListItem>
+              ))}
+            </List>
+          ) : (
+            <Box display="flex" alignItems="center">
+              <WarningIcon
+                style={{
+                  color: 'orange',
+                  marginRight: '5px',
+                  flexShrink: 0,
+                }}
+              />
+              <span>None</span>
+            </Box>
+          ),
+        License:
+          license === NO_LICENSE_MSG ? (
+            <Box display="flex" alignItems="center">
+              <WarningIcon
+                style={{
+                  color: 'orange',
+                  marginRight: '5px',
+                  flexShrink: 0,
+                }}
+              />
+              <span>None</span>
+            </Box>
+          ) : (
+            license
+          ),
+      }}
+    />
+  );
+};
+
+const ComplianceCard = (props: PromptableLoginProps) => {
+  const { autoPromptLogin = true } = props;
+  const { entity } = useEntity();
+
+  const projectAlert = isGithubInsightsAvailable(entity);
+  if (!projectAlert) {
+    return (
+      <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
+  }
+
+  return (
     <InfoCard title="Compliance report">
-      <StructuredMetadataTable
-        metadata={{
-          'Protected branches':
-            branches?.length && owner && repo ? (
-              <List className={classes.listStyle}>
-                {branches.map((branch: any) => (
-                  <ListItem key={branch.name}>{branch.name}</ListItem>
-                ))}
-              </List>
-            ) : (
-              <Box display="flex" alignItems="center">
-                <WarningIcon
-                  style={{
-                    color: 'orange',
-                    marginRight: '5px',
-                    flexShrink: 0,
-                  }}
-                />
-                <span>None</span>
-              </Box>
-            ),
-          License:
-            license === NO_LICENSE_MSG ? (
-              <Box display="flex" alignItems="center">
-                <WarningIcon
-                  style={{
-                    color: 'orange',
-                    marginRight: '5px',
-                    flexShrink: 0,
-                  }}
-                />
-                <span>None</span>
-              </Box>
-            ) : (
-              license
-            ),
-        }}
-      />
+      <GithubAuthPromptWrapper autoPrompt={autoPromptLogin} scope={['repo']}>
+        <ComplianceCardContent />
+      </GithubAuthPromptWrapper>
     </InfoCard>
   );
 };

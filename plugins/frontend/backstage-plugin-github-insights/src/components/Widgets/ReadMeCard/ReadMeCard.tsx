@@ -21,6 +21,10 @@ import { MarkdownContent } from '../index';
 import { InfoCard } from '@backstage/core-components';
 import { makeStyles } from '@material-ui/core';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -57,10 +61,33 @@ type ReadMeCardProps = {
   title?: string;
 };
 
-const ReadMeCard = (props: ReadMeCardProps) => {
+const ReadmeCardContent = (props: ReadMeCardProps) => {
   const { entity } = useEntity();
   const { owner, repo, readmePath } = useProjectEntity(entity);
-  const { hostname, baseUrl } = useEntityGithubScmIntegration(entity);
+  const classes = useStyles();
+  const { baseUrl } = useEntityGithubScmIntegration(entity);
+  return (
+    <div
+      className={classes.readMe}
+      style={{
+        maxHeight: `${props.maxHeight}px`,
+      }}
+    >
+      <MarkdownContent
+        baseUrl={baseUrl}
+        owner={owner}
+        repo={repo}
+        path={readmePath}
+      />
+    </div>
+  );
+};
+
+const ReadMeCard = (props: PromptableLoginProps<ReadMeCardProps>) => {
+  const { autoPromptLogin = true } = props;
+  const { entity } = useEntity();
+  const { owner, repo, readmePath } = useProjectEntity(entity);
+  const { hostname } = useEntityGithubScmIntegration(entity);
   const classes = useStyles();
 
   const linkPath = readmePath || 'README.md';
@@ -78,19 +105,9 @@ const ReadMeCard = (props: ReadMeCardProps) => {
         },
       }}
     >
-      <div
-        className={classes.readMe}
-        style={{
-          maxHeight: `${props.maxHeight}px`,
-        }}
-      >
-        <MarkdownContent
-          baseUrl={baseUrl}
-          owner={owner}
-          repo={repo}
-          path={readmePath}
-        />
-      </div>
+      <GithubAuthPromptWrapper autoPrompt={autoPromptLogin} scope={['repo']}>
+        <ReadmeCardContent {...props} />
+      </GithubAuthPromptWrapper>
     </InfoCard>
   );
 };

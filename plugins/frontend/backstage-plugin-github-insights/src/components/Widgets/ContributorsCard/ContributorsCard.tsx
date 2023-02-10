@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import {
   InfoCard,
   Progress,
@@ -31,6 +31,10 @@ import {
   GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -41,26 +45,28 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ContributorsCard = () => {
+const ContributorsListContent = () => {
+  const { entity } = useEntity();
+  const { value, loading, error } = useRequest(entity, 'contributors', 10);
+  if (loading) {
+    return <Progress />;
+  } else if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  return <ContributorsList contributors={value || []} />;
+};
+
+const ContributorsCard = (props: PromptableLoginProps) => {
+  const { autoPromptLogin = true } = props;
   const { entity } = useEntity();
   const classes = useStyles();
-  const { value, loading, error } = useRequest(entity, 'contributors', 10);
   const { hostname } = useEntityGithubScmIntegration(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
   const { owner, repo } = useProjectEntity(entity);
   if (!projectAlert) {
     return (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
-    );
-  }
-
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
-      </Alert>
     );
   }
 
@@ -77,7 +83,9 @@ const ContributorsCard = () => {
       }}
       className={classes.infoCard}
     >
-      <ContributorsList contributors={value || []} />
+      <GithubAuthPromptWrapper autoPrompt={autoPromptLogin} scope={['repo']}>
+        <ContributorsListContent />
+      </GithubAuthPromptWrapper>
     </InfoCard>
   );
 };

@@ -17,7 +17,7 @@
 import React from 'react';
 import { Link, List, ListItem, Chip } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import {
   InfoCard,
   Progress,
@@ -32,6 +32,10 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
+import {
+  GithubAuthPromptWrapper,
+  PromptableLoginProps,
+} from '../../AuthPromptWrapper';
 
 type Release = {
   id: number;
@@ -41,12 +45,62 @@ type Release = {
   name: string;
 };
 
-const ReleasesCard = () => {
+const ReleasesCardContent = () => {
   const classes = useStyles();
   const { entity } = useEntity();
-
-  const { owner, repo } = useProjectEntity(entity);
   const { value, loading, error } = useRequest(entity, 'releases', 0, 5);
+
+  if (loading) {
+    return <Progress />;
+  } else if (error) {
+    return <Alert severity="error">{error.message}</Alert>;
+  }
+
+  if (!value) {
+    return (
+      <Alert severity="error">Failed to retrieve the list of releases</Alert>
+    );
+  }
+
+  if (value?.length === 0) {
+    return (
+      <Alert severity="info">
+        No releases appear to have been made to date
+      </Alert>
+    );
+  }
+  return (
+    <List>
+      {value.map((release: Release) => (
+        <ListItem className={classes.listItem} key={release.id}>
+          <Link
+            href={release.html_url}
+            color="inherit"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <p className={classes.releaseTitle}>{release.name}</p>
+            <LocalOfferOutlinedIcon
+              fontSize="inherit"
+              className={classes.releaseTagIcon}
+            />{' '}
+            {release.tag_name}
+            {/* by {release.author.login} */}
+          </Link>
+          {release.prerelease && (
+            <Chip color="primary" size="small" label="Pre-release" />
+          )}
+        </ListItem>
+      ))}
+    </List>
+  );
+};
+
+const ReleasesCard = (props: PromptableLoginProps) => {
+  const { autoPromptLogin = true } = props;
+  const classes = useStyles();
+  const { entity } = useEntity();
+  const { owner, repo } = useProjectEntity(entity);
   const { hostname } = useEntityGithubScmIntegration(entity);
 
   const projectAlert = isGithubInsightsAvailable(entity);
@@ -56,17 +110,7 @@ const ReleasesCard = () => {
     );
   }
 
-  if (loading) {
-    return <Progress />;
-  } else if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
-      </Alert>
-    );
-  }
-
-  return value?.length && owner && repo ? (
+  return (
     <InfoCard
       title="Releases"
       deepLink={{
@@ -79,32 +123,10 @@ const ReleasesCard = () => {
       }}
       className={classes.infoCard}
     >
-      <List>
-        {value.map((release: Release) => (
-          <ListItem className={classes.listItem} key={release.id}>
-            <Link
-              href={release.html_url}
-              color="inherit"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className={classes.releaseTitle}>{release.name}</p>
-              <LocalOfferOutlinedIcon
-                fontSize="inherit"
-                className={classes.releaseTagIcon}
-              />{' '}
-              {release.tag_name}
-              {/* by {release.author.login} */}
-            </Link>
-            {release.prerelease && (
-              <Chip color="primary" size="small" label="Pre-release" />
-            )}
-          </ListItem>
-        ))}
-      </List>
+      <GithubAuthPromptWrapper autoPrompt={autoPromptLogin} scope={['repo']}>
+        <ReleasesCardContent />
+      </GithubAuthPromptWrapper>
     </InfoCard>
-  ) : (
-    <></>
   );
 };
 
