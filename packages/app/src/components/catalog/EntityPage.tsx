@@ -205,14 +205,11 @@ const overviewContent = (
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
         <Grid item md={6}>
-          <EntityGithubInsightsLanguagesCard autoPromptLogin={false} />
-          <EntityGithubInsightsReleasesCard autoPromptLogin={false} />
+          <EntityGithubInsightsLanguagesCard />
+          <EntityGithubInsightsReleasesCard />
         </Grid>
         <Grid item md={6}>
-          <EntityGithubInsightsReadmeCard
-            maxHeight={350}
-            autoPromptLogin={false}
-          />
+          <EntityGithubInsightsReadmeCard maxHeight={350} />
         </Grid>
       </EntitySwitch.Case>
     </EntitySwitch>
