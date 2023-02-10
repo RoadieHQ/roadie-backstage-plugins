@@ -11,9 +11,9 @@ export interface RouterOptions {
   config: Config;
 }
 export type Response = {
-  status: string
-  message: string
-}
+  status: string;
+  message: string;
+};
 export function createRouter({
   logger,
   config,
@@ -31,7 +31,8 @@ export function createRouter({
     .getConfigArray('argocd.appLocatorMethods')
     .filter(element => element.getString('type') === 'config');
   const appArray: Config[] = argoApps.reduce(
-    (acc: Config[], argoApp: Config) =>      acc.concat(argoApp.getConfigArray('instances')),
+    (acc: Config[], argoApp: Config) =>
+      acc.concat(argoApp.getConfigArray('instances')),
     [],
   );
   const argoInstanceArray = appArray.map(instance => ({
@@ -216,16 +217,16 @@ export function createRouter({
       } else {
         token = matchedArgoInstance.token;
       }
-      const argoDeleteProjectResp: Response = { 
+      const argoDeleteProjectResp: Response = {
         status: '',
-        message: ''
+        message: '',
       };
-      const argoDeleteAppResp: Response = { 
+      const argoDeleteAppResp: Response = {
         status: '',
-        message: ''
+        message: '',
       };
-      let countinueToDeleteProject: boolean = true
-      let isAppexist: boolean = true
+      let countinueToDeleteProject: boolean = true;
+      let isAppexist: boolean = true;
       try {
         const deleteAppResp = await argoSvc.deleteApp({
           baseUrl: matchedArgoInstance.url,
@@ -233,19 +234,19 @@ export function createRouter({
           argoToken: token,
         });
         if (deleteAppResp === false) {
-          countinueToDeleteProject = false
-          argoDeleteAppResp.status = "failed";
+          countinueToDeleteProject = false;
+          argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = 'error with deleteing argo app';
         }
-      } catch (e: any) {  
+      } catch (e: any) {
         if (typeof e.message === 'string') {
           isAppexist = false;
-          countinueToDeleteProject = true
-          argoDeleteAppResp.status = "failed";
+          countinueToDeleteProject = true;
+          argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = e.message;
         }
       }
-      let isAppPendingDelete: boolean = false
+      let isAppPendingDelete: boolean = false;
       if (isAppexist) {
         for (let attempts = 0; attempts < argoWaitCycles; attempts++) {
           try {
@@ -256,45 +257,47 @@ export function createRouter({
               token,
             );
             isAppPendingDelete = 'metadata' in argoApp;
-            if (!isAppPendingDelete) { 
-              argoDeleteAppResp.status = "success"
-              argoDeleteAppResp.message = 'application is deleted successfully'; 
+            if (!isAppPendingDelete) {
+              argoDeleteAppResp.status = 'success';
+              argoDeleteAppResp.message = 'application is deleted successfully';
               break;
-            };
-           await timer(5000);
-          } catch (e: any) { 
-            if (attempts === argoWaitCycles){
-              argoDeleteAppResp.status = "failed";
-              argoDeleteAppResp.message = "error getting argo app data";
-          }
+            }
+            await timer(5000);
+          } catch (e: any) {
+            if (attempts === argoWaitCycles) {
+              argoDeleteAppResp.status = 'failed';
+              argoDeleteAppResp.message = 'error getting argo app data';
+            }
             continue;
           }
         }
       }
       try {
         if (isAppPendingDelete && isAppexist) {
-            argoDeleteAppResp.status = "failed"
-            argoDeleteAppResp.message = 'application pending delete';
-            argoDeleteProjectResp.status = 'failed';
-            argoDeleteProjectResp.message = 'skipping project deletion due to app deletion pending';
+          argoDeleteAppResp.status = 'failed';
+          argoDeleteAppResp.message = 'application pending delete';
+          argoDeleteProjectResp.status = 'failed';
+          argoDeleteProjectResp.message =
+            'skipping project deletion due to app deletion pending';
         } else if (countinueToDeleteProject) {
-            await argoSvc.deleteProject({
-              baseUrl: matchedArgoInstance.url,
-              argoProjectName: argoAppName,
-              argoToken: token,          
+          await argoSvc.deleteProject({
+            baseUrl: matchedArgoInstance.url,
+            argoProjectName: argoAppName,
+            argoToken: token,
           });
           argoDeleteProjectResp.status = 'success';
           argoDeleteProjectResp.message = 'project is deleted successfully';
         } else {
           argoDeleteProjectResp.status = 'failed';
-          argoDeleteProjectResp.message = 'skipping project deletion due to erro deleting argo app';
-        } 
+          argoDeleteProjectResp.message =
+            'skipping project deletion due to erro deleting argo app';
+        }
       } catch (e: any) {
         if (typeof e.message === 'string') {
-          argoDeleteProjectResp.status = "failed";
+          argoDeleteProjectResp.status = 'failed';
           argoDeleteProjectResp.message = e.message;
         } else {
-          argoDeleteProjectResp.status = "failed";
+          argoDeleteProjectResp.status = 'failed';
           argoDeleteProjectResp.message = 'error with deleteing argo project';
         }
       }
@@ -304,7 +307,7 @@ export function createRouter({
       });
     },
   );
-  
+
   router.use(errorHandler());
   return Promise.resolve(router);
 }
