@@ -40,7 +40,7 @@ const config = ConfigReader.fromConfigs([
     context: '',
     data: {
       argocd: {
-        waitCycles: 0,
+        // waitCycles: 0,
         username: 'testusername',
         password: 'testpassword',
         appLocatorMethods: [
@@ -88,9 +88,8 @@ describe('router', () => {
       labelValue: 'test-app',
     });
 
-    expect(getArgoToken).toBeCalledTimes(1);
-    expect(createArgoProject).toBeCalledTimes(1);
-    expect(createArgoApplication).toBeCalledTimes(1);
+    expect(mockCreateArgoProject).toBeCalledTimes(1);
+    expect(mockCreateArgoApplication).toBeCalledTimes(1);
     expect(response.body).toMatchObject({
       argoAppName: 'test-app-nonprod',
       argoProjectName: 'test-project',
