@@ -13,27 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { OAuthApi, SessionApi } from '@backstage/core-plugin-api';
 import {
-  Button,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
-import React, { PropsWithChildren, useState } from 'react';
+  errorApiRef,
+  OAuthApi,
+  SessionApi,
+  useApi,
+} from '@backstage/core-plugin-api';
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
+import React, { PropsWithChildren, useCallback, useState } from 'react';
 import useAsync from 'react-use/lib/useAsync';
 import { Progress } from '@backstage/core-components';
-import { Alert } from '@material-ui/lab';
-
-const useStyles = makeStyles(theme => ({
-  infoCard: {
-    marginBottom: theme.spacing(3),
-    '& + .MuiAlert-root': {
-      marginTop: theme.spacing(3),
-    },
-  },
-}));
 
 export type PromptableLoginProps<TProps = {}> = TProps & {
   autoPromptLogin?: boolean;
@@ -41,6 +30,17 @@ export type PromptableLoginProps<TProps = {}> = TProps & {
 
 const NotAuthorized = (props: { auth: OAuthApi; scope: string[] }) => {
   const { auth, scope } = props;
+  const errorApi = useApi(errorApiRef);
+
+  const onSignInClient = useCallback(async () => {
+    try {
+      // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
+      await auth.getAccessToken(scope);
+    } catch (e: any) {
+      errorApi.post(e);
+    }
+  }, [auth, errorApi, scope]);
+
   return (
     <Grid container>
       <Grid item xs={8}>
@@ -51,12 +51,7 @@ const NotAuthorized = (props: { auth: OAuthApi; scope: string[] }) => {
       </Grid>
       <Grid item xs={4} container justifyContent="flex-end">
         <Tooltip placement="top" arrow title="Sign in to Github">
-          <Button
-            variant="outlined"
-            color="primary"
-            // Calling getAccessToken instead of a plain signIn because we are going to get the correct scopes right away. No need to second request
-            onClick={() => auth.getAccessToken(scope)}
-          >
+          <Button variant="outlined" color="primary" onClick={onSignInClient}>
             Sign in
           </Button>
         </Tooltip>
@@ -74,9 +69,8 @@ export type AuthPromptWrapperProps = PropsWithChildren<{
 export const AuthPromptWrapper = (props: AuthPromptWrapperProps) => {
   const { auth, scope, autoPrompt, children } = props;
   const [sessionState, setSessionState] = useState<string | undefined>();
-  const classes = useStyles();
 
-  const { value, loading, error } = useAsync(async () => {
+  const { value, loading } = useAsync(async () => {
     auth.sessionState$().subscribe(state => {
       setSessionState(state);
     });
@@ -91,16 +85,9 @@ export const AuthPromptWrapper = (props: AuthPromptWrapperProps) => {
     return <Progress />;
   }
 
-  if (error) {
-    return (
-      <Alert severity="error" className={classes.infoCard}>
-        {error.message}
-      </Alert>
-    );
+  if (value !== '') {
+    return <>{children}</>;
   }
 
-  if (value === '' && !autoPrompt) {
-    return <NotAuthorized auth={auth} scope={scope} />;
-  }
-  return <>{children}</>;
+  return <NotAuthorized auth={auth} scope={scope} />;
 };
