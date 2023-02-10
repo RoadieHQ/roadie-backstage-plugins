@@ -5,6 +5,7 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { ArgoService } from './argocd.service';
 import { timer } from './timer.services';
+
 export interface RouterOptions {
   logger: Logger;
   config: Config;
@@ -141,7 +142,7 @@ export function createRouter({
     } else {
       token = matchedArgoInstance.token;
     }
-    let argoProjResp = {};
+
     try {
       await argoSvc.createArgoProject({
         baseUrl: matchedArgoInstance.url,
@@ -157,7 +158,7 @@ export function createRouter({
         message: e.message || 'Failed to create argo project',
       });
     }
-    let argoAppResp = {};
+
     try {
       await argoSvc.createArgoApplication({
         baseUrl: matchedArgoInstance.url,
