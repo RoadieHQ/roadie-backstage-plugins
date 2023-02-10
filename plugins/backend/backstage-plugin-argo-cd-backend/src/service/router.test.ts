@@ -226,6 +226,7 @@ describe('router', () => {
       },
     });
   });
+  
   it('succesfully deletes app and fails to delete project', async () => {
     mockDeleteApp.mockResolvedValueOnce(true);
     mockGetArgoAppData.mockResolvedValueOnce({

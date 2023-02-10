@@ -304,6 +304,7 @@ export function createRouter({
       });
     },
   );
+  
   router.use(errorHandler());
   return Promise.resolve(router);
 }
