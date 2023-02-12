@@ -82,7 +82,7 @@ export const createActions = (options: {
     createJSONataAction(),
     createYamlJSONataTransformAction(),
     createJsonJSONataTransformAction(),
-    createHttpBackstageAction({discovery}),
+    createHttpBackstageAction({ discovery }),
     ...defaultActions,
   ];
 };

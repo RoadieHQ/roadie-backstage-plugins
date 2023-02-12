@@ -23,7 +23,9 @@ import {
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 
-export function createHttpBackstageAction(options: { discovery: DiscoveryApi }) {
+export function createHttpBackstageAction(options: {
+  discovery: DiscoveryApi;
+}) {
   const { discovery } = options;
   return createTemplateAction<{
     path: string;

@@ -66,7 +66,7 @@ const headers = new Headers({
 describe('http', () => {
   describe('#generateProxyUrl', () => {
     beforeEach(() => {
-      discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`) 
+      discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
       url = `${mockBaseUrl}/api/proxy/foo`;
     });
 
@@ -83,7 +83,9 @@ describe('http', () => {
     describe('with override', () => {
       describe('when the override is in place', () => {
         it('returns the same url as passed in', async () => {
-          discovery = UrlPatternDiscovery.compile(`${mockCustomBaseUrl}/{{pluginId}}`) 
+          discovery = UrlPatternDiscovery.compile(
+            `${mockCustomBaseUrl}/{{pluginId}}`,
+          );
           expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
             `${mockCustomBaseUrl}/api/proxy/foo`,
           );

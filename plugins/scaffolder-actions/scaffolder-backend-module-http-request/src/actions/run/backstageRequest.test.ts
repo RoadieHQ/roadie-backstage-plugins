@@ -29,7 +29,7 @@ describe('http:backstage:request', () => {
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
   const logger = getVoidLogger();
-  const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`) 
+  const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
     jest.resetAllMocks();

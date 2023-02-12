@@ -21,8 +21,11 @@ import { HttpOptions } from './types';
 class HttpError extends Error {}
 const DEFAULT_TIMEOUT = 60_000;
 
-export const generateBackstageUrl = (discovery: DiscoveryApi, path: string): Promise<string> => {
-  return discovery.getBaseUrl(path.startsWith("/") ? path.substring(1) : path);
+export const generateBackstageUrl = (
+  discovery: DiscoveryApi,
+  path: string,
+): Promise<string> => {
+  return discovery.getBaseUrl(path.startsWith('/') ? path.substring(1) : path);
 };
 
 export const http = async (
