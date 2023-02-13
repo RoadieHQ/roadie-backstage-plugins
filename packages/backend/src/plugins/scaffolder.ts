@@ -15,7 +15,6 @@
  */
 import {
   DockerContainerRunner,
-  SingleHostDiscovery,
   UrlReader,
   ContainerRunner,
 } from '@backstage/backend-common';
@@ -90,11 +89,11 @@ export default async function createPlugin({
   config,
   database,
   reader,
+  discovery,
 }: PluginEnvironment): Promise<Router> {
   const dockerClient = new Docker();
   const containerRunner = new DockerContainerRunner({ dockerClient });
 
-  const discovery = SingleHostDiscovery.fromConfig(config);
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
 
   return await createRouter({
