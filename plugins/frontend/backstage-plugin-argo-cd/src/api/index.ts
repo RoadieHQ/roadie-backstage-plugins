@@ -63,14 +63,14 @@ export class ArgoCDApiClient implements ArgoCDApi {
     this.identityApi = options.identityApi;
   }
 
-  private async getBaseUrl() {
+  async getBaseUrl() {
     if (this.searchInstances) {
       return `${this.backendBaseUrl}/api/argocd`;
     }
     return await this.discoveryApi.getBaseUrl('proxy');
   }
 
-  private async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
+  async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
     const { token } = await this.identityApi.getCredentials();
     const response = await fetch(url, {
       headers: token
