@@ -48,6 +48,7 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
 import { Config } from '@backstage/config';
+import { DiscoveryApi } from '@backstage/plugin-permission-common';
 
 export const createActions = (options: {
   reader: UrlReader;
@@ -55,8 +56,9 @@ export const createActions = (options: {
   config: Config;
   containerRunner: ContainerRunner;
   catalogClient: CatalogClient;
+  discovery: DiscoveryApi;
 }): TemplateAction<any>[] => {
-  const { reader, integrations, config, catalogClient } = options;
+  const { reader, integrations, config, catalogClient, discovery } = options;
   const defaultActions = createBuiltinActions({
     reader,
     integrations,
@@ -79,7 +81,7 @@ export const createActions = (options: {
     createJSONataAction(),
     createYamlJSONataTransformAction(),
     createJsonJSONataTransformAction(),
-    createHttpBackstageAction({ config }),
+    createHttpBackstageAction({ discovery }),
     ...defaultActions,
   ];
 };
@@ -106,6 +108,7 @@ export default async function createPlugin({
       reader,
       integrations: ScmIntegrations.fromConfig(config),
       config,
+      discovery,
       catalogClient: catalogClient,
       containerRunner: containerRunner,
     }),

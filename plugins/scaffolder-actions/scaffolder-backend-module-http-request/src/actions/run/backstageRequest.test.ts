@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { createHttpBackstageAction } from './backstageRequest';
-import { Config, ConfigReader } from '@backstage/config';
 import os from 'os'; // eslint-disable-line
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 jest.mock('./helpers', () => ({
   ...jest.requireActual('./helpers.ts'),
@@ -26,25 +26,14 @@ jest.mock('./helpers', () => ({
 }));
 
 describe('http:backstage:request', () => {
-  let config: Config;
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
   const logger = getVoidLogger();
+  const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
     jest.resetAllMocks();
-    config = new ConfigReader({
-      app: {
-        baseUrl: mockBaseUrl,
-      },
-      backend: {
-        baseUrl: mockBaseUrl,
-        listen: {
-          port: 7007,
-        },
-      },
-    });
-    action = createHttpBackstageAction({ config });
+    action = createHttpBackstageAction({ discovery });
   });
 
   const mockContext = {
@@ -327,25 +316,6 @@ describe('http:backstage:request', () => {
           },
           logger,
         );
-      });
-    });
-  });
-
-  describe("when the action doesn't run correctly", () => {
-    describe('with no proxy path', () => {
-      it('fails to run', async () => {
-        config = new ConfigReader({});
-        action = createHttpBackstageAction({ config });
-        await expect(
-          async () =>
-            await action.handler({
-              ...mockContext,
-              input: {
-                path: '/api/path',
-                method: 'GET',
-              },
-            }),
-        ).rejects.toThrowError('Unable to get base url');
       });
     });
   });
