@@ -23,6 +23,7 @@ export function createSerializeJsonAction() {
   }>({
     id: 'roadiehq:utils:serialize:json',
     description: 'Allows performing serialization on an object',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',

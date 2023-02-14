@@ -24,6 +24,7 @@ export function createZipAction() {
   return createTemplateAction<{ path: string; outputPath: string }>({
     id: 'roadiehq:utils:zip',
     description: 'Zips the content of the path',
+    supportsDryRun: true,
     schema: {
       input: {
         required: ['path'],
