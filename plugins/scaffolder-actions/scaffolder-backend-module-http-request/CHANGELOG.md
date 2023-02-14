@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.0
+
+### Major Changes
+
+- 04df8f6a: use discoveryApi for configuring the scaffolder-backend-module-http-request action
+
 ## 3.3.2
 
 ### Patch Changes
