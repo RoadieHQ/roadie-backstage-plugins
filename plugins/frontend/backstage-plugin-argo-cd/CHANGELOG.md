@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.5
+
+### Patch Changes
+
+- b619d5d8: make `getBaseUrl` and `fetchDecode` methods public so that they can be used when the plugin is subclassed
+
 ## 2.2.4
 
 ### Patch Changes
