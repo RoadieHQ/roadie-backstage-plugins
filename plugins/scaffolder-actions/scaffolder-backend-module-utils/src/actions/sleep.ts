@@ -21,6 +21,7 @@ export function createSleepAction(options?: { maxSleep?: number }) {
   return createTemplateAction<{ amount: number }>({
     id: 'roadiehq:utils:sleep',
     description: 'Halts the scaffolding for the given amount of seconds',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',
