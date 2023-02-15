@@ -65,7 +65,7 @@
     "@testing-library/react": "^11.2.6",
     "@types/luxon": "^1.27.0",
     "jest-environment-jsdom": "^29.2.1",
-    "msw": "^0.35.0"
+    "msw": "^1.0.1"
   },
   "files": [
     "dist",
