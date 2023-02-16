@@ -28,7 +28,7 @@ catalog:
   providers:
     okta:
       - orgUrl: 'https://tenant.okta.com'
-        ouath: {
+        oauth: {
           clientId: ${OKTA_OAUTH_CLIENT_ID},
           keyId: ${OKTA_OAUTH_KEY_ID},
           privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
