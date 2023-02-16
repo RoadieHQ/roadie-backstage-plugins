@@ -19,7 +19,7 @@ import { AccountConfig } from '../types';
 
 export const getAccountConfig = (config: Config): AccountConfig => {
   const orgUrl = config.getString('orgUrl');
-  const token = config.getString('token');
+  const token = config.getOptionalString('token');
 
   const userFilter = config.getOptionalString('userFilter');
   const groupFilter = config.getOptionalString('groupFilter');
