@@ -247,7 +247,7 @@ export function createRouter({
         }
       }
       let isAppPendingDelete: boolean = false;
-      if (isAppexist) {
+      if (isAppExist) {
         for (let attempts = 0; attempts < argoWaitCycles; attempts++) {
           try {
             const argoApp = await argoSvc.getArgoAppData(
