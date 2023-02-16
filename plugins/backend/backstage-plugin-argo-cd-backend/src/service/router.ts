@@ -240,7 +240,7 @@ export function createRouter({
         }
       } catch (e: any) {
         if (typeof e.message === 'string') {
-          isAppexist = false;
+          isAppExist = false;
           countinueToDeleteProject = true;
           argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = e.message;
