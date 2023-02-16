@@ -244,7 +244,8 @@ export function createRouter({
           argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = e.message;
         }
-        const message = e.message || `Failed to delete your app:, ${argoAppName}.`
+        const message =
+          e.message || `Failed to delete your app:, ${argoAppName}.`;
         logger.info(message);
       }
       let isAppPendingDelete: boolean = false;
@@ -265,7 +266,8 @@ export function createRouter({
             }
             await timer(5000);
           } catch (e: any) {
-            const message = e.message || `Failed to get argo app data for:, ${argoAppName}.`
+            const message =
+              e.message || `Failed to get argo app data for:, ${argoAppName}.`;
             logger.info(message);
             if (attempts === argoWaitCycles) {
               argoDeleteAppResp.status = 'failed';
@@ -296,7 +298,8 @@ export function createRouter({
             'skipping project deletion due to erro deleting argo app';
         }
       } catch (e: any) {
-        const message = e.message || `Failed to delete the project:, ${argoAppName}.`
+        const message =
+          e.message || `Failed to delete the project:, ${argoAppName}.`;
         logger.info(message);
         if (typeof e.message === 'string') {
           argoDeleteProjectResp.status = 'failed';
