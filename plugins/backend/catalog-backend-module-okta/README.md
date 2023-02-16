@@ -35,6 +35,8 @@ catalog:
         }
 ```
 
+Note: `keyId` is optional but _must_ be passed wen using a PEM as the `privateKey`
+
 ### Filter Users and Groups
 
 The provider allows configuring Okta search filtering for users and groups. See here for more details on what is possible: https://developer.okta.com/docs/reference/core-okta-api/#filter

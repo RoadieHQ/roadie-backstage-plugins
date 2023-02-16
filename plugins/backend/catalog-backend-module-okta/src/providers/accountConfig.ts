@@ -28,9 +28,7 @@ export const getAccountConfig = (config: Config): AccountConfig => {
   const privateKey = config.getOptionalString('oauth.privateKey');
 
   const oauth =
-    clientId || keyId || privateKey
-      ? { clientId, keyId, privateKey }
-      : undefined;
+    clientId && privateKey ? { clientId, keyId, privateKey } : undefined;
 
   return {
     orgUrl,
