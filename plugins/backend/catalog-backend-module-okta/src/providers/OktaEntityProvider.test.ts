@@ -15,7 +15,7 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { OktaEntityProvider } from './OktaEntityProvider';
+import { OktaEntityProvider, OktaScope } from './OktaEntityProvider';
 import { AccountConfig } from '../types';
 import { Client } from '@okta/okta-sdk-nodejs';
 
@@ -31,7 +31,7 @@ class ConcreteEntityProvider extends OktaEntityProvider {
 
   getClient(
     orgUrl: string,
-    oauthScopes: string[] | undefined = undefined,
+    oauthScopes: OktaScope[] | undefined = undefined,
   ): Client {
     return super.getClient(orgUrl, oauthScopes);
   }
@@ -54,7 +54,7 @@ describe('OktaEntityProvider', () => {
         orgUrl: 'http://someorg',
         token: 'secret',
       });
-      provider.getClient('http://someorg', ['some.scope']);
+      provider.getClient('http://someorg', ['okta.users.read']);
 
       expect(Client).toBeCalledWith({
         orgUrl: 'http://someorg',
@@ -73,7 +73,7 @@ describe('OktaEntityProvider', () => {
           clientId: 'theclientid',
         },
       });
-      provider.getClient('http://someorg', ['some.scope']);
+      provider.getClient('http://someorg', ['okta.users.read']);
 
       expect(Client).toBeCalledWith({
         authorizationMode: 'PrivateKey',
@@ -81,7 +81,7 @@ describe('OktaEntityProvider', () => {
         keyId: 'thekeyid',
         orgUrl: 'http://someorg',
         privateKey: 'some string encoded PEM or JWK',
-        scopes: ['some.scope'],
+        scopes: ['okta.users.read'],
       });
     });
   });

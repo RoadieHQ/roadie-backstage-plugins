@@ -27,6 +27,8 @@ import {
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
 
+export type OktaScope = 'okta.groups.read' | 'okta.users.read';
+
 export abstract class OktaEntityProvider implements EntityProvider {
   protected readonly accounts: AccountConfig[];
   protected readonly logger: Logger;
@@ -44,7 +46,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
 
   protected getClient(
     orgUrl: string,
-    oauthScopes: string[] | undefined = undefined,
+    oauthScopes: OktaScope[] | undefined = undefined,
   ): Client {
     const account = this.accounts.find(
       acccountConfig => acccountConfig.orgUrl === orgUrl,
