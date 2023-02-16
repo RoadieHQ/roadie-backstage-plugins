@@ -177,7 +177,6 @@ export function createRouter({
         kubernetesNamespace: namespace,
       });
     } catch (e: any) {
-      logger.error(e);
       return response.status(500).send({
         status: 500,
         message: e.message || 'Failed to create argo app',
@@ -226,7 +225,7 @@ export function createRouter({
         message: '',
       };
       let countinueToDeleteProject: boolean = true;
-      let isAppexist: boolean = true;
+      let isAppExist: boolean = true;
       try {
         const deleteAppResp = await argoSvc.deleteApp({
           baseUrl: matchedArgoInstance.url,
@@ -240,14 +239,16 @@ export function createRouter({
         }
       } catch (e: any) {
         if (typeof e.message === 'string') {
-          isAppexist = false;
+          isAppExist = false;
           countinueToDeleteProject = true;
           argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = e.message;
         }
+        const message = e.message || `Failed to delete your app:, ${argoAppName}.`
+        logger.info(message);
       }
       let isAppPendingDelete: boolean = false;
-      if (isAppexist) {
+      if (isAppExist) {
         for (let attempts = 0; attempts < argoWaitCycles; attempts++) {
           try {
             const argoApp = await argoSvc.getArgoAppData(
@@ -264,6 +265,8 @@ export function createRouter({
             }
             await timer(5000);
           } catch (e: any) {
+            const message = e.message || `Failed to get argo app data for:, ${argoAppName}.`
+            logger.info(message);
             if (attempts === argoWaitCycles) {
               argoDeleteAppResp.status = 'failed';
               argoDeleteAppResp.message = 'error getting argo app data';
@@ -273,7 +276,7 @@ export function createRouter({
         }
       }
       try {
-        if (isAppPendingDelete && isAppexist) {
+        if (isAppPendingDelete && isAppExist) {
           argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = 'application pending delete';
           argoDeleteProjectResp.status = 'failed';
@@ -293,6 +296,8 @@ export function createRouter({
             'skipping project deletion due to erro deleting argo app';
         }
       } catch (e: any) {
+        const message = e.message || `Failed to delete the project:, ${argoAppName}.`
+        logger.info(message);
         if (typeof e.message === 'string') {
           argoDeleteProjectResp.status = 'failed';
           argoDeleteProjectResp.message = e.message;
