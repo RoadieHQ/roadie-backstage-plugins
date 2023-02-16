@@ -55,13 +55,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
       throw new Error(`accountConfig for ${orgUrl} not found`);
     }
 
-    if (
-      account.oauth &&
-      account.oauth.keyId &&
-      account.oauth.privateKey &&
-      account.oauth.clientId &&
-      oauthScopes
-    ) {
+    if (account.oauth && oauthScopes) {
       // use OAuth authentication strategy
       return new Client({
         orgUrl: account.orgUrl,
