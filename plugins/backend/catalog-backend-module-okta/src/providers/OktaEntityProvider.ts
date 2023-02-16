@@ -57,18 +57,19 @@ export abstract class OktaEntityProvider implements EntityProvider {
 
     if (account.oauth && oauthScopes) {
       // use OAuth authentication strategy
+      const { clientId, privateKey, keyId } = account.oauth;
       return new Client({
-        orgUrl: account.orgUrl,
+        orgUrl,
         authorizationMode: 'PrivateKey',
-        clientId: account.oauth.clientId,
+        clientId,
         scopes: oauthScopes,
-        privateKey: account.oauth.privateKey,
-        keyId: account.oauth.keyId,
+        privateKey,
+        keyId,
       });
     } else if (account.token) {
       // use api token authentication strategy
       return new Client({
-        orgUrl: account.orgUrl,
+        orgUrl,
         token: account.token,
       });
     }
