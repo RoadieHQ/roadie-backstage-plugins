@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.2.5
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 1.2.4
 
 ### Patch Changes

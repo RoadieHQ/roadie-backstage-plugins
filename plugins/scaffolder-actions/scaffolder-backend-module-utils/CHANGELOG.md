@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.0
+
+### Minor Changes
+
+- 6acba5ac: Enable dry runs for actions which support it without modification
+
 ## 1.7.2
 
 ### Patch Changes

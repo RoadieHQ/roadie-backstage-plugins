@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.1
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 2.5.0
 
 ### Minor Changes

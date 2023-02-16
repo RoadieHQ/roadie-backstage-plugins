@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.6
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 2.2.5
 
 ### Patch Changes
