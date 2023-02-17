@@ -13,6 +13,7 @@ const mockGetArgoAppData = jest.fn();
 const mockGetArgoToken = jest.fn();
 const mockCreateArgoProject = jest.fn();
 const mockCreateArgoApplication = jest.fn();
+const mockDeleteAppandProject = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -23,6 +24,7 @@ jest.mock('./argocd.service', () => {
         getArgoToken: mockGetArgoToken,
         createArgoProject: mockCreateArgoProject,
         createArgoApplication: mockCreateArgoApplication,
+        deleteAppandProject: mockDeleteAppandProject,
       };
     }),
   };
@@ -91,168 +93,19 @@ describe('router', () => {
       kubernetesNamespace: 'test-namespace',
     });
   });
-  it('delete fails when argo instance is not found', async () => {
-    fetchMock.mockOnceIf(
-      /.*\/api\/v1\/session/g,
-      JSON.stringify({ token: 'testToken' }),
-    );
-    const response = await request(app).delete(
-      '/argoInstance/:argoInstanceName/applications/argoInstance2',
-    );
-    expect(response.body).toMatchObject({
-      status: 'failed',
-      message: 'cannot find an argo instance to match this cluster',
-    });
-  });
-  it('when deleteApp returns 404 Not found continue to delete Project', async () => {
-    mockDeleteApp.mockRejectedValueOnce(new Error('Not Found'));
-    mockDeleteProject.mockResolvedValueOnce(true);
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'failed',
-        message: 'Not Found',
-      },
-      argoDeleteProjectResp: {
-        status: 'success',
-        message: 'project is deleted successfully',
-      },
-    });
-  });
-  it('when deleteApp gives 5xx errors skip project deletion', async () => {
-    mockDeleteApp.mockResolvedValueOnce(false);
-    mockDeleteProject.mockResolvedValueOnce(true);
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'failed',
-        message: 'error with deleteing argo app',
-      },
-      argoDeleteProjectResp: {
-        status: 'failed',
-        message: 'skipping project deletion due to erro deleting argo app',
-      },
-    });
-  });
-  it('when app is in pending to delete state skip project deletion', async () => {
-    mockDeleteApp.mockResolvedValueOnce(true);
-    mockGetArgoAppData.mockResolvedValue({
-      metadata: {
-        instance: {
-          name: 'argoInstance1',
-        },
-      },
-    });
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'failed',
-        message: 'application pending delete',
-      },
-      argoDeleteProjectResp: {
-        status: 'failed',
-        message: 'skipping project deletion due to app deletion pending',
-      },
-    });
-  });
-  it('when getArgoCD returns 404 every time and app is in pending to delete state skip project deletion', async () => {
-    mockDeleteApp.mockResolvedValueOnce(true);
-    mockGetArgoAppData.mockResolvedValueOnce({
-      metadata: {
-        instance: {
-          name: 'argoInstance1',
-        },
-      },
-    });
-    mockGetArgoAppData.mockRejectedValue(
-      new Error('Could not retrieve ArgoCD app data.'),
-    );
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'failed',
-        message: 'application pending delete',
-      },
-      argoDeleteProjectResp: {
-        status: 'failed',
-        message: 'skipping project deletion due to app deletion pending',
-      },
-    });
-  });
-  it('when getArgoCD returns 404 one occurrence and the app is later deleted then delete project', async () => {
-    mockDeleteApp.mockResolvedValueOnce(true);
-    mockGetArgoAppData.mockResolvedValueOnce({
-      metadata: {
-        instance: {
-          name: 'argoInstance1',
-        },
-      },
-    });
-    mockGetArgoAppData.mockRejectedValueOnce(
-      new Error('Could not retrieve ArgoCD app data.'),
-    );
-    mockGetArgoAppData.mockResolvedValueOnce({});
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'success',
-        message: 'application is deleted successfully',
-      },
-      argoDeleteProjectResp: {
-        status: 'success',
-        message: 'project is deleted successfully',
-      },
-    });
-  });
-  it('successfully deletes app and successfuly deletes project', async () => {
-    mockDeleteApp.mockResolvedValueOnce(true);
-    mockGetArgoAppData.mockResolvedValueOnce({
-      metadata: {
-        instance: {
-          name: 'argoInstance1',
-        },
-      },
-    });
-    mockGetArgoAppData.mockResolvedValueOnce({});
-    mockDeleteProject.mockResolvedValueOnce(true);
-    const response = await request(app).delete(
-      '/argoInstance/argoInstance1/applications/appName',
-    );
-    expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
-        status: 'success',
-        message: 'application is deleted successfully',
-      },
-      argoDeleteProjectResp: {
-        status: 'success',
-        message: 'project is deleted successfully',
-      },
-    });
-  });
 
-  it('succesfully deletes app and fails to delete project', async () => {
-    mockDeleteApp.mockResolvedValueOnce(true);
-    mockGetArgoAppData.mockResolvedValueOnce({
-      metadata: {
-        instance: {
-          name: 'argoInstance1',
-        },
+  it('delete sends back status of app and project deletion', async () => {
+    mockDeleteAppandProject.mockResolvedValue({
+      argoDeleteAppResp: {
+        status: 'success',
+        message: 'application is deleted successfully',
+      },
+      argoDeleteProjectResp: {
+        status: 'failed',
+        message: 'error deleting project',
       },
     });
-    mockGetArgoAppData.mockResolvedValueOnce({});
-    mockDeleteProject.mockRejectedValueOnce({
-      message: 'error deleting project',
-    });
+
     const response = await request(app).delete(
       '/argoInstance/argoInstance1/applications/appName',
     );
