@@ -14,6 +14,7 @@ const mockGetArgoToken = jest.fn();
 const mockCreateArgoProject = jest.fn();
 const mockCreateArgoApplication = jest.fn();
 const mockDeleteAppandProject = jest.fn();
+const mockGetArgoInstanceArray = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -25,6 +26,7 @@ jest.mock('./argocd.service', () => {
         createArgoProject: mockCreateArgoProject,
         createArgoApplication: mockCreateArgoApplication,
         deleteAppandProject: mockDeleteAppandProject,
+        getArgoInstanceArray: mockGetArgoInstanceArray,
       };
     }),
   };
@@ -74,7 +76,25 @@ describe('router', () => {
     mockDeleteApp.mockReset();
     mockGetArgoAppData.mockReset();
   });
+
   it('returns the requested data', async () => {
+    mockGetArgoInstanceArray.mockReturnValue([
+      {
+        name: 'argoInstance1',
+        url: 'https://argoInstance1.com',
+        token: 'token',
+        username: 'username',
+        password: 'password',
+      },
+      {
+        name: 'argoInstance2',
+        url: 'https://argoInstance2.com',
+        token: 'token',
+        username: 'username',
+        password: 'password',
+      },
+    ]);
+
     const response = await request(app).post('/createArgo').send({
       clusterName: 'argoInstance1',
       namespace: 'test-namespace',

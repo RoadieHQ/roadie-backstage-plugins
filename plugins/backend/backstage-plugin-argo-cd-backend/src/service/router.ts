@@ -27,14 +27,16 @@ export function createRouter({
   const argoSvc = new ArgoService(argoUserName, argoPassword, config, logger);
 
   const argoInstanceArray = argoSvc.getArgoInstanceArray();
+
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
     response.send(await argoSvc.findArgoApp({ name: argoAppName }));
   });
+
   router.get(
     '/argoInstance/:argoInstanceName/applications/name/:argoAppName',
     async (request, response) => {
-      const argoInstanceName = request.params.argoInstanceName;
+      const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
@@ -99,13 +101,15 @@ export function createRouter({
     },
   );
   router.post('/createArgo', async (request, response) => {
-    const argoInstanceName = request.body.clusterName;
+    console.log('inside createArgo');
+    const argoInstanceName: string = request.body.clusterName;
     const namespace = request.body.namespace;
     const projectName = request.body.projectName as string;
     const appName = request.body.appName as string;
     const labelValue = request.body.labelValue as string;
     const sourceRepo = request.body.sourceRepo;
     const sourcePath = request.body.sourcePath;
+    const argoInstanceArray = argoSvc.getArgoInstanceArray();
     const matchedArgoInstance = argoInstanceArray.find(
       argoInstance => argoInstance.name === argoInstanceName,
     );
@@ -128,7 +132,6 @@ export function createRouter({
     } else {
       token = matchedArgoInstance.token;
     }
-
     try {
       await argoSvc.createArgoProject({
         baseUrl: matchedArgoInstance.url,
