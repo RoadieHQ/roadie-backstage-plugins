@@ -101,7 +101,6 @@ export function createRouter({
     },
   );
   router.post('/createArgo', async (request, response) => {
-    console.log('inside createArgo');
     const argoInstanceName: string = request.body.clusterName;
     const namespace = request.body.namespace;
     const projectName = request.body.projectName as string;
