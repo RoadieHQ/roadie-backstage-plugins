@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-github-insights",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -66,7 +66,7 @@
     "@testing-library/react": "^11.2.5",
     "cross-fetch": "^3.1.4",
     "esbuild": "^0.8.56",
-    "msw": "^0.35.0",
+    "msw": "^1.0.1",
     "react-test-renderer": "^16.14.0",
     "jest-environment-jsdom": "^29.2.1",
     "typescript": "^4.2.4"

@@ -79,3 +79,5 @@ export type PrometheusRuleResponse = {
   };
   status: 'success' | 'error';
 };
+
+export type OnRowClick = (arg: PrometheusDisplayableAlert) => void;

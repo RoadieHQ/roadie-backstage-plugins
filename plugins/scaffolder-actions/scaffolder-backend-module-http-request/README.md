@@ -27,9 +27,8 @@ Configure the action:
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-
 const actions = [
-  createHttpBackstageAction({ config }),
+  createHttpBackstageAction({ discovery }),
   ...createBuiltinActions({
     containerRunner,
     integrations,

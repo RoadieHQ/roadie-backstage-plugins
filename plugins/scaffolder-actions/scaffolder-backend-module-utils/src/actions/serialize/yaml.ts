@@ -25,6 +25,7 @@ export function createSerializeYamlAction() {
   }>({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',

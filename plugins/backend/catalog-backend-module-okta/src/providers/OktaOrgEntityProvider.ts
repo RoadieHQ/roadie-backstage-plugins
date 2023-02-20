@@ -31,6 +31,7 @@ import {
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { getAccountConfig } from './accountConfig';
 
 /**
  * Provides entities from Okta Org service.
@@ -49,15 +50,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
   ) {
     const oktaConfigs = config
       .getOptionalConfigArray('catalog.providers.okta')
-      ?.map(oktaConfig => {
-        const orgUrl = oktaConfig.getString('orgUrl');
-        const token = oktaConfig.getString('token');
-
-        const userFilter = oktaConfig.getOptionalString('userFilter');
-        const groupFilter = oktaConfig.getOptionalString('groupFilter');
-
-        return { orgUrl, token, groupFilter, userFilter };
-      });
+      ?.map(getAccountConfig);
 
     return new OktaOrgEntityProvider(oktaConfigs || [], options);
   }
@@ -95,7 +88,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
 
     await Promise.all(
       this.accounts.map(async account => {
-        const client = this.getClient(account.orgUrl);
+        const client = this.getClient(account.orgUrl, [
+          'okta.groups.read',
+          'okta.users.read',
+        ]);
 
         const defaultAnnotations = await this.buildDefaultAnnotations();
 

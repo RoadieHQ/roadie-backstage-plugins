@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.3.4
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 1.3.3
 
 ### Patch Changes

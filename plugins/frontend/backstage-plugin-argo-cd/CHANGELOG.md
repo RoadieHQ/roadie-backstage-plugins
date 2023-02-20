@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.6
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
+## 2.2.5
+
+### Patch Changes
+
+- b619d5d8: make `getBaseUrl` and `fetchDecode` methods public so that they can be used when the plugin is subclassed
+
 ## 2.2.4
 
 ### Patch Changes
