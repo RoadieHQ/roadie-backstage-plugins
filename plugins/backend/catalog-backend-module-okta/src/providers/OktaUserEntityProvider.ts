@@ -25,6 +25,7 @@ import {
 } from './userNamingStrategyFactory';
 import { AccountConfig } from '../types';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
+import { getAccountConfig } from './accountConfig';
 
 /**
  * Provides entities from Okta User service.
@@ -38,12 +39,9 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     config: Config,
     options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
   ) {
-    const orgUrl = config.getString('orgUrl');
-    const token = config.getString('token');
+    const accountConfig = getAccountConfig(config);
 
-    const userFilter = config.getOptionalString('userFilter');
-
-    return new OktaUserEntityProvider({ orgUrl, token, userFilter }, options);
+    return new OktaUserEntityProvider(accountConfig, options);
   }
 
   constructor(
@@ -68,7 +66,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     this.logger.info(`Providing user resources from okta: ${this.orgUrl}`);
     const userResources: UserEntity[] = [];
 
-    const client = this.getClient(this.orgUrl);
+    const client = this.getClient(this.orgUrl, ['okta.users.read']);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 

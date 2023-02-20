@@ -30,6 +30,7 @@ import {
 } from './userNamingStrategyFactory';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { getAccountConfig } from './accountConfig';
 
 /**
  * Provides entities from Okta Group service.
@@ -48,12 +49,9 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       userNamingStrategy?: UserNamingStrategies;
     },
   ) {
-    const orgUrl = config.getString('orgUrl');
-    const token = config.getString('token');
+    const accountConfig = getAccountConfig(config);
 
-    const groupFilter = config.getOptionalString('groupFilter');
-
-    return new OktaGroupEntityProvider({ orgUrl, token, groupFilter }, options);
+    return new OktaGroupEntityProvider(accountConfig, options);
   }
 
   constructor(
@@ -85,7 +83,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     this.logger.info(`Providing group resources from okta: ${this.orgUrl}`);
     const groupResources: GroupEntity[] = [];
 
-    const client = this.getClient(this.orgUrl);
+    const client = this.getClient(this.orgUrl, ['okta.groups.read']);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
