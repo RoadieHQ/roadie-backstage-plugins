@@ -1,3 +1,4 @@
+import { Config } from '@backstage/config';
 import { Logger } from 'winston';
 
 export type findArgoAppResp = {
@@ -55,6 +56,21 @@ export interface DeleteApplicationProps {
   argoToken: string;
 }
 
+export interface DeleteApplicationAndProjectProps {
+  argoAppName: string;
+  argoInstanceName: string;
+}
+
+export type DeleteApplicationAndProjectResponse = {
+  argoDeleteAppResp: ResponseSchema;
+  argoDeleteProjectResp: ResponseSchema;
+};
+
+export type ResponseSchema = {
+  status: string;
+  message: string;
+};
+
 export interface SyncArgoApplicationProps {
   argoInstance: findArgoAppResp;
   argoToken: string;
@@ -66,6 +82,8 @@ export interface ResyncProps {
 }
 
 export interface ArgoServiceApi {
+  getArgoInstanceArray: () => InstanceConfig[];
+  getAppArray: () => Config[];
   getArgoToken: (appConfig: {
     url: string;
     username?: string;
@@ -85,6 +103,9 @@ export interface ArgoServiceApi {
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
   deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
   deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
+  deleteAppandProject: (
+    props: DeleteApplicationAndProjectProps,
+  ) => Promise<DeleteApplicationAndProjectResponse>;
   syncArgoApp: (props: SyncArgoApplicationProps) => Promise<SyncResponse>;
   resyncAppOnAllArgos: (props: {
     appSelector: string;

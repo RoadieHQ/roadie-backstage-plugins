@@ -18,6 +18,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version}}
+
       - name: Log node version
         run: node --version
 
@@ -61,6 +65,10 @@ jobs:
         node-version: [16]
 
     steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version}}
+
       - name: Log node version
         run: node --version
 

@@ -1,6 +1,7 @@
 import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
 import { Logger } from 'winston';
+import { timer } from './timer.services';
 
 import {
   ArgoServiceApi,
@@ -14,6 +15,9 @@ import {
   SyncArgoApplicationProps,
   SyncResponse,
   findArgoAppResp,
+  DeleteApplicationAndProjectProps,
+  DeleteApplicationAndProjectResponse,
+  ResponseSchema,
 } from './types';
 
 export class ArgoService implements ArgoServiceApi {
@@ -40,6 +44,28 @@ export class ArgoService implements ArgoServiceApi {
         username: instance.getOptionalString('username'),
         password: instance.getOptionalString('password'),
       }));
+  }
+
+  getArgoInstanceArray(): InstanceConfig[] {
+    return this.getAppArray().map(instance => ({
+      name: instance.getString('name'),
+      url: instance.getString('url'),
+      token: instance.getOptionalString('token'),
+      username: instance.getOptionalString('username'),
+      password: instance.getOptionalString('password'),
+    }));
+  }
+
+  getAppArray(): Config[] {
+    const argoApps = this.config
+      .getConfigArray('argocd.appLocatorMethods')
+      .filter(element => element.getString('type') === 'config');
+
+    return argoApps.reduce(
+      (acc: Config[], argoApp: Config) =>
+        acc.concat(argoApp.getConfigArray('instances')),
+      [],
+    );
   }
 
   async findArgoApp(options: {
@@ -401,6 +427,138 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error(`Cannot Delete Project: ${data.message}`);
     }
     return false;
+  }
+
+  async deleteAppandProject({
+    argoAppName,
+    argoInstanceName,
+  }: DeleteApplicationAndProjectProps): Promise<DeleteApplicationAndProjectResponse> {
+    const argoDeleteAppResp: ResponseSchema = {
+      status: '',
+      message: '',
+    };
+    const argoDeleteProjectResp: ResponseSchema = {
+      status: '',
+      message: '',
+    };
+
+    const matchedArgoInstance = this.instanceConfigs.find(
+      argoInstance => argoInstance.name === argoInstanceName,
+    );
+    if (matchedArgoInstance === undefined) {
+      argoDeleteAppResp.status = 'failed';
+      argoDeleteAppResp.message =
+        'cannot find an argo instance to match this cluster';
+      throw new Error('cannot find an argo instance to match this cluster');
+    }
+
+    let token: string;
+    if (!matchedArgoInstance.token) {
+      token = await this.getArgoToken(matchedArgoInstance);
+    } else {
+      token = matchedArgoInstance.token;
+    }
+
+    let countinueToDeleteProject: boolean = true;
+    let isAppExist: boolean = true;
+    try {
+      const deleteAppResp = await this.deleteApp({
+        baseUrl: matchedArgoInstance.url,
+        argoApplicationName: argoAppName,
+        argoToken: token,
+      });
+      if (deleteAppResp === false) {
+        countinueToDeleteProject = false;
+        argoDeleteAppResp.status = 'failed';
+        argoDeleteAppResp.message = 'error with deleteing argo app';
+      }
+    } catch (e: any) {
+      if (typeof e.message === 'string') {
+        isAppExist = false;
+        countinueToDeleteProject = true;
+        argoDeleteAppResp.status = 'failed';
+        argoDeleteAppResp.message = e.message;
+      }
+      const message =
+        e.message || `Failed to delete your app:, ${argoAppName}.`;
+      this.logger.info(message);
+    }
+
+    let isAppPendingDelete: boolean = false;
+    if (isAppExist) {
+      for (
+        let attempts = 0;
+        attempts < (this.config.getOptionalNumber('argocd.waitCycles') || 5);
+        attempts++
+      ) {
+        try {
+          const argoApp = await this.getArgoAppData(
+            matchedArgoInstance.url,
+            matchedArgoInstance.name,
+            { name: argoAppName },
+            token,
+          );
+
+          isAppPendingDelete = 'metadata' in argoApp;
+          if (!isAppPendingDelete) {
+            argoDeleteAppResp.status = 'success';
+            argoDeleteAppResp.message = 'application is deleted successfully';
+            break;
+          }
+
+          await timer(5000);
+        } catch (e: any) {
+          const message =
+            e.message || `Failed to get argo app data for:, ${argoAppName}.`;
+          this.logger.info(message);
+          if (
+            attempts ===
+            (this.config.getOptionalNumber('argocd.waitCycles') || 5) - 1
+          ) {
+            argoDeleteAppResp.status = 'failed';
+            argoDeleteAppResp.message = 'error getting argo app data';
+          }
+          continue;
+        }
+      }
+    }
+
+    try {
+      if (isAppPendingDelete && isAppExist) {
+        argoDeleteAppResp.status = 'failed';
+        argoDeleteAppResp.message = 'application pending delete';
+        argoDeleteProjectResp.status = 'failed';
+        argoDeleteProjectResp.message =
+          'skipping project deletion due to app deletion pending';
+      } else if (countinueToDeleteProject) {
+        await this.deleteProject({
+          baseUrl: matchedArgoInstance.url,
+          argoProjectName: argoAppName,
+          argoToken: token,
+        });
+        argoDeleteProjectResp.status = 'success';
+        argoDeleteProjectResp.message = 'project is deleted successfully';
+      } else {
+        argoDeleteProjectResp.status = 'failed';
+        argoDeleteProjectResp.message =
+          'skipping project deletion due to error deleting argo app';
+      }
+    } catch (e: any) {
+      const message =
+        e.message || `Failed to delete the project:, ${argoAppName}.`;
+      this.logger.info(message);
+      if (typeof e.message === 'string') {
+        argoDeleteProjectResp.status = 'failed';
+        argoDeleteProjectResp.message = e.message;
+      } else {
+        argoDeleteProjectResp.status = 'failed';
+        argoDeleteProjectResp.message = 'error with deleteing argo project';
+      }
+    }
+    return {
+      argoDeleteAppResp: argoDeleteAppResp,
+      argoDeleteProjectResp: argoDeleteProjectResp,
+    };
   }
 
   async createArgoResources({
