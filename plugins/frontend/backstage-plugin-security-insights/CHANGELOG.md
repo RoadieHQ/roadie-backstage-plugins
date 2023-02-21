@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.7
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.1.6
 
 ### Patch Changes

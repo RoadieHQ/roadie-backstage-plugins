@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.2
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.4.1
 
 ### Patch Changes

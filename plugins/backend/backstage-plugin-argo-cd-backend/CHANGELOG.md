@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.7.0
+
+### Minor Changes
+
+- dbaf0f83: enhance argo delete operation to handle failures better
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.6.4
 
 ### Patch Changes

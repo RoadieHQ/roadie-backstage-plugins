@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.0.3
 
 ### Patch Changes

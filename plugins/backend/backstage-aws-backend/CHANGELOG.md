@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.1.3
 
 ### Patch Changes

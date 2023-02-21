@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.1
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.8.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.2.6
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.2.5
 
 ### Patch Changes

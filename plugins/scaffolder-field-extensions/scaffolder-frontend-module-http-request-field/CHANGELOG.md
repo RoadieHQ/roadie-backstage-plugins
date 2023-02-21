@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.3.5
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.3.4
 
 ### Patch Changes

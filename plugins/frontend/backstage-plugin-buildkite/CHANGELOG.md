@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.1.5
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.1.4
 
 ### Patch Changes
