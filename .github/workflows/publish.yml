@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [16]
 
     env:
       CI: true
@@ -22,9 +22,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@main
-      - name: Set up Node.js
-        uses: actions/setup-node@main
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --frozen-lockfile
@@ -72,10 +73,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@main
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --frozen-lockfile

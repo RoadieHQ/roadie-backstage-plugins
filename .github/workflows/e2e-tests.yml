@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [16]
 
     env:
       CI: true
@@ -21,9 +21,13 @@ jobs:
       - name: Log node version
         run: node --version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: yarn install
@@ -54,15 +58,19 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [16]
 
     steps:
       - name: Log node version
         run: node --version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: yarn install
