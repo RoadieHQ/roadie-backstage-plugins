@@ -127,11 +127,13 @@ export class JiraAPI {
     apiUrl,
     projectKey,
     component,
+    label,
     statusesNames,
   }: {
     apiUrl: string;
     projectKey: string;
     component: string;
+    label: string;
     statusesNames: Array<string>;
   }) {
     const statusesString = this.convertToString(statusesNames);
@@ -139,7 +141,8 @@ export class JiraAPI {
     const jql = `project = "${projectKey}"
       ${statusesString ? `AND status in (${statusesString})` : ''}
       ${component ? `AND component = "${component}"` : ''}
-      AND statuscategory not in ("Done")
+      ${label ? `AND labels in ("${label}")` : ''}
+      AND statuscategory not in ("Done") 
     `;
 
     let startAt: number | undefined = 0;
@@ -165,6 +168,7 @@ export class JiraAPI {
     statusesNames,
     issueType,
     issueIcon,
+    label,
   }: {
     apiUrl: string;
     projectKey: string;
@@ -172,6 +176,7 @@ export class JiraAPI {
     statusesNames: Array<string>;
     issueType: string;
     issueIcon: string;
+    label: string;
   }) {
     const statusesString = this.convertToString(statusesNames);
 
@@ -179,7 +184,9 @@ export class JiraAPI {
       AND issuetype = "${issueType}"
       ${statusesString ? `AND status in (${statusesString})` : ''}
       ${component ? `AND component = "${component}"` : ''}
-      AND statuscategory not in ("Done")
+      AND statuscategory not in ("Done") ${
+        label ? `AND labels in ("${label}")` : ''
+      }
     `;
     const data = {
       jql,
@@ -210,6 +217,7 @@ export class JiraAPI {
   async getProjectDetails(
     projectKey: string,
     component: string,
+    label: string,
     statusesNames: Array<string>,
   ) {
     const { apiUrl } = await this.getUrls();
@@ -233,7 +241,7 @@ export class JiraAPI {
     let issuesCounter: IssuesCounter[] = [];
     let ticketIds: string[] = [];
 
-    if (!component) {
+    if (!component && !label) {
       // Generate counters for each issue type
       const issuesTypes = project.issueTypes.map((status: IssueType) => ({
         name: status.name,
@@ -253,6 +261,7 @@ export class JiraAPI {
             statusesNames,
             issueType,
             issueIcon,
+            label,
           });
         }),
       );
@@ -270,6 +279,7 @@ export class JiraAPI {
         apiUrl,
         projectKey,
         component,
+        label,
         statusesNames,
       });
 
@@ -309,12 +319,13 @@ export class JiraAPI {
     projectKey: string,
     componentName: string | undefined,
     ticketIds: string[] | undefined,
+    label: string | undefined,
     isBearerAuth: boolean,
   ) {
     const { baseUrl } = await this.getUrls();
 
     let filterUrl = `streams=key+IS+${projectKey}`;
-    if (componentName && ticketIds) {
+    if (ticketIds && (componentName || label)) {
       filterUrl += `&streams=issue-key+IS+${ticketIds.join('+')}`;
       filterUrl += this.confluenceActivityFilter
         ? `&${this.confluenceActivityFilter}=activity+IS+NOT+*`

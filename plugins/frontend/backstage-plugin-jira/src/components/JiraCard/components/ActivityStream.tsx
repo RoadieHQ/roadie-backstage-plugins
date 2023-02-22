@@ -122,11 +122,13 @@ export const ActivityStream = ({
   tokenType,
   componentName,
   ticketIds,
+  label,
 }: {
   projectKey: string;
   tokenType: string | undefined;
   componentName: string | undefined;
   ticketIds: string[] | undefined;
+  label: string | undefined;
 }) => {
   const classes = useStyles();
   const [size, setSize] = useState(25);
@@ -137,6 +139,7 @@ export const ActivityStream = ({
     projectKey,
     componentName,
     ticketIds,
+    label,
     isBearerAuth,
   );
 
