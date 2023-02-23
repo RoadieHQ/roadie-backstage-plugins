@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.2
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.5.1
 
 ### Patch Changes

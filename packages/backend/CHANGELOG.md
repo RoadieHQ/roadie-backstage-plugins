@@ -1,5 +1,21 @@
 # backend
 
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [58506f09]
+- Updated dependencies [dbaf0f83]
+- Updated dependencies [1599cf96]
+  - @roadiehq/catalog-backend-module-okta@0.4.7
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.0
+  - @roadiehq/backstage-plugin-aws-backend@1.1.4
+  - @roadiehq/backstage-plugin-aws-auth@0.4.4
+  - @roadiehq/catalog-backend-module-aws@1.3.5
+  - @roadiehq/scaffolder-backend-module-aws@2.4.2
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.1
+  - @roadiehq/scaffolder-backend-module-utils@1.8.1
+
 ## 2.0.0
 
 ### Major Changes

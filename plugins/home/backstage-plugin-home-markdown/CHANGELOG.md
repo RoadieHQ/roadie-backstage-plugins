@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.5.3
 
 ### Patch Changes

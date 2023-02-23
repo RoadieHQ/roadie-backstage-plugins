@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.2.2
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.2.1
 
 ### Patch Changes

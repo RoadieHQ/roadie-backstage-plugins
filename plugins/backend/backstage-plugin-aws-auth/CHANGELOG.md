@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 0.4.3
 
 ### Patch Changes

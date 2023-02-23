@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.5
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.3.4
 
 ### Patch Changes

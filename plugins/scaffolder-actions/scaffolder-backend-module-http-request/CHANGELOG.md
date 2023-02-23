@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.1
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 4.0.0
 
 ### Major Changes

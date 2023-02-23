@@ -1,5 +1,14 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.1.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+- Updated dependencies [dbaf0f83]
+- Updated dependencies [1599cf96]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.0
+
 ## 1.1.3
 
 ### Patch Changes

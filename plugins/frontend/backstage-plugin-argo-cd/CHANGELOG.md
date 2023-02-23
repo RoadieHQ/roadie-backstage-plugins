@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.7
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.2.6
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.7
+
+### Patch Changes
+
+- 58506f09: Enabled the use of OAuth credentials for authenticating to okta. This allows credential to be provisiond that have the minimum required level of privilege for the provider to function.
+- 1599cf96: release dependabot PRs
+
 ## 0.4.6
 
 ### Patch Changes
