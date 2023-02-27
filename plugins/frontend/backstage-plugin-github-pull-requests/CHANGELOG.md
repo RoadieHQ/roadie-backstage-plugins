@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.3
+
+### Patch Changes
+
+- 17104109: Fixed bug in PullRequestsTableView component where table layout did not readjust properly when table header text length exceeded.
+
 ## 2.5.2
 
 ### Patch Changes
