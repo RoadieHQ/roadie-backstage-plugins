@@ -157,13 +157,33 @@ export const PullRequestsTableView: FC<Props> = ({
       onRowsPerPageChange={onChangePageSize}
       title={
         <>
-          <Box display="flex" alignItems="center">
+          <Box
+            position="absolute"
+            left="20px"
+            top="17px"
+            width="45%"
+            display="flex"
+            alignItems="center"
+          >
             <GitHubIcon />
             <Box mr={1} />
-            <Typography variant="h6">{projectName}</Typography>
+            <Typography variant="h6" noWrap>
+              {projectName}
+            </Typography>
           </Box>
-          {StateFilterComponent ? <StateFilterComponent /> : <></>}
-          {SearchComponent ? <SearchComponent /> : <></>}
+          <Box
+            position="absolute"
+            right="20px"
+            top="15px"
+            width="50%"
+            display="flex"
+            alignItems="center"
+            justifyContent="flex-end"
+          >
+            {StateFilterComponent ? <StateFilterComponent /> : <></>}
+            {StateFilterComponent && SearchComponent ? <Box mr={1} /> : <></>}
+            {SearchComponent ? <SearchComponent /> : <></>}
+          </Box>
         </>
       }
       columns={generatedColumns}
@@ -203,7 +223,7 @@ const PullRequests = (__props: TableProps) => {
     repo,
   });
   const StateFilterComponent = () => (
-    <Box position="absolute" right={525} top={20}>
+    <Box>
       <ButtonGroup color="primary" aria-label="text primary button group">
         <Button
           color={search.search('state:open') !== -1 ? 'primary' : 'default'}
@@ -229,7 +249,7 @@ const PullRequests = (__props: TableProps) => {
   const SearchComponent = () => {
     const [draftSearch, setDraftSearch] = useState(search);
     return (
-      <Box position="absolute" width={500} right={10} top={25}>
+      <Box width={500}>
         <TextField
           fullWidth
           onChange={event => {
