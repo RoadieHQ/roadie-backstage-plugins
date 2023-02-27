@@ -66,7 +66,11 @@
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.5",
     "jest-environment-jsdom": "^29.2.1",
-    "cross-fetch": "^3.1.4"
+    "cross-fetch": "^3.1.4",
+    "rollup-plugin-dts": "^5.2.0",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "rollup-plugin-esbuild": "^5.0.0"
   },
   "files": [
     "dist"

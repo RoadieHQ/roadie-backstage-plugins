@@ -65,7 +65,11 @@
     "@testing-library/react": "^11.2.6",
     "@types/luxon": "^1.27.0",
     "jest-environment-jsdom": "^29.2.1",
-    "msw": "^1.0.1"
+    "msw": "^1.0.1",
+    "rollup-plugin-dts": "^5.2.0",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "rollup-plugin-esbuild": "^5.0.0"
   },
   "files": [
     "dist",

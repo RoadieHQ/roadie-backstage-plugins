@@ -53,14 +53,18 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.22.3",
-    "@backstage/dev-utils": "^1.0.12",
     "@backstage/core-app-api": "^1.5.0",
+    "@backstage/dev-utils": "^1.0.12",
     "@backstage/test-utils": "^1.2.5",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
     "@testing-library/jest-dom": "^5.10.1",
     "@testing-library/react": "^11.2.6",
     "cross-fetch": "^3.0.6",
     "jest-environment-jsdom": "^29.2.1",
-    "msw": "^1.0.1"
+    "msw": "^1.0.1",
+    "rollup-plugin-dts": "^5.2.0",
+    "rollup-plugin-esbuild": "^5.0.0"
   },
   "files": [
     "dist"
