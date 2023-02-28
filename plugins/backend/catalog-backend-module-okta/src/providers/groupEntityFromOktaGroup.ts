@@ -22,6 +22,10 @@ export const groupEntityFromOktaGroup = (
   namingStrategy: GroupNamingStrategy,
   options: { annotations: Record<string, string>; members: string[] },
 ): GroupEntity => {
+  const title =
+    typeof group.profile.label === 'string'
+      ? group.profile.label
+      : group.profile.name;
   return {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
@@ -30,7 +34,7 @@ export const groupEntityFromOktaGroup = (
         ...options.annotations,
       },
       name: namingStrategy(group),
-      title: group.profile.name,
+      title,
       description: group.profile.description || '',
     },
     spec: {
