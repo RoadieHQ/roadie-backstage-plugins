@@ -114,7 +114,6 @@ export function createHttpBackstageAction(options: {
       const url = await generateBackstageUrl(discovery, input.path);
 
       if (logging === true) {
-        console.debug(`Inside function | Logging is: ${logging}`);
         ctx.logger.info(
           `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
         );
