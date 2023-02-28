@@ -9019,7 +9019,7 @@
 
 "@okta/okta-sdk-nodejs@^6.6.0":
   version "6.6.0"
-  resolved "https://roadiehq.jfrog.io/artifactory/api/npm/roadiehq/@okta/okta-sdk-nodejs/-/okta-sdk-nodejs-6.6.0.tgz#fd7ab0122ca1bf9fa4c8b71c594fd439e5e18d01"
+  resolved "https://registry.yarnpkg.com/@okta/okta-sdk-nodejs/-/okta-sdk-nodejs-6.6.0.tgz#fd7ab0122ca1bf9fa4c8b71c594fd439e5e18d01"
   integrity sha512-2dxvZlEh4v1/L9vnRZ3tPT94+8VyxXwplfcl6nm84rQjENpHWf34XO5SnZYy9kvuabIdHYtq4wfRqaEyJnzpyA==
   dependencies:
     deep-copy "^1.4.2"
