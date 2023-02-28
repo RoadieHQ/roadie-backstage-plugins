@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.0
+
+### Minor Changes
+
+- 185d1c69: feat: added filtering by label
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 2.3.5
 
 ### Patch Changes
