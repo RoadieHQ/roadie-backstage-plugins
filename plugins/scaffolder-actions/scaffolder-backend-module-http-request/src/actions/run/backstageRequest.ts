@@ -33,6 +33,7 @@ export function createHttpBackstageAction(options: {
     headers?: Headers;
     params?: Params;
     body?: any;
+    logging?: boolean;
   }>({
     id: 'http:backstage:request',
     description:
@@ -78,6 +79,12 @@ export function createHttpBackstageAction(options: {
             description: 'The body you would like to pass to your request',
             type: ['object', 'string'],
           },
+          logging: {
+            title: 'Request path logging',
+            description:
+              'Option to turn request path logging off. On by default',
+            type: 'boolean',
+          },
         },
       },
       output: {
@@ -103,11 +110,15 @@ export function createHttpBackstageAction(options: {
       const { input } = ctx;
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
+      const logging = input.logging ?? true;
       const url = await generateBackstageUrl(discovery, input.path);
 
-      ctx.logger.info(
-        `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
-      );
+      if (logging === true) {
+        console.debug(`Inside function | Logging is: ${logging}`);
+        ctx.logger.info(
+          `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
+        );
+      }
 
       const queryParams: string = params
         ? new URLSearchParams(params).toString()
