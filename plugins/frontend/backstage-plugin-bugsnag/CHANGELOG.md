@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.1.7
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 2.1.6
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.8
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 2.1.7
 
 ### Patch Changes

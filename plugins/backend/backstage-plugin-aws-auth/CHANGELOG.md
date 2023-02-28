@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.5
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 0.4.4
 
 ### Patch Changes

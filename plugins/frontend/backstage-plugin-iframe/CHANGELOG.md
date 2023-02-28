@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.2.7
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 1.2.6
 
 ### Patch Changes

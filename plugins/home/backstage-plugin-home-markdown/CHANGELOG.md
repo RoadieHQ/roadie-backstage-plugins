@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.5
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 2.5.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.2
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 1.8.1
 
 ### Patch Changes

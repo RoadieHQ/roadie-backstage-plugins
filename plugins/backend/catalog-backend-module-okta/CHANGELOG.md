@@ -1,5 +1,12 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.4.8
+
+### Patch Changes
+
+- ce51ed14: Fix example okta oauth configuration to use regular yaml
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
 ## 0.4.7
 
 ### Patch Changes
