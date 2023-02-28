@@ -28,11 +28,10 @@ catalog:
   providers:
     okta:
       - orgUrl: 'https://tenant.okta.com'
-        oauth: {
+        oauth:
           clientId: ${OKTA_OAUTH_CLIENT_ID},
           keyId: ${OKTA_OAUTH_KEY_ID},
           privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
-        }
 ```
 
 Note: `keyId` is optional but _must_ be passed wen using a PEM as the `privateKey`
