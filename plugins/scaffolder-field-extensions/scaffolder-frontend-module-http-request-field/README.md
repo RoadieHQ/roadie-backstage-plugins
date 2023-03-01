@@ -75,6 +75,7 @@ The response is the following and it will extract the `count` field as the value
 }
 ```
 
-The example template would result in the following dropdown::
+The example template would result in the following dropdown:
 
-![Alt text](images/sample.png?raw=true 'Example of the custom scaffolder field')
+![Alt text](images/dropdown_sample_closed.png?raw=true 'Example of the custom scaffolder field')
+![Alt text](images/dropdown_sample_opened.png?raw=true 'Example of the custom scaffolder field')
