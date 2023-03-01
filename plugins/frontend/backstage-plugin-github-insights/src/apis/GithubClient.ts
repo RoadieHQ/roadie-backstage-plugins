@@ -60,8 +60,8 @@ export class GithubClient implements GithubApi {
     links: Record<string, string>;
   }> {
     const { path, repo, owner, branch, baseUrl = defaultBaseUrl } = props;
-    const token = await this.githubAuthApi.getAccessToken();
-    const octokit = new Octokit({ auth: token, baseUrl });
+    //const token = await this.githubAuthApi.getAccessToken();
+    const octokit = new Octokit({ baseUrl });
     let query = 'readme';
     if (path) {
       query = `contents/${path}`;
@@ -77,6 +77,8 @@ export class GithubClient implements GithubApi {
     const content = Buffer.from(response.data.content, 'base64').toString(
       'utf8',
     );
+
+    console.log(response)
 
     const mediaLinks = [
       ...content.matchAll(
@@ -117,8 +119,8 @@ export class GithubClient implements GithubApi {
     for (const markdownLink of markdownLinks) {
       links[
         markdownLink
-      ] = `https://github.com/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-        response.url,
+      ] = `https://github.com/${owner}/${repo}/blob/${branch || getRepositoryDefaultBranch(
+        response.data.url,
       )}/${markdownLink}`;
     }
     return { content, media, links };
