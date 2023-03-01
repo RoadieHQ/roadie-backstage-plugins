@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.7
+
+### Patch Changes
+
+- 199311f4: Fix branch resolution on markdown links in the Readme card.
+
 ## 2.3.6
 
 ### Patch Changes
