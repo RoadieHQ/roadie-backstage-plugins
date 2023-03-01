@@ -38,13 +38,13 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const { title = 'Select', description = '' } = props.uiSchema;
+  const options = selectFieldFromApiConfigSchema.parse(
+      props.uiSchema['ui:options'],
+  );
+  const { title = 'Select', description = '' } = options;
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
-    const options = selectFieldFromApiConfigSchema.parse(
-      props.uiSchema['ui:options'],
-    );
     const params = new URLSearchParams(options.params);
     const response = await fetchApi.fetch(
       `${baseUrl}${options.path}?${params}`,

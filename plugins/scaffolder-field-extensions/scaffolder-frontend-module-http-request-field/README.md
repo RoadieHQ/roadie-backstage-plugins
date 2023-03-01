@@ -34,14 +34,14 @@ spec:
       - title: Custom
         properties:
           custom:
-            title: custom
             type: string
-            description: My custom name for the component
-
             # Use `SelectFieldFromApi` to configure the select field for the entry.
             ui:field: SelectFieldFromApi
 
             ui:options:
+              title: My Dropdown title
+              description: My custom description for the component
+              
               # The Path on the Backstage API and the parameters to fetch the data for the dropdown
               path: 'catalog/entity-facets'
               params:
