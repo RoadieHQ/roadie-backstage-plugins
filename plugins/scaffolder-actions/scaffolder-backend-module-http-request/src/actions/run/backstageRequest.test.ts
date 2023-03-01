@@ -356,15 +356,18 @@ describe('http:backstage:request', () => {
           headers: {},
           body: {},
         });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action';
         await action.handler({
           ...mockContext,
           input: {
             path: '/api/proxy/foo',
             method: 'GET',
-            logging: false,
+            logRequestPath: false,
           },
         });
-        expect(loggerSpy).toBeCalledTimes(0);
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
         expect(http).toBeCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
