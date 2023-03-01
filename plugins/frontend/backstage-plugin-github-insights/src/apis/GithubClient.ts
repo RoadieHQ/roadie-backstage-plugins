@@ -60,8 +60,8 @@ export class GithubClient implements GithubApi {
     links: Record<string, string>;
   }> {
     const { path, repo, owner, branch, baseUrl = defaultBaseUrl } = props;
-    //const token = await this.githubAuthApi.getAccessToken();
-    const octokit = new Octokit({ baseUrl });
+    const token = await this.githubAuthApi.getAccessToken();
+    const octokit = new Octokit({ auth: token, baseUrl });
     let query = 'readme';
     if (path) {
       query = `contents/${path}`;
@@ -77,8 +77,6 @@ export class GithubClient implements GithubApi {
     const content = Buffer.from(response.data.content, 'base64').toString(
       'utf8',
     );
-
-    console.log(response)
 
     const mediaLinks = [
       ...content.matchAll(
