@@ -115,11 +115,9 @@ export class GithubClient implements GithubApi {
 
     const links: Record<string, string> = {};
     for (const markdownLink of markdownLinks) {
-      links[
-        markdownLink
-      ] = `https://github.com/${owner}/${repo}/blob/${getRepositoryDefaultBranch(
-        response.url,
-      )}/${markdownLink}`;
+      links[markdownLink] = `https://github.com/${owner}/${repo}/blob/${
+        branch || getRepositoryDefaultBranch(response.data.url)
+      }/${markdownLink}`;
     }
     return { content, media, links };
   }
