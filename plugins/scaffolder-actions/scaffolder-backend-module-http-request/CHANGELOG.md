@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.3
+
+### Patch Changes
+
+- b1887781: Add option to disable request path logging.
+
 ## 4.0.2
 
 ### Patch Changes
