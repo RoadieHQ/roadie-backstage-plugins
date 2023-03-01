@@ -29,6 +29,7 @@ describe('http:backstage:request', () => {
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
   const logger = getVoidLogger();
+  const loggerSpy = jest.spyOn(logger, 'info');
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
@@ -313,6 +314,65 @@ describe('http:backstage:request', () => {
             headers: {
               authorization: 'Bearer some-token',
             },
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with logging enabled', () => {
+      it('should create a request with logging', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action against /api/proxy/foo';
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: {},
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with logging turned off', () => {
+      it('should create a request without logging', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action';
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+            logRequestPath: false,
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: {},
           },
           logger,
         );
