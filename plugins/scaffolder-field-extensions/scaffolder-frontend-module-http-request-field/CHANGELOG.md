@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.3.7
+
+### Patch Changes
+
+- a36acc83: Add possibility to define title and description for the http request custom field dropdown box.
+
 ## 1.3.6
 
 ### Patch Changes
