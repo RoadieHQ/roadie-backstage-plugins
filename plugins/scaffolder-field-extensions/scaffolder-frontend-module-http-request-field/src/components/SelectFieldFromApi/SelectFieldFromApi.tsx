@@ -39,7 +39,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
   const options = selectFieldFromApiConfigSchema.parse(
-      props.uiSchema['ui:options'],
+    props.uiSchema['ui:options'],
   );
   const { title = 'Select', description = '' } = options;
 
