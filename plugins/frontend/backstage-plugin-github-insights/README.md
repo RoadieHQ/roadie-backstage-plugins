@@ -117,6 +117,8 @@ import { EntityGithubInsightsReadmeCard } from '@roadiehq/backstage-plugin-githu
 
 ![a preview of the compliance widget](docs/readme-widget.png)
 
+Please note that the [workflow status badge](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge) feature in GitHub will not work with the Readme plugin.
+
 #### ReleasesCard
 
 ```ts
