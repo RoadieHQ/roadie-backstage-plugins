@@ -84,7 +84,7 @@ spec:
       action: http:backstage:request
       input:
         method: 'GET'
-        path: '/api/proxy/snyk/org/org/project/project-id/aggregated-issues'
+        path: '/proxy/snyk/org/org/project/project-id/aggregated-issues'
         headers:
           test: 'hello'
           foo: 'bar'
@@ -109,7 +109,7 @@ steps:
     action: http:backstage:request
     input:
       method: 'POST'
-      path: '/api/proxy/snyk/org/org/project/project-id/aggregated-issues'
+      path: '/proxy/snyk/org/org/project/project-id/aggregated-issues'
       headers:
         content-type: 'application/json'
       body:
