@@ -8,6 +8,8 @@ import {
   ArgoCDAppDetails,
   argoCDAppList,
   ArgoCDAppList,
+  argoCDAppManagedResources,
+  ArgoCDAppManagedResources,
 } from '../types';
 import { Type as tsType } from 'io-ts';
 import {
@@ -36,6 +38,12 @@ export interface ArgoCDApi {
     appName?: string;
     appSelector?: string;
   }): Promise<Array<string> | Error>;
+  getAppManagedResources(options: {
+    url: string;
+    appName: string;
+    instance?: string;
+    kind?: string;
+  }): Promise<ArgoCDAppManagedResources>;
 }
 
 export const argoCDApiRef = createApiRef<ArgoCDApi>({
@@ -193,5 +201,30 @@ export class ArgoCDApiClient implements ArgoCDApi {
       .catch(_ => {
         throw new Error('Cannot get argo location(s) for service');
       });
+  }
+
+  async getAppManagedResources(options: {
+    url: string;
+    appName: string;
+    instance?: string;
+    kind?: string;
+  }) {
+    const proxyUrl = await this.getBaseUrl();
+    if (this.searchInstances) {
+      return this.fetchDecode(
+        `${proxyUrl}/argoInstance/${
+          options.instance
+        }/applications/name/${encodeURIComponent(
+          options.appName as string,
+        )}/managed-resources`,
+        argoCDAppManagedResources,
+      );
+    }
+    return this.fetchDecode(
+      `${proxyUrl}${options.url}/applications/${encodeURIComponent(
+        options.appName as string,
+      )}/managed-resources`,
+      argoCDAppManagedResources,
+    );
   }
 }

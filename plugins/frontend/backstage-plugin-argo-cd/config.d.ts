@@ -7,9 +7,16 @@ export interface Config {
      */
     baseUrl?: string;
     /**
-     * The base url of the ArgoCD instance.
+     * Enable versions view
      * @visibility frontend
      */
+    versions?: {
+      /**
+       * Enable versions view
+       * @visibility frontend
+       */
+      enabled?: boolean;
+    };
     appLocatorMethods?: Array</**
      * @visibility secret
      */

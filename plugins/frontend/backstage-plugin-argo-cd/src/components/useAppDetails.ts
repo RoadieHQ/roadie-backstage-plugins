@@ -16,7 +16,53 @@
 
 import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
-import { argoCDApiRef } from '../api';
+import { ArgoCDApi, argoCDApiRef } from '../api';
+
+const getCompleteAppDetails = async ({
+  api,
+  appName,
+  url,
+}: {
+  api: ArgoCDApi;
+  appName: string;
+  url: string;
+}) => {
+  const appDetails = await api.getAppDetails({ url, appName });
+  const appResources = await api.getAppManagedResources({ url, appName });
+
+  const uniqueLabels = appResources.items
+    .map((item) => JSON.parse(item.liveState).metadata.labels)
+    .reduce((acc, current) => {
+      Object.keys(current).forEach((key) => {
+        if (!acc.hasOwnProperty(key)) {
+          acc[key] = current[key];
+        }
+      });
+      return acc;
+    }, {});
+
+  appDetails.resources = { labels: uniqueLabels };
+  return appDetails;
+};
+
+const getCompleteAppList = async ({
+  api,
+  appSelector,
+  projectName,
+  url,
+}: {
+  api: ArgoCDApi;
+  appSelector?: string;
+  projectName?: string;
+  url: string;
+}) => {
+  const appList = await api.listApps({ url, appSelector, projectName });
+  appList.items = await Promise.all((appList.items ?? []).map(async (item) => {
+    const appName = item.metadata.name;
+    return await getCompleteAppDetails({ api, appName, url });
+  }));
+  return appList;
+};
 
 export const useAppDetails = ({
   appName,
@@ -39,7 +85,7 @@ export const useAppDetails = ({
     );
     try {
       if (!argoSearchMethod && appName) {
-        return await api.getAppDetails({ url, appName });
+        return await getCompleteAppDetails({ api, appName, url });
       }
       if (argoSearchMethod && appName) {
         const kubeInfo = await api.serviceLocatorUrl({
@@ -90,7 +136,7 @@ export const useAppDetails = ({
         return items;
       }
       if (appSelector || projectName) {
-        return await api.listApps({ url, appSelector, projectName });
+        return await getCompleteAppList({api, appSelector, projectName, url});
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {

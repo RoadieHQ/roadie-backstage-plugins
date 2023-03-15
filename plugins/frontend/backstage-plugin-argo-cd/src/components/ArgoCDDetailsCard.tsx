@@ -82,6 +82,12 @@ const OverviewComponent = ({
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
+ 
+  // Feature flag for app versions
+  const supportVersions: boolean = Boolean(
+    configApi.getOptionalConfig('argocd.versions')?.getOptionalBoolean('enabled')
+  );
+
 
   const columns: TableColumn[] = [
     {
@@ -100,6 +106,20 @@ const OverviewComponent = ({
       title: 'Health Status',
       render: (row: any): React.ReactNode => (
         <State value={row.status.health.status} />
+      ),
+    },
+    {
+      title: 'App Version',
+      hidden: !supportVersions,
+      render: (row: any): React.ReactNode => (
+        row.resources?.labels?.['app.kubernetes.io/version']
+      ),
+    },
+    {
+      title: 'Chart Version',
+      hidden: !supportVersions,
+      render: (row: any): React.ReactNode => (
+        row.resources?.labels?.['helm.sh/chart']
       ),
     },
     {
