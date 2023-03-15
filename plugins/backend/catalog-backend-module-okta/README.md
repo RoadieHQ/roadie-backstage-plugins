@@ -113,6 +113,37 @@ export default async function createPlugin(
 }
 ```
 
+You can optionally provide the ability to create a hierarchy of groups by providing the `parentGroupField`.
+
+```typescript
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = await CatalogBuilder.create(env);
+
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
+    logger: env.logger,
+    parentGroupField: 'parent_org_id',
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+  });
+
+  builder.addEntityProvider(orgProvider);
+
+  const { processingEngine, router } = await builder.build();
+
+  orgProvider.run();
+
+  await processingEngine.start();
+
+  // ...
+
+  return router;
+}
+```
+
 ## Load Users and Groups Separately
 
 ### OktaUserEntityProvider
@@ -183,6 +214,49 @@ export default async function createPlugin(
   });
   const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+  });
+
+  builder.addEntityProvider(userProvider);
+  builder.addEntityProvider(groupProvider);
+
+  const { processingEngine, router } = await builder.build();
+
+  userProvider.run();
+  groupProvider.run();
+
+  await processingEngine.start();
+
+  // ...
+
+  return router;
+}
+```
+
+You can optionally provide the ability to create a hierarchy of groups by providing the `parentGroupField`.
+
+```typescript
+import {
+  OktaUserEntityProvider,
+  OktaGroupEntityProvider,
+} from '@roadiehq/catalog-backend-module-okta';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = await CatalogBuilder.create(env);
+
+  const oktaConfig = env.config.getOptionalConfigArray(
+    'catalog.providers.okta',
+  );
+  const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], {
+    logger: env.logger,
+    namingStrategy: 'strip-domain-email',
+  });
+  const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
+    logger: env.logger,
+    parentGroupField: 'parent_org_id',
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
   });

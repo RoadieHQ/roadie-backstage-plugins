@@ -20,8 +20,17 @@ import { GroupNamingStrategy } from './groupNamingStrategies';
 export const groupEntityFromOktaGroup = (
   group: Group,
   namingStrategy: GroupNamingStrategy,
-  options: { annotations: Record<string, string>; members: string[] },
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+    parentGroupField?: string;
+  },
 ): GroupEntity => {
+  const parentFieldValue = options.parentGroupField
+    ? group.profile[options.parentGroupField]
+    : undefined;
+  const parent =
+    typeof parentFieldValue === 'string' ? parentFieldValue : undefined;
   return {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
@@ -35,6 +44,7 @@ export const groupEntityFromOktaGroup = (
     },
     spec: {
       members: options.members,
+      parent,
       type: 'group',
       children: [],
     },

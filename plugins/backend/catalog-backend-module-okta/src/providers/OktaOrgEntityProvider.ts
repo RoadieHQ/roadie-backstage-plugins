@@ -40,11 +40,13 @@ import { assertError } from '@backstage/errors';
 export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly parentGroupField: string | undefined;
 
   static fromConfig(
     config: Config,
     options: {
       logger: winston.Logger;
+      parentGroupField?: string;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
@@ -60,11 +62,13 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     accountConfigs: AccountConfig[],
     options: {
       logger: winston.Logger;
+      parentGroupField?: string;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     super(accountConfigs, options);
+    this.parentGroupField = options.parentGroupField;
     this.groupNamingStrategy = groupNamingStrategyFactory(
       options.groupNamingStrategy,
     );
@@ -124,7 +128,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               const groupEntity = groupEntityFromOktaGroup(
                 group,
                 this.groupNamingStrategy,
-                { annotations: defaultAnnotations, members },
+                {
+                  annotations: defaultAnnotations,
+                  members,
+                  parentGroupField: this.parentGroupField,
+                },
               );
               if (members.length > 0) {
                 resources.push(groupEntity);

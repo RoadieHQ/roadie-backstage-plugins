@@ -40,12 +40,14 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
   private readonly groupFilter: string | undefined;
-  private orgUrl: string;
+  private readonly orgUrl: string;
+  private readonly parentGroupField: string | undefined;
 
   static fromConfig(
     config: Config,
     options: {
       logger: winston.Logger;
+      parentGroupField?: string;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
@@ -59,11 +61,13 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     accountConfig: AccountConfig,
     options: {
       logger: winston.Logger;
+      parentGroupField?: string;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     super([accountConfig], options);
+    this.parentGroupField = options.parentGroupField;
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
@@ -107,6 +111,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           {
             annotations: defaultAnnotations,
             members,
+            parentGroupField: this.parentGroupField,
           },
         );
         groupResources.push(groupEntity);
