@@ -19,6 +19,7 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
 import { getVoidLogger } from '@backstage/backend-common';
+import { ProfileFieldGroupNamingStrategy } from './groupNamingStrategies';
 
 let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -71,6 +72,7 @@ describe('OktaGroupProvider', () => {
             profile: {
               name: 'Everyone@the-company',
               description: 'Everyone in the company',
+              org_id: '1234',
             },
             listUsers: () => {
               return new MockOktaCollection([
@@ -166,6 +168,90 @@ describe('OktaGroupProvider', () => {
               }),
               spec: expect.objectContaining({
                 members: ['fname'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('allows selecting a custom field for the name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: new ProfileFieldGroupNamingStrategy('org_id')
+          .nameForGroup,
+        userNamingStrategy: 'strip-domain-email',
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: '1234',
+              }),
+              spec: expect.objectContaining({
+                members: ['fname'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('where a failing naming strategy is provided it passes over the group', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: () => {
+          throw new Error('bork');
+        },
+        userNamingStrategy: 'strip-domain-email',
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [],
+      });
+    });
+
+    it('where a failing user naming strategy is provided it passes over the user', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: new ProfileFieldGroupNamingStrategy('org_id')
+          .nameForGroup,
+        userNamingStrategy: () => {
+          throw new Error('bork');
+        },
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: '1234',
+              }),
+              spec: expect.objectContaining({
+                members: [],
               }),
             }),
           }),

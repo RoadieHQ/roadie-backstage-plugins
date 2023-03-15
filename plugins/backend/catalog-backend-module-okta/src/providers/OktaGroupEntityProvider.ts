@@ -22,15 +22,16 @@ import {
   GroupNamingStrategies,
   GroupNamingStrategy,
   groupNamingStrategyFactory,
-} from './groupNamingStrategyFactory';
+} from './groupNamingStrategies';
 import {
   UserNamingStrategies,
   UserNamingStrategy,
   userNamingStrategyFactory,
-} from './userNamingStrategyFactory';
+} from './userNamingStrategies';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
+import { assertError } from '@backstage/errors';
 
 /**
  * Provides entities from Okta Group service.
@@ -45,8 +46,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     config: Config,
     options: {
       logger: winston.Logger;
-      namingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     const accountConfig = getAccountConfig(config);
@@ -58,8 +59,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     accountConfig: AccountConfig,
     options: {
       logger: winston.Logger;
-      namingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     super([accountConfig], options);
@@ -90,15 +91,29 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     await client.listGroups({ search: this.groupFilter }).each(async group => {
       const members: string[] = [];
       await group.listUsers().each(user => {
-        members.push(this.userNamingStrategy(user));
+        try {
+          const userName = this.userNamingStrategy(user);
+          members.push(userName);
+        } catch (e) {
+          assertError(e);
+          this.logger.warn(`failed to add user to group: ${e.message}`);
+        }
       });
 
-      const groupEntity = groupEntityFromOktaGroup(group, this.namingStrategy, {
-        annotations: defaultAnnotations,
-        members,
-      });
-
-      groupResources.push(groupEntity);
+      try {
+        const groupEntity = groupEntityFromOktaGroup(
+          group,
+          this.namingStrategy,
+          {
+            annotations: defaultAnnotations,
+            members,
+          },
+        );
+        groupResources.push(groupEntity);
+      } catch (e) {
+        assertError(e);
+        this.logger.warn(`failed to add group: ${e.message}`);
+      }
     });
 
     await this.connection.applyMutation({

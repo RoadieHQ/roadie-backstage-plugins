@@ -22,10 +22,11 @@ import {
   UserNamingStrategies,
   UserNamingStrategy,
   userNamingStrategyFactory,
-} from './userNamingStrategyFactory';
+} from './userNamingStrategies';
 import { AccountConfig } from '../types';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { getAccountConfig } from './accountConfig';
+import { assertError } from '@backstage/errors';
 
 /**
  * Provides entities from Okta User service.
@@ -37,7 +38,10 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
 
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
+    options: {
+      logger: winston.Logger;
+      namingStrategy?: UserNamingStrategies | UserNamingStrategy;
+    },
   ) {
     const accountConfig = getAccountConfig(config);
 
@@ -46,7 +50,10 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
 
   constructor(
     accountConfig: AccountConfig,
-    options: { logger: winston.Logger; namingStrategy?: UserNamingStrategies },
+    options: {
+      logger: winston.Logger;
+      namingStrategy?: UserNamingStrategies | UserNamingStrategy;
+    },
   ) {
     super([accountConfig], options);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
@@ -73,10 +80,15 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     const allUsers = await client.listUsers({ search: this.userFilter });
 
     await allUsers.each(user => {
-      const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
-        annotations: defaultAnnotations,
-      });
-      userResources.push(userEntity);
+      try {
+        const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
+          annotations: defaultAnnotations,
+        });
+        userResources.push(userEntity);
+      } catch (e: unknown) {
+        assertError(e);
+        this.logger.warn(`failed to add user to group: ${e.message}`);
+      }
     });
 
     await this.connection.applyMutation({

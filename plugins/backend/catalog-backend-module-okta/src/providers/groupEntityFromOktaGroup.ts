@@ -15,7 +15,7 @@
  */
 import { GroupEntity } from '@backstage/catalog-model';
 import { Group } from '@okta/okta-sdk-nodejs';
-import { GroupNamingStrategy } from './groupNamingStrategyFactory';
+import { GroupNamingStrategy } from './groupNamingStrategies';
 
 export const groupEntityFromOktaGroup = (
   group: Group,

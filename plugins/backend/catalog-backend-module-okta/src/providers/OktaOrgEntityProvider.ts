@@ -22,16 +22,17 @@ import {
   GroupNamingStrategies,
   GroupNamingStrategy,
   groupNamingStrategyFactory,
-} from './groupNamingStrategyFactory';
+} from './groupNamingStrategies';
 import {
   UserNamingStrategies,
   UserNamingStrategy,
   userNamingStrategyFactory,
-} from './userNamingStrategyFactory';
+} from './userNamingStrategies';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
+import { assertError } from '@backstage/errors';
 
 /**
  * Provides entities from Okta Org service.
@@ -44,8 +45,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     config: Config,
     options: {
       logger: winston.Logger;
-      groupNamingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     const oktaConfigs = config
@@ -59,8 +60,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     accountConfigs: AccountConfig[],
     options: {
       logger: winston.Logger;
-      groupNamingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
     super(accountConfigs, options);
@@ -110,24 +111,33 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
           .each(async group => {
             const members: string[] = [];
             await group.listUsers().each(user => {
-              members.push(this.userNamingStrategy(user));
+              try {
+                const userName = this.userNamingStrategy(user);
+                members.push(userName);
+              } catch (e: unknown) {
+                assertError(e);
+                this.logger.warn(`failed to add user to group: ${e.message}`);
+              }
             });
 
-            const groupEntity = groupEntityFromOktaGroup(
-              group,
-              this.groupNamingStrategy,
-              { annotations: defaultAnnotations, members },
-            );
-
-            if (members.length > 0) {
-              resources.push(groupEntity);
+            try {
+              const groupEntity = groupEntityFromOktaGroup(
+                group,
+                this.groupNamingStrategy,
+                { annotations: defaultAnnotations, members },
+              );
+              if (members.length > 0) {
+                resources.push(groupEntity);
+              }
+            } catch (e: unknown) {
+              assertError(e);
+              this.logger.warn(`failed to add group: ${e.message}`);
             }
           });
       }),
     );
 
     providedGroupCount = resources.length - providedUserCount;
-
     await this.connection.applyMutation({
       type: 'full',
       entities: resources.map(entity => ({

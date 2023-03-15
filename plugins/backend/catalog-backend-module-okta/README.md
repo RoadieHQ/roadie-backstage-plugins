@@ -64,10 +64,24 @@ User naming stategies:
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
 
+You may also choose to implement a custom naming strategy by providing a function.
+
+```typescript jsx
+export const customUserNamingStrategy: UserNamingStrategy = user =>
+  user.profile.customField;
+```
+
 Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+
+You may also choose to implement a custom naming strategy by providing a function.
+
+```typescript jsx
+export const customGroupNamingStrategy: GroupNamingStrategy = group =>
+  group.profile.customField;
+```
 
 ### Example configuration:
 
@@ -109,6 +123,13 @@ You can configure the provider with different naming strategies. The configured 
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
 
+You may also choose to implement a custom naming strategy by providing a function.
+
+```typescript jsx
+export const customUserNamingStrategy: UserNamingStrategy = user =>
+  user.profile.customField;
+```
+
 ### OktaGroupEntityProvider
 
 You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entities `metadata.name` field. The currently supported strategies are the following:
@@ -119,10 +140,24 @@ User naming stategies:
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
 
+You may also choose to implement a custom naming strategy by providing a function.
+
+```typescript jsx
+export const customUserNamingStrategy: UserNamingStrategy = user =>
+  user.profile.customField;
+```
+
 Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+
+You may also choose to implement a custom naming strategy by providing a function.
+
+```typescript jsx
+export const customGroupNamingStrategy: GroupNamingStrategy = group =>
+  group.profile.customField;
+```
 
 Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroupEntityProvider's user naming strategy.
 
