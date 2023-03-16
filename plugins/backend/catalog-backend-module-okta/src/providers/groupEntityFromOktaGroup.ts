@@ -44,7 +44,7 @@ export const groupEntityFromOktaGroup = (
     },
     spec: {
       members: options.members,
-      parent,
+      parent: parent !== '' ? parent : undefined,
       type: 'group',
       children: [],
     },
