@@ -55,6 +55,8 @@ Action supports following HTTP methods: `GET`, `HEAD`, `OPTIONS`, `POST`, `UPDAT
 
 The path should always point to a proxy entry with the following format: `proxy/<proxy-path>/<external-api-path>`
 
+You can also point to the internal catalog apis like so: `/catalog/entities` See [https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities](https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities)
+
 i.e.: `/proxy/snyk/org/<some-org>/projects` or `/proxy/circleci/api/projects` (NB: the CircleCI proxy path is `circleci/api/` but Snyk is just `snyk/`)
 
 ### Example of using GET method
