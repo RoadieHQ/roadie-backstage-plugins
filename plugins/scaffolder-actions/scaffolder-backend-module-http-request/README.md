@@ -53,6 +53,12 @@ return await createRouter({
 
 Action supports following HTTP methods: `GET`, `HEAD`, `OPTIONS`, `POST`, `UPDATE`, `DELETE`, `PUT`, `PATCH`
 
+The path should always point to a proxy entry with the following format: `proxy/<proxy-path>/<external-api-path>`
+
+You can also point to the internal catalog apis like so: `/catalog/entities` See [https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities](https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities)
+
+i.e.: `/proxy/snyk/org/<some-org>/projects` or `/proxy/circleci/api/projects` (NB: the CircleCI proxy path is `circleci/api/` but Snyk is just `snyk/`)
+
 ### Example of using GET method
 
 ```yaml
@@ -84,7 +90,7 @@ spec:
       action: http:backstage:request
       input:
         method: 'GET'
-        path: '/proxy/snyk/org/org/project/project-id/aggregated-issues'
+        path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues'
         headers:
           test: 'hello'
           foo: 'bar'
@@ -109,7 +115,7 @@ steps:
     action: http:backstage:request
     input:
       method: 'POST'
-      path: '/proxy/snyk/org/org/project/project-id/aggregated-issues'
+      path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues'
       headers:
         content-type: 'application/json'
       body:
