@@ -201,7 +201,7 @@ describe('OktaOrgEntityProvider', () => {
           .nameForGroup,
         userNamingStrategy: 'strip-domain-email',
       });
-      provider.connect(entityProviderConnection);
+      await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
