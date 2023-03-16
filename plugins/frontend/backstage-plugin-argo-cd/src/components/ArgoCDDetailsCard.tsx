@@ -175,6 +175,12 @@ const OverviewComponent = ({
           ? getElapsedTime(row.status.operationState.finishedAt!)
           : '',
     },
+    {
+      title: 'Message',
+      render: (row: any): React.ReactNode => (
+        <MessageComponent conditions={row.status.conditions} />
+      ),
+    },
   ];
 
   if (supportsMultipleArgoInstances) {
