@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2023 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { User } from '@okta/okta-sdk-nodejs';
-import { kebabCase } from 'lodash';
 
 export type UserNamingStrategy = (user: User) => string;
 export type UserNamingStrategies =
@@ -23,19 +21,3 @@ export type UserNamingStrategies =
   | 'kebab-case-email'
   | 'strip-domain-email'
   | undefined;
-
-export const userNamingStrategyFactory = (
-  name: UserNamingStrategies = 'id',
-): UserNamingStrategy => {
-  switch (name) {
-    case 'id':
-      return user => user.id;
-    case 'kebab-case-email':
-      return user => kebabCase(user.profile.email);
-    case 'strip-domain-email':
-      return user =>
-        user.profile.email.substring(0, user.profile.email.indexOf('@'));
-    default:
-      throw new Error(`Unknown naming strategy ${name}`);
-  }
-};

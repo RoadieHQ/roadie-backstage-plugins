@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2023 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export { OktaGroupEntityProvider } from './OktaGroupEntityProvider';
-export { OktaUserEntityProvider } from './OktaUserEntityProvider';
-export { OktaOrgEntityProvider } from './OktaOrgEntityProvider';
-export * from './groupNamingStrategies';
-export * from './userNamingStrategies';
+export * from './types';
+export * from './idUserNamingStrategy';
+export * from './stripEmailDomainUserNamingStrategy';
+export * from './kebabCaseEmailUserNamingStrategy';
+export * from './userNamingStrategyFactory';

@@ -15,7 +15,7 @@
  */
 import { UserEntity } from '@backstage/catalog-model';
 import { User } from '@okta/okta-sdk-nodejs';
-import { UserNamingStrategy } from './userNamingStrategyFactory';
+import { UserNamingStrategy } from './userNamingStrategies';
 
 export const userEntityFromOktaUser = (
   user: User,

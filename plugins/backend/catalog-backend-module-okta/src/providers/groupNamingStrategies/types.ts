@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2023 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { Group } from '@okta/okta-sdk-nodejs';
 
-export { OktaGroupEntityProvider } from './OktaGroupEntityProvider';
-export { OktaUserEntityProvider } from './OktaUserEntityProvider';
-export { OktaOrgEntityProvider } from './OktaOrgEntityProvider';
-export * from './groupNamingStrategies';
-export * from './userNamingStrategies';
+export type GroupNamingStrategy = (group: Group) => string;
+export type GroupNamingStrategies = 'id' | 'kebab-case-name' | undefined;
