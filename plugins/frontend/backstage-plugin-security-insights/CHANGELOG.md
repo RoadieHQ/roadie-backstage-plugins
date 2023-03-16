@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.1.9
+
+### Patch Changes
+
+- 4fb9c5ef: docs: update deprecation notice with correct exported name
+
 ## 2.1.8
 
 ### Patch Changes
