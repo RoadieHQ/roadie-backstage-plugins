@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.1
+
+### Patch Changes
+
+- 03db4933: Fix case where the parent group field is empty.
+
 ## 0.5.0
 
 ### Minor Changes
