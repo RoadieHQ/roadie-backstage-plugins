@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.0
+
+### Minor Changes
+
+- 7992ceb8: Add ability to configure a custom group/user names, and provide the name of the parent group to create a hierarchy of groups.
+
 ## 0.4.8
 
 ### Patch Changes
