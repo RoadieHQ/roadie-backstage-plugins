@@ -24,7 +24,7 @@ import {
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { LinearProgress, Tooltip, Link } from '@material-ui/core';
+import { LinearProgress, Link, List, ListItem } from '@material-ui/core';
 import React from 'react';
 import { isArgocdAvailable } from '../conditions';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
@@ -85,37 +85,33 @@ const HistoryTable = ({
       highlight: true,
     },
     {
-      title: 'Deploy Started',
-      field: 'deployStartedAt',
+      title: 'Deploy Details',
       render: (row: any) => (
-        <Tooltip
-          title={
-            row.deployStartedAt ? row.deployStartedAt : 'Deploy started at'
-          }
-          placement="left"
-        >
-          <div>
-            {row.deployStartedAt ? moment(row.deployStartedAt).fromNow() : '-'}
-          </div>
-        </Tooltip>
+        <List dense style={{ padding: '0px' }}>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt
+              ? `Deployed at ${moment(row.deployedAt)
+                  .local()
+                  .format('DD MMM YYYY, H:mm:ss')}`
+              : null}
+          </ListItem>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt
+              ? `Run ${moment(row.deployStartedAt).local().fromNow()}`
+              : null}
+          </ListItem>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt && row.deployStartedAt
+              ? `Took
+            ${moment
+              .duration(
+                moment(row.deployStartedAt).diff(moment(row.deployedAt)),
+              )
+              .humanize()}`
+              : null}
+          </ListItem>
+        </List>
       ),
-    },
-    {
-      title: 'Deployed At',
-      field: 'deployedAt',
-      render: (row: any) => (
-        <Tooltip title={row.deployedAt} placement="left">
-          <div>{moment(row.deployedAt).fromNow()}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      title: 'Deploy duration',
-      render: (row: any): React.ReactNode =>
-        moment
-          .duration(moment(row.deployStartedAt).diff(moment(row.deployedAt)))
-          .humanize(),
-      sorting: false,
     },
     {
       title: 'Revision',

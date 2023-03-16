@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { Box, LinearProgress } from '@material-ui/core';
+import { Box, LinearProgress, List, ListItem } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
 import {
@@ -36,6 +36,28 @@ import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
+
+interface Condition {
+  message?: string;
+  lastTransitionTime?: string;
+  type: string;
+}
+
+const MessageComponent = ({ conditions }: { conditions: Condition[] }) => {
+  return (
+    <>
+      {conditions ? (
+        <List dense>
+          {conditions.map((condition: Condition, index: number) => (
+            <ListItem style={{ padding: 0 }} key={index}>
+              {condition.message}
+            </ListItem>
+          ))}
+        </List>
+      ) : null}
+    </>
+  );
+};
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
@@ -108,6 +130,12 @@ const OverviewComponent = ({
         row.status.operationState
           ? getElapsedTime(row.status.operationState.finishedAt!)
           : '',
+    },
+    {
+      title: 'Message',
+      render: (row: any): React.ReactNode => (
+        <MessageComponent conditions={row.status.conditions} />
+      ),
     },
   ];
 
