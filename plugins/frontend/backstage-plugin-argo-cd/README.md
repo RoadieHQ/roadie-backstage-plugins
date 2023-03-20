@@ -137,6 +137,21 @@ The Argo plugin will fetch the Argo CD instances an app is deployed to and use t
 
 Please visit the [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) for more information
 
+## Visualize deployed App and Helm Chart versions
+
+If you want to visualize the Application version and Helm chart versions of your applications in the DetailsCard you can enable the feature by adding the following configuration:
+
+```yml
+argocd:
+  versions:
+    enabled: true
+```
+
+The plugin expects the following labels to present on atleast one of the resources in your ArgoCD application:
+
+- Application version uses `app.kubernetes.io/version`
+- Helm chart version uses `helm.sh/chart`
+
 ## Develop plugin locally
 
 You can run the application by running `yarn dev` at the root of this monorepo.
