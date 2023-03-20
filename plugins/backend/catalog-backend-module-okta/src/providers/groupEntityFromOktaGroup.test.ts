@@ -84,4 +84,37 @@ describe('groupEntityFromOktaGroup', () => {
       spec: { children: [], members: [], parent: '1', type: 'group' },
     });
   });
+
+  it('sets a number parent id string', async () => {
+    const group: Partial<Group> = {
+      profile: {
+        name: 'group-2',
+        description: 'Group 2',
+        parent_org_id: 1,
+        org_id: '2',
+      },
+    };
+    const options = {
+      annotations: {},
+      members: [],
+      parentGroupField: 'parent_org_id',
+    };
+    expect(
+      groupEntityFromOktaGroup(
+        group as Group,
+        new ProfileFieldGroupNamingStrategy('org_id').nameForGroup,
+        options,
+      ),
+    ).toEqual({
+      apiVersion: 'backstage.io/v1alpha1',
+      kind: 'Group',
+      metadata: {
+        annotations: {},
+        description: 'Group 2',
+        name: '2',
+        title: 'group-2',
+      },
+      spec: { children: [], members: [], parent: '1', type: 'group' },
+    });
+  });
 });

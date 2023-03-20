@@ -29,8 +29,13 @@ export const groupEntityFromOktaGroup = (
   const parentFieldValue = options.parentGroupField
     ? group.profile[options.parentGroupField]
     : undefined;
-  const parent =
-    typeof parentFieldValue === 'string' ? parentFieldValue : undefined;
+  let parent: string | undefined = undefined;
+  if (typeof parentFieldValue === 'string') {
+    parent = parentFieldValue;
+  }
+  if (typeof parentFieldValue === 'number') {
+    parent = parentFieldValue.toString();
+  }
   return {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
