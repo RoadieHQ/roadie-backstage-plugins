@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.3
+
+### Patch Changes
+
+- cf15f404: Support number as parent org id.
+
 ## 0.5.2
 
 ### Patch Changes
