@@ -379,6 +379,16 @@ export const getResponseStubAppListWithMultipleApps = {
   items: multipleApps(),
 };
 
+export const getResponseStubAppManagedResources = {
+  items: [
+    {
+      name: 'guestbook',
+      liveState:
+        '{"metadata":{"labels":{"app.kubernetes.io/version":"1.0.0","argocd.argoproj.io/instance":"guestbook","helm.sh/chart":"guestbook-1.0.0"}}}',
+    },
+  ],
+};
+
 export class ArgoCDApiMock implements ArgoCDApi {
   // @ts-ignore
   // constructor(_: Options) {}

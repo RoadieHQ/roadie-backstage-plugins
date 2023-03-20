@@ -42,7 +42,6 @@ export interface ArgoCDApi {
     url: string;
     appName: string;
     instance?: string;
-    kind?: string;
   }): Promise<ArgoCDAppManagedResources>;
 }
 
@@ -207,7 +206,6 @@ export class ArgoCDApiClient implements ArgoCDApi {
     url: string;
     appName: string;
     instance?: string;
-    kind?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
     if (this.searchInstances) {

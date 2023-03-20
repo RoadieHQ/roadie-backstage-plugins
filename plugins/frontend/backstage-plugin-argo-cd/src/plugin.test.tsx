@@ -41,6 +41,7 @@ import {
   getEntityStubWithAppSelector,
   getEmptyResponseStub,
   getIdentityApiStub,
+  getResponseStubAppManagedResources,
 } from './mocks/mocks';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
@@ -163,6 +164,23 @@ describe('argo-cd', () => {
       expect(
         await rendered.queryByText('Chart Version'),
       ).not.toBeInTheDocument();
+    });
+
+    it('should display appversion when set in the response', async () => {
+      worker.use(
+        rest.get('*', (_, res, ctx) => res(ctx.json(getEmptyResponseStub))),
+      );
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={getEntityStubWithAppSelector}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+
+      expect(
+        await rendered.findByText('No records to display'),
+      ).toBeInTheDocument();
     });
 
     it('should display empty table when no item returned with app selector', async () => {
@@ -318,7 +336,9 @@ describe('argo-cd', () => {
         [
           configApiRef,
           new ConfigReader({
-            versions: { enabled: true },
+            argocd: {
+              versions: { enabled: true },
+            },
           }),
         ],
         [errorApiRef, errorApiMock],
@@ -335,6 +355,11 @@ describe('argo-cd', () => {
       worker.use(
         rest.get('*', (_, res, ctx) => res(ctx.json(getResponseStub))),
       );
+      worker.use(
+        rest.get('*/managed-resources', (_, res, ctx) =>
+          res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
       const rendered = render(
         <TestApiProvider apis={apisWithVersionsEnabled}>
           <EntityProvider entity={getEntityStub}>
@@ -350,6 +375,8 @@ describe('argo-cd', () => {
       expect(await rendered.findByText('Healthy')).toBeInTheDocument();
       expect(await rendered.findByText('App Version')).toBeInTheDocument();
       expect(await rendered.findByText('Chart Version')).toBeInTheDocument();
+      expect(await rendered.findByText('1.0.0')).toBeInTheDocument();
+      expect(await rendered.findByText('guestbook-1.0.0')).toBeInTheDocument();
     });
   });
   describe('widget - scan instances', () => {
@@ -375,7 +402,7 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook*',
           (_, res, ctx) => res(ctx.json(getResponseStubScanning)),
         ),
       );
@@ -474,6 +501,12 @@ describe('argo-cd', () => {
           (_, res, ctx) => res(ctx.json(getResponseStub)),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
 
       const rendered = render(
         <TestApiProvider apis={apisWithArgoCDBaseURL}>
@@ -519,6 +552,12 @@ describe('argo-cd', () => {
         rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStub)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
         ),
       );
 
@@ -570,6 +609,12 @@ describe('argo-cd', () => {
           (_, res, ctx) => res(ctx.status(403)),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.status(403)),
+        ),
+      );
       const rendered = render(
         <TestApiProvider apis={apisScan}>
           <EntityProvider entity={getEntityStub}>
@@ -602,10 +647,11 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook*',
           (_, res, ctx) => res(ctx.json(getResponseStubMissingData)),
         ),
       );
+
       const rendered = render(
         <TestApiProvider apis={apisScan}>
           <EntityProvider entity={getEntityStub}>
@@ -639,6 +685,12 @@ describe('argo-cd', () => {
         rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
         ),
       );
       const rendered = render(
@@ -682,11 +734,24 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/name/guestbook/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
+
       const rendered = render(
         <TestApiProvider apis={apisScanMultipleInstances}>
           <EntityProvider entity={getEntityStubWithAppSelector}>
@@ -727,9 +792,21 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook*/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/name/guestbook*/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
         ),
       );
       const rendered = render(
@@ -776,8 +853,20 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook*/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/name/guestbook*/managed-resources',
+          (_, res, ctx) => res(ctx.json(getResponseStubAppManagedResources)),
         ),
       );
       const rendered = render(
@@ -817,13 +906,13 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook*',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
       );
       worker.use(
         rest.get(
-          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook*',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
       );

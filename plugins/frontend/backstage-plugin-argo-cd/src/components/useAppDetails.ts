@@ -18,6 +18,35 @@ import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
 import { ArgoCDApi, argoCDApiRef } from '../api';
 
+const getUniqueLabels = async ({
+  api,
+  appName,
+  url,
+  instance,
+}: {
+  api: ArgoCDApi;
+  appName: string;
+  url: string;
+  instance?: string;
+}) => {
+  const appResources = await api.getAppManagedResources({
+    url,
+    appName,
+    instance,
+  });
+  const uniqueLabels = (appResources.items ?? [])
+    .map(item => JSON.parse(item.liveState).metadata.labels)
+    .reduce((acc, current) => {
+      Object.keys(current).forEach(key => {
+        if (!acc.hasOwnProperty(key)) {
+          acc[key] = current[key];
+        }
+      });
+      return acc;
+    }, {});
+  return { labels: await uniqueLabels };
+};
+
 const getCompleteAppDetails = async ({
   api,
   appName,
@@ -30,24 +59,7 @@ const getCompleteAppDetails = async ({
   instance?: string;
 }) => {
   const appDetails = await api.getAppDetails({ url, appName, instance });
-  const appResources = await api.getAppManagedResources({
-    url,
-    appName,
-    instance,
-  });
-
-  const uniqueLabels = (appResources.items ?? [])
-    .map(item => JSON.parse(item.liveState).metadata.labels)
-    .reduce((acc, current) => {
-      Object.keys(current).forEach(key => {
-        if (!acc.hasOwnProperty(key)) {
-          acc[key] = current[key];
-        }
-      });
-      return acc;
-    }, {});
-
-  appDetails.resources = { labels: uniqueLabels };
+  appDetails.resources = await getUniqueLabels({ api, url, appName, instance });
   return appDetails;
 };
 
@@ -66,7 +78,30 @@ const getCompleteAppList = async ({
   appList.items = await Promise.all(
     (appList.items ?? []).map(async item => {
       const appName = item.metadata.name;
-      return await getCompleteAppDetails({ api, appName, url });
+      item.resources = await getUniqueLabels({ api, url, appName });
+      return item;
+    }),
+  );
+  return appList;
+};
+
+const getCompleteAppListDetails = async ({
+  api,
+  appSelector,
+  url,
+  instance,
+}: {
+  api: ArgoCDApi;
+  appSelector: string;
+  url: string;
+  instance?: string;
+}) => {
+  const appList = await api.getAppListDetails({ url, appSelector, instance });
+  appList.items = await Promise.all(
+    (appList.items ?? []).map(async item => {
+      const appName = item.metadata.name;
+      item.resources = await getUniqueLabels({ api, url, appName, instance });
+      return item;
     }),
   );
   return appList;
@@ -129,11 +164,17 @@ export const useAppDetails = ({
         });
         if (kubeInfo instanceof Error) return kubeInfo;
         const promises = kubeInfo.map(async (instance: any) => {
-          const apiOut = await api.getAppListDetails({
-            url,
+          const apiOut = await getCompleteAppListDetails({
+            api,
             appSelector,
+            url,
             instance: instance.name,
           });
+          // const apiOut = await api.getAppListDetails({
+          //   url,
+          //   appSelector,
+          //   instance: instance.name,
+          // });
           return apiOut;
         });
         const output = await Promise.all(promises);
