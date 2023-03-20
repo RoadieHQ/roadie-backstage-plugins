@@ -202,5 +202,6 @@ prometheus:
 
 bugsnag:
   resultsPerPage: 50
+
 iframe:
-  allowList: [ "example.com" ]
+  allowList: ['example.com']
