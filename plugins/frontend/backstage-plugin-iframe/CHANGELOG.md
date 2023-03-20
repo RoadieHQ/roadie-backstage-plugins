@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.0
+
+### Minor Changes
+
+- c02204ef: Add possibility to configure IFrame as a Page component.
+
 ## 1.2.7
 
 ### Patch Changes

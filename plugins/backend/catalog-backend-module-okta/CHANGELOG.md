@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.2
+
+### Patch Changes
+
+- fbbfd60c: Allow supporting profile name fields that are numbers.
+
 ## 0.5.1
 
 ### Patch Changes
