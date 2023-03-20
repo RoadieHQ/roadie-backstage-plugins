@@ -46,7 +46,7 @@ import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
-import { IFramePage } from '@roadiehq/backstage-plugin-iframe/src/plugin';
+import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
 
 const app = createApp({
   apis,
