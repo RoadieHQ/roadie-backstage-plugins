@@ -24,11 +24,11 @@ export class ProfileFieldGroupNamingStrategy {
 
   nameForGroup: GroupNamingStrategy = (group: Group) => {
     const groupName = group.profile[this.fieldName];
-    if (typeof groupName !== 'string') {
+    if (!['number', 'string'].includes(typeof groupName)) {
       throw new Error(
-        `Profile field ${this.fieldName} does not contain a string for ${group.profile.name}`,
+        `Profile field ${this.fieldName} does not contain a string/number for ${group.profile.name}`,
       );
     }
-    return groupName;
+    return groupName.toString();
   };
 }
