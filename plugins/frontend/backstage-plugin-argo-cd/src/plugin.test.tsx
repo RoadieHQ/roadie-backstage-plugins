@@ -159,6 +159,10 @@ describe('argo-cd', () => {
       );
       expect(await rendered.findByText('Synced')).toBeInTheDocument();
       expect(await rendered.findByText('Healthy')).toBeInTheDocument();
+      expect(await rendered.queryByText('App Version')).not.toBeInTheDocument();
+      expect(
+        await rendered.queryByText('Chart Version'),
+      ).not.toBeInTheDocument();
     });
 
     it('should display empty table when no item returned with app selector', async () => {
@@ -307,6 +311,45 @@ describe('argo-cd', () => {
       expect(
         await rendered.findByText(/remote data validation failed: /),
       ).toBeInTheDocument();
+    });
+
+    it('should display app and chart version when configuration is enabled', async () => {
+      const apisWithVersionsEnabled: [AnyApiRef, Partial<unknown>][] = [
+        [
+          configApiRef,
+          new ConfigReader({
+            versions: { enabled: true },
+          }),
+        ],
+        [errorApiRef, errorApiMock],
+        [
+          argoCDApiRef,
+          new ArgoCDApiClient({
+            discoveryApi,
+            identityApi: getIdentityApiStub,
+            backendBaseUrl: 'https://testbackend.com',
+            searchInstances: false,
+          }),
+        ],
+      ];
+      worker.use(
+        rest.get('*', (_, res, ctx) => res(ctx.json(getResponseStub))),
+      );
+      const rendered = render(
+        <TestApiProvider apis={apisWithVersionsEnabled}>
+          <EntityProvider entity={getEntityStub}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(await rendered.findByText('guestbook')).toBeInTheDocument();
+      expect(await rendered.findByText('guestbook')).not.toHaveAttribute(
+        'href',
+      );
+      expect(await rendered.findByText('Synced')).toBeInTheDocument();
+      expect(await rendered.findByText('Healthy')).toBeInTheDocument();
+      expect(await rendered.findByText('App Version')).toBeInTheDocument();
+      expect(await rendered.findByText('Chart Version')).toBeInTheDocument();
     });
   });
   describe('widget - scan instances', () => {

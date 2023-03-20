@@ -22,18 +22,24 @@ const getCompleteAppDetails = async ({
   api,
   appName,
   url,
+  instance,
 }: {
   api: ArgoCDApi;
   appName: string;
   url: string;
+  instance?: string;
 }) => {
-  const appDetails = await api.getAppDetails({ url, appName });
-  const appResources = await api.getAppManagedResources({ url, appName });
+  const appDetails = await api.getAppDetails({ url, appName, instance });
+  const appResources = await api.getAppManagedResources({
+    url,
+    appName,
+    instance,
+  });
 
-  const uniqueLabels = appResources.items
-    .map((item) => JSON.parse(item.liveState).metadata.labels)
+  const uniqueLabels = (appResources.items ?? [])
+    .map(item => JSON.parse(item.liveState).metadata.labels)
     .reduce((acc, current) => {
-      Object.keys(current).forEach((key) => {
+      Object.keys(current).forEach(key => {
         if (!acc.hasOwnProperty(key)) {
           acc[key] = current[key];
         }
@@ -57,10 +63,12 @@ const getCompleteAppList = async ({
   url: string;
 }) => {
   const appList = await api.listApps({ url, appSelector, projectName });
-  appList.items = await Promise.all((appList.items ?? []).map(async (item) => {
-    const appName = item.metadata.name;
-    return await getCompleteAppDetails({ api, appName, url });
-  }));
+  appList.items = await Promise.all(
+    (appList.items ?? []).map(async item => {
+      const appName = item.metadata.name;
+      return await getCompleteAppDetails({ api, appName, url });
+    }),
+  );
   return appList;
 };
 
@@ -93,9 +101,10 @@ export const useAppDetails = ({
         });
         if (kubeInfo instanceof Error) return kubeInfo;
         const promises = kubeInfo.map(async (instance: any) => {
-          const apiOut = await api.getAppDetails({
-            url,
+          const apiOut = await getCompleteAppDetails({
+            api,
             appName,
+            url,
             instance: instance.name,
           });
           if (!apiOut.metadata) {
@@ -136,7 +145,7 @@ export const useAppDetails = ({
         return items;
       }
       if (appSelector || projectName) {
-        return await getCompleteAppList({api, appSelector, projectName, url});
+        return await getCompleteAppList({ api, appSelector, projectName, url });
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {

@@ -196,6 +196,7 @@ export const getResponseStub = {
     sourceType: 'Directory',
     summary: { images: ['gcr.io/heptio-images/ks-guestbook-demo:0.2'] },
   },
+  resources: {},
 };
 
 export const getResponseStubScanning = {
@@ -334,6 +335,7 @@ export const getResponseStubScanning = {
     sourceType: 'Directory',
     summary: { images: ['gcr.io/heptio-images/ks-guestbook-demo:0.2'] },
   },
+  resources: {},
 };
 
 export const getEmptyResponseStub = {
@@ -401,6 +403,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
               finishedAt: '2020-11-18T16:47:04Z',
             },
           },
+          resources: {},
         },
         {
           metadata: {
@@ -418,6 +421,7 @@ export class ArgoCDApiMock implements ArgoCDApi {
               finishedAt: '2020-11-18T16:47:04Z',
             },
           },
+          resources: {},
         },
       ],
     };
