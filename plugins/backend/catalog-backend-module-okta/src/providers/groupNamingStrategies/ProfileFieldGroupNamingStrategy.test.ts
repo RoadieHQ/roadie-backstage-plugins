@@ -56,4 +56,16 @@ describe('ProfileFiledGroupNamingStrategy', () => {
       'Profile field org_id does not contain a string',
     );
   });
+
+  it('makes a number a string', async () => {
+    const provider = new ProfileFieldGroupNamingStrategy('org_id');
+    const testGroup: Partial<Group> = {
+      profile: {
+        name: 'group-1',
+        description: 'Group 1',
+        org_id: 1234,
+      },
+    };
+    expect(provider.nameForGroup(testGroup as Group)).toEqual('1234');
+  });
 });
