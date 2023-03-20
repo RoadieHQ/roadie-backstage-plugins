@@ -46,6 +46,7 @@ import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
+import { IFramePage } from '@roadiehq/backstage-plugin-iframe/src/plugin';
 
 const app = createApp({
   apis,
@@ -91,6 +92,16 @@ const routes = (
     <Route
       path="/tech-radar"
       element={<TechRadarPage width={1500} height={800} />}
+    />
+    <Route
+      path="/i-frame"
+      element={
+        <IFramePage
+          iframe={{
+            src: 'https://example.com',
+          }}
+        />
+      }
     />
     <Route path="/catalog-import" element={<CatalogImportPage />} />
     <Route path="/search" element={<SearchPage />} />
