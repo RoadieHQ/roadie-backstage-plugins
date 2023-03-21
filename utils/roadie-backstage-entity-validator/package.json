@@ -33,7 +33,7 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@actions/core": "^1.2.7",
+    "@actions/core": "^1.10.0",
     "@backstage/catalog-model": "^1.2.1",
     "@backstage/plugin-scaffolder-common": "^1.2.6",
     "ajv": "^8.4.0",
