@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.5
+
+### Patch Changes
+
+- 3cca5a13: Only set the parent entity name if it is provided.
+
 ## 0.5.4
 
 ### Patch Changes
