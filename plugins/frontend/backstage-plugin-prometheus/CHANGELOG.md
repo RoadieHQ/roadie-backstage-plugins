@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.4.4
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
 ## 2.4.3
 
 ### Patch Changes

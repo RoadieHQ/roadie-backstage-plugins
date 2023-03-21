@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.8
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
 ## 2.3.7
 
 ### Patch Changes

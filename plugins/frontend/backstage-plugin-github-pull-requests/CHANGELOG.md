@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.5
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
 ## 2.5.4
 
 ### Patch Changes

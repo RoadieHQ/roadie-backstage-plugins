@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.9
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
 ## 2.2.8
 
 ### Patch Changes
