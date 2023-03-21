@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.4
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
 ## 0.5.3
 
 ### Patch Changes
