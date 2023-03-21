@@ -36,7 +36,7 @@ export const groupEntityFromOktaGroup = (
   if (typeof parentFieldValue === 'number') {
     parent = parentFieldValue.toString();
   }
-  return {
+  const groupEntity: GroupEntity = {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
     metadata: {
@@ -49,9 +49,12 @@ export const groupEntityFromOktaGroup = (
     },
     spec: {
       members: options.members,
-      parent: parent !== '' ? parent : undefined,
       type: 'group',
       children: [],
     },
   };
+  if (parent !== '') {
+    groupEntity.spec.parent = parent;
+  }
+  return groupEntity;
 };
