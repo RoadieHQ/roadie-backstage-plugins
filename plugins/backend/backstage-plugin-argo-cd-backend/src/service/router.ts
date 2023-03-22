@@ -60,6 +60,40 @@ export function createRouter({
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
+      const argoInstanceArray = argoSvc.getArgoInstanceArray();
+      const matchedArgoInstance = argoInstanceArray.find(
+        argoInstance => argoInstance.name === argoInstanceName,
+      );
+      if (matchedArgoInstance === undefined) {
+        return response.status(500).send({
+          status: 'failed',
+          message: 'cannot find an argo instance to match this cluster',
+        });
+      }
+      let token: string;
+      if (!matchedArgoInstance.token) {
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
+      } else {
+        token = matchedArgoInstance.token;
+      }
+      const resp = await argoSvc.getRevisionData(
+        matchedArgoInstance.url,
+        { name: argoAppName },
+        token,
+        revisionID,
+      );
+      return response.send(resp);
+    },
+  );
+
+  router.get(
+    '/argoInstance/:argoInstanceName/applications/name/:argoAppName',
+    async (request, response) => {
+      const revisionID: string = request.params.revisionID;
+      const argoInstanceName: string = request.params.argoInstanceName;
+      const argoAppName = request.params.argoAppName;
+      logger.info(`Getting info on ${argoAppName}`);
+      logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = findArgoInstance(argoInstanceName);
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
