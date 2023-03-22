@@ -86,7 +86,8 @@ const HistoryTable = ({
     },
     {
       title: 'Deploy Details',
-      render: (row: any) => (
+      sorting: false,
+      render: (row: any): React.ReactNode => (
         <List dense style={{ padding: '0px' }}>
           <ListItem style={{ paddingLeft: '0px' }}>
             {row.deployedAt
@@ -114,16 +115,31 @@ const HistoryTable = ({
       ),
     },
     {
-      title: 'Revision',
-      field: 'revision',
+      title: 'Author',
       sorting: false,
+      render: (row: any): React.ReactNode => <div>{row.revision?.author}</div>,
+    },
+    {
+      title: 'Message',
+      sorting: false,
+      render: (row: any): React.ReactNode => <div>{row.revision?.message}</div>,
+    },
+    {
+      title: 'Revision',
+      sorting: false,
+      render: (row: any): React.ReactNode => (
+        <div>{row.revision?.revisionID}</div>
+      ),
     },
   ];
 
   if (supportsMultipleArgoInstances) {
     columns.splice(1, 0, {
       title: 'Instance',
-      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+      render: (row: any): React.ReactNode =>
+        row.metadata?.instance?.name
+          ? row.metadata?.instance?.name
+          : row.instance,
     });
   }
 

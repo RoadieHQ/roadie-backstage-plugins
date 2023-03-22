@@ -15,7 +15,14 @@
  */
 
 import React from 'react';
-import { Box, LinearProgress, List, ListItem } from '@material-ui/core';
+import {
+  Box,
+  LinearProgress,
+  List,
+  ListItem,
+  Tooltip,
+  Button,
+} from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
 import {
@@ -43,7 +50,11 @@ interface Condition {
   type: string;
 }
 
-const MessageComponent = ({ conditions }: { conditions: Condition[] }) => {
+const MessageComponent = ({
+  conditions,
+}: {
+  conditions: Condition[] | undefined;
+}) => {
   return (
     <>
       {conditions ? (
@@ -63,7 +74,13 @@ const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const State = ({ value }: { value: string }) => {
+const State = ({
+  value,
+  conditions,
+}: {
+  value: string;
+  conditions: Condition[] | undefined;
+}) => {
   const colorMap: Record<string, string> = {
     Pending: '#dcbc21',
     Synced: 'green',
@@ -71,6 +88,30 @@ const State = ({ value }: { value: string }) => {
     Inactive: 'black',
     Failed: 'red',
   };
+  if (conditions !== undefined) {
+    return (
+      <Tooltip
+        title={<MessageComponent conditions={conditions} />}
+        placement="bottom-start"
+      >
+        <Box display="flex" alignItems="center">
+          <Button style={{ paddingLeft: '0px' }}>
+            <span
+              style={{
+                display: 'block',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: colorMap[value] || '#dcbc21',
+                marginRight: '5px',
+              }}
+            />
+            {value}
+          </Button>
+        </Box>
+      </Tooltip>
+    );
+  }
   return (
     <Box display="flex" alignItems="center">
       <span
@@ -115,13 +156,16 @@ const OverviewComponent = ({
     {
       title: 'Sync Status',
       render: (row: any): React.ReactNode => (
-        <State value={row.status.sync.status} />
+        <State
+          value={row.status.sync.status}
+          conditions={row.status.conditions}
+        />
       ),
     },
     {
       title: 'Health Status',
       render: (row: any): React.ReactNode => (
-        <State value={row.status.health.status} />
+        <State value={row.status.health.status} conditions={undefined} />
       ),
     },
     {
@@ -130,12 +174,6 @@ const OverviewComponent = ({
         row.status.operationState
           ? getElapsedTime(row.status.operationState.finishedAt!)
           : '',
-    },
-    {
-      title: 'Message',
-      render: (row: any): React.ReactNode => (
-        <MessageComponent conditions={row.status.conditions} />
-      ),
     },
   ];
 

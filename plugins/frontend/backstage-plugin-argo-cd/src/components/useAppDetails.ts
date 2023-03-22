@@ -17,6 +17,7 @@
 import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsyncRetry } from 'react-use';
 import { argoCDApiRef } from '../api';
+import { ArgoCDAppDetails } from '../types';
 
 export const useAppDetails = ({
   appName,
@@ -33,13 +34,44 @@ export const useAppDetails = ({
   const errorApi = useApi(errorApiRef);
   const configApi = useApi(configApiRef);
 
+  const getRevisionHistroyDetails = async (
+    appDetails: ArgoCDAppDetails,
+    app: string,
+    instanceName?: string | undefined,
+  ) => {
+    const promises: any = appDetails.status?.history?.map(
+      async (historyRecord: any) => {
+        const revisionID = historyRecord.revision;
+        const revisionDetails = await api.getRevisionDetails({
+          url,
+          app,
+          revisionID,
+          instanceName,
+        });
+        historyRecord.revision = { revisionID: revisionID, ...revisionDetails };
+      },
+    );
+    await Promise.all(promises);
+    return appDetails;
+  };
+
   const { loading, value, error, retry } = useAsyncRetry(async () => {
     const argoSearchMethod: boolean = Boolean(
       configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
     );
     try {
       if (!argoSearchMethod && appName) {
-        return await api.getAppDetails({ url, appName });
+        const appDetails = await api.getAppDetails({ url, appName });
+        if (
+          appDetails &&
+          appDetails?.status &&
+          appDetails?.status?.history &&
+          appDetails?.status?.history.length > 0
+        ) {
+          return getRevisionHistroyDetails(appDetails, appName);
+        }
+
+        return appDetails;
       }
       if (argoSearchMethod && appName) {
         const kubeInfo = await api.serviceLocatorUrl({
@@ -64,6 +96,14 @@ export const useAppDetails = ({
             };
           }
           apiOut.metadata.instance = instance;
+          if (
+            apiOut &&
+            apiOut?.status &&
+            apiOut?.status?.history &&
+            apiOut?.status?.history.length > 0
+          ) {
+            return getRevisionHistroyDetails(apiOut, appName, instance.name);
+          }
           return apiOut;
         });
         return await Promise.all(promises);
@@ -87,10 +127,38 @@ export const useAppDetails = ({
             .flatMap(argoCdAppList => argoCdAppList.items)
             .filter(item => item !== null),
         };
-        return items;
+        const getRevisionHistroyPromises = items.items.map(
+          async (item: any) => {
+            if (item?.status.history && item?.status.history.length > 0) {
+              item = getRevisionHistroyDetails(
+                item,
+                item.metadata.name,
+                item.metadata.instance.name,
+              ); // eslint-disable-line
+            }
+            return item;
+          },
+        );
+        const result = await Promise.all(getRevisionHistroyPromises);
+        return result;
       }
       if (appSelector || projectName) {
-        return await api.listApps({ url, appSelector, projectName });
+        const result = await api.listApps({ url, appSelector, projectName });
+        if (result.items && result.items.length > 0) {
+          const apps = {
+            items: result.items.filter(item => item !== null),
+          };
+          const getRevisionHistroyPromises = apps.items.map(
+            async (item: any) => {
+              if (item?.status.history && item?.status.history.length > 0) {
+                item = getRevisionHistroyDetails(item, item.metadata.name); // eslint-disable-line
+              }
+              return item;
+            },
+          );
+          return await Promise.all(getRevisionHistroyPromises);
+        }
+        return result;
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {
