@@ -81,8 +81,7 @@ proxy:
     # this line is required if your hosted argoCD instance has self-signed certificate
     secure: false
     headers:
-      Cookie:
-        $env: ARGOCD_AUTH_TOKEN
+      Cookie: ${ARGOCD_AUTH_TOKEN}
 
   '/prometheus/api':
     # url to the api of your hosted prometheus instance
@@ -114,12 +113,7 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  environment: development
-  providers:
-    github:
-      development:
-        clientId: 9876c08ce4d5308977ce
-        clientSecret: c76512b06b3d65a06eff86e1773921e55c27ea9c
+  providers: {}
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}
@@ -189,9 +183,9 @@ catalog:
     #   rules:
     #     - allow: [Template]
 argocd:
-  username: admin
-  password: Super135?
   baseUrl: https://localhost:8080
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
   appLocatorMethods:
     []
     ## The below is if you wish to scan all Argo CD instances, however
@@ -200,8 +194,8 @@ argocd:
     ## `backstage-plugin-argo-cd-backend`.
     # - type: 'config'
     #   instances:
-    #     - name: in-cluster
-    #       url: https://localhost:8080
+    #     - name: argoInstance2
+    #       url: https://argoInstance2.com
 
 prometheus:
   proxyPath: /prometheus/api
