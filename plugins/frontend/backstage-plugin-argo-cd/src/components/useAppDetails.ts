@@ -129,14 +129,15 @@ export const useAppDetails = ({
         };
         const getRevisionHistroyPromises = items.items.map(
           async (item: any) => {
+            let newItem;
             if (item?.status.history && item?.status.history.length > 0) {
-              item = getRevisionHistroyDetails(
+              newItem = getRevisionHistroyDetails(
                 item,
                 item.metadata.name,
                 item.metadata.instance.name,
-              ); // eslint-disable-line
+              );
             }
-            return item;
+            return newItem;
           },
         );
         const result = await Promise.all(getRevisionHistroyPromises);
@@ -150,10 +151,11 @@ export const useAppDetails = ({
           };
           const getRevisionHistroyPromises = apps.items.map(
             async (item: any) => {
+              let newItem;
               if (item?.status.history && item?.status.history.length > 0) {
-                item = getRevisionHistroyDetails(item, item.metadata.name); // eslint-disable-line
+                newItem = getRevisionHistroyDetails(item, item.metadata.name);
               }
-              return item;
+              return newItem;
             },
           );
           return await Promise.all(getRevisionHistroyPromises);
