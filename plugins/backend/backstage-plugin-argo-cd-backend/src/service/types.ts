@@ -98,6 +98,15 @@ export interface ArgoServiceApi {
     },
     argoToken: string,
   ) => Promise<object>;
+  getArgoAppManagedResources: (
+    baseUrl: string,
+    argoInstanceName: string,
+    options: {
+      name: string;
+      selector: string;
+    },
+    argoToken: string,
+  ) => Promise<object>;
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;

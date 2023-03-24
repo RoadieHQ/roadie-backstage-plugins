@@ -175,6 +175,42 @@ export class ArgoService implements ArgoServiceApi {
     return data;
   }
 
+  async getArgoAppManagedResources(
+    baseUrl: string,
+    argoInstanceName: string,
+    options: {
+      name?: string;
+    },
+    argoToken: string,
+  ): Promise<any> {
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+    };
+
+    const resp = await fetch(
+      `${baseUrl}/api/v1/applications/${options.name}/managed-resources`,
+      requestOptions,
+    );
+
+    if (!resp.ok) {
+      throw new Error(`Request failed with ${resp.status} Error`);
+    }
+
+    const data = await resp?.json();
+    if (data.items) {
+      (data.items as any[]).forEach(item => {
+        item.metadata.instance = { name: argoInstanceName };
+      });
+    } else if (data && options.name) {
+      data.instance = argoInstanceName;
+    }
+    return data;
+  }
+
   async createArgoProject({
     baseUrl,
     argoToken,
