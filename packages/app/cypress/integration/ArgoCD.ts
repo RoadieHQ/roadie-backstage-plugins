@@ -25,8 +25,14 @@ describe('Argo CD', () => {
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       { fixture: 'ArgoCD/applications-test-app.json' },
     ).as('getArgoData');
+    cy.intercept(
+      'GET',
+      'http://localhost:7007/api/proxy/argocd/api/applications/test-app/revisions/53e28ff20cc530b9ada2173fbbd64d48338583ba/metadata',
+      { fixture: 'ArgoCD/deploy-history-data.json' },
+    ).as('getRevisionData');
     cy.visit('/catalog/default/component/sample-service');
     cy.wait('@getArgoData');
+    cy.wait('@getRevisionData');
   });
 
   describe('Navigate to Overview', () => {
