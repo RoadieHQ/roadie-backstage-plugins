@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.4
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 1.8.3
 
 ### Patch Changes

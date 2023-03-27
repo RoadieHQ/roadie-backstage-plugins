@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.3.9
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 1.3.8
 
 ### Patch Changes
