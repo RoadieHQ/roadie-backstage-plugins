@@ -24,7 +24,8 @@ export function createYamlJSONataTransformAction() {
     path: string;
     expression: string;
     options?: {
-      indent: number;
+      indent?: number;
+      lineWidth?: number;
     };
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
@@ -52,6 +53,9 @@ export function createYamlJSONataTransformAction() {
             type: 'object',
             properties: {
               indent: {
+                type: 'number',
+              },
+              lineWidth: {
                 type: 'number',
               },
             },

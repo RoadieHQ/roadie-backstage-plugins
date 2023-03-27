@@ -55,4 +55,30 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       yaml.dump({ hello: ['world', 'item2'] }),
     );
   });
+
+  it('should use lineWidth to control wrapping lines', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': '',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression:
+          '{ "helloFrom": "anIncrediblyLongEmailAddress@anIncrediblyLongSubdomain.anIncrediblyLongDomain.com" }',
+        options: {
+          lineWidth: -1,
+        },
+      },
+    });
+
+    // No block style ( >- )
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      'helloFrom: anIncrediblyLongEmailAddress@anIncrediblyLongSubdomain.anIncrediblyLongDomain.com\n',
+    );
+  });
 });

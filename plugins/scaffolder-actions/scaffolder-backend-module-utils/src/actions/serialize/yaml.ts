@@ -20,7 +20,8 @@ export function createSerializeYamlAction() {
   return createTemplateAction<{
     data: any;
     options?: {
-      indent: number;
+      indent?: number;
+      lineWidth?: number;
     };
   }>({
     id: 'roadiehq:utils:serialize:yaml',
@@ -50,6 +51,9 @@ export function createSerializeYamlAction() {
             type: 'object',
             properties: {
               indent: {
+                type: 'number',
+              },
+              lineWidth: {
                 type: 'number',
               },
             },

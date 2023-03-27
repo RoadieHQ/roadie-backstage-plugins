@@ -60,4 +60,22 @@ describe('roadiehq:utils:serialize:yaml', () => {
       yaml.dump({ hello1: 'world1', hello2: { asdf: 'blah' } }, { indent: 10 }),
     );
   });
+
+  it('should write file to the worskspacePath with line width', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { hello3: 'world3' },
+        options: {
+          lineWidth: -1,
+        },
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      yaml.dump({ hello3: 'world3' }, { lineWidth: -1 }),
+    );
+  });
 });
