@@ -41,6 +41,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
   private readonly parentGroupField: string | undefined;
+  private readonly includeEmptyGroups: boolean;
 
   static fromConfig(
     config: Config,
@@ -49,6 +50,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       parentGroupField?: string;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      includeEmptyGroups?: boolean;
     },
   ) {
     const oktaConfigs = config
@@ -65,6 +67,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       parentGroupField?: string;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      includeEmptyGroups?: boolean;
     },
   ) {
     super(accountConfigs, options);
@@ -75,6 +78,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.includeEmptyGroups = !!options.includeEmptyGroups;
   }
 
   getProviderName(): string {
@@ -134,7 +138,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
                   parentGroupField: this.parentGroupField,
                 },
               );
-              if (members.length > 0) {
+              if (this.includeEmptyGroups || members.length > 0) {
                 resources.push(groupEntity);
               }
             } catch (e: unknown) {

@@ -117,6 +117,16 @@ describe('OktaOrgEntityProvider', () => {
               ]);
             },
           },
+          {
+            id: 'group-with-no-members',
+            profile: {
+              name: 'no-members@the-company',
+              description: null,
+            },
+            listUsers: () => {
+              return new MockOktaCollection([]);
+            },
+          },
         ]);
       };
     });
@@ -153,6 +163,32 @@ describe('OktaOrgEntityProvider', () => {
               }),
               spec: expect.objectContaining({
                 members: ['asdfwefwefwef'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('optionally creates okta groups with no members', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        includeEmptyGroups: true,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'group-with-no-members',
               }),
             }),
           }),
