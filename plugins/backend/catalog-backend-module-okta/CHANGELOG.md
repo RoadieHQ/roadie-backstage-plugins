@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.5.6
+
+### Patch Changes
+
+- cc0f1489: Allow the okta provider to include groups that have no members.
+
 ## 0.5.5
 
 ### Patch Changes
