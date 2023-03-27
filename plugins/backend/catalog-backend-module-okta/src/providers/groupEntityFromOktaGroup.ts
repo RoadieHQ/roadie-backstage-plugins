@@ -20,22 +20,17 @@ import { GroupNamingStrategy } from './groupNamingStrategies';
 export const groupEntityFromOktaGroup = (
   group: Group,
   namingStrategy: GroupNamingStrategy,
+  parentGroup: Group | undefined,
   options: {
     annotations: Record<string, string>;
     members: string[];
-    parentGroupField?: string;
   },
 ): GroupEntity => {
-  const parentFieldValue = options.parentGroupField
-    ? group.profile[options.parentGroupField]
-    : undefined;
-  let parent: string | undefined = undefined;
-  if (typeof parentFieldValue === 'string') {
-    parent = parentFieldValue;
+  let parentGroupName = undefined;
+  if (parentGroup) {
+    parentGroupName = namingStrategy(parentGroup);
   }
-  if (typeof parentFieldValue === 'number') {
-    parent = parentFieldValue.toString();
-  }
+
   const groupEntity: GroupEntity = {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
@@ -53,8 +48,8 @@ export const groupEntityFromOktaGroup = (
       children: [],
     },
   };
-  if (parent !== '') {
-    groupEntity.spec.parent = parent;
+  if (parentGroupName) {
+    groupEntity.spec.parent = parentGroupName;
   }
   return groupEntity;
 };
