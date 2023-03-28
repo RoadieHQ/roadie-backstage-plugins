@@ -32,8 +32,8 @@ import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
 import { assertError } from '@backstage/errors';
-import { Group } from '@okta/okta-sdk-nodejs';
-import get from 'lodash/get';
+import { getOktaGroups } from './getOktaGroups';
+import { getParentGroup } from './getParentGroup';
 
 /**
  * Provides entities from Okta Group service.
@@ -109,24 +109,13 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     const client = this.getClient(this.orgUrl, ['okta.groups.read']);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
-    const oktaGroups: Record<string, Group> = {};
 
-    await client.listGroups({ search: this.groupFilter }).each(group => {
-      if (this.hierarchyConfig?.key) {
-        const id = get(group, this.hierarchyConfig?.key);
-        if (typeof id === 'string') {
-          oktaGroups[id] = group;
-        }
-        if (typeof id === 'number') {
-          oktaGroups[id.toString()] = group;
-        }
-      }
-      try {
-        oktaGroups[this.namingStrategy(group)] = group;
-      } catch (e: unknown) {
-        assertError(e);
-        this.logger.warn(`Failed to add group ${group.id}: ${e.message}`);
-      }
+    const oktaGroups = await getOktaGroups({
+      client,
+      groupFilter: this.groupFilter,
+      groupNamingStrategy: this.namingStrategy,
+      key: this.hierarchyConfig?.key,
+      logger: this.logger,
     });
 
     await Promise.allSettled(
@@ -142,17 +131,11 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           }
         });
 
-        let parentGroup: Group | undefined = undefined;
-
-        if (this.hierarchyConfig?.parentKey) {
-          const parentId = get(group, this.hierarchyConfig?.parentKey);
-          if (typeof parentId === 'string') {
-            parentGroup = oktaGroups[parentId];
-          }
-          if (typeof parentId === 'number') {
-            parentGroup = oktaGroups[parentId.toString()];
-          }
-        }
+        const parentGroup = getParentGroup({
+          parentKey: this.hierarchyConfig?.parentKey,
+          group,
+          oktaGroups,
+        });
 
         try {
           const groupEntity = groupEntityFromOktaGroup(

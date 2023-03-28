@@ -26,11 +26,6 @@ export const groupEntityFromOktaGroup = (
     members: string[];
   },
 ): GroupEntity => {
-  let parentGroupName = undefined;
-  if (parentGroup) {
-    parentGroupName = namingStrategy(parentGroup);
-  }
-
   const groupEntity: GroupEntity = {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
@@ -48,8 +43,9 @@ export const groupEntityFromOktaGroup = (
       children: [],
     },
   };
-  if (parentGroupName) {
-    groupEntity.spec.parent = parentGroupName;
+
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
   }
   return groupEntity;
 };
