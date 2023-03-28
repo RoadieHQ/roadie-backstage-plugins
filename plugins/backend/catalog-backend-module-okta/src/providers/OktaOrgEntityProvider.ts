@@ -54,6 +54,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
       includeEmptyGroups?: boolean;
+      /*
+       * @deprecated, please use hierarchyConfig.parentKey
+       */
+      parentGroupField?: string;
       hierarchyConfig?: {
         parentKey: string;
         key?: string;
@@ -64,6 +68,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       .getOptionalConfigArray('catalog.providers.okta')
       ?.map(getAccountConfig);
 
+    if (options.parentGroupField && !options.hierarchyConfig?.parentKey) {
+      options.hierarchyConfig = {
+        parentKey: `profile.${options.parentGroupField}`,
+      };
+    }
     return new OktaOrgEntityProvider(oktaConfigs || [], options);
   }
 

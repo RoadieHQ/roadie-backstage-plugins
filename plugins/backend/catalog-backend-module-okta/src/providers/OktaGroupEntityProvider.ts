@@ -51,6 +51,10 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      /*
+       * @deprecated, please use hierarchyConfig.parentKey
+       */
+      parentGroupField?: string;
       hierarchyConfig?: {
         parentKey: string;
         key?: string;
@@ -58,6 +62,12 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     },
   ) {
     const accountConfig = getAccountConfig(config);
+
+    if (options.parentGroupField && !options.hierarchyConfig?.parentKey) {
+      options.hierarchyConfig = {
+        parentKey: options.parentGroupField,
+      };
+    }
 
     return new OktaGroupEntityProvider(accountConfig, options);
   }
