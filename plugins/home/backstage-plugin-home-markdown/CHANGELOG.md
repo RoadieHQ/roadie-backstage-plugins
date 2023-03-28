@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.7
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 2.5.6
 
 ### Patch Changes
