@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.6.0
+
+### Minor Changes
+
+- 7baa7791: Rewrite the configuration and logic for creating a hierarchy of groups. Now it does not insist on the group name matching the parent key.
+
 ## 0.5.7
 
 ### Patch Changes
