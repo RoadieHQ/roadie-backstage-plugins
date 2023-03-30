@@ -27,36 +27,57 @@ export const yamlOptionsSchema = {
   type: 'object',
   properties: {
     indent: {
+      description: '(default: 2) - indentation width to use (in spaces)',
       type: 'number',
     },
     noArrayIndent: {
+      description:
+        '(default: false) - when true, will not add an indentation level to array elements',
       type: 'boolean',
     },
     skipInvalid: {
+      description:
+        '(default: false) - do not throw on invalid types (like function in the safe schema) and skip pairs and single values with such types',
       type: 'boolean',
     },
     flowLevel: {
+      description:
+        '(default: -1) - specifies level of nesting, when to switch from block to flow style for collections. -1 means block style everwhere',
       type: 'number',
     },
     sortKeys: {
+      description:
+        '(default: false) - if true, sort keys when dumping YAML. If a function, use the function to sort the keys',
       type: 'boolean',
     },
     lineWidth: {
+      description:
+        '(default: 80) - set max line width. Set -1 for unlimited width',
       type: 'number',
     },
     noRefs: {
+      description:
+        "(default: false) - if true, don't convert duplicate objects into references",
       type: 'boolean',
     },
     noCompatMode: {
+      description:
+        '(default: false) - if true don\'t try to be compatible with older yaml versions. Currently: don\'t quote "yes", "no" and so on, as required for YAML 1.1',
       type: 'boolean',
     },
     condenseFlow: {
+      description:
+        "(default: false) - if true flow sequences will be condensed, omitting the space between a, b. Eg. '[a,b]', and omitting the space between key: value and quoting the key. Eg. '{\"a\":b}' Can be useful when using yaml for pretty URL query params as spaces are %-encoded.",
       type: 'boolean',
     },
     quotingType: {
+      description:
+        "(' or \", default: ') - strings will be quoted using this quoting style. If you specify single quotes, double quotes will still be used for non-printable characters.",
       type: 'string',
     },
     forceQuotes: {
+      description:
+        "(default: false) - if true, all non-key strings will be quoted even if they normally don't need to.",
       type: 'boolean',
     },
   },
