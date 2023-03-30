@@ -56,29 +56,39 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
     );
   });
 
-  it('should use lineWidth to control wrapping lines', async () => {
+  it('should pass options to yaml.dump', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': '',
       },
     });
+
+    const mockDump = jest.spyOn(yaml, 'dump');
+
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
       input: {
         path: 'fake-file.yaml',
-        expression:
-          '{ "helloFrom": "anIncrediblyLongEmailAddress@anIncrediblyLongSubdomain.anIncrediblyLongDomain.com" }',
-        options: {
-          lineWidth: -1,
-        },
+        expression: '{ "hello": "beautiful world" }',
+        options: opts,
       },
     });
 
-    // No block style ( >- )
-    expect(mockContext.output).toHaveBeenCalledWith(
-      'result',
-      'helloFrom: anIncrediblyLongEmailAddress@anIncrediblyLongSubdomain.anIncrediblyLongDomain.com\n',
-    );
+    expect(mockDump).toHaveBeenCalledWith({ hello: 'beautiful world' }, opts);
   });
 });

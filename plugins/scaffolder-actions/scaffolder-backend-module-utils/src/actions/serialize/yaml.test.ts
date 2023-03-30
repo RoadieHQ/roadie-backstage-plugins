@@ -61,21 +61,32 @@ describe('roadiehq:utils:serialize:yaml', () => {
     );
   });
 
-  it('should write file to the worskspacePath with line width', async () => {
+  it('should pass options to yaml.dump', async () => {
+    const mockDump = jest.spyOn(yaml, 'dump');
+
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
       input: {
         data: { hello3: 'world3' },
-        options: {
-          lineWidth: -1,
-        },
+        options: opts,
       },
     });
 
-    expect(mockContext.output).toHaveBeenCalledWith(
-      'serialized',
-      yaml.dump({ hello3: 'world3' }, { lineWidth: -1 }),
-    );
+    expect(mockDump).toHaveBeenCalledWith({ hello3: 'world3' }, opts);
   });
 });

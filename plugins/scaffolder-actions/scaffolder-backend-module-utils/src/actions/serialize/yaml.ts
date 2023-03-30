@@ -15,14 +15,12 @@
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import yaml from 'js-yaml';
+import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
 export function createSerializeYamlAction() {
   return createTemplateAction<{
     data: any;
-    options?: {
-      indent?: number;
-      lineWidth?: number;
-    };
+    options?: supportedDumpOptions;
   }>({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
@@ -45,19 +43,7 @@ export function createSerializeYamlAction() {
               type: 'string',
             },
           },
-          options: {
-            title: 'Options',
-            description: 'YAML stringify options',
-            type: 'object',
-            properties: {
-              indent: {
-                type: 'number',
-              },
-              lineWidth: {
-                type: 'number',
-              },
-            },
-          },
+          options: yamlOptionsSchema,
         },
       },
       output: {
