@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.6.1
+
+### Patch Changes
+
+- 7c561d79: Uses imports from the `@backstage/plugin-catalog-node` package
+
 ## 0.6.0
 
 ### Minor Changes
