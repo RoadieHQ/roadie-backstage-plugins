@@ -32,7 +32,6 @@ export default async function createPlugin(
   const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
     ...env,
     groupNamingStrategy: 'kebab-case-name',
-    userNamingStrategy: 'strip-domain-email',
   });
   builder.addEntityProvider(orgProvider);
   providers.push(orgProvider);
@@ -82,7 +81,7 @@ export default async function createPlugin(
       fn: async () => {
         await provider.run();
       },
-      frequency: Duration.fromObject({ minutes: 5 }),
+      frequency: Duration.fromObject({ minutes: 1 }),
       timeout: Duration.fromObject({ minutes: 10 }),
     });
   }
