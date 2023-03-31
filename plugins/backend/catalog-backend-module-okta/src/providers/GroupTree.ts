@@ -22,13 +22,18 @@ interface GroupNode {
 
 export class GroupTree {
   private groupDict: Record<string, GroupNode> = {};
+  private groups: GroupEntity[];
 
-  constructor(private groups: GroupEntity[]) {
+  constructor(groups: GroupEntity[]) {
+    this.groups = groups;
     for (const group of groups) {
       this.groupDict[group.metadata.name] = { group, children: [] };
     }
     for (const group of groups) {
-      const parentName = group.spec.parent;
+      const parentName =
+        group.spec.parent === group.metadata.name
+          ? undefined
+          : group.spec.parent;
       if (parentName) {
         this.groupDict[parentName].children.push(
           this.groupDict[group.metadata.name],
@@ -64,11 +69,17 @@ export class GroupTree {
     }
   }
 
+  private hasParent(group: GroupEntity): boolean {
+    return group.spec.parent === group.metadata.name
+      ? false
+      : !!group.spec.parent;
+  }
+
   private createTree(opts: { pruneEmptyMembers: boolean }): GroupNode[] {
     const { pruneEmptyMembers } = opts;
     const rootNodes: GroupNode[] = [];
     for (const group of this.groups) {
-      if (!group.spec.parent) {
+      if (!this.hasParent(group)) {
         rootNodes.push(this.groupDict[group.metadata.name]);
       }
     }

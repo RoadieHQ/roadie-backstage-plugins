@@ -126,14 +126,19 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         const defaultAnnotations = await this.buildDefaultAnnotations();
 
         await client.listUsers({ search: account.userFilter }).each(user => {
-          const userName = this.userNamingStrategy(user);
-          userResources[userName] = userEntityFromOktaUser(
-            user,
-            this.userNamingStrategy,
-            {
-              annotations: defaultAnnotations,
-            },
-          );
+          try {
+            const userName = this.userNamingStrategy(user);
+            userResources[userName] = userEntityFromOktaUser(
+              user,
+              this.userNamingStrategy,
+              {
+                annotations: defaultAnnotations,
+              },
+            );
+          } catch (e: unknown) {
+            assertError(e);
+            this.logger.warn(`Failed to add user: ${e.message}`);
+          }
         });
 
         providedUserCount = Object.values(userResources).length;
