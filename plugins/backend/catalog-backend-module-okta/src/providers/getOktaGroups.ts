@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import get from 'lodash/get';
-import { assertError } from '@backstage/errors';
+import { isError } from '@backstage/errors';
 import { Group, Client } from '@okta/okta-sdk-nodejs';
 import { Logger } from 'winston';
 import { GroupNamingStrategy } from './groupNamingStrategies';
@@ -45,8 +45,11 @@ export const getOktaGroups = async (opts: GetOktaGroupsOptions) => {
       try {
         oktaGroups[groupNamingStrategy(group)] = group;
       } catch (e: unknown) {
-        assertError(e);
-        logger.warn(`Failed to add group ${group.id}: ${e.message}`);
+        logger.warn(
+          `Failed to add group ${group.id}: ${
+            isError(e) ? e.message : 'unknown error'
+          }`,
+        );
       }
     }
   });
