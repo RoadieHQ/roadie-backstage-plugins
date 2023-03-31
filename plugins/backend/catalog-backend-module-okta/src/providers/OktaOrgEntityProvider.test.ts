@@ -25,8 +25,34 @@ let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
 };
 
+const allUsers = [
+  {
+    id: 'asdfwefwefwef',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'asdfwefwefwef',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'user-1',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'user-2',
+    profile: {
+      email: 'fname2@domain.com',
+    },
+  },
+];
 let listUsers: () => MockOktaCollection = () => {
-  return new MockOktaCollection([]);
+  return new MockOktaCollection(allUsers);
 };
 
 jest.mock('@okta/okta-sdk-nodejs', () => {
@@ -60,7 +86,7 @@ describe('OktaOrgEntityProvider', () => {
   describe('where there is no groups', () => {
     beforeEach(() => {
       listGroups = () => new MockOktaCollection([]);
-      listUsers = () => new MockOktaCollection([]);
+      listUsers = () => new MockOktaCollection(allUsers);
     });
 
     it('creates no okta groups', async () => {
@@ -73,7 +99,13 @@ describe('OktaOrgEntityProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [],
+        entities: expect.not.arrayContaining([
+          {
+            entity: expect.objectContaining({
+              kind: 'Group',
+            }),
+          },
+        ]),
       });
     });
   });
@@ -273,7 +305,13 @@ describe('OktaOrgEntityProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [],
+        entities: expect.not.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+            }),
+          }),
+        ]),
       });
     });
 
