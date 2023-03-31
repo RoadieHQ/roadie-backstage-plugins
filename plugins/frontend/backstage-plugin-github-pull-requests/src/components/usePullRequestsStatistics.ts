@@ -166,7 +166,10 @@ export function usePullRequestsStatistics({
       };
     const avgTimeUntilMergeDiff =
       calcResult.avgTimeUntilMerge / calcResult.mergedCount;
-    const avgTimeUntilMerge = humanizeDuration(avgTimeUntilMergeDiff);
+    const avgTimeUntilMerge = humanizeDuration(avgTimeUntilMergeDiff, {
+      round: true,
+      units: ['mo'],
+    });
     return {
       ...calcResult,
       avgTimeUntilMerge: avgTimeUntilMerge,
