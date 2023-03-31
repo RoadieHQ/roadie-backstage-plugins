@@ -283,9 +283,12 @@ describe('OktaGroupProvider', () => {
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, {
         logger,
-        parentGroupField: 'parent_org_id',
         namingStrategy: new ProfileFieldGroupNamingStrategy('org_id')
           .nameForGroup,
+        hierarchyConfig: {
+          parentKey: 'profile.parent_org_id',
+          key: 'profile.org_id',
+        },
         userNamingStrategy: 'strip-domain-email',
       });
       await provider.connect(entityProviderConnection);
@@ -314,6 +317,52 @@ describe('OktaGroupProvider', () => {
               spec: expect.objectContaining({
                 members: ['fname'],
                 parent: '1234',
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('allows creating a hierarchy for groups without a naming strategy', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        hierarchyConfig: {
+          parentKey: 'profile.parent_org_id',
+          key: 'profile.org_id',
+        },
+        userNamingStrategy: 'strip-domain-email',
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+              }),
+              spec: expect.objectContaining({
+                members: ['fname'],
+                parent: 'asdfwefwefwef',
+              }),
+            }),
+          }),
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'group-with-null-description',
+              }),
+              spec: expect.objectContaining({
+                members: ['fname'],
+                parent: 'asdfwefwefwef',
               }),
             }),
           }),

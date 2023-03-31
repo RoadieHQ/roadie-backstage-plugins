@@ -60,4 +60,33 @@ describe('roadiehq:utils:serialize:yaml', () => {
       yaml.dump({ hello1: 'world1', hello2: { asdf: 'blah' } }, { indent: 10 }),
     );
   });
+
+  it('should pass options to yaml.dump', async () => {
+    const mockDump = jest.spyOn(yaml, 'dump');
+
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { hello3: 'world3' },
+        options: opts,
+      },
+    });
+
+    expect(mockDump).toHaveBeenCalledWith({ hello3: 'world3' }, opts);
+  });
 });

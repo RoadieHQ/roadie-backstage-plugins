@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.5
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 4.0.4
 
 ### Patch Changes
