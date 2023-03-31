@@ -75,27 +75,3 @@ export const EntityDependabotAlertsCard = securityInsightsPlugin.provide(
     },
   }),
 );
-
-export const EntityDependabotAlertsTable = securityInsightsPlugin.provide(
-  createComponentExtension({
-    name: 'EntityDependabotAlertsTable',
-    component: {
-      lazy: () =>
-        import('./components/DependabotAlertsTable').then(
-          m => m.DependabotAlertsTable,
-        ),
-    },
-  }),
-);
-
-export const EntitySecurityInsightsTable = securityInsightsPlugin.provide(
-  createComponentExtension({
-    name: 'EntitySecurityInsightsTable',
-    component: {
-      lazy: () =>
-        import('./components/SecurityInsightsTable').then(
-          m => m.SecurityInsightsTable,
-        ),
-    },
-  }),
-);
