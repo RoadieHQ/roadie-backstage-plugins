@@ -43,7 +43,6 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly userNamingStrategy: UserNamingStrategy;
   private readonly groupFilter: string | undefined;
   private readonly orgUrl: string;
-  private readonly parentGroupField: string | undefined;
   private readonly customAttributesToAnnotationAllowlist: string[];
   private hierarchyConfig: { parentKey: string; key?: string } | undefined;
 
@@ -144,14 +143,28 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           group,
           oktaGroups,
         });
-
+        const profileAnnotations: Record<string, string> = {};
+        if (this.customAttributesToAnnotationAllowlist.length) {
+          for (const [key, value] of new Map(Object.entries(group.profile))) {
+            const stringKey = key.toString();
+            if (
+              this.customAttributesToAnnotationAllowlist.includes(stringKey)
+            ) {
+              profileAnnotations[stringKey] = value.toString();
+            }
+          }
+        }
+        const annotations = {
+          ...defaultAnnotations,
+          ...profileAnnotations,
+        };
         try {
           const groupEntity = groupEntityFromOktaGroup(
             group,
             this.namingStrategy,
             parentGroup,
             {
-              annotations: defaultAnnotations,
+              annotations: annotations,
               members,
             },
           );
@@ -160,36 +173,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           assertError(e);
           this.logger.warn(`failed to add group: ${e.message}`);
         }
-      });
-      const profileAnnotations: Record<string, string> = {};
-      if (this.customAttributesToAnnotationAllowlist.length) {
-        for (const [key, value] of new Map(Object.entries(group.profile))) {
-          const stringKey = key.toString();
-          if (this.customAttributesToAnnotationAllowlist.includes(stringKey)) {
-            profileAnnotations[stringKey] = value.toString();
-          }
-        }
-      }
-      const annotations = {
-        ...defaultAnnotations,
-        ...profileAnnotations,
-      };
-      try {
-        const groupEntity = groupEntityFromOktaGroup(
-          group,
-          this.namingStrategy,
-          {
-            annotations: annotations,
-            members,
-            parentGroupField: this.parentGroupField,
-          },
-        );
-        groupResources.push(groupEntity);
-      } catch (e) {
-        assertError(e);
-        this.logger.warn(`failed to add group: ${e.message}`);
-      }
-    });
+      }),
+    );
 
     await this.connection.applyMutation({
       type: 'full',
