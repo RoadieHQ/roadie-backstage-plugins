@@ -1,5 +1,35 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.2.6
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 2.2.5
+
+### Patch Changes
+
+- 15bbbca3: Update depedendecy versions.
+
+## 2.2.4
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 2.2.3
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 2.2.2
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 2.2.1
 
 ### Patch Changes

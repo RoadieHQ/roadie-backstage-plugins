@@ -33,7 +33,7 @@ export {
    */
   Router,
   /**
-   * @deprecated From 0.2.0 new name 'isSecurityInsightsAvalilable' should be used
+   * @deprecated From 0.2.0 new name 'isSecurityInsightsAvailable' should be used
    */
   isSecurityInsightsAvailable as isPluginApplicableToEntity,
   isSecurityInsightsAvailable,

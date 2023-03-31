@@ -17,7 +17,7 @@
 import {
   EntityProvider,
   EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
 import { Logger } from 'winston';
 import { AccountConfig } from '../types';
 import { Client } from '@okta/okta-sdk-nodejs';
@@ -26,6 +26,8 @@ import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
+
+export type OktaScope = 'okta.groups.read' | 'okta.users.read';
 
 export abstract class OktaEntityProvider implements EntityProvider {
   protected readonly accounts: AccountConfig[];
@@ -42,17 +44,38 @@ export abstract class OktaEntityProvider implements EntityProvider {
     this.logger = options.logger;
   }
 
-  protected getClient(orgUrl: string): Client {
+  protected getClient(
+    orgUrl: string,
+    oauthScopes: OktaScope[] | undefined = undefined,
+  ): Client {
     const account = this.accounts.find(
       acccountConfig => acccountConfig.orgUrl === orgUrl,
     );
     if (!account) {
       throw new Error(`accountConfig for ${orgUrl} not found`);
     }
-    return new Client({
-      orgUrl: account.orgUrl,
-      token: account.token,
-    });
+
+    if (account.oauth && oauthScopes) {
+      // use OAuth authentication strategy
+      const { clientId, privateKey, keyId } = account.oauth;
+      return new Client({
+        orgUrl,
+        authorizationMode: 'PrivateKey',
+        clientId,
+        scopes: oauthScopes,
+        privateKey,
+        keyId,
+      });
+    } else if (account.token) {
+      // use api token authentication strategy
+      return new Client({
+        orgUrl,
+        token: account.token,
+      });
+    }
+    throw new Error(
+      `accountConfig for ${orgUrl} missing api token or oath key`,
+    );
   }
 
   public async connect(connection: EntityProviderConnection): Promise<void> {

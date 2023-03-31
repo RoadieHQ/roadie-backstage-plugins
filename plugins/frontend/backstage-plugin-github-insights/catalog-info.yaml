@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-github-insights
+  title: Backstage Plugin GitHub Insights
   description: |
     Backstage plugin to provide Readmes, Top Contributors and other widgets.
   annotations:

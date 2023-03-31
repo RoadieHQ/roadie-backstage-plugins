@@ -23,6 +23,7 @@ import { jiraApiRef } from '../api';
 export const useProjectInfo = (
   projectKey: string,
   component: string,
+  label: string,
   statusesNames: Array<string>,
 ) => {
   const api = useApi(jiraApiRef);
@@ -30,11 +31,16 @@ export const useProjectInfo = (
   const getProjectDetails = useCallback(async () => {
     try {
       setTimeout(() => (document.activeElement as HTMLElement).blur(), 0);
-      return await api.getProjectDetails(projectKey, component, statusesNames);
+      return await api.getProjectDetails(
+        projectKey,
+        component,
+        label,
+        statusesNames,
+      );
     } catch (err: any) {
       return handleError(err);
     }
-  }, [api, projectKey, component, statusesNames]);
+  }, [api, projectKey, component, label, statusesNames]);
 
   const [state, fetchProjectInfo] = useAsyncFn(
     () => getProjectDetails(),

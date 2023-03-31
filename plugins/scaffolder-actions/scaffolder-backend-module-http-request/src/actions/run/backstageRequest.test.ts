@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { createHttpBackstageAction } from './backstageRequest';
-import { Config, ConfigReader } from '@backstage/config';
 import os from 'os'; // eslint-disable-line
 import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 jest.mock('./helpers', () => ({
   ...jest.requireActual('./helpers.ts'),
@@ -26,25 +26,15 @@ jest.mock('./helpers', () => ({
 }));
 
 describe('http:backstage:request', () => {
-  let config: Config;
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
   const logger = getVoidLogger();
+  const loggerSpy = jest.spyOn(logger, 'info');
+  const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
     jest.resetAllMocks();
-    config = new ConfigReader({
-      app: {
-        baseUrl: mockBaseUrl,
-      },
-      backend: {
-        baseUrl: mockBaseUrl,
-        listen: {
-          port: 7007,
-        },
-      },
-    });
-    action = createHttpBackstageAction({ config });
+    action = createHttpBackstageAction({ discovery });
   });
 
   const mockContext = {
@@ -329,23 +319,63 @@ describe('http:backstage:request', () => {
         );
       });
     });
-  });
 
-  describe("when the action doesn't run correctly", () => {
-    describe('with no proxy path', () => {
-      it('fails to run', async () => {
-        config = new ConfigReader({});
-        action = createHttpBackstageAction({ config });
-        await expect(
-          async () =>
-            await action.handler({
-              ...mockContext,
-              input: {
-                path: '/api/path',
-                method: 'GET',
-              },
-            }),
-        ).rejects.toThrowError('Unable to get base url');
+    describe('with logging enabled', () => {
+      it('should create a request with logging', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action against /api/proxy/foo';
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: {},
+          },
+          logger,
+        );
+      });
+    });
+
+    describe('with logging turned off', () => {
+      it('should create a request without logging', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action';
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+            logRequestPath: false,
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: {},
+          },
+          logger,
+        );
       });
     });
   });

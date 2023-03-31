@@ -77,7 +77,7 @@ const CardProjectDetails = ({
 export const JiraCard = (_props: EntityProps) => {
   const { entity } = useEntity();
   const classes = useStyles();
-  const { projectKey, component, tokenType } = useProjectEntity(entity);
+  const { projectKey, component, tokenType, label } = useProjectEntity(entity);
   const [statusesNames, setStatusesNames] = useState<Array<string>>([]);
   const {
     project,
@@ -86,7 +86,7 @@ export const JiraCard = (_props: EntityProps) => {
     projectLoading,
     projectError,
     fetchProjectInfo,
-  } = useProjectInfo(projectKey, component, statusesNames);
+  } = useProjectInfo(projectKey, component, label, statusesNames);
   const {
     issueTypes: displayIssues,
     type,
@@ -180,6 +180,7 @@ export const JiraCard = (_props: EntityProps) => {
             projectKey={projectKey}
             tokenType={tokenType}
             componentName={component}
+            label={label}
             ticketIds={ticketIds}
           />
         </div>

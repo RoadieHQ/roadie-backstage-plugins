@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-home-markdown
+  title: Backstage Plugin Home Markdown
   description: |
     Homapge markdown renderer plugin
   annotations:

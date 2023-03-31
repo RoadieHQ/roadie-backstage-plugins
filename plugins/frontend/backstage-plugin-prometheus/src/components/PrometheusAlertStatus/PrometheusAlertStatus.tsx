@@ -26,10 +26,11 @@ import {
   TableColumn,
 } from '@backstage/core-components';
 import { Chip, Tooltip, makeStyles } from '@material-ui/core';
+// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { useAlerts } from '../../hooks/usePrometheus';
-import { PrometheusDisplayableAlert } from '../../types';
+import { OnRowClick, PrometheusDisplayableAlert } from '../../types';
 
 export default {
   title: 'Data Display/Status',
@@ -131,8 +132,10 @@ const columns: TableColumn<PrometheusDisplayableAlert>[] = [
 
 export const PrometheusAlertStatus = ({
   alerts,
+  onRowClick,
 }: {
   alerts: string[] | 'all';
+  onRowClick?: OnRowClick;
 }) => {
   const { error, loading, displayableAlerts } = useAlerts(alerts);
   if (loading) {
@@ -149,6 +152,9 @@ export const PrometheusAlertStatus = ({
             paging: false,
             toolbar: false,
           }}
+          onRowClick={
+            onRowClick ? (_, rowData) => onRowClick(rowData!) : undefined
+          }
           data={displayableAlerts}
           columns={columns}
         />

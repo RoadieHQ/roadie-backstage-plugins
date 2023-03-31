@@ -19,7 +19,6 @@ import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useBaseUrl } from './useBaseUrl';
 import { PullRequestState, SearchPullRequestsResponseData } from '../types';
-import { Duration } from 'luxon';
 import humanizeDuration from 'humanize-duration';
 
 export type PullRequestStats = {
@@ -165,9 +164,8 @@ export function usePullRequestsStatistics({
         avgTimeUntilMerge: 'Never',
         mergedToClosedRatio: '0%',
       };
-    const avgTimeUntilMergeDiff = Duration.fromMillis(
-      calcResult.avgTimeUntilMerge / calcResult.mergedCount,
-    );
+    const avgTimeUntilMergeDiff =
+      calcResult.avgTimeUntilMerge / calcResult.mergedCount;
     const avgTimeUntilMerge = humanizeDuration(avgTimeUntilMergeDiff);
     return {
       ...calcResult,

@@ -191,6 +191,25 @@ prometheus:
       proxyPath: /prometheusTeamB/api
 ```
 
+## Using callback with `EntityPrometheusAlertCard`
+
+You can add callbacks that will be executed when the user clicks on a row in the table of the `EntityPrometheusAlertCard` component. This callback is optional, and the rows become clickable only when the callback is supplied. The callback function is also provided with data of type JSON. It contains the information from the row of the table.
+The component with callback can look like this:
+
+```typescript
+<EntityPrometheusAlertCard onRowClick={callbackFunction} />
+```
+
+Where `callbackFunction` can have the following definition:
+
+```typescript
+const callbackFunction = (arg: Alerts) => {
+  ...
+};
+```
+
+`Alerts` is a custom type you can define to easily parse JSON (or you can use `any` type).
+
 ## Links
 
 - [Backstage](https://backstage.io)

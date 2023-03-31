@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import { Group } from '@okta/okta-sdk-nodejs';
-import { kebabCase } from 'lodash';
-
-export type GroupNamingStrategy = (group: Group) => string;
-export type GroupNamingStrategies = 'id' | 'kebab-case-name' | undefined;
+import { idGroupNamingStrategy, kebabCaseGroupNamingStrategy } from './index';
+import { GroupNamingStrategies, GroupNamingStrategy } from './types';
 
 export const groupNamingStrategyFactory = (
-  name: GroupNamingStrategies = 'id',
+  strategy: GroupNamingStrategies | GroupNamingStrategy = 'id',
 ): GroupNamingStrategy => {
-  switch (name) {
+  if (typeof strategy === 'function') {
+    return strategy;
+  }
+  switch (strategy) {
     case 'id':
-      return group => group.id;
+      return idGroupNamingStrategy;
     case 'kebab-case-name':
-      return group => kebabCase(group.profile.name);
+      return kebabCaseGroupNamingStrategy;
     default:
-      throw new Error(`Unknown naming strategy ${name}`);
+      throw new Error(`Unknown naming strategy ${strategy}`);
   }
 };

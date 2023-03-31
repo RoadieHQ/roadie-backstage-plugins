@@ -2,8 +2,9 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-jira
+  title: Backstage Plugin Jira
   description: |
-    Backstage plugin to view and interact with JIRA
+    Backstage plugin to view and interact with Jira
   annotations:
     github.com/project-slug: RoadieHQ/roadie-backstage-plugins
     github.com/project-readme-path: plugins/frontend/backstage-plugin-jira/README.md

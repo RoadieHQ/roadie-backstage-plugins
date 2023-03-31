@@ -2,6 +2,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: backstage-plugin-github-pull-requests
+  title: Backstage Plugin GitHub Pull Requests
   description: |
     Backstage plugin to view and interact with GitHub pull requests.
   annotations:

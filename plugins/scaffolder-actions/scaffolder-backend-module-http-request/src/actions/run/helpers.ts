@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Config } from '@backstage/config';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { fetch } from 'cross-fetch';
 import { Logger } from 'winston';
 import { HttpOptions } from './types';
@@ -21,13 +21,11 @@ import { HttpOptions } from './types';
 class HttpError extends Error {}
 const DEFAULT_TIMEOUT = 60_000;
 
-export const generateBackstageUrl = (config: Config, path: string): string => {
-  // ensure the request points to the correct domain
-  const externalUrl = config.getOptionalString('backend.baseUrl') || '';
-  if (externalUrl === '') {
-    throw new Error('Unable to get base url');
-  }
-  return externalUrl + path;
+export const generateBackstageUrl = (
+  discovery: DiscoveryApi,
+  path: string,
+): Promise<string> => {
+  return discovery.getBaseUrl(path.startsWith('/') ? path.substring(1) : path);
 };
 
 export const http = async (

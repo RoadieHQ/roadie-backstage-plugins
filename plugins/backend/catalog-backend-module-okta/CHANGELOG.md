@@ -1,5 +1,85 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.6.1
+
+### Patch Changes
+
+- 7c561d79: Uses imports from the `@backstage/plugin-catalog-node` package
+
+## 0.6.0
+
+### Minor Changes
+
+- 7baa7791: Rewrite the configuration and logic for creating a hierarchy of groups. Now it does not insist on the group name matching the parent key.
+
+## 0.5.7
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 0.5.6
+
+### Patch Changes
+
+- cc0f1489: Allow the okta provider to include groups that have no members.
+
+## 0.5.5
+
+### Patch Changes
+
+- 3cca5a13: Only set the parent entity name if it is provided.
+
+## 0.5.4
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 0.5.3
+
+### Patch Changes
+
+- cf15f404: Support number as parent org id.
+
+## 0.5.2
+
+### Patch Changes
+
+- fbbfd60c: Allow supporting profile name fields that are numbers.
+
+## 0.5.1
+
+### Patch Changes
+
+- 03db4933: Fix case where the parent group field is empty.
+
+## 0.5.0
+
+### Minor Changes
+
+- 7992ceb8: Add ability to configure a custom group/user names, and provide the name of the parent group to create a hierarchy of groups.
+
+## 0.4.8
+
+### Patch Changes
+
+- ce51ed14: Fix example okta oauth configuration to use regular yaml
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 0.4.7
+
+### Patch Changes
+
+- 58506f09: Enabled the use of OAuth credentials for authenticating to okta. This allows credential to be provisiond that have the minimum required level of privilege for the provider to function.
+- 1599cf96: release dependabot PRs
+
+## 0.4.6
+
+### Patch Changes
+
+- db03675e: Fixed typo in README
+
 ## 0.4.5
 
 ### Patch Changes

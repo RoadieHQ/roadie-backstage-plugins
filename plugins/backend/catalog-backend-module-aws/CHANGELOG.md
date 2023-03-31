@@ -1,5 +1,29 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.3.8
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 1.3.7
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 1.3.6
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 1.3.5
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 1.3.4
 
 ### Patch Changes

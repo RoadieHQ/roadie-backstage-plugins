@@ -25,6 +25,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
     id: actionId || 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',
@@ -89,6 +90,7 @@ export function createMergeAction() {
   return createTemplateAction<{ path: string; content: any }>({
     id: 'roadiehq:utils:merge',
     description: 'Merges data into an existing structured file.',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',

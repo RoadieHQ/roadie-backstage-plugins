@@ -64,3 +64,11 @@ export const HomePageIFrameCard = homePlugin.provide(
     components: () => import('./components/HomePageCard'),
   }),
 );
+
+export const IFramePage = iframePlugin.provide(
+  createRoutableExtension({
+    mountPoint: rootRouteRef,
+    name: 'IFramePage',
+    component: () => import('./components').then(m => m.IFramePage),
+  }),
+);

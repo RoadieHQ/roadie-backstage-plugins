@@ -1,5 +1,47 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.6
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 2.5.5
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 2.5.4
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 2.5.3
+
+### Patch Changes
+
+- 17104109: Fixed bug in PullRequestsTableView component where table layout did not readjust properly when table header text length exceeded.
+
+## 2.5.2
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
+## 2.5.1
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
+## 2.5.0
+
+### Minor Changes
+
+- 7dcfffa0: Display pull request descriptions on `PullRequestTable`
+
 ## 2.4.3
 
 ### Patch Changes

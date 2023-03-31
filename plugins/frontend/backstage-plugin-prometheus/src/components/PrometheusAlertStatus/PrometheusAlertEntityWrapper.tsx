@@ -22,8 +22,13 @@ import {
   PROMETHEUS_ALERT_ANNOTATION,
 } from '../util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
+import { OnRowClick } from '../../types';
 
-export const PrometheusAlertEntityWrapper = () => {
+export const PrometheusAlertEntityWrapper = ({
+  onRowClick,
+}: {
+  onRowClick?: OnRowClick;
+}) => {
   const { entity } = useEntity();
   const alertContent = isPrometheusAlertAvailable(entity);
   if (!alertContent) {
@@ -36,8 +41,8 @@ export const PrometheusAlertEntityWrapper = () => {
     : [];
 
   return alerts.length > 0 && alerts[0] === 'all' ? (
-    <PrometheusAlertStatus alerts="all" />
+    <PrometheusAlertStatus alerts="all" onRowClick={onRowClick} />
   ) : (
-    <PrometheusAlertStatus alerts={alerts} />
+    <PrometheusAlertStatus alerts={alerts} onRowClick={onRowClick} />
   );
 };

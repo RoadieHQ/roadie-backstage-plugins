@@ -15,14 +15,18 @@
  */
 import { GroupEntity } from '@backstage/catalog-model';
 import { Group } from '@okta/okta-sdk-nodejs';
-import { GroupNamingStrategy } from './groupNamingStrategyFactory';
+import { GroupNamingStrategy } from './groupNamingStrategies';
 
 export const groupEntityFromOktaGroup = (
   group: Group,
   namingStrategy: GroupNamingStrategy,
-  options: { annotations: Record<string, string>; members: string[] },
+  parentGroup: Group | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
 ): GroupEntity => {
-  return {
+  const groupEntity: GroupEntity = {
     kind: 'Group',
     apiVersion: 'backstage.io/v1alpha1',
     metadata: {
@@ -39,4 +43,9 @@ export const groupEntityFromOktaGroup = (
       children: [],
     },
   };
+
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
+  }
+  return groupEntity;
 };

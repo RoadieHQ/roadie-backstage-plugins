@@ -30,6 +30,7 @@ export function createYamlJSONataTransformAction() {
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
       'Allows performing jsonata opterations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',

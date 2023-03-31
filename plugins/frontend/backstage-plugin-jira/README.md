@@ -99,6 +99,7 @@ metadata:
   annotations:
     jira/project-key: <example-jira-project-key>
     jira/component: <example-component> # optional, you might skip value to fetch data for all components
+    jira/label: <example-label> # optional, you might skip value to fetch data for all labels
     jira/token-type: Bearer # optional, used for Activity stream feed. If you are using Basic auth you can skip this.
 ```
 

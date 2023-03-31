@@ -1,5 +1,41 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.5
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 4.0.4
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 4.0.3
+
+### Patch Changes
+
+- b1887781: Add option to disable request path logging.
+
+## 4.0.2
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 4.0.1
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
+## 4.0.0
+
+### Major Changes
+
+- 04df8f6a: use discoveryApi for configuring the scaffolder-backend-module-http-request action
+
 ## 3.3.2
 
 ### Patch Changes

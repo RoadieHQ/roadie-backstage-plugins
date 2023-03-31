@@ -1,5 +1,39 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.2
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 2.4.1
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 2.4.0
+
+### Minor Changes
+
+- 185d1c69: feat: added filtering by label
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 2.3.5
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
+## 2.3.4
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 2.3.3
 
 ### Patch Changes

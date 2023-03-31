@@ -1,5 +1,89 @@
 # backend
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [7baa7791]
+  - @roadiehq/catalog-backend-module-okta@0.6.0
+
+## 2.0.5
+
+### Patch Changes
+
+- Updated dependencies [e331d3a1]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.7
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.3
+  - @roadiehq/backstage-plugin-aws-auth@0.4.7
+  - @roadiehq/catalog-backend-module-aws@1.3.8
+  - @roadiehq/catalog-backend-module-okta@0.5.7
+  - @roadiehq/scaffolder-backend-module-aws@2.4.5
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.5
+  - @roadiehq/scaffolder-backend-module-utils@1.8.4
+
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [f129477d]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.6
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.2
+  - @roadiehq/backstage-plugin-aws-auth@0.4.6
+  - @roadiehq/catalog-backend-module-aws@1.3.7
+  - @roadiehq/catalog-backend-module-okta@0.5.4
+  - @roadiehq/scaffolder-backend-module-aws@2.4.4
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.4
+  - @roadiehq/scaffolder-backend-module-utils@1.8.3
+
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [7992ceb8]
+  - @roadiehq/catalog-backend-module-okta@0.5.0
+
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [ce51ed14]
+- Updated dependencies [ac5717e6]
+  - @roadiehq/catalog-backend-module-okta@0.4.8
+  - @roadiehq/backstage-plugin-aws-backend@1.1.5
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.1
+  - @roadiehq/backstage-plugin-aws-auth@0.4.5
+  - @roadiehq/catalog-backend-module-aws@1.3.6
+  - @roadiehq/scaffolder-backend-module-aws@2.4.3
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.2
+  - @roadiehq/scaffolder-backend-module-utils@1.8.2
+
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [58506f09]
+- Updated dependencies [dbaf0f83]
+- Updated dependencies [1599cf96]
+  - @roadiehq/catalog-backend-module-okta@0.4.7
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.0
+  - @roadiehq/backstage-plugin-aws-backend@1.1.4
+  - @roadiehq/backstage-plugin-aws-auth@0.4.4
+  - @roadiehq/catalog-backend-module-aws@1.3.5
+  - @roadiehq/scaffolder-backend-module-aws@2.4.2
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.1
+  - @roadiehq/scaffolder-backend-module-utils@1.8.1
+
+## 2.0.0
+
+### Major Changes
+
+- 04df8f6a: use discoveryApi for configuring the scaffolder-backend-module-http-request action
+
+### Patch Changes
+
+- Updated dependencies [04df8f6a]
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.0
+
 ## 1.0.22
 
 ### Patch Changes

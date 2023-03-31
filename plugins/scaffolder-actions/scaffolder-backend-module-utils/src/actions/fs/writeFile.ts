@@ -22,6 +22,7 @@ export function createWriteFileAction() {
   return createTemplateAction<{ path: string; content: string }>({
     id: 'roadiehq:utils:fs:write',
     description: 'Creates a file with the content on the given path',
+    supportsDryRun: true,
     schema: {
       input: {
         required: ['path', 'content'],

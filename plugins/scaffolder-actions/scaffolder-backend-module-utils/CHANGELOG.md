@@ -1,5 +1,35 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.4
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 1.8.3
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 1.8.2
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 1.8.1
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
+## 1.8.0
+
+### Minor Changes
+
+- 6acba5ac: Enable dry runs for actions which support it without modification
+
 ## 1.7.2
 
 ### Patch Changes

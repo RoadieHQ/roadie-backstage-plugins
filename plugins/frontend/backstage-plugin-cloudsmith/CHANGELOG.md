@@ -1,5 +1,35 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.7
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 1.0.6
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 1.0.5
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 1.0.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
+## 1.0.3
+
+### Patch Changes
+
+- 3a870726: Bump the `msw` dependency to `^1.0.1`
+
 ## 1.0.2
 
 ### Patch Changes

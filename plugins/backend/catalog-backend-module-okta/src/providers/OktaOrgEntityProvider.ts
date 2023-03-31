@@ -22,15 +22,19 @@ import {
   GroupNamingStrategies,
   GroupNamingStrategy,
   groupNamingStrategyFactory,
-} from './groupNamingStrategyFactory';
+} from './groupNamingStrategies';
 import {
   UserNamingStrategies,
   UserNamingStrategy,
   userNamingStrategyFactory,
-} from './userNamingStrategyFactory';
+} from './userNamingStrategies';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { getAccountConfig } from './accountConfig';
+import { assertError } from '@backstage/errors';
+import { getOktaGroups } from './getOktaGroups';
+import { getParentGroup } from './getParentGroup';
 
 /**
  * Provides entities from Okta Org service.
@@ -38,27 +42,37 @@ import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly includeEmptyGroups: boolean;
+  private readonly hierarchyConfig:
+    | { parentKey: string; key?: string }
+    | undefined;
 
   static fromConfig(
     config: Config,
     options: {
       logger: winston.Logger;
-      groupNamingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      includeEmptyGroups?: boolean;
+      /*
+       * @deprecated, please use hierarchyConfig.parentKey
+       */
+      parentGroupField?: string;
+      hierarchyConfig?: {
+        parentKey: string;
+        key?: string;
+      };
     },
   ) {
     const oktaConfigs = config
       .getOptionalConfigArray('catalog.providers.okta')
-      ?.map(oktaConfig => {
-        const orgUrl = oktaConfig.getString('orgUrl');
-        const token = oktaConfig.getString('token');
+      ?.map(getAccountConfig);
 
-        const userFilter = oktaConfig.getOptionalString('userFilter');
-        const groupFilter = oktaConfig.getOptionalString('groupFilter');
-
-        return { orgUrl, token, groupFilter, userFilter };
-      });
-
+    if (options.parentGroupField && !options.hierarchyConfig?.parentKey) {
+      options.hierarchyConfig = {
+        parentKey: `profile.${options.parentGroupField}`,
+      };
+    }
     return new OktaOrgEntityProvider(oktaConfigs || [], options);
   }
 
@@ -66,8 +80,13 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     accountConfigs: AccountConfig[],
     options: {
       logger: winston.Logger;
-      groupNamingStrategy?: GroupNamingStrategies;
-      userNamingStrategy?: UserNamingStrategies;
+      groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
+      userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      includeEmptyGroups?: boolean;
+      hierarchyConfig?: {
+        parentKey: string;
+        key?: string;
+      };
     },
   ) {
     super(accountConfigs, options);
@@ -77,6 +96,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.includeEmptyGroups = !!options.includeEmptyGroups;
+    this.hierarchyConfig = options.hierarchyConfig;
   }
 
   getProviderName(): string {
@@ -95,7 +116,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
 
     await Promise.all(
       this.accounts.map(async account => {
-        const client = this.getClient(account.orgUrl);
+        const client = this.getClient(account.orgUrl, [
+          'okta.groups.read',
+          'okta.users.read',
+        ]);
 
         const defaultAnnotations = await this.buildDefaultAnnotations();
 
@@ -109,29 +133,56 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
 
         providedUserCount = resources.length;
 
-        await client
-          .listGroups({ search: account.groupFilter })
-          .each(async group => {
+        const oktaGroups = await getOktaGroups({
+          client,
+          groupFilter: account.groupFilter,
+          key: this.hierarchyConfig?.key,
+          groupNamingStrategy: this.groupNamingStrategy,
+          logger: this.logger,
+        });
+
+        await Promise.allSettled(
+          Object.entries(oktaGroups).map(async ([_, group]) => {
             const members: string[] = [];
             await group.listUsers().each(user => {
-              members.push(this.userNamingStrategy(user));
+              try {
+                const userName = this.userNamingStrategy(user);
+                members.push(userName);
+              } catch (e: unknown) {
+                assertError(e);
+                this.logger.warn(`failed to add user to group: ${e.message}`);
+              }
             });
 
-            const groupEntity = groupEntityFromOktaGroup(
+            const parentGroup = getParentGroup({
+              parentKey: this.hierarchyConfig?.parentKey,
               group,
-              this.groupNamingStrategy,
-              { annotations: defaultAnnotations, members },
-            );
+              oktaGroups,
+            });
 
-            if (members.length > 0) {
-              resources.push(groupEntity);
+            try {
+              const groupEntity = groupEntityFromOktaGroup(
+                group,
+                this.groupNamingStrategy,
+                parentGroup,
+                {
+                  annotations: defaultAnnotations,
+                  members,
+                },
+              );
+              if (this.includeEmptyGroups || members.length > 0) {
+                resources.push(groupEntity);
+              }
+            } catch (e: unknown) {
+              assertError(e);
+              this.logger.warn(`failed to add group: ${e.message}`);
             }
-          });
+          }),
+        );
       }),
     );
 
     providedGroupCount = resources.length - providedUserCount;
-
     await this.connection.applyMutation({
       type: 'full',
       entities: resources.map(entity => ({
@@ -139,6 +190,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
     this.logger.info(
       `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta`,
     );

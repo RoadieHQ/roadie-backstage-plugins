@@ -27,13 +27,14 @@ export type PullRequest = {
   number: number;
   url: string;
   title: string;
-  updatedTime: string;
-  createdTime: string;
+  updatedTime: string | null;
+  createdTime: string | null;
   state: string;
   draft: boolean;
   merged: string | null;
   creatorNickname: string;
   creatorProfileLink: string;
+  body: string;
 };
 
 export function usePullRequests({
@@ -53,7 +54,7 @@ export function usePullRequests({
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const getElapsedTime = (start: string) => {
+  const getElapsedTime = (start: string): string | null => {
     return DateTime.fromISO(start).toRelative();
   };
 
@@ -101,11 +102,13 @@ export function usePullRequests({
                 state: pr_state,
                 draft,
                 pull_request: { merged_at },
+                body,
               }) => ({
                 url: html_url,
                 id,
                 number,
                 title,
+                body,
                 state: pr_state,
                 draft,
                 merged: merged_at,

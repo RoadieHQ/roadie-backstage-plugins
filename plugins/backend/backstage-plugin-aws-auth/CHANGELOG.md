@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.7
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
+## 0.4.6
+
+### Patch Changes
+
+- f129477d: Upgrade to backstage 1.12.0
+
+## 0.4.5
+
+### Patch Changes
+
+- ac5717e6: Update plugins to Backstage version 1.11.1
+
+## 0.4.4
+
+### Patch Changes
+
+- 1599cf96: release dependabot PRs
+
 ## 0.4.3
 
 ### Patch Changes

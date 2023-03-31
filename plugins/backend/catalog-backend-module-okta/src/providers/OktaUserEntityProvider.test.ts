@@ -149,5 +149,50 @@ describe('OktaUserEntityProvider', () => {
         ],
       });
     });
+
+    it('I can customize the naming strategy', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: user => user.id,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('Where the naming strategy fails it passes over the user', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: () => {
+          throw new Error('bork');
+        },
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [],
+      });
+    });
   });
 });

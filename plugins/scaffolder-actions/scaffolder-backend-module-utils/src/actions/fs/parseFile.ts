@@ -31,6 +31,7 @@ export function createParseFileAction() {
   }>({
     id: 'roadiehq:utils:fs:parse',
     description: 'Reads a file from the workspace and optionally parses it',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',
