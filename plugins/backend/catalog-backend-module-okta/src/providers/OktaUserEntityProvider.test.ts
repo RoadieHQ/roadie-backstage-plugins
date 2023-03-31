@@ -69,6 +69,7 @@ describe('OktaUserEntityProvider', () => {
             id: 'asdfwefwefwef',
             profile: {
               email: 'fname@domain.com',
+              customAttribute1: 'asdfasdf',
             },
           },
         ]);
@@ -192,6 +193,35 @@ describe('OktaUserEntityProvider', () => {
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
         entities: [],
+      });
+    });
+
+    it('passes allowed profile fields to annotations', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        customAttributesToAnnotationAllowlist: ['customAttribute1'],
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                annotations: expect.objectContaining({
+                  customAttribute1: 'asdfasdf',
+                }),
+                name: 'asdfwefwefwef',
+              }),
+            }),
+          }),
+        ],
       });
     });
   });
