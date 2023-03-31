@@ -99,7 +99,7 @@ describe('OktaGroupProvider', () => {
       };
       const provider = OktaGroupEntityProvider.fromConfig(config, {
         logger,
-        customAttributesToAnnotationWhitelist: [
+        customAttributesToAnnotationAllowlist: [
           'customAttribute1',
           'customAttribute2',
         ],
