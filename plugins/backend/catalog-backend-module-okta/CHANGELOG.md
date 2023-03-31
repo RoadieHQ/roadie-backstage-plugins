@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.0
+
+### Minor Changes
+
+- 46cc9fc7: Add smarter pruning of empty groups. Previously, parent groups of groups with members were being pruned. This change includes parent groups if their decendants have members.
+
 ## 0.6.1
 
 ### Patch Changes
