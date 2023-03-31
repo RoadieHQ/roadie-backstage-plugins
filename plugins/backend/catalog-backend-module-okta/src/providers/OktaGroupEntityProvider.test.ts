@@ -63,7 +63,7 @@ describe('OktaGroupProvider', () => {
     });
   });
 
-  describe('where it has whitelisted profile fields to pass to annotations', () => {
+  describe('where it has allowed profile fields to pass to annotations', () => {
     beforeEach(() => {
       listGroups = () => {
         return new MockOktaCollection([
