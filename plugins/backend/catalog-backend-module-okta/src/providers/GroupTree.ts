@@ -60,11 +60,11 @@ export class GroupTree {
   }
 
   private pruneEmptyMembers(nodes: GroupNode[]): void {
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const node = nodes[i];
+    for (const node of nodes) {
       this.pruneEmptyMembers(node.children);
       if (node.group.spec.members?.length === 0 && node.children.length === 0) {
-        nodes.splice(i, 1);
+        const index = nodes.indexOf(node);
+        nodes.splice(index, 1);
       }
     }
   }
