@@ -4,9 +4,17 @@
 
 ## Features
 
-- Last deploy time
-- Healthcheck
-- Status
+### 'ArgoCD overview' card
+
+![](./docs/argo-cd-plugin-overview-card.png)
+
+selected ArgoCD app details showing up after click on app name:
+
+![](./docs/argo-cd-plugin-overview-card-details.png)
+
+### 'ArgoCD history' card
+
+![](./docs/argo-cd-plugin-history-card.png)
 
 ## How to add argo-cd project dependency to Backstage app
 
