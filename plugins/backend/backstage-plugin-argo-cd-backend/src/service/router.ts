@@ -60,10 +60,7 @@ export function createRouter({
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
-      const argoInstanceArray = argoSvc.getArgoInstanceArray();
-      const matchedArgoInstance = argoInstanceArray.find(
-        argoInstance => argoInstance.name === argoInstanceName,
-      );
+      const matchedArgoInstance = findArgoInstance(argoInstanceName);
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
           status: 'failed',
@@ -89,7 +86,6 @@ export function createRouter({
   router.get(
     '/argoInstance/:argoInstanceName/applications/name/:argoAppName',
     async (request, response) => {
-      const revisionID: string = request.params.revisionID;
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
@@ -104,11 +100,11 @@ export function createRouter({
       const token: string = await findMatchedArgoInstanceToken(
         matchedArgoInstance,
       );
-      const resp = await argoSvc.getRevisionData(
+      const resp = await argoSvc.getArgoAppData(
         matchedArgoInstance.url,
+        matchedArgoInstance.name,
         { name: argoAppName },
         token,
-        revisionID,
       );
       return response.send(resp);
     },
