@@ -18,6 +18,7 @@ import {
   DeleteApplicationAndProjectProps,
   DeleteApplicationAndProjectResponse,
   ResponseSchema,
+  getRevisionDataResp,
 } from './types';
 
 export class ArgoService implements ArgoServiceApi {
@@ -97,7 +98,7 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error(`Request failed with ${resp.status} Error`);
     }
 
-    const data = await resp?.json();
+    const data: getRevisionDataResp = await resp?.json();
     return data;
   }
 

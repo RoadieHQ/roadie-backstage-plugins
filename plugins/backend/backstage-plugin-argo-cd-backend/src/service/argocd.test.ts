@@ -80,6 +80,42 @@ describe('ArgoCD service', () => {
     fetchMock.resetMocks();
   });
 
+  it('should get revision data', async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify({
+        author: 'testuser',
+        date: '2023-03-20T18:44:10Z',
+        message: 'Update README.md',
+      }),
+    );
+
+    const resp = await argoService.getRevisionData(
+      'https://argoInstance1.com',
+      { name: 'testApp' },
+      'testToken',
+      '15db63ac922a920f388bd841912838ae4d126317',
+    );
+
+    expect(resp).toStrictEqual({
+      author: 'testuser',
+      date: '2023-03-20T18:44:10Z',
+      message: 'Update README.md',
+    });
+  });
+
+  it('should fail to get revision data', async () => {
+    fetchMock.mockRejectOnce(new Error());
+
+    await expect(
+      argoService.getRevisionData(
+        'https://argoInstance1.com',
+        { name: 'testApp' },
+        'testToken',
+        '15db63ac922a920f388bd841912838ae4d126317',
+      ),
+    ).rejects.toThrow();
+  });
+
   it('should get argo app data', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({

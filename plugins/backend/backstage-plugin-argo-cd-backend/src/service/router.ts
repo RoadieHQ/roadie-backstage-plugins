@@ -26,6 +26,14 @@ export function createRouter({
     config.getOptionalString('argocd.password') ?? 'argocdPassword';
   const argoSvc = new ArgoService(argoUserName, argoPassword, config, logger);
 
+  const findArgoInstance = (argoInstanceName: string) => {
+    const argoInstanceArray = argoSvc.getArgoInstanceArray();
+    const foundArgoInstance = argoInstanceArray.find(
+      argoInstance => argoInstance.name === argoInstanceName,
+    );
+    return foundArgoInstance;
+  };
+
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
     response.send(await argoSvc.findArgoApp({ name: argoAppName }));
@@ -39,10 +47,7 @@ export function createRouter({
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
-      const argoInstanceArray = argoSvc.getArgoInstanceArray();
-      const matchedArgoInstance = argoInstanceArray.find(
-        argoInstance => argoInstance.name === argoInstanceName,
-      );
+      const matchedArgoInstance = findArgoInstance(argoInstanceName);
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
           status: 'failed',
@@ -72,10 +77,7 @@ export function createRouter({
       const argoAppName = request.params.argoAppName;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
-      const argoInstanceArray = argoSvc.getArgoInstanceArray();
-      const matchedArgoInstance = argoInstanceArray.find(
-        argoInstance => argoInstance.name === argoInstanceName,
-      );
+      const matchedArgoInstance = findArgoInstance(argoInstanceName);
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
           status: 'failed',
@@ -109,10 +111,7 @@ export function createRouter({
       logger.info(
         `Getting apps for selector ${argoAppSelector} on ${argoInstanceName}`,
       );
-      const argoInstanceArray = argoSvc.getArgoInstanceArray();
-      const matchedArgoInstance = argoInstanceArray.find(
-        argoInstance => argoInstance.name === argoInstanceName,
-      );
+      const matchedArgoInstance = findArgoInstance(argoInstanceName);
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
           status: 'failed',
@@ -142,10 +141,7 @@ export function createRouter({
     const labelValue = request.body.labelValue as string;
     const sourceRepo = request.body.sourceRepo;
     const sourcePath = request.body.sourcePath;
-    const argoInstanceArray = argoSvc.getArgoInstanceArray();
-    const matchedArgoInstance = argoInstanceArray.find(
-      argoInstance => argoInstance.name === argoInstanceName,
-    );
+    const matchedArgoInstance = findArgoInstance(argoInstanceName);
     if (matchedArgoInstance === undefined) {
       return response.status(500).send({
         status: 'failed',
