@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.2.0
+
+### Minor Changes
+
+- 89a75dca: Export `DependabotAlertsTable` and `SecurityInsightsTable` components allowing users to build custom integrations.
+
 ## 2.1.11
 
 ### Patch Changes
