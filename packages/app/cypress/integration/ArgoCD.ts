@@ -40,6 +40,8 @@ describe('Argo CD', () => {
       cy.contains('ArgoCD history');
       cy.contains('test-app');
       cy.contains('53e28ff20cc530b9ada2173fbbd64d48338583ba');
+      cy.contains('test-user');
+      cy.contains('Update README.md');
     });
 
     it('should show ArgoCD app details card', () => {

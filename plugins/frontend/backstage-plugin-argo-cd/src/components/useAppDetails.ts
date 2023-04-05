@@ -39,8 +39,8 @@ export const useAppDetails = ({
     app: string,
     instanceName?: string | undefined,
   ) => {
-    const promises: any = appDetails.status?.history?.map(
-      async (historyRecord: any) => {
+    const promises: Promise<void>[] | undefined =
+      appDetails.status?.history?.map(async (historyRecord: any) => {
         const revisionID = historyRecord.revision;
         const revisionDetails = await api.getRevisionDetails({
           url,
@@ -49,9 +49,8 @@ export const useAppDetails = ({
           instanceName,
         });
         historyRecord.revision = { revisionID: revisionID, ...revisionDetails };
-      },
-    );
-    await Promise.all(promises);
+      });
+    await Promise.all(promises as readonly unknown[] | []);
     return appDetails;
   };
 
