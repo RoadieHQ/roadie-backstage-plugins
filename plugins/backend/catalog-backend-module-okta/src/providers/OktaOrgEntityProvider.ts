@@ -200,6 +200,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     );
 
     if (!this.includeEmptyGroups) {
+      this.logger.debug(
+        `Found ${groupResources.length}, pruning the empty ones`,
+      );
       groupResources = new GroupTree(groupResources).getGroups({
         pruneEmptyMembers: true,
       });
