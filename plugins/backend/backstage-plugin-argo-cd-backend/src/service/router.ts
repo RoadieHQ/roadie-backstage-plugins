@@ -4,6 +4,7 @@ import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { ArgoService } from './argocd.service';
+import { InstanceConfig } from './types';
 
 export interface RouterOptions {
   logger: Logger;
@@ -34,6 +35,18 @@ export function createRouter({
     return foundArgoInstance;
   };
 
+  async function findMatchedArgoInstanceToken(
+    matchedArgoInstance: InstanceConfig,
+  ) {
+    let token: string;
+    if (!matchedArgoInstance.token) {
+      token = await argoSvc.getArgoToken(matchedArgoInstance);
+    } else {
+      token = matchedArgoInstance.token;
+    }
+    return token;
+  }
+
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
     response.send(await argoSvc.findArgoApp({ name: argoAppName }));
@@ -54,12 +67,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      let token: string;
-      if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
-      } else {
-        token = matchedArgoInstance.token;
-      }
+      const token: string = await findMatchedArgoInstanceToken(
+        matchedArgoInstance,
+      );
       const resp = await argoSvc.getRevisionData(
         matchedArgoInstance.url,
         { name: argoAppName },
@@ -84,12 +94,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      let token: string;
-      if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
-      } else {
-        token = matchedArgoInstance.token;
-      }
+      const token: string = await findMatchedArgoInstanceToken(
+        matchedArgoInstance,
+      );
       const resp = await argoSvc.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
@@ -118,12 +125,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      let token: string;
-      if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
-      } else {
-        token = matchedArgoInstance.token;
-      }
+      const token: string = await findMatchedArgoInstanceToken(
+        matchedArgoInstance,
+      );
       const resp = await argoSvc.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
