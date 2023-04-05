@@ -200,7 +200,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     );
 
     if (!this.includeEmptyGroups) {
-      this.logger.debug(
+      this.logger.info(
         `Found ${groupResources.length}, pruning the empty ones`,
       );
       groupResources = new GroupTree(groupResources).getGroups({
