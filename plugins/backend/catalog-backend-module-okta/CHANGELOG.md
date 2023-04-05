@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.1
+
+### Patch Changes
+
+- 5319e868: No longer raise error when an non error like object is thrown.
+
 ## 0.7.0
 
 ### Minor Changes
