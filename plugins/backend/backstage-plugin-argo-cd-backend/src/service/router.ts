@@ -67,44 +67,14 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      let token: string;
-      if (!matchedArgoInstance.token) {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
-      } else {
-        token = matchedArgoInstance.token;
-      }
+      const token: string = await findMatchedArgoInstanceToken(
+        matchedArgoInstance,
+      );
       const resp = await argoSvc.getRevisionData(
         matchedArgoInstance.url,
         { name: argoAppName },
         token,
         revisionID,
-      );
-      return response.send(resp);
-    },
-  );
-
-  router.get(
-    '/argoInstance/:argoInstanceName/applications/name/:argoAppName',
-    async (request, response) => {
-      const argoInstanceName: string = request.params.argoInstanceName;
-      const argoAppName = request.params.argoAppName;
-      logger.info(`Getting info on ${argoAppName}`);
-      logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
-      const matchedArgoInstance = findArgoInstance(argoInstanceName);
-      if (matchedArgoInstance === undefined) {
-        return response.status(500).send({
-          status: 'failed',
-          message: 'cannot find an argo instance to match this cluster',
-        });
-      }
-      const token: string = await findMatchedArgoInstanceToken(
-        matchedArgoInstance,
-      );
-      const resp = await argoSvc.getArgoAppData(
-        matchedArgoInstance.url,
-        matchedArgoInstance.name,
-        { name: argoAppName },
-        token,
       );
       return response.send(resp);
     },
