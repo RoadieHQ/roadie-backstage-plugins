@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.2
+
+### Patch Changes
+
+- 365f12df: Adding a log line to indicate that empty groups will be pruned.
+
 ## 0.7.1
 
 ### Patch Changes
