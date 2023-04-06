@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { GroupEntity } from '@backstage/catalog-model';
+import { Logger } from 'winston';
 
 interface GroupNode {
   group: GroupEntity;
@@ -23,9 +24,11 @@ interface GroupNode {
 export class GroupTree {
   private groupDict: Record<string, GroupNode> = {};
   private groups: GroupEntity[];
+  private logger: Logger;
 
-  constructor(groups: GroupEntity[]) {
+  constructor(groups: GroupEntity[], logger: Logger) {
     this.groups = groups;
+    this.logger = logger;
     for (const group of groups) {
       this.groupDict[group.metadata.name] = { group, children: [] };
     }
@@ -62,7 +65,11 @@ export class GroupTree {
   private pruneEmptyMembers(nodes: GroupNode[]): void {
     for (const node of nodes) {
       this.pruneEmptyMembers(node.children);
+      this.logger.debug(
+        `${node.group.metadata.name}: members=${node.group.spec.members?.length} children=${node.children.length} `,
+      );
       if (node.group.spec.members?.length === 0 && node.children.length === 0) {
+        this.logger.debug(`pruning ${node.group.metadata.name}`);
         const index = nodes.indexOf(node);
         nodes.splice(index, 1);
       }
