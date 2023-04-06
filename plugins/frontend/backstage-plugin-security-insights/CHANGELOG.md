@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.2.1
+
+### Patch Changes
+
+- 012cf627: Fix issue where EntitySecurityInsightsCard and EntityDependabotAlertsCard were no longer exported.
+
 ## 2.2.0
 
 ### Minor Changes

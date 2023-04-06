@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.3
+
+### Patch Changes
+
+- b55aca8d: Add debug logging to the okta tree pruning.
+
 ## 0.7.2
 
 ### Patch Changes
