@@ -22,6 +22,8 @@ export {
   securityInsightsPlugin,
   EntitySecurityInsightsContent,
   EntityGithubDependabotContent,
+  EntitySecurityInsightsCard,
+  EntityDependabotAlertsCard,
 } from './plugin';
 export { SecurityInsightsWidget } from './components/SecurityInsightsWidget';
 export { SecurityInsightsTable } from './components/SecurityInsightsTable';
