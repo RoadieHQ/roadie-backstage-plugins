@@ -77,7 +77,7 @@ export class ArgoService implements ArgoServiceApi {
     },
     argoToken: string,
     revisionID: string,
-  ): Promise<any> {
+  ): Promise<getRevisionDataResp> {
     const urlSuffix = options.name
       ? `/${options.name}`
       : `?selector=${options.selector}`;
