@@ -29,22 +29,30 @@ const getUniqueLabels = async ({
   url: string;
   instance?: string;
 }) => {
-  const appResources = await api.getAppManagedResources({
-    url,
-    appName,
-    instance,
-  });
-  const uniqueLabels = (appResources.items ?? [])
-    .map(item => JSON.parse(item.liveState).metadata.labels)
-    .reduce((acc, current) => {
-      Object.keys(current).forEach(key => {
-        if (!acc.hasOwnProperty(key)) {
-          acc[key] = current[key];
-        }
-      });
-      return acc;
-    }, {});
-  return { labels: await uniqueLabels };
+  try {
+    const appResources = await api.getAppManagedResources({
+      url,
+      appName,
+      instance,
+    });
+    const uniqueLabels = (appResources.items ?? [])
+      .map(item => JSON.parse(item.liveState).metadata.labels)
+      .reduce((acc, current) => {
+        Object.keys(current).forEach(key => {
+          if (!acc.hasOwnProperty(key)) {
+            acc[key] = current[key];
+          }
+        });
+        return acc;
+      }, {});
+    return { labels: await uniqueLabels };
+  } catch (e: any) {
+    /*
+    Error handling to error value to indicate that something happened with the call. This allows the component to still be rendered in-case of one API call failing out of potentially multiple.
+    */
+    console.error(`An error has occurred ${e.status}: ${e}`);
+    return { labels: {} };
+  }
 };
 
 const getCompleteAppDetails = async ({
