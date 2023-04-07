@@ -35,6 +35,7 @@ import {
 } from './useArgoCDAppData';
 import SyncIcon from '@material-ui/icons/Sync';
 import moment from 'moment';
+import gitUrlParse, { GitUrl } from 'git-url-parse';
 
 const HistoryTable = ({
   data,
@@ -48,6 +49,47 @@ const HistoryTable = ({
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
+  const protocol = (proto: string): string => {
+    return proto === 'ssh' ? 'https' : proto;
+  };
+  const supportedSource = (parsed: GitUrl): boolean => {
+    return (
+      parsed.resource.startsWith('github') ||
+      ['gitlab.com', 'bitbucket.org'].indexOf(parsed.source) >= 0
+    );
+  };
+  const isSHA = (revision?: string): boolean | undefined => {
+    // https://stackoverflow.com/questions/468370/a-regex-to-match-a-sha1
+    return revision !== undefined
+      ? revision.match(/^[a-f0-9]{5,40}$/) !== null
+      : undefined;
+  };
+  const revisionUrl = (
+    repoUrl: string,
+    forPath: string,
+    revision?: string,
+  ): string | undefined => {
+    let parsed;
+    try {
+      parsed = gitUrlParse(repoUrl);
+    } catch {
+      return undefined;
+    }
+    let urlSubPath = isSHA(revision) ? 'commit' : 'tree';
+
+    if (repoUrl.indexOf('bitbucket') >= 0) {
+      // The reason for the condition of 'forPath' is that when we build nested path, we need to use 'src'
+      urlSubPath = isSHA(revision) && !forPath ? 'commits' : 'src';
+    }
+
+    if (!supportedSource(parsed)) {
+      return undefined;
+    }
+
+    return `${protocol(parsed.protocol)}://${parsed.resource}/${parsed.owner}/${
+      parsed.name
+    }/${urlSubPath}/${revision || 'HEAD'}`;
+  };
 
   const history = data.items
     ? data.items
@@ -120,6 +162,22 @@ const HistoryTable = ({
     {
       title: 'Revision',
       field: 'revision',
+      render: (row: any): React.ReactNode =>
+        row.source.repoURL ? (
+          <Link
+            href={revisionUrl(
+              row.source.repoURL,
+              row.source.path,
+              row.revision,
+            )}
+            target="_blank"
+            rel="noopener"
+          >
+            {row.revision}
+          </Link>
+        ) : (
+          row.revision
+        ),
       sorting: false,
     },
   ];
