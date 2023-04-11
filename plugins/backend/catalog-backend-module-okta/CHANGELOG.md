@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.4
+
+### Patch Changes
+
+- 8784b5f5: Refactor and add tests to okta group tree.
+
 ## 0.7.3
 
 ### Patch Changes
