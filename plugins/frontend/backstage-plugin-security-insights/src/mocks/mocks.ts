@@ -187,7 +187,7 @@ export const dependabotAlertsResponseMock = {
         {
           createdAt: '2020-10-13T14:05:11Z',
           id: 'MDI4OlJlcddsdsfererertc5QWxlcnQ0MDgyODMyyy2MDY=',
-          dismissedAt: null,
+          state: 'OPEN',
           vulnerableManifestPath: 'yarn.lock',
           securityVulnerability: {
             vulnerableVersionRange: '< 3.1.0',
@@ -207,7 +207,7 @@ export const dependabotAlertsResponseMock = {
         {
           createdAt: '2021-05-25T15:16:23Z',
           id: 'MDI4OlJlcG9zaXRvcnlWdWxuuuuuuZXJhYmls12lksoiurrrQ3MTE1NjQwODQ=',
-          dismissedAt: null,
+          state: 'OPEN',
           vulnerableManifestPath: 'yarn.lock',
           securityVulnerability: {
             vulnerableVersionRange: '>= 4.0.0, < 4.16.5',
