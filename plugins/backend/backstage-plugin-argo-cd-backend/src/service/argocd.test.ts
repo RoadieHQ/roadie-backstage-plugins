@@ -9,6 +9,7 @@ import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'ts-jest/utils';
 
+fetchMock.enableMocks();
 jest.mock('./timer.services');
 
 const config = ConfigReader.fromConfigs([
@@ -451,14 +452,13 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create both app and project in argo when argo rejects', async () => {
-    fetchMock.mockOnceIf(
-      /.*\/api\/v1\/session/g,
-      JSON.stringify({ token: 'testToken' }),
-    );
     fetchMock.mockResponseOnce(
       JSON.stringify({
         error: 'Failure to create project',
       }),
+      {
+        status: 500,
+      },
     );
 
     const resp = argoService.createArgoResources({
