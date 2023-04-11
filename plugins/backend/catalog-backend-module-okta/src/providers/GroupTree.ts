@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { GroupEntity } from '@backstage/catalog-model';
-import { Logger } from 'winston';
 
 interface GroupNode {
   group: GroupEntity;
@@ -23,12 +22,9 @@ interface GroupNode {
 
 export class GroupTree {
   private groupDict: Record<string, GroupNode> = {};
-  private groups: GroupEntity[];
-  private logger: Logger;
+  private rootNodes: GroupNode[] = [];
 
-  constructor(groups: GroupEntity[], logger: Logger) {
-    this.groups = groups;
-    this.logger = logger;
+  constructor(groups: GroupEntity[]) {
     for (const group of groups) {
       this.groupDict[group.metadata.name] = { group, children: [] };
     }
@@ -43,56 +39,40 @@ export class GroupTree {
         );
       }
     }
+    for (const group of Object.values(this.groupDict)) {
+      if (!this.hasParent(group)) {
+        this.rootNodes.push(group);
+      }
+    }
   }
 
   public getGroups(opts: { pruneEmptyMembers: boolean }): GroupEntity[] {
     const { pruneEmptyMembers } = opts;
     const result: GroupEntity[] = [];
-    const tree = this.createTree({ pruneEmptyMembers });
-    for (const node of tree) {
-      this.addSubtreeNodes(node, result);
+    for (const group of Object.values(this.groupDict)) {
+      if (pruneEmptyMembers) {
+        if (this.hasMembers(group)) {
+          result.push(group.group);
+        }
+      } else {
+        result.push(group.group);
+      }
     }
     return result;
   }
 
-  private addSubtreeNodes(node: GroupNode, result: GroupEntity[]): void {
-    result.push(node.group);
+  private hasMembers(node: GroupNode): boolean {
+    let hasMembers = node.group.spec.members?.length !== 0;
     for (const child of node.children) {
-      this.addSubtreeNodes(child, result);
+      const childHasMembers = this.hasMembers(child);
+      hasMembers = hasMembers || childHasMembers;
     }
+    return hasMembers;
   }
 
-  private pruneEmptyMembers(nodes: GroupNode[]): void {
-    for (const node of nodes) {
-      this.pruneEmptyMembers(node.children);
-      this.logger.debug(
-        `${node.group.metadata.name}: members=${node.group.spec.members?.length} children=${node.children.length} `,
-      );
-      if (node.group.spec.members?.length === 0 && node.children.length === 0) {
-        this.logger.debug(`pruning ${node.group.metadata.name}`);
-        const index = nodes.indexOf(node);
-        nodes.splice(index, 1);
-      }
-    }
-  }
-
-  private hasParent(group: GroupEntity): boolean {
-    return group.spec.parent === group.metadata.name
+  private hasParent(node: GroupNode): boolean {
+    return node.group.spec.parent === node.group.metadata.name
       ? false
-      : !!group.spec.parent;
-  }
-
-  private createTree(opts: { pruneEmptyMembers: boolean }): GroupNode[] {
-    const { pruneEmptyMembers } = opts;
-    const rootNodes: GroupNode[] = [];
-    for (const group of this.groups) {
-      if (!this.hasParent(group)) {
-        rootNodes.push(this.groupDict[group.metadata.name]);
-      }
-    }
-    if (pruneEmptyMembers) {
-      this.pruneEmptyMembers(rootNodes);
-    }
-    return rootNodes;
+      : !!node.group.spec.parent;
   }
 }
