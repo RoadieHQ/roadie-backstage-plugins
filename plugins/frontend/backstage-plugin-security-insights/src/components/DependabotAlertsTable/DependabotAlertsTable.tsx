@@ -36,9 +36,12 @@ import { useProjectName } from '../useProjectName';
 import { useUrl } from '../useUrl';
 import { useProjectEntity } from '../useProjectEntity';
 
+type State = 'OPEN' | 'FIXED' | 'DISMISSED';
+type StateFilter = State | 'ALL';
+
 type Node = {
+  state: State;
   createdAt: string;
-  dismissedAt: string;
   vulnerableManifestPath: string;
   securityVulnerability: {
     package: {
@@ -79,12 +82,21 @@ const capitalize = (s: string) => {
 const getDetailsUrl = (
   packageName: string,
   detailsUrl: DetailsUrl,
-  dismissedAt: string,
+  state: State,
   vulnerableManifestPath: string,
 ) => {
-  const status = dismissedAt ? 'closed' : 'open';
-  const url = `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot/${vulnerableManifestPath}/${packageName}/${status}`;
-  return <Link to={url}>{packageName}</Link>;
+  const url = new URL(
+    `https://${detailsUrl.hostname}/${detailsUrl.owner}/${detailsUrl.repo}/security/dependabot`,
+  );
+
+  const queryParts = [
+    `is:${state === 'OPEN' ? 'open' : 'closed'}`,
+    `manifest:${vulnerableManifestPath}`,
+    `package:${packageName}`,
+  ];
+  url.searchParams.set('q', queryParts.join(' '));
+
+  return <Link to={url.toString()}>{packageName}</Link>;
 };
 
 export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
@@ -93,22 +105,21 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const [filteredTableData, setFilteredTableData] = useState<Node[]>(
     repository.vulnerabilityAlerts.nodes,
   );
-  const [insightsStatusFilter, setInsightsStatusFilter] = useState<any>('all');
+  const [stateFilter, setStateFilter] = useState<StateFilter>('ALL');
 
-  const filterAlerts = (statusFilter: string, issues: Node[]) => {
-    setInsightsStatusFilter(statusFilter);
-    if (issues && issues.length > 0) {
+  const filterAlerts = (newStateFilter: StateFilter) => {
+    setStateFilter(newStateFilter);
+
+    const issues = repository.vulnerabilityAlerts.nodes;
+
+    if (newStateFilter === 'ALL') {
       setFilteredTableData(issues);
-    } else setFilteredTableData([]);
+    } else {
+      setFilteredTableData(
+        issues.filter(node => node.state === newStateFilter),
+      );
+    }
   };
-
-  const dismissedIssues = repository.vulnerabilityAlerts.nodes.filter(
-    entry => entry.dismissedAt !== null,
-  );
-  const openIssues =
-    repository.vulnerabilityAlerts.nodes.filter(
-      entry => entry.dismissedAt === null,
-    ) || null;
 
   const columns: TableColumn[] = [
     { title: 'Name', field: 'name' },
@@ -122,11 +133,11 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const structuredData = tableData.map(node => {
     return {
       createdAt: DateTime.fromISO(node.createdAt).toLocaleString(),
-      state: node.dismissedAt ? 'Dismissed' : 'Open',
+      state: capitalize(node.state),
       name: getDetailsUrl(
         node.securityVulnerability.package.name,
         detailsUrl,
-        node.dismissedAt,
+        node.state,
         node.vulnerableManifestPath,
       ),
       severity: capitalize(node.securityVulnerability.severity.toLowerCase()),
@@ -150,26 +161,26 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
                 aria-label="text primary button group"
               >
                 <Button
-                  color={insightsStatusFilter === 'all' ? 'primary' : 'default'}
-                  onClick={() =>
-                    filterAlerts('all', repository.vulnerabilityAlerts.nodes)
-                  }
+                  color={stateFilter === 'ALL' ? 'primary' : 'default'}
+                  onClick={() => filterAlerts('ALL')}
                 >
                   ALL
                 </Button>
                 <Button
-                  color={
-                    insightsStatusFilter === 'open' ? 'primary' : 'default'
-                  }
-                  onClick={() => filterAlerts('open', openIssues)}
+                  color={stateFilter === 'OPEN' ? 'primary' : 'default'}
+                  onClick={() => filterAlerts('OPEN')}
                 >
                   OPEN
                 </Button>
                 <Button
-                  color={
-                    insightsStatusFilter === 'dismissed' ? 'primary' : 'default'
-                  }
-                  onClick={() => filterAlerts('dismissed', dismissedIssues)}
+                  color={stateFilter === 'FIXED' ? 'primary' : 'default'}
+                  onClick={() => filterAlerts('FIXED')}
+                >
+                  FIXED
+                </Button>
+                <Button
+                  color={stateFilter === 'DISMISSED' ? 'primary' : 'default'}
+                  onClick={() => filterAlerts('DISMISSED')}
                 >
                   DISMISSED
                 </Button>
@@ -197,9 +208,9 @@ export const DependabotAlertsTable: FC<{}> = () => {
       vulnerabilityAlerts(first: 100) {
         totalCount
         nodes {
+          state
           createdAt
           id
-          dismissedAt
           vulnerableManifestPath
           securityVulnerability {
             vulnerableVersionRange
