@@ -31,7 +31,6 @@ import {
   githubAuthApiRef,
   AnyApiRef,
 } from '@backstage/core-plugin-api';
-import { securityInsightsPlugin } from '../../plugin';
 
 let entity: { entity: Entity };
 
@@ -79,13 +78,7 @@ describe('Dependabot alerts overview', () => {
     jest.resetAllMocks();
   });
 
-  describe('export-security-insights-plugin', () => {
-    it('should export plugin', () => {
-      expect(securityInsightsPlugin).toBeDefined();
-    });
-  });
-
-  describe('GithubDependabotAlertsTable', () => {
+  describe('DependabotAlertsTable', () => {
     beforeEach(() => {
       entity = entityStub;
     });
