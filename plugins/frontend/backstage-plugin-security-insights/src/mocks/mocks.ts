@@ -182,7 +182,7 @@ export const alertsResponseMock = [
 export const dependabotAlertsResponseMock = {
   repository: {
     vulnerabilityAlerts: {
-      totalCount: 2,
+      totalCount: 4,
       nodes: [
         {
           createdAt: '2020-10-13T14:05:11Z',
@@ -192,7 +192,7 @@ export const dependabotAlertsResponseMock = {
           securityVulnerability: {
             vulnerableVersionRange: '< 3.1.0',
             package: {
-              name: 'serialize-javascript',
+              name: 'serialize-javascript-open',
             },
             firstPatchedVersion: {
               identifier: '3.1.0',
@@ -221,6 +221,46 @@ export const dependabotAlertsResponseMock = {
             advisory: {
               description:
                 'The package browserslist from 4.0.0 and before 4.16.5 are vulnerable to Regular Expression Denial of Service (ReDoS) during parsing of queries.',
+            },
+          },
+        },
+        {
+          createdAt: '2020-10-13T14:05:11Z',
+          id: 'MDI4OlJlcddsdsfererertc5QWxlcnQ0MDgyODMyyy2MDY=',
+          state: 'FIXED',
+          vulnerableManifestPath: 'yarn.lock',
+          securityVulnerability: {
+            vulnerableVersionRange: '< 3.1.0',
+            package: {
+              name: 'serialize-javascript-fixed',
+            },
+            firstPatchedVersion: {
+              identifier: '3.1.0',
+            },
+            severity: 'HIGH',
+            advisory: {
+              description:
+                'serialize-javascript prior to 3.1.0 allows remote attackers to inject arbitrary code via the function "deleteFunctions" within "index.js". \r\n\r\nAn object such as `{"foo": /1"/, "bar": "a\\"@__R-<UID>-0__@"}` was serialized as `{"foo": /1"/, "bar": "a\\/1"/}`, which allows an attacker to escape the `bar` key. This requires the attacker to control the values of both `foo` and `bar` and guess the value of `<UID>`. The UID has a keyspace of approximately 4 billion making it a realistic network attack.\r\n\r\nThe following proof-of-concept calls `console.log()` when the running `eval()`:\r\n`eval(\'(\'+ serialize({"foo": /1" + console.log(1)/i, "bar": \'"@__R-<UID>-0__@\'}) + \')\');`',
+            },
+          },
+        },
+        {
+          createdAt: '2020-10-13T14:05:11Z',
+          id: 'MDI4OlJlcddsdsfererertc5QWxlcnQ0MDgyODMyyy2MDY=',
+          state: 'DISMISSED',
+          vulnerableManifestPath: 'yarn.lock',
+          securityVulnerability: {
+            vulnerableVersionRange: '< 3.1.0',
+            package: {
+              name: 'serialize-javascript-dismissed',
+            },
+            firstPatchedVersion: {
+              identifier: '3.1.0',
+            },
+            severity: 'HIGH',
+            advisory: {
+              description:
+                'serialize-javascript prior to 3.1.0 allows remote attackers to inject arbitrary code via the function "deleteFunctions" within "index.js". \r\n\r\nAn object such as `{"foo": /1"/, "bar": "a\\"@__R-<UID>-0__@"}` was serialized as `{"foo": /1"/, "bar": "a\\/1"/}`, which allows an attacker to escape the `bar` key. This requires the attacker to control the values of both `foo` and `bar` and guess the value of `<UID>`. The UID has a keyspace of approximately 4 billion making it a realistic network attack.\r\n\r\nThe following proof-of-concept calls `console.log()` when the running `eval()`:\r\n`eval(\'(\'+ serialize({"foo": /1" + console.log(1)/i, "bar": \'"@__R-<UID>-0__@\'}) + \')\');`',
             },
           },
         },
