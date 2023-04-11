@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.0
+
+### Minor Changes
+
+- 47ad5fd2: The Dependabot Alerts table now correctly displays and filters "Fixed" alerts.
+
 ## 2.2.1
 
 ### Patch Changes
