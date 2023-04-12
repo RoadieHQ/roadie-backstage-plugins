@@ -64,7 +64,7 @@ describe('PullRequestsCard', () => {
         </EntityProvider>
       </TestApiProvider>,
     );
-    expect(await screen.findByText('2 months')).toBeInTheDocument();
+    expect(await screen.findByText('1 month, 27 days')).toBeInTheDocument();
     expect(await screen.findByText('67%')).toBeInTheDocument();
     expect(await screen.findByText('3309 lines')).toBeInTheDocument();
   });

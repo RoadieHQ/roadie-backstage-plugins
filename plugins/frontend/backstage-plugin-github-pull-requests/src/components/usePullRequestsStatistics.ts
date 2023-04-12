@@ -19,7 +19,7 @@ import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { useBaseUrl } from './useBaseUrl';
 import { PullRequestState, SearchPullRequestsResponseData } from '../types';
-import humanizeDuration from 'humanize-duration';
+import { Duration } from 'luxon';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
@@ -166,13 +166,13 @@ export function usePullRequestsStatistics({
       };
     const avgTimeUntilMergeDiff =
       calcResult.avgTimeUntilMerge / calcResult.mergedCount;
-    const avgTimeUntilMerge = humanizeDuration(avgTimeUntilMergeDiff, {
-      round: true,
-      units: ['mo'],
-    });
+
+    const avgTimeUntilMerge = Duration.fromMillis(avgTimeUntilMergeDiff)
+      .shiftTo('months', 'days')
+      .toHuman({ notation: 'compact' });
     return {
       ...calcResult,
-      avgTimeUntilMerge: avgTimeUntilMerge,
+      avgTimeUntilMerge,
       mergedToClosedRatio: `${Math.round(
         (calcResult.mergedCount / calcResult.closedCount) * 100,
       )}%`,
