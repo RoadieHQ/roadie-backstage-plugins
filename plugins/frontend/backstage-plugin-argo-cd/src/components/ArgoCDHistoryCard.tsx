@@ -52,7 +52,7 @@ const HistoryTable = ({
   const protocol = (protocol: string): string => {
     return proto === 'ssh' ? 'https' : proto;
   };
-  const supportedSource = (parsed: GitUrl): boolean => {
+  const supportedSource = (gitUrl: GitUrl): boolean => {
     return (
       parsed.resource.startsWith('github') ||
       ['gitlab.com', 'bitbucket.org'].indexOf(parsed.source) >= 0
