@@ -17,9 +17,9 @@
 import { useAsync } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import moment from 'moment';
 import { useBaseUrl } from './useBaseUrl';
 import { PullRequestState, SearchPullRequestsResponseData } from '../types';
+import { Duration } from 'luxon';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
@@ -164,13 +164,15 @@ export function usePullRequestsStatistics({
         avgTimeUntilMerge: 'Never',
         mergedToClosedRatio: '0%',
       };
-    const avgTimeUntilMergeDiff = moment.duration(
-      calcResult.avgTimeUntilMerge / calcResult.mergedCount,
-    );
-    const avgTimeUntilMerge = avgTimeUntilMergeDiff.humanize();
+    const avgTimeUntilMergeDiff =
+      calcResult.avgTimeUntilMerge / calcResult.mergedCount;
+
+    const avgTimeUntilMerge = Duration.fromMillis(avgTimeUntilMergeDiff)
+      .shiftTo('months', 'days')
+      .toHuman({ notation: 'compact' });
     return {
       ...calcResult,
-      avgTimeUntilMerge: avgTimeUntilMerge,
+      avgTimeUntilMerge,
       mergedToClosedRatio: `${Math.round(
         (calcResult.mergedCount / calcResult.closedCount) * 100,
       )}%`,

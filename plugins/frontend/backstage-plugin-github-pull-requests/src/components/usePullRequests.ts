@@ -18,17 +18,17 @@ import { useEffect, useState } from 'react';
 import { useAsyncRetry } from 'react-use';
 import { githubPullRequestsApiRef } from '../api/GithubPullRequestsApi';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import moment from 'moment';
 import { SearchPullRequestsResponseData } from '../types';
 import { useBaseUrl } from './useBaseUrl';
+import { DateTime } from 'luxon';
 
 export type PullRequest = {
   id: number;
   number: number;
   url: string;
   title: string;
-  updatedTime: string;
-  createdTime: string;
+  updatedTime: string | null;
+  createdTime: string | null;
   state: string;
   draft: boolean;
   merged: string | null;
@@ -54,8 +54,8 @@ export function usePullRequests({
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
-  const getElapsedTime = (start: string) => {
-    return moment(start).fromNow();
+  const getElapsedTime = (start: string): string | null => {
+    return DateTime.fromISO(start).toRelative();
   };
 
   const {
