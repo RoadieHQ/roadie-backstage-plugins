@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { entityStub, dependabotAlertsResponseMock } from '../../mocks/mocks';
 import { graphql } from 'msw';
 import {
@@ -31,7 +31,6 @@ import {
   githubAuthApiRef,
   AnyApiRef,
 } from '@backstage/core-plugin-api';
-import { securityInsightsPlugin } from '../../plugin';
 
 let entity: { entity: Entity };
 
@@ -79,13 +78,7 @@ describe('Dependabot alerts overview', () => {
     jest.resetAllMocks();
   });
 
-  describe('export-security-insights-plugin', () => {
-    it('should export plugin', () => {
-      expect(securityInsightsPlugin).toBeDefined();
-    });
-  });
-
-  describe('GithubDependabotAlertsTable', () => {
+  describe('DependabotAlertsTable', () => {
     beforeEach(() => {
       entity = entityStub;
     });
@@ -105,8 +98,97 @@ describe('Dependabot alerts overview', () => {
         ),
       );
       expect(
-        await rendered.findByText('serialize-javascript'),
-      ).toBeInTheDocument();
+        await rendered.findByText('serialize-javascript-open'),
+      ).toBeVisible();
+      expect(
+        await rendered.findByText('serialize-javascript-fixed'),
+      ).toBeVisible();
+      expect(
+        await rendered.findByText('serialize-javascript-dismissed'),
+      ).toBeVisible();
+    });
+
+    it('should show open alerts only when filtering for them', async () => {
+      worker.use(
+        GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
+          res(ctx.data(dependabotAlertsResponseMock));
+        }),
+      );
+
+      const rendered = render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <DependabotAlertsTable />
+          </TestApiProvider>,
+        ),
+      );
+      fireEvent.click(await rendered.findByRole('button', { name: 'OPEN' }));
+
+      expect(
+        await rendered.findByText('serialize-javascript-open'),
+      ).toBeVisible();
+      expect(await rendered.queryByText('serialize-javascript-fixed')).toBe(
+        null,
+      );
+      expect(await rendered.queryByText('serialize-javascript-dismissed')).toBe(
+        null,
+      );
+    });
+
+    it('should show fixed alerts only when filtering for them', async () => {
+      worker.use(
+        GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
+          res(ctx.data(dependabotAlertsResponseMock));
+        }),
+      );
+
+      const rendered = render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <DependabotAlertsTable />
+          </TestApiProvider>,
+        ),
+      );
+      fireEvent.click(await rendered.findByRole('button', { name: 'FIXED' }));
+
+      expect(
+        await rendered.findByText('serialize-javascript-fixed'),
+      ).toBeVisible();
+      expect(await rendered.queryByText('serialize-javascript-open')).toBe(
+        null,
+      );
+      expect(await rendered.queryByText('serialize-javascript-dismissed')).toBe(
+        null,
+      );
+    });
+
+    it('should show dismissed alerts only when filtering for them', async () => {
+      worker.use(
+        GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
+          res(ctx.data(dependabotAlertsResponseMock));
+        }),
+      );
+
+      const rendered = render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <DependabotAlertsTable />
+          </TestApiProvider>,
+        ),
+      );
+      fireEvent.click(
+        await rendered.findByRole('button', { name: 'DISMISSED' }),
+      );
+
+      expect(
+        await rendered.findByText('serialize-javascript-dismissed'),
+      ).toBeVisible();
+      expect(await rendered.queryByText('serialize-javascript-open')).toBe(
+        null,
+      );
+      expect(await rendered.queryByText('serialize-javascript-fixed')).toBe(
+        null,
+      );
     });
   });
 });

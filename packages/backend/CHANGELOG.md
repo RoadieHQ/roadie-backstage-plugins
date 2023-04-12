@@ -1,5 +1,14 @@
 # backend
 
+## 2.0.7
+
+### Patch Changes
+
+- Updated dependencies [12a139f6]
+- Updated dependencies [46cc9fc7]
+  - @roadiehq/scaffolder-backend-module-utils@1.8.5
+  - @roadiehq/catalog-backend-module-okta@0.7.0
+
 ## 2.0.6
 
 ### Patch Changes

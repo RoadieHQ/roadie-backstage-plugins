@@ -55,4 +55,40 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       yaml.dump({ hello: ['world', 'item2'] }),
     );
   });
+
+  it('should pass options to yaml.dump', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': '',
+      },
+    });
+
+    const mockDump = jest.spyOn(yaml, 'dump');
+
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '{ "hello": "beautiful world" }',
+        options: opts,
+      },
+    });
+
+    expect(mockDump).toHaveBeenCalledWith({ hello: 'beautiful world' }, opts);
+  });
 });

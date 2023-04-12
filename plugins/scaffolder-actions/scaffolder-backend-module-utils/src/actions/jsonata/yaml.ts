@@ -18,14 +18,13 @@ import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
+import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
 export function createYamlJSONataTransformAction() {
   return createTemplateAction<{
     path: string;
     expression: string;
-    options?: {
-      indent: number;
-    };
+    options?: supportedDumpOptions;
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
@@ -46,16 +45,7 @@ export function createYamlJSONataTransformAction() {
             description: 'JSONata expression to perform on the input',
             type: 'string',
           },
-          options: {
-            title: 'Options',
-            description: 'YAML stringify options',
-            type: 'object',
-            properties: {
-              indent: {
-                type: 'number',
-              },
-            },
-          },
+          options: yamlOptionsSchema,
         },
       },
       output: {

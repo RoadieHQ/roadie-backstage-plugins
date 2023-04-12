@@ -16,7 +16,7 @@
 
 import { securityInsightsPlugin } from './plugin';
 
-describe('github-pull-requests', () => {
+describe('export-security-insights-plugin', () => {
   it('should export plugin', () => {
     expect(securityInsightsPlugin).toBeDefined();
   });

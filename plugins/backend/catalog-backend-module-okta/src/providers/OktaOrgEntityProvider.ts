@@ -32,9 +32,10 @@ import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
-import { assertError } from '@backstage/errors';
+import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
+import { GroupTree } from './GroupTree';
 
 /**
  * Provides entities from Okta Org service.
@@ -110,7 +111,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     }
 
     this.logger.info('Providing user and group resources from okta');
-    const resources: (GroupEntity | UserEntity)[] = [];
+    let groupResources: GroupEntity[] = [];
+    const userResources: Record<string, UserEntity> = {};
     let providedUserCount = 0;
     let providedGroupCount = 0;
 
@@ -124,14 +126,23 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         const defaultAnnotations = await this.buildDefaultAnnotations();
 
         await client.listUsers({ search: account.userFilter }).each(user => {
-          resources.push(
-            userEntityFromOktaUser(user, this.userNamingStrategy, {
-              annotations: defaultAnnotations,
-            }),
-          );
+          try {
+            const userName = this.userNamingStrategy(user);
+            userResources[userName] = userEntityFromOktaUser(
+              user,
+              this.userNamingStrategy,
+              {
+                annotations: defaultAnnotations,
+              },
+            );
+          } catch (e: unknown) {
+            this.logger.warn(
+              `Failed to add user: ${isError(e) ? e.message : 'unknown error'}`,
+            );
+          }
         });
 
-        providedUserCount = resources.length;
+        providedUserCount = Object.values(userResources).length;
 
         const oktaGroups = await getOktaGroups({
           client,
@@ -147,10 +158,15 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
             await group.listUsers().each(user => {
               try {
                 const userName = this.userNamingStrategy(user);
-                members.push(userName);
+                if (userResources[userName]) {
+                  members.push(userName);
+                }
               } catch (e: unknown) {
-                assertError(e);
-                this.logger.warn(`failed to add user to group: ${e.message}`);
+                this.logger.warn(
+                  `failed to add user to group: ${
+                    isError(e) ? e.message : 'unknown error'
+                  }`,
+                );
               }
             });
 
@@ -170,25 +186,37 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
                   members,
                 },
               );
-              if (this.includeEmptyGroups || members.length > 0) {
-                resources.push(groupEntity);
-              }
+              groupResources.push(groupEntity);
             } catch (e: unknown) {
-              assertError(e);
-              this.logger.warn(`failed to add group: ${e.message}`);
+              this.logger.warn(
+                `failed to add group: ${
+                  isError(e) ? e.message : 'unknown error'
+                }`,
+              );
             }
           }),
         );
       }),
     );
 
-    providedGroupCount = resources.length - providedUserCount;
+    if (!this.includeEmptyGroups) {
+      this.logger.info(
+        `Found ${groupResources.length}, pruning the empty ones`,
+      );
+      groupResources = new GroupTree(groupResources).getGroups({
+        pruneEmptyMembers: true,
+      });
+    }
+
+    providedGroupCount = groupResources.length;
     await this.connection.applyMutation({
       type: 'full',
-      entities: resources.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
+      entities: [...Object.values(userResources), ...groupResources].map(
+        entity => ({
+          entity,
+          locationKey: this.getProviderName(),
+        }),
+      ),
     });
 
     this.logger.info(
