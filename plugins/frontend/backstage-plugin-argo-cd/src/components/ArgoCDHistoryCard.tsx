@@ -49,7 +49,7 @@ const HistoryTable = ({
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
-  const protocol = (proto: string): string => {
+  const protocol = (protocol: string): string => {
     return proto === 'ssh' ? 'https' : proto;
   };
   const supportedSource = (parsed: GitUrl): boolean => {
