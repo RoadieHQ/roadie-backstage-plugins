@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.7
+
+### Patch Changes
+
+- 6bfd4ff5: feat: replaced moment by luxon
+
 ## 2.5.6
 
 ### Patch Changes
