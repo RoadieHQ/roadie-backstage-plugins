@@ -49,13 +49,13 @@ const HistoryTable = ({
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
-  const protocol = (protocol: string): string => {
-    return proto === 'ssh' ? 'https' : proto;
+  const parseProtocol = (protocol: string): string => {
+    return protocol === 'ssh' ? 'https' : protocol;
   };
   const supportedSource = (gitUrl: GitUrl): boolean => {
     return (
-      parsed.resource.startsWith('github') ||
-      ['gitlab.com', 'bitbucket.org'].indexOf(parsed.source) >= 0
+      gitUrl.resource.startsWith('github') ||
+      ['gitlab.com', 'bitbucket.org'].indexOf(gitUrl.source) >= 0
     );
   };
   const isSHA = (revision?: string): boolean | undefined => {
@@ -69,9 +69,9 @@ const HistoryTable = ({
     forPath: string,
     revision?: string,
   ): string | undefined => {
-    let parsed;
+    let gitUrl;
     try {
-      parsed = gitUrlParse(repoUrl);
+      gitUrl = gitUrlParse(repoUrl);
     } catch {
       return undefined;
     }
@@ -82,13 +82,13 @@ const HistoryTable = ({
       urlSubPath = isSHA(revision) && !forPath ? 'commits' : 'src';
     }
 
-    if (!supportedSource(parsed)) {
+    if (!supportedSource(gitUrl)) {
       return undefined;
     }
 
-    return `${protocol(parsed.protocol)}://${parsed.resource}/${parsed.owner}/${
-      parsed.name
-    }/${urlSubPath}/${revision || 'HEAD'}`;
+    return `${parseProtocol(gitUrl.protocol)}://${gitUrl.resource}/${
+      gitUrl.owner
+    }/${gitUrl.name}/${urlSubPath}/${revision || 'HEAD'}`;
   };
 
   const history = data.items
