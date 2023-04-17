@@ -336,6 +336,19 @@ describe('argo-cd', () => {
           (_, res, ctx) => res(ctx.json(getResponseStubScanning)),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
       const rendered = render(
         <TestApiProvider apis={apisScan}>
           <EntityProvider entity={getEntityStub}>
@@ -431,6 +444,19 @@ describe('argo-cd', () => {
           (_, res, ctx) => res(ctx.json(getResponseStub)),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
 
       const rendered = render(
         <TestApiProvider apis={apisWithArgoCDBaseURL}>
@@ -476,6 +502,19 @@ describe('argo-cd', () => {
         rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
           (_, res, ctx) => res(ctx.json(getResponseStub)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
         ),
       );
 
@@ -598,6 +637,19 @@ describe('argo-cd', () => {
           (_, res, ctx) => res(ctx.json(getResponseStubAppListForInstanceOne)),
         ),
       );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
       const rendered = render(
         <TestApiProvider apis={apisScan}>
           <EntityProvider entity={getEntityStubWithAppSelector}>
@@ -639,9 +691,35 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
         ),
       );
       const rendered = render(
@@ -684,9 +762,48 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-prod/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-staging/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
         ),
       );
       const rendered = render(
@@ -729,6 +846,32 @@ describe('argo-cd', () => {
           'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListWithMultipleApps)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-prod/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-staging/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
         ),
       );
       worker.use(
