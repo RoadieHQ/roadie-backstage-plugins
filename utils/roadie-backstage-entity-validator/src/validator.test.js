@@ -1,5 +1,6 @@
 jest.mock('fs');
-
+jest.mock('cross-fetch');
+const fetch = require('cross-fetch');
 const validator = require('./validator');
 const { vol } = require('memfs');
 
@@ -129,7 +130,41 @@ spec:
   lifecycle: experimental
   providesApis:
     - sample-service
-    `,
+`,
+      'catalog-info-with-custom-fields.yml': `
+    apiVersion: backstage.io/v1alpha1
+    kind: Component
+    metadata:
+      name: sample-service-5
+      description: |
+        A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.
+      annotations:
+        github.com/project-slug: roadiehq/sample-service
+        backstage.io/view-url: https://github.com/RoadieHQ/sample-service/tree/main
+        backstage.io/source-location: url:https://github.com/RoadieHQ/sample-service/tree/main/
+        custom/source-location: custom-field-value:12342
+    spec:
+        type: service
+        owner: user:dtuite
+        lifecycle: experimental
+`,
+      'catalog-info-with-custom-fields-with-errors.yml': `
+        apiVersion: backstage.io/v1alpha1
+        kind: Component
+        metadata:
+          name: sample-service-5
+          description: |
+            A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.
+          annotations:
+            github.com/project-slug: roadiehq/sample-service
+            backstage.io/view-url: https://github.com/RoadieHQ/sample-service/tree/main
+            backstage.io/source-location: url:https://github.com/RoadieHQ/sample-service/tree/main/
+            custom/source-location: custom-field-value:123error
+        spec:
+            type: service
+            owner: user:dtuite
+            lifecycle: experimental
+`,
       'template-v2-entity.yml': `
 apiVersion: backstage.io/v1beta2
 kind: Template
@@ -266,6 +301,64 @@ spec:
       await expect(
         validator.validateFromFile('template-v3-entity.yml'),
       ).resolves.toBeUndefined();
+    });
+  });
+
+  describe('customValidationSchema', () => {
+    const mockResponse = {
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          $schema: 'http://json-schema.org/draft-07/schema',
+          $id: 'Custom Entity metadata annotations',
+          description: 'Individual annotation format validations',
+          type: 'object',
+          required: ['metadata'],
+          additionalProperties: true,
+          properties: {
+            metadata: {
+              type: 'object',
+              properties: {
+                annotations: {
+                  type: 'object',
+                  allOf: [
+                    {
+                      properties: {
+                        'custom/source-location': {
+                          type: 'string',
+                          pattern: '^custom-field-value:\\d*$',
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        }),
+    };
+    it('should successfully validate against custom annotation schema', async () => {
+      fetch.mockResolvedValue(mockResponse);
+      await expect(
+        validator.validateFromFile(
+          'catalog-info-with-custom-fields.yml',
+          false,
+          'https://backstage.io/schema.json',
+        ),
+      ).resolves.toBeUndefined();
+    });
+
+    it('should throw validate error when validating against custom annotation schema', async () => {
+      fetch.mockResolvedValue(mockResponse);
+      await expect(
+        validator.validateFromFile(
+          'catalog-info-with-custom-fields-with-errors.yml',
+          false,
+          'https://backstage.io/schema.json',
+        ),
+      ).rejects.toThrowError(
+        'Error: Malformed annotation, /metadata/annotations/custom~1source-location must match pattern "^custom-field-value:\\d*$"',
+      );
     });
   });
 });

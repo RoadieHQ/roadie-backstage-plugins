@@ -20,6 +20,7 @@ import annotationSchema from './schemas/annotations.schema.json';
 import Ajv from 'ajv';
 import ajvFormats from 'ajv-formats';
 import { relativeSpaceValidation } from './relativeSpaceValidation';
+import fetch from 'cross-fetch';
 
 const ajv = new Ajv({ verbose: true });
 ajvFormats(ajv);
@@ -54,11 +55,35 @@ function modifyPlaceholders(obj) {
   }
 }
 
-export const validate = async (fileContents, verbose = true) => {
+export const validate = async (
+  fileContents,
+  verbose = true,
+  customAnnotationSchemaLocation = '',
+) => {
   let validator;
-  const validateAnnotations = (entity, idx) => {
+  const validateAnnotations = async (entity, idx) => {
     if (!validator) {
-      validator = ajv.compile(annotationSchema);
+      if (customAnnotationSchemaLocation) {
+        console.log(
+          `Using validation schema from ${customAnnotationSchemaLocation}...`,
+        );
+        const resp = await fetch(customAnnotationSchemaLocation);
+
+        if (!resp.ok) {
+          throw new Error(
+            `Failed to fetch schema, status ${resp.status}: ${resp.statusText} `,
+          );
+        }
+
+        const customAnnotationSchema = await resp.json();
+        validator = ajv.getSchema(customAnnotationSchema.$id);
+
+        if (!validator) {
+          validator = ajv.compile(customAnnotationSchema);
+        }
+      } else {
+        validator = ajv.compile(annotationSchema);
+      }
     }
     if (verbose) {
       console.log(`Validating entity annotations for file document ${idx}`);
@@ -112,8 +137,8 @@ export const validate = async (fileContents, verbose = true) => {
       return Object.values(results[0]).filter(r => r === false).length > 0;
     };
     const validKind = await validateEntities(data);
-    const validAnnotations = data.map((it, idx) =>
-      validateAnnotations(it, idx),
+    const validAnnotations = await Promise.all(
+      data.map(async (it, idx) => await validateAnnotations(it, idx)),
     );
 
     if (validKind && validAnnotations && verbose) {
@@ -125,12 +150,16 @@ export const validate = async (fileContents, verbose = true) => {
   }
 };
 
-export const validateFromFile = async (filepath, verbose = true) => {
+export const validateFromFile = async (
+  filepath,
+  verbose = true,
+  customAnnotationSchemaLocation = '',
+) => {
   const fileContents = fs.readFileSync(filepath, 'utf8');
   if (verbose) {
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
 
-  await validate(fileContents, verbose);
+  await validate(fileContents, verbose, customAnnotationSchemaLocation);
   await relativeSpaceValidation(fileContents, filepath, verbose);
 };
