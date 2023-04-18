@@ -87,4 +87,22 @@ Between the Argo CD project delete and application delete there is a loop create
 
 Setting permissions for the Argo CD user account can reduce the scope, but also reduce the functionality of the backend. If you choose to scope the permissions for read-only get actions will work such as the catalog plugin but creating, deleting, and resyncing applications will not be available. The error handling has been designed to alert the users when the proper permissions are not in place.
 
+### Self Signed Certificates
+
+By default the Argo CD Server will generate a self signed certificate. For testing purposes you can use the below to allow `http` traffic. **This should not be used for production.** The backend will validate certificates and a self signed certificate will not work properly, which is why for testing enabling `http` might be preferred.
+
+Once you have installed Argo CD, the deployment of `argocd-server` can be patched to be insecure using the below command,
+
+```bash
+kubectl patch deployment argocd-server --type "json" -p '[{"op":"add","path":"/spec/template/spec/containers/0/command/-","value":"--insecure"}]'
+```
+
+Or using Helm you can install Argo CD and be insecure by default.
+
+```bash
+helm upgrade --install argocd argo/argo-cd \
+  --version 3.33.5 \
+  --set 'server.extraArgs={--insecure}'
+```
+
 ## Contributed By American Airlines
