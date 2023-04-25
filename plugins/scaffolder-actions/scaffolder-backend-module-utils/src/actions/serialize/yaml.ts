@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import yaml from 'js-yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
