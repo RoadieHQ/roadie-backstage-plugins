@@ -25,7 +25,7 @@ Cypress.Commands.add('loginAsGuest', () => {
 Cypress.Commands.add('saveGithubToken', () => {
   cy.intercept(
     'GET',
-    'http://localhost:7007/api/auth/github/refresh?optional&env=development',
+    'http://localhost:7007/api/auth/github/refresh?optional&scope=repo&env=development',
     { fixture: 'githubLogin/login.json' },
   );
 });
