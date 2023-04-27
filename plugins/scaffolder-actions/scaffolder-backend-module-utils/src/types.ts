@@ -18,7 +18,7 @@ import { DumpOptions } from 'js-yaml';
 
 export type supportedDumpOptions = Omit<
   DumpOptions,
-  'styles' | 'schema' | 'replacer'
+  'styles' | 'schema' | 'replacer' | 'sortKeys'
 >;
 
 export const yamlOptionsSchema = {
