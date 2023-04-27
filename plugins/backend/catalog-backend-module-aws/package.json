@@ -61,7 +61,7 @@
     "@types/crypto-js": "^4.1.1",
     "@types/link2aws": "^1.0.0",
     "aws-sdk-client-mock": "^0.6.2",
-    "yaml": "^1.9.2"
+    "yaml": "^2.2.2"
   },
   "files": [
     "dist",
