@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.8
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
 ## 2.5.7
 
 ### Patch Changes
