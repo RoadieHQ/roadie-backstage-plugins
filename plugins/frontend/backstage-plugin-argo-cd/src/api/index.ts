@@ -8,6 +8,8 @@ import {
   ArgoCDAppDetails,
   argoCDAppList,
   ArgoCDAppList,
+  argoCDAppDeployRevisionDetails,
+  ArgoCDAppDeployRevisionDetails,
 } from '../types';
 import { Type as tsType } from 'io-ts';
 import {
@@ -22,6 +24,12 @@ export interface ArgoCDApi {
     appSelector?: string;
     projectName?: string;
   }): Promise<ArgoCDAppList>;
+  getRevisionDetails(options: {
+    url: string;
+    app: string;
+    revisionID: string;
+    instanceName?: string;
+  }): Promise<ArgoCDAppDeployRevisionDetails>;
   getAppDetails(options: {
     url: string;
     appName: string;
@@ -121,6 +129,35 @@ export class ArgoCDApiClient implements ArgoCDApi {
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications?${query}`,
       argoCDAppList,
+    );
+  }
+
+  async getRevisionDetails(options: {
+    url: string;
+    app: string;
+    revisionID: string;
+    instanceName?: string;
+  }) {
+    const proxyUrl = await this.getBaseUrl();
+    if (this.searchInstances) {
+      return this.fetchDecode(
+        `${proxyUrl}/argoInstance/${
+          options.instanceName
+        }/applications/name/${encodeURIComponent(
+          options.app as string,
+        )}/revisions/${encodeURIComponent(
+          options.revisionID as string,
+        )}/metadata`,
+        argoCDAppDeployRevisionDetails,
+      );
+    }
+    return this.fetchDecode(
+      `${proxyUrl}${options.url}/applications/${encodeURIComponent(
+        options.app as string,
+      )}/revisions/${encodeURIComponent(
+        options.revisionID as string,
+      )}/metadata`,
+      argoCDAppDeployRevisionDetails,
     );
   }
 

@@ -25,8 +25,34 @@ let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
 };
 
+const allUsers = [
+  {
+    id: 'asdfwefwefwef',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'asdfwefwefwef',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'user-1',
+    profile: {
+      email: 'fname@domain.com',
+    },
+  },
+  {
+    id: 'user-2',
+    profile: {
+      email: 'fname2@domain.com',
+    },
+  },
+];
 let listUsers: () => MockOktaCollection = () => {
-  return new MockOktaCollection([]);
+  return new MockOktaCollection(allUsers);
 };
 
 jest.mock('@okta/okta-sdk-nodejs', () => {
@@ -60,7 +86,7 @@ describe('OktaOrgEntityProvider', () => {
   describe('where there is no groups', () => {
     beforeEach(() => {
       listGroups = () => new MockOktaCollection([]);
-      listUsers = () => new MockOktaCollection([]);
+      listUsers = () => new MockOktaCollection(allUsers);
     });
 
     it('creates no okta groups', async () => {
@@ -73,7 +99,13 @@ describe('OktaOrgEntityProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [],
+        entities: expect.not.arrayContaining([
+          {
+            entity: expect.objectContaining({
+              kind: 'Group',
+            }),
+          },
+        ]),
       });
     });
   });
@@ -273,7 +305,13 @@ describe('OktaOrgEntityProvider', () => {
       await provider.run();
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
-        entities: [],
+        entities: expect.not.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+            }),
+          }),
+        ]),
       });
     });
 
@@ -401,7 +439,10 @@ describe('OktaOrgEntityProvider', () => {
         logger,
         groupNamingStrategy: new ProfileFieldGroupNamingStrategy('org_id')
           .nameForGroup,
-        parentGroupField: 'parent_org_id',
+        hierarchyConfig: {
+          parentKey: 'profile.parent_org_id',
+          key: 'profile.org_id',
+        },
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -431,6 +472,104 @@ describe('OktaOrgEntityProvider', () => {
               spec: expect.objectContaining({
                 members: ['user-1'],
                 parent: '1',
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('numbers can be provided to create a hierarchy', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+              org_id: 1,
+              parent_org_id: 1,
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+                {
+                  id: 'user-2',
+                  profile: {
+                    email: 'fname2@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Some@the-company',
+              description: 'Some in the company',
+              org_id: 2,
+              parent_org_id: 1,
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        hierarchyConfig: {
+          parentKey: 'profile.parent_org_id',
+          key: 'profile.org_id',
+        },
+        includeEmptyGroups: true,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                title: 'Everyone@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['user-1', 'user-2'],
+                parent: 'asdfwefwefwef',
+              }),
+            }),
+          }),
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                title: 'Some@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['user-1'],
+                parent: 'asdfwefwefwef',
               }),
             }),
           }),

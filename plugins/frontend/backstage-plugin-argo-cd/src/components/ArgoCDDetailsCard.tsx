@@ -15,7 +15,14 @@
  */
 
 import React from 'react';
-import { Box, LinearProgress } from '@material-ui/core';
+import {
+  Box,
+  LinearProgress,
+  List,
+  ListItem,
+  Tooltip,
+  Button,
+} from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
 import moment from 'moment';
 import {
@@ -37,11 +44,43 @@ import SyncIcon from '@material-ui/icons/Sync';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
 
+interface Condition {
+  message?: string;
+  lastTransitionTime?: string;
+  type: string;
+}
+
+const MessageComponent = ({
+  conditions,
+}: {
+  conditions: Condition[] | undefined;
+}) => {
+  return (
+    <>
+      {conditions ? (
+        <List dense>
+          {conditions.map((condition: Condition, index: number) => (
+            <ListItem style={{ padding: 0 }} key={index}>
+              {condition.message}
+            </ListItem>
+          ))}
+        </List>
+      ) : null}
+    </>
+  );
+};
+
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-const State = ({ value }: { value: string }) => {
+const State = ({
+  value,
+  conditions,
+}: {
+  value: string;
+  conditions: Condition[] | undefined;
+}) => {
   const colorMap: Record<string, string> = {
     Pending: '#dcbc21',
     Synced: 'green',
@@ -49,6 +88,30 @@ const State = ({ value }: { value: string }) => {
     Inactive: 'black',
     Failed: 'red',
   };
+  if (conditions !== undefined) {
+    return (
+      <Tooltip
+        title={<MessageComponent conditions={conditions} />}
+        placement="bottom-start"
+      >
+        <Box display="flex" alignItems="center">
+          <Button style={{ paddingLeft: '0px' }}>
+            <span
+              style={{
+                display: 'block',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: colorMap[value] || '#dcbc21',
+                marginRight: '5px',
+              }}
+            />
+            {value}
+          </Button>
+        </Box>
+      </Tooltip>
+    );
+  }
   return (
     <Box display="flex" alignItems="center">
       <span
@@ -93,13 +156,16 @@ const OverviewComponent = ({
     {
       title: 'Sync Status',
       render: (row: any): React.ReactNode => (
-        <State value={row.status.sync.status} />
+        <State
+          value={row.status.sync.status}
+          conditions={row.status.conditions}
+        />
       ),
     },
     {
       title: 'Health Status',
       render: (row: any): React.ReactNode => (
-        <State value={row.status.health.status} />
+        <State value={row.status.health.status} conditions={undefined} />
       ),
     },
     {

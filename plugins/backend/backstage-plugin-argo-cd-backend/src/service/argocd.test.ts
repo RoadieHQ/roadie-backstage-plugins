@@ -9,6 +9,7 @@ import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'ts-jest/utils';
 
+fetchMock.enableMocks();
 jest.mock('./timer.services');
 
 const config = ConfigReader.fromConfigs([
@@ -78,6 +79,42 @@ describe('ArgoCD service', () => {
   beforeEach(() => {
     mocked(timer).mockResolvedValue(0);
     fetchMock.resetMocks();
+  });
+
+  it('should get revision data', async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify({
+        author: 'testuser',
+        date: '2023-03-20T18:44:10Z',
+        message: 'Update README.md',
+      }),
+    );
+
+    const resp = await argoService.getRevisionData(
+      'https://argoInstance1.com',
+      { name: 'testApp' },
+      'testToken',
+      '15db63ac922a920f388bd841912838ae4d126317',
+    );
+
+    expect(resp).toStrictEqual({
+      author: 'testuser',
+      date: '2023-03-20T18:44:10Z',
+      message: 'Update README.md',
+    });
+  });
+
+  it('should fail to get revision data', async () => {
+    fetchMock.mockRejectOnce(new Error());
+
+    await expect(
+      argoService.getRevisionData(
+        'https://argoInstance1.com',
+        { name: 'testApp' },
+        'testToken',
+        '15db63ac922a920f388bd841912838ae4d126317',
+      ),
+    ).rejects.toThrow();
   });
 
   it('should get argo app data', async () => {
@@ -415,14 +452,13 @@ describe('ArgoCD service', () => {
   });
 
   it('should fail to create both app and project in argo when argo rejects', async () => {
-    fetchMock.mockOnceIf(
-      /.*\/api\/v1\/session/g,
-      JSON.stringify({ token: 'testToken' }),
-    );
     fetchMock.mockResponseOnce(
       JSON.stringify({
         error: 'Failure to create project',
       }),
+      {
+        status: 500,
+      },
     );
 
     const resp = argoService.createArgoResources({

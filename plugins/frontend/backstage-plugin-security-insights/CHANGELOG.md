@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.0
+
+### Minor Changes
+
+- 47ad5fd2: The Dependabot Alerts table now correctly displays and filters "Fixed" alerts.
+
+## 2.2.1
+
+### Patch Changes
+
+- 012cf627: Fix issue where EntitySecurityInsightsCard and EntityDependabotAlertsCard were no longer exported.
+
+## 2.2.0
+
+### Minor Changes
+
+- 89a75dca: Export `DependabotAlertsTable` and `SecurityInsightsTable` components allowing users to build custom integrations.
+
+## 2.1.11
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 2.1.10
 
 ### Patch Changes

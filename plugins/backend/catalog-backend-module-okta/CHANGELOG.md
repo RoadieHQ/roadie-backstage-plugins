@@ -1,5 +1,53 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.4
+
+### Patch Changes
+
+- 8784b5f5: Refactor and add tests to okta group tree.
+
+## 0.7.3
+
+### Patch Changes
+
+- b55aca8d: Add debug logging to the okta tree pruning.
+
+## 0.7.2
+
+### Patch Changes
+
+- 365f12df: Adding a log line to indicate that empty groups will be pruned.
+
+## 0.7.1
+
+### Patch Changes
+
+- 5319e868: No longer raise error when an non error like object is thrown.
+
+## 0.7.0
+
+### Minor Changes
+
+- 46cc9fc7: Add smarter pruning of empty groups. Previously, parent groups of groups with members were being pruned. This change includes parent groups if their decendants have members.
+
+## 0.6.1
+
+### Patch Changes
+
+- 7c561d79: Uses imports from the `@backstage/plugin-catalog-node` package
+
+## 0.6.0
+
+### Minor Changes
+
+- 7baa7791: Rewrite the configuration and logic for creating a hierarchy of groups. Now it does not insist on the group name matching the parent key.
+
+## 0.5.7
+
+### Patch Changes
+
+- e331d3a1: Bump to backstage version 1.12.1
+
 ## 0.5.6
 
 ### Patch Changes

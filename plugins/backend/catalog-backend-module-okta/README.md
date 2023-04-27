@@ -113,7 +113,7 @@ export default async function createPlugin(
 }
 ```
 
-You can optionally provide the ability to create a hierarchy of groups by providing the `parentGroupField`.
+You can optionally provide the ability to create a hierarchy of groups by providing `hierarchyConfig`.
 
 ```typescript
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
@@ -125,9 +125,12 @@ export default async function createPlugin(
 
   const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
     logger: env.logger,
-    parentGroupField: 'parent_org_id',
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
+    hierarchyConfig: {
+      key: 'profile.orgId',
+      parentKey: 'profile.parentOrgId',
+    },
   });
 
   builder.addEntityProvider(orgProvider);
@@ -234,7 +237,7 @@ export default async function createPlugin(
 }
 ```
 
-You can optionally provide the ability to create a hierarchy of groups by providing the `parentGroupField`.
+You can optionally provide the ability to create a hierarchy of groups by providing the `hierarchyConfig`.
 
 ```typescript
 import {
@@ -256,9 +259,12 @@ export default async function createPlugin(
   });
   const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
-    parentGroupField: 'parent_org_id',
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
+    hierarchyConfig: {
+      key: 'profile.orgId',
+      parentKey: 'profile.parentOrgId',
+    },
   });
 
   builder.addEntityProvider(userProvider);

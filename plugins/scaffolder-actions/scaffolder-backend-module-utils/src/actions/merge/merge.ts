@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { extname } from 'path';
 import { merge } from 'lodash';
 import yaml from 'js-yaml';
+import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{ path: string; content: any }>({
@@ -87,7 +88,11 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
 }
 
 export function createMergeAction() {
-  return createTemplateAction<{ path: string; content: any }>({
+  return createTemplateAction<{
+    path: string;
+    content: any;
+    options?: supportedDumpOptions;
+  }>({
     id: 'roadiehq:utils:merge',
     description: 'Merges data into an existing structured file.',
     supportsDryRun: true,
@@ -106,6 +111,10 @@ export function createMergeAction() {
               'This will be merged into to the file. Can be either an object or a string.',
             title: 'Content',
             type: ['string', 'object'],
+          },
+          options: {
+            ...yamlOptionsSchema,
+            description: `${yamlOptionsSchema.description}  (for YAML output only)`,
           },
         },
       },
@@ -153,6 +162,7 @@ export function createMergeAction() {
               : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = yaml.dump(
             merge(yaml.load(originalContent), newContent),
+            ctx.input.options,
           );
           break;
         }

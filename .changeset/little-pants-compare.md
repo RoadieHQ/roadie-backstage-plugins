@@ -29,4 +29,4 @@
 '@roadiehq/roadie-backstage-entity-validator': patch
 ---
 
-Bump to backstage version 1.12.1
+Bump packages to backstage version 1.13.0

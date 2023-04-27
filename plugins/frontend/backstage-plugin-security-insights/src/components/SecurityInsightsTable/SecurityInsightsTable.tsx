@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { Typography, Box, Grid } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
@@ -29,25 +29,21 @@ import { UpdateSeverityStatusModal } from '../UpdateSeverityStatusModal';
 import { StateFilterComponent } from './components/StateFilterComponent';
 import { useUrl } from '../useUrl';
 import { getSeverityBadge } from '../utils';
-import {
-  SecurityInsightsTabProps,
-  SecurityInsight,
-  SecurityInsightFilterState,
-} from '../../types';
+import { SecurityInsight, SecurityInsightFilterState } from '../../types';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
 };
 
-export const SecurityInsightsTable: FC<SecurityInsightsTabProps> = ({
-  entity,
-}) => {
+export const SecurityInsightsTable = () => {
   const [insightsStatusFilter, setInsightsStatusFilter] =
     useState<SecurityInsightFilterState>(null);
   const [filteredTableData, setFilteredTableData] = useState<SecurityInsight[]>(
     [],
   );
   const [tableData, setTableData] = useState<SecurityInsight[]>([]);
+  const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const projectName = useProjectName(entity);
   const auth = useApi(githubAuthApiRef);
