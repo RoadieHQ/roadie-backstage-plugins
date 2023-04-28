@@ -5916,10 +5916,10 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-home@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-home/-/plugin-home-0.5.0.tgz#432d287cd17995ebb1369887f8f9d4af2f54268d"
-  integrity sha512-vIT1gHh+kSXgtpoCsw9ht8CfQzpqGwIYAJm34bV99b1AB0r+/JLDvZ8sIzs00Z9yo6mLY2OVf//mOj/GcYrLHA==
+"@backstage/plugin-home@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-home/-/plugin-home-0.5.1.tgz#cc4555df49cfefac3a7d577a94d9b0f10636568f"
+  integrity sha512-Grtgc4hs0RlqV+T2iRI4yP75CUW9zfiU1ogJ45W4+XJEdB0gG/OqmuJpsDKRBIHjO+9DGOtSAX/tved0dVw26Q==
   dependencies:
     "@backstage/catalog-model" "^1.3.0"
     "@backstage/config" "^1.0.7"
@@ -5930,8 +5930,10 @@
     "@material-ui/core" "^4.12.2"
     "@material-ui/icons" "^4.9.1"
     "@material-ui/lab" "4.0.0-alpha.61"
-    "@rjsf/material-ui" "^3.2.1"
+    "@rjsf/core-v5" "npm:@rjsf/core@5.6.0"
+    "@rjsf/material-ui" "5.6.0"
     "@rjsf/utils" "5.6.0"
+    "@rjsf/validator-ajv8" "5.6.0"
     "@types/react" "^16.13.1 || ^17.0.0"
     lodash "^4.17.21"
     object-hash "^3.0.0"
@@ -6019,10 +6021,10 @@
     yn "^4.0.0"
     yup "^0.32.9"
 
-"@backstage/plugin-scaffolder-backend@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.13.0.tgz#7a6c0cb50dee9e4b85583823f7d7afbe83595a1c"
-  integrity sha512-NJ7L+/bX0Bo3Xua1XHD8lphpDIAR+vPulJu9ea7paQEgU7FXATXLSVF3VJtk+wLnOOw4+3a1oHINqh1AK9twVg==
+"@backstage/plugin-scaffolder-backend@^1.13.1":
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.13.1.tgz#70ca002483a0e4ba4928a19a87e7d16a5762dcbd"
+  integrity sha512-AQ0OEoNEsQNDMR1vI+pTtp0RW4q4MldK6HZxhr+7Kd3FbuQyiLxtGlwaDyYKCvpjPpaN+KPHboSZJ3MhRSztBw==
   dependencies:
     "@backstage/backend-common" "^0.18.4"
     "@backstage/backend-plugin-api" "^0.5.1"
@@ -6070,7 +6072,7 @@
     p-queue "^6.6.2"
     prom-client "^14.0.1"
     uuid "^8.2.0"
-    vm2 "^3.9.11"
+    vm2 "^3.9.17"
     winston "^3.2.1"
     yaml "^2.0.0"
     zen-observable "^0.10.0"
@@ -9369,7 +9371,7 @@
     prop-types "^15.7.2"
     react-is "^16.9.0"
 
-"@rjsf/material-ui-v5@npm:@rjsf/material-ui@5.6.0":
+"@rjsf/material-ui-v5@npm:@rjsf/material-ui@5.6.0", "@rjsf/material-ui@5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@rjsf/material-ui/-/material-ui-5.6.0.tgz#f547dfd17e24036ba1e495760d16cbce6d5da985"
   integrity sha512-e2YMo2XfgPaHuzh5A18Dw+k33n52Mr2AaGEAkrWPI83yar6i+XT4RZLUp1VwO9pm0PqahKBtyvTEyV+ewdLmWQ==
@@ -26582,7 +26584,7 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vm2@^3.9.11:
+vm2@^3.9.17:
   version "3.9.17"
   resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.9.17.tgz#251b165ff8a0e034942b5181057305e39570aeab"
   integrity sha512-AqwtCnZ/ERcX+AVj9vUsphY56YANXxRuqMb7GsDtAr0m0PcQX3u0Aj3KWiXM0YAHy7i6JEeHrwOnwXbGYgRpAw==
