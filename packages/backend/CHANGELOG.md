@@ -1,5 +1,11 @@
 # backend
 
+## 2.0.10
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
 ## 2.0.9
 
 ### Patch Changes
