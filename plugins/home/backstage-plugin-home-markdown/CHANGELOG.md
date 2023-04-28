@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.9
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
 ## 2.5.8
 
 ### Patch Changes

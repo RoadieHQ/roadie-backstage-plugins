@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.2
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
 ## 2.3.1
 
 ### Patch Changes
