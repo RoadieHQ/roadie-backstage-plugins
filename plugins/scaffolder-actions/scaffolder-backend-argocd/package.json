@@ -33,7 +33,7 @@
   "dependencies": {
     "@backstage/backend-common": "^0.18.4",
     "@backstage/config": "^1.0.7",
-    "@backstage/plugin-scaffolder-backend": "^1.13.0",
+    "@backstage/plugin-scaffolder-backend": "^1.13.1",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.7.5",
     "winston": "^3.2.1"
   },
