@@ -41,7 +41,7 @@ export type PullRequestStatsCount = {
 };
 export type PullRequestStatsData = {
   createdAt: string;
-  closedAt: string;
+  closedAt: string | null;
   pullRequest: {
     mergedAt: string | null;
     additions: number;
