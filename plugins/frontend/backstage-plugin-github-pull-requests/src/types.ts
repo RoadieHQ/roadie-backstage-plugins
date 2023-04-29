@@ -46,6 +46,7 @@ export type GithubSearchPullRequestsDataItem = {
   repositoryUrl: string;
   pullRequest: {
     htmlUrl?: string;
+    created_at?: string;
   };
   title: string;
   number: number;
