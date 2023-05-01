@@ -174,6 +174,9 @@ const PullRequestItem = (props: PullRequestItemProps) => {
             {pr.user.login}
           </Link>
         </Typography>
+        <Typography variant="caption" className={classes.secondaryText}>
+          {pr.pullRequest.created_at}
+        </Typography>
       </Grid>
 
       <Grid

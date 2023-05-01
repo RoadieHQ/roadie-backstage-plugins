@@ -168,7 +168,7 @@ export function usePullRequestsStatistics({
       calcResult.avgTimeUntilMerge / calcResult.mergedCount;
 
     const avgTimeUntilMerge = Duration.fromMillis(avgTimeUntilMergeDiff)
-      .shiftTo('months', 'days')
+      .shiftTo('months', 'days', 'hour')
       .toHuman({ notation: 'compact' });
     return {
       ...calcResult,
