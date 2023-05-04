@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.7
+
+### Patch Changes
+
+- 7e55c346: Export the secrets-manager action
+
 ## 2.4.6
 
 ### Patch Changes
