@@ -97,7 +97,7 @@ The Argo CD plugin is a part of the Backstage sample app. To start using it for 
 
    **Note:** You can only use one of the options per component.
 
-2. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
+2. Add your auth key to the environment variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
    ```
    ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
    ```
@@ -127,7 +127,7 @@ proxy:
         $env: ARGOCD_AUTH_TOKEN2
 ```
 
-Add all required auth tokens to environmental variables, in this example, `ARGOCD_AUTH_TOKEN2`.
+Add all required auth tokens to environment variables, in this example, `ARGOCD_AUTH_TOKEN2`.
 
 And then in the following component definition annotations add a line with the url to the desired proxy path:
 
