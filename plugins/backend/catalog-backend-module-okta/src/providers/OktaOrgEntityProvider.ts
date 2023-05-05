@@ -178,19 +178,12 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               group,
               oktaGroups,
             });
-            const profileAnnotations: Record<string, string> = {};
-            if (this.customAttributesToAnnotationAllowlist.length) {
-              for (const [key, value] of new Map(
-                Object.entries(group.profile),
-              )) {
-                const stringKey = key.toString();
-                if (
-                  this.customAttributesToAnnotationAllowlist.includes(stringKey)
-                ) {
-                  profileAnnotations[stringKey] = value.toString();
-                }
-              }
-            }
+
+            const profileAnnotations = this.getCustomAnnotations(
+              group,
+              this.customAttributesToAnnotationAllowlist,
+            );
+
             const annotations = {
               ...defaultAnnotations,
               ...profileAnnotations,

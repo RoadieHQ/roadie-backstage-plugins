@@ -87,15 +87,11 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     const allUsers = await client.listUsers({ search: this.userFilter });
 
     await allUsers.each(user => {
-      const profileAnnotations: Record<string, string> = {};
-      if (this.customAttributesToAnnotationAllowlist.length) {
-        for (const [key, value] of new Map(Object.entries(user.profile))) {
-          const stringKey = key.toString();
-          if (this.customAttributesToAnnotationAllowlist.includes(stringKey)) {
-            profileAnnotations[stringKey] = value.toString();
-          }
-        }
-      }
+      const profileAnnotations = this.getCustomAnnotations(
+        user,
+        this.customAttributesToAnnotationAllowlist,
+      );
+
       const annotations = {
         ...defaultAnnotations,
         ...profileAnnotations,
