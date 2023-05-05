@@ -102,7 +102,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       };
       try {
         const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
-          annotations: annotations,
+          annotations,
         });
         userResources.push(userEntity);
       } catch (e: unknown) {
