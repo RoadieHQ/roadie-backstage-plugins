@@ -201,7 +201,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
                 this.groupNamingStrategy,
                 parentGroup,
                 {
-                  annotations: annotations,
+                  annotations,
                   members,
                 },
               );
