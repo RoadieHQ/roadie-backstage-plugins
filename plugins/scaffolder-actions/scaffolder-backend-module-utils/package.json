@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/scaffolder-backend-module-utils",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -31,25 +31,26 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.18.3",
+    "@backstage/backend-common": "^0.18.4",
     "@backstage/config": "^1.0.7",
     "@backstage/errors": "^1.1.5",
-    "@backstage/plugin-scaffolder-backend": "^1.12.0",
-    "lodash": "^4.17.21",
+    "@backstage/plugin-scaffolder-backend": "^1.13.1",
+    "@backstage/plugin-scaffolder-node": "^0.1.2",
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "fs-extra": "^10.0.0",
-    "winston": "^3.2.1",
     "js-yaml": "^4.0.0",
-    "jsonata": "^1.8.6"
+    "jsonata": "^1.8.6",
+    "lodash": "^4.17.21",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.5",
+    "@backstage/cli": "^0.22.6",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^26.0.7",
-    "@types/mock-fs": "^4.13.1",
     "@types/js-yaml": "^4.0.0",
+    "@types/mock-fs": "^4.13.1",
     "mock-fs": "^5.1.2"
   },
   "files": [

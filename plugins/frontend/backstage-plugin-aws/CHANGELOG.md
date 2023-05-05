@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.1.9
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
 ## 1.1.8
 
 ### Patch Changes

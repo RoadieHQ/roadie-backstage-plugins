@@ -1,5 +1,17 @@
 ## 1.1.0
 
+## 2.5.9
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
+## 2.5.8
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
 ## 2.5.7
 
 ### Patch Changes

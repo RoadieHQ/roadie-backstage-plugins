@@ -41,7 +41,7 @@ export type PullRequestStatsCount = {
 };
 export type PullRequestStatsData = {
   createdAt: string;
-  closedAt: string;
+  closedAt: string | null;
   pullRequest: {
     mergedAt: string | null;
     additions: number;
@@ -168,7 +168,7 @@ export function usePullRequestsStatistics({
       calcResult.avgTimeUntilMerge / calcResult.mergedCount;
 
     const avgTimeUntilMerge = Duration.fromMillis(avgTimeUntilMergeDiff)
-      .shiftTo('months', 'days')
+      .shiftTo('months', 'days', 'hour')
       .toHuman({ notation: 'compact' });
     return {
       ...calcResult,

@@ -76,7 +76,6 @@ const generatedColumns: TableColumn<PullRequest>[] = [
     title: 'Creator',
     field: 'creatorNickname',
     highlight: true,
-    width: '250px',
     render: (row: Partial<PullRequest>) => (
       <Box fontWeight="fontWeightBold">
         <a
