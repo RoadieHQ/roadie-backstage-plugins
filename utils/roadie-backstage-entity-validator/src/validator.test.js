@@ -1,6 +1,4 @@
 jest.mock('fs');
-jest.mock('cross-fetch');
-const fetch = require('cross-fetch');
 const validator = require('./validator');
 const { vol } = require('memfs');
 
@@ -195,6 +193,35 @@ spec:
       path: foo.txt
       outputPath: foo.zip
 `,
+      'custom-validation-schema.json': `
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "Custom Entity metadata annotations",
+  "description": "Individual annotation format validations",
+  "type": "object",
+  "required": ["metadata"],
+  "additionalProperties": true,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "annotations": {
+          "type": "object",
+          "allOf": [
+            {
+              "properties": {
+                "custom/source-location": {
+                  "type": "string",
+                  "pattern": "^custom-field-value:\\\\d*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}`,
     });
   });
   afterEach(() => {
@@ -305,56 +332,22 @@ spec:
   });
 
   describe('customValidationSchema', () => {
-    const mockResponse = {
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          $schema: 'http://json-schema.org/draft-07/schema',
-          $id: 'Custom Entity metadata annotations',
-          description: 'Individual annotation format validations',
-          type: 'object',
-          required: ['metadata'],
-          additionalProperties: true,
-          properties: {
-            metadata: {
-              type: 'object',
-              properties: {
-                annotations: {
-                  type: 'object',
-                  allOf: [
-                    {
-                      properties: {
-                        'custom/source-location': {
-                          type: 'string',
-                          pattern: '^custom-field-value:\\d*$',
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        }),
-    };
     it('should successfully validate against custom annotation schema', async () => {
-      fetch.mockResolvedValue(mockResponse);
       await expect(
         validator.validateFromFile(
           'catalog-info-with-custom-fields.yml',
           false,
-          'https://backstage.io/schema.json',
+          'custom-validation-schema.json',
         ),
       ).resolves.toBeUndefined();
     });
 
     it('should throw validate error when validating against custom annotation schema', async () => {
-      fetch.mockResolvedValue(mockResponse);
       await expect(
         validator.validateFromFile(
           'catalog-info-with-custom-fields-with-errors.yml',
           false,
-          'https://backstage.io/schema.json',
+          'custom-validation-schema.json',
         ),
       ).rejects.toThrowError(
         'Error: Malformed annotation, /metadata/annotations/custom~1source-location must match pattern "^custom-field-value:\\d*$"',

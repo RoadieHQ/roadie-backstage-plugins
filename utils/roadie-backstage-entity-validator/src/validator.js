@@ -20,7 +20,6 @@ import annotationSchema from './schemas/annotations.schema.json';
 import Ajv from 'ajv';
 import ajvFormats from 'ajv-formats';
 import { relativeSpaceValidation } from './relativeSpaceValidation';
-import fetch from 'cross-fetch';
 
 const ajv = new Ajv({ verbose: true });
 ajvFormats(ajv);
@@ -61,21 +60,15 @@ export const validate = async (
   customAnnotationSchemaLocation = '',
 ) => {
   let validator;
-  const validateAnnotations = async (entity, idx) => {
+  const validateAnnotations = (entity, idx) => {
     if (!validator) {
       if (customAnnotationSchemaLocation) {
         console.log(
           `Using validation schema from ${customAnnotationSchemaLocation}...`,
         );
-        const resp = await fetch(customAnnotationSchemaLocation);
-
-        if (!resp.ok) {
-          throw new Error(
-            `Failed to fetch schema, status ${resp.status}: ${resp.statusText} `,
-          );
-        }
-
-        const customAnnotationSchema = await resp.json();
+        const customAnnotationSchema = JSON.parse(
+          fs.readFileSync(customAnnotationSchemaLocation),
+        );
         validator = ajv.getSchema(customAnnotationSchema.$id);
 
         if (!validator) {
@@ -137,8 +130,8 @@ export const validate = async (
       return Object.values(results[0]).filter(r => r === false).length > 0;
     };
     const validKind = await validateEntities(data);
-    const validAnnotations = await Promise.all(
-      data.map(async (it, idx) => await validateAnnotations(it, idx)),
+    const validAnnotations = data.map((it, idx) =>
+      validateAnnotations(it, idx),
     );
 
     if (validKind && validAnnotations && verbose) {
