@@ -478,6 +478,97 @@ describe('argo-cd', () => {
       );
     });
 
+    it('should display link to argo cd source using instance url', async () => {
+      const apisWithArgoCDBaseURL: [AnyApiRef, Partial<unknown>][] = [
+        [
+          configApiRef,
+          new ConfigReader({
+            argocd: {
+              appLocatorMethods: [
+                {
+                  type: 'config',
+                  instances: [
+                    {
+                      url: 'https://testrancher.com',
+                      name: 'argoInstance1',
+                    },
+                  ],
+                },
+              ],
+            },
+          }),
+        ],
+        [errorApiRef, errorApiMock],
+        [
+          argoCDApiRef,
+          new ArgoCDApiClient({
+            discoveryApi,
+            identityApi: getIdentityApiStub,
+            backendBaseUrl: 'https://testbackend.com',
+            searchInstances: true,
+          }),
+        ],
+      ];
+
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/find/name/guestbook',
+          (_, res, ctx) =>
+            res(
+              ctx.json([
+                {
+                  name: 'argoInstance1',
+                  url: 'https://argocd-argoInstance1.com',
+                },
+              ]),
+            ),
+        ),
+      );
+      worker.use(
+        rest.post('*', (_, res, ctx) =>
+          res(ctx.json({ items: [{ instance: { name: 'argoInstance1' } }] })),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook',
+          (_, res, ctx) => res(ctx.json(getResponseStub)),
+        ),
+      );
+      worker.use(
+        rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+
+      const rendered = render(
+        <TestApiProvider apis={apisWithArgoCDBaseURL}>
+          <EntityProvider entity={getEntityStub}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const drawerButton = await rendered.findByTitle('guestbook');
+      fireEvent.click(drawerButton);
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toBeInTheDocument();
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toHaveAttribute(
+        'href',
+        'https://testrancher.com/applications/guestbook',
+      );
+    });
+
     it('should display extra column', async () => {
       worker.use(
         rest.get(
