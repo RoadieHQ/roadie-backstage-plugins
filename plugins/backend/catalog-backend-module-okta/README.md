@@ -210,7 +210,7 @@ export default async function createPlugin(
 
   const oktaConfig = env.config.getOptionalConfigArray(
     'catalog.providers.okta',
-  );
+  ) || [];
   const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
     namingStrategy: 'strip-domain-email',
