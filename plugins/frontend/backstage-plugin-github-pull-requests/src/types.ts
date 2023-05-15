@@ -1,15 +1,19 @@
 import { Octokit } from '@octokit/rest';
 import { GetResponseTypeFromEndpointMethod } from '@octokit/types';
-import { SearchIssuesAndPullRequestsResponseData } from '@octokit/types';
 
 const octokit: Octokit = new Octokit();
 
 export type PullRequestState = 'open' | 'closed' | 'all';
 
+export type GetSearchPullRequestsResponseType =
+  GetResponseTypeFromEndpointMethod<
+    typeof octokit.search.issuesAndPullRequests
+  >;
+
 export type SearchPullRequestsResponseDataItems = {
   items: Array<
     Omit<
-      SearchIssuesAndPullRequestsResponseData['items'][number],
+      GetSearchPullRequestsResponseType['data']['items'][number],
       'pull_request'
     > & {
       draft: boolean;
@@ -29,15 +33,10 @@ export type SearchPullRequestsResponseDataItems = {
 };
 
 export type SearchPullRequestsResponseData = Omit<
-  SearchIssuesAndPullRequestsResponseData,
+  GetSearchPullRequestsResponseType['data'],
   'items'
 > &
   SearchPullRequestsResponseDataItems;
-
-export type GetSearchPullRequestsResponseType =
-  GetResponseTypeFromEndpointMethod<
-    typeof octokit.search.issuesAndPullRequests
-  >;
 
 export type GithubSearchPullRequestsDataItem = {
   id: number;
@@ -47,6 +46,7 @@ export type GithubSearchPullRequestsDataItem = {
   repositoryUrl: string;
   pullRequest: {
     htmlUrl?: string;
+    created_at?: string;
   };
   title: string;
   number: number;

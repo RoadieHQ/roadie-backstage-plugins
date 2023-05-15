@@ -1,5 +1,25 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.7.5
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
+## 2.7.4
+
+### Patch Changes
+
+- 8ae4bbc7: ---
+
+  '@roadiehq/backstage-plugin-argo-cd-backend': patch
+  '@roadiehq/backstage-plugin-argo-cd': patch
+
+  ***
+
+  Added API to fetch revision information.
+  Modified Argocd overview card to show error message. When there is error message, users can hover the field in the overview table to see the error message. Modified the Argocd history card to show more informations including author, message, and combine deploy detail in one column.
+
 ## 2.7.3
 
 ### Patch Changes

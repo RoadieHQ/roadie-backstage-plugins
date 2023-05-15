@@ -1,6 +1,12 @@
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
 
+export type getRevisionDataResp = {
+  author: string;
+  date: string;
+  message: string;
+};
+
 export type findArgoAppResp = {
   name: string;
   url: string;

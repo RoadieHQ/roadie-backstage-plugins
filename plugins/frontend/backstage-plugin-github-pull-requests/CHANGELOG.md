@@ -1,5 +1,31 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.10
+
+### Patch Changes
+
+- 20286f59: extend 'avg time PR until merge' to display hours
+- ef17db74: fix creator column size in pull request table
+- e9b1c0c1: Add relative created from to pull request widget
+
+## 2.5.9
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
+## 2.5.8
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
+## 2.5.7
+
+### Patch Changes
+
+- 6bfd4ff5: feat: replaced moment by luxon
+
 ## 2.5.6
 
 ### Patch Changes

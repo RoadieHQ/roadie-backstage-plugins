@@ -1,5 +1,17 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.3.0
+
+### Minor Changes
+
+- b31391d6: Add option to specify location of the schema file.
+
+## 2.2.7
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
 ## 2.2.6
 
 ### Patch Changes

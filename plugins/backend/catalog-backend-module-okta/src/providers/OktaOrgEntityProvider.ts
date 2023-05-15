@@ -32,7 +32,7 @@ import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
-import { assertError } from '@backstage/errors';
+import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
@@ -141,8 +141,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               },
             );
           } catch (e: unknown) {
-            assertError(e);
-            this.logger.warn(`Failed to add user: ${e.message}`);
+            this.logger.warn(
+              `Failed to add user: ${isError(e) ? e.message : 'unknown error'}`,
+            );
           }
         });
 
@@ -166,8 +167,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
                   members.push(userName);
                 }
               } catch (e: unknown) {
-                assertError(e);
-                this.logger.warn(`failed to add user to group: ${e.message}`);
+                this.logger.warn(
+                  `failed to add user to group: ${
+                    isError(e) ? e.message : 'unknown error'
+                  }`,
+                );
               }
             });
 
@@ -198,8 +202,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               );
               groupResources.push(groupEntity);
             } catch (e: unknown) {
-              assertError(e);
-              this.logger.warn(`failed to add group: ${e.message}`);
+              this.logger.warn(
+                `failed to add group: ${
+                  isError(e) ? e.message : 'unknown error'
+                }`,
+              );
             }
           }),
         );
@@ -207,6 +214,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     );
 
     if (!this.includeEmptyGroups) {
+      this.logger.info(
+        `Found ${groupResources.length}, pruning the empty ones`,
+      );
       groupResources = new GroupTree(groupResources).getGroups({
         pruneEmptyMembers: true,
       });

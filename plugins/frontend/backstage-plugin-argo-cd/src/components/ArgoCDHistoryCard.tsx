@@ -24,7 +24,7 @@ import {
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { LinearProgress, Tooltip, Link } from '@material-ui/core';
+import { LinearProgress, Link, List, ListItem } from '@material-ui/core';
 import React from 'react';
 import { isArgocdAvailable } from '../conditions';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
@@ -85,49 +85,61 @@ const HistoryTable = ({
       highlight: true,
     },
     {
-      title: 'Deploy Started',
-      field: 'deployStartedAt',
-      render: (row: any) => (
-        <Tooltip
-          title={
-            row.deployStartedAt ? row.deployStartedAt : 'Deploy started at'
-          }
-          placement="left"
-        >
-          <div>
-            {row.deployStartedAt ? moment(row.deployStartedAt).fromNow() : '-'}
-          </div>
-        </Tooltip>
-      ),
-    },
-    {
-      title: 'Deployed At',
-      field: 'deployedAt',
-      render: (row: any) => (
-        <Tooltip title={row.deployedAt} placement="left">
-          <div>{moment(row.deployedAt).fromNow()}</div>
-        </Tooltip>
-      ),
-    },
-    {
-      title: 'Deploy duration',
-      render: (row: any): React.ReactNode =>
-        moment
-          .duration(moment(row.deployStartedAt).diff(moment(row.deployedAt)))
-          .humanize(),
+      title: 'Deploy Details',
       sorting: false,
+      render: (row: any): React.ReactNode => (
+        <List dense style={{ padding: '0px' }}>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt
+              ? `Deployed at ${moment(row.deployedAt)
+                  .local()
+                  .format('DD MMM YYYY, H:mm:ss')}`
+              : null}
+          </ListItem>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt
+              ? `Run ${moment(row.deployStartedAt).local().fromNow()}`
+              : null}
+          </ListItem>
+          <ListItem style={{ paddingLeft: '0px' }}>
+            {row.deployedAt && row.deployStartedAt
+              ? `Took
+            ${moment
+              .duration(
+                moment(row.deployStartedAt).diff(moment(row.deployedAt)),
+              )
+              .humanize()}`
+              : null}
+          </ListItem>
+        </List>
+      ),
+    },
+    {
+      title: 'Author',
+      sorting: false,
+      render: (row: any): React.ReactNode => <div>{row.revision?.author}</div>,
+    },
+    {
+      title: 'Message',
+      sorting: false,
+      render: (row: any): React.ReactNode => <div>{row.revision?.message}</div>,
     },
     {
       title: 'Revision',
-      field: 'revision',
       sorting: false,
+      render: (row: any): React.ReactNode => (
+        <div>{row.revision?.revisionID}</div>
+      ),
     },
   ];
 
   if (supportsMultipleArgoInstances) {
     columns.splice(1, 0, {
       title: 'Instance',
-      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+      render: (row: any): React.ReactNode =>
+        row.metadata?.instance?.name
+          ? row.metadata?.instance?.name
+          : row.instance,
     });
   }
 

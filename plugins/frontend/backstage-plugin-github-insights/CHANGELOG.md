@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.12
+
+### Patch Changes
+
+- 871c4584: use style theme in ComplianceCard
+
+## 2.3.11
+
+### Patch Changes
+
+- 0fe673e3: Version bumps
+
+## 2.3.10
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
 ## 2.3.9
 
 ### Patch Changes

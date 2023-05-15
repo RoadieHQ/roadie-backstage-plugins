@@ -66,7 +66,7 @@ const ComplianceCard = () => {
   }
 
   return (
-    <InfoCard title="Compliance report">
+    <InfoCard title="Compliance report" className={classes.infoCard}>
       <StructuredMetadataTable
         metadata={{
           'Protected branches':

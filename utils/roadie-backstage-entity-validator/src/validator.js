@@ -54,11 +54,29 @@ function modifyPlaceholders(obj) {
   }
 }
 
-export const validate = async (fileContents, verbose = true) => {
+export const validate = async (
+  fileContents,
+  verbose = true,
+  customAnnotationSchemaLocation = '',
+) => {
   let validator;
   const validateAnnotations = (entity, idx) => {
     if (!validator) {
-      validator = ajv.compile(annotationSchema);
+      if (customAnnotationSchemaLocation) {
+        console.log(
+          `Using validation schema from ${customAnnotationSchemaLocation}...`,
+        );
+        const customAnnotationSchema = JSON.parse(
+          fs.readFileSync(customAnnotationSchemaLocation),
+        );
+        validator = ajv.getSchema(customAnnotationSchema.$id);
+
+        if (!validator) {
+          validator = ajv.compile(customAnnotationSchema);
+        }
+      } else {
+        validator = ajv.compile(annotationSchema);
+      }
     }
     if (verbose) {
       console.log(`Validating entity annotations for file document ${idx}`);
@@ -125,12 +143,16 @@ export const validate = async (fileContents, verbose = true) => {
   }
 };
 
-export const validateFromFile = async (filepath, verbose = true) => {
+export const validateFromFile = async (
+  filepath,
+  verbose = true,
+  customAnnotationSchemaLocation = '',
+) => {
   const fileContents = fs.readFileSync(filepath, 'utf8');
   if (verbose) {
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
 
-  await validate(fileContents, verbose);
+  await validate(fileContents, verbose, customAnnotationSchemaLocation);
   await relativeSpaceValidation(fileContents, filepath, verbose);
 };

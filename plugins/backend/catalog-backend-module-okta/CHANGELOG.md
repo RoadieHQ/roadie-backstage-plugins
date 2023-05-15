@@ -1,5 +1,35 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.7.5
+
+### Patch Changes
+
+- 85620abc: Bump packages to backstage version 1.13.0
+
+## 0.7.4
+
+### Patch Changes
+
+- 8784b5f5: Refactor and add tests to okta group tree.
+
+## 0.7.3
+
+### Patch Changes
+
+- b55aca8d: Add debug logging to the okta tree pruning.
+
+## 0.7.2
+
+### Patch Changes
+
+- 365f12df: Adding a log line to indicate that empty groups will be pruned.
+
+## 0.7.1
+
+### Patch Changes
+
+- 5319e868: No longer raise error when an non error like object is thrown.
+
 ## 0.7.0
 
 ### Minor Changes

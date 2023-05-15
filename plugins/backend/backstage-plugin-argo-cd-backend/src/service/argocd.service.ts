@@ -18,6 +18,7 @@ import {
   DeleteApplicationAndProjectProps,
   DeleteApplicationAndProjectResponse,
   ResponseSchema,
+  getRevisionDataResp,
 } from './types';
 
 export class ArgoService implements ArgoServiceApi {
@@ -66,6 +67,39 @@ export class ArgoService implements ArgoServiceApi {
         acc.concat(argoApp.getConfigArray('instances')),
       [],
     );
+  }
+
+  async getRevisionData(
+    baseUrl: string,
+    options: {
+      name?: string;
+      selector?: string;
+    },
+    argoToken: string,
+    revisionID: string,
+  ): Promise<getRevisionDataResp> {
+    const urlSuffix = options.name
+      ? `/${options.name}`
+      : `?selector=${options.selector}`;
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+    };
+
+    const resp = await fetch(
+      `${baseUrl}/api/v1/applications${urlSuffix}/revisions/${revisionID}/metadata`,
+      requestOptions,
+    );
+
+    if (!resp.ok) {
+      throw new Error(`Request failed with ${resp.status} Error`);
+    }
+
+    const data: getRevisionDataResp = await resp?.json();
+    return data;
   }
 
   async findArgoApp(options: {
