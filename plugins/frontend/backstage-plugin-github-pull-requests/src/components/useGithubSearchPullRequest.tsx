@@ -21,6 +21,7 @@ import {
   GithubSearchPullRequestsDataItem,
 } from '../types';
 import { useBaseUrl } from './useBaseUrl';
+import { DateTime } from 'luxon';
 
 export const useGithubSearchPullRequest = (query: string) => {
   const githubAuthApi = useApi(githubAuthApiRef);
@@ -46,6 +47,7 @@ export const useGithubSearchPullRequest = (query: string) => {
       repositoryUrl: pr.repository_url,
       pullRequest: {
         htmlUrl: pr.pull_request?.html_url || undefined,
+        created_at: DateTime.fromISO(pr.created_at).toRelative() || undefined,
       },
       title: pr.title,
       number: pr.number,

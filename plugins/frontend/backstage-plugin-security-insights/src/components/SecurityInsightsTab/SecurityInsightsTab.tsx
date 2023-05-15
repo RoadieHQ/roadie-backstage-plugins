@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import {
   Page,
@@ -23,9 +23,8 @@ import {
   SupportButton,
 } from '@backstage/core-components';
 import { SecurityInsightsTable } from '../SecurityInsightsTable';
-import { Entity } from '@backstage/catalog-model';
 
-const SecurityInsightsTab: FC<{ entity: Entity }> = ({ entity }) => (
+const SecurityInsightsTab = () => (
   <Page themeId="tool">
     <Content>
       <ContentHeader title="Security Insights">
@@ -33,7 +32,7 @@ const SecurityInsightsTab: FC<{ entity: Entity }> = ({ entity }) => (
       </ContentHeader>
       <Grid container spacing={3} direction="column">
         <Grid item>
-          <SecurityInsightsTable entity={entity} />
+          <SecurityInsightsTable />
         </Grid>
       </Grid>
     </Content>

@@ -26,7 +26,9 @@ export {
   EntityDependabotAlertsCard,
 } from './plugin';
 export { SecurityInsightsWidget } from './components/SecurityInsightsWidget';
+export { SecurityInsightsTable } from './components/SecurityInsightsTable';
 export { DependabotAlertsWidget } from './components/DependabotAlertsWidget';
+export { DependabotAlertsTable } from './components/DependabotAlertsTable';
 export {
   /**
    * @deprecated From 0.2.0 composability API should be used

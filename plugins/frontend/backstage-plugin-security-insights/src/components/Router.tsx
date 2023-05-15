@@ -31,7 +31,7 @@ export const Router = () => {
     <MissingAnnotationEmptyState annotation={GITHUB_REPO_ANNOTATION} />
   ) : (
     <Routes>
-      <Route element={<SecurityInsightsTab entity={entity} />} />
+      <Route element={<SecurityInsightsTab />} />
     </Routes>
   );
 };

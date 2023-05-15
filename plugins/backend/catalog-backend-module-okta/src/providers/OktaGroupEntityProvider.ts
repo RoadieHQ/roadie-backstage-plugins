@@ -31,7 +31,7 @@ import {
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
-import { assertError } from '@backstage/errors';
+import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 
@@ -132,9 +132,12 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           try {
             const userName = this.userNamingStrategy(user);
             members.push(userName);
-          } catch (e) {
-            assertError(e);
-            this.logger.warn(`failed to add user to group: ${e.message}`);
+          } catch (e: unknown) {
+            this.logger.warn(
+              `failed to add user to group: ${
+                isError(e) ? e.message : 'unknown error'
+              }`,
+            );
           }
         });
 
@@ -170,8 +173,9 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           );
           groupResources.push(groupEntity);
         } catch (e) {
-          assertError(e);
-          this.logger.warn(`failed to add group: ${e.message}`);
+          this.logger.warn(
+            `failed to add group: ${isError(e) ? e.message : 'unknown error'}`,
+          );
         }
       }),
     );

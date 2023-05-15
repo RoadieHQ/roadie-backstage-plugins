@@ -26,7 +26,7 @@ import {
 import { AccountConfig } from '../types';
 import { userEntityFromOktaUser } from './userEntityFromOktaUser';
 import { getAccountConfig } from './accountConfig';
-import { assertError } from '@backstage/errors';
+import { isError } from '@backstage/errors';
 
 /**
  * Provides entities from Okta User service.
@@ -100,8 +100,11 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
         });
         userResources.push(userEntity);
       } catch (e: unknown) {
-        assertError(e);
-        this.logger.warn(`failed to add user to group: ${e.message}`);
+        this.logger.warn(
+          `failed to add user to group: ${
+            isError(e) ? e.message : 'unknown error'
+          }`,
+        );
       }
     });
 
