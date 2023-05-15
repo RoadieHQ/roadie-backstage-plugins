@@ -94,7 +94,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     );
     this.orgUrl = accountConfig.orgUrl;
     this.groupFilter = accountConfig.groupFilter;
-    this.customAttributesToAnnotationAllowlist = options.customAttributesToAnnotationAllowlist || [];
+    this.customAttributesToAnnotationAllowlist = 
+      options.customAttributesToAnnotationAllowlist || [];
     this.hierarchyConfig = options.hierarchyConfig;
   }
 
