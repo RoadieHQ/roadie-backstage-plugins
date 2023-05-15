@@ -66,10 +66,10 @@ describe('OktaUserEntityProvider', () => {
       listUsers = () => {
         return new MockOktaCollection([
           {
-            id: 'asdfwefwefwef',
+            id: '123Test',
             profile: {
               email: 'fname@domain.com',
-              customAttribute1: 'asdfasdf',
+              customAttribute1: 'customValue',
             },
           },
         ]);
@@ -91,7 +91,7 @@ describe('OktaUserEntityProvider', () => {
             entity: expect.objectContaining({
               kind: 'User',
               metadata: expect.objectContaining({
-                name: 'asdfwefwefwef',
+                name: '123Test',
               }),
             }),
           }),
@@ -169,7 +169,7 @@ describe('OktaUserEntityProvider', () => {
             entity: expect.objectContaining({
               kind: 'User',
               metadata: expect.objectContaining({
-                name: 'asdfwefwefwef',
+                name: '123Test',
               }),
             }),
           }),
@@ -215,9 +215,9 @@ describe('OktaUserEntityProvider', () => {
               kind: 'User',
               metadata: expect.objectContaining({
                 annotations: expect.objectContaining({
-                  customAttribute1: 'asdfasdf',
+                  customAttribute1: 'customValue',
                 }),
-                name: 'asdfwefwefwef',
+                name: '123Test',
               }),
             }),
           }),

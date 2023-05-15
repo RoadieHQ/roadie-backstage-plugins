@@ -68,7 +68,7 @@ describe('OktaGroupProvider', () => {
       listGroups = () => {
         return new MockOktaCollection([
           {
-            id: 'asdfwefwefwef',
+            id: '123Test',
             profile: {
               name: 'Everyone@the-company',
               description: 'Everyone in the company',
@@ -80,7 +80,7 @@ describe('OktaGroupProvider', () => {
             listUsers: () => {
               return new MockOktaCollection([
                 {
-                  id: 'asdfwefwefwef',
+                  id: '123Test',
                   profile: {
                     email: 'fname@domain.com',
                   },
@@ -113,7 +113,7 @@ describe('OktaGroupProvider', () => {
             entity: expect.objectContaining({
               kind: 'Group',
               metadata: expect.objectContaining({
-                name: 'asdfwefwefwef',
+                name: '123Test',
                 description: 'Everyone in the company',
                 annotations: expect.objectContaining({
                   customAttribute1: 'whatever',
@@ -121,7 +121,7 @@ describe('OktaGroupProvider', () => {
                 }),
               }),
               spec: expect.objectContaining({
-                members: ['asdfwefwefwef'],
+                members: ['123Test'],
               }),
             }),
           }),

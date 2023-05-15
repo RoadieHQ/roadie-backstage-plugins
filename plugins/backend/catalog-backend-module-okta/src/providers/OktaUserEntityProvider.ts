@@ -63,9 +63,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     this.userFilter = accountConfig.userFilter;
     this.orgUrl = accountConfig.orgUrl;
     this.customAttributesToAnnotationAllowlist =
-      options.customAttributesToAnnotationAllowlist
-        ? options.customAttributesToAnnotationAllowlist
-        : [];
+      options.customAttributesToAnnotationAllowlist || [];
   }
 
   getProviderName(): string {
