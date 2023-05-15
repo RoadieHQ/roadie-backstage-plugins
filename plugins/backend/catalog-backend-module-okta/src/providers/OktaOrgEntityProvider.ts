@@ -103,9 +103,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.includeEmptyGroups = !!options.includeEmptyGroups;
     this.hierarchyConfig = options.hierarchyConfig;
     this.customAttributesToAnnotationAllowlist =
-      options.customAttributesToAnnotationAllowlist
-        ? options.customAttributesToAnnotationAllowlist
-        : [];
+      options.customAttributesToAnnotationAllowlist || [];
   }
 
   getProviderName(): string {
