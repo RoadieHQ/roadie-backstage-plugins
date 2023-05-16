@@ -63,6 +63,73 @@ describe('OktaGroupProvider', () => {
     });
   });
 
+  describe('where it has allowed profile fields to pass to annotations', () => {
+    beforeEach(() => {
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: '123Test',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+              org_id: '1234',
+              parent_org_id: '1234',
+              customAttribute1: 'whatever',
+              customAttribute2: 'whenever',
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: '123Test',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+    });
+
+    it('passes the whitelisted fields to annotations', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        customAttributesToAnnotationAllowlist: [
+          'customAttribute1',
+          'customAttribute2',
+        ],
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: '123Test',
+                description: 'Everyone in the company',
+                annotations: expect.objectContaining({
+                  customAttribute1: 'whatever',
+                  customAttribute2: 'whenever',
+                }),
+              }),
+              spec: expect.objectContaining({
+                members: ['123Test'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+  });
+
   describe('where there is a group', () => {
     beforeEach(() => {
       listGroups = () => {

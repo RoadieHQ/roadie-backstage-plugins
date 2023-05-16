@@ -43,6 +43,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly userNamingStrategy: UserNamingStrategy;
   private readonly groupFilter: string | undefined;
   private readonly orgUrl: string;
+  private readonly customAttributesToAnnotationAllowlist: string[];
   private hierarchyConfig: { parentKey: string; key?: string } | undefined;
 
   static fromConfig(
@@ -51,6 +52,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      customAttributesToAnnotationAllowlist?: string[];
       /*
        * @deprecated, please use hierarchyConfig.parentKey
        */
@@ -78,6 +80,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      customAttributesToAnnotationAllowlist?: string[];
       hierarchyConfig?: {
         parentKey: string;
         key?: string;
@@ -91,6 +94,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     );
     this.orgUrl = accountConfig.orgUrl;
     this.groupFilter = accountConfig.groupFilter;
+    this.customAttributesToAnnotationAllowlist =
+      options.customAttributesToAnnotationAllowlist || [];
     this.hierarchyConfig = options.hierarchyConfig;
   }
 
@@ -139,14 +144,28 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           group,
           oktaGroups,
         });
-
+        const profileAnnotations: Record<string, string> = {};
+        if (this.customAttributesToAnnotationAllowlist.length) {
+          for (const [key, value] of new Map(Object.entries(group.profile))) {
+            const stringKey = key.toString();
+            if (
+              this.customAttributesToAnnotationAllowlist.includes(stringKey)
+            ) {
+              profileAnnotations[stringKey] = value.toString();
+            }
+          }
+        }
+        const annotations = {
+          ...defaultAnnotations,
+          ...profileAnnotations,
+        };
         try {
           const groupEntity = groupEntityFromOktaGroup(
             group,
             this.namingStrategy,
             parentGroup,
             {
-              annotations: defaultAnnotations,
+              annotations,
               members,
             },
           );
