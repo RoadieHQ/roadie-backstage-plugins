@@ -19,6 +19,16 @@ export interface Config {
        * @visibility frontend
        */
       type: string;
+      instances: Array<{
+        /**
+         * @visibility frontend
+         */
+        name: string;
+        /**
+         * @visibility frontend
+         */
+        url: string;
+      }>;
     }>;
   };
 }
