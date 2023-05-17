@@ -15,7 +15,7 @@ You will need to configure your okta credentials in the `app-config.yaml`.
 catalog:
   providers:
     okta:
-      - orgUrl: "https://tenant.okta.com"
+      - orgUrl: 'https://tenant.okta.com'
         token: ${OKTA_TOKEN}
 ```
 
@@ -27,7 +27,7 @@ catalog:
 catalog:
   providers:
     okta:
-      - orgUrl: "https://tenant.okta.com"
+      - orgUrl: 'https://tenant.okta.com'
         oauth:
           clientId: ${OKTA_OAUTH_CLIENT_ID},
           keyId: ${OKTA_OAUTH_KEY_ID},
@@ -44,7 +44,7 @@ The provider allows configuring Okta search filtering for users and groups. See 
 catalog:
   providers:
     okta:
-      - orgUrl: "https://tenant.okta.com"
+      - orgUrl: 'https://tenant.okta.com'
         token: ${OKTA_TOKEN}
         userFilter: profile.department eq "engineering"
         groupFilter: profile.name eq "Everyone"
@@ -67,7 +67,7 @@ User naming stategies:
 You may also choose to implement a custom naming strategy by providing a function.
 
 ```typescript jsx
-export const customUserNamingStrategy: UserNamingStrategy = (user) =>
+export const customUserNamingStrategy: UserNamingStrategy = user =>
   user.profile.customField;
 ```
 
@@ -79,24 +79,24 @@ Group naming strategies:
 You may also choose to implement a custom naming strategy by providing a function.
 
 ```typescript jsx
-export const customGroupNamingStrategy: GroupNamingStrategy = (group) =>
+export const customGroupNamingStrategy: GroupNamingStrategy = group =>
   group.profile.customField;
 ```
 
 ### Example configuration:
 
 ```typescript
-import { OktaOrgEntityProvider } from "@roadiehq/catalog-backend-module-okta";
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
-  env: PluginEnvironment
+  env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
     logger: env.logger,
-    userNamingStrategy: "strip-domain-email",
-    groupNamingStrategy: "kebab-case-name",
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
   });
 
   builder.addEntityProvider(orgProvider);
@@ -116,20 +116,20 @@ export default async function createPlugin(
 You can optionally provide the ability to create a hierarchy of groups by providing `hierarchyConfig`.
 
 ```typescript
-import { OktaOrgEntityProvider } from "@roadiehq/catalog-backend-module-okta";
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
-  env: PluginEnvironment
+  env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
     logger: env.logger,
-    userNamingStrategy: "strip-domain-email",
-    groupNamingStrategy: "kebab-case-name",
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
     hierarchyConfig: {
-      key: "profile.orgId",
-      parentKey: "profile.parentOrgId",
+      key: 'profile.orgId',
+      parentKey: 'profile.parentOrgId',
     },
   });
 
@@ -160,7 +160,7 @@ You can configure the provider with different naming strategies. The configured 
 You may also choose to implement a custom naming strategy by providing a function.
 
 ```typescript jsx
-export const customUserNamingStrategy: UserNamingStrategy = (user) =>
+export const customUserNamingStrategy: UserNamingStrategy = user =>
   user.profile.customField;
 ```
 
@@ -177,7 +177,7 @@ User naming stategies:
 You may also choose to implement a custom naming strategy by providing a function.
 
 ```typescript jsx
-export const customUserNamingStrategy: UserNamingStrategy = (user) =>
+export const customUserNamingStrategy: UserNamingStrategy = user =>
   user.profile.customField;
 ```
 
@@ -189,7 +189,7 @@ Group naming strategies:
 You may also choose to implement a custom naming strategy by providing a function.
 
 ```typescript jsx
-export const customGroupNamingStrategy: GroupNamingStrategy = (group) =>
+export const customGroupNamingStrategy: GroupNamingStrategy = group =>
   group.profile.customField;
 ```
 
@@ -201,23 +201,23 @@ Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroup
 import {
   OktaUserEntityProvider,
   OktaGroupEntityProvider,
-} from "@roadiehq/catalog-backend-module-okta";
+} from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
-  env: PluginEnvironment
+  env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const oktaConfig =
-    env.config.getOptionalConfigArray("catalog.providers.okta") || [];
+    env.config.getOptionalConfigArray('catalog.providers.okta') || [];
   const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
-    namingStrategy: "strip-domain-email",
+    namingStrategy: 'strip-domain-email',
   });
   const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
-    userNamingStrategy: "strip-domain-email",
-    groupNamingStrategy: "kebab-case-name",
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
   });
 
   builder.addEntityProvider(userProvider);
@@ -242,27 +242,27 @@ You can optionally provide the ability to create a hierarchy of groups by provid
 import {
   OktaUserEntityProvider,
   OktaGroupEntityProvider,
-} from "@roadiehq/catalog-backend-module-okta";
+} from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
-  env: PluginEnvironment
+  env: PluginEnvironment,
 ): Promise<Router> {
   const builder = await CatalogBuilder.create(env);
 
   const oktaConfig = env.config.getOptionalConfigArray(
-    "catalog.providers.okta"
+    'catalog.providers.okta',
   );
   const userProvider = OktaUserEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
-    namingStrategy: "strip-domain-email",
+    namingStrategy: 'strip-domain-email',
   });
   const groupProvider = OktaGroupEntityProvider.fromConfig(oktaConfig[0], {
     logger: env.logger,
-    userNamingStrategy: "strip-domain-email",
-    groupNamingStrategy: "kebab-case-name",
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
     hierarchyConfig: {
-      key: "profile.orgId",
-      parentKey: "profile.parentOrgId",
+      key: 'profile.orgId',
+      parentKey: 'profile.parentOrgId',
     },
   });
 
