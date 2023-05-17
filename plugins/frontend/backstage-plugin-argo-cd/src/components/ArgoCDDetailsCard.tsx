@@ -146,12 +146,27 @@ const OverviewComponent = ({
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
 
+  const getBaseUrl = (row: any): string | undefined => {
+    if (supportsMultipleArgoInstances && !baseUrl) {
+      return configApi
+        .getConfigArray('argocd.appLocatorMethods')
+        .find(value => value.getOptionalString('type') === 'config')
+        ?.getOptionalConfigArray('instances')
+        ?.find(
+          value =>
+            value.getOptionalString('name') === row.metadata?.instance?.name,
+        )
+        ?.getOptionalString('url');
+    }
+    return baseUrl;
+  };
+
   const columns: TableColumn[] = [
     {
       title: 'Name',
       highlight: true,
       render: (row: any): React.ReactNode =>
-        detailsDrawerComponent(row, baseUrl),
+        detailsDrawerComponent(row, getBaseUrl(row)),
     },
     {
       title: 'Sync Status',
