@@ -35,11 +35,13 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: UserNamingStrategy;
   private readonly userFilter?: string;
   private readonly orgUrl: string;
+  private readonly customAttributesToAnnotationAllowlist: string[];
 
   static fromConfig(
     config: Config,
     options: {
       logger: winston.Logger;
+      customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
@@ -52,6 +54,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     accountConfig: AccountConfig,
     options: {
       logger: winston.Logger;
+      customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
     },
   ) {
@@ -59,6 +62,8 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
     this.userFilter = accountConfig.userFilter;
     this.orgUrl = accountConfig.orgUrl;
+    this.customAttributesToAnnotationAllowlist =
+      options.customAttributesToAnnotationAllowlist || [];
   }
 
   getProviderName(): string {
@@ -80,9 +85,18 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     const allUsers = await client.listUsers({ search: this.userFilter });
 
     await allUsers.each(user => {
+      const profileAnnotations = this.getCustomAnnotations(
+        user,
+        this.customAttributesToAnnotationAllowlist,
+      );
+
+      const annotations = {
+        ...defaultAnnotations,
+        ...profileAnnotations,
+      };
       try {
         const userEntity = userEntityFromOktaUser(user, this.namingStrategy, {
-          annotations: defaultAnnotations,
+          annotations,
         });
         userResources.push(userEntity);
       } catch (e: unknown) {

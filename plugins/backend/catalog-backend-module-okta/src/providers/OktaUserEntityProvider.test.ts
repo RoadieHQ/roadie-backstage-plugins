@@ -66,9 +66,10 @@ describe('OktaUserEntityProvider', () => {
       listUsers = () => {
         return new MockOktaCollection([
           {
-            id: 'asdfwefwefwef',
+            id: '123Test',
             profile: {
               email: 'fname@domain.com',
+              customAttribute1: 'customValue',
             },
           },
         ]);
@@ -90,7 +91,7 @@ describe('OktaUserEntityProvider', () => {
             entity: expect.objectContaining({
               kind: 'User',
               metadata: expect.objectContaining({
-                name: 'asdfwefwefwef',
+                name: '123Test',
               }),
             }),
           }),
@@ -168,7 +169,7 @@ describe('OktaUserEntityProvider', () => {
             entity: expect.objectContaining({
               kind: 'User',
               metadata: expect.objectContaining({
-                name: 'asdfwefwefwef',
+                name: '123Test',
               }),
             }),
           }),
@@ -192,6 +193,35 @@ describe('OktaUserEntityProvider', () => {
       expect(entityProviderConnection.applyMutation).toBeCalledWith({
         type: 'full',
         entities: [],
+      });
+    });
+
+    it('passes allowed profile fields to annotations', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        customAttributesToAnnotationAllowlist: ['customAttribute1'],
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                annotations: expect.objectContaining({
+                  customAttribute1: 'customValue',
+                }),
+                name: '123Test',
+              }),
+            }),
+          }),
+        ],
       });
     });
   });

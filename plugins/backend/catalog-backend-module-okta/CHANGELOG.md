@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.0
+
+### Minor Changes
+
+- ad0e4458: Adds capacity to parse specific profile attributes into annotations
+
 ## 0.7.5
 
 ### Patch Changes
