@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.13
+
+### Patch Changes
+
+- b2ef20b1: The instance url for the argocd backend plugin will be used if `argocd.baseUrl` is not defined.
+
 ## 2.2.12
 
 ### Patch Changes
