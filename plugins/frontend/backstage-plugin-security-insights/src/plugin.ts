@@ -17,7 +17,6 @@
 import {
   createComponentExtension,
   createPlugin,
-  createRoutableExtension,
   createRouteRef,
 } from '@backstage/core-plugin-api';
 
@@ -33,10 +32,14 @@ export const securityInsightsPlugin = createPlugin({
 });
 
 export const EntitySecurityInsightsContent = securityInsightsPlugin.provide(
-  createRoutableExtension({
+  createComponentExtension({
     name: 'EntitySecurityInsightsContent',
-    component: () => import('./components/Router').then(m => m.Router),
-    mountPoint: entityContentRouteRef,
+    component: {
+      lazy: () =>
+        import('./components/SecurityInsightsTab').then(
+          m => m.SecurityInsightsTab,
+        ),
+    },
   }),
 );
 
