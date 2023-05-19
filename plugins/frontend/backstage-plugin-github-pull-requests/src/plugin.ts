@@ -81,7 +81,7 @@ export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
 export const HomePageYourOpenPullRequestsCard =
   githubPullRequestsPlugin.provide(
     createCardExtension<{ query?: string }>({
-      name: 'HomePageRequestedReviewsCard',
+      name: 'YourOpenPullRequestsCard',
       title: 'Your open pull requests',
       components: () => import('./components/Home/YourOpenPullRequestsCard'),
     }),
