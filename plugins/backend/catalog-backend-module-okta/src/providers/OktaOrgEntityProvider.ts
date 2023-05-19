@@ -47,6 +47,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly hierarchyConfig:
     | { parentKey: string; key?: string }
     | undefined;
+  private readonly customAttributesToAnnotationAllowlist: string[];
 
   static fromConfig(
     config: Config,
@@ -63,6 +64,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         parentKey: string;
         key?: string;
       };
+      customAttributesToAnnotationAllowlist?: string[];
     },
   ) {
     const oktaConfigs = config
@@ -88,6 +90,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         parentKey: string;
         key?: string;
       };
+      customAttributesToAnnotationAllowlist?: string[];
     },
   ) {
     super(accountConfigs, options);
@@ -99,6 +102,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     );
     this.includeEmptyGroups = !!options.includeEmptyGroups;
     this.hierarchyConfig = options.hierarchyConfig;
+    this.customAttributesToAnnotationAllowlist =
+      options.customAttributesToAnnotationAllowlist || [];
   }
 
   getProviderName(): string {
@@ -176,13 +181,22 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               oktaGroups,
             });
 
+            const profileAnnotations = this.getCustomAnnotations(
+              group,
+              this.customAttributesToAnnotationAllowlist,
+            );
+
+            const annotations = {
+              ...defaultAnnotations,
+              ...profileAnnotations,
+            };
             try {
               const groupEntity = groupEntityFromOktaGroup(
                 group,
                 this.groupNamingStrategy,
                 parentGroup,
                 {
-                  annotations: defaultAnnotations,
+                  annotations,
                   members,
                 },
               );

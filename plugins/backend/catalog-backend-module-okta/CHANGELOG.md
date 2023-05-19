@@ -1,5 +1,17 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.1
+
+### Patch Changes
+
+- 215dc186: Improve `README.md` to handle empty config in example.
+
+## 0.8.0
+
+### Minor Changes
+
+- ad0e4458: Adds capacity to parse specific profile attributes into annotations
+
 ## 0.7.5
 
 ### Patch Changes

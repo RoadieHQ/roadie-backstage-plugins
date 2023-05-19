@@ -20,7 +20,7 @@ import {
 } from '@backstage/plugin-catalog-node';
 import { Logger } from 'winston';
 import { AccountConfig } from '../types';
-import { Client } from '@okta/okta-sdk-nodejs';
+import { Client, User, Group } from '@okta/okta-sdk-nodejs';
 
 import {
   ANNOTATION_LOCATION,
@@ -87,5 +87,17 @@ export abstract class OktaEntityProvider implements EntityProvider {
       [ANNOTATION_LOCATION]: this.getProviderName(),
       [ANNOTATION_ORIGIN_LOCATION]: this.getProviderName(),
     };
+  }
+
+  protected getCustomAnnotations(member: User | Group, allowList: string[]) {
+    const profileAnnotations: Record<string, string> = {};
+    if (allowList.length) {
+      for (const [key, value] of new Map(Object.entries(member.profile))) {
+        if (allowList.includes(key)) {
+          profileAnnotations[key] = value.toString();
+        }
+      }
+    }
+    return profileAnnotations;
   }
 }

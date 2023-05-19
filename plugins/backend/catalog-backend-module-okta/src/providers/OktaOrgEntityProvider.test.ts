@@ -576,5 +576,70 @@ describe('OktaOrgEntityProvider', () => {
         ]),
       });
     });
+
+    it('passes allowed profile fields to annotations', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+              org_id: '1',
+              parent_org_id: '1',
+              customAttribute1: 'groupCustomAttribute',
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+                {
+                  id: 'user-2',
+                  profile: {
+                    email: 'fname2@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        customAttributesToAnnotationAllowlist: ['customAttribute1'],
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                annotations: expect.objectContaining({
+                  customAttribute1: 'groupCustomAttribute',
+                }),
+                name: 'asdfwefwefwef',
+                title: 'Everyone@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['user-1', 'user-2'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
   });
 });
