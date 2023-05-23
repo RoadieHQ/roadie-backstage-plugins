@@ -2,6 +2,14 @@ export interface Config {
   /** Optional configurations for the ArgoCD plugin */
   argocd?: {
     /**
+     * @visibility secret
+     */
+    username?: string;
+    /**
+     * @visibility secret
+     */
+    password?: string;
+    /**
      * The base url of the ArgoCD instance.
      * @visibility frontend
      */
@@ -28,6 +36,18 @@ export interface Config {
          * @visibility frontend
          */
         url: string;
+        /**
+         * @visibility secret
+         */
+        token?: string;
+        /**
+         * @visibility secret
+         */
+        username?: string;
+        /**
+         * @visibility secret
+         */
+        password?: string;
       }>;
     }>;
   };
