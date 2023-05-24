@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.7.6
+
+### Patch Changes
+
+- 9dc30073: Expose instances for the frontend to display ArgoCD dashboard links in a multi instance setup.
+  Additionally, don't expose secrets.
+
 ## 2.7.5
 
 ### Patch Changes
