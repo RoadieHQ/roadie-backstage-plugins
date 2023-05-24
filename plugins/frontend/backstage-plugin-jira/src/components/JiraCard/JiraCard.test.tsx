@@ -17,7 +17,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
-import { AnyApiRef } from '@backstage/core-plugin-api';
+import { AnyApiRef, configApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { rest } from 'msw';
 import {
@@ -42,11 +42,16 @@ import { getIdentityApiStub } from '../../identityStubs';
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const configApi = new ConfigReader({});
 
+const config = {
+  getOptionalBoolean: (_key: string) => undefined,
+};
+
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [
     jiraApiRef,
     new JiraAPI({ discoveryApi, configApi, identityApi: getIdentityApiStub }),
   ],
+  [configApiRef, config],
 ];
 
 describe('JiraCard', () => {
@@ -100,6 +105,9 @@ describe('JiraCard', () => {
       'src',
       expect.stringContaining('mocked_icon_filename.gif'),
     );
+    expect(
+      await rendered.findByText(/filter issue status/),
+    ).toBeInTheDocument();
   });
 
   it('should display an error on fetch failure', async () => {

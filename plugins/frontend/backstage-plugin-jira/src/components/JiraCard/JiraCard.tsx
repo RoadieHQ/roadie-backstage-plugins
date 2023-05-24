@@ -39,6 +39,7 @@ import { ActivityStream } from './components/ActivityStream';
 import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -94,6 +95,9 @@ export const JiraCard = (_props: EntityProps) => {
   } = useEmptyIssueTypeFilter(issues);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const hideIssueFilter = !!useApi(configApiRef).getOptionalBoolean(
+    'jira.hideIssueFilter',
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -153,12 +157,14 @@ export const JiraCard = (_props: EntityProps) => {
       ) : null}
       {project && issues ? (
         <div className={classes.root}>
-          <Selectors
-            projectKey={projectKey}
-            statusesNames={statusesNames}
-            setStatusesNames={setStatusesNames}
-            fetchProjectInfo={fetchProjectInfo}
-          />
+          {!hideIssueFilter && (
+            <Selectors
+              projectKey={projectKey}
+              statusesNames={statusesNames}
+              setStatusesNames={setStatusesNames}
+              fetchProjectInfo={fetchProjectInfo}
+            />
+          )}
           <Grid container spacing={3}>
             {displayIssues?.map(issueType => (
               <Grid item xs key={issueType.name}>

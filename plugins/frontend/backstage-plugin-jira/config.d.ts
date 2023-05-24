@@ -38,5 +38,12 @@ export interface Config {
      * @visibility frontend
      */
     apiVersion?: number;
+
+    /**
+     * Allow to hide issue filter onto Jira card.
+     * If not set, default behavior if to display the filter.
+     * @visibility frontend
+     */
+    hideIssueFilter?: boolean;
   };
 }
