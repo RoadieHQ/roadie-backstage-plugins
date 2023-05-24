@@ -25,6 +25,13 @@ export interface Config {
     proxyPath?: string;
 
     /**
+     * Allow to hide issue filter onto Jira card.
+     * If not set, default behavior is o display the filter.
+     * @visibility frontend
+     */
+    hideIssueFilter?: boolean;
+
+    /**
      * In case Confluence is also used, when filtering by component
      * the activities from there would also appear, add this config to
      * remove all those occurrences from the Activity Stream.
