@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16]
+        node-version: [18]
 
     env:
       CI: true
@@ -65,7 +65,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18]
 
     env:
       CI: 'true'

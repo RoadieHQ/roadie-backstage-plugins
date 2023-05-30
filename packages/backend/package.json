@@ -7,9 +7,6 @@
   "backstage": {
     "role": "backend"
   },
-  "engines": {
-    "node": "14 || 16"
-  },
   "scripts": {
     "build": "backstage-cli package build",
     "build-image": "docker build ../.. -f Dockerfile --tag backstage",
