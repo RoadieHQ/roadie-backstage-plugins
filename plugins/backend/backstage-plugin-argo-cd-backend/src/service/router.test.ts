@@ -105,8 +105,8 @@ describe('router', () => {
       labelValue: 'test-app',
     });
 
-    expect(mockCreateArgoProject).toBeCalledTimes(1);
-    expect(mockCreateArgoApplication).toBeCalledTimes(1);
+    expect(mockCreateArgoProject).toHaveBeenCalledTimes(1);
+    expect(mockCreateArgoApplication).toHaveBeenCalledTimes(1);
     expect(response.body).toMatchObject({
       argoAppName: 'test-app-nonprod',
       argoProjectName: 'test-project',
