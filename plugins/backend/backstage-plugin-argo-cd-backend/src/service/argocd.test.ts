@@ -516,7 +516,7 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    await expect(resp).rejects.toThrowError(
+    await expect(resp).rejects.toThrow(
       'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
     );
   });
@@ -536,7 +536,7 @@ describe('ArgoCD service', () => {
         argoProjectName: 'testApp',
         argoToken: 'testToken',
       }),
-    ).rejects.toThrowError('something unexpected');
+    ).rejects.toThrow('something unexpected');
   });
 
   it('should delete app in argo', async () => {
@@ -580,7 +580,7 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    await expect(resp).rejects.toThrowError(
+    await expect(resp).rejects.toThrow(
       'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
     );
   });
@@ -700,7 +700,7 @@ describe('ArgoCD service', () => {
       appSelector: 'testApp',
     });
 
-    await expect(resp).rejects.toThrowError(
+    await expect(resp).rejects.toThrow(
       'Getting unauthorized for Argo CD instance https://argoInstance1.com',
     );
   });
