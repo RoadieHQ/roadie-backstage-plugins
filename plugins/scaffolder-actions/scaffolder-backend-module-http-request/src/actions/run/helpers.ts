@@ -25,8 +25,10 @@ export const generateBackstageUrl = async (
   discovery: DiscoveryApi,
   path: string,
 ): Promise<string> => {
-  const [pluginId, ...rest] = path.split('/');
-  return `${await discovery.getBaseUrl(pluginId)}${rest.join('/')}`;
+  const [pluginId, ...rest] = (
+    path.startsWith('/') ? path.substring(1) : path
+  ).split('/');
+  return `${await discovery.getBaseUrl(pluginId)}/${rest.join('/')}`;
 };
 
 export const http = async (
