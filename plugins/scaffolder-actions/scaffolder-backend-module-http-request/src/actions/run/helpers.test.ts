@@ -24,13 +24,13 @@ import { Writable } from 'stream';
 import * as winston from 'winston';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
-const mockBaseUrl = 'http://backstage.tests';
-const mockCustomBaseUrl = 'http://localhost:7007';
+const mockBaseUrl = 'http://backstage.tests/api';
+const mockCustomBaseUrl = 'http://localhost:7007/api';
 
 let mockResponse: Response;
 let discovery: DiscoveryApi;
 let url = 'https://some-mock-url.com';
-const proxyPath = '/api/proxy/foo';
+const proxyPath = '/proxy/foo';
 
 const status = 200;
 const returnBody: any = {
@@ -67,14 +67,14 @@ describe('http', () => {
   describe('#generateProxyUrl', () => {
     beforeEach(() => {
       discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
-      url = `${mockBaseUrl}/api/proxy/foo`;
+      url = `${mockBaseUrl}/proxy/foo`;
     });
 
     describe('with happy path proxy configuration', () => {
       describe('with valid path', () => {
         it('returns the same url as passed in', async () => {
           expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
-            `${mockBaseUrl}/api/proxy/foo`,
+            `${mockBaseUrl}/proxy/foo`,
           );
         });
       });
@@ -87,7 +87,7 @@ describe('http', () => {
             `${mockCustomBaseUrl}/{{pluginId}}`,
           );
           expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
-            `${mockCustomBaseUrl}/api/proxy/foo`,
+            `${mockCustomBaseUrl}/proxy/foo`,
           );
         });
       });
