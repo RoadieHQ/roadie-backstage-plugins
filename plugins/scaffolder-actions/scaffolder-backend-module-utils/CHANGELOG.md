@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.7
+
+### Patch Changes
+
+- 59179c45: Upgrade to backstage version 1.14.1
+
 ## 1.8.6
 
 ### Patch Changes
