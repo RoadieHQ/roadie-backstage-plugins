@@ -343,7 +343,7 @@ spec:
             - item1
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    result: ${{ steps.serialize.output.result }}
+    result: ${{ steps.jsonata.output.result }}
 ```
 
 Transform a JSON file:
@@ -369,7 +369,7 @@ spec:
         path: input-data.jaon
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    result: ${{ steps.serialize.output.result }}
+    result: ${{ steps.jsonata.output.result }}
 ```
 
 Transform a YAML file:
@@ -395,7 +395,7 @@ spec:
         path: input-data.yaml
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
-    result: ${{ steps.serialize.output.result }}
+    result: ${{ steps.jsonata.output.result }}
 ```
 
 ### Merge JSON
