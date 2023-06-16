@@ -27,6 +27,16 @@ export interface CreateArgoProjectProps {
   destinationServer?: string;
 }
 
+export interface UpdateArgoProjectProps {
+  baseUrl: string;
+  argoToken: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string | string[];
+  resourceVersion: string;
+  destinationServer?: string;
+}
+
 export interface CreateArgoApplicationProps {
   baseUrl: string;
   argoToken: string;
@@ -39,6 +49,10 @@ export interface CreateArgoApplicationProps {
   destinationServer?: string;
 }
 
+export interface UpdateArgoApplicationProps extends CreateArgoApplicationProps {
+  resourceVersion: string;
+}
+
 export interface CreateArgoResourcesProps {
   argoInstance: string;
   appName: string;
@@ -48,6 +62,18 @@ export interface CreateArgoResourcesProps {
   sourcePath: string;
   labelValue: string;
   logger: Logger;
+}
+
+export interface UpdateArgoProjectAndAppProps {
+  instanceConfig: InstanceConfig;
+  argoToken: string;
+  appName: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string;
+  sourcePath: string;
+  labelValue: string;
+  destinationServer?: string;
 }
 
 export interface DeleteProjectProps {
@@ -120,6 +146,10 @@ export interface ArgoServiceApi {
     name?: string;
     selector?: string;
   }) => Promise<findArgoAppResp[]>;
+  updateArgoProjectAndApp: (
+    props: UpdateArgoProjectAndAppProps,
+  ) => Promise<boolean>;
+  getArgoProject: (props: GetArgoProjectProps) => Promise<GetArgoProjectResp>;
 }
 
 export type InstanceConfig = {
@@ -128,4 +158,36 @@ export type InstanceConfig = {
   token?: string;
   url: string;
   username?: string;
+};
+
+export type BuildArgoProjectArgs = {
+  projectName: string;
+  namespace: string;
+  sourceRepo: string | string[];
+  resourceVersion?: string;
+  destinationServer?: string;
+};
+
+export type BuildArgoApplicationArgs = {
+  appName: string;
+  projectName: string;
+  namespace: string;
+  sourceRepo: string;
+  sourcePath: string;
+  labelValue: string;
+  resourceVersion?: string;
+  destinationServer?: string;
+};
+
+export type GetArgoProjectProps = {
+  baseUrl: string;
+  argoToken: string;
+  projectName: string;
+};
+
+// Many more fields available, can be added as needed
+export type GetArgoProjectResp = {
+  metadata: {
+    resourceVersion: string;
+  };
 };
