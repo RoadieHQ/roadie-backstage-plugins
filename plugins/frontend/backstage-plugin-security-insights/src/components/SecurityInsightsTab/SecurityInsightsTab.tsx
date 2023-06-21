@@ -21,22 +21,34 @@ import {
   Content,
   ContentHeader,
   SupportButton,
+  MissingAnnotationEmptyState,
 } from '@backstage/core-components';
 import { SecurityInsightsTable } from '../SecurityInsightsTable';
+import { GITHUB_REPO_ANNOTATION } from '../useProjectName';
+import { useEntity } from '@backstage/plugin-catalog-react';
+import type { Entity } from '@backstage/catalog-model';
 
-const SecurityInsightsTab = () => (
-  <Page themeId="tool">
-    <Content>
-      <ContentHeader title="Security Insights">
-        <SupportButton>Plugin to show Security Insights</SupportButton>
-      </ContentHeader>
-      <Grid container spacing={3} direction="column">
-        <Grid item>
-          <SecurityInsightsTable />
+export const isSecurityInsightsAvailable = (entity: Entity) =>
+  Boolean(entity.metadata.annotations?.[GITHUB_REPO_ANNOTATION]);
+
+export const SecurityInsightsTab = () => {
+  const { entity } = useEntity();
+  if (!isSecurityInsightsAvailable(entity)) {
+    return <MissingAnnotationEmptyState annotation={GITHUB_REPO_ANNOTATION} />;
+  }
+
+  return (
+    <Page themeId="tool">
+      <Content>
+        <ContentHeader title="Security Insights">
+          <SupportButton>Plugin to show Security Insights</SupportButton>
+        </ContentHeader>
+        <Grid container spacing={3} direction="column">
+          <Grid item>
+            <SecurityInsightsTable />
+          </Grid>
         </Grid>
-      </Grid>
-    </Content>
-  </Page>
-);
-
-export default SecurityInsightsTab;
+      </Content>
+    </Page>
+  );
+};

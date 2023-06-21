@@ -15,21 +15,11 @@
  */
 
 import React from 'react';
-import { Entity } from '@backstage/catalog-model';
 import { Routes, Route } from 'react-router';
-import { MissingAnnotationEmptyState } from '@backstage/core-components';
-import { GITHUB_REPO_ANNOTATION } from './useProjectName';
-import SecurityInsightsTab from './SecurityInsightsTab';
-import { useEntity } from '@backstage/plugin-catalog-react';
-
-export const isSecurityInsightsAvailable = (entity: Entity) =>
-  Boolean(entity.metadata.annotations?.[GITHUB_REPO_ANNOTATION]);
+import { SecurityInsightsTab } from './SecurityInsightsTab';
 
 export const Router = () => {
-  const { entity } = useEntity();
-  return !isSecurityInsightsAvailable(entity) ? (
-    <MissingAnnotationEmptyState annotation={GITHUB_REPO_ANNOTATION} />
-  ) : (
+  return (
     <Routes>
       <Route element={<SecurityInsightsTab />} />
     </Routes>
