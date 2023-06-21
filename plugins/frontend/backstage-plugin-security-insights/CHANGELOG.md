@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.4
+
+### Patch Changes
+
+- 77314913: Remove superfluous `Router` in `EntitySecurityInsightsContent` component. This fixes a bug where the Security Insights tab would not get rendered when a recent version of `react-router` is used.
+
 ## 2.3.3
 
 ### Patch Changes
