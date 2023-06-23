@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.4.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.4.7
 
 ### Patch Changes

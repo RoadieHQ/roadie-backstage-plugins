@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.11
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.5.10
 
 ### Patch Changes

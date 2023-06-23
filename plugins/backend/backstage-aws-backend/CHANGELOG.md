@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.10
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.1.9
 
 ### Patch Changes

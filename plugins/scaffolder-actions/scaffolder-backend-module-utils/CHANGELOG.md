@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.8.7
 
 ### Patch Changes

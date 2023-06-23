@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.14
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.3.13
 
 ### Patch Changes

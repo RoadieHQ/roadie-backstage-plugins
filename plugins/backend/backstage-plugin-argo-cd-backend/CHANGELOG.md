@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.7.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.7.7
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.1.12
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.1.11
 
 ### Patch Changes

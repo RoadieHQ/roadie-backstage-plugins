@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.12
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.5.11
 
 ### Patch Changes
