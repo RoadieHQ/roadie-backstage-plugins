@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.6
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.4.5
 
 ### Patch Changes

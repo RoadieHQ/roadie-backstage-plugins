@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.3
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 0.8.2
 
 ### Patch Changes

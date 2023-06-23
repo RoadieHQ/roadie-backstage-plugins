@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.5
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.3.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.2.13
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.2.12
 
 ### Patch Changes

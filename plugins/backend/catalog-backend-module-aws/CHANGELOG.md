@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.3.11
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.3.10
 
 ### Patch Changes

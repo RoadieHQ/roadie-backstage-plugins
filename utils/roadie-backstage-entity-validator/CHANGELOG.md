@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.3.2
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.3.1
 
 ### Patch Changes

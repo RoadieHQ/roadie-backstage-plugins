@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.10
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.0.9
 
 ### Patch Changes

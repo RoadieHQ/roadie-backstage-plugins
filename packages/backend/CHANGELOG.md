@@ -1,5 +1,21 @@
 # backend
 
+## 2.0.14
+
+### Patch Changes
+
+- 608e1061: Release all
+- Updated dependencies [608e1061]
+  - app@1.0.10
+  - @roadiehq/backstage-plugin-aws-backend@1.1.10
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.7.8
+  - @roadiehq/backstage-plugin-aws-auth@0.4.10
+  - @roadiehq/catalog-backend-module-aws@1.3.11
+  - @roadiehq/catalog-backend-module-okta@0.8.3
+  - @roadiehq/scaffolder-backend-module-aws@2.4.9
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.8
+  - @roadiehq/scaffolder-backend-module-utils@1.8.8
+
 ## 2.0.13
 
 ### Patch Changes
