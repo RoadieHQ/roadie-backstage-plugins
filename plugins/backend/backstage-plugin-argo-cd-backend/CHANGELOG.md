@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.8.0
+
+### Minor Changes
+
+- 18f8a82f: add updateArgoApp endpoint to change source repo, path, and label values
+
 ## 2.7.8
 
 ### Patch Changes
