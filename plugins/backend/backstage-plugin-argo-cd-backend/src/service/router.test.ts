@@ -15,6 +15,7 @@ const mockCreateArgoProject = jest.fn();
 const mockCreateArgoApplication = jest.fn();
 const mockDeleteAppandProject = jest.fn();
 const mockGetArgoInstanceArray = jest.fn();
+const mockUpdateArgoProjectAndApp = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -27,6 +28,7 @@ jest.mock('./argocd.service', () => {
         createArgoApplication: mockCreateArgoApplication,
         deleteAppandProject: mockDeleteAppandProject,
         getArgoInstanceArray: mockGetArgoInstanceArray,
+        updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
       };
     }),
   };
@@ -138,6 +140,91 @@ describe('router', () => {
         status: 'failed',
         message: 'error deleting project',
       },
+    });
+  });
+
+  describe('/updateArgo/:argoAppName', () => {
+    let data: object;
+    beforeEach(() => {
+      jest.clearAllMocks();
+      data = {
+        clusterName: 'argoInstance1',
+        namespace: 'namespace',
+        projectName: 'projectName',
+        appName: 'appName',
+        labelValue: 'labelValue',
+        sourceRepo: 'sourceRepo',
+        sourcePath: 'sourcePath',
+      };
+      mockGetArgoInstanceArray.mockReturnValue([
+        {
+          name: 'argoInstance1',
+          url: 'https://argoInstance1.com',
+          username: 'testusername',
+          password: 'testpassword',
+          token: 'token',
+        },
+        {
+          name: 'argoInstance2',
+          url: 'https://argoInstance2.com',
+        },
+      ]);
+    });
+    it('gets argo token if no token in matched instance', async () => {
+      await request(app)
+        .put('/updateArgo/test')
+        .send({ ...data, clusterName: 'argoInstance2' });
+
+      expect(mockGetArgoToken).toHaveBeenCalledWith({
+        name: 'argoInstance2',
+        url: 'https://argoInstance2.com',
+      });
+    });
+
+    it('sends 500 on unmatched instance', async () => {
+      const res = await request(app)
+        .put('/updateArgo/test')
+        .send({ ...data, clusterName: 'argoInstance3' });
+
+      expect(res.status).toBe(500);
+    });
+
+    it('calls updateArgoProjectAndApp', async () => {
+      await request(app).put('/updateArgo/test').send(data);
+
+      expect(mockUpdateArgoProjectAndApp).toHaveBeenCalledTimes(1);
+      expect(mockUpdateArgoProjectAndApp).toHaveBeenCalledWith({
+        instanceConfig: {
+          name: 'argoInstance1',
+          url: 'https://argoInstance1.com',
+          username: 'testusername',
+          password: 'testpassword',
+          token: 'token',
+        },
+        argoToken: 'token',
+        projectName: 'projectName',
+        appName: 'appName',
+        namespace: 'namespace',
+        sourceRepo: 'sourceRepo',
+        sourcePath: 'sourcePath',
+        labelValue: 'labelValue',
+      });
+    });
+
+    it('sends 500 on failed update', async () => {
+      mockUpdateArgoProjectAndApp.mockRejectedValueOnce({});
+      const res = await request(app).put('/updateArgo/test').send(data);
+      expect(res.status).toBe(500);
+    });
+
+    it('sends 200 on update success', async () => {
+      const res = await request(app).put('/updateArgo/test').send(data);
+      expect(res.status).toBe(200);
+      expect(res.body).toStrictEqual({
+        argoProjectName: 'projectName',
+        argoAppName: 'appName',
+        kubernetesNamespace: 'namespace',
+      });
     });
   });
 });

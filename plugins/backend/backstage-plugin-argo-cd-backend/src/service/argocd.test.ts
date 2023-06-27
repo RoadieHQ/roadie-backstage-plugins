@@ -8,6 +8,7 @@ import {
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'ts-jest/utils';
+import { UpdateArgoProjectAndAppProps } from './types';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services');
@@ -980,6 +981,149 @@ describe('ArgoCD service', () => {
         status: 'failed',
         message: 'Cannot Delete Project: something unexpected',
       },
+    });
+  });
+
+  describe('updateArgoProjectAndApp', () => {
+    const data: UpdateArgoProjectAndAppProps = {
+      instanceConfig: { name: 'argoInstanceName', url: 'url' },
+      argoToken: 'argoToken',
+      appName: 'appName',
+      projectName: 'projectName',
+      namespace: 'namespace',
+      sourceRepo: 'sourceRepo',
+      sourcePath: 'sourcePath',
+      labelValue: 'labelValue',
+    };
+    const getArgoAppDataResp = {
+      metadata: {
+        name: 'argoInstanceName',
+        resourceVersion: 'resourceVersion',
+      },
+      spec: { source: { repoURL: 'sourceRepo' } },
+      status: {},
+      instance: 'instance',
+    };
+    const getArgoProjectResp = {
+      metadata: { resourceVersion: 'resourceVersion' },
+    };
+    it('should throw error when argo app not found', async () => {
+      fetchMock.mockResponseOnce('', { status: 404 }); // getArgoAppData
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'Request failed with 404 Error',
+      );
+    });
+
+    it('should throw error when source url undefined', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          ...getArgoAppDataResp,
+          spec: { source: { repoURL: '' } },
+        }),
+      ); // getArgoAppData
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'No repo URL found for argo app',
+      );
+    });
+
+    it('should throw error when app resourceVersion undefined', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ ...getArgoAppDataResp, metadata: {} }),
+      ); // getArgoAppData
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'No resourceVersion found for argo app',
+      );
+    });
+
+    it('should throw error when project resourceVersion undefined', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify({ metadata: {} })); // getArgoProject
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'No resourceVersion found for argo project',
+      );
+    });
+
+    it('should throw error when argo project update fails', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify({ message: 'ERROR' }), {
+          status: 500,
+        }); // updateArgoProject
+
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'Error updating argo project: ERROR',
+      );
+    });
+
+    it('should throw error when argo app update fails', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // updateArgoProject
+        .mockResponseOnce(JSON.stringify({ message: 'ERROR' }), {
+          status: 500,
+        }); // updateArgoApp
+
+      await expect(argoService.updateArgoProjectAndApp(data)).rejects.toThrow(
+        'Error updating argo app: ERROR',
+      );
+    });
+
+    it('should return true when app and project update succeeds', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // updateArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)); // updateArgoApp
+
+      const resp = await argoService.updateArgoProjectAndApp(data);
+
+      expect(resp).toBe(true);
+    });
+
+    it('should return true when app and project update succeeds and source repo changes', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // updateArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // updateArgoApp
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)); // updateArgoProject
+
+      const newData = { ...data, sourceRepo: 'newRepo' };
+
+      const resp = await argoService.updateArgoProjectAndApp(newData);
+
+      expect(resp).toBe(true);
+    });
+  });
+
+  describe('getArgoProject', () => {
+    const projectData = { metadata: { resourceVersion: 'resourceVersion' } };
+    const argoProjectReq = {
+      baseUrl: 'baseUrl',
+      argoToken: 'token',
+      projectName: 'projectName',
+    };
+
+    it('should get project data', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify(projectData));
+
+      const resp = await argoService.getArgoProject(argoProjectReq);
+
+      expect(resp).toStrictEqual(projectData);
+    });
+
+    it('should throw an error when fail to get project', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({ message: 'ERROR' }), {
+        status: 500,
+      });
+
+      await expect(argoService.getArgoProject(argoProjectReq)).rejects.toThrow(
+        'Failed to get argo project: ERROR',
+      );
     });
   });
 });
