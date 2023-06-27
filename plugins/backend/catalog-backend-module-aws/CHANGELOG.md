@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.3.12
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
 ## 1.3.11
 
 ### Patch Changes
