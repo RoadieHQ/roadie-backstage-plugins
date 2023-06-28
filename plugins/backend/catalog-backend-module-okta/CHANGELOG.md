@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.4
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
 ## 0.8.3
 
 ### Patch Changes

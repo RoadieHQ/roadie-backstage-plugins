@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.1.12
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
 ## 1.1.11
 
 ### Patch Changes

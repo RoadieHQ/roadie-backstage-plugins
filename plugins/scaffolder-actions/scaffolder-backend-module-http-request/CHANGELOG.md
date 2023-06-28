@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.0.9
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
 ## 4.0.8
 
 ### Patch Changes

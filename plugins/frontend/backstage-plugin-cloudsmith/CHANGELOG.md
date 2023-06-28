@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.11
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
 ## 1.0.10
 
 ### Patch Changes
