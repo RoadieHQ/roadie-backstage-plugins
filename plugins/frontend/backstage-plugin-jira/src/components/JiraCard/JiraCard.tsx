@@ -39,7 +39,6 @@ import { ActivityStream } from './components/ActivityStream';
 import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,7 +74,12 @@ const CardProjectDetails = ({
   </Box>
 );
 
-export const JiraCard = (_props: EntityProps) => {
+type JiraCardOptionalProps = {
+  hideIssueFilter?: boolean;
+};
+
+export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
+  const { hideIssueFilter } = props;
   const { entity } = useEntity();
   const classes = useStyles();
   const { projectKey, component, tokenType, label } = useProjectEntity(entity);
@@ -95,9 +99,6 @@ export const JiraCard = (_props: EntityProps) => {
   } = useEmptyIssueTypeFilter(issues);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const hideIssueFilter = !!useApi(configApiRef).getOptionalBoolean(
-    'jira.hideIssueFilter',
-  );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

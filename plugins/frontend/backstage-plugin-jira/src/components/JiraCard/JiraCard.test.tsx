@@ -17,7 +17,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
-import { AnyApiRef, configApiRef } from '@backstage/core-plugin-api';
+import { AnyApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { rest } from 'msw';
 import {
@@ -42,16 +42,11 @@ import { getIdentityApiStub } from '../../identityStubs';
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const configApi = new ConfigReader({});
 
-const config = {
-  getOptionalBoolean: (_key: string) => undefined,
-};
-
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [
     jiraApiRef,
     new JiraAPI({ discoveryApi, configApi, identityApi: getIdentityApiStub }),
   ],
-  [configApiRef, config],
 ];
 
 describe('JiraCard', () => {
@@ -108,6 +103,54 @@ describe('JiraCard', () => {
     expect(
       await rendered.findByText(/filter issue status/),
     ).toBeInTheDocument();
+  });
+
+  it('should display board and component data whitout issue filter', async () => {
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/jira/api/rest/api/latest/project/BT',
+        (_, res, ctx) => res(ctx.json(projectResponseStub)),
+      ),
+      rest.post(
+        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        (_, res, ctx) => res(ctx.json(searchResponseStub)),
+      ),
+      rest.get(
+        'http://exampleapi.com/jira/api/rest/api/latest/project/BT/statuses',
+        (_, res, ctx) => res(ctx.json(statusesResponseStub)),
+      ),
+      rest.get('http://exampleapi.com/jira/api/activity', (_, res, ctx) =>
+        res(ctx.xml(activityResponseStub)),
+      ),
+    );
+
+    const rendered = render(
+      <MemoryRouter>
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityStub}>
+            <JiraCard hideIssueFilter />
+          </EntityProvider>
+        </TestApiProvider>
+      </MemoryRouter>,
+    );
+
+    expect(await rendered.findByText(/backstage-test/)).toBeInTheDocument();
+    expect(
+      (await rendered.findAllByText(/testComponent/)).length,
+    ).toBeGreaterThan(0);
+    expect(
+      await rendered.findByText(
+        /changed the status to Selected for Development/,
+      ),
+    ).toBeInTheDocument();
+    expect(await rendered.findByText(/Add basic test/)).toBeInTheDocument();
+    expect(await rendered.getByAltText(/Page/)).toHaveAttribute(
+      'src',
+      expect.stringContaining('mocked_icon_filename.gif'),
+    );
+    expect(
+      await rendered.queryByText(/filter issue status/),
+    ).not.toBeInTheDocument();
   });
 
   it('should display an error on fetch failure', async () => {
