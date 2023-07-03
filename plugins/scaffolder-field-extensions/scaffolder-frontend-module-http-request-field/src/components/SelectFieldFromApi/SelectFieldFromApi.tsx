@@ -98,7 +98,12 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       required={props.required}
       error={props.rawErrors?.length > 0 && !props.formData}
     >
-      <Select items={dropDownData} label={title} onChange={props.onChange} />
+      <Select
+        items={dropDownData}
+        label={title}
+        onChange={props.onChange}
+        native
+      />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>
   );

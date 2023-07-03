@@ -1,5 +1,23 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.9
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 1.8.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
+## 1.8.7
+
+### Patch Changes
+
+- 59179c45: Upgrade to backstage version 1.14.1
+
 ## 1.8.6
 
 ### Patch Changes
