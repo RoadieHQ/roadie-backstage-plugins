@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.7
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.4.6
+
+### Patch Changes
+
+- 608e1061: Release all
+
+## 2.4.5
+
+### Patch Changes
+
+- 59179c45: Upgrade to backstage version 1.14.1
+
 ## 2.4.4
 
 ### Patch Changes

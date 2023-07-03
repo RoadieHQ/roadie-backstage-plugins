@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.8.1
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.8.0
+
+### Minor Changes
+
+- 18f8a82f: add updateArgoApp endpoint to change source repo, path, and label values
+
+## 2.7.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
+## 2.7.7
+
+### Patch Changes
+
+- 59179c45: Upgrade to backstage version 1.14.1
+
 ## 2.7.6
 
 ### Patch Changes

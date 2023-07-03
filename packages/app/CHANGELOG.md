@@ -1,5 +1,30 @@
 # app
 
+## 1.0.10
+
+### Patch Changes
+
+- 608e1061: Release all
+- Updated dependencies [608e1061]
+  - @roadiehq/backstage-plugin-argo-cd@2.2.16
+  - @roadiehq/backstage-plugin-aws@1.1.11
+  - @roadiehq/backstage-plugin-aws-lambda@2.1.11
+  - @roadiehq/backstage-plugin-bugsnag@2.1.12
+  - @roadiehq/backstage-plugin-buildkite@2.1.11
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.10
+  - @roadiehq/backstage-plugin-datadog@2.1.11
+  - @roadiehq/backstage-plugin-github-insights@2.3.14
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.12
+  - @roadiehq/backstage-plugin-iframe@1.3.5
+  - @roadiehq/backstage-plugin-jira@2.4.6
+  - @roadiehq/backstage-plugin-prometheus@2.4.8
+  - @roadiehq/backstage-plugin-security-insights@2.3.5
+  - @roadiehq/backstage-plugin-shortcut@1.1.11
+  - @roadiehq/backstage-plugin-travis-ci@2.1.11
+  - @roadiehq/backstage-plugin-home-markdown@2.5.11
+  - @roadiehq/backstage-plugin-home-rss@1.2.13
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.3.12
+
 ## 1.0.9
 
 ### Patch Changes

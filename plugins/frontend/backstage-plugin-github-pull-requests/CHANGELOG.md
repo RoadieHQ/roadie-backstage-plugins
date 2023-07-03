@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.13
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.5.12
+
+### Patch Changes
+
+- 608e1061: Release all
+
+## 2.5.11
+
+### Patch Changes
+
+- 59179c45: Upgrade to backstage version 1.14.1
+
 ## 2.5.10
 
 ### Patch Changes
