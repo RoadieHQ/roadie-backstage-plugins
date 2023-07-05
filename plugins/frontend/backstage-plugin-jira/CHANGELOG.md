@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.8
+
+### Patch Changes
+
+- b593ed34: Allow to hide issue filter by configuration
+
 ## 2.4.7
 
 ### Patch Changes
