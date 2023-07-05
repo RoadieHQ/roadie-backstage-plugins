@@ -118,8 +118,8 @@ export class ArgoService implements ArgoServiceApi {
           getArgoAppDataResp = await this.getArgoAppData(
             argoInstance.url,
             argoInstance.name,
-            options,
             token,
+            options
           );
         } catch (error: any) {
           return null;
@@ -172,15 +172,19 @@ export class ArgoService implements ArgoServiceApi {
   async getArgoAppData(
     baseUrl: string,
     argoInstanceName: string,
-    options: {
+    argoToken: string,
+    options?: {
       name?: string;
       selector?: string;
-    },
-    argoToken: string,
+    }
   ): Promise<any> {
-    const urlSuffix = options.name
-      ? `/${options.name}`
-      : `?selector=${options.selector}`;
+    let urlSuffix = ""
+    if (options?.name) {
+      urlSuffix = `/${options.name}`
+    }
+    if (options?.selector) {
+      urlSuffix =  `?selector=${options.selector}`
+    }
     const requestOptions: RequestInit = {
       method: 'GET',
       headers: {
@@ -203,7 +207,7 @@ export class ArgoService implements ArgoServiceApi {
       (data.items as any[]).forEach(item => {
         item.metadata.instance = { name: argoInstanceName };
       });
-    } else if (data && options.name) {
+    } else if (data && options?.name) {
       data.instance = argoInstanceName;
     }
     return data;
@@ -529,8 +533,8 @@ export class ArgoService implements ArgoServiceApi {
           const argoApp = await this.getArgoAppData(
             matchedArgoInstance.url,
             matchedArgoInstance.name,
-            { name: argoAppName },
             token,
+            { name: argoAppName },
           );
 
           isAppPendingDelete = 'metadata' in argoApp;
