@@ -19,12 +19,14 @@ import { Entity } from '@backstage/catalog-model';
 export const AWS_LAMBDA_ANNOTATION = 'aws.com/lambda-function-name';
 export const AWS_LAMBDA_REGION_ANNOTATION = 'aws.com/lambda-region';
 export const useServiceEntityAnnotations = (entity: Entity) => {
-  const lambdaName =
+  const lambdaNamesString =
     entity?.metadata.annotations?.[AWS_LAMBDA_ANNOTATION] ?? '';
   const lambdaRegion =
     entity?.metadata.annotations?.[AWS_LAMBDA_REGION_ANNOTATION] ?? '';
   const projectName =
     entity?.metadata.annotations?.['github.com/project-slug'] ?? '';
+
+  const lambdaName = lambdaNamesString.includes(',') ? lambdaNamesString.split(',') : [lambdaNamesString];
 
   return {
     projectName,
