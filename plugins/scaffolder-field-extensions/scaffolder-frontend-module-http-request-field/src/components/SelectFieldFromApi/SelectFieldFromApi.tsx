@@ -34,7 +34,30 @@ import sortBy from 'lodash/sortBy';
 import { selectFieldFromApiConfigSchema } from '../../types';
 import { FormHelperText } from '@material-ui/core';
 
-export const SelectFieldFromApi = (props: FieldProps<string>) => {
+const getLabel = (
+  item: unknown,
+  labelSelector: string | string[] | undefined,
+): string | undefined => {
+  if (!labelSelector) {
+    return undefined;
+  }
+  const label = get(item, labelSelector);
+  if (typeof label === 'string') {
+    return label;
+  }
+  throw new Error('Label type must be a string');
+};
+
+const getLabelFromValue = (value: unknown): string | undefined => {
+  if (typeof value === 'string') {
+    return value;
+  }
+  throw new Error(
+    'Value must be a string, when not providing labelSelector, please provide a labelSelector referring to a string',
+  );
+};
+
+export const SelectFieldFromApi = (props: FieldProps<unknown>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
@@ -54,14 +77,13 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       ? get(body, options.arraySelector)
       : body;
     const constructedData = array.map((item: unknown) => {
-      let value: string | undefined;
+      let value: unknown | undefined;
       let label: string | undefined;
 
       if (options.valueSelector) {
         value = get(item, options.valueSelector);
-        label = options.labelSelector
-          ? get(item, options.labelSelector)
-          : value;
+        label = getLabel(item, options.valueSelector);
+        label = label ? label : getLabelFromValue(value);
       } else {
         if (!(typeof item === 'string')) {
           throw new Error(
@@ -110,12 +132,14 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
 };
 
 export const selectFieldFromApiValidation = (
-  value: string,
+  value: unknown,
   validation: FieldValidation,
 ) => {
-  if (!KubernetesValidatorFunctions.isValidObjectName(value)) {
-    validation.addError(
-      'must start and end with an alphanumeric character, and contain only alphanumeric characters, hyphens, underscores, and periods. Maximum length is 63 characters.',
-    );
+  if (typeof value === 'string') {
+    if (!KubernetesValidatorFunctions.isValidObjectName(value)) {
+      validation.addError(
+        'must start and end with an alphanumeric character, and contain only alphanumeric characters, hyphens, underscores, and periods. Maximum length is 63 characters.',
+      );
+    }
   }
 };
