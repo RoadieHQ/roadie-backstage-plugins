@@ -41,7 +41,7 @@ export const useAppDetails = ({
   ) => {
     const promises: Promise<void>[] | undefined =
       appDetails.status?.history?.map(async (historyRecord: any) => {
-        if (historyRecord.helm !== undefined) {
+        if (historyRecord.source?.chart !== undefined) {
           return;
         }
         const revisionID = historyRecord.revision;
