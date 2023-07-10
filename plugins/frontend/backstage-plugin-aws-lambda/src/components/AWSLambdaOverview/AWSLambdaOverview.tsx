@@ -44,6 +44,9 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 type States = 'Pending' | 'Active' | 'Inactive' | 'Failed';
 
 const useStyles = makeStyles(theme => ({
+  card: {
+    marginBottom: '2rem'
+  },
   links: {
     margin: theme.spacing(2, 0),
     display: 'grid',
@@ -135,7 +138,7 @@ const OverviewComponent = ({ lambda }: { lambda: LambdaData }) => {
 
   const classes = useStyles();
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardHeader
         title={<Typography variant="h5">AWS Lambda</Typography>}
         subheader={
@@ -204,22 +207,36 @@ export const isAWSLambdaAvailable = (entity: Entity) =>
 
 const AWSLambdaOverview = ({ entity }: { entity: Entity }) => {
   const { lambdaName, lambdaRegion } = useServiceEntityAnnotations(entity);
-
-  const [lambdaData] = useLambda({
-    lambdaName,
-    region: lambdaRegion,
-  });
-  if (lambdaData.loading) {
+  const lambdaFunctions = lambdaName;
+    
     return (
-      <Card>
-        <CardHeader title={<Typography variant="h5">AWS Lambda</Typography>} />
-        <LinearProgress />
-      </Card>
-    );
-  }
-  return (
-    <>{lambdaData.lambda && <OverviewComponent lambda={lambdaData.lambda} />}</>
-  );
+      <>
+          {
+            lambdaFunctions.map(
+              (functionName, index) => {
+                const [lambdaData] = useLambda({
+                       lambdaName: functionName,
+                       region: lambdaRegion,
+                      });
+
+                if(lambdaData.loading) {
+                        return (
+                          <Card key={index}>
+                            <CardHeader title={<Typography variant="h5">AWS Lambda</Typography>} />
+                            <LinearProgress />
+                          </Card>
+                        );
+                     }
+                return (
+                          <>
+                            {lambdaData.lambda && 
+                              <OverviewComponent lambda={lambdaData.lambda} key={index} />}
+                          </>
+              );
+            })
+          }
+      </>
+  )
 };
 
 export const AWSLambdaOverviewWidget = () => {
