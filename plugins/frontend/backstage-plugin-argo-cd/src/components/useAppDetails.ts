@@ -144,7 +144,7 @@ export const useAppDetails = ({
           },
         );
         const result = await Promise.all(getRevisionHistroyPromises);
-        return result;
+        return result.filter(n => n);
       }
       if (appSelector || projectName) {
         const result = await api.listApps({ url, appSelector, projectName });
@@ -163,7 +163,7 @@ export const useAppDetails = ({
           );
           return await Promise.all(getRevisionHistroyPromises);
         }
-        return result;
+        return result.filter(n => n);
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {
