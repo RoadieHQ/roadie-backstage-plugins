@@ -161,7 +161,9 @@ export const useAppDetails = ({
               return newItem;
             },
           );
-          return await Promise.all(getRevisionHistroyPromises);
+          return Promise.all(getRevisionHistroyPromises)
+            .then(result => result.filter(n => n))
+          ;
         }
         return result.filter(n => n);
       }
