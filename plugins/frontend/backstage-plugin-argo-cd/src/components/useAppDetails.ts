@@ -143,8 +143,8 @@ export const useAppDetails = ({
             return newItem;
           },
         );
-        const result = await Promise.all(getRevisionHistroyPromises);
-        return result.filter(n => n);
+        return Promise.all(getRevisionHistroyPromises)
+          .then(result => result.filter(n => n));
       }
       if (appSelector || projectName) {
         const result = await api.listApps({ url, appSelector, projectName });
@@ -162,8 +162,7 @@ export const useAppDetails = ({
             },
           );
           return Promise.all(getRevisionHistroyPromises)
-            .then(result => result.filter(n => n))
-          ;
+            .then(result => result.filter(n => n));
         }
         return result.filter(n => n);
       }
