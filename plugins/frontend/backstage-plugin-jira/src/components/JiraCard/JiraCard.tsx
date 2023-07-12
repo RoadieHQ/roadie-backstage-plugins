@@ -76,10 +76,11 @@ const CardProjectDetails = ({
 
 type JiraCardOptionalProps = {
   hideIssueFilter?: boolean;
+  displayConfluenceChanges?: boolean;
 };
 
 export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
-  const { hideIssueFilter } = props;
+  const { hideIssueFilter, displayConfluenceChanges } = props;
   const { entity } = useEntity();
   const classes = useStyles();
   const { projectKey, component, tokenType, label } = useProjectEntity(entity);
@@ -188,7 +189,7 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
             tokenType={tokenType}
             componentName={component}
             label={label}
-            ticketIds={ticketIds}
+            ticketIds={!displayConfluenceChanges ? ticketIds : undefined}
           />
         </div>
       ) : null}
