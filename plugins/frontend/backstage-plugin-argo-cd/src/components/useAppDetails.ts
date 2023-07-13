@@ -162,7 +162,7 @@ export const useAppDetails = ({
             },
           );
           return Promise.all(getRevisionHistroyPromises)
-            .then(result => result.filter(n => n));
+            .then(output => output.filter(n => n));
         }
         return result.filter(n => n);
       }
