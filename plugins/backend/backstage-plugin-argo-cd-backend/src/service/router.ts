@@ -72,7 +72,32 @@ export function createRouter({
     ))
   })
 
-  router.get('')
+  router.get('/argoInstance/:argoInstance/repo/:repo/source/:source', async(request, response) => {
+    const argoInstanceName = request.params.argoInstance;
+    const matchedArgoInstance = findArgoInstance(argoInstanceName);
+    if (matchedArgoInstance === undefined) {
+      return response.status(500).send({
+        status: 'failed',
+        message: 'cannot find an argo instance to match this cluster',
+      });
+    }
+    const token: string = await findMatchedArgoInstanceToken(
+      matchedArgoInstance,
+    );
+    if (!token) {
+      return response.status(500).send({
+        status: 'failed',
+        message: 'could not generate token',
+      });
+    }
+    const argoData = await argoSvc.getArgoAppData(
+      matchedArgoInstance.url,
+      matchedArgoInstance.name,
+      token
+    )
+    const repoAndSource = argoData.items.map((argoApp: any) =>  `${argoApp?.spec?.source?.repoURL}/${argoApp?.spec?.source?.path}`)
+    return response.send(repoAndSource.includes(`${request.params.repo}/${decodeURIComponent(request.params.source)}`))
+  }) 
 
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
