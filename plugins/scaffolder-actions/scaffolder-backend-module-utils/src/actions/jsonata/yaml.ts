@@ -28,7 +28,7 @@ export function createYamlJSONataTransformAction() {
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
-      'Allows performing jsonata operations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
+      'Allows performing JSONata operations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
     supportsDryRun: true,
     schema: {
       input: {
@@ -37,7 +37,7 @@ export function createYamlJSONataTransformAction() {
         properties: {
           path: {
             title: 'Path',
-            description: 'Input path to read yaml file.',
+            description: 'Input path to read yaml file',
             type: 'string',
           },
           expression: {

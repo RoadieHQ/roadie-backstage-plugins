@@ -23,7 +23,7 @@ export function createJSONataAction() {
   }>({
     id: 'roadiehq:utils:jsonata',
     description:
-      'Allows performing jsonata operations and transformations on input objects and produces the output result as a step output.',
+      'Allows performing JSONata operations and transformations on input objects and produces the output result as a step output.',
     schema: {
       input: {
         type: 'object',
@@ -31,7 +31,7 @@ export function createJSONataAction() {
         properties: {
           data: {
             title: 'Data',
-            description: 'Input data to perform JSONata expression.',
+            description: 'Input data to be transformed',
             type: [
               'object',
               'array',
