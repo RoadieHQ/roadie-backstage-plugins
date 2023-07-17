@@ -15,3 +15,4 @@
  */
 
 export { Content } from './Content';
+export { type DataItem } from './types';

@@ -15,10 +15,23 @@
  */
 
 /**
+ * Element displayed in each row for the RSS Feed {@link Content}.
+ *
+ * @public
+ */
+export type DataItem = {
+  title: JSX.Element;
+};
+
+/**
  * Props for RSS content component {@link Content}.
  *
  * @public
  */
 export type RSSContentProps = {
   feedURL: string;
+  paging?: boolean;
+  rowRenderer?: (
+    items: NodeListOf<Element>,
+  ) => DataItem[] | Promise<DataItem[]>;
 };
