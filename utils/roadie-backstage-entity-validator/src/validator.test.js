@@ -278,6 +278,32 @@ spec:
       validator.validateFromFile('invalid-resource-entity.yml'),
     ).rejects.toThrow();
   });
+  describe('validateDefaultTechDocs', () => {
+    const defaultVol = {
+      './test-entity.yaml': `
+      apiVersion: backstage.io/v1alpha1
+      kind: Component
+      metadata:
+        name: test-entity
+        description: |
+          Foo bar description
+        annotations:
+          backstage.io/techdocs-ref: dir:.
+      spec:
+        type: service
+        owner: user:dtuite
+        lifecycle: experimental
+      `,
+    };
+    describe('default techdocs annotations is set', () => {
+      it('should use the default mkdocs.yaml', async () => {
+        vol.fromJSON(defaultVol);
+        await expect(
+          validator.validateFromFile('./test-entity.yaml'),
+        ).resolves.toBeUndefined();
+      });
+    });
+  });
   describe('validateTechDocs', () => {
     const defaultVol = {
       './test-entity.yaml': `
