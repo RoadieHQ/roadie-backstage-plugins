@@ -27,7 +27,7 @@ export function createJsonJSONataTransformAction() {
   }>({
     id: 'roadiehq:utils:jsonata:json:transform',
     description:
-      'Allows performing jsonata operations and transformations on a JSON file in the workspace. The result can be read from the `result` step output.',
+      'Allows performing JSONata operations and transformations on a JSON file in the workspace. The result can be read from the `result` step output.',
     supportsDryRun: true,
     schema: {
       input: {
@@ -36,7 +36,7 @@ export function createJsonJSONataTransformAction() {
         properties: {
           path: {
             title: 'Path',
-            description: 'Input path to read json file.',
+            description: 'Input path to read json file',
             type: 'string',
           },
           expression: {
