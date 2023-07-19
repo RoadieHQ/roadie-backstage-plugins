@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.8.10
+
+### Patch Changes
+
+- 060e3b22: Minor documentation changes to JSONata actions for spelling and consistency wrt capitalization and punctuation
+- ec38b255: correct jsonata action tests' descriptions
+
 ## 1.8.9
 
 ### Patch Changes
