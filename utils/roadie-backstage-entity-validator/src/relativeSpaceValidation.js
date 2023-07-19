@@ -21,7 +21,10 @@ const validateTechDocs = async (data, filePath) => {
   }
   const techDocsAnnotation =
     data.metadata.annotations['backstage.io/techdocs-ref'];
-  if (!techDocsAnnotation.includes('dir')) {
+  if (
+    !techDocsAnnotation.includes('dir') ||
+    techDocsAnnotation.match(/^dir:.$/gm)
+  ) {
     return;
   }
 
