@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2023 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { getVoidLogger } from '@backstage/backend-common';
 import { createJsonJSONataTransformAction } from './json';
 import { PassThrough } from 'stream';
@@ -34,7 +35,7 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
   };
   const action = createJsonJSONataTransformAction();
 
-  it('should write file to the workspacePath with the given transformation', async () => {
+  it('should output result of having applied the given transformation', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.json': '{ "hello": ["world"] }',
