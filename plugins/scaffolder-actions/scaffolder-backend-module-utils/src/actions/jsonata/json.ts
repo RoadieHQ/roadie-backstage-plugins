@@ -50,6 +50,7 @@ export function createJsonJSONataTransformAction() {
             description:
               'Permitted values are: "string" (default) and "object"',
             type: 'string',
+            enum: ['string', 'object'],
           },
           replacer: {
             title: 'Replacer',
@@ -77,12 +78,13 @@ export function createJsonJSONataTransformAction() {
       },
     },
     async handler(ctx) {
-      let post: (rz: any) => any;
+      let resultHandler: (rz: any) => any;
 
       if (ctx.input.as === 'object') {
-        post = rz => rz;
+        resultHandler = rz => rz;
       } else {
-        post = rz => JSON.stringify(rz, ctx.input.replacer, ctx.input.space);
+        resultHandler = rz =>
+          JSON.stringify(rz, ctx.input.replacer, ctx.input.space);
       }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
@@ -93,7 +95,7 @@ export function createJsonJSONataTransformAction() {
       const expression = jsonata(ctx.input.expression);
       const result = expression.evaluate(data);
 
-      ctx.output('result', post(result));
+      ctx.output('result', resultHandler(result));
     },
   });
 }

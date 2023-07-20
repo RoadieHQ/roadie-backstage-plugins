@@ -51,6 +51,7 @@ export function createYamlJSONataTransformAction() {
             description:
               'Permitted values are: "string" (default) and "object"',
             type: 'string',
+            enum: ['string', 'object'],
           },
           options: yamlOptionsSchema,
         },
@@ -66,12 +67,12 @@ export function createYamlJSONataTransformAction() {
       },
     },
     async handler(ctx) {
-      let post: (rz: any) => any;
+      let resultHandler: (rz: any) => any;
 
       if (ctx.input.as === 'object') {
-        post = rz => rz;
+        resultHandler = rz => rz;
       } else {
-        post = rz => yaml.dump(rz, ctx.input.options);
+        resultHandler = rz => yaml.dump(rz, ctx.input.options);
       }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
@@ -82,7 +83,7 @@ export function createYamlJSONataTransformAction() {
       const expression = jsonata(ctx.input.expression);
       const result = expression.evaluate(data);
 
-      ctx.output('result', post(result));
+      ctx.output('result', resultHandler(result));
     },
   });
 }
