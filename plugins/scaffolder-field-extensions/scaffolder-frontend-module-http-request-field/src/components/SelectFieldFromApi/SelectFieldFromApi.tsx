@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { FieldProps, FieldValidation } from '@rjsf/core';
+import { FieldProps } from '@rjsf/core';
 import FormControl from '@material-ui/core/FormControl';
-import { KubernetesValidatorFunctions } from '@backstage/catalog-model';
 import {
   discoveryApiRef,
   fetchApiRef,
@@ -107,15 +106,4 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       <FormHelperText>{description}</FormHelperText>
     </FormControl>
   );
-};
-
-export const selectFieldFromApiValidation = (
-  value: string,
-  validation: FieldValidation,
-) => {
-  if (!KubernetesValidatorFunctions.isValidObjectName(value)) {
-    validation.addError(
-      'must start and end with an alphanumeric character, and contain only alphanumeric characters, hyphens, underscores, and periods. Maximum length is 63 characters.',
-    );
-  }
 };
