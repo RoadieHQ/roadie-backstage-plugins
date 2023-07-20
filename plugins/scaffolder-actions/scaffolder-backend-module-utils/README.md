@@ -71,6 +71,7 @@ const actions = [
   createJSONataAction(),
   createYamlJSONataTransformAction(),
   createJsonJSONataTransformAction(),
+  createReplaceInFileAction(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -708,4 +709,35 @@ spec:
       action: debug:log
       input:
         message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
+```
+
+### Replace in files
+
+**Action name:** `roadiehq:utils:fs:replace`
+
+This action replaces found string in files with content defined in input.
+
+**Required params:**
+
+- files: Collection of files and their replacing configuration. See structure of collection item below.
+- files[].file: Path to the file to be modified
+- files[].find: A text to be replaced
+- files[].replaceWith: A text to be used to replace above
+
+```yaml
+---
+parameters:
+  templated_text:
+    title: Replacer
+    type: string
+    description: Text you want to use to replace i_want_to_replace_this
+steps:
+  - id: Replace text in file
+    name: Replace
+    action: roadiehq:utils:fs:replace
+    input:
+      files:
+        - file: './file.1'
+          find: 'i_want_to_replace_this'
+          replaceWith: ${{ parameters.templated_text }}
 ```
