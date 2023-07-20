@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.9.0
+
+### Minor Changes
+
+- 8d0a7db3: Add new scaffolder action roadiehq:utils:fs:replace to add ability to replace text in files.
+
 ## 1.8.10
 
 ### Patch Changes
