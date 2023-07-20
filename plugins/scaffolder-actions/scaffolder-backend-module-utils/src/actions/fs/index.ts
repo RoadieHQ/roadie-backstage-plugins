@@ -16,3 +16,4 @@
 export { createWriteFileAction } from './writeFile';
 export { createAppendFileAction } from './appendFile';
 export { createParseFileAction } from './parseFile';
+export { createReplaceInFileAction } from './replaceInFile';
