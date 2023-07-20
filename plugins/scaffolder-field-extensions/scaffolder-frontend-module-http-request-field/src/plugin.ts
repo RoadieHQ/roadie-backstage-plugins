@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  scaffolderPlugin,
-  createScaffolderFieldExtension,
-} from '@backstage/plugin-scaffolder';
-import {
-  SelectFieldFromApi,
-  selectFieldFromApiValidation,
-} from './components/SelectFieldFromApi';
+import { scaffolderPlugin } from '@backstage/plugin-scaffolder';
+import { createScaffolderFieldExtension } from '@backstage/plugin-scaffolder-react';
+import { SelectFieldFromApi } from './components/SelectFieldFromApi';
 
 export const SelectFieldFromApiExtension = scaffolderPlugin.provide(
   createScaffolderFieldExtension({
     name: 'SelectFieldFromApi',
     component: SelectFieldFromApi,
-    validation: selectFieldFromApiValidation,
   }),
 );
