@@ -63,11 +63,15 @@ export function createJSONataAction() {
       try {
         const expression = jsonata(ctx.input.expression);
         const result = expression.evaluate(ctx.input.data);
-  
+
         ctx.output('result', result);
-      } catch(e) {
-        const message = e.hasOwnProperty('message') ? e.message : 'unknown JSONata evaluation error';
-        throw new Error(`JSONata failed to evaluate the expression: ${message}`);
+      } catch (e: any) {
+        const message = e.hasOwnProperty('message')
+          ? e.message
+          : 'unknown JSONata evaluation error';
+        throw new Error(
+          `JSONata failed to evaluate the expression: ${message}`,
+        );
       }
     },
   });
