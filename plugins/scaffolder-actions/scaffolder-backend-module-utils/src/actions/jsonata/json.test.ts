@@ -35,7 +35,7 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
   };
   const action = createJsonJSONataTransformAction();
 
-  it('should output result of having applied the given transformation', async () => {
+  it('should output default string result of having applied the given transformation', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.json': '{ "hello": ["world"] }',
@@ -54,5 +54,48 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
       'result',
       JSON.stringify({ hello: ['world', 'item2'] }),
     );
+  });
+
+  it('should output string result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "hello": ["world"] }',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'string',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      JSON.stringify({ hello: ['world', 'item2'] }),
+    );
+  });
+
+  it('should output object result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': '{ "hello": ["world"] }',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'object',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith('result', {
+      hello: ['world', 'item2'],
+    });
   });
 });

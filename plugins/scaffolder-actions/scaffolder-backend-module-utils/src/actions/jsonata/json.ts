@@ -24,6 +24,7 @@ export function createJsonJSONataTransformAction() {
     expression: string;
     replacer?: string[];
     space?: string;
+    as?: 'string' | 'object';
   }>({
     id: 'roadiehq:utils:jsonata:json:transform',
     description:
@@ -43,6 +44,13 @@ export function createJsonJSONataTransformAction() {
             title: 'Expression',
             description: 'JSONata expression to perform on the input',
             type: 'string',
+          },
+          as: {
+            title: 'Desired Result Type',
+            description:
+              'Permitted values are: "string" (default) and "object"',
+            type: 'string',
+            enum: ['string', 'object'],
           },
           replacer: {
             title: 'Replacer',
@@ -64,12 +72,20 @@ export function createJsonJSONataTransformAction() {
         properties: {
           result: {
             title: 'Output result from JSONata',
-            type: 'object',
+            type: 'object | string',
           },
         },
       },
     },
     async handler(ctx) {
+      let resultHandler: (rz: any) => any;
+
+      if (ctx.input.as === 'object') {
+        resultHandler = rz => rz;
+      } else {
+        resultHandler = rz =>
+          JSON.stringify(rz, ctx.input.replacer, ctx.input.space);
+      }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
         ctx.input.path,
@@ -77,13 +93,9 @@ export function createJsonJSONataTransformAction() {
 
       const data = JSON.parse(fs.readFileSync(sourceFilepath).toString());
       const expression = jsonata(ctx.input.expression);
-      const result = JSON.stringify(
-        expression.evaluate(data),
-        ctx.input.replacer,
-        ctx.input.space,
-      );
+      const result = expression.evaluate(data);
 
-      ctx.output('result', result);
+      ctx.output('result', resultHandler(result));
     },
   });
 }
