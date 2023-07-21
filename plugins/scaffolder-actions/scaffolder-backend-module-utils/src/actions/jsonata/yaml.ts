@@ -25,6 +25,7 @@ export function createYamlJSONataTransformAction() {
     path: string;
     expression: string;
     options?: supportedDumpOptions;
+    as?: 'string' | 'object';
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
@@ -45,6 +46,13 @@ export function createYamlJSONataTransformAction() {
             description: 'JSONata expression to perform on the input',
             type: 'string',
           },
+          as: {
+            title: 'Desired Result Type',
+            description:
+              'Permitted values are: "string" (default) and "object"',
+            type: 'string',
+            enum: ['string', 'object'],
+          },
           options: yamlOptionsSchema,
         },
       },
@@ -53,12 +61,19 @@ export function createYamlJSONataTransformAction() {
         properties: {
           result: {
             title: 'Output result from JSONata',
-            type: 'object',
+            type: 'object | string',
           },
         },
       },
     },
     async handler(ctx) {
+      let resultHandler: (rz: any) => any;
+
+      if (ctx.input.as === 'object') {
+        resultHandler = rz => rz;
+      } else {
+        resultHandler = rz => yaml.dump(rz, ctx.input.options);
+      }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
         ctx.input.path,
@@ -66,9 +81,9 @@ export function createYamlJSONataTransformAction() {
 
       const data = yaml.load(fs.readFileSync(sourceFilepath).toString());
       const expression = jsonata(ctx.input.expression);
-      const result = yaml.dump(expression.evaluate(data), ctx.input.options);
+      const result = expression.evaluate(data);
 
-      ctx.output('result', result);
+      ctx.output('result', resultHandler(result));
     },
   });
 }
