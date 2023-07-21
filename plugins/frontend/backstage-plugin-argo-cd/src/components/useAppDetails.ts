@@ -42,6 +42,10 @@ export const useAppDetails = ({
     const promises: Promise<void>[] | undefined =
       appDetails.status?.history?.map(async (historyRecord: any) => {
         const revisionID = historyRecord.revision;
+        if (historyRecord.source?.chart !== undefined) {
+          historyRecord.revision = { revisionID: revisionID };
+          return;
+        }
         const revisionDetails = await api.getRevisionDetails({
           url,
           app,
