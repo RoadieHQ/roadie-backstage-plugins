@@ -14,6 +14,7 @@ This contains a collection of actions to use in scaffolder templates:
 - [Merge new data into an existing JSON file](#merge-json)
 - [Append content to a file](#append)
 - [Write content to a file](#write-to-file)
+- [Replace in files](#replace-in-files)
 
 ## Setup
 
