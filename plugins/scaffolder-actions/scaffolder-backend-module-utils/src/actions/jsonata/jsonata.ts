@@ -66,7 +66,7 @@ export function createJSONataAction() {
   
         ctx.output('result', result);
       } catch(e) {
-        const message = e.hasOwnProperty('message') ? e.message : 'unknown error';
+        const message = e.hasOwnProperty('message') ? e.message : 'unknown JSONata evaluation error';
         throw new Error(`JSONata failed to evaluate the expression: ${message}`);
       }
     },
