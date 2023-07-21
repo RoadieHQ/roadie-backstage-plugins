@@ -36,7 +36,7 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
   };
   const action = createYamlJSONataTransformAction();
 
-  it('should output result of having applied the given transformation', async () => {
+  it('should output default string result of having applied the given transformation', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': 'hello: [world]',
@@ -48,6 +48,28 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       input: {
         path: 'fake-file.yaml',
         expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      yaml.dump({ hello: ['world', 'item2'] }),
+    );
+  });
+
+  it('should output string result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'hello: [world]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'string',
       },
     });
 
@@ -91,5 +113,26 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
     });
 
     expect(mockDump).toHaveBeenCalledWith({ hello: 'beautiful world' }, opts);
+  });
+
+  it('should output object result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'hello: [world]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'object',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith('result', {
+      hello: ['world', 'item2'],
+    });
   });
 });
