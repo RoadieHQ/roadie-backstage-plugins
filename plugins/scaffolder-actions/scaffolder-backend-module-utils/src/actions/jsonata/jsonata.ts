@@ -60,10 +60,15 @@ export function createJSONataAction() {
       },
     },
     async handler(ctx) {
-      const expression = jsonata(ctx.input.expression);
-      const result = expression.evaluate(ctx.input.data);
-
-      ctx.output('result', result);
+      try {
+        const expression = jsonata(ctx.input.expression);
+        const result = expression.evaluate(ctx.input.data);
+  
+        ctx.output('result', result);
+      } catch(e) {
+        const message = e.hasOwnProperty('message') ? e.message : 'unknown error';
+        throw new Error(`JSONata failed to evaluate the expression: ${message}`);
+      }
     },
   });
 }
