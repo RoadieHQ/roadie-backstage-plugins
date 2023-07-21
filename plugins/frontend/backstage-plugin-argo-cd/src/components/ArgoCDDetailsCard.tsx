@@ -30,13 +30,13 @@ import {
   useArgoCDAppData,
 } from './useArgoCDAppData';
 import {
+  ErrorBoundary,
   InfoCard,
   MissingAnnotationEmptyState,
   Table,
   TableColumn,
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import ErrorBoundary from './ErrorBoundary';
 import { isArgocdAvailable } from '../conditions';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
