@@ -27,8 +27,8 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.0",
-    "@backstage/catalog-client": "^1.4.2",
+    "@backstage/backend-common": "^0.19.1",
+    "@backstage/catalog-client": "^1.4.3",
     "@backstage/config": "^1.0.8",
     "@types/express": "^4.17.6",
     "cross-fetch": "^3.1.4",
@@ -38,7 +38,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.8",
+    "@backstage/cli": "^0.22.9",
     "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",
     "supertest": "^4.0.2",
