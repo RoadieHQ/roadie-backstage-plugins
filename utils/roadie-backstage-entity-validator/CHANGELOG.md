@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.3.4
+
+### Patch Changes
+
+- f7e24d24: Allow for backstage default mkdocs.yaml
+
 ## 2.3.3
 
 ### Patch Changes
