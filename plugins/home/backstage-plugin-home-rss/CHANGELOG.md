@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.0
+
+### Minor Changes
+
+- 14f0e4df: Allow more customization for RSS Feed component and minor tweaks.
+
+  - Enable/disable paging if required
+  - Allow modifying the rows for the table with any custom setup
+  - Minor changes in the component to work better with new custom homepage
+
 ## 1.2.14
 
 ### Patch Changes

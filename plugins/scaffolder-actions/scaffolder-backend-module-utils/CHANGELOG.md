@@ -1,5 +1,16 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.10.0
+
+### Minor Changes
+
+- 5bcc1b11: Enable dry runs for jsonata action which supports it without modification
+
+### Patch Changes
+
+- 74b37636: support object result in jsonata actions
+- c1f55273: Adds error handling for the `JSONata` scaffolder action.
+
 ## 1.9.0
 
 ### Minor Changes
