@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.1.13
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 1.1.12
 
 ### Patch Changes

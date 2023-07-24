@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.14
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 2.5.13
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.5
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 0.8.4
 
 ### Patch Changes

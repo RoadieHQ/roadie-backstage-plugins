@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.9
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 2.4.8
 
 ### Patch Changes

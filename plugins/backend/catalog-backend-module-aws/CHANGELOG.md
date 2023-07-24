@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 1.3.13
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 1.3.12
 
 ### Patch Changes
