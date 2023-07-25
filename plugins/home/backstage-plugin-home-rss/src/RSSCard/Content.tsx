@@ -15,10 +15,10 @@
  */
 
 import React from 'react';
-import { ErrorPanel, Table } from '@backstage/core-components';
-import { RSSContentProps } from './types';
+import { ErrorPanel, Link, Table } from '@backstage/core-components';
+import { DataItem, RSSContentProps } from './types';
 import { useAsync } from 'react-use';
-import { Box, Typography, Link, makeStyles } from '@material-ui/core';
+import { Typography, makeStyles } from '@material-ui/core';
 import { DateTime } from 'luxon';
 import { Skeleton } from '@material-ui/lab';
 
@@ -33,10 +33,6 @@ const useStyles = makeStyles(theme => ({
     fontSize: '1rem',
   },
 }));
-
-type DataItem = {
-  title: any;
-};
 
 const columns = [
   {
@@ -54,45 +50,27 @@ const skeletonDataItem = {
     </>
   ),
 };
-const skeletonData = [
-  skeletonDataItem,
-  skeletonDataItem,
-  skeletonDataItem,
-  skeletonDataItem,
-  skeletonDataItem,
-];
+const skeletonData = Array(6).fill(skeletonDataItem);
 
 /**
- * A component to render a RSS feed
+ * A component to render an RSS feed
  *
  * @public
  */
 export const Content = (props: RSSContentProps) => {
   const parser = new DOMParser();
   const classes = useStyles();
+  const { feedURL, paging = true, rowRenderer } = props;
 
-  const { value, loading, error } = useAsync(async () => {
-    const headers = new Headers({
-      Accept: 'application/rss+xml',
-    });
-
-    const response = await fetch(props.feedURL, { headers: headers });
-
-    const body = await response.text();
-    const feedData = parser.parseFromString(body, 'application/xml');
-    const title = feedData.querySelector('title')?.textContent || undefined;
-
-    const items = feedData.querySelectorAll('item');
+  const defaultRow = (items: NodeListOf<Element>): DataItem[] => {
     const result: DataItem[] = [];
     items.forEach(item => {
       const link = item.querySelector('link')?.textContent;
       const itemTitle = item.querySelector('title')?.textContent;
       const pubDate = item.querySelector('pubDate')?.textContent;
-      let pubDateString: string | undefined = undefined;
-      if (pubDate) {
-        const publishedAt = DateTime.fromRFC2822(pubDate);
-        pubDateString = publishedAt.toLocaleString(DateTime.DATE_MED);
-      }
+      const pubDateString = pubDate
+        ? DateTime.fromRFC2822(pubDate).toLocaleString(DateTime.DATE_MED)
+        : undefined;
 
       if (link && itemTitle) {
         const itemComponent = (
@@ -100,7 +78,7 @@ export const Content = (props: RSSContentProps) => {
             <Typography className={classes.newsItemDate}>
               {pubDateString}
             </Typography>
-            <Link className={classes.newsItemLink} href={link} target="_blank">
+            <Link className={classes.newsItemLink} to={link} target="_blank">
               {itemTitle}
             </Link>
           </>
@@ -111,34 +89,38 @@ export const Content = (props: RSSContentProps) => {
         });
       }
     });
-    return { data: result, title };
+    return result;
+  };
+
+  const { value = skeletonData, error } = useAsync(async () => {
+    const headers = new Headers({
+      Accept: 'application/rss+xml',
+    });
+
+    const response = await fetch(feedURL, { headers: headers });
+
+    const body = await response.text();
+    const feedData = parser.parseFromString(body, 'application/xml');
+    const items = feedData.querySelectorAll('item');
+
+    return rowRenderer ? await rowRenderer(items) : defaultRow(items);
   }, []);
+
   if (error) {
     return <ErrorPanel error={error} />;
   }
-  let tableData: DataItem[] = [];
-  let title;
-  if (loading) {
-    tableData = skeletonData;
-    title = <Skeleton variant="text" width={200} />;
-  } else if (value) {
-    tableData = value.data;
-    title = value.title;
-  }
+
   return (
-    <Box position="relative">
-      <Table
-        title={title}
-        options={{
-          search: false,
-          paging: true,
-          showTitle: true,
-          padding: 'dense',
-          header: false,
-        }}
-        data={tableData}
-        columns={columns}
-      />
-    </Box>
+    <Table
+      options={{
+        search: false,
+        paging: paging,
+        toolbar: false,
+        padding: 'dense',
+        header: false,
+      }}
+      data={value}
+      columns={columns}
+    />
   );
 };

@@ -15,3 +15,4 @@
  */
 
 export { HomePageRSS, rssPlugin } from './plugin';
+export { type DataItem } from './RSSCard';

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.1.13
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
 ## 2.1.12
 
 ### Patch Changes
