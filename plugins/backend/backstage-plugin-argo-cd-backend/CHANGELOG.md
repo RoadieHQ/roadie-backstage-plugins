@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.9.0
+
+### Minor Changes
+
+- 23ca55f3: Adding FailOnSharedResource=true to syncOptions when an argo app is created to prevent dueling argo applications
+
 ## 2.8.2
 
 ### Patch Changes
