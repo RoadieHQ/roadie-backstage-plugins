@@ -33,7 +33,7 @@
   "dependencies": {
     "@backstage/backend-common": "^0.19.1",
     "@backstage/config": "^1.0.8",
-    "@backstage/plugin-home-react": "^0.1.0",
+    "@backstage/plugin-home-react": "^0.1.1",
     "@backstage/core-components": "^0.13.3",
     "@backstage/core-plugin-api": "^1.5.3",
     "@material-ui/core": "^4.12.3",

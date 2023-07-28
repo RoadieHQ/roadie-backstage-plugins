@@ -6575,7 +6575,7 @@
     luxon "^3.0.0"
     react-use "^17.2.4"
 
-"@backstage/plugin-home-react@^0.1.0", "@backstage/plugin-home-react@^0.1.1":
+"@backstage/plugin-home-react@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-home-react/-/plugin-home-react-0.1.1.tgz#31dd9877d95b45a12221cf70c5a190c2fecf618f"
   integrity sha512-4mHWNkeS4eXpnA85d6g3GHCp+F+gtHsPqTLfZCBjkBnHn5Gxo7t0WNjsxTl97HRD85v+Scud6XtZ/ATMHt8RQA==
