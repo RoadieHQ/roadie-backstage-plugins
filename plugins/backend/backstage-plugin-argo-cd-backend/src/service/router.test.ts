@@ -130,7 +130,7 @@ describe('router', () => {
         password: 'password',
       },
     ]);
-    mockGetArgoToken.mockReturnValue("token")
+    mockGetArgoToken.mockReturnValue('token');
     mockGetArgoAppData.mockReturnValue({
       items: [
         {
@@ -140,10 +140,10 @@ describe('router', () => {
           },
           spec: {
             source: {
-              repoURL: "test.repo.url",
-              path: "source/path"
-            }
-          }
+              repoURL: 'test.repo.url',
+              path: 'source/path',
+            },
+          },
         },
         {
           metadata: {
@@ -152,20 +152,24 @@ describe('router', () => {
           },
           spec: {
             source: {
-              repoURL: "test.repo.url.two",
-              path: "source/path"
-            }
-          }
+              repoURL: 'test.repo.url.two',
+              path: 'source/path',
+            },
+          },
         },
-      ]
-    })
+      ],
+    });
 
-    const response = await request(app).get('/argoInstance/argoInstance1/repo/testrepo/source/testsource')
+    const response = await request(app).get(
+      '/argoInstance/argoInstance1/repo/testrepo/source/testsource',
+    );
     expect(response.body).toEqual(false);
 
-    const response2 = await request(app).get('/argoInstance/argoInstance1/repo/test.repo.url/source/source%2Fpath')
+    const response2 = await request(app).get(
+      '/argoInstance/argoInstance1/repo/test.repo.url/source/source%2Fpath',
+    );
     expect(response2.body).toEqual(true);
-  })
+  });
 
   it('delete sends back status of app and project deletion', async () => {
     mockDeleteAppandProject.mockResolvedValue({

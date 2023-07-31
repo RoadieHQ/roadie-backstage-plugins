@@ -119,7 +119,7 @@ export class ArgoService implements ArgoServiceApi {
             argoInstance.url,
             argoInstance.name,
             token,
-            options
+            options,
           );
         } catch (error: any) {
           return null;
@@ -176,14 +176,14 @@ export class ArgoService implements ArgoServiceApi {
     options?: {
       name?: string;
       selector?: string;
-    }
+    },
   ): Promise<any> {
-    let urlSuffix = ""
+    let urlSuffix = '';
     if (options?.name) {
-      urlSuffix = `/${options.name}`
+      urlSuffix = `/${options.name}`;
     }
     if (options?.selector) {
-      urlSuffix =  `?selector=${options.selector}`
+      urlSuffix = `?selector=${options.selector}`;
     }
     const requestOptions: RequestInit = {
       method: 'GET',

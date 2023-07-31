@@ -103,7 +103,6 @@ export interface ArgoServiceApi {
       name: string;
       selector: string;
     },
-    
   ) => Promise<object>;
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;

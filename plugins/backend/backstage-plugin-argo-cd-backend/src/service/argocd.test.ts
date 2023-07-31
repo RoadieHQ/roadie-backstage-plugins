@@ -133,7 +133,7 @@ describe('ArgoCD service', () => {
               namespace: 'testNamespace2',
             },
           },
-        ]
+        ],
       }),
     );
     const resp = await argoService.getArgoAppData(
@@ -142,29 +142,29 @@ describe('ArgoCD service', () => {
       'testToken',
     );
 
-    expect(resp).toStrictEqual( {
+    expect(resp).toStrictEqual({
       items: [
         {
           metadata: {
-            name: "testAppName",
-            namespace: "testNamespace",
+            name: 'testAppName',
+            namespace: 'testNamespace',
             instance: {
-              name: "argoInstance1"
-            }
-          }
+              name: 'argoInstance1',
+            },
+          },
         },
         {
           metadata: {
-            name: "testAppName2",
-            namespace: "testNamespace2",
+            name: 'testAppName2',
+            namespace: 'testNamespace2',
             instance: {
-              name: "argoInstance1"
-            }
-          }
-        }
-      ]
+              name: 'argoInstance1',
+            },
+          },
+        },
+      ],
     });
-  })
+  });
 
   it('should get argo app data', async () => {
     fetchMock.mockResponseOnce(
@@ -180,7 +180,7 @@ describe('ArgoCD service', () => {
       'https://argoInstance1.com',
       'argoInstance1',
       'testToken',
-      { name: 'testApp' }
+      { name: 'testApp' },
     );
 
     expect(resp).toStrictEqual({
@@ -200,7 +200,7 @@ describe('ArgoCD service', () => {
         'https://argoInstance1.com',
         'argoInstance1',
         'testToken',
-        { name: 'testApp' }
+        { name: 'testApp' },
       ),
     ).rejects.toThrow();
   });
