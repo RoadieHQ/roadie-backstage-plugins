@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.1.14
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 2.1.13
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.1.12
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.1.11
 
 ### Patch Changes

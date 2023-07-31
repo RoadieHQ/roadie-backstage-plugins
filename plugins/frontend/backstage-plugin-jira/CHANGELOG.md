@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.4.9
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 2.4.8
+
+### Patch Changes
+
+- b593ed34: Allow to hide issue filter by configuration
+
+## 2.4.7
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.4.6
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.4.5
 
 ### Patch Changes

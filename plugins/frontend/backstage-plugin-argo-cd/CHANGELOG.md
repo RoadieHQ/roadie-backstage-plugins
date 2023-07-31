@@ -1,5 +1,30 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.19
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 2.2.18
+
+### Patch Changes
+
+- 48439673: Fix for cases where argo application history source is Helm, which would cause revision metadata api to return 500
+- 0e4c6da4: Use ErrorBoundary from @backstage/core-components
+
+## 2.2.17
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.2.16
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 2.2.15
 
 ### Patch Changes

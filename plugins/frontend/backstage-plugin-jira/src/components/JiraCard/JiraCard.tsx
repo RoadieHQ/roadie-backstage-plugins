@@ -74,7 +74,12 @@ const CardProjectDetails = ({
   </Box>
 );
 
-export const JiraCard = (_props: EntityProps) => {
+type JiraCardOptionalProps = {
+  hideIssueFilter?: boolean;
+};
+
+export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
+  const { hideIssueFilter } = props;
   const { entity } = useEntity();
   const classes = useStyles();
   const { projectKey, component, tokenType, label } = useProjectEntity(entity);
@@ -153,12 +158,14 @@ export const JiraCard = (_props: EntityProps) => {
       ) : null}
       {project && issues ? (
         <div className={classes.root}>
-          <Selectors
-            projectKey={projectKey}
-            statusesNames={statusesNames}
-            setStatusesNames={setStatusesNames}
-            fetchProjectInfo={fetchProjectInfo}
-          />
+          {!hideIssueFilter && (
+            <Selectors
+              projectKey={projectKey}
+              statusesNames={statusesNames}
+              setStatusesNames={setStatusesNames}
+              fetchProjectInfo={fetchProjectInfo}
+            />
+          )}
           <Grid container spacing={3}>
             {displayIssues?.map(issueType => (
               <Grid item xs key={issueType.name}>

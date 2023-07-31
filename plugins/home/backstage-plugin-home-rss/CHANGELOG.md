@@ -1,5 +1,33 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.1
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 1.3.0
+
+### Minor Changes
+
+- 14f0e4df: Allow more customization for RSS Feed component and minor tweaks.
+
+  - Enable/disable paging if required
+  - Allow modifying the rows for the table with any custom setup
+  - Minor changes in the component to work better with new custom homepage
+
+## 1.2.14
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 1.2.13
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.2.12
 
 ### Patch Changes

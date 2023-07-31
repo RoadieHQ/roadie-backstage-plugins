@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import { createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home-react';
 import { createPlugin } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
+import { RSSContentProps } from './RSSCard/types';
 
 /** @public */
 export const rssPlugin = createPlugin({
@@ -32,11 +33,9 @@ export const rssPlugin = createPlugin({
  * @public
  */
 export const HomePageRSS = rssPlugin.provide(
-  createCardExtension<{
-    feedURL: string;
-  }>({
+  createCardExtension<RSSContentProps>({
     name: 'HomePageRSS',
-    title: '',
+    title: 'RSS Feed',
     components: () => import('./RSSCard'),
   }),
 );

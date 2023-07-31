@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2023 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import { getVoidLogger } from '@backstage/backend-common';
 import { createYamlJSONataTransformAction } from './yaml';
 import { PassThrough } from 'stream';
@@ -35,7 +36,7 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
   };
   const action = createYamlJSONataTransformAction();
 
-  it('should write file to the workspacePath with the given transformation', async () => {
+  it('should output default string result of having applied the given transformation', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': 'hello: [world]',
@@ -47,6 +48,28 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       input: {
         path: 'fake-file.yaml',
         expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      yaml.dump({ hello: ['world', 'item2'] }),
+    );
+  });
+
+  it('should output string result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'hello: [world]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'string',
       },
     });
 
@@ -90,5 +113,26 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
     });
 
     expect(mockDump).toHaveBeenCalledWith({ hello: 'beautiful world' }, opts);
+  });
+
+  it('should output object result of having applied the given transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': 'hello: [world]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$ ~> | $ | { "hello": [hello, "item2"] }|',
+        as: 'object',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith('result', {
+      hello: ['world', 'item2'],
+    });
   });
 });

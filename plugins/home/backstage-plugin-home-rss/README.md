@@ -39,9 +39,14 @@ export const HomePage = () => {
         <HomePageRSS
             feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
             title="Reuters News"
+            paging={false} // Optional. By default the paging is enabled, but it can be disabled
         />
     </Grid>
     ...
   );
 };
 ```
+
+## Customization
+
+It's also possible to customize each row in the RSS Feed table. You have to use the property `rowRenderer`. Check the [default renderer](./src/RSSCard/Content.tsx#L65-L93) as an example.

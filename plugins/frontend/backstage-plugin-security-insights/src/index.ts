@@ -34,9 +34,11 @@ export {
    * @deprecated From 0.2.0 composability API should be used
    */
   Router,
+} from './components/Router';
+export {
   /**
    * @deprecated From 0.2.0 new name 'isSecurityInsightsAvailable' should be used
    */
   isSecurityInsightsAvailable as isPluginApplicableToEntity,
   isSecurityInsightsAvailable,
-} from './components/Router';
+} from './components/SecurityInsightsTab';

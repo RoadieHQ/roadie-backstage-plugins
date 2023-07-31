@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.7
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 2.3.6
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 2.3.5
+
+### Patch Changes
+
+- 608e1061: Release all
+
+## 2.3.4
+
+### Patch Changes
+
+- 77314913: Remove superfluous `Router` in `EntitySecurityInsightsContent` component. This fixes a bug where the Security Insights tab would not get rendered when a recent version of `react-router` is used.
+
 ## 2.3.3
 
 ### Patch Changes

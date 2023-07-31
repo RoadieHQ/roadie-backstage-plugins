@@ -1,5 +1,29 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.4.1
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 1.4.0
+
+### Minor Changes
+
+- da5068ff: Remove field validation for `SelectFieldFromApi`. The validation didn't make sense and was needlessly limiting.
+
+## 1.3.13
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 1.3.12
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.3.11
 
 ### Patch Changes

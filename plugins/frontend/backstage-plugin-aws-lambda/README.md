@@ -44,7 +44,7 @@ In order to perform requests to AWS lambda plugin first asks backend for tempora
 
 (it uses @roadiehq/backstage-plugin-aws-auth backend plugin)
 
-Regardless of what auth method you use - you can also decide what functions to show in the table (what functions particular service uses) by annotating backstage.yaml with name of the functions separated by comma, like:
+Regardless of what auth method you use - you can also decide what function to show in the table (what function particular service uses) by annotating backstage.yaml with a name of the function, like:
 
 ```yaml
 metadata:

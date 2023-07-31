@@ -25,10 +25,11 @@ export function createYamlJSONataTransformAction() {
     path: string;
     expression: string;
     options?: supportedDumpOptions;
+    as?: 'string' | 'object';
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
-      'Allows performing jsonata opterations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
+      'Allows performing JSONata operations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
     supportsDryRun: true,
     schema: {
       input: {
@@ -37,13 +38,20 @@ export function createYamlJSONataTransformAction() {
         properties: {
           path: {
             title: 'Path',
-            description: 'Input path to read yaml file.',
+            description: 'Input path to read yaml file',
             type: 'string',
           },
           expression: {
             title: 'Expression',
             description: 'JSONata expression to perform on the input',
             type: 'string',
+          },
+          as: {
+            title: 'Desired Result Type',
+            description:
+              'Permitted values are: "string" (default) and "object"',
+            type: 'string',
+            enum: ['string', 'object'],
           },
           options: yamlOptionsSchema,
         },
@@ -53,12 +61,19 @@ export function createYamlJSONataTransformAction() {
         properties: {
           result: {
             title: 'Output result from JSONata',
-            type: 'object',
+            type: 'object | string',
           },
         },
       },
     },
     async handler(ctx) {
+      let resultHandler: (rz: any) => any;
+
+      if (ctx.input.as === 'object') {
+        resultHandler = rz => rz;
+      } else {
+        resultHandler = rz => yaml.dump(rz, ctx.input.options);
+      }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
         ctx.input.path,
@@ -66,9 +81,9 @@ export function createYamlJSONataTransformAction() {
 
       const data = yaml.load(fs.readFileSync(sourceFilepath).toString());
       const expression = jsonata(ctx.input.expression);
-      const result = yaml.dump(expression.evaluate(data), ctx.input.options);
+      const result = expression.evaluate(data);
 
-      ctx.output('result', result);
+      ctx.output('result', resultHandler(result));
     },
   });
 }

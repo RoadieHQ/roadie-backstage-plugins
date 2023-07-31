@@ -268,6 +268,60 @@ export function createRouter({
       });
     }
   });
+  router.put('/updateArgo/:argoAppName', async (request, response) => {
+    const argoInstanceName: string = request.body.clusterName;
+    const namespace = request.body.namespace;
+    const projectName = request.body.projectName as string;
+    const appName = request.body.appName as string;
+    const labelValue = request.body.labelValue as string;
+    const sourceRepo = request.body.sourceRepo;
+    const sourcePath = request.body.sourcePath;
+    const matchedArgoInstance = findArgoInstance(argoInstanceName);
+
+    if (matchedArgoInstance === undefined) {
+      return response.status(500).send({
+        status: 'failed',
+        message: 'cannot find an argo instance to match this cluster',
+      });
+    }
+    let token: string;
+    if (!matchedArgoInstance.token) {
+      try {
+        token = await argoSvc.getArgoToken(matchedArgoInstance);
+      } catch (e: any) {
+        return response.status(e.status || 500).send({
+          status: e.status,
+          message: e.message,
+        });
+      }
+    } else {
+      token = matchedArgoInstance.token;
+    }
+
+    try {
+      await argoSvc.updateArgoProjectAndApp({
+        instanceConfig: matchedArgoInstance,
+        argoToken: token,
+        projectName,
+        appName,
+        namespace,
+        sourceRepo,
+        sourcePath,
+        labelValue,
+      });
+      return response.send({
+        argoProjectName: projectName,
+        argoAppName: appName,
+        kubernetesNamespace: namespace,
+      });
+    } catch (e: any) {
+      logger.error(e);
+      return response.status(e.status || 500).send({
+        status: e.status,
+        message: e.message || 'Failed to create argo project',
+      });
+    }
+  });
   router.post('/sync', async (request, response) => {
     const appSelector = request.body.appSelector;
     try {

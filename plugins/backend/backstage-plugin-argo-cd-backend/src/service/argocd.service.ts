@@ -19,6 +19,13 @@ import {
   DeleteApplicationAndProjectResponse,
   ResponseSchema,
   getRevisionDataResp,
+  BuildArgoProjectArgs,
+  BuildArgoApplicationArgs,
+  UpdateArgoProjectAndAppProps,
+  UpdateArgoApplicationProps,
+  UpdateArgoProjectProps,
+  GetArgoProjectProps,
+  GetArgoProjectResp,
 } from './types';
 
 export class ArgoService implements ArgoServiceApi {
@@ -141,6 +148,35 @@ export class ArgoService implements ArgoServiceApi {
     return resp.flatMap(f => (f ? [f] : []));
   }
 
+  async getArgoProject({
+    baseUrl,
+    argoToken,
+    projectName,
+  }: GetArgoProjectProps): Promise<GetArgoProjectResp> {
+    const requestOptions: RequestInit = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+    };
+
+    const resp = await fetch(
+      `${baseUrl}/api/v1/projects/${projectName}`,
+      requestOptions,
+    );
+    const data = await resp.json();
+
+    if (resp.status !== 200) {
+      this.logger.error(
+        `Failed to get argo project ${projectName}: ${data.message}`,
+      );
+      throw new Error(`Failed to get argo project: ${data.message}`);
+    }
+
+    return data;
+  }
+
   async getArgoToken(appConfig: {
     url: string;
     username?: string;
@@ -213,18 +249,18 @@ export class ArgoService implements ArgoServiceApi {
     return data;
   }
 
-  async createArgoProject({
-    baseUrl,
-    argoToken,
+  private buildArgoProjectPayload({
     projectName,
     namespace,
-    sourceRepo,
     destinationServer,
-  }: CreateArgoProjectProps): Promise<object> {
-    const data = {
+    resourceVersion,
+    sourceRepo,
+  }: BuildArgoProjectArgs) {
+    return {
       project: {
         metadata: {
           name: projectName,
+          resourceVersion,
         },
         spec: {
           destinations: [
@@ -236,10 +272,26 @@ export class ArgoService implements ArgoServiceApi {
                 : 'https://kubernetes.default.svc',
             },
           ],
-          sourceRepos: [sourceRepo],
+          sourceRepos: Array.isArray(sourceRepo) ? sourceRepo : [sourceRepo],
         },
       },
     };
+  }
+
+  async createArgoProject({
+    baseUrl,
+    argoToken,
+    projectName,
+    namespace,
+    sourceRepo,
+    destinationServer,
+  }: CreateArgoProjectProps): Promise<object> {
+    const data = this.buildArgoProjectPayload({
+      projectName,
+      namespace,
+      sourceRepo,
+      destinationServer,
+    });
 
     const options: RequestInit = {
       method: 'POST',
@@ -265,22 +317,61 @@ export class ArgoService implements ArgoServiceApi {
     return responseData;
   }
 
-  async createArgoApplication({
+  private async updateArgoProject({
     baseUrl,
     argoToken,
+    projectName,
+    namespace,
+    sourceRepo,
+    resourceVersion,
+    destinationServer,
+  }: UpdateArgoProjectProps): Promise<object> {
+    const data = this.buildArgoProjectPayload({
+      projectName,
+      namespace,
+      sourceRepo,
+      resourceVersion,
+      destinationServer,
+    });
+
+    const options: RequestInit = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${argoToken}`,
+      },
+      body: JSON.stringify(data),
+    };
+    const resp = await fetch(
+      `${baseUrl}/api/v1/projects/${projectName}`,
+      options,
+    );
+    const responseData = await resp.json();
+    if (resp.status !== 200) {
+      this.logger.error(
+        `Error updating argo project ${projectName}: ${responseData.message}`,
+      );
+      throw new Error(`Error updating argo project: ${responseData.message}`);
+    }
+    return responseData;
+  }
+
+  private buildArgoApplicationPayload({
     appName,
     projectName,
     namespace,
     sourceRepo,
     sourcePath,
     labelValue,
+    resourceVersion,
     destinationServer,
-  }: CreateArgoApplicationProps): Promise<object> {
-    const data = {
+  }: BuildArgoApplicationArgs) {
+    return {
       metadata: {
         name: appName,
         labels: { 'backstage-name': labelValue },
         finalizers: ['resources-finalizer.argocd.argoproj.io'],
+        resourceVersion,
       },
       spec: {
         destination: {
@@ -313,6 +404,28 @@ export class ArgoService implements ArgoServiceApi {
         },
       },
     };
+  }
+
+  async createArgoApplication({
+    baseUrl,
+    argoToken,
+    appName,
+    projectName,
+    namespace,
+    sourceRepo,
+    sourcePath,
+    labelValue,
+    destinationServer,
+  }: CreateArgoApplicationProps): Promise<object> {
+    const data = this.buildArgoApplicationPayload({
+      appName,
+      projectName,
+      namespace,
+      sourcePath,
+      sourceRepo,
+      labelValue,
+      destinationServer,
+    });
 
     const options: RequestInit = {
       method: 'POST',
@@ -402,6 +515,52 @@ export class ArgoService implements ArgoServiceApi {
       message: `Failed to resync ${appName} on ${argoInstance.name}`,
       status: 'Failure',
     };
+  }
+
+  private async updateArgoApp({
+    baseUrl,
+    argoToken,
+    appName,
+    projectName,
+    namespace,
+    sourceRepo,
+    sourcePath,
+    labelValue,
+    resourceVersion,
+    destinationServer,
+  }: UpdateArgoApplicationProps): Promise<object> {
+    const data = this.buildArgoApplicationPayload({
+      appName,
+      projectName,
+      namespace,
+      sourceRepo,
+      sourcePath,
+      labelValue,
+      resourceVersion,
+      destinationServer,
+    });
+
+    const options: RequestInit = {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${argoToken}`,
+      },
+      body: JSON.stringify(data),
+    };
+
+    const resp = await fetch(
+      `${baseUrl}/api/v1/applications/${appName}`,
+      options,
+    );
+    const respData = await resp.json();
+    if (resp.status !== 200) {
+      this.logger.error(
+        `Error updating argo app ${appName}: ${respData.message}`,
+      );
+      throw new Error(`Error updating argo app: ${respData.message}`);
+    }
+
+    return respData;
   }
 
   async deleteApp({
@@ -639,6 +798,105 @@ export class ArgoService implements ArgoServiceApi {
       sourceRepo,
       sourcePath,
       labelValue: labelValue ? labelValue : appName,
+    });
+
+    return true;
+  }
+
+  async updateArgoProjectAndApp({
+    instanceConfig,
+    argoToken,
+    appName,
+    projectName,
+    namespace,
+    sourceRepo,
+    sourcePath,
+    labelValue,
+    destinationServer,
+  }: UpdateArgoProjectAndAppProps): Promise<boolean> {
+    const appData = await this.getArgoAppData(
+      instanceConfig.url,
+      instanceConfig.name,
+      { name: appName },
+      argoToken,
+    );
+    if (!appData.spec?.source?.repoURL) {
+      this.logger.error(`No repo URL found for argo app ${projectName}`);
+      throw new Error('No repo URL found for argo app');
+    }
+    if (!appData.metadata?.resourceVersion) {
+      this.logger.error(`No resourceVersion found for argo app ${projectName}`);
+      throw new Error('No resourceVersion found for argo app');
+    }
+    const projData = await this.getArgoProject({
+      baseUrl: instanceConfig.url,
+      argoToken,
+      projectName,
+    });
+    if (!projData.metadata?.resourceVersion) {
+      this.logger.error(
+        `No resourceVersion found for argo project ${projectName}`,
+      );
+      throw new Error('No resourceVersion found for argo project');
+    }
+    if (appData.spec?.source?.repoURL === sourceRepo) {
+      await this.updateArgoProject({
+        argoToken,
+        baseUrl: instanceConfig.url,
+        namespace,
+        projectName,
+        sourceRepo,
+        resourceVersion: projData.metadata.resourceVersion,
+        destinationServer,
+      });
+      await this.updateArgoApp({
+        appName,
+        argoToken,
+        baseUrl: instanceConfig.url,
+        labelValue,
+        namespace,
+        projectName,
+        sourcePath,
+        sourceRepo,
+        resourceVersion: appData.metadata.resourceVersion,
+        destinationServer,
+      });
+      return true;
+    }
+    await this.updateArgoProject({
+      argoToken,
+      baseUrl: instanceConfig.url,
+      namespace,
+      projectName,
+      sourceRepo: [sourceRepo, appData.spec.source.repoURL],
+      resourceVersion: projData.metadata.resourceVersion,
+      destinationServer,
+    });
+    await this.updateArgoApp({
+      appName,
+      argoToken,
+      baseUrl: instanceConfig.url,
+      labelValue,
+      namespace,
+      projectName,
+      sourcePath,
+      sourceRepo,
+      resourceVersion: appData.metadata.resourceVersion,
+      destinationServer,
+    });
+    const updatedProjData = await this.getArgoProject({
+      baseUrl: instanceConfig.url,
+      argoToken,
+      projectName,
+    });
+    await this.updateArgoProject({
+      argoToken,
+      baseUrl: instanceConfig.url,
+      namespace,
+      projectName,
+      sourceRepo,
+      resourceVersion: updatedProjData.metadata.resourceVersion,
+      destinationServer,
     });
 
     return true;

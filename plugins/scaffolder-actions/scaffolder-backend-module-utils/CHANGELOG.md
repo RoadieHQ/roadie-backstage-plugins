@@ -1,5 +1,47 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.10.1
+
+### Patch Changes
+
+- 05c0c417: Update deps to backstage 1.16.0 version
+
+## 1.10.0
+
+### Minor Changes
+
+- 5bcc1b11: Enable dry runs for jsonata action which supports it without modification
+
+### Patch Changes
+
+- 74b37636: support object result in jsonata actions
+- c1f55273: Adds error handling for the `JSONata` scaffolder action.
+
+## 1.9.0
+
+### Minor Changes
+
+- 8d0a7db3: Add new scaffolder action roadiehq:utils:fs:replace to add ability to replace text in files.
+
+## 1.8.10
+
+### Patch Changes
+
+- 060e3b22: Minor documentation changes to JSONata actions for spelling and consistency wrt capitalization and punctuation
+- ec38b255: correct jsonata action tests' descriptions
+
+## 1.8.9
+
+### Patch Changes
+
+- edf2f0ab: Update dependencies to backstage version 1.15.0
+
+## 1.8.8
+
+### Patch Changes
+
+- 608e1061: Release all
+
 ## 1.8.7
 
 ### Patch Changes
