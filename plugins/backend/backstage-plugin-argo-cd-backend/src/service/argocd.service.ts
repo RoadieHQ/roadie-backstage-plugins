@@ -817,8 +817,8 @@ export class ArgoService implements ArgoServiceApi {
     const appData = await this.getArgoAppData(
       instanceConfig.url,
       instanceConfig.name,
-      { name: appName },
       argoToken,
+      { name: appName },
     );
     if (!appData.spec?.source?.repoURL) {
       this.logger.error(`No repo URL found for argo app ${projectName}`);
