@@ -166,7 +166,7 @@ export const useAppDetails = ({
             output.filter(n => n),
           );
         }
-        return result.items?.filter(n => n);
+        return result;
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {
