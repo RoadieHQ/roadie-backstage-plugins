@@ -139,7 +139,7 @@ export const argocdCreateApplicationResp = {
         selfHeal: true,
         allowEmpty: true,
       },
-      syncOptions: ['CreateNamespace=false'],
+      syncOptions: ['CreateNamespace=false', 'FailOnSharedResource=true'],
       retry: {
         limit: 10,
         backoff: {
@@ -329,7 +329,7 @@ export const syncResp = {
         selfHeal: true,
         allowEmpty: true,
       },
-      syncOptions: ['CreateNamespace=false'],
+      syncOptions: ['CreateNamespace=false', 'FailOnSharedResource=true'],
       retry: {
         limit: 10,
         backoff: {
@@ -410,7 +410,7 @@ export const syncResp = {
           force: true,
         },
       },
-      syncOptions: ['CreateNamespace=false'],
+      syncOptions: ['CreateNamespace=false', 'FailOnSharedResource=true'],
     },
     initiatedBy: {
       username: 'testnamespace',
