@@ -254,15 +254,6 @@ const ArgoCDDetails = ({
     );
   }
   if (value) {
-    if ((value as ArgoCDAppList).items !== undefined) {
-      return (
-        <OverviewComponent
-          data={value as ArgoCDAppList}
-          retry={retry}
-          extraColumns={extraColumns}
-        />
-      );
-    }
     if (Array.isArray(value)) {
       const wrapped: ArgoCDAppList = {
         items: value as Array<ArgoCDAppDetails>,

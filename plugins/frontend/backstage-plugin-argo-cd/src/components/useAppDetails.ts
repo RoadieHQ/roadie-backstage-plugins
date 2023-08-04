@@ -143,8 +143,9 @@ export const useAppDetails = ({
             return newItem;
           },
         );
-        return Promise.all(getRevisionHistroyPromises)
-          .then(result => result.filter(n => n));
+        return Promise.all(getRevisionHistroyPromises).then(result =>
+          result.filter(n => n),
+        );
       }
       if (appSelector || projectName) {
         const result = await api.listApps({ url, appSelector, projectName });
@@ -161,10 +162,11 @@ export const useAppDetails = ({
               return newItem;
             },
           );
-          return Promise.all(getRevisionHistroyPromises)
-            .then(output => output.filter(n => n));
+          return Promise.all(getRevisionHistroyPromises).then(output =>
+            output.filter(n => n),
+          );
         }
-        return result.filter(n => n);
+        return result.items?.filter(n => n);
       }
       return Promise.reject('Neither appName nor appSelector provided');
     } catch (e: any) {

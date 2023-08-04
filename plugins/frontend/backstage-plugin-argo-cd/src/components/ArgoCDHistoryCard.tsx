@@ -192,9 +192,6 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
   }
 
   if (value) {
-    if ((value as ArgoCDAppList).items !== undefined) {
-      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
-    }
     if (Array.isArray(value)) {
       const wrapped: ArgoCDAppList = {
         items: value as Array<ArgoCDAppDetails>,
