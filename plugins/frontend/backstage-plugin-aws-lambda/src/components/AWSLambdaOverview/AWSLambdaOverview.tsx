@@ -202,12 +202,19 @@ export const isRegionInAnnotations = (entity: Entity) =>
 export const isAWSLambdaAvailable = (entity: Entity) =>
   entity?.metadata.annotations?.[AWS_LAMBDA_ANNOTATION];
 
-const AWSLambdaOverview = ({ entity }: { entity: Entity }) => {
+const AWSLambdaOverview = ({
+  entity,
+  roleArn,
+}: {
+  entity: Entity;
+  roleArn: string | undefined;
+}) => {
   const { lambdaName, lambdaRegion } = useServiceEntityAnnotations(entity);
 
   const [lambdaData] = useLambda({
     lambdaName,
     region: lambdaRegion,
+    roleArn: roleArn,
   });
   if (lambdaData.loading) {
     return (
@@ -222,13 +229,17 @@ const AWSLambdaOverview = ({ entity }: { entity: Entity }) => {
   );
 };
 
-export const AWSLambdaOverviewWidget = () => {
+type LambdaContentProps = {
+  roleArn?: string;
+};
+
+export const AWSLambdaOverviewWidget = ({ roleArn }: LambdaContentProps) => {
   const { entity } = useEntity();
   return !isRegionInAnnotations(entity) ? (
     <MissingAnnotationEmptyState annotation={AWS_LAMBDA_REGION_ANNOTATION} />
   ) : (
     <ErrorBoundary>
-      <AWSLambdaOverview entity={entity} />
+      <AWSLambdaOverview entity={entity} roleArn={roleArn} />
     </ErrorBoundary>
   );
 };
