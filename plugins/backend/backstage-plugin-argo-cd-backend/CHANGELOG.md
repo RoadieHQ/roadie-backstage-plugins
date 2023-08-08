@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.10.0
+
+### Minor Changes
+
+- d52d82ec: Add endpoint that grabs all argo projects and another endpoint that checks if app already exists in a given cluster with the same repo and source
+
 ## 2.9.0
 
 ### Minor Changes
