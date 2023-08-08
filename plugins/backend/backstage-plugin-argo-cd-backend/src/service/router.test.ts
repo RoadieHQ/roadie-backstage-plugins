@@ -96,7 +96,6 @@ describe('router', () => {
         password: 'password',
       },
     ]);
-
     const response = await request(app).post('/createArgo').send({
       clusterName: 'argoInstance1',
       namespace: 'test-namespace',
@@ -114,6 +113,64 @@ describe('router', () => {
       argoProjectName: 'test-project',
       kubernetesNamespace: 'test-namespace',
     });
+  });
+
+  it('checks to see if source already exists in argo', async () => {
+    mockGetArgoInstanceArray.mockReturnValue([
+      {
+        name: 'argoInstance1',
+        url: 'https://argoInstance1.com',
+        token: 'token',
+        username: 'username',
+        password: 'password',
+      },
+      {
+        name: 'argoInstance2',
+        url: 'https://argoInstance2.com',
+        token: 'token',
+        username: 'username',
+        password: 'password',
+      },
+    ]);
+    mockGetArgoToken.mockReturnValue('token');
+    mockGetArgoAppData.mockReturnValue({
+      items: [
+        {
+          metadata: {
+            name: 'testAppName',
+            namespace: 'testNamespace',
+          },
+          spec: {
+            source: {
+              repoURL: 'test.repo.url',
+              path: 'source/path',
+            },
+          },
+        },
+        {
+          metadata: {
+            name: 'testAppName2',
+            namespace: 'testNamespace2',
+          },
+          spec: {
+            source: {
+              repoURL: 'test.repo.url.two',
+              path: 'source/path',
+            },
+          },
+        },
+      ],
+    });
+
+    const response = await request(app).get(
+      '/argoInstance/argoInstance1/repo/testrepo/source/testsource',
+    );
+    expect(response.body).toEqual(false);
+
+    const response2 = await request(app).get(
+      '/argoInstance/argoInstance1/repo/test.repo.url/source/source%2Fpath',
+    );
+    expect(response2.body).toEqual(true);
   });
 
   it('delete sends back status of app and project deletion', async () => {
