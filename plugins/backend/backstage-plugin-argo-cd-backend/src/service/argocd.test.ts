@@ -371,8 +371,7 @@ describe('ArgoCD service', () => {
   it('should fail to create an app in argo when argo errors out', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
-        message:
-          'application spec for test-1 is invalid: InvalidSpecError: repository not accessible: rpc error: code = Unknown desc = error testing repository connectivity: authentication required',
+        message: 'errorMessage',
       }),
       { status: 500 },
     );
@@ -388,9 +387,7 @@ describe('ArgoCD service', () => {
         sourcePath: 'kubernetes/nonproduction',
         labelValue: 'backstageId',
       }),
-    ).rejects.toThrow(
-      'Error creating argo app: application spec for test-1 is invalid: InvalidSpecError: repository not accessible: rpc error: code = Unknown desc = error testing repository connectivity: authentication required',
-    );
+    ).rejects.toThrow('Error creating argo app: errorMessage');
   });
 
   it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
