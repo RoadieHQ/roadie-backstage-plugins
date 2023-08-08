@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.2.20
+
+### Patch Changes
+
+- 2c2661cb: Filtered null values from ArgoCD revision history
+
 ## 2.2.19
 
 ### Patch Changes
