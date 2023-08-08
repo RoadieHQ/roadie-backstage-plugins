@@ -371,25 +371,26 @@ describe('ArgoCD service', () => {
   it('should fail to create an app in argo when argo errors out', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
-        message: 'Duplicate project detected. Cannot overwrite existing.',
+        message:
+          'application spec for test-1 is invalid: InvalidSpecError: repository not accessible: rpc error: code = Unknown desc = error testing repository connectivity: authentication required',
       }),
+      { status: 500 },
     );
 
-    const resp = await argoService.createArgoApplication({
-      baseUrl: 'https://argoInstance1.com',
-      argoToken: 'testToken',
-      appName: 'testProject',
-      projectName: 'testProject',
-      namespace: 'test-namespace',
-      sourceRepo: 'https://github.com/backstage/backstage',
-      sourcePath: 'kubernetes/nonproduction',
-      labelValue: 'backstageId',
-    });
-
-    expect(resp).toStrictEqual({
-      error:
-        'Error creating argo app: Duplicate project detected. Cannot overwrite existing.',
-    });
+    await expect(
+      argoService.createArgoApplication({
+        baseUrl: 'https://argoInstance1.com',
+        argoToken: 'testToken',
+        appName: 'testProject',
+        projectName: 'testProject',
+        namespace: 'test-namespace',
+        sourceRepo: 'https://github.com/backstage/backstage',
+        sourcePath: 'kubernetes/nonproduction',
+        labelValue: 'backstageId',
+      }),
+    ).rejects.toThrow(
+      'Error creating argo app: application spec for test-1 is invalid: InvalidSpecError: repository not accessible: rpc error: code = Unknown desc = error testing repository connectivity: authentication required',
+    );
   });
 
   it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
