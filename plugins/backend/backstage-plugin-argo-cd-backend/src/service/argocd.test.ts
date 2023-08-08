@@ -371,7 +371,7 @@ describe('ArgoCD service', () => {
   it('should fail to create an app in argo when argo errors out', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
-        error: 'Failed to Create application',
+        message: 'Duplicate project detected. Cannot overwrite existing.',
       }),
     );
 
@@ -387,7 +387,8 @@ describe('ArgoCD service', () => {
     });
 
     expect(resp).toStrictEqual({
-      error: 'Failed to Create application',
+      error:
+        'Error creating argo app: Duplicate project detected. Cannot overwrite existing.',
     });
   });
 
