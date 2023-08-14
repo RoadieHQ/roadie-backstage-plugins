@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.11.0
+
+### Minor Changes
+
+- 0c7d7136: Updates the error thrown in argoCreateApplication to include the error message from argo api response.
+
 ## 2.10.0
 
 ### Minor Changes

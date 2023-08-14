@@ -420,24 +420,23 @@ describe('ArgoCD service', () => {
   it('should fail to create an app in argo when argo errors out', async () => {
     fetchMock.mockResponseOnce(
       JSON.stringify({
-        error: 'Failed to Create application',
+        message: 'errorMessage',
       }),
+      { status: 500 },
     );
 
-    const resp = await argoService.createArgoApplication({
-      baseUrl: 'https://argoInstance1.com',
-      argoToken: 'testToken',
-      appName: 'testProject',
-      projectName: 'testProject',
-      namespace: 'test-namespace',
-      sourceRepo: 'https://github.com/backstage/backstage',
-      sourcePath: 'kubernetes/nonproduction',
-      labelValue: 'backstageId',
-    });
-
-    expect(resp).toStrictEqual({
-      error: 'Failed to Create application',
-    });
+    await expect(
+      argoService.createArgoApplication({
+        baseUrl: 'https://argoInstance1.com',
+        argoToken: 'testToken',
+        appName: 'testProject',
+        projectName: 'testProject',
+        namespace: 'test-namespace',
+        sourceRepo: 'https://github.com/backstage/backstage',
+        sourcePath: 'kubernetes/nonproduction',
+        labelValue: 'backstageId',
+      }),
+    ).rejects.toThrow('Error creating argo app: errorMessage');
   });
 
   it('should fail to create a application in argo when argo user is not given enough permissions', async () => {
