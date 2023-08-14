@@ -437,10 +437,11 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(`${baseUrl}/api/v1/applications`, options);
+    const respData = await resp.json();
     if (!resp.ok) {
-      throw new Error('Could not create ArgoCD application.');
+      throw new Error(`Error creating argo app: ${respData.message}`);
     }
-    return resp.json();
+    return respData;
   }
 
   async resyncAppOnAllArgos({
