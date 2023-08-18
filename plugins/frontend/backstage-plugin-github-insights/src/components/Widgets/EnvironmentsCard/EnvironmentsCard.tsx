@@ -63,7 +63,7 @@ const EnvironmentsCard = () => {
     );
   }
 
-  return value.environments.length && owner && repo ? (
+  return value?.environments?.length && owner && repo ? (
     <InfoCard
       title="Environments"
       deepLink={{

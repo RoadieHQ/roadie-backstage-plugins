@@ -63,6 +63,7 @@ export const useRequest = (
         result = requestState[requestName];
       }
     }
+
     return result;
   }, [baseUrl, requestName]);
 
