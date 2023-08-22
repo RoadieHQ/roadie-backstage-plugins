@@ -1,5 +1,6 @@
-import { IdentityApi } from '@backstage/core-plugin-api';
+import { DiscoveryApi, IdentityApi } from '@backstage/core-plugin-api';
 import { ArgoCDApi } from '..';
+import { ArgoCDServiceList } from '../types';
 
 export const getEntityStub = {
   metadata: {
@@ -453,3 +454,17 @@ export const getIdentityApiStub: IdentityApi = {
   },
   signOut: jest.fn(),
 };
+
+export const getDiscoveryApiStub: DiscoveryApi = {
+  async getBaseUrl(pluginId: string) {
+    return Promise.resolve(`http://test.com/${pluginId}`);
+  },
+};
+
+export const getServiceListStub: ArgoCDServiceList = [
+  {
+    name: 'infrastructure',
+    url: 'https://infrastructure.argo.cd',
+    appName: ['some-cool-service'],
+  },
+];

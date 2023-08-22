@@ -10,6 +10,8 @@ import {
   ArgoCDAppList,
   argoCDAppDeployRevisionDetails,
   ArgoCDAppDeployRevisionDetails,
+  argoCDServiceList,
+  ArgoCDServiceList,
 } from '../types';
 import { Type as tsType } from 'io-ts';
 import {
@@ -43,7 +45,7 @@ export interface ArgoCDApi {
   serviceLocatorUrl(options: {
     appName?: string;
     appSelector?: string;
-  }): Promise<Array<string> | Error>;
+  }): Promise<ArgoCDServiceList | Error>;
 }
 
 export const argoCDApiRef = createApiRef<ArgoCDApi>({
@@ -211,24 +213,15 @@ export class ArgoCDApiClient implements ArgoCDApi {
     if (!options.appName && !options.appSelector) {
       throw new Error('Need to provide appName or appSelector');
     }
-    const proxyUrl = await this.getBaseUrl();
+    const baseUrl = await this.getBaseUrl();
     const url = options.appName
-      ? `${proxyUrl}/find/name/${encodeURIComponent(options.appName as string)}`
-      : `${proxyUrl}/find/selector/${encodeURIComponent(
+      ? `${baseUrl}/find/name/${encodeURIComponent(options.appName as string)}`
+      : `${baseUrl}/find/selector/${encodeURIComponent(
           options.appSelector as string,
         )}`;
-    return fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(async response => {
-        const resp = await response.json();
-        return resp;
-      })
-      .catch(_ => {
-        throw new Error('Cannot get argo location(s) for service');
-      });
+
+    return this.fetchDecode(url, argoCDServiceList).catch(_ => {
+      throw new Error('Cannot get argo location(s) for service');
+    });
   }
 }
