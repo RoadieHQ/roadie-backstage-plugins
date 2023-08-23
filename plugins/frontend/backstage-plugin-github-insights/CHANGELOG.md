@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.17
+
+### Patch Changes
+
+- 4abae0b2: Fix issue where .environment may be not available
+
 ## 2.3.16
 
 ### Patch Changes

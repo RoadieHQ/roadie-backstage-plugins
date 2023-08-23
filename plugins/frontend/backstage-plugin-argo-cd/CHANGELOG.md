@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.3.0
+
+### Minor Changes
+
+- 51412379: Fix #796, use authentication api when calling service locator
+
 ## 2.2.20
 
 ### Patch Changes
