@@ -63,3 +63,13 @@ export const argoCDAppList = t.type({
 });
 
 export type ArgoCDAppList = t.TypeOf<typeof argoCDAppList>;
+
+export const argoCDService = t.type({
+  name: t.string,
+  url: t.string,
+  appName: t.union([t.array(t.string), t.undefined]),
+});
+
+export const argoCDServiceList = t.array(argoCDService);
+
+export type ArgoCDServiceList = t.TypeOf<typeof argoCDServiceList>;
