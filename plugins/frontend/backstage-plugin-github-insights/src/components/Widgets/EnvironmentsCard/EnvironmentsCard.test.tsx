@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
 import { ConfigReader } from '@backstage/core-app-api';
 import { rest } from 'msw';
@@ -31,8 +31,8 @@ import { lightTheme } from '@backstage/theme';
 import EnvironmentsCard from '.';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import {
-  scmIntegrationsApiRef,
   ScmIntegrationsApi,
+  scmIntegrationsApiRef,
 } from '@backstage/integration-react';
 import { defaultIntegrationsConfig } from '../../../mocks/scmIntegrationsApiMock';
 
@@ -99,7 +99,7 @@ describe('EnvironmentsCard', () => {
 
     worker.use(
       rest.get(
-        'https://api.github.com/repos/mcalus3/backstage/releases',
+        'https://api.github.com/repos/mcalus3/backstage/environments',
         (_, res, ctx) => res(ctx.status(304), ctx.json({})),
       ),
     );
@@ -118,5 +118,39 @@ describe('EnvironmentsCard', () => {
 
     expect(await screen.findAllByText('env1')).toHaveLength(1);
     expect(await screen.findAllByText('env2')).toHaveLength(1);
+  });
+
+  it('should handle gracefully if no environment is found', async () => {
+    worker.restoreHandlers();
+    worker.use(
+      rest.get(
+        'https://api.github.com/repos/mcalus3/backstage/environments',
+        (_, res, ctx) =>
+          res(
+            ctx.status(404),
+            ctx.json({
+              message: 'Not Found',
+              documentation_url:
+                'https://docs.github.com/rest/deployments/environments#list-environments',
+            }),
+          ),
+      ),
+    );
+
+    render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <ThemeProvider theme={lightTheme}>
+            <EntityProvider entity={entityMock}>
+              <EnvironmentsCard />
+            </EntityProvider>
+          </ThemeProvider>
+        </TestApiProvider>,
+      ),
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByText('Environments')).not.toBeInTheDocument();
+    });
   });
 });
