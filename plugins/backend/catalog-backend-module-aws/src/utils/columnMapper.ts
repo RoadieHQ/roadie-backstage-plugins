@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { set, template, trim } from 'lodash';
-import { ValueMapping } from '../providers/AWSDynamoDbTableDataProvider';
+import { ValueMapping } from '../types';
 
 /**
  * Constructs an object from a `splitChar` separated string.
