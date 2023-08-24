@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FieldProps } from '@rjsf/core';
 import FormControl from '@material-ui/core/FormControl';
 import {
@@ -37,6 +37,18 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
+  const [previousFieldValue, setPreviousFieldValue] = useState<
+    string | undefined
+  >(undefined);
+  const [previousFieldArraySelector, setPreviousFieldArraySelector] = useState<
+    string | undefined
+  >(undefined);
+  const [previousFieldValueSelector, setPreviousFieldValueSelector] = useState<
+    string | undefined
+  >(undefined);
+  const [previousFieldLabelSelector, setPreviousFieldLabelSelector] = useState<
+    string | undefined
+  >(undefined);
   const options = selectFieldFromApiConfigSchema.parse(
     props.uiSchema['ui:options'],
   );
@@ -45,61 +57,159 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     description = '',
     previousFieldParamRequestKey,
     previousFieldParamValueLookupKey,
+    previousFieldArraySelectorLookupKey,
+    previousFieldValueSelectorLookupKey,
+    previousFieldLabelSelectorLookupKey,
   } = options;
+  const { formData } = props.formContext;
 
-  const { error } = useAsync(async () => {
+  useEffect(() => {
+    if (previousFieldParamRequestKey && previousFieldParamValueLookupKey) {
+      const previousField = get(
+        formData?.[0],
+        previousFieldParamValueLookupKey,
+      );
+      if (previousField) {
+        setPreviousFieldValue(previousField);
+      } else {
+        setPreviousFieldValue(undefined);
+      }
+    }
+  }, [
+    formData,
+    previousFieldParamRequestKey,
+    previousFieldParamValueLookupKey,
+  ]);
+
+  useEffect(() => {
+    if (previousFieldValueSelectorLookupKey) {
+      const previousField = get(
+        formData?.[0],
+        previousFieldValueSelectorLookupKey,
+      );
+      if (previousField) {
+        setPreviousFieldValueSelector(previousField);
+      } else {
+        setPreviousFieldValueSelector(undefined);
+      }
+    }
+  }, [formData, previousFieldValueSelectorLookupKey]);
+
+  useEffect(() => {
+    if (previousFieldLabelSelectorLookupKey) {
+      const previousField = get(
+        formData?.[0],
+        previousFieldLabelSelectorLookupKey,
+      );
+      if (previousField) {
+        setPreviousFieldLabelSelector(previousField);
+      } else {
+        setPreviousFieldLabelSelector(undefined);
+      }
+    }
+  }, [formData, previousFieldLabelSelectorLookupKey]);
+
+  useEffect(() => {
+    if (previousFieldArraySelectorLookupKey) {
+      const previousField = get(
+        formData?.[0],
+        previousFieldArraySelectorLookupKey,
+      );
+      if (previousField) {
+        setPreviousFieldArraySelector(previousField);
+      } else {
+        setPreviousFieldArraySelector(undefined);
+      }
+    }
+  }, [formData, previousFieldArraySelectorLookupKey]);
+
+  const { value, error, loading } = useAsync(async () => {
+    if (
+      previousFieldParamValueLookupKey &&
+      previousFieldParamRequestKey &&
+      !previousFieldValue
+    ) {
+      return [];
+    }
     const baseUrl = await discoveryApi.getBaseUrl('');
     const params = new URLSearchParams(options.params);
-    if (previousFieldParamRequestKey && previousFieldParamValueLookupKey) {
-      const { formData } = props.formContext;
-      const value = formData[previousFieldParamValueLookupKey];
-      if (value) {
-        params.append(previousFieldParamRequestKey, value);
-      }
+    if (previousFieldParamRequestKey && previousFieldValue) {
+      params.append(previousFieldParamRequestKey, previousFieldValue);
     }
     const response = await fetchApi.fetch(
       `${baseUrl}${options.path}?${params}`,
     );
     const body = await response.json();
-    const array = options.arraySelector
-      ? get(body, options.arraySelector)
-      : body;
-    const constructedData = array.map((item: unknown) => {
-      let value: string | undefined;
-      let label: string | undefined;
+    if (body) {
+      const getViaDependant = previousFieldArraySelector
+        ? get(body, previousFieldArraySelector)
+        : body;
+      const array = options.arraySelector
+        ? get(body, options.arraySelector)
+        : getViaDependant;
+      if (array && Array.isArray(array)) {
+        const constructedData = array.map((item: unknown) => {
+          let itemValue: string | undefined;
+          let label: string | undefined;
+          const valueSelector =
+            options.valueSelector || previousFieldValueSelector;
+          const labelSelector =
+            options.labelSelector || previousFieldLabelSelector;
 
-      if (options.valueSelector) {
-        value = get(item, options.valueSelector);
-        label = options.labelSelector
-          ? get(item, options.labelSelector)
-          : value;
-      } else {
-        if (!(typeof item === 'string')) {
+          if (valueSelector) {
+            itemValue = get(item, valueSelector);
+            label = labelSelector ? get(item, labelSelector) : itemValue;
+          }
+
+          if (!valueSelector) {
+            throw new Error(
+              `No value selector specified. Cannot parse response.`,
+            );
+          }
+
+          if (!itemValue) {
+            throw new Error(
+              `No value could be extracted from response. Please check your value selector fits the response data.`,
+            );
+          }
+
+          return {
+            value: itemValue,
+            label: label || itemValue,
+          };
+        });
+        setDropDownData(sortBy(constructedData, 'label'));
+      }
+      if (!array) {
+        if (options.arraySelector || previousFieldArraySelector) {
+          const lookupKey = options.arraySelector || previousFieldArraySelector;
           throw new Error(
-            `The item provided for the select drop down "${item}" is not a string`,
+            `Failed to parse response using array selector: ${lookupKey}`,
           );
         }
-        value = item;
-        label = item;
       }
+      return array;
+    }
+    return body;
+  }, [
+    previousFieldValue,
+    previousFieldArraySelector,
+    previousFieldLabelSelector,
+  ]);
 
-      if (!value) {
-        throw new Error(`Failed to populate SelectFieldFromApi dropdown`);
-      }
-
-      return {
-        value,
-        label: label || value,
-      };
-    });
-    setDropDownData(sortBy(constructedData, 'label'));
-  });
-
-  if (error) {
+  if (error && !loading && !value && !dropDownData) {
     return <ErrorPanel error={error} />;
   }
 
-  if (!dropDownData) {
+  if (
+    previousFieldParamRequestKey &&
+    previousFieldParamValueLookupKey &&
+    !previousFieldValue
+  ) {
+    return <></>;
+  }
+
+  if (!dropDownData || loading) {
     return <Progress />;
   }
 
