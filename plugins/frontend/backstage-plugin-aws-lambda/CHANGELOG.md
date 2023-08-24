@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.0
+
+### Minor Changes
+
+- 843e6620: Add optional roleArn prop for lambda overview card to enable cross-account auth capabilities
+
+### Patch Changes
+
+- 0d688d09: Bump package versions to backstage version 1.17.0
+
 ## 2.1.13
 
 ### Patch Changes
