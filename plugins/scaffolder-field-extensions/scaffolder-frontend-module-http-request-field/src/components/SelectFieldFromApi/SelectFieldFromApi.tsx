@@ -40,11 +40,23 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const options = selectFieldFromApiConfigSchema.parse(
     props.uiSchema['ui:options'],
   );
-  const { title = 'Select', description = '' } = options;
+  const {
+    title = 'Select',
+    description = '',
+    previousFieldParamRequestKey,
+    previousFieldParamValueLookupKey,
+  } = options;
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
     const params = new URLSearchParams(options.params);
+    if (previousFieldParamRequestKey && previousFieldParamValueLookupKey) {
+      const { formData } = props.formContext;
+      const value = formData[previousFieldParamValueLookupKey];
+      if (value) {
+        params.append(previousFieldParamRequestKey, value);
+      }
+    }
     const response = await fetchApi.fetch(
       `${baseUrl}${options.path}?${params}`,
     );

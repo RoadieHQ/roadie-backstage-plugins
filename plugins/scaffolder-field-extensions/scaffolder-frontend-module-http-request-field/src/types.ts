@@ -21,6 +21,8 @@ export const selectFieldFromApiConfigSchema = z.object({
   arraySelector: z.string().or(z.array(z.string())).optional(),
   valueSelector: z.string().or(z.array(z.string())).optional(),
   labelSelector: z.string().or(z.array(z.string())).optional(),
+  previousFieldParamRequestKey: z.string(),
+  previousFieldParamValueLookupKey: z.string(),
   title: z.string().optional(),
   description: z.string().optional(),
 });
