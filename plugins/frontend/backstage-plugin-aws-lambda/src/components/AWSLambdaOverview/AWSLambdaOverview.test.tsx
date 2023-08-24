@@ -62,7 +62,7 @@ describe('AWSLambdaCard', () => {
 
   beforeEach(() => {
     worker.use(
-      rest.get('https://test-url/api/aws/credentials', (_, res, ctx) =>
+      rest.post('https://test-url/api/aws/credentials', (_, res, ctx) =>
         res(ctx.json(credentialsResponseMock)),
       ),
       rest.get(
