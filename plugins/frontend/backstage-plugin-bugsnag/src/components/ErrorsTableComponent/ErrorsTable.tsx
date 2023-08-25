@@ -97,10 +97,23 @@ export const DenseTable = ({
 
   return (
     <Table
-      title="Errors overview"
       options={{ search: true, paging: true }}
       columns={columns}
       data={data}
+      filters={[
+        {
+          column: 'Severity',
+          type: 'multiple-select',
+        },
+        {
+          column: 'Status',
+          type: 'multiple-select',
+        },
+        {
+          column: 'Stage',
+          type: 'multiple-select',
+        },
+      ]}
     />
   );
 };
