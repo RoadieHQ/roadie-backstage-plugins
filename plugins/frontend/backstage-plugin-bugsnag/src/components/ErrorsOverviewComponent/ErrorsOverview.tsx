@@ -37,8 +37,7 @@ import {
   useProjectName,
 } from '../../hooks/useBugsnagData';
 
-export const ErrorsOverview = () => {
-  const { entity } = useEntity();
+export const ErrorsOverviewComponent = () => {
   const organisationName = useBugsnagData()[0];
   const projectApiKey = useBugsnagData()[1];
   const projectName = useProjectName();
@@ -72,7 +71,7 @@ export const ErrorsOverview = () => {
     return <Alert severity="error">{error.message}</Alert>;
   }
 
-  return isBugsnagAvailable(entity) ? (
+  return (
     <Page themeId="tool">
       <Content>
         <ContentHeader title="Bugsnag logs">
@@ -87,7 +86,13 @@ export const ErrorsOverview = () => {
         </Grid>
       </Content>
     </Page>
-  ) : (
-    <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />
   );
+};
+
+export const ErrorsOverview = () => {
+  const { entity } = useEntity();
+  if (!isBugsnagAvailable(entity)) {
+    return <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />;
+  }
+  return <ErrorsOverviewComponent />;
 };
