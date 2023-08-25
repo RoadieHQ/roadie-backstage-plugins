@@ -64,12 +64,14 @@ export const DenseTable = ({
 }) => {
   const columns: TableColumn[] = [
     { title: '', field: 'class' },
+    { title: 'Description', field: 'message', width: '40%' },
     { title: 'Events', field: 'events' },
     { title: 'Users', field: 'users' },
     { title: 'Stage', field: 'stage' },
     { title: 'First seen', field: 'first_seen' },
     { title: 'Last seen', field: 'last_seen' },
     { title: 'Severity', field: 'severity' },
+    { title: 'Status', field: 'status' },
   ];
 
   const data = errors.map(error => {
@@ -81,6 +83,8 @@ export const DenseTable = ({
         organisationName,
         projectName,
       ),
+      message: error.message,
+      status: error.status,
       stage: error.release_stages.join(', '),
       events: error.events,
       id: error.id,

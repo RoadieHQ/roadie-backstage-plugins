@@ -24,6 +24,8 @@ export type BugsnagError = {
   release_stages: string[];
   error_class: string;
   users: number;
+  message: string;
+  status: string;
 };
 
 export type Organisation = {
