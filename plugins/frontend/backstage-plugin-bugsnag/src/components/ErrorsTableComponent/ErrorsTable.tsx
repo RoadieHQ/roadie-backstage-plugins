@@ -81,7 +81,7 @@ export const DenseTable = ({
         organisationName,
         projectName,
       ),
-      stage: error.release_stages,
+      stage: error.release_stages.join(', '),
       events: error.events,
       id: error.id,
       project_id: error.project_id,
