@@ -51,8 +51,9 @@ const HistoryTable = ({
 
   const history = data.items
     ? data.items
+        .filter(Boolean)
         .map(app => {
-          if (typeof app.status.history !== 'undefined') {
+          if (app?.status?.history) {
             return app.status.history.map(entry => {
               return {
                 app: app.metadata.name,
