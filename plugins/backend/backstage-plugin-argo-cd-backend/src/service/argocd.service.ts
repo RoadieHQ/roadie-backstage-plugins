@@ -118,10 +118,10 @@ export class ArgoService implements ArgoServiceApi {
     }
     const resp = await Promise.all(
       this.instanceConfigs.map(async (argoInstance: any) => {
-        const token =
-          argoInstance.token || (await this.getArgoToken(argoInstance));
         let getArgoAppDataResp: any;
         try {
+          const token =
+            argoInstance.token || (await this.getArgoToken(argoInstance));
           getArgoAppDataResp = await this.getArgoAppData(
             argoInstance.url,
             argoInstance.name,
@@ -129,6 +129,9 @@ export class ArgoService implements ArgoServiceApi {
             options,
           );
         } catch (error: any) {
+          this.logger.error(
+            `Error getting token from Argo Instance ${argoInstance.name}: ${error.message}`,
+          );
           return null;
         }
 
@@ -450,32 +453,34 @@ export class ArgoService implements ArgoServiceApi {
     const argoAppResp: findArgoAppResp[] = await this.findArgoApp({
       selector: appSelector,
     });
-
-    const parallelSyncCalls = argoAppResp.map(
-      async (argoInstance: any): Promise<SyncResponse[]> => {
-        try {
-          const token = await this.getArgoToken(argoInstance);
+    if (argoAppResp) {
+      const parallelSyncCalls = argoAppResp.map(
+        async (argoInstance: any): Promise<SyncResponse[]> => {
           try {
-            const resp = argoInstance.appName.map(
-              (argoApp: any): Promise<SyncResponse> => {
-                return this.syncArgoApp({
-                  argoInstance,
-                  argoToken: token,
-                  appName: argoApp,
-                });
-              },
-            );
-            return await Promise.all(resp);
+            const token = await this.getArgoToken(argoInstance);
+            try {
+              const resp = argoInstance.appName.map(
+                (argoApp: any): Promise<SyncResponse> => {
+                  return this.syncArgoApp({
+                    argoInstance,
+                    argoToken: token,
+                    appName: argoApp,
+                  });
+                },
+              );
+              return await Promise.all(resp);
+            } catch (e: any) {
+              return [{ status: 'Failure', message: e.message }];
+            }
           } catch (e: any) {
             return [{ status: 'Failure', message: e.message }];
           }
-        } catch (e: any) {
-          return [{ status: 'Failure', message: e.message }];
-        }
-      },
-    );
+        },
+      );
 
-    return await Promise.all(parallelSyncCalls);
+      return await Promise.all(parallelSyncCalls);
+    }
+    return [];
   }
 
   async syncArgoApp({
