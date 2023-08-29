@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-common';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
+import jsonata from 'jsonata';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
 export function createYamlJSONataTransformAction() {

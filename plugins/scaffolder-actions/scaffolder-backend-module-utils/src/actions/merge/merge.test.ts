@@ -15,11 +15,11 @@
  */
 
 import { getVoidLogger } from '@backstage/backend-common';
-import { createMergeAction, createMergeJSONAction } from './merge';
-import { PassThrough } from 'stream';
-import mock from 'mock-fs';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
+import mock from 'mock-fs';
+import { PassThrough } from 'stream';
+import { createMergeAction, createMergeJSONAction } from './merge';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -36,7 +36,7 @@ describe('roadiehq:utils:json:merge', () => {
     createTemporaryDirectory: jest.fn(),
   };
 
-  const action = createMergeJSONAction({});
+  const action = createMergeJSONAction();
 
   it('should throw error when required parameter path is not provided', async () => {
     await expect(

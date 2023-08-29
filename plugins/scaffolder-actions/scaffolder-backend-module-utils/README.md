@@ -6,22 +6,33 @@ Welcome to the roadie `utils` actions for the `scaffolder-backend`.
 
 This contains a collection of actions to use in scaffolder templates:
 
-- [Zip](#zip)
-- [Sleep](#sleep)
-- [Deserialise a file](#deserialise)
-- [Serialise to JSON or YAML](#serialise)
-- [Parse and Transform JSON or YAML](#parse-and-transform-json-or-yaml)
-- [Merge new data into an existing JSON file](#merge-json)
-- [Append content to a file](#append)
-- [Write content to a file](#write-to-file)
-- [Replace in files](#replace-in-files)
+- [scaffolder-backend-module-utils actions package](#scaffolder-backend-module-utils-actions-package)
+  - [Intro](#intro)
+  - [Setup](#setup)
+  - [Setting up Backstage](#setting-up-backstage)
+    - [Installing the actions](#installing-the-actions)
+  - [Actions](#actions)
+    - [Zip](#zip)
+    - [Sleep](#sleep)
+    - [Parse](#parse)
+    - [Serialize to JSON or YAML](#serialize-to-json-or-yaml)
+      - [To yaml](#to-yaml)
+      - [To JSON](#to-json)
+    - [Parse and Transform JSON or YAML](#parse-and-transform-json-or-yaml)
+    - [Merge JSON or YAML](#merge-json-or-yaml)
+      - [Example Merge JSON template using an object input](#example-merge-json-template-using-an-object-input)
+      - [Example Merge JSON template using string input](#example-merge-json-template-using-string-input)
+    - [Append](#append)
+    - [Write to File](#write-to-file)
+      - [Example template](#example-template)
+    - [Replace in files](#replace-in-files)
 
 ## Setup
 
 ## Setting up Backstage
 
 Create your Backstage application using the Backstage CLI as described here:
-https://backstage.io/docs/getting-started/create-an-app
+<https://backstage.io/docs/getting-started/create-an-app>
 
 > Note: If you are using this plugin in a Backstage monorepo that contains the code for `@backstage/plugin-scaffolder-backend`, you need to modify your internal build processes to transpile files from the `node_modules` folder as well.
 
@@ -29,9 +40,8 @@ You need to configure the action in your backend:
 
 ### Installing the actions
 
-```
-cd packages/backend
-yarn add @roadiehq/scaffolder-backend-module-utils
+```console
+yarn workspace backend add @roadiehq/scaffolder-backend-module-utils
 ```
 
 Configure the action:
@@ -42,37 +52,12 @@ Here you can pick the actions that you'd like to register to your backstage inst
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
 import {
-  createZipAction,
-  createSleepAction,
-  createWriteFileAction,
-  createAppendFileAction,
-  createMergeJSONAction,
-  createMergeAction,
-  createParseFileAction,
-  createSerializeYamlAction,
-  createSerializeJsonAction,
-  createJSONataAction,
-  createYamlJSONataTransformAction,
-  createJsonJSONataTransformAction,
+  createUtilActions
 } from '@roadiehq/scaffolder-backend-module-utils';
 ...
 
 const actions = [
-  createZipAction(),
-  createSleepAction(),
-  createWriteFileAction(),
-  createAppendFileAction(),
-  createMergeJSONAction({}),
-  createMergeAction(),
-  createAwsS3CpAction(),
-  createEcrAction(),
-  createParseFileAction(),
-  createSerializeYamlAction(),
-  createSerializeJsonAction(),
-  createJSONataAction(),
-  createYamlJSONataTransformAction(),
-  createJsonJSONataTransformAction(),
-  createReplaceInFileAction(),
+  ...createUtilActions(),
   ...createBuiltinActions({
     containerRunner,
     integrations,
@@ -93,7 +78,7 @@ return await createRouter({
 });
 ```
 
-## Actions:
+## Actions
 
 ### Zip
 
@@ -180,16 +165,17 @@ spec:
         path: ${{ parameters.amount }}
 ```
 
-### Deserialise
+### Parse
 
 **Action name**: `roadiehq:utils:fs:parse`
 
-This action deserialises JSON or YAML files in the temporary scaffolder workspace to a JavaScript object in memory that can then be passed to another step.
+This action parses JSON or YAML files in the temporary scaffolder workspace to a JavaScript object in memory that can then be passed to another step.
 
 Required params:
 
-- path: The path to the file in the temporary scaffolder workspace that you want to de-serialaise
-- parser: The type of content found in the file you want to de-serialise
+- path: The file path you want to edit.
+- parser: The type of content found in the file you want to parse.
+  - `json | yaml | multiyaml`
 
 ```yaml
 ---
@@ -229,13 +215,13 @@ spec:
     content: ${{ steps.serialize.output.content }}
 ```
 
-### Serialise to JSON or YAML
+### Serialize to JSON or YAML
 
 Action: `roadiehq:utils:serialize:[json|yaml]`
 
 This action creates a JSON or YAML formatted string representation of key value pairs written in yaml under the data input field.
 
-#### To yaml:
+#### To yaml
 
 ```yaml
 ---
@@ -276,7 +262,7 @@ spec:
 hello: world
 ```
 
-#### To JSON:
+#### To JSON
 
 ```yaml
 ---
@@ -368,7 +354,7 @@ spec:
       name: Parse File
       action: roadiehq:utils:jsonata:json:transform
       input:
-        path: input-data.jaon
+        path: input-data.json
         expression: '$ ~> | $ | { "items": [items, "item2"] }|'
   output:
     result: ${{ steps.jsonata.output.result }}
@@ -400,14 +386,17 @@ spec:
     result: ${{ steps.jsonata.output.result }}
 ```
 
-### Merge JSON
+### Merge JSON or YAML
 
-**Action name**: `roadiehq:utils:json:merge`
+**Action name**: `roadiehq:utils:merge`
 
 **Required params:**
 
-- path: The file path for the JSON you want to edit.
+- path: The file path you want to edit.
+- parser: The type of content found in the file you want to parse.
+  - `json | yaml | multiyaml`
 - content: The JSON you want to merge in, as a string or a YAML object.
+- options: Optional YAML parameters when serializing.
 
 #### Example Merge JSON template using an object input
 
@@ -430,7 +419,7 @@ spec:
         type: string
         description: The name of the repository
       org:
-        title: Repository Organisation
+        title: Repository Organization
         type: string
         description: The Github org that the repository is in
       pr_branch:
@@ -496,7 +485,7 @@ spec:
         type: string
         description: The name of the repository
       org:
-        title: Repository Organisation
+        title: Repository Organization
         type: string
         description: The Github org that the repository is in
       pr_branch:
@@ -653,7 +642,7 @@ spec:
           type: string
           description: The name of the repository
         org:
-          title: Repository Organisation
+          title: Repository Organization
           type: string
           description: The Github org that the repository is in
         pr_branch:

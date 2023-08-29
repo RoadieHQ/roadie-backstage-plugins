@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-common';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import fs from 'fs-extra';
-import { extname } from 'path';
 import { merge } from 'lodash';
-import yaml from 'js-yaml';
+import { extname } from 'node:path';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import { parseContent, serializeContent } from '../../utils';
 
-export function createMergeJSONAction({ actionId }: { actionId?: string }) {
+/**
+ * @deprecated use createMergeAction instead
+ */
+export function createMergeJSONAction() {
   return createTemplateAction<{ path: string; content: any }>({
-    id: actionId || 'roadiehq:utils:json:merge',
+    id: 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
     supportsDryRun: true,
     schema: {
@@ -90,6 +93,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
 export function createMergeAction() {
   return createTemplateAction<{
     path: string;
+    parser?: 'yaml' | 'json';
     content: any;
     options?: supportedDumpOptions;
   }>({
@@ -105,6 +109,12 @@ export function createMergeAction() {
             title: 'Path',
             description: 'Path to existing file to append.',
             type: 'string',
+          },
+          parser: {
+            title: 'Parse',
+            description: 'Optionally parse the content to an object.',
+            type: 'string',
+            enum: ['yaml', 'json'],
           },
           content: {
             description:
@@ -138,41 +148,31 @@ export function createMergeAction() {
         ctx.logger.error(`The file ${sourceFilepath} does not exist.`);
         throw new Error(`The file ${sourceFilepath} does not exist.`);
       }
-      const originalContent = fs.readFileSync(sourceFilepath).toString();
-      let mergedContent;
 
-      switch (extname(sourceFilepath)) {
-        case '.json': {
-          const newContent =
-            typeof ctx.input.content === 'string'
-              ? JSON.parse(ctx.input.content)
-              : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = JSON.stringify(
-            merge(JSON.parse(originalContent), newContent),
-            null,
-            2,
-          );
-          break;
-        }
-        case '.yml':
-        case '.yaml': {
-          const newContent =
-            typeof ctx.input.content === 'string'
-              ? yaml.load(ctx.input.content)
-              : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = yaml.dump(
-            merge(yaml.load(originalContent), newContent),
-            ctx.input.options,
-          );
-          break;
-        }
-        default:
-          break;
-      }
-      if (!mergedContent) {
+      const originalContent = fs.readFileSync(sourceFilepath).toString();
+      const fileExtension = extname(sourceFilepath);
+      const content = parseContent(
+        originalContent,
+        fileExtension,
+        ctx.input.parser,
+      );
+      const newContent =
+        typeof ctx.input.content === 'string'
+          ? parseContent(ctx.input.content, fileExtension, ctx.input.parser)
+          : (ctx.input.content as unknown); // This supports the case where dynamic keys are required
+      const mergedContent = merge(content, newContent);
+      const serializedContent = serializeContent(
+        mergedContent,
+        fileExtension,
+        ctx.input.parser,
+        ctx.input.options,
+      );
+
+      if (!serializedContent) {
         return;
       }
-      fs.writeFileSync(sourceFilepath, mergedContent);
+
+      fs.writeFileSync(sourceFilepath, serializedContent);
       ctx.output('path', sourceFilepath);
     },
   });

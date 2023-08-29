@@ -15,8 +15,8 @@
  */
 
 import { resolveSafeChildPath } from '@backstage/backend-common';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { InputError } from '@backstage/errors';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
 

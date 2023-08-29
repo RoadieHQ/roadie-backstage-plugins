@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { resolveSafeChildPath } from '@backstage/backend-common';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
-
-const parsers: Record<'yaml' | 'json' | 'multiyaml', (cnt: string) => any> = {
-  yaml: (cnt: string) => yaml.load(cnt),
-  json: (cnt: string) => JSON.parse(cnt),
-  multiyaml: (cnt: string) => yaml.loadAll(cnt),
-};
+import { extname } from 'node:path';
+import { parseContent } from '../../utils';
 
 export function createParseFileAction() {
   return createTemplateAction<{
@@ -65,18 +60,20 @@ export function createParseFileAction() {
         ctx.workspacePath,
         ctx.input.path,
       );
-      const parserName = ctx.input.parser;
-      let parser = (content: string) => content;
-
-      if (parserName) {
-        parser = parsers[parserName];
+      if (!fs.existsSync(sourceFilepath)) {
+        ctx.logger.error(`The file ${sourceFilepath} does not exist.`);
+        throw new Error(`The file ${sourceFilepath} does not exist.`);
       }
 
-      const content: string | object = parser(
-        fs.readFileSync(sourceFilepath).toString(),
+      const originalContent = fs.readFileSync(sourceFilepath).toString();
+      const fileExtension = extname(sourceFilepath);
+      const content = parseContent(
+        originalContent,
+        fileExtension,
+        ctx.input.parser,
       );
 
-      ctx.output('content', content);
+      ctx.output('content', content as any);
     },
   });
 }

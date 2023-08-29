@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { InputError } from '@backstage/errors';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 
 export function createSleepAction(options?: { maxSleep?: number }) {
   return createTemplateAction<{ amount: number }>({
