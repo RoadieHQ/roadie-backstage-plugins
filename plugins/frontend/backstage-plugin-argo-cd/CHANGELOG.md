@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.3.2
+
+### Patch Changes
+
+- 99534e20: Fix undefined error.
+
+## 2.3.1
+
+### Patch Changes
+
+- 0d688d09: Bump package versions to backstage version 1.17.0
+
 ## 2.3.0
 
 ### Minor Changes

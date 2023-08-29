@@ -44,6 +44,24 @@ In order to perform requests to AWS lambda plugin first asks backend for tempora
 
 (it uses @roadiehq/backstage-plugin-aws-auth backend plugin)
 
+Optionally, you can provide a Role ARN to the entity card to instruct it to request credentials for that particular role to pull the lambda information. The AWS user was have IAM permissions to `sts:AssumeRole` the providing role:
+
+```ts
+const overviewContent = (
+  <Grid container spacing={3} alignItems="stretch">
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isAWSLambdaAvailable(e))}>
+        <Grid item md={6}>
+          <EntityAWSLambdaOverviewCard
+            roleArn={'arn:aws:iam::000000000000:role/roleName'}
+          />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+  </Grid>
+);
+```
+
 Regardless of what auth method you use - you can also decide what function to show in the table (what function particular service uses) by annotating backstage.yaml with a name of the function, like:
 
 ```yaml

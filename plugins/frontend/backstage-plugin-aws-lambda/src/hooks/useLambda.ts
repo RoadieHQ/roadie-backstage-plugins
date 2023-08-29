@@ -28,9 +28,11 @@ import { useCallback } from 'react';
 export function useLambda({
   lambdaName,
   region,
+  roleArn,
 }: {
   lambdaName: string;
   region: string;
+  roleArn: string | undefined;
 }) {
   const lambdaApi = useApi(awsLambdaApiRef);
   const errorApi = useApi(errorApiRef);
@@ -48,6 +50,7 @@ export function useLambda({
         awsRegion: region,
         functionName: lambdaName,
         token: identity.value?.token || undefined,
+        roleArn: roleArn,
       });
     },
     [region, lambdaName], // eslint-disable-line react-hooks/exhaustive-deps

@@ -21,7 +21,7 @@ import {
 import {
   EntityProvider,
   EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { STS } from '@aws-sdk/client-sts';
 import { Config } from '@backstage/config';
@@ -35,11 +35,7 @@ import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
-
-export type ValueMapping = {
-  entityPath: string;
-  template?: string;
-};
+import { ValueMapping } from '../types';
 
 type DdbTableDataConfigOptions = {
   tableName: string;

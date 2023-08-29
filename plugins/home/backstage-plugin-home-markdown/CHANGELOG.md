@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.14
+
+### Patch Changes
+
+- 0d688d09: Bump package versions to backstage version 1.17.0
+
 ## 2.5.13
 
 ### Patch Changes
