@@ -14,41 +14,30 @@
  * limitations under the License.
  */
 import {
-  ContainerRunner,
   DockerContainerRunner,
   UrlReader,
+  ContainerRunner,
 } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
-import { Config } from '@backstage/config';
-import { ScmIntegrations } from '@backstage/integration';
-import { DiscoveryApi } from '@backstage/plugin-permission-common';
 import {
-  TemplateAction,
-  createBuiltinActions,
   createRouter,
+  createBuiltinActions,
+  TemplateAction,
 } from '@backstage/plugin-scaffolder-backend';
+import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
+import {
+  createUtilActions,
+} from '@roadiehq/scaffolder-backend-module-utils';
 import {
   createAwsS3CpAction,
   createEcrAction,
 } from '@roadiehq/scaffolder-backend-module-aws';
-import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
-import {
-  createAppendFileAction,
-  createJSONataAction,
-  createJsonJSONataTransformAction,
-  createMergeAction,
-  createMergeJSONAction,
-  createParseFileAction,
-  createSerializeJsonAction,
-  createSerializeYamlAction,
-  createSleepAction,
-  createWriteFileAction,
-  createYamlJSONataTransformAction,
-  createZipAction,
-} from '@roadiehq/scaffolder-backend-module-utils';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
+import { ScmIntegrations } from '@backstage/integration';
+import { Config } from '@backstage/config';
+import { DiscoveryApi } from '@backstage/plugin-permission-common';
 
 export const createActions = (options: {
   reader: UrlReader;
@@ -67,21 +56,10 @@ export const createActions = (options: {
   });
 
   return [
-    createZipAction(),
-    createSleepAction(),
-    createWriteFileAction(),
-    createAppendFileAction(),
-    createMergeJSONAction(),
-    createMergeAction(),
     createAwsS3CpAction(),
     createEcrAction(),
-    createParseFileAction(),
-    createSerializeYamlAction(),
-    createSerializeJsonAction(),
-    createJSONataAction(),
-    createYamlJSONataTransformAction(),
-    createJsonJSONataTransformAction(),
     createHttpBackstageAction({ discovery }),
+    ...createUtilActions(),
     ...defaultActions,
   ];
 };
