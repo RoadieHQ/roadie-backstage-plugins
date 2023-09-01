@@ -1,120 +1,145 @@
-# scaffolder-frontend-module-dynamic-select
+# scaffolder-backend-module-http-request
 
-This custom scaffolder field.
+Welcome to the `http` actions for the `scaffolder-backend`.
 
-It can be installed as follows in the `App.tsx`
+This contains one action: `http:backstage:request`.
 
-```typescript jsx
-...
-    <Route path="/create" element={<ScaffolderPage />}>
-      <ScaffolderFieldExtensions>
-        ...
-        <SelectFieldFromApiExtension />
-      </ScaffolderFieldExtensions>
-    </Route>
-...
+The `http:backstage:request` action allows the task to call any of the backstage APIs available to the user that triggers it. The action takes care of passing the authentication token of the user to the task execution so that the action can perform actions on behalf of the user that triggers it.
+
+## Getting started
+
+Create your Backstage application using the Backstage CLI as described here:
+https://backstage.io/docs/getting-started/create-an-app
+
+> Note: If you are using this plugin in a Backstage monorepo that contains the code for `@backstage/plugin-scaffolder-backend`, you need to modify your internal build processes to transpile files from the `node_modules` folder as well.
+
+You need to configure the action in your backend:
+
+## From your Backstage root directory
+
+```
+cd packages/backend
+yarn add @roadiehq/scaffolder-backend-module-http-request
 ```
 
-Here is an example of its use in a template:
+Configure the action:
+(you can check the [docs](https://backstage.io/docs/features/software-templates/writing-custom-actions#registering-custom-actions) to see all options):
+
+```typescript
+// packages/backend/src/plugins/scaffolder.ts
+const actions = [
+  createHttpBackstageAction({ discovery }),
+  ...createBuiltinActions({
+    containerRunner,
+    integrations,
+    config,
+    catalogClient,
+    reader,
+  }),
+];
+
+return await createRouter({
+  containerRunner,
+  logger,
+  config,
+  database,
+  catalogClient,
+  reader,
+  actions,
+});
+```
+
+### Supported methods
+
+Action supports following HTTP methods: `GET`, `HEAD`, `OPTIONS`, `POST`, `UPDATE`, `DELETE`, `PUT`, `PATCH`
+
+The path should always point to a proxy entry with the following format: `proxy/<proxy-path>/<external-api-path>`
+
+You can also point to the internal catalog apis like so: `/catalog/entities` See [https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities](https://backstage.io/docs/features/software-catalog/software-catalog-api/#get-entities)
+
+i.e.: `/proxy/snyk/org/<some-org>/projects` or `/proxy/circleci/api/projects` (NB: the CircleCI proxy path is `circleci/api/` but Snyk is just `snyk/`)
+
+### Example of using GET method
 
 ```yaml
+---
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: custom-field-demo
-  title: Custom Field Demo
-  description: Custom Field Demo.
+  name: HTTP-testing
+  title: Http testing for post/get
+  description: Testing get functionality with get
 spec:
-  owner: backstage/techdocs-core
+  owner: roadie
   type: service
 
   parameters:
-    properties:
-      - title: Custom
-        properties:
-          facetValue:
-            type: string
-            enum: ['kind', 'apiVersion']
-          custom:
-            type: string
-            # Use `SelectFieldFromApi` to configure the select field for the entry.
-            ui:field: SelectFieldFromApi
+    - title: Fill in some params
+      properties:
+        httpGetPath:
+          title: Get Path
+          type: string
+          description: The path you want to get on your backstage instance
+          ui:autofocus: true
+          ui:options:
+            rows: 5
 
-            ui:options:
-              title: My Dropdown title
-              description: My custom description for the component
-              # The Path on the Backstage API and the parameters to fetch the data for the dropdown
-              path: 'catalog/entity-facets'
-              # This selects the array element from the API fetch response. It finds the array with the name kind
-              # under the facets object
-              arraySelector: 'facets.kind'
-              # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
-              # it will use the value of the item directly.
-              valueSelector: 'count'
-              # (Optional) This selects the field in the array to use for the label of each select item.
-              labelSelector: 'value'
-              # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-              previousFieldParamRequestKey: 'facet'
-              # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
-              previousFieldParamValueLookupKey: 'facetValue'
+  steps:
+    - id: backstage_request
+      name: backstage request
+      action: http:backstage:request
+      input:
+        method: 'GET'
+        path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues'
+        headers:
+          test: 'hello'
+          foo: 'bar'
+
+  output:
+    getResponse: '{{ steps.backstage_request.output.body }}'
+    getCode: '{{ steps.backstage_request.output.code }}'
+    getHeaders: '{{ steps.backstage_request.output.headers }}'
 ```
 
-The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
-when the 'kind' facet is selected.
+### Example of using POST method
 
-The response is the following and it will extract the `count` field as the value and `value` as the label of the dropdown.
+If the request requires a body, it can be specified using the body parameter. There are two options here
 
-```json
-{
-  "facets": {
-    "kind": [
-      {
-        "count": 5,
-        "value": "foo"
-      }
-    ]
-  }
-}
-```
-
-The example template would result in the following dropdown:
-
-![Alt text](images/dropdown_sample_closed.png?raw=true 'Example of the custom scaffolder field')
-![Alt text](images/dropdown_sample_opened.png?raw=true 'Example of the custom scaffolder field')
-
-You will notice that using the apiKey value causes an error because we have hardcoded the arraySelector to suit the body returned by the kind request.
-
-You can get around this by specifying the arraySelector dynamically also like so:
+1. `content-type: application/json` header is specified. Everything under `body` hash will be converted into JSON string
+2. `content-type: application/json` header is not specified. `body` treated as a plain string
 
 ```yaml
-properties:
-  objectFacet:
-    type: object
-    properties:
-      kind:
-        type: string
-        enum: ['kind', 'apiVersion']
-      arraySelector:
-        type: string
-        enum: ['facets.kind', 'facets.apiVersion']
-  custom:
-    type: string
-    # Use `SelectFieldFromApi` to configure the select field for the entry.
-    ui:field: SelectFieldFromApi
-    ui:options:
-      title: My Dropdown title
-      description: My custom description for the component
-      # The Path on the Backstage API and the parameters to fetch the data for the dropdown
-      path: 'catalog/entity-facets'
-      # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
-      # it will use the value of the item directly.
-      valueSelector: 'count'
-      # (Optional) This selects the field in the array to use for the label of each select item.
-      labelSelector: 'value'
-      # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-      previousFieldParamRequestKey: 'facet'
-      # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
-      previousFieldParamValueLookupKey: 'objectFacet.kind'
-      # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
-      previousFieldArraySelectorLookupKey: 'objectFacet.arraySelector'
+steps:
+  - id: backstage_request
+    name: backstage request
+    action: http:backstage:request
+    input:
+      method: 'POST'
+      path: '/proxy/snyk/org/<some-org>/project/<some-project-id>/aggregated-issues'
+      headers:
+        content-type: 'application/json'
+      body:
+        name: 'test'
+        bar: 'foo'
+
+output:
+  getResponse: '{{ steps.backstage_request.output.body }}'
+  getCode: '{{ steps.backstage_request.output.code }}'
+  getHeaders: '{{ steps.backstage_request.output.headers }}'
 ```
+
+Snippet above will send the following HTTP request:
+
+```sh
+--------  127.0.0.1:53321 | POST /
+Headers
+"Accept" : ["*/*"]
+"Content-Type" : ["application/json"]
+"Connection" : ["close"]
+"User-Agent" : ["node-fetch/1.0 (+https://github.com/bitinn/node-fetch)"]
+"Content-Length" : ["27"]
+00000000  7b 22 6e 61 6d 65 22 3a  22 74 65 73 74 22 2c 22  |{"name":"test","|
+00000010  62 61 72 22 3a 22 66 6f  6f 22 7d                 |bar":"foo"}|
+```
+
+You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.
