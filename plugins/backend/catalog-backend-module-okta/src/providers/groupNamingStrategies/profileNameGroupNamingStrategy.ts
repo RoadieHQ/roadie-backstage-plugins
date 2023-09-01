@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group } from '@okta/okta-sdk-nodejs';
+import { GroupNamingStrategy } from './types';
 
-export type GroupNamingStrategy = (group: Group) => string;
-export type GroupNamingStrategies =
-  | 'id'
-  | 'kebab-case-name'
-  | 'profile-name'
-  | undefined;
+export const profileNameGroupNamingStrategy: GroupNamingStrategy = group =>
+  group.profile.name;

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { idGroupNamingStrategy, kebabCaseGroupNamingStrategy } from './index';
+import {
+  idGroupNamingStrategy,
+  kebabCaseGroupNamingStrategy,
+  profileNameGroupNamingStrategy,
+} from './index';
 import { GroupNamingStrategies, GroupNamingStrategy } from './types';
 
 export const groupNamingStrategyFactory = (
@@ -28,6 +32,8 @@ export const groupNamingStrategyFactory = (
       return idGroupNamingStrategy;
     case 'kebab-case-name':
       return kebabCaseGroupNamingStrategy;
+    case 'profile-name':
+      return profileNameGroupNamingStrategy;
     default:
       throw new Error(`Unknown naming strategy ${strategy}`);
   }

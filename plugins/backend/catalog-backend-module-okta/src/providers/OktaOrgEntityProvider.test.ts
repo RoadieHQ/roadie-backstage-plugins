@@ -258,6 +258,36 @@ describe('OktaOrgEntityProvider', () => {
       });
     });
 
+    it('allows using the profile name of the group name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        groupNamingStrategy: 'profile-name',
+        userNamingStrategy: 'strip-domain-email',
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'Everyone@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['fname'],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
     it('allows selecting a custom field for the name', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),

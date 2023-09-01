@@ -15,6 +15,7 @@
  */
 export { kebabCaseGroupNamingStrategy } from './kebabCaseGroupNamingStrategy';
 export { idGroupNamingStrategy } from './idGroupNamingStrategy';
+export { profileNameGroupNamingStrategy } from './profileNameGroupNamingStrategy';
 export { ProfileFieldGroupNamingStrategy } from './ProfileFieldGroupNamingStrategy';
 export { groupNamingStrategyFactory } from './groupNamingStrategyFactory';
 export type { GroupNamingStrategy, GroupNamingStrategies } from './types';
