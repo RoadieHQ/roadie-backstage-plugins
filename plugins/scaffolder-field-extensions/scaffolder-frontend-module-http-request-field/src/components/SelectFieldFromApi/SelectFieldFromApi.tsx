@@ -29,9 +29,9 @@ import {
 } from '@backstage/core-components';
 import { useAsync } from 'react-use';
 import get from 'lodash/get';
-import sortBy from 'lodash/sortBy';
 import { selectFieldFromApiConfigSchema } from '../../types';
 import { FormHelperText } from '@material-ui/core';
+import jsonata from 'jsonata';
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
@@ -40,15 +40,10 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const [previousFieldValue, setPreviousFieldValue] = useState<
     string | undefined
   >(undefined);
-  const [previousFieldArraySelector, setPreviousFieldArraySelector] = useState<
+  const [jsonataLookupExpression, setJsonataLookupExpression] = useState<
     string | undefined
   >(undefined);
-  const [previousFieldValueSelector, setPreviousFieldValueSelector] = useState<
-    string | undefined
-  >(undefined);
-  const [previousFieldLabelSelector, setPreviousFieldLabelSelector] = useState<
-    string | undefined
-  >(undefined);
+
   const options = selectFieldFromApiConfigSchema.parse(
     props.uiSchema['ui:options'],
   );
@@ -57,18 +52,14 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     description = '',
     previousFieldParamRequestKey,
     previousFieldParamValueLookupKey,
-    previousFieldArraySelectorLookupKey,
-    previousFieldValueSelectorLookupKey,
-    previousFieldLabelSelectorLookupKey,
+    previousFieldJsonataLookupKey,
+    jsonataExpression,
   } = options;
   const { formData } = props.formContext;
 
   useEffect(() => {
     if (previousFieldParamRequestKey && previousFieldParamValueLookupKey) {
-      const previousField = get(
-        formData?.[0],
-        previousFieldParamValueLookupKey,
-      );
+      const previousField = get(formData, previousFieldParamValueLookupKey);
       if (previousField) {
         setPreviousFieldValue(previousField);
       } else {
@@ -82,46 +73,65 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   ]);
 
   useEffect(() => {
-    if (previousFieldValueSelectorLookupKey) {
-      const previousField = get(
-        formData?.[0],
-        previousFieldValueSelectorLookupKey,
-      );
-      if (previousField) {
-        setPreviousFieldValueSelector(previousField);
+    if (previousFieldJsonataLookupKey) {
+      const jsonataString = get(formData, previousFieldJsonataLookupKey);
+      if (jsonataString) {
+        setJsonataLookupExpression(jsonataString);
       } else {
-        setPreviousFieldValueSelector(undefined);
+        setJsonataLookupExpression(undefined);
       }
     }
-  }, [formData, previousFieldValueSelectorLookupKey]);
+    if (jsonataExpression && !previousFieldJsonataLookupKey) {
+      setJsonataLookupExpression(jsonataExpression);
+    }
+  }, [formData, jsonataExpression, previousFieldJsonataLookupKey]);
 
-  useEffect(() => {
-    if (previousFieldLabelSelectorLookupKey) {
-      const previousField = get(
-        formData?.[0],
-        previousFieldLabelSelectorLookupKey,
-      );
-      if (previousField) {
-        setPreviousFieldLabelSelector(previousField);
-      } else {
-        setPreviousFieldLabelSelector(undefined);
-      }
+  const parseWithJsonata = async (body: any) => {
+    try {
+      const expression = jsonata(jsonataLookupExpression!);
+      const result = await expression.evaluate(body);
+      return result;
+    } catch (e: any) {
+      const message = e.hasOwnProperty('message')
+        ? e.message
+        : 'unknown JSONata evaluation error';
+      throw new Error(`JSONata failed to evaluate the expression: ${message}`);
     }
-  }, [formData, previousFieldLabelSelectorLookupKey]);
+  };
 
-  useEffect(() => {
-    if (previousFieldArraySelectorLookupKey) {
-      const previousField = get(
-        formData?.[0],
-        previousFieldArraySelectorLookupKey,
-      );
-      if (previousField) {
-        setPreviousFieldArraySelector(previousField);
+  const constructDropdownValues = (body: any) => {
+    const array = options.arraySelector
+      ? get(body, options.arraySelector)
+      : body;
+    return array.map((item: unknown) => {
+      let value: string | undefined;
+      let label: string | undefined;
+
+      if (options.valueSelector) {
+        value = get(item, options.valueSelector);
+        label = options.labelSelector
+          ? get(item, options.labelSelector)
+          : value;
       } else {
-        setPreviousFieldArraySelector(undefined);
+        if (!(typeof item === 'string')) {
+          throw new Error(
+            `The item provided for the select drop down "${item}" is not a string`,
+          );
+        }
+        value = item;
+        label = item;
       }
-    }
-  }, [formData, previousFieldArraySelectorLookupKey]);
+
+      if (!value) {
+        throw new Error(`Failed to populate SelectFieldFromApi dropdown`);
+      }
+
+      return {
+        value,
+        label: label || value,
+      };
+    });
+  };
 
   const { value, error, loading } = useAsync(async () => {
     if (
@@ -141,63 +151,40 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     );
     const body = await response.json();
     if (body) {
-      const getViaDependant = previousFieldArraySelector
-        ? get(body, previousFieldArraySelector)
-        : body;
-      const array = options.arraySelector
-        ? get(body, options.arraySelector)
-        : getViaDependant;
-      if (array && Array.isArray(array)) {
-        const constructedData = array.map((item: unknown) => {
-          let itemValue: string | undefined;
-          let label: string | undefined;
-          const valueSelector =
-            options.valueSelector || previousFieldValueSelector;
-          const labelSelector =
-            options.labelSelector || previousFieldLabelSelector;
-
-          if (valueSelector) {
-            itemValue = get(item, valueSelector);
-            label = labelSelector ? get(item, labelSelector) : itemValue;
-          }
-
-          if (!valueSelector) {
-            throw new Error(
-              `No value selector specified. Cannot parse response.`,
-            );
-          }
-
-          if (!itemValue) {
-            throw new Error(
-              `No value could be extracted from response. Please check your value selector fits the response data.`,
-            );
-          }
-
-          return {
-            value: itemValue,
-            label: label || itemValue,
-          };
-        });
-        setDropDownData(sortBy(constructedData, 'label'));
-      }
-      if (!array) {
-        if (options.arraySelector || previousFieldArraySelector) {
-          const lookupKey = options.arraySelector || previousFieldArraySelector;
+      if (jsonataLookupExpression) {
+        const parsedItems = await parseWithJsonata(body);
+        if (!Array.isArray(parsedItems)) {
+          setDropDownData([]);
           throw new Error(
-            `Failed to parse response using array selector: ${lookupKey}`,
+            `Jsonata expression did not produce an array of values: ${parsedItems}. Please change it so that it does.`,
           );
         }
+        if (Array.isArray(parsedItems)) {
+          setDropDownData(parsedItems.map(i => ({ label: i, value: i })));
+        }
+        return parsedItems;
       }
-      return array;
+      if (!jsonataLookupExpression && options.arraySelector) {
+        const values = constructDropdownValues(body);
+        if (values) {
+          setDropDownData(values);
+          return values;
+        }
+        if (!values) {
+          if (options.arraySelector) {
+            const lookupKey = options.arraySelector;
+            throw new Error(
+              `Failed to parse response using array selector: ${lookupKey}`,
+            );
+          }
+        }
+      }
+      setDropDownData([]);
     }
     return body;
-  }, [
-    previousFieldValue,
-    previousFieldArraySelector,
-    previousFieldLabelSelector,
-  ]);
+  }, [previousFieldValue, jsonataExpression]);
 
-  if (error && !loading && !value && !dropDownData) {
+  if (error && !loading) {
     return <ErrorPanel error={error} />;
   }
 
@@ -209,7 +196,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     return <></>;
   }
 
-  if (!dropDownData || loading) {
+  if (!dropDownData || (loading && !value)) {
     return <Progress />;
   }
 

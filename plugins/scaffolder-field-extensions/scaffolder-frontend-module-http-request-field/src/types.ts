@@ -23,9 +23,8 @@ export const selectFieldFromApiConfigSchema = z.object({
   labelSelector: z.string().or(z.array(z.string())).optional(),
   previousFieldParamRequestKey: z.string().optional(),
   previousFieldParamValueLookupKey: z.string().optional(),
-  previousFieldArraySelectorLookupKey: z.string().optional(),
-  previousFieldValueSelectorLookupKey: z.string().optional(),
-  previousFieldLabelSelectorLookupKey: z.string().optional(),
+  previousFieldJsonataLookupKey: z.string().optional(),
+  jsonataExpression: z.string().optional(),
   title: z.string().optional(),
   description: z.string().optional(),
 });
