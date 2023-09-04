@@ -67,6 +67,6 @@ describe('API calls', () => {
 
     const error = new Error('Need to provide appName or appSelector');
 
-    await expect(client.serviceLocatorUrl({})).rejects.toThrowError(error);
+    await expect(client.serviceLocatorUrl({})).rejects.toThrow(error);
   });
 });
