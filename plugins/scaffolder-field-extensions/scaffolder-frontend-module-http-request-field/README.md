@@ -80,6 +80,28 @@ The example template would result in the following dropdown:
 ![Alt text](images/dropdown_sample_closed.png?raw=true 'Example of the custom scaffolder field')
 ![Alt text](images/dropdown_sample_opened.png?raw=true 'Example of the custom scaffolder field')
 
+The simplest version of this parameter would look like this:
+
+````yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: http-param-example
+spec:
+  owner: roadie
+  type: service
+  parameters:
+    properties:
+      custom-basic:
+        type: string
+        ui:field: SelectFieldFromApi
+        ui:options:
+          path: 'catalog/entities'
+          # This assumes the api response returns an array of objects of ```{ metadata: { name: "", ... }, ... }```
+          valueSelector: 'metadata.name'
+````
+
 ### Dynamic Select
 
 You can configure your http select to toggle between different requests in order to populate the dropdown depending on previously selected parameters.
@@ -163,39 +185,29 @@ properties:
 Additionally, if you want to selectively call different api endpoints you can do so as follows:
 
 ```yaml
----
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: http-param-new
-  title: Http param test
-spec:
-  owner: roadie
-  type: service
-  parameters:
-    properties:
-      objectFacet:
-        title: 'Select Mapping'
-        enumNames:
-          - 'Kind'
-          - 'Group Name'
-        enum:
-          - paramValue: 'kind'
-            paramKey: 'facet'
-            path: 'catalog/entity-facets'
-            jsonata: 'facets.kind.value'
-          - paramValue: 'group'
-            paramKey: 'filter=kind'
-            path: 'catalog/entities'
-            jsonata: 'metadata.name'
-      entities:
-        type: string
-        ui:field: SelectFieldFromApi
-        ui:options:
-          title: Dependant select
-          dynamicParams:
-            paramKeyLocation: 'objectFacet.paramKey'
-            paramValueLocation: 'objectFacet.paramValue'
-            pathLocation: 'objectFacet.path'
-            jsonataLocation: 'objectFacet.jsonata'
+properties:
+  objectFacet:
+    title: 'Select Mapping'
+    enumNames:
+      - 'Kind'
+      - 'Group Name'
+    enum:
+      - paramValue: 'kind'
+        paramKey: 'facet'
+        path: 'catalog/entity-facets'
+        jsonata: 'facets.kind.value'
+      - paramValue: 'group'
+        paramKey: 'filter=kind'
+        path: 'catalog/entities'
+        jsonata: 'metadata.name'
+  entities:
+    type: string
+    ui:field: SelectFieldFromApi
+    ui:options:
+      title: Dependant select
+      dynamicParams:
+        paramKeyLocation: 'objectFacet.paramKey'
+        paramValueLocation: 'objectFacet.paramValue'
+        pathLocation: 'objectFacet.path'
+        jsonataLocation: 'objectFacet.jsonata'
 ```
