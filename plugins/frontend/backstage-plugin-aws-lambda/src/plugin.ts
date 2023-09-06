@@ -34,7 +34,21 @@ export const awsLambdaPlugin = createPlugin({
   },
 });
 
-export const EntityAWSLambdaOverviewCard = awsLambdaPlugin.provide(
+/**
+ * Props of EntityAWSLambdaOverviewCard
+ *
+ * @public
+ */
+export type EntityAWSLambdaOverviewCardProps = {
+  /**
+   * Sets the accountId for where it should find the lambdas
+   */
+  roleArn?: string;
+};
+
+export const EntityAWSLambdaOverviewCard: (
+  props: EntityAWSLambdaOverviewCardProps,
+) => JSX.Element = awsLambdaPlugin.provide(
   createComponentExtension({
     name: 'EntityAWSLambdaOverviewCard',
     component: {

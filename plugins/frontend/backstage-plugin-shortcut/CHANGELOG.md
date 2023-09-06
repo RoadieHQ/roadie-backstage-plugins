@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.1.14
+
+### Patch Changes
+
+- 0d688d09: Bump package versions to backstage version 1.17.0
+
 ## 1.1.13
 
 ### Patch Changes

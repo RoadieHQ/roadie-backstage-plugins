@@ -1,4 +1,5 @@
-* @RoadieHQ/open-source @RoadieHQ/engineering
+* @RoadieHQ/engineering
 
 # Argo CD Backend:
-/plugins/backend/backstage-plugin-argo-cd-backend @RoadieHQ/open-source @karlhaworth
+
+/plugins/backend/backstage-plugin-argo-cd-backend @RoadieHQ/engineering @karlhaworth
