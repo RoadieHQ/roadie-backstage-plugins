@@ -120,10 +120,12 @@ spec:
           valueSelector: 'count'
           # (Optional) This selects the field in the array to use for the label of each select item.
           labelSelector: 'value'
-          # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-          previousFieldParamRequestKey: 'facet'
-          # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
-          previousFieldParamValueLookupKey: 'facetValue'
+          # (Optional)
+          dynamicParams:
+            # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
+            paramKeyLocation: 'facet'
+            # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
+            paramValueLocation: 'facetValue'
 ```
 
 The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
@@ -156,4 +158,44 @@ properties:
       previousFieldParamValueLookupKey: 'facetMapping.facet'
       # (Optional) This is the path to the jsonata that will be used to parse the request's body and extract values
       previousFieldJsonataLookupKey: 'facetMapping.jsonata'
+```
+
+Additionally, if you want to selectively call different api endpoints you can do so as follows:
+
+```yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: http-param-new
+  title: Http param test
+spec:
+  owner: roadie
+  type: service
+  parameters:
+    properties:
+      objectFacet:
+        title: 'Select Mapping'
+        enumNames:
+          - 'Kind'
+          - 'Group Name'
+        enum:
+          - paramValue: 'kind'
+            paramKey: 'facet'
+            path: 'catalog/entity-facets'
+            jsonata: 'facets.kind.value'
+          - paramValue: 'group'
+            paramKey: 'filter=kind'
+            path: 'catalog/entities'
+            jsonata: 'metadata.name'
+      entities:
+        type: string
+        ui:field: SelectFieldFromApi
+        ui:options:
+          title: Dependant select
+          dynamicParams:
+            paramKeyLocation: 'objectFacet.paramKey'
+            paramValueLocation: 'objectFacet.paramValue'
+            pathLocation: 'objectFacet.path'
+            jsonataLocation: 'objectFacet.jsonata'
 ```

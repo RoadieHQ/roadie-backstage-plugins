@@ -37,9 +37,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const [previousFieldValue, setPreviousFieldValue] = useState<
-    string | undefined
-  >(undefined);
+  const [paramValue, setParamValue] = useState<string | undefined>(undefined);
+  const [paramKey, setParamKey] = useState<string | undefined>(undefined);
+  const [pathExtension, setPathExtension] = useState<string | undefined>(
+    undefined,
+  );
   const [jsonataLookupExpression, setJsonataLookupExpression] = useState<
     string | undefined
   >(undefined);
@@ -55,41 +57,67 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     arraySelector,
     params,
     path,
-    previousFieldParamRequestKey,
-    previousFieldParamValueLookupKey,
-    previousFieldJsonataLookupKey,
+    dynamicParams,
     jsonataExpression,
   } = options;
+
+  const {
+    paramKeyLocation,
+    paramValueLocation,
+    jsonataLocation,
+    pathLocation,
+  } = dynamicParams;
   const { formData } = props.formContext;
 
   useEffect(() => {
-    if (previousFieldParamRequestKey && previousFieldParamValueLookupKey) {
-      const previousField = get(formData, previousFieldParamValueLookupKey);
+    if (paramKeyLocation && paramValueLocation) {
+      const previousField = get(formData, paramValueLocation);
       if (previousField) {
-        setPreviousFieldValue(previousField);
+        setParamValue(previousField);
       } else {
-        setPreviousFieldValue(undefined);
+        setParamValue(undefined);
       }
     }
-  }, [
-    formData,
-    previousFieldParamRequestKey,
-    previousFieldParamValueLookupKey,
-  ]);
+  }, [formData, paramKeyLocation, paramValueLocation]);
 
   useEffect(() => {
-    if (previousFieldJsonataLookupKey) {
-      const jsonataString = get(formData, previousFieldJsonataLookupKey);
+    if (paramKeyLocation && paramValueLocation) {
+      const key = get(formData, paramKeyLocation);
+      if (key) {
+        setParamKey(key);
+      } else {
+        setParamKey(undefined);
+      }
+    }
+  }, [formData, paramKeyLocation, paramValueLocation]);
+
+  useEffect(() => {
+    if (jsonataLocation) {
+      const jsonataString = get(formData, jsonataLocation);
       if (jsonataString) {
         setJsonataLookupExpression(jsonataString);
       } else {
         setJsonataLookupExpression(undefined);
       }
     }
-    if (jsonataExpression && !previousFieldJsonataLookupKey) {
+    if (jsonataExpression && !jsonataLocation) {
       setJsonataLookupExpression(jsonataExpression);
     }
-  }, [formData, jsonataExpression, previousFieldJsonataLookupKey]);
+  }, [formData, jsonataExpression, jsonataLocation]);
+
+  useEffect(() => {
+    if (pathLocation) {
+      const pathString = get(formData, pathLocation);
+      if (pathString) {
+        setPathExtension(pathString);
+      } else {
+        setPathExtension(undefined);
+      }
+    }
+    if (path && !pathLocation) {
+      setPathExtension(path);
+    }
+  }, [formData, pathExtension, pathLocation, path]);
 
   const parseWithJsonata = async (body: any) => {
     try {
@@ -136,18 +164,20 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
 
   const { value, error, loading } = useAsync(async () => {
     if (
-      previousFieldParamValueLookupKey &&
-      previousFieldParamRequestKey &&
-      !previousFieldValue
+      (paramValueLocation && !paramValue) ||
+      (paramKeyLocation && !paramKey) ||
+      (pathLocation && !pathExtension)
     ) {
       return [];
     }
     const baseUrl = await discoveryApi.getBaseUrl('');
     const requestParams = new URLSearchParams(params);
-    if (previousFieldParamRequestKey && previousFieldValue) {
-      requestParams.append(previousFieldParamRequestKey, previousFieldValue);
+    if (paramKey && paramValue) {
+      requestParams.append(paramKey, paramValue);
     }
-    const response = await fetchApi.fetch(`${baseUrl}${path}?${requestParams}`);
+    const response = await fetchApi.fetch(
+      `${baseUrl}${pathExtension}?${requestParams}`,
+    );
     const body = await response.json();
     if (body) {
       if (jsonataLookupExpression) {
@@ -181,17 +211,20 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       setDropDownData([]);
     }
     return body;
-  }, [previousFieldValue, jsonataExpression]);
+  }, [
+    paramValue,
+    jsonataExpression,
+    jsonataLookupExpression,
+    paramKey,
+    paramValue,
+    pathExtension,
+  ]);
 
   if (error && !loading) {
     return <ErrorPanel error={error} />;
   }
 
-  if (
-    previousFieldParamRequestKey &&
-    previousFieldParamValueLookupKey &&
-    !previousFieldValue
-  ) {
+  if (paramKeyLocation && paramValueLocation && !paramValue) {
     return <></>;
   }
 

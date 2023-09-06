@@ -17,14 +17,17 @@ import { z } from 'zod';
 
 export const selectFieldFromApiConfigSchema = z.object({
   params: z.record(z.string(), z.string()).optional(),
-  path: z.string(),
+  path: z.string().optional(),
   arraySelector: z.string().or(z.array(z.string())).optional(),
   valueSelector: z.string().or(z.array(z.string())).optional(),
   labelSelector: z.string().or(z.array(z.string())).optional(),
-  previousFieldParamRequestKey: z.string().optional(),
-  previousFieldParamValueLookupKey: z.string().optional(),
-  previousFieldJsonataLookupKey: z.string().optional(),
   jsonataExpression: z.string().optional(),
+  dynamicParams: z.object({
+    paramKeyLocation: z.string().optional(),
+    pathLocation: z.string().optional(),
+    paramValueLocation: z.string().optional(),
+    jsonataLocation: z.string().optional(),
+  }),
   title: z.string().optional(),
   description: z.string().optional(),
 });
