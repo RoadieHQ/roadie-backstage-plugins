@@ -50,6 +50,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const {
     title = 'Select',
     description = '',
+    valueSelector,
+    labelSelector,
+    arraySelector,
+    params,
+    path,
     previousFieldParamRequestKey,
     previousFieldParamValueLookupKey,
     previousFieldJsonataLookupKey,
@@ -100,18 +105,14 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   };
 
   const constructDropdownValues = (body: any) => {
-    const array = options.arraySelector
-      ? get(body, options.arraySelector)
-      : body;
+    const array = arraySelector ? get(body, arraySelector) : body;
     return array.map((item: unknown) => {
       let value: string | undefined;
       let label: string | undefined;
 
-      if (options.valueSelector) {
-        value = get(item, options.valueSelector);
-        label = options.labelSelector
-          ? get(item, options.labelSelector)
-          : value;
+      if (valueSelector) {
+        value = get(item, valueSelector);
+        label = labelSelector ? get(item, labelSelector) : value;
       } else {
         if (!(typeof item === 'string')) {
           throw new Error(
@@ -142,13 +143,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       return [];
     }
     const baseUrl = await discoveryApi.getBaseUrl('');
-    const params = new URLSearchParams(options.params);
+    const requestParams = new URLSearchParams(params);
     if (previousFieldParamRequestKey && previousFieldValue) {
-      params.append(previousFieldParamRequestKey, previousFieldValue);
+      requestParams.append(previousFieldParamRequestKey, previousFieldValue);
     }
-    const response = await fetchApi.fetch(
-      `${baseUrl}${options.path}?${params}`,
-    );
+    const response = await fetchApi.fetch(`${baseUrl}${path}?${requestParams}`);
     const body = await response.json();
     if (body) {
       if (jsonataLookupExpression) {
@@ -164,15 +163,15 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
         }
         return parsedItems;
       }
-      if (!jsonataLookupExpression && options.arraySelector) {
+      if (!jsonataLookupExpression && arraySelector) {
         const values = constructDropdownValues(body);
         if (values) {
           setDropDownData(values);
           return values;
         }
         if (!values) {
-          if (options.arraySelector) {
-            const lookupKey = options.arraySelector;
+          if (arraySelector) {
+            const lookupKey = arraySelector;
             throw new Error(
               `Failed to parse response using array selector: ${lookupKey}`,
             );
