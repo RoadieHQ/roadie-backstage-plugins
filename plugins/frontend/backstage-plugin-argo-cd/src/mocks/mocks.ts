@@ -364,11 +364,18 @@ export const getResponseStubAppListForInstanceTwo = () => {
 
 export const multipleApps = () => {
   const item = JSON.parse(JSON.stringify(getResponseStubScanning));
+
   const item1 = JSON.parse(JSON.stringify(item));
   item1.metadata.name = 'guestbook-prod';
+
   const item2 = JSON.parse(JSON.stringify(item));
   item2.metadata.name = 'guestbook-staging';
-  return [item1, item2];
+
+  const item3 = JSON.parse(JSON.stringify(item));
+  item3.metadata.name = 'guestbook-nohistory';
+  item3.status.history = [];
+
+  return [item1, item2, item3];
 };
 
 export const getResponseStubAppListWithMultipleApps = {
@@ -406,6 +413,23 @@ export class ArgoCDApiMock implements ArgoCDApi {
         {
           metadata: {
             name: 'guestbook-staging',
+          },
+          status: {
+            sync: {
+              status: 'OutOfSync',
+            },
+            health: {
+              status: 'Healthy',
+            },
+            operationState: {
+              startedAt: '2020-11-18T16:47:03Z',
+              finishedAt: '2020-11-18T16:47:04Z',
+            },
+          },
+        },
+        {
+          metadata: {
+            name: 'guestbook-nohistory',
           },
           status: {
             sync: {
