@@ -44,15 +44,19 @@ describe('SelectFieldFromApi', () => {
   ];
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should use response body directly where there is no arraySelector', async () => {
-    fetchApi.fetch.mockResolvedValueOnce({
+    fetchApi.fetch.mockResolvedValue({
+      status: 200,
       json: jest.fn().mockResolvedValue(['result1', 'result2']),
     });
     const uiSchema = { 'ui:options': { path: '/test-endpoint' } };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -69,13 +73,17 @@ describe('SelectFieldFromApi', () => {
   });
 
   it('should use array specified by arraySelector', async () => {
-    fetchApi.fetch.mockResolvedValueOnce({
+    fetchApi.fetch.mockResolvedValue({
+      status: 200,
       json: jest.fn().mockResolvedValue({ myarray: ['result1', 'result2'] }),
     });
     const uiSchema = {
       'ui:options': { path: '/test-endpoint', arraySelector: 'myarray' },
     };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>

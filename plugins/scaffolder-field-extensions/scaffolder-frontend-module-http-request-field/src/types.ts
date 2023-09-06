@@ -22,12 +22,14 @@ export const selectFieldFromApiConfigSchema = z.object({
   valueSelector: z.string().or(z.array(z.string())).optional(),
   labelSelector: z.string().or(z.array(z.string())).optional(),
   jsonataExpression: z.string().optional(),
-  dynamicParams: z.object({
-    paramKeyLocation: z.string().optional(),
-    pathLocation: z.string().optional(),
-    paramValueLocation: z.string().optional(),
-    jsonataLocation: z.string().optional(),
-  }),
+  dynamicParams: z
+    .object({
+      paramKeyLocation: z.string().optional(),
+      pathLocation: z.string().optional(),
+      paramValueLocation: z.string().optional(),
+      jsonataLocation: z.string().optional(),
+    })
+    .optional(),
   title: z.string().optional(),
   description: z.string().optional(),
 });

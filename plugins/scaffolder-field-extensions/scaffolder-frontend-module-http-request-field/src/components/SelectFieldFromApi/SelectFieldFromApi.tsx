@@ -61,12 +61,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     jsonataExpression,
   } = options;
 
-  const {
-    paramKeyLocation,
-    paramValueLocation,
-    jsonataLocation,
-    pathLocation,
-  } = dynamicParams;
+  const paramKeyLocation = dynamicParams?.paramKeyLocation;
+  const paramValueLocation = dynamicParams?.paramValueLocation;
+  const jsonataLocation = dynamicParams?.jsonataLocation;
+  const pathLocation = dynamicParams?.pathLocation;
+
   const { formData } = props.formContext;
 
   useEffect(() => {
@@ -178,6 +177,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     const response = await fetchApi.fetch(
       `${baseUrl}${pathExtension}?${requestParams}`,
     );
+    if (response.status < 200 || response.status > 299) {
+      throw new Error(
+        `Failed to populate SelectFieldFromApi dropdown due to failed request with error ${response.status}: ${response.body}`,
+      );
+    }
     const body = await response.json();
     if (body) {
       if (jsonataLookupExpression) {
@@ -193,7 +197,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
         }
         return parsedItems;
       }
-      if (!jsonataLookupExpression && arraySelector) {
+      if (!jsonataLookupExpression) {
         const values = constructDropdownValues(body);
         if (values) {
           setDropDownData(values);
@@ -241,6 +245,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       <Select
         items={dropDownData}
         label={title}
+        data-testid="select"
         onChange={props.onChange}
         native
       />
