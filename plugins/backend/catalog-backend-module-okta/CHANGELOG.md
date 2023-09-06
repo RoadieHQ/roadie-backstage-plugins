@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.8.6
+
+### Patch Changes
+
+- 0d688d09: Bump package versions to backstage version 1.17.0
+
 ## 0.8.5
 
 ### Patch Changes

@@ -23,15 +23,19 @@ async function generateCredentials(
   options: {
     token: string | undefined;
   },
+  roleArn: string | undefined,
 ) {
   const respData = await fetch(`${backendUrl}/api/aws/credentials`, {
+    method: 'POST',
     headers: {
       // Disable eqeqeq rule for next line to allow it to pick up both undefind and null
       // eslint-disable-next-line eqeqeq
       ...((options == null ? void 0 : options.token) && {
         Authorization: `Bearer ${options === null ? void 0 : options.token}`,
       }),
+      'Content-Type': 'application/json',
     },
+    body: roleArn === null ? void 0 : JSON.stringify({ RoleArn: roleArn }),
   });
   try {
     const resp = await respData.json();
@@ -50,14 +54,20 @@ export class AwsLambdaClient implements AwsLambdaApi {
     backendUrl,
     functionName,
     token,
+    roleArn,
   }: {
     awsRegion: string;
     backendUrl: string;
     functionName: string;
     token?: string;
+    roleArn?: string | undefined;
   }): Promise<LambdaData> {
     AWS.config.region = awsRegion;
-    AWS.config.credentials = await generateCredentials(backendUrl, { token });
+    AWS.config.credentials = await generateCredentials(
+      backendUrl,
+      { token },
+      roleArn,
+    );
     const lambdaApi = new AWS.Lambda({});
     const resp = await lambdaApi
       .getFunction({
