@@ -82,7 +82,7 @@ The example template would result in the following dropdown:
 
 ### Dynamic Select
 
-You can configure your http select to topggle between different requests in order to populate the dropdown depending on previously selected parameters.
+You can configure your http select to toggle between different requests in order to populate the dropdown depending on previously selected parameters.
 
 There are several ways to do this. The simplest looks like so:
 
