@@ -86,7 +86,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
 
   let content = value.content;
   if (!preserveHtmlComments) {
-    content = content.replace(/<!--.*?-->/g, '');
+    content = content.replace(/<!--(.|\n)*?-->/g, '');
   }
 
   return (
