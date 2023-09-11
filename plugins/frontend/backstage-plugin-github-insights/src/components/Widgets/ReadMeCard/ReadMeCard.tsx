@@ -70,11 +70,13 @@ const ReadMeCard = (props: ReadMeCardProps) => {
       title={props.title || 'Readme'}
       className={classes.infoCard}
       deepLink={{
-        link: `//${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`,
+        link: `https://${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`,
         title: 'Readme',
         onClick: e => {
           e.preventDefault();
-          window.open(`//${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`);
+          window.open(
+            `https://${hostname}/${owner}/${repo}/blob/HEAD/${linkPath}`,
+          );
         },
       }}
     >
