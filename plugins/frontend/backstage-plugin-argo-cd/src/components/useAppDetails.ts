@@ -132,15 +132,14 @@ export const useAppDetails = ({
         };
         const getRevisionHistroyPromises = items.items.map(
           async (item: any) => {
-            let newItem;
             if (item?.status.history && item?.status.history.length > 0) {
-              newItem = getRevisionHistroyDetails(
+              return getRevisionHistroyDetails(
                 item,
                 item.metadata.name,
                 item.metadata.instance.name,
               );
             }
-            return newItem;
+            return item;
           },
         );
         return Promise.all(getRevisionHistroyPromises).then(result =>
@@ -155,11 +154,10 @@ export const useAppDetails = ({
           };
           const getRevisionHistroyPromises = apps.items.map(
             async (item: any) => {
-              let newItem;
               if (item?.status.history && item?.status.history.length > 0) {
-                newItem = getRevisionHistroyDetails(item, item.metadata.name);
+                return getRevisionHistroyDetails(item, item.metadata.name);
               }
-              return newItem;
+              return item;
             },
           );
           return Promise.all(getRevisionHistroyPromises).then(output =>
