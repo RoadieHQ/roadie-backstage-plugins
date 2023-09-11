@@ -879,6 +879,19 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-nohistory/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) =>
             res(ctx.json(getResponseStubAppListForInstanceTwo())),
@@ -908,9 +921,12 @@ describe('argo-cd', () => {
       expect(
         await rendered.findByText('guestbook-staging'),
       ).toBeInTheDocument();
+      expect(
+        await rendered.findByText('guestbook-nohistory'),
+      ).toBeInTheDocument();
 
       const apps = await rendered.findAllByText('argoInstance1');
-      expect(apps).toHaveLength(2);
+      expect(apps).toHaveLength(3);
       expect(await rendered.findByText('argoInstance2')).toBeInTheDocument();
     });
     it('should display fetched data from an instance when scanning multiple instances', async () => {
@@ -967,6 +983,19 @@ describe('argo-cd', () => {
       );
       worker.use(
         rest.get(
+          'https://testbackend.com/api/argocd/argoInstance/argoInstance1/applications/name/guestbook-nohistory/revisions/6bed858de32a0e876ec49dad1a2e3c5840d3fb07/metadata',
+          (_, res, ctx) =>
+            res(
+              ctx.json({
+                author: 'testuser <testuser@test.com>',
+                date: '2023-03-20T18:44:10Z',
+                message: 'Update README.md',
+              }),
+            ),
+        ),
+      );
+      worker.use(
+        rest.get(
           'https://testbackend.com/api/argocd/argoInstance/argoInstance2/applications/selector/name%3dguestbook',
           (_, res, ctx) => res(ctx.json(getEmptyResponseStub)),
         ),
@@ -982,9 +1011,12 @@ describe('argo-cd', () => {
       expect(
         await rendered.findByText('guestbook-staging'),
       ).toBeInTheDocument();
+      expect(
+        await rendered.findByText('guestbook-nohistory'),
+      ).toBeInTheDocument();
 
       const apps = await rendered.findAllByText('argoInstance1');
-      expect(apps).toHaveLength(2);
+      expect(apps).toHaveLength(3);
       expect(rendered.queryByText('argoInstance2')).toBeNull();
     });
     it('should display an empty table when receiving no data from multiple instances', async () => {
