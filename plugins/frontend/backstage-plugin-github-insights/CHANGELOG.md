@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.20
+
+### Patch Changes
+
+- 5301fa54: Explicitly define protocol for component links instead of protocol-less
+
 ## 2.3.19
 
 ### Patch Changes
