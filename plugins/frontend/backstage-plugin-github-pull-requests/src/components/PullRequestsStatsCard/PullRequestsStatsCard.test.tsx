@@ -32,6 +32,7 @@ import { entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { handlers } from '../../mocks/handlers';
+import { Duration } from 'luxon';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
@@ -65,7 +66,11 @@ describe('PullRequestsCard', () => {
       </TestApiProvider>,
     );
     expect(
-      await screen.findByText('1 month, 26 days, 16 hours'),
+      await screen.findByText(
+        Duration.fromObject({ months: 1, days: 26, hours: 16 }).toHuman({
+          notation: 'compact',
+        }),
+      ),
     ).toBeInTheDocument();
     expect(await screen.findByText('67%')).toBeInTheDocument();
     expect(await screen.findByText('3309 lines')).toBeInTheDocument();

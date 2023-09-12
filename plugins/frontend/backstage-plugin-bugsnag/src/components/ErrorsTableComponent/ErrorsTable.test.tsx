@@ -92,7 +92,8 @@ describe('BugsnagErrorsTable', () => {
         </TestApiProvider>,
       ),
     );
-    expect(await rendered.findByText('Errors overview')).toBeInTheDocument();
+    expect(await rendered.findByText('Description')).toBeInTheDocument();
     expect(await rendered.findByText('SyntaxError')).toBeInTheDocument();
+    expect(await rendered.findByText('Development, Test')).toBeInTheDocument();
   });
 });
