@@ -47,14 +47,15 @@ spec:
               params:
                 facet: 'kind'
 
-              # This selects the array element from the API fetch response. It finds the array with the name kind
-              # under the facets object
+              # (Optional) This selects the array element from the API fetch response to use for populating the values of the select.
+              # It finds the array with the name kind under the facets object
               arraySelector: 'facets.kind'
-
-              # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
-              # it will use the value of the item directly.
+              # (Optional) Selects from an object in the response body array the value to use for each select item.
+              # If your array is a list of strings or numbers you can leave this out and it will use the values directly.
               valueSelector: 'count'
-              # (Optional) This selects the field in the array to use for the label of each select item.
+              # (Optional) Selects from an object in the response body array the value to use for the label of each select item.
+              # If your array is a list of strings or numbers you can leave this out and it will use the values directly.
+              # If left out it will use the select values as the labels.
               labelSelector: 'value'
 ```
 
@@ -100,6 +101,28 @@ spec:
           path: 'catalog/entities'
           # This assumes the api response returns an array of objects of ```{ metadata: { name: "", ... }, ... }```
           valueSelector: 'metadata.name'
+````
+
+[jsonata](https://docs.jsonata.org/overview.html) can also be used to select the values for the dropdown from the API response like so:
+
+````yaml
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: http-param-example
+spec:
+  owner: roadie
+  type: service
+  parameters:
+    properties:
+      custom-jsonata:
+        type: string
+        ui:field: SelectFieldFromApi
+        ui:options:
+          path: 'catalog/entities'
+          # This assumes the api response returns an array of objects of ```{ metadata: { name: "", ... }, ... }```
+          jsonataExpression: 'metadata.name'
 ````
 
 ### Dynamic Select
