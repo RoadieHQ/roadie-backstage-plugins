@@ -42,12 +42,12 @@ spec:
               title: My Dropdown title
               description: My custom description for the component
 
-              # The Path on the Backstage API and the parameters to fetch the data for the dropdown
+              # (Optional) The Path on the Backstage API and the parameters to fetch the data for the dropdown
               path: 'catalog/entity-facets'
+              # (Optional) Specifies the key for the query param that appends the path i.e. `/catalog/entity-facets?facet=kind
               params:
                 facet: 'kind'
-
-              # (Optional) This selects the array element from the API fetch response to use for populating the values of the select.
+              # (Optional) Selects the array from the API response to use for populating the values of the select.
               # It finds the array with the name kind under the facets object
               arraySelector: 'facets.kind'
               # (Optional) Selects from an object in the response body array the value to use for each select item.
@@ -155,21 +155,19 @@ spec:
         ui:options:
           title: My Dropdown title
           description: My custom description for the component
-          # The Path on the Backstage API and the parameters to fetch the data for the dropdown
+          # (Optional) The Path on the Backstage API and the parameters to fetch the data for the dropdown
           path: 'catalog/entity-facets'
-          # This selects the array element from the API fetch response. It finds the array with the name kind
-          # under the facets object
+          # (Optional) Selects the array from the API response to use for populating the values of the select.
+          # It finds the array with the name kind under the facets object
           arraySelector: 'facets.kind'
-          # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
+          # (Optional) Selects the field in the array to use for the value of each select item. If its not specified
           # it will use the value of the item directly.
           valueSelector: 'count'
-          # (Optional) This selects the field in the array to use for the label of each select item.
+          # (Optional) Selects the field in the array to use for the label of each select item.
           labelSelector: 'value'
           # (Optional)
           dynamicParams:
-            # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-            paramKeyLocation: 'facet'
-            # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
+            # (Optional) The key of a previous template property in this form who's selected value will be used as the query parameter value on the request
             paramValueLocation: 'facetValue'
 ```
 
@@ -199,13 +197,15 @@ properties:
       title: Select Populated Depending on Previous field
       # The Path to the Backstage API
       path: 'catalog/entity-facets'
+      # (Optional) Specifies the key for the query param that appends the path i.e. `/catalog/entity-facets?facet=kind
+      params:
+        facet: 'kind'
       # (Optional)
       dynamicParams:
-        # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-        paramKeyLocation: 'facet'
-        # (Optional) This is the key of a previous property in this form who's output value will be used as an additional query parameter value on the request
+        # (Optional) The key of a previous template property in this form who's selected value will be used as the query parameter value on the request
         paramValueLocation: 'facetMapping'
-        # (Optional) This is the path to the jsonata that will be used to parse the request's body and extract values
+        # (Optional) The path to a previous template property for the jsonata string that will be used to parse the request's body and extract values.
+        # i.e. 'facets.kind.value' or 'facets.`metadata.name`.value' depending on whether `Kind` or `Entity name` is selected.
         jsonataLocation: 'facetMapping.jsonata'
 ```
 
@@ -238,8 +238,15 @@ properties:
     ui:options:
       title: Dependant select
       dynamicParams:
+        # (Optional) The key of a previous template property who's selected value will be used as an additional query parameter value on the request
+        # i.e. '?facet=' or '?filter=kind=' depending on whether `Kind` or `Group name` is selected.
         paramKeyLocation: 'objectFacet.paramKey'
+        # (Optional) The key of a previous template property in this form who's selected value will be used as the query parameter value on the request
         paramValueLocation: 'objectFacet.paramValue'
+        # (Optional) The path to a previous template property for the HTTP request path added to the backend api base url.
+        # i.e. 'http://localhost:7007/api/catalog/entity-facets' or 'http://localhost:7007/api/catalog/entities' depending on whether `Kind` or `Group name` is selected.
         pathLocation: 'objectFacet.path'
+        # (Optional) The path to a previous template property for the jsonata string that will be used to parse the request's body and extract values.
+        # i.e. 'facets.kind.value' or 'facets.`metadata.name`.value' depending on whether `Kind` or `Entity name` is selected.
         jsonataLocation: 'objectFacet.jsonata'
 ```
