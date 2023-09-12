@@ -21,9 +21,11 @@ export type BugsnagError = {
   first_seen: string;
   last_seen: string;
   events: number;
-  release_stages: string;
+  release_stages: string[];
   error_class: string;
   users: number;
+  message: string;
+  status: string;
 };
 
 export type Organisation = {

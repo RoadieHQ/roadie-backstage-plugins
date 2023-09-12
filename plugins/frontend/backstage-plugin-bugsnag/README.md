@@ -67,14 +67,10 @@ const serviceEntityPage = (
 1. Add annotations to the yaml config file of a component:
 
 ```yml
-bugsnag.com/project-key: <organization-name>/<project-notifier-api-key>
+bugsnag.com/project-key: <organization-name>/<project-name>
 ```
 
-Please note that if your organisation has more projects than results returned by page and defined under 'bugsnag.resultsPerPage' you need to provide additional annotations where you will provide the name of the project:
-
-```yml
-bugsnag.com/project-name: <project-name>
-```
+Note that you must use the full names, not the slugs.
 
 These values can be found in Bugsnag settings dashboard, under organization and project settings.
 
