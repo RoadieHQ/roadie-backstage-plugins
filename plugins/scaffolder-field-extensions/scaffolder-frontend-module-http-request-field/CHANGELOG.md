@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.5.0
+
+### Minor Changes
+
+- b338f5e3: Allow parameters to be used for the select field options.
+
 ## 1.4.2
 
 ### Patch Changes
