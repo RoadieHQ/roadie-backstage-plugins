@@ -11371,6 +11371,11 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
 
+"@types/nunjucks@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@types/nunjucks/-/nunjucks-3.2.3.tgz#994e68cb575c3ac1be27e6f99543183b3c3605aa"
+  integrity sha512-+lFIql0nbWSftazQ27cOYvSLC92SsfjxrU0I/Iys7hoxrBkN8OF+wmxxzx3bLFyFrLgDZ9lUckGcwldE4SfDQA==
+
 "@types/oauth@*":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@types/oauth/-/oauth-0.9.1.tgz#e17221e7f7936b0459ae7d006255dff61adca305"

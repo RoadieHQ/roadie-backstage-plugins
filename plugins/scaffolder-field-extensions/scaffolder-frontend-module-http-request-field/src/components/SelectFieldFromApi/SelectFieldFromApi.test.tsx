@@ -52,7 +52,10 @@ describe('SelectFieldFromApi', () => {
       json: jest.fn().mockResolvedValue(['result1', 'result2']),
     });
     const uiSchema = { 'ui:options': { path: '/test-endpoint' } };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -75,7 +78,10 @@ describe('SelectFieldFromApi', () => {
     const uiSchema = {
       'ui:options': { path: '/test-endpoint', arraySelector: 'myarray' },
     };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
