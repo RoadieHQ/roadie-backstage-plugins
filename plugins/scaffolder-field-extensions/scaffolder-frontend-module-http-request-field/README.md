@@ -187,8 +187,10 @@ properties:
       - 'Entity name'
     enum:
       - facet: 'kind'
+        paramKey: 'facet'
         jsonata: 'facets.kind.value'
       - facet: 'metadata.name'
+        paramKey: 'facet'
         jsonata: 'facets.`metadata.name`.value'
   custom:
     type: string
@@ -197,11 +199,11 @@ properties:
       title: Select Populated Depending on Previous field
       # The Path to the Backstage API
       path: 'catalog/entity-facets'
-      # (Optional) Specifies the key for the query param that appends the path i.e. `/catalog/entity-facets?facet=kind
-      params:
-        facet: 'kind'
       # (Optional)
       dynamicParams:
+        # (Optional) The key of a previous template property who's selected value will be used as an additional query parameter value on the request
+        # i.e. '?facet=' or '?filter=kind=' depending on whether `Kind` or `Group name` is selected.
+        paramKeyLocation: 'objectFacet.paramKey'
         # (Optional) The key of a previous template property in this form who's selected value will be used as the query parameter value on the request
         paramValueLocation: 'facetMapping'
         # (Optional) The path to a previous template property for the jsonata string that will be used to parse the request's body and extract values.
