@@ -32,34 +32,76 @@ import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import { selectFieldFromApiConfigSchema } from '../../types';
 import { FormHelperText } from '@material-ui/core';
+import { renderString } from 'nunjucks';
+import fromPairs from 'lodash/fromPairs';
+
+const renderOption = (input: any, context: object): any => {
+  if (!input) {
+    return input;
+  }
+  if (typeof input === 'string') {
+    return renderString(input, context);
+  }
+  if (Array.isArray(input)) {
+    return input.map(item => renderOption(item, context));
+  }
+  if (typeof input === 'object') {
+    return fromPairs(
+      Object.keys(input).map(key => [
+        key as keyof typeof input,
+        renderOption(input[key], context),
+      ]),
+    );
+  }
+  return input;
+};
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const options = selectFieldFromApiConfigSchema.parse(
-    props.uiSchema['ui:options'],
-  );
+  const { formContext, uiSchema } = props;
+  const options = selectFieldFromApiConfigSchema.parse(uiSchema['ui:options']);
+
   const { title = 'Select', description = '' } = options;
 
   const { error } = useAsync(async () => {
     const baseUrl = await discoveryApi.getBaseUrl('');
-    const params = new URLSearchParams(options.params);
+    const params = new URLSearchParams(
+      renderOption(options.params, { parameters: formContext.formData }),
+    );
     const response = await fetchApi.fetch(
-      `${baseUrl}${options.path}?${params}`,
+      `${baseUrl}${renderOption(options.path, {
+        parameters: formContext.formData,
+      })}?${params}`,
     );
     const body = await response.json();
     const array = options.arraySelector
-      ? get(body, options.arraySelector)
+      ? get(
+          body,
+          renderOption(options.arraySelector, {
+            parameters: formContext.formData,
+          }),
+        )
       : body;
     const constructedData = array.map((item: unknown) => {
       let value: string | undefined;
       let label: string | undefined;
 
       if (options.valueSelector) {
-        value = get(item, options.valueSelector);
+        value = get(
+          item,
+          renderOption(options.valueSelector, {
+            parameters: formContext.formData,
+          }),
+        );
         label = options.labelSelector
-          ? get(item, options.labelSelector)
+          ? get(
+              item,
+              renderOption(options.labelSelector, {
+                parameters: formContext.formData,
+              }),
+            )
           : value;
       } else {
         if (!(typeof item === 'string')) {
