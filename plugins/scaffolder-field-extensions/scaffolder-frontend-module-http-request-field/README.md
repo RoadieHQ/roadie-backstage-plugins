@@ -58,7 +58,7 @@ spec:
               labelSelector: 'value'
 ```
 
-The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
+The configuration above will result in an outgoing request to: `http://loclhost:7007/api/catalog/entity-facets?facet=kind`
 
 The response is the following and it will extract the `count` field as the value and `value` as the label of the dropdown.
 
@@ -150,10 +150,12 @@ spec:
             paramValueLocation: 'facetValue'
 ```
 
-The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
-when the 'kind' facet is selected and `https://my.backstage.com/api/catalog/entity-facets?facet=apiVersion` when 'apiVersion' is selected.
+The configuration above will result in an outgoing request to: `http://localhost:7007/api/catalog/entity-facets?facet=kind`
+when the 'kind' facet is selected and `http://localhost:7007/api/catalog/entity-facets?facet=apiVersion` when 'apiVersion' is selected.
 
-You can also map between different response parsing using [jsonata](https://docs.jsonata.org/overview.html) rather than the `arraySelector` like so:
+### Response Parsing Using Jsonata
+
+You can map between different response parsing using [jsonata](https://docs.jsonata.org/overview.html) rather than the `arraySelector` and `valueSelector` like so:
 
 ```yaml
 properties:
@@ -174,15 +176,22 @@ properties:
       title: Select Populated Depending on Previous field
       # The Path to the Backstage API
       path: 'catalog/entity-facets'
-      # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
-      previousFieldParamRequestKey: 'facet'
-      # (Optional) This is the key of a previous property who's selected value will be used as an additional query parameter value on the request
-      previousFieldParamValueLookupKey: 'facetMapping.facet'
-      # (Optional) This is the path to the jsonata that will be used to parse the request's body and extract values
-      previousFieldJsonataLookupKey: 'facetMapping.jsonata'
+      # (Optional)
+      dynamicParams:
+        # (Optional) This is the key of an additional dynamic query parameter that can be added to the request
+        paramKeyLocation: 'facet'
+        # (Optional) This is the key of a previous property in this form who's output value will be used as an additional query parameter value on the request
+        paramValueLocation: 'facetMapping'
+        # (Optional) This is the path to the jsonata that will be used to parse the request's body and extract values
+        jsonataLocation: 'facetMapping.jsonata'
 ```
 
-Additionally, if you want to selectively call different api endpoints you can do so as follows:
+When the first enum value is selected, this will produce a request for example to `https://localhost:7007/api/catalog/entity-facets?facet=kind` and use 'facets.kind.value' jsonata to get a list of values from the response body.
+Or when the second enum is selected, a request to `https://localhost:7007/api/catalog/entity-facets?facet=metadata.name` using 'facets.`metadata.name`.value' jsonata.
+
+### Using different endpoints
+
+If you want to selectively call different api endpoints you can do so as follows:
 
 ```yaml
 properties:
