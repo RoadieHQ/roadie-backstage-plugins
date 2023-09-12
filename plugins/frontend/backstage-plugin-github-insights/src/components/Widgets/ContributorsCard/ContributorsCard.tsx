@@ -68,11 +68,13 @@ const ContributorsCard = () => {
     <InfoCard
       title="Contributors"
       deepLink={{
-        link: `//${hostname}/${owner}/${repo}/graphs/contributors`,
+        link: `https://${hostname}/${owner}/${repo}/graphs/contributors`,
         title: 'People',
         onClick: e => {
           e.preventDefault();
-          window.open(`//${hostname}/${owner}/${repo}/graphs/contributors`);
+          window.open(
+            `https://${hostname}/${owner}/${repo}/graphs/contributors`,
+          );
         },
       }}
       className={classes.infoCard}
