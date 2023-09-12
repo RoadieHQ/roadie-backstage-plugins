@@ -103,7 +103,11 @@ metadata:
 
 ![dashboard share](./docs/dd-dashboard-share.png?raw=true)
 
-### Adding the annotations and the values from Datadog to your component's metadata file.
+- **Note**: You can also add multiple dashboards by creating a list of URLs in the annotation file (Each URL must be separated by a comma - `,` )
+
+### Adding the annotations and the values from Datadog to your component's metadata file
+
+#### Embedding a single dashboard
 
 ```yaml
 apiVersion: backstage.io/v1alpha1
@@ -114,6 +118,19 @@ metadata:
     A sample service
   annotations:
     datadoghq.com/dashboard-url: datadoghq.com
+```
+
+#### Embedding multiple dashboards
+
+```yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service
+  description: |
+    A sample service
+  annotations:
+    datadoghq.com/dashboard-url: datadoghq.com,datadoghq.com/dashboard2
 ```
 
 ## Embed a datadog graph in Backstage
