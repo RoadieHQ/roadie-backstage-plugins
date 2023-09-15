@@ -642,6 +642,81 @@ describe('OktaOrgEntityProvider', () => {
       });
     });
 
+    it('uses custom group transformer', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+              displayName: 'Display name 1',
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        groupTransformer: (group, namingStrategy, parentGroup, options) => ({
+          kind: 'Group',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: { ...options.annotations },
+            name: namingStrategy(group),
+            title: group.profile.name,
+            description: group.profile.description || '',
+          },
+          spec: {
+            profile: {
+              displayName: group.profile.displayName as string,
+            },
+            members: options.members,
+            type: 'group',
+            children: [],
+            parent: parentGroup ? namingStrategy(parentGroup) : '',
+          },
+        }),
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                title: 'Everyone@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['user-1'],
+                profile: expect.objectContaining({
+                  displayName: 'Display name 1',
+                }),
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
     it('uses custom user transformer', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
@@ -655,9 +730,6 @@ describe('OktaOrgEntityProvider', () => {
             profile: {
               name: 'Everyone@the-company',
               description: 'Everyone in the company',
-              org_id: '1',
-              parent_org_id: '1',
-              customAttribute1: 'groupCustomAttribute',
             },
             listUsers: () => {
               return new MockOktaCollection([

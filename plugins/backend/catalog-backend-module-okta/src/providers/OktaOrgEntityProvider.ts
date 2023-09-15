@@ -30,13 +30,13 @@ import {
 } from './userNamingStrategies';
 import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
-import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { groupEntityFromOktaGroup as defaultGroupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
-import { OktaUserEntityTransformer } from './types';
+import { OktaGroupEntityTransformer, OktaUserEntityTransformer } from './types';
 
 /**
  * Provides entities from Okta Org service.
@@ -44,6 +44,7 @@ import { OktaUserEntityTransformer } from './types';
 export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly groupEntityFromOktaGroup: OktaGroupEntityTransformer;
   private readonly userEntityFromOktaUser: OktaUserEntityTransformer;
   private readonly includeEmptyGroups: boolean;
   private readonly hierarchyConfig:
@@ -57,6 +58,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      groupTransformer?: OktaGroupEntityTransformer;
       userTransformer?: OktaUserEntityTransformer;
       includeEmptyGroups?: boolean;
       /*
@@ -88,6 +90,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      groupTransformer?: OktaGroupEntityTransformer;
       userTransformer?: OktaUserEntityTransformer;
       includeEmptyGroups?: boolean;
       hierarchyConfig?: {
@@ -104,6 +107,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.groupEntityFromOktaGroup =
+      options?.groupTransformer || defaultGroupEntityFromOktaGroup;
     this.userEntityFromOktaUser =
       options.userTransformer || defaultUserEntityFromOktaUser;
     this.includeEmptyGroups = !!options.includeEmptyGroups;
@@ -197,7 +202,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               ...profileAnnotations,
             };
             try {
-              const groupEntity = groupEntityFromOktaGroup(
+              const groupEntity = this.groupEntityFromOktaGroup(
                 group,
                 this.groupNamingStrategy,
                 parentGroup,
