@@ -29,11 +29,12 @@ import {
   userNamingStrategyFactory,
 } from './userNamingStrategies';
 import { AccountConfig } from '../types';
-import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { groupEntityFromOktaGroup as defaultGroupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
+import { OktaGroupEntityTransformer } from './types';
 
 /**
  * Provides entities from Okta Group service.
@@ -41,6 +42,7 @@ import { getParentGroup } from './getParentGroup';
 export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly groupEntityFromOktaGroup: OktaGroupEntityTransformer;
   private readonly groupFilter: string | undefined;
   private readonly orgUrl: string;
   private readonly customAttributesToAnnotationAllowlist: string[];
@@ -52,6 +54,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      groupTransformer?: OktaGroupEntityTransformer;
       customAttributesToAnnotationAllowlist?: string[];
       /*
        * @deprecated, please use hierarchyConfig.parentKey
@@ -85,6 +88,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         parentKey: string;
         key?: string;
       };
+      groupTransformer?: OktaGroupEntityTransformer;
     },
   ) {
     super([accountConfig], options);
@@ -92,6 +96,8 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.groupEntityFromOktaGroup =
+      options?.groupTransformer || defaultGroupEntityFromOktaGroup;
     this.orgUrl = accountConfig.orgUrl;
     this.groupFilter = accountConfig.groupFilter;
     this.customAttributesToAnnotationAllowlist =
@@ -160,7 +166,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           ...profileAnnotations,
         };
         try {
-          const groupEntity = groupEntityFromOktaGroup(
+          const groupEntity = this.groupEntityFromOktaGroup(
             group,
             this.namingStrategy,
             parentGroup,

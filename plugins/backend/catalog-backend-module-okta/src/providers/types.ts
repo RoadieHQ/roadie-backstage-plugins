@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-import { UserEntity } from '@backstage/catalog-model';
-import type { User as OktaUser } from '@okta/okta-sdk-nodejs';
+import { GroupEntity, UserEntity } from '@backstage/catalog-model';
+import type {
+  Group as OktaGroup,
+  User as OktaUser,
+} from '@okta/okta-sdk-nodejs';
+import { GroupNamingStrategy } from './groupNamingStrategies';
 import { UserNamingStrategy } from './userNamingStrategies';
+
+export type OktaGroupEntityTransformer = (
+  group: OktaGroup,
+  namingStrategy: GroupNamingStrategy,
+  parentGroup: OktaGroup | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
+) => GroupEntity;
 
 export type OktaUserEntityTransformer = (
   user: OktaUser,

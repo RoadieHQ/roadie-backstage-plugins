@@ -141,6 +141,7 @@ describe('OktaGroupProvider', () => {
               description: 'Everyone in the company',
               org_id: '1234',
               parent_org_id: '1234',
+              displayName: 'Display name 1',
             },
             listUsers: () => {
               return new MockOktaCollection([
@@ -160,6 +161,7 @@ describe('OktaGroupProvider', () => {
               description: null,
               org_id: '1235',
               parent_org_id: '1234',
+              displayName: 'Display name 2',
             },
             listUsers: () => {
               return new MockOktaCollection([
@@ -416,6 +418,57 @@ describe('OktaGroupProvider', () => {
               }),
               spec: expect.objectContaining({
                 members: [],
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('uses custom group transformer', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        groupTransformer: (group, namingStrategy, parentGroup, options) => ({
+          kind: 'Group',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: { ...options.annotations },
+            name: namingStrategy(group),
+            title: group.profile.name,
+            description: group.profile.description || '',
+          },
+          spec: {
+            profile: {
+              displayName: group.profile.displayName as string,
+            },
+            members: options.members,
+            type: 'group',
+            children: [],
+            parent: parentGroup ? namingStrategy(parentGroup) : '',
+          },
+        }),
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                description: 'Everyone in the company',
+              }),
+              spec: expect.objectContaining({
+                members: ['asdfwefwefwef'],
+                profile: expect.objectContaining({
+                  displayName: 'Display name 1',
+                }),
               }),
             }),
           }),
