@@ -11,6 +11,7 @@ import { StructuredMetadataTable } from '@backstage/core-components';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
 import MaterialButton from '@material-ui/core/Button';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 
 interface TableContent {
   [key: string]: any;
@@ -43,6 +44,10 @@ export const DetailsDrawerComponent = (
 ) => {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
+  const configApi = useApi(configApiRef);
+  const namespaced =
+    configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
+
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -72,7 +77,11 @@ export const DetailsDrawerComponent = (
           title="Open Argo CD Dashboard"
           endIcon={<OpenInNewIcon />}
           target="_blank"
-          href={`${baseUrl}/applications/${rowData.metadata.name}`}
+          href={`${baseUrl}/applications/${
+            namespaced
+              ? `${rowData.metadata.namespace}/${rowData.metadata.name}`
+              : rowData.metadata.name
+          }`}
         >
           Open Argo CD Dashboard
         </MaterialButton>

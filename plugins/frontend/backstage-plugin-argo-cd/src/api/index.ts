@@ -19,32 +19,38 @@ import {
   isDecodeError as tsIsDecodeError,
 } from 'io-ts-promise';
 import reporter from 'io-ts-reporters';
+import { ARGOCD_ANNOTATION_APP_NAMESPACE } from '../components/useArgoCDAppData';
 
 export interface ArgoCDApi {
   listApps(options: {
     url: string;
     appSelector?: string;
+    appNamespace?: string;
     projectName?: string;
   }): Promise<ArgoCDAppList>;
   getRevisionDetails(options: {
     url: string;
     app: string;
+    appNamespace?: string;
     revisionID: string;
     instanceName?: string;
   }): Promise<ArgoCDAppDeployRevisionDetails>;
   getAppDetails(options: {
     url: string;
     appName: string;
+    appNamespace?: string;
     instance?: string;
   }): Promise<ArgoCDAppDetails>;
   getAppListDetails(options: {
     url: string;
     appSelector: string;
+    appNamespace?: string;
     instance?: string;
   }): Promise<ArgoCDAppList>;
   serviceLocatorUrl(options: {
     appName?: string;
     appSelector?: string;
+    appNamespace?: string;
   }): Promise<ArgoCDServiceList | Error>;
 }
 
@@ -58,6 +64,7 @@ export type Options = {
   searchInstances: boolean;
   identityApi: IdentityApi;
   proxyPath?: string;
+  useNamespacedApps: boolean;
 };
 
 export class ArgoCDApiClient implements ArgoCDApi {
@@ -65,12 +72,14 @@ export class ArgoCDApiClient implements ArgoCDApi {
   private readonly backendBaseUrl: string;
   private readonly searchInstances: boolean;
   private readonly identityApi: IdentityApi;
+  private readonly useNamespacedApps: boolean;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
     this.backendBaseUrl = options.backendBaseUrl;
     this.searchInstances = options.searchInstances;
     this.identityApi = options.identityApi;
+    this.useNamespacedApps = options.useNamespacedApps;
   }
 
   async getBaseUrl() {
@@ -78,6 +87,21 @@ export class ArgoCDApiClient implements ArgoCDApi {
       return `${this.backendBaseUrl}/api/argocd`;
     }
     return await this.discoveryApi.getBaseUrl('proxy');
+  }
+
+  getQueryParams(params: { [p: string]: string | undefined }) {
+    const result = Object.keys(params)
+      .filter(key => params[key] !== undefined)
+      .filter(
+        key =>
+          this.useNamespacedApps || key === ARGOCD_ANNOTATION_APP_NAMESPACE,
+      )
+      .map(
+        k =>
+          `${encodeURIComponent(k)}=${encodeURIComponent(params[k] as string)}`,
+      )
+      .join('&');
+    return result ? `?${result}` : '';
   }
 
   async fetchDecode<A, O, I>(url: string, typeCodec: tsType<A, O, I>) {
@@ -114,22 +138,17 @@ export class ArgoCDApiClient implements ArgoCDApi {
   async listApps(options: {
     url: string;
     appSelector?: string;
+    appNamespace?: string;
     projectName?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
-    const params: { [key: string]: string | undefined } = {
+    const query = this.getQueryParams({
       selector: options.appSelector,
       project: options.projectName,
-    };
-    const query = Object.keys(params)
-      .filter(key => params[key] !== undefined)
-      .map(
-        k =>
-          `${encodeURIComponent(k)}=${encodeURIComponent(params[k] as string)}`,
-      )
-      .join('&');
+      appNamespace: options.appNamespace,
+    });
     return this.fetchDecode(
-      `${proxyUrl}${options.url}/applications?${query}`,
+      `${proxyUrl}${options.url}/applications${query}`,
       argoCDAppList,
     );
   }
@@ -137,10 +156,14 @@ export class ArgoCDApiClient implements ArgoCDApi {
   async getRevisionDetails(options: {
     url: string;
     app: string;
+    appNamespace?: string;
     revisionID: string;
     instanceName?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
+    const query = this.getQueryParams({
+      appNamespace: options.appNamespace,
+    });
     if (this.searchInstances) {
       return this.fetchDecode(
         `${proxyUrl}/argoInstance/${
@@ -149,7 +172,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
           options.app as string,
         )}/revisions/${encodeURIComponent(
           options.revisionID as string,
-        )}/metadata`,
+        )}/metadata${query}`,
         argoCDAppDeployRevisionDetails,
       );
     }
@@ -158,7 +181,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
         options.app as string,
       )}/revisions/${encodeURIComponent(
         options.revisionID as string,
-      )}/metadata`,
+      )}/metadata${query}`,
       argoCDAppDeployRevisionDetails,
     );
   }
@@ -166,21 +189,27 @@ export class ArgoCDApiClient implements ArgoCDApi {
   async getAppDetails(options: {
     url: string;
     appName: string;
+    appNamespace?: string;
     instance?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
+    const query = this.getQueryParams({
+      appNamespace: options.appNamespace,
+    });
     if (this.searchInstances) {
       return this.fetchDecode(
         `${proxyUrl}/argoInstance/${
           options.instance
-        }/applications/name/${encodeURIComponent(options.appName as string)}`,
+        }/applications/name/${encodeURIComponent(
+          options.appName as string,
+        )}?${query}`,
         argoCDAppDetails,
       );
     }
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications/${encodeURIComponent(
         options.appName as string,
-      )}`,
+      )}${query}`,
       argoCDAppDetails,
     );
   }
@@ -188,37 +217,50 @@ export class ArgoCDApiClient implements ArgoCDApi {
   async getAppListDetails(options: {
     url: string;
     appSelector: string;
+    appNamespace?: string;
     instance?: string;
   }) {
     const proxyUrl = await this.getBaseUrl();
+    const query = this.getQueryParams({
+      appNamespace: options.appNamespace,
+    });
     if (this.searchInstances) {
       return this.fetchDecode(
         `${proxyUrl}/argoInstance/${
           options.instance
         }/applications/selector/${encodeURIComponent(
           options.appSelector as string,
-        )}`,
+        )}${query}`,
         argoCDAppList,
       );
     }
     return this.fetchDecode(
       `${proxyUrl}${options.url}/applications/selector/${encodeURIComponent(
         options.appSelector as string,
-      )}`,
+      )}${query}`,
       argoCDAppList,
     );
   }
 
-  async serviceLocatorUrl(options: { appName?: string; appSelector?: string }) {
+  async serviceLocatorUrl(options: {
+    appName?: string;
+    appSelector?: string;
+    appNamespace?: string;
+  }) {
     if (!options.appName && !options.appSelector) {
       throw new Error('Need to provide appName or appSelector');
     }
     const baseUrl = await this.getBaseUrl();
+    const query = this.getQueryParams({
+      appNamespace: options.appNamespace,
+    });
     const url = options.appName
-      ? `${baseUrl}/find/name/${encodeURIComponent(options.appName as string)}`
+      ? `${baseUrl}/find/name/${encodeURIComponent(
+          options.appName as string,
+        )}${query}`
       : `${baseUrl}/find/selector/${encodeURIComponent(
           options.appSelector as string,
-        )}`;
+        )}${query}`;
 
     return this.fetchDecode(url, argoCDServiceList).catch(_ => {
       throw new Error('Cannot get argo location(s) for service');

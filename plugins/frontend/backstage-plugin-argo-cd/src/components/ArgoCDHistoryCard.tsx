@@ -45,6 +45,8 @@ const HistoryTable = ({
 }) => {
   const configApi = useApi(configApiRef);
   const baseUrl = configApi.getOptionalString('argocd.baseUrl');
+  const namespaced =
+    configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
@@ -57,6 +59,7 @@ const HistoryTable = ({
             return app.status.history.map(entry => {
               return {
                 app: app.metadata.name,
+                appNamespace: app.metadata.namespace,
                 instance: app.metadata?.instance?.name,
                 ...entry,
               };
@@ -74,7 +77,9 @@ const HistoryTable = ({
       render: (row: any): React.ReactNode =>
         baseUrl ? (
           <Link
-            href={`${baseUrl}/applications/${row.app}`}
+            href={`${baseUrl}/applications/${
+              namespaced ? `${row.appNamespace}/${row.app}` : row.app
+            }`}
             target="_blank"
             rel="noopener"
           >
@@ -168,13 +173,15 @@ const HistoryTable = ({
 };
 
 const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
-  const { url, appName, appSelector, projectName } = useArgoCDAppData({
-    entity,
-  });
+  const { url, appName, appSelector, appNamespace, projectName } =
+    useArgoCDAppData({
+      entity,
+    });
   const { loading, value, error, retry } = useAppDetails({
     url,
     appName,
     appSelector,
+    appNamespace,
     projectName,
   });
   if (loading) {

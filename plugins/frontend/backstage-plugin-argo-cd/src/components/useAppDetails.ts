@@ -22,11 +22,13 @@ import { ArgoCDAppDetails } from '../types';
 export const useAppDetails = ({
   appName,
   appSelector,
+  appNamespace,
   projectName,
   url,
 }: {
   appName?: string;
   appSelector?: string;
+  appNamespace?: string;
   projectName?: string;
   url: string;
 }) => {
@@ -49,6 +51,7 @@ export const useAppDetails = ({
         const revisionDetails = await api.getRevisionDetails({
           url,
           app,
+          appNamespace: appDetails.metadata.namespace,
           revisionID,
           instanceName,
         });
@@ -64,7 +67,11 @@ export const useAppDetails = ({
     );
     try {
       if (!argoSearchMethod && appName) {
-        const appDetails = await api.getAppDetails({ url, appName });
+        const appDetails = await api.getAppDetails({
+          url,
+          appName,
+          appNamespace,
+        });
         if (
           appDetails &&
           appDetails?.status &&
@@ -79,12 +86,14 @@ export const useAppDetails = ({
       if (argoSearchMethod && appName) {
         const kubeInfo = await api.serviceLocatorUrl({
           appName: appName as string,
+          appNamespace: appNamespace,
         });
         if (kubeInfo instanceof Error) return kubeInfo;
         const promises = kubeInfo.map(async (instance: any) => {
           const apiOut = await api.getAppDetails({
             url,
             appName,
+            appNamespace,
             instance: instance.name,
           });
           if (!apiOut.metadata) {
@@ -114,12 +123,14 @@ export const useAppDetails = ({
       if (argoSearchMethod && appSelector) {
         const kubeInfo = await api.serviceLocatorUrl({
           appSelector: appSelector as string,
+          appNamespace,
         });
         if (kubeInfo instanceof Error) return kubeInfo;
         const promises = kubeInfo.map(async (instance: any) => {
           const apiOut = await api.getAppListDetails({
             url,
             appSelector,
+            appNamespace,
             instance: instance.name,
           });
           return apiOut;
@@ -147,7 +158,12 @@ export const useAppDetails = ({
         );
       }
       if (appSelector || projectName) {
-        const result = await api.listApps({ url, appSelector, projectName });
+        const result = await api.listApps({
+          url,
+          appSelector,
+          appNamespace,
+          projectName,
+        });
         if (result.items && result.items.length > 0) {
           const apps = {
             items: result.items.filter(item => item !== null),
