@@ -37,7 +37,7 @@ export const PrometheusGraphEntityWrapper = ({
   const graphContent = isPrometheusGraphAvailable(entity);
   if (!graphContent) {
     return (
-      <MissingAnnotationEmptyState 
+      <MissingAnnotationEmptyState
         annotation={PROMETHEUS_RULE_ANNOTATION}
         readMoreUrl={PROMETHEUS_PLUGIN_DOCUMENTATION}
       />

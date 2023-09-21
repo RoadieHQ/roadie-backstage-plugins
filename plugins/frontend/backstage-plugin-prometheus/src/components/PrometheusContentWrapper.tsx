@@ -45,7 +45,7 @@ const PrometheusContentWrapper = ({
   const { entity } = useEntity();
   const graphContent = isPrometheusGraphAvailable(entity);
   const alertContent = isPrometheusAlertAvailable(entity);
-if (!graphContent && !alertContent) {
+  if (!graphContent && !alertContent) {
     return (
       <MissingAnnotationEmptyState
         annotation={[PROMETHEUS_RULE_ANNOTATION, PROMETHEUS_ALERT_ANNOTATION]}
