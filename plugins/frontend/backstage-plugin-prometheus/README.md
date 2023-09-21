@@ -203,7 +203,7 @@ prometheus:
 Step 2: Hijack this path by writing your own proxy middleware extension.
 **packages/backend/src/plugins/proxy.ts**
 
-````diff
+```diff
 import { createRouter } from '@backstage/plugin-proxy-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
