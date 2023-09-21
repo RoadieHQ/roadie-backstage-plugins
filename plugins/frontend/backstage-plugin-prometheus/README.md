@@ -201,10 +201,13 @@ prometheus:
 ```
 
 Step 2: Hijack this path by writing your own proxy middleware extension.
-**src/plugins/proxy.ts**
+**packages/backend/src/plugins/proxy.ts**
 
-````ts
-import { createProxyMiddleware } from 'http-proxy-middleware';
+````diff
+import { createRouter } from '@backstage/plugin-proxy-backend';
+import { Router } from 'express';
+import { PluginEnvironment } from '../types';
++ import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -214,26 +217,28 @@ export default async function createPlugin(
     config: env.config,
     discovery: env.discovery,
   });
-  const externalUrl = await env.discovery.getExternalBaseUrl('proxy');
-  const { pathname: pathPrefix } = new URL(externalUrl);
-  proxyRouter.use(
-    '/dynamic-prometheus',
-    createProxyMiddleware({
-      logProvider: () => env.logger,
-      logLevel: 'debug',
-      changeOrigin: true,
-      pathRewrite: {
-        [`^${pathPrefix}/dynamic-prometheus/?`]: '/',
-      },
-      // Some code that does something with the x-prometheus-service-name header.
-      // Here you can just do URL manipulation, or even make requests out to other services
-      // or caches to pull down lookup info.
-      router: async (req) => {
-        const prometheusServiceName = req.headers['x-prometheus-service-name'];
-        return `https://${prometheusServiceName}.company.com`;
-      },
-    }),
-  );
++ const externalUrl = await env.discovery.getExternalBaseUrl('proxy');
++ const { pathname: pathPrefix } = new URL(externalUrl);
++ proxyRouter.use(
++   '/dynamic-prometheus',
++   createProxyMiddleware({
++     logProvider: () => env.logger,
++     logLevel: 'debug',
++     changeOrigin: true,
++     pathRewrite: {
++       [`^${pathPrefix}/dynamic-prometheus/?`]: '/',
++     },
++     // Some code that does something with the x-prometheus-service-name header.
++     // Here you can just do URL manipulation, or even make requests out to other services
++     // or caches to pull down lookup info.
++     router: async (req) => {
++       const prometheusServiceName = req.headers['x-prometheus-service-name'];
++       return `https://${prometheusServiceName}.company.com`;
++     },
++   }),
++ );
++ return proxyRouter;
+```
 
 ## Using callback with `EntityPrometheusAlertCard`
 
@@ -242,7 +247,7 @@ The component with callback can look like this:
 
 ```typescript
 <EntityPrometheusAlertCard onRowClick={callbackFunction} />
-````
+```
 
 Where `callbackFunction` can have the following definition:
 
@@ -260,3 +265,4 @@ const callbackFunction = (arg: Alerts) => {
 - [Prometheus](https://prometheus.io/docs/introduction/overview/)
 - [Prometheus Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
 - Get hosted, managed Backstage for your company: https://roadie.io
+````
