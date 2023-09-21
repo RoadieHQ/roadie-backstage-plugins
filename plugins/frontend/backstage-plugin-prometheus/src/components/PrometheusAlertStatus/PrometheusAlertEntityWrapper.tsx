@@ -20,6 +20,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import {
   isPrometheusAlertAvailable,
   PROMETHEUS_ALERT_ANNOTATION,
+  PROMETHEUS_PLUGIN_DOCUMENTATION,
 } from '../util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
 import { OnRowClick } from '../../types';
@@ -33,7 +34,10 @@ export const PrometheusAlertEntityWrapper = ({
   const alertContent = isPrometheusAlertAvailable(entity);
   if (!alertContent) {
     return (
-      <MissingAnnotationEmptyState annotation={PROMETHEUS_ALERT_ANNOTATION} />
+      <MissingAnnotationEmptyState
+        annotation={PROMETHEUS_ALERT_ANNOTATION}
+        readMoreUrl={PROMETHEUS_PLUGIN_DOCUMENTATION}
+      />
     );
   }
   const alerts = alertContent
