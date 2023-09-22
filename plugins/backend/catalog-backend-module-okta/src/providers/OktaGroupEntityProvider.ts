@@ -169,11 +169,11 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           const groupEntity = this.groupEntityFromOktaGroup(
             group,
             this.namingStrategy,
-            parentGroup,
             {
               annotations,
               members,
             },
+            parentGroup,
           );
           groupResources.push(groupEntity);
         } catch (e) {

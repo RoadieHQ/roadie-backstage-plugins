@@ -20,11 +20,11 @@ import { GroupNamingStrategy } from './groupNamingStrategies';
 export const groupEntityFromOktaGroup = (
   group: Group,
   namingStrategy: GroupNamingStrategy,
-  parentGroup: Group | undefined,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
+  parentGroup?: Group,
 ): GroupEntity => {
   const groupEntity: GroupEntity = {
     kind: 'Group',

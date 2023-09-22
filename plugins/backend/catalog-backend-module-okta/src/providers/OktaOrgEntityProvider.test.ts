@@ -673,7 +673,7 @@ describe('OktaOrgEntityProvider', () => {
 
       const provider = OktaOrgEntityProvider.fromConfig(config, {
         logger,
-        groupTransformer: (group, namingStrategy, parentGroup, options) => ({
+        groupTransformer: (group, namingStrategy, options, parentGroup) => ({
           kind: 'Group',
           apiVersion: 'backstage.io/v1alpha1',
           metadata: {

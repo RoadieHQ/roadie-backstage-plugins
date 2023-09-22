@@ -25,11 +25,11 @@ import { UserNamingStrategy } from './userNamingStrategies';
 export type OktaGroupEntityTransformer = (
   group: OktaGroup,
   namingStrategy: GroupNamingStrategy,
-  parentGroup: OktaGroup | undefined,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
+  parentGroup?: OktaGroup,
 ) => GroupEntity;
 
 export type OktaUserEntityTransformer = (
