@@ -1,5 +1,25 @@
 # backend
 
+## 2.0.23
+
+### Patch Changes
+
+- 2fbcbee1: Bump to Backstage version 1.17.5
+- Updated dependencies [2fbcbee1]
+- Updated dependencies [42574014]
+  - @roadiehq/catalog-backend-module-aws@1.3.15
+  - @roadiehq/catalog-backend-module-okta@0.8.7
+  - @roadiehq/scaffolder-backend-module-aws@2.4.13
+  - @roadiehq/scaffolder-backend-module-http-request@4.0.12
+  - @roadiehq/scaffolder-backend-module-utils@1.10.3
+
+## 2.0.22
+
+### Patch Changes
+
+- Updated dependencies [56c40ed5]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.11.2
+
 ## 2.0.21
 
 ### Patch Changes

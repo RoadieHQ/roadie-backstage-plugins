@@ -6409,10 +6409,10 @@
     node-fetch "^2.6.7"
     winston "^3.2.1"
 
-"@backstage/plugin-catalog-backend@^1.12.3":
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.12.3.tgz#3665a170cefe1e422edb93107479374a97db1a39"
-  integrity sha512-goPJ30qnnSMS/2oQj3mJCYIjpknjkHXYzdnWnlnuteESl8N9dyJG6nYZgkCd9+80KY1WgPHjXP1RfGIs1yV4eg==
+"@backstage/plugin-catalog-backend@^1.12.4":
+  version "1.12.4"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-catalog-backend/-/plugin-catalog-backend-1.12.4.tgz#d1d932777777eda83ffd81dcd60a5b878eb2da4f"
+  integrity sha512-sgImzpaCkIKCGLDC9jKkacOZ+EOBFUd/YAX2Ku4A4GvLQvf/gK5+gJ+rO6YKXz3tGSxyylztuCMw/GPj05BWpw==
   dependencies:
     "@backstage/backend-common" "^0.19.4"
     "@backstage/backend-openapi-utils" "^0.0.3"
@@ -6729,10 +6729,10 @@
     yn "^4.0.0"
     yup "^0.32.9"
 
-"@backstage/plugin-scaffolder-backend@^1.16.4":
-  version "1.16.4"
-  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.16.4.tgz#1f32ccad2705a57024f3ccc7a3b8c5c11551a223"
-  integrity sha512-8vfV26BbEHH/WZq33SO7SXe5pFc/GDqnDzfFVj8bKcVJ1Xo4RUy7e2ED2+0W3V1HIDxawssCWocw0YYK7OUc4Q==
+"@backstage/plugin-scaffolder-backend@^1.16.5":
+  version "1.16.5"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-scaffolder-backend/-/plugin-scaffolder-backend-1.16.5.tgz#f69d65cf52ae750bad39bc493f90e43ebd3f226b"
+  integrity sha512-rCYuJ/YjNeClNaxcFCBaiUwM4jfWWFqsbrUx6SxO8uVt8utB/ocelZtlCslWREFyiAuIWEY0w6lW7+fJzHeT+g==
   dependencies:
     "@backstage/backend-common" "^0.19.4"
     "@backstage/backend-plugin-api" "^0.6.2"
@@ -6743,7 +6743,7 @@
     "@backstage/errors" "^1.2.1"
     "@backstage/integration" "^1.6.2"
     "@backstage/plugin-auth-node" "^0.2.19"
-    "@backstage/plugin-catalog-backend" "^1.12.3"
+    "@backstage/plugin-catalog-backend" "^1.12.4"
     "@backstage/plugin-catalog-common" "^1.0.15"
     "@backstage/plugin-catalog-node" "^1.4.3"
     "@backstage/plugin-permission-common" "^0.7.7"
@@ -11370,6 +11370,11 @@
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
+
+"@types/nunjucks@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@types/nunjucks/-/nunjucks-3.2.3.tgz#994e68cb575c3ac1be27e6f99543183b3c3605aa"
+  integrity sha512-+lFIql0nbWSftazQ27cOYvSLC92SsfjxrU0I/Iys7hoxrBkN8OF+wmxxzx3bLFyFrLgDZ9lUckGcwldE4SfDQA==
 
 "@types/oauth@*":
   version "0.9.1"

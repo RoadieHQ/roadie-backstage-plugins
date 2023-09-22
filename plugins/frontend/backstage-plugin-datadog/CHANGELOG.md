@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.1.15
+
+### Patch Changes
+
+- 71b0340b: Modify DatadogDashboardPage to allow for multiple comma-separated urls to be provided and rendered for a given component.
+
 ## 2.1.14
 
 ### Patch Changes

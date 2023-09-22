@@ -75,6 +75,7 @@ Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+- profile-name | Group entities will be named exactly as their group profile name. ⚠ The Okta field supports characters not supported as [entity names in backstage](https://backstage.io/docs/features/software-catalog/descriptor-format#name-required). ⚠
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -327,6 +328,7 @@ Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+- profile-name | Group entities will be named exactly as their group profile name. ⚠ The Okta field supports characters not supported as [entity names in backstage](https://backstage.io/docs/features/software-catalog/descriptor-format#name-required). ⚠
 
 You may also choose to implement a custom naming strategy by providing a function.
 

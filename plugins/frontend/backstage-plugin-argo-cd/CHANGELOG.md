@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.3.3
+
+### Patch Changes
+
+- 1cb56767: fix: return item when no history
+
 ## 2.3.2
 
 ### Patch Changes

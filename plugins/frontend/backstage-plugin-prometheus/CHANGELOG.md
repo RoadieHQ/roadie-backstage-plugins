@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.5.0
+
+### Minor Changes
+
+- 7a7a0b5f: updated documentation links for MissingAnnotationEmptyState components
+
 ## 2.4.11
 
 ### Patch Changes

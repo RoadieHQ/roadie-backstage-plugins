@@ -37,11 +37,12 @@ import {
   useProjectName,
 } from '../../hooks/useBugsnagData';
 
-export const ErrorsOverview = () => {
-  const { entity } = useEntity();
+export const ErrorsOverviewComponent = () => {
   const organisationName = useBugsnagData()[0];
-  const projectApiKey = useBugsnagData()[1];
-  const projectName = useProjectName();
+  const projectNameOrKey = useBugsnagData()[1];
+  const projectNameAnnotation = useProjectName();
+  const isKey = /^[0-9a-fA-F]{32}$/i.test(projectNameOrKey);
+  const projectName = isKey ? projectNameAnnotation : projectNameOrKey;
   const api = useApi(bugsnagApiRef);
   const configApi = useApi(configApiRef);
   const [slug, setOrganisationSlug] = useState('');
@@ -61,7 +62,9 @@ export const ErrorsOverview = () => {
     });
 
     const filteredProject = projects.find(proj =>
-      proj.api_key.includes(projectApiKey),
+      isKey
+        ? proj.api_key.includes(projectNameOrKey)
+        : proj.name.includes(projectNameOrKey),
     );
     return filteredProject;
   });
@@ -72,7 +75,7 @@ export const ErrorsOverview = () => {
     return <Alert severity="error">{error.message}</Alert>;
   }
 
-  return isBugsnagAvailable(entity) ? (
+  return (
     <Page themeId="tool">
       <Content>
         <ContentHeader title="Bugsnag logs">
@@ -87,7 +90,13 @@ export const ErrorsOverview = () => {
         </Grid>
       </Content>
     </Page>
-  ) : (
-    <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />
   );
+};
+
+export const ErrorsOverview = () => {
+  const { entity } = useEntity();
+  if (!isBugsnagAvailable(entity)) {
+    return <MissingAnnotationEmptyState annotation={BUGSNAG_ANNOTATION} />;
+  }
+  return <ErrorsOverviewComponent />;
 };

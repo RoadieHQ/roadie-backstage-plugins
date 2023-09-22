@@ -22,6 +22,7 @@ import {
 import { DateTime, Duration } from 'luxon';
 
 const DEFAULT_PROXY_PATH = '/prometheus/api';
+const SERVICE_NAME_HEADER = 'x-prometheus-service-name';
 
 export const prometheusApiRef = createApiRef<PrometheusApi>({
   id: 'plugin.prometheus.service',
@@ -87,6 +88,11 @@ export class PrometheusApi {
     const start = DateTime.now().minus(Duration.fromObject(range)).toSeconds();
     const response = await fetch(
       `${apiUrl}/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
+      {
+        headers: {
+          [SERVICE_NAME_HEADER]: serviceName || '',
+        },
+      },
     );
     if (!response.ok) {
       throw new Error(
@@ -98,7 +104,11 @@ export class PrometheusApi {
 
   async getAlerts({ serviceName }: { serviceName?: string }) {
     const apiUrl = await this.getApiUrl({ serviceName });
-    const response = await fetch(`${apiUrl}/rules?type=alert`);
+    const response = await fetch(`${apiUrl}/rules?type=alert`, {
+      headers: {
+        [SERVICE_NAME_HEADER]: serviceName || '',
+      },
+    });
 
     if (!response.ok) {
       throw new Error(

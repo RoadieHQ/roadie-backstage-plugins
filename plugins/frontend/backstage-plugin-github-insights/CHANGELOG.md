@@ -1,5 +1,18 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.20
+
+### Patch Changes
+
+- 5301fa54: Explicitly define protocol for component links instead of protocol-less
+
+## 2.3.19
+
+### Patch Changes
+
+- 86721387: The `MarkdownContent` component currently removes only single line comments if `preserveHtmlComments` is not set.
+  This change accounts for single line and multiline HTML comments
+
 ## 2.3.18
 
 ### Patch Changes

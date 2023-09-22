@@ -4,11 +4,6 @@ Backstage plugin exposing graphs and alerts from Prometheus
 
 ![Prometheus Entity Content Page Screenshot](./docs/prom_entity_content.png)
 
-## Features
-
-- List Pull Requests for your repository, with filtering and search.
-- Show basic statistics widget about pull requests for your repository.
-
 ### The plugin provides an entity content page and two additional widgets:
 
 1. Alert table widget
@@ -189,6 +184,60 @@ prometheus:
   instances:
     - name: prometheusTeamB
       proxyPath: /prometheusTeamB/api
+```
+
+## Advanced Dynamic Prometheus Proxying
+
+If you have a very large amount of prometheus servers, the above statically configured "Multiple Prometheus instances" proxy config may become verbose and difficult to maintain. You can take full control over Backstage's backend proxying behavior for prometheus by writing your own proxy middleware.
+
+All prometheus requests from the frontend will send the entities `prometheus.io/service-name` annotation in the `x-prometheus-service-name` request header.
+
+Step 1: Update app-config to use a special path if it can't find the `prometheus.io/service-name` config in the `prometheus.instances` config array
+**app-config.yaml**
+
+```yaml
+prometheus:
+  proxyPath: '/dynamic-prometheus'
+```
+
+Step 2: Hijack this path by writing your own proxy middleware extension.
+**packages/backend/src/plugins/proxy.ts**
+
+```diff
+import { createRouter } from '@backstage/plugin-proxy-backend';
+import { Router } from 'express';
+import { PluginEnvironment } from '../types';
++ import { createProxyMiddleware } from 'http-proxy-middleware';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const proxyRouter = await createRouter({
+    logger: env.logger,
+    config: env.config,
+    discovery: env.discovery,
+  });
++ const externalUrl = await env.discovery.getExternalBaseUrl('proxy');
++ const { pathname: pathPrefix } = new URL(externalUrl);
++ proxyRouter.use(
++   '/dynamic-prometheus',
++   createProxyMiddleware({
++     logProvider: () => env.logger,
++     logLevel: 'debug',
++     changeOrigin: true,
++     pathRewrite: {
++       [`^${pathPrefix}/dynamic-prometheus/?`]: '/',
++     },
++     // Some code that does something with the x-prometheus-service-name header.
++     // Here you can just do URL manipulation, or even make requests out to other services
++     // or caches to pull down lookup info.
++     router: async (req) => {
++       const prometheusServiceName = req.headers['x-prometheus-service-name'];
++       return `https://${prometheusServiceName}.company.com`;
++     },
++   }),
++ );
++ return proxyRouter;
 ```
 
 ## Using callback with `EntityPrometheusAlertCard`
