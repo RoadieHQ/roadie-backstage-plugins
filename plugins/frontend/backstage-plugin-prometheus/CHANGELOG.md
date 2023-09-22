@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.6.0
+
+### Minor Changes
+
+- d4fb212c: Prometheus service name will now be sent to the backstage backend proxy as a request header to support advanced proxying configs
+
 ## 2.5.0
 
 ### Minor Changes
