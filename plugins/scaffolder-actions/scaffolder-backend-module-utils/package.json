@@ -31,11 +31,11 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.4",
-    "@backstage/config": "^1.0.8",
-    "@backstage/errors": "^1.2.1",
-    "@backstage/plugin-scaffolder-backend": "^1.16.5",
-    "@backstage/plugin-scaffolder-node": "^0.2.2",
+    "@backstage/backend-common": "^0.19.5",
+    "@backstage/config": "^1.1.0",
+    "@backstage/errors": "^1.2.2",
+    "@backstage/plugin-scaffolder-backend": "^1.17.0",
+    "@backstage/plugin-scaffolder-node": "^0.2.3",
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "fs-extra": "^10.0.0",
@@ -45,7 +45,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.22.12",
+    "@backstage/cli": "^0.22.13",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^26.0.7",
