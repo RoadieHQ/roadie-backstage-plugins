@@ -62,7 +62,6 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
   const { formContext, uiSchema } = props;
   const options = selectFieldFromApiConfigSchema.parse(uiSchema['ui:options']);
-
   const { title = 'Select', description = '' } = options;
 
   const { error } = useAsync(async () => {
@@ -132,7 +131,6 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   if (!dropDownData) {
     return <Progress />;
   }
-
   return (
     <FormControl
       margin="normal"
@@ -141,9 +139,9 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     >
       <Select
         items={dropDownData}
+        placeholder={options.placeholder || 'Select from results'}
         label={title}
         onChange={props.onChange}
-        native
       />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>
