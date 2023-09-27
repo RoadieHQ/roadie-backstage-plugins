@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.0
+
+### Minor Changes
+
+- cfc712b7: Adds option to provide custom user transformer for user and org providers
+
 ## 0.8.7
 
 ### Patch Changes
