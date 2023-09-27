@@ -1,9 +1,14 @@
 # scaffolder-frontend-module-http-request-field
 
-This custom scaffolder field, fetches an api call from the backstage backend and allows the result to be
+This custom scaffolder field fetches an API call from the backstage backend and allows the result to be
 rendered to a list.
 
-It can be installed as follows in the `App.tsx`
+This is a frontend plugin to be installed under `packages/app`:
+```
+yarn add --cwd packages/app @roadiehq/plugin-scaffolder-frontend-module-http-request-field
+```
+
+To make it available in the Scaffolder add the extension in your `App.tsx`:
 
 ```typescript jsx
 ...
@@ -49,7 +54,9 @@ spec:
 
               # This selects the array element from the API fetch response. It finds the array with the name kind
               # under the facets object
-              arraySelector: 'facets.kind'
+              arraySelector:
+                - facets
+                - kind
 
               # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
               # it will use the value of the item directly.
