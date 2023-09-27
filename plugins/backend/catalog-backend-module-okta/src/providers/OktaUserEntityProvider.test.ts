@@ -224,5 +224,49 @@ describe('OktaUserEntityProvider', () => {
         ],
       });
     });
+
+    it('uses custom user transformer', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        userTransformer: (user, namingStrategy, options) => ({
+          kind: 'User',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: { ...options.annotations },
+            name: namingStrategy(user),
+            title: user.profile.email,
+          },
+          spec: {
+            profile: {
+              displayName: user.profile.displayName,
+              email: user.profile.email,
+              picture: 'picture.com',
+            },
+            memberOf: [],
+          },
+        }),
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              spec: expect.objectContaining({
+                profile: expect.objectContaining({
+                  picture: 'picture.com',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
   });
 });

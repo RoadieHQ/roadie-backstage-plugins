@@ -13,39 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { GroupEntity } from '@backstage/catalog-model';
-import { Group } from '@okta/okta-sdk-nodejs';
-import { GroupNamingStrategy } from './groupNamingStrategies';
 
-export const groupEntityFromOktaGroup = (
-  group: Group,
+import { GroupEntity, UserEntity } from '@backstage/catalog-model';
+import type {
+  Group as OktaGroup,
+  User as OktaUser,
+} from '@okta/okta-sdk-nodejs';
+import { GroupNamingStrategy } from './groupNamingStrategies';
+import { UserNamingStrategy } from './userNamingStrategies';
+
+export type OktaGroupEntityTransformer = (
+  group: OktaGroup,
   namingStrategy: GroupNamingStrategy,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
-  parentGroup?: Group,
-): GroupEntity => {
-  const groupEntity: GroupEntity = {
-    kind: 'Group',
-    apiVersion: 'backstage.io/v1alpha1',
-    metadata: {
-      annotations: {
-        ...options.annotations,
-      },
-      name: namingStrategy(group),
-      title: group.profile.name,
-      description: group.profile.description || '',
-    },
-    spec: {
-      members: options.members,
-      type: 'group',
-      children: [],
-    },
-  };
+  parentGroup?: OktaGroup,
+) => GroupEntity;
 
-  if (parentGroup) {
-    groupEntity.spec.parent = namingStrategy(parentGroup);
-  }
-  return groupEntity;
-};
+export type OktaUserEntityTransformer = (
+  user: OktaUser,
+  namingStrategy: UserNamingStrategy,
+  options: { annotations: Record<string, string> },
+) => UserEntity;

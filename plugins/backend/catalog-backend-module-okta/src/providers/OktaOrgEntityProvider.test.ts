@@ -671,5 +671,153 @@ describe('OktaOrgEntityProvider', () => {
         ]),
       });
     });
+
+    it('uses custom group transformer', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+              displayName: 'Display name 1',
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        groupTransformer: (group, namingStrategy, options, parentGroup) => ({
+          kind: 'Group',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: { ...options.annotations },
+            name: namingStrategy(group),
+            title: group.profile.name,
+            description: group.profile.description || '',
+          },
+          spec: {
+            profile: {
+              displayName: group.profile.displayName as string,
+            },
+            members: options.members,
+            type: 'group',
+            children: [],
+            parent: parentGroup ? namingStrategy(parentGroup) : '',
+          },
+        }),
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Group',
+              metadata: expect.objectContaining({
+                name: 'asdfwefwefwef',
+                title: 'Everyone@the-company',
+              }),
+              spec: expect.objectContaining({
+                members: ['user-1'],
+                profile: expect.objectContaining({
+                  displayName: 'Display name 1',
+                }),
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
+
+    it('uses custom user transformer', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      listGroups = () => {
+        return new MockOktaCollection([
+          {
+            id: 'asdfwefwefwef',
+            profile: {
+              name: 'Everyone@the-company',
+              description: 'Everyone in the company',
+            },
+            listUsers: () => {
+              return new MockOktaCollection([
+                {
+                  id: 'user-1',
+                  profile: {
+                    email: 'fname@domain.com',
+                  },
+                },
+                {
+                  id: 'user-2',
+                  profile: {
+                    email: 'fname2@domain.com',
+                  },
+                },
+              ]);
+            },
+          },
+        ]);
+      };
+
+      const provider = OktaOrgEntityProvider.fromConfig(config, {
+        logger,
+        userTransformer: (user, namingStrategy, options) => ({
+          kind: 'User',
+          apiVersion: 'backstage.io/v1alpha1',
+          metadata: {
+            annotations: { ...options.annotations },
+            name: namingStrategy(user),
+            title: user.profile.email,
+          },
+          spec: {
+            profile: {
+              displayName: user.profile.displayName,
+              email: user.profile.email,
+              picture: 'picture.com',
+            },
+            memberOf: [],
+          },
+        }),
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+        type: 'full',
+        entities: expect.arrayContaining([
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              spec: expect.objectContaining({
+                profile: expect.objectContaining({
+                  picture: 'picture.com',
+                }),
+              }),
+            }),
+          }),
+        ]),
+      });
+    });
   });
 });

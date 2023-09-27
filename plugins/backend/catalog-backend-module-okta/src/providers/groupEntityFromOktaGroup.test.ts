@@ -37,8 +37,8 @@ describe('groupEntityFromOktaGroup', () => {
       groupEntityFromOktaGroup(
         group as Group,
         new ProfileFieldGroupNamingStrategy('org_id').nameForGroup,
-        parentGroup,
         options,
+        parentGroup,
       ),
     ).toEqual({
       apiVersion: 'backstage.io/v1alpha1',
@@ -77,8 +77,8 @@ describe('groupEntityFromOktaGroup', () => {
       groupEntityFromOktaGroup(
         group as Group,
         new ProfileFieldGroupNamingStrategy('org_id').nameForGroup,
-        parentGroup as Group,
         options,
+        parentGroup as Group,
       ),
     ).toEqual({
       apiVersion: 'backstage.io/v1alpha1',
