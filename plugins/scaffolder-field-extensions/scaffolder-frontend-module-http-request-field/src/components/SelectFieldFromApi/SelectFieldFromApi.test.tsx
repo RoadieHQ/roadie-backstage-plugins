@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import {
   renderWithEffects,
   TestApiProvider,
@@ -64,8 +64,8 @@ describe('SelectFieldFromApi', () => {
       ),
     );
     const input = await getByTestId('select');
-
-    fireEvent.click(input);
+    expect(input.textContent).toBe('Select from results');
+    fireEvent.mouseDown(within(input).getByRole('button'));
 
     expect(getByText('result1')).toBeInTheDocument();
     expect(getByText('result2')).toBeInTheDocument();
@@ -90,8 +90,8 @@ describe('SelectFieldFromApi', () => {
       ),
     );
     const input = await getByTestId('select');
-
-    fireEvent.click(input);
+    expect(input.textContent).toBe('Select from results');
+    fireEvent.mouseDown(within(input).getByRole('button'));
 
     expect(getByText('result1')).toBeInTheDocument();
     expect(getByText('result2')).toBeInTheDocument();

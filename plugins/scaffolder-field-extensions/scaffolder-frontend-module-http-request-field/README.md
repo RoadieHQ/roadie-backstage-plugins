@@ -47,6 +47,9 @@ spec:
               params:
                 facet: 'kind'
 
+              # (Optional) Renders the provided text as a placeholder value into the select box.
+              placeholder: 'Select from options'
+
               # This selects the array element from the API fetch response. It finds the array with the name kind
               # under the facets object
               arraySelector: 'facets.kind'
