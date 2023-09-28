@@ -21,7 +21,7 @@ import {
   createRoutableExtension,
   createComponentExtension,
 } from '@backstage/core-plugin-api';
-import { createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home-react';
 
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
