@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.17
+
+### Patch Changes
+
+- 528722d1: Updated to use `@backstage/plugin-home-react` instead of `@backstage/plugin-home`
+
 ## 2.5.16
 
 ### Patch Changes
