@@ -33,13 +33,13 @@
     "start": "backstage-cli package start"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.5",
+    "@backstage/backend-common": "^0.19.6",
     "@backstage/catalog-client": "^1.4.4",
     "@backstage/catalog-model": "^1.4.2",
-    "@backstage/plugin-catalog-node": "^1.4.4",
+    "@backstage/plugin-catalog-node": "^1.4.5",
     "@backstage/config": "^1.1.0",
     "@backstage/errors": "^1.2.2",
-    "@backstage/plugin-catalog-backend": "^1.13.0",
+    "@backstage/plugin-catalog-backend": "^1.13.2",
     "@backstage/types": "^1.1.1",
     "@okta/okta-sdk-nodejs": "^6.6.0",
     "crypto-js": "^4.1.1",
