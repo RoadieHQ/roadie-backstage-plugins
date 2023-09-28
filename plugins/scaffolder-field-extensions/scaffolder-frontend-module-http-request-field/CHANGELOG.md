@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.5.1
+
+### Patch Changes
+
+- 14273c2d: Expose placeholder property for the select
+
 ## 1.5.0
 
 ### Minor Changes
