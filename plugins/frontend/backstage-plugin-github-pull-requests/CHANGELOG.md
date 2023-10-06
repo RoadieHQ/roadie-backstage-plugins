@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.18
+
+### Patch Changes
+
+- ff9d7b04: Updated `PullRequestsListView` to fit the full height of the content it is in
+
 ## 2.5.17
 
 ### Patch Changes
