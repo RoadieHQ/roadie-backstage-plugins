@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid grey',
     borderRadius: '6px',
     overflowY: 'auto',
-    maxHeight: '18rem',
+    maxHeight: '100%',
   },
   pullRequestRow: {
     paddingTop: '0.5rem',
