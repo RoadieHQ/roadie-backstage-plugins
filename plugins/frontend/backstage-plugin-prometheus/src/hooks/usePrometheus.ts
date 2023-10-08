@@ -91,6 +91,7 @@ export function useMetrics({
   const [state, fetchGraph] = useAsyncFn(async () => {
     try {
       const serviceName = getServiceName(entity);
+      const uiUrl = prometheusApi.getUiUrl({ serviceName });
       const value = await prometheusApi.query({
         query,
         range,
@@ -98,7 +99,7 @@ export function useMetrics({
         serviceName,
       });
       if (isMetricResult(value.data.resultType, value.data.result)) {
-        return resultToGraphData(value.data.result, dimension);
+        return { ...resultToGraphData(value.data.result, dimension), uiUrl };
       }
       errorApi.post({
         name: 'Prometheus Graph construction error',
@@ -125,9 +126,10 @@ export function useMetrics({
 export function useAlerts(alerts: string[] | 'all') {
   const prometheusApi = useApi(prometheusApiRef);
   const { entity } = useEntity();
+  const serviceName = getServiceName(entity);
+  const uiUrl = prometheusApi.getUiUrl({ serviceName });
   const { value, loading, error } =
     useAsync(async (): Promise<PrometheusRuleResponse> => {
-      const serviceName = getServiceName(entity);
       return await prometheusApi.getAlerts({ serviceName });
     }, []);
   if (value && value.status !== 'error') {
@@ -150,13 +152,14 @@ export function useAlerts(alerts: string[] | 'all') {
               parsedLabels[key],
           ),
       );
-    return { loading, error, displayableAlerts };
+    return { loading, error, displayableAlerts, uiUrl };
   } else if (value && value.status === 'error') {
     return {
       loading,
       error: { message: 'Error when retrieving alerting data from Prometheus' },
       displayableAlerts: [],
+      uiUrl,
     };
   }
-  return { loading, error, displayableAlerts: [] };
+  return { loading, error, displayableAlerts: [], uiUrl };
 }

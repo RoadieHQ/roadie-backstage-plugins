@@ -57,6 +57,7 @@ const config = {
 
 const mockPrometheusApi = {
   getAlerts: () => require('../../mocks/mockAlertResponse.json'),
+  getUiUrl: () => undefined,
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [

@@ -17,6 +17,7 @@ import React from 'react';
 
 import {
   InfoCard,
+  Link,
   Progress,
   StatusAborted,
   StatusError,
@@ -25,7 +26,7 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { Chip, Tooltip, makeStyles } from '@material-ui/core';
+import { Chip, Tooltip, makeStyles, Grid, Typography } from '@material-ui/core';
 // eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
@@ -137,15 +138,29 @@ export const PrometheusAlertStatus = ({
   alerts: string[] | 'all';
   onRowClick?: OnRowClick;
 }) => {
-  const { error, loading, displayableAlerts } = useAlerts(alerts);
+  const { error, loading, displayableAlerts, uiUrl } = useAlerts(alerts);
   if (loading) {
     return <Progress />;
   } else if (error) {
     return <Alert severity="error">{error?.message}</Alert>;
   }
+
+  const title = (
+    <Grid container justifyContent="space-between" alignItems="center">
+      <Grid item>Prometheus Alerts</Grid>
+      {uiUrl && (
+        <Grid item>
+          <Typography variant="subtitle1">
+            <Link to={`${uiUrl}/alerts`}>Go to Prometheus</Link>
+          </Typography>
+        </Grid>
+      )}
+    </Grid>
+  );
+
   return (
     <div>
-      <InfoCard title="Prometheus Alerts" noPadding>
+      <InfoCard title={title} noPadding>
         <Table
           options={{
             search: false,
