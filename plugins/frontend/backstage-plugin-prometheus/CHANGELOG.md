@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.7.0
+
+### Minor Changes
+
+- 1078f16e: Add `uiUrl` as config to enable links to Prometheus.
+
 ## 2.6.1
 
 ### Patch Changes
