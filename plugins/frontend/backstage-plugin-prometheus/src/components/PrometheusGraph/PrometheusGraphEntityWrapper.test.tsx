@@ -59,6 +59,7 @@ const config = {
 
 const mockPrometheusApi = {
   query: () => require('../../mocks/mockQueryResponse.json'),
+  getUiUrl: () => undefined,
 };
 
 const apis: [AnyApiRef, Partial<unknown>][] = [

@@ -28,6 +28,12 @@ export interface Config {
     proxyPath?: string;
 
     /**
+     * The URL for the Prometheus UI.
+     * @visibility frontend
+     */
+    uiUrl?: string;
+
+    /**
      * The proxy service instances for Prometheus.
      * Should be used if you have multiple Prometheus instances you like to proxy to.
      * @visibility frontend
@@ -46,6 +52,11 @@ export interface Config {
          * @visibility frontend
          */
         proxyPath: string;
+        /**
+         * The URL for the Prometheus UI.
+         * @visibility frontend
+         */
+        uiUrl?: string;
       },
     ];
   };

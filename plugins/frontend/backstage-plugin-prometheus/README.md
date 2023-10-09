@@ -39,6 +39,7 @@ proxy:
 # Defaults to /prometheus/api and can be omitted if proxy is configured for that url
 prometheus:
   proxyPath: /prometheus/api
+  uiUrl: http://localhost:9090
 ```
 
 ## Content page setup
@@ -181,9 +182,11 @@ proxy:
 
 prometheus:
   proxyPath: /prometheus/api
+  uiUrl: http://localhost:9090
   instances:
     - name: prometheusTeamB
       proxyPath: /prometheusTeamB/api
+      uiUrl: http://localhost:9999
 ```
 
 ## Advanced Dynamic Prometheus Proxying

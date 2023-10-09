@@ -199,6 +199,7 @@ argocd:
 
 prometheus:
   proxyPath: /prometheus/api
+  uiUrl: http://localhost:9090
 
 bugsnag:
   resultsPerPage: 50

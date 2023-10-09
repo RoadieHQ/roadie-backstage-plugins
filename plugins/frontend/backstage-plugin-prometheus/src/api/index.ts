@@ -47,6 +47,23 @@ export class PrometheusApi {
     return `${proxyUrl}${this.getProxyPath({ serviceName })}`;
   }
 
+  public getUiUrl({ serviceName }: { serviceName?: string }) {
+    if (Boolean(serviceName)) {
+      const instances = this.configApi.getOptionalConfigArray(
+        'prometheus.instances',
+      );
+      if (instances && instances?.length > 0) {
+        const instance = instances.find(
+          value => value.getString('name') === serviceName,
+        );
+        if (Boolean(instance)) {
+          return instance?.getOptionalString('uiUrl');
+        }
+      }
+    }
+    return this.configApi.getOptionalString('prometheus.uiUrl');
+  }
+
   private getProxyPath({ serviceName }: { serviceName?: string }) {
     if (Boolean(serviceName)) {
       const instances = this.configApi.getOptionalConfigArray(

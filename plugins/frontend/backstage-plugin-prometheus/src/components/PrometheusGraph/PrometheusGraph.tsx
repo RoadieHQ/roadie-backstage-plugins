@@ -16,7 +16,7 @@
 
 import React, { useEffect } from 'react';
 import { DateTime } from 'luxon';
-import { Box, useTheme } from '@material-ui/core';
+import { Box, Grid, Typography, useTheme } from '@material-ui/core';
 import {
   Area,
   AreaChart,
@@ -32,7 +32,7 @@ import {
 
 // @ts-ignore no types
 import useDimensions from 'react-use-dimensions';
-import { InfoCard, Progress } from '@backstage/core-components';
+import { InfoCard, Link, Progress } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import { BackstagePalette } from '@backstage/theme';
 import { CustomTooltip, tooltipCollector } from '../CustomTooltip';
@@ -250,13 +250,31 @@ export const PrometheusGraph = ({
   } else if (error) {
     return <Alert severity="error">{error.message}</Alert>;
   }
+
+  const title = (
+    <Grid container justifyContent="space-between" alignItems="center">
+      <Grid item>{query}</Grid>
+      {value?.uiUrl && (
+        <Grid item>
+          <Typography variant="subtitle1">
+            <Link
+              to={`${value.uiUrl}/graph?g0.expr=${encodeURI(query)}&g0.tab=0`}
+            >
+              Go to Prometheus
+            </Link>
+          </Typography>
+        </Grid>
+      )}
+    </Grid>
+  );
+
   const { data, keys, metrics } = value ?? { data: [], keys: [], metrics: {} };
   return graphType === 'line' ? (
-    <InfoCard title={query}>
+    <InfoCard title={title}>
       <LineGraph data={data} keys={keys} metrics={metrics} />
     </InfoCard>
   ) : (
-    <InfoCard title={query}>
+    <InfoCard title={title}>
       {' '}
       <AreaGraph data={data} keys={keys} metrics={metrics} />
     </InfoCard>
