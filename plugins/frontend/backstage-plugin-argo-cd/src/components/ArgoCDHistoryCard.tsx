@@ -83,11 +83,11 @@ const HistoryTable = ({
         ) : (
           row.app
         ),
-      highlight: true,
     },
     {
       title: 'Deploy Details',
-      sorting: false,
+      defaultSort: 'desc',
+      field: 'deployedAt',
       render: (row: any): React.ReactNode => (
         <List dense style={{ padding: '0px' }}>
           <ListItem style={{ paddingLeft: '0px' }}>
@@ -117,17 +117,17 @@ const HistoryTable = ({
     },
     {
       title: 'Author',
-      sorting: false,
+      field: 'revision.author',
       render: (row: any): React.ReactNode => <div>{row.revision?.author}</div>,
     },
     {
       title: 'Message',
-      sorting: false,
+      field: 'revision.message',
       render: (row: any): React.ReactNode => <div>{row.revision?.message}</div>,
     },
     {
       title: 'Revision',
-      sorting: false,
+      field: 'revision.revisionID',
       render: (row: any): React.ReactNode => (
         <div>{row.revision?.revisionID}</div>
       ),
@@ -137,6 +137,7 @@ const HistoryTable = ({
   if (supportsMultipleArgoInstances) {
     columns.splice(1, 0, {
       title: 'Instance',
+      field: 'instance',
       render: (row: any): React.ReactNode =>
         row.metadata?.instance?.name
           ? row.metadata?.instance?.name
@@ -148,7 +149,7 @@ const HistoryTable = ({
     <Table
       title="ArgoCD history"
       options={{
-        paging: false,
+        paging: true,
         search: false,
         draggable: false,
         padding: 'dense',
