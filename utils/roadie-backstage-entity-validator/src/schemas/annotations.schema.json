@@ -141,6 +141,7 @@
             { "properties": { "aws.com/lambda-region": { "type": "string" } } },
             { "properties": { "jira/project-key": { "type": "string" } } },
             { "properties": { "snyk.io/org-name": { "type": "string" } } },
+            { "properties": { "snyk.io/org-id": { "type": "string" } } },
             {
               "properties": {
                 "graph.microsoft.com/tenant-id": { "type": "string" }
