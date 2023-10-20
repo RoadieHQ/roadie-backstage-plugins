@@ -34,14 +34,19 @@ export const useAppDetails = ({
   const errorApi = useApi(errorApiRef);
   const configApi = useApi(configApiRef);
 
-  const getRevisionHistroyDetails = async (
+  const getRevisionHistoryDetails = async (
     appDetails: ArgoCDAppDetails,
     app: string,
     instanceName?: string | undefined,
   ) => {
     const promises: Promise<void>[] | undefined =
       appDetails.status?.history?.map(async (historyRecord: any) => {
-        const revisionID = historyRecord.revision;
+        let revisionID = '';
+        if (historyRecord.revision.hasOwnProperty('revisionID')) {
+          revisionID = historyRecord.revision.revisionID;
+        } else {
+          revisionID = historyRecord.revision;
+        }
         if (historyRecord.source?.chart !== undefined) {
           historyRecord.revision = { revisionID: revisionID };
           return;
@@ -71,7 +76,7 @@ export const useAppDetails = ({
           appDetails?.status?.history &&
           appDetails?.status?.history.length > 0
         ) {
-          return getRevisionHistroyDetails(appDetails, appName);
+          return getRevisionHistoryDetails(appDetails, appName);
         }
 
         return appDetails;
@@ -105,7 +110,7 @@ export const useAppDetails = ({
             apiOut?.status?.history &&
             apiOut?.status?.history.length > 0
           ) {
-            return getRevisionHistroyDetails(apiOut, appName, instance.name);
+            return getRevisionHistoryDetails(apiOut, appName, instance.name);
           }
           return apiOut;
         });
@@ -133,7 +138,7 @@ export const useAppDetails = ({
         const getRevisionHistroyPromises = items.items.map(
           async (item: any) => {
             if (item?.status.history && item?.status.history.length > 0) {
-              return getRevisionHistroyDetails(
+              return getRevisionHistoryDetails(
                 item,
                 item.metadata.name,
                 item.metadata.instance.name,
@@ -155,7 +160,7 @@ export const useAppDetails = ({
           const getRevisionHistroyPromises = apps.items.map(
             async (item: any) => {
               if (item?.status.history && item?.status.history.length > 0) {
-                return getRevisionHistroyDetails(item, item.metadata.name);
+                return getRevisionHistoryDetails(item, item.metadata.name);
               }
               return item;
             },
