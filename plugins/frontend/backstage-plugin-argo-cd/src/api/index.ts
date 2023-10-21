@@ -202,7 +202,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
           options.instance
         }/applications/name/${encodeURIComponent(
           options.appName as string,
-        )}?${query}`,
+        )}${query}`,
         argoCDAppDetails,
       );
     }
