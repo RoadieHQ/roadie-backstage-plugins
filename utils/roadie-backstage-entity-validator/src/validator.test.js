@@ -230,7 +230,7 @@ spec:
   it('Should successfully validate simple catalog info', async () => {
     await expect(
       validator.validateFromFile('catalog-info.yml'),
-    ).resolves.toBeUndefined();
+    ).resolves.toHaveLength(2);
   });
 
   it('Should fail to validate with incorrect catalog-info', async () => {
@@ -242,13 +242,13 @@ spec:
   it('Should successfully validate catalog info with replacements', async () => {
     await expect(
       validator.validateFromFile('catalog-info-with-replacement.yml'),
-    ).resolves.toBeUndefined();
+    ).resolves.toHaveLength(1);
     await expect(
       validator.validateFromFile('catalog-info-with-openapi-placeholder.yml'),
-    ).resolves.toBeUndefined();
+    ).resolves.toHaveLength(1);
     await expect(
       validator.validateFromFile('catalog-info-with-asyncapi-placeholder.yml'),
-    ).resolves.toBeUndefined();
+    ).resolves.toHaveLength(1);
   });
 
   it('Should fail to validate with incorrect catalog-info that has an empty label', async () => {
@@ -300,7 +300,7 @@ spec:
         vol.fromJSON(defaultVol);
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toBeUndefined();
+        ).resolves.toHaveLength(1);
       });
     });
   });
@@ -333,13 +333,13 @@ spec:
         vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yaml': 'bar' });
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toBeUndefined();
+        ).resolves.toHaveLength(1);
       });
       it('should resolve when mkdocs.yml found', async () => {
         vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yml': 'bar' });
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toBeUndefined();
+        ).resolves.toHaveLength(1);
       });
     });
   });
@@ -347,13 +347,13 @@ spec:
     it('Should successfully validate v2 template', async () => {
       await expect(
         validator.validateFromFile('template-v2-entity.yml'),
-      ).resolves.toBeUndefined();
+      ).resolves.toHaveLength(1);
     });
 
     it('Should successfully validate v3 template', async () => {
       await expect(
         validator.validateFromFile('template-v3-entity.yml'),
-      ).resolves.toBeUndefined();
+      ).resolves.toHaveLength(1);
     });
   });
 
@@ -365,7 +365,7 @@ spec:
           false,
           'custom-validation-schema.json',
         ),
-      ).resolves.toBeUndefined();
+      ).resolves.toHaveLength(1);
     });
 
     it('should throw validate error when validating against custom annotation schema', async () => {
