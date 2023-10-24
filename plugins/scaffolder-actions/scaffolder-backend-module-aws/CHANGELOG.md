@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.15
+
+### Patch Changes
+
+- 3de4ad45: Return AWS ECR errors
+
 ## 2.4.14
 
 ### Patch Changes
