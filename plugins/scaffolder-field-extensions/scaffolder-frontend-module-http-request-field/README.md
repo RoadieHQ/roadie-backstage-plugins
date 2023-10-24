@@ -54,9 +54,7 @@ spec:
 
               # This selects the array element from the API fetch response. It finds the array with the name kind
               # under the facets object
-              arraySelector:
-                - facets
-                - kind
+              arraySelector: 'facets.kind'
 
               # (Optional) This selects the field in the array to use for the value of each select item. If its not specified
               # it will use the value of the item directly.
