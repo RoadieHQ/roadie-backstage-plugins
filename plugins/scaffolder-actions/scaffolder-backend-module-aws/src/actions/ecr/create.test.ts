@@ -23,6 +23,8 @@ import { ECRClient } from '@aws-sdk/client-ecr';
 const ecrClient = mockClient(ECRClient);
 const region = 'us-east-1';
 
+ecrClient.resolves({});
+
 describe('Create ECR repository without tags', () => {
   const repoName = 'no-tags';
 
@@ -207,6 +209,43 @@ describe('Create ECR repo with image scanning disabled', () => {
       },
     });
     expect(ecrClient.send.getCall(5).args[0].input).toMatchObject({
+      repositoryName: repoName,
+      imageTagMutability: 'IMMUTABLE',
+      imageScanningConfiguration: { scanOnPush: false },
+      tags: [],
+    });
+  });
+});
+
+describe('Create ECR repository with error', () => {
+  const repoName = 'no-tags';
+
+  const mockContext = {
+    workspacePath: '/fake-tmp-dir',
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+  };
+  const action = createEcrAction();
+
+  it('Should forward ECR client errors', async () => {
+    ecrClient.rejects('aws error');
+
+    await expect(
+      action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          region: region,
+          imageMutability: false,
+          scanOnPush: false,
+          tags: [],
+        },
+      }),
+    ).rejects.toThrow('aws error');
+
+    expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
       repositoryName: repoName,
       imageTagMutability: 'IMMUTABLE',
       imageScanningConfiguration: { scanOnPush: false },

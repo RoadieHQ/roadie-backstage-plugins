@@ -96,6 +96,7 @@ export function createEcrAction(options?: {
       } catch (e) {
         assertError(e);
         ctx.logger.warn(`Unable to create ECR repository: ${e}`);
+        throw e;
       }
     },
   });
