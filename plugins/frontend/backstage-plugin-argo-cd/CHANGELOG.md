@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.3.5
+
+### Patch Changes
+
+- 6a8eb8c4: added sorting and pagination to argocd history
+
 ## 2.3.4
 
 ### Patch Changes
