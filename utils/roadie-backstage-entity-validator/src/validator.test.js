@@ -230,7 +230,74 @@ spec:
   it('Should successfully validate simple catalog info', async () => {
     await expect(
       validator.validateFromFile('catalog-info.yml'),
-    ).resolves.toHaveLength(2);
+    ).resolves.toEqual([
+      {
+        metadata: {
+          namespace: 'default',
+          name: 'sample-service-5',
+          description:
+            'A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.\n',
+          annotations: {
+            'github.com/project-slug': 'roadiehq/sample-service',
+            'sentry.io/project-slug': 'sample-service',
+            'aws.com/lambda-function-name': 'HelloWorld',
+            'aws.com/lambda-region': 'eu-west-1',
+            'backstage.io/techdocs-ref':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main',
+            'jira/project-key': 'TEST',
+            'jira/component': 'COMP',
+            'snyk.io/org-name': 'roadie',
+            'backstage.io/view-url':
+              'https://github.com/RoadieHQ/sample-service/tree/main',
+            'backstage.io/source-location':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main/',
+            testextraannotation: 'adfstea',
+            'backstage.io/ldap-uuid': 'c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21',
+          },
+        },
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Component',
+        spec: {
+          type: 'service',
+          owner: 'user:dtuite',
+          lifecycle: 'experimental',
+          providesApis: ['sample-service'],
+        },
+      },
+      {
+        metadata: {
+          namespace: 'default',
+          name: 'sample-service-5',
+          description:
+            'A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.\n',
+          annotations: {
+            'github.com/project-slug': 'roadiehq/sample-service',
+            'sentry.io/project-slug': 'sample-service',
+            'aws.com/lambda-function-name': 'HelloWorld',
+            'aws.com/lambda-region': 'eu-west-1',
+            'backstage.io/techdocs-ref':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main',
+            'jira/project-key': 'TEST',
+            'jira/component': 'COMP',
+            'snyk.io/org-name': 'roadie',
+            'backstage.io/view-url':
+              'https://github.com/RoadieHQ/sample-service/tree/main',
+            'backstage.io/source-location':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main/',
+            testextraannotation: 'adfstea',
+            'backstage.io/ldap-uuid': 'c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21',
+          },
+        },
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Component',
+        spec: {
+          type: 'service',
+          owner: 'user:dtuite',
+          lifecycle: 'experimental',
+          providesApis: ['sample-service'],
+        },
+      },
+    ]);
   });
 
   it('Should fail to validate with incorrect catalog-info', async () => {
@@ -242,13 +309,61 @@ spec:
   it('Should successfully validate catalog info with replacements', async () => {
     await expect(
       validator.validateFromFile('catalog-info-with-replacement.yml'),
-    ).resolves.toHaveLength(1);
+    ).resolves.toEqual([
+      {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'API',
+        metadata: {
+          namespace: 'default',
+          name: 'test-service-api',
+          description: 'API for test-service',
+        },
+        spec: {
+          type: 'openapi',
+          lifecycle: 'production',
+          owner: 'group:team-atools',
+          definition: 'DUMMY TEXT',
+        },
+      },
+    ]);
     await expect(
       validator.validateFromFile('catalog-info-with-openapi-placeholder.yml'),
-    ).resolves.toHaveLength(1);
+    ).resolves.toEqual([
+      {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'API',
+        metadata: {
+          namespace: 'default',
+          name: 'test-service-api',
+          description: 'API for test-service',
+        },
+        spec: {
+          type: 'openapi',
+          lifecycle: 'production',
+          owner: 'group:team-atools',
+          definition: 'DUMMY TEXT',
+        },
+      },
+    ]);
     await expect(
       validator.validateFromFile('catalog-info-with-asyncapi-placeholder.yml'),
-    ).resolves.toHaveLength(1);
+    ).resolves.toEqual([
+      {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'API',
+        metadata: {
+          namespace: 'default',
+          name: 'test-service-api',
+          description: 'API for test-service',
+        },
+        spec: {
+          type: 'openapi',
+          lifecycle: 'production',
+          owner: 'group:team-atools',
+          definition: 'DUMMY TEXT',
+        },
+      },
+    ]);
   });
 
   it('Should fail to validate with incorrect catalog-info that has an empty label', async () => {
@@ -300,7 +415,25 @@ spec:
         vol.fromJSON(defaultVol);
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toHaveLength(1);
+        ).resolves.toEqual([
+          {
+            apiVersion: 'backstage.io/v1alpha1',
+            kind: 'Component',
+            metadata: {
+              namespace: 'default',
+              name: 'test-entity',
+              description: 'Foo bar description\n',
+              annotations: {
+                'backstage.io/techdocs-ref': 'dir:.',
+              },
+            },
+            spec: {
+              type: 'service',
+              lifecycle: 'experimental',
+              owner: 'user:dtuite',
+            },
+          },
+        ]);
       });
     });
   });
@@ -333,13 +466,49 @@ spec:
         vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yaml': 'bar' });
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toHaveLength(1);
+        ).resolves.toEqual([
+          {
+            apiVersion: 'backstage.io/v1alpha1',
+            kind: 'Component',
+            metadata: {
+              namespace: 'default',
+              name: 'test-entity',
+              description: 'Foo bar description\n',
+              annotations: {
+                'backstage.io/techdocs-ref': 'dir:test-dir',
+              },
+            },
+            spec: {
+              type: 'service',
+              lifecycle: 'experimental',
+              owner: 'user:dtuite',
+            },
+          },
+        ]);
       });
       it('should resolve when mkdocs.yml found', async () => {
         vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yml': 'bar' });
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toHaveLength(1);
+        ).resolves.toEqual([
+          {
+            apiVersion: 'backstage.io/v1alpha1',
+            kind: 'Component',
+            metadata: {
+              namespace: 'default',
+              name: 'test-entity',
+              description: 'Foo bar description\n',
+              annotations: {
+                'backstage.io/techdocs-ref': 'dir:test-dir',
+              },
+            },
+            spec: {
+              type: 'service',
+              lifecycle: 'experimental',
+              owner: 'user:dtuite',
+            },
+          },
+        ]);
       });
     });
   });
@@ -347,13 +516,59 @@ spec:
     it('Should successfully validate v2 template', async () => {
       await expect(
         validator.validateFromFile('template-v2-entity.yml'),
-      ).resolves.toHaveLength(1);
+      ).resolves.toEqual([
+        {
+          apiVersion: 'backstage.io/v1beta2',
+          kind: 'Template',
+          metadata: {
+            namespace: 'default',
+            name: 'sample-template-v2',
+          },
+          spec: {
+            type: 'foo',
+            steps: [
+              {
+                action: 'roadiehq:utils:zip',
+                id: 'zip',
+                input: {
+                  outputPath: 'foo.zip',
+                  path: 'foo.txt',
+                },
+                name: 'Zip',
+              },
+            ],
+          },
+        },
+      ]);
     });
 
     it('Should successfully validate v3 template', async () => {
       await expect(
         validator.validateFromFile('template-v3-entity.yml'),
-      ).resolves.toHaveLength(1);
+      ).resolves.toEqual([
+        {
+          apiVersion: 'scaffolder.backstage.io/v1beta3',
+          kind: 'Template',
+          metadata: {
+            namespace: 'default',
+            name: 'sample-template-v3',
+          },
+          spec: {
+            type: 'foo',
+            steps: [
+              {
+                action: 'roadiehq:utils:zip',
+                id: 'zip',
+                input: {
+                  outputPath: 'foo.zip',
+                  path: 'foo.txt',
+                },
+                name: 'Zip',
+              },
+            ],
+          },
+        },
+      ]);
     });
   });
 
@@ -365,7 +580,31 @@ spec:
           false,
           'custom-validation-schema.json',
         ),
-      ).resolves.toHaveLength(1);
+      ).resolves.toEqual([
+        {
+          apiVersion: 'backstage.io/v1alpha1',
+          kind: 'Component',
+          metadata: {
+            namespace: 'default',
+            name: 'sample-service-5',
+            description:
+              'A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.\n',
+            annotations: {
+              'backstage.io/source-location':
+                'url:https://github.com/RoadieHQ/sample-service/tree/main/',
+              'backstage.io/view-url':
+                'https://github.com/RoadieHQ/sample-service/tree/main',
+              'custom/source-location': 'custom-field-value:12342',
+              'github.com/project-slug': 'roadiehq/sample-service',
+            },
+          },
+          spec: {
+            type: 'service',
+            lifecycle: 'experimental',
+            owner: 'user:dtuite',
+          },
+        },
+      ]);
     });
 
     it('should throw validate error when validating against custom annotation schema', async () => {
