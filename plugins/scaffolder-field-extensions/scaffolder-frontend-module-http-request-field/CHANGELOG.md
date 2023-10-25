@@ -1,5 +1,23 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.5.2
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 1.5.1
+
+### Patch Changes
+
+- 14273c2d: Expose placeholder property for the select
+
+## 1.5.0
+
+### Minor Changes
+
+- b338f5e3: Allow parameters to be used for the select field options.
+
 ## 1.4.2
 
 ### Patch Changes

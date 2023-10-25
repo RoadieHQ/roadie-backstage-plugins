@@ -17,33 +17,41 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { InfoCard } from '@backstage/core-components';
+import { Grid } from '@material-ui/core';
 import { useDatadogAppData } from './useDatadogAppData';
 import { Resizable } from 're-resizable';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 
 export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
   const { dashboardUrl } = useDatadogAppData({ entity });
+  const allDashboardUrls: string[] = dashboardUrl.split(',');
   return (
-    <InfoCard title="Datadog dashboard">
-      <Resizable
-        defaultSize={{
-          width: '100%',
-          height: 500,
-        }}
-        handleComponent={{ bottomRight: <ZoomOutMapIcon /> }}
-      >
-        <iframe
-          title="dashboard"
-          src={`${dashboardUrl}`}
-          style={{
-            border: 'none',
-            height: '100%',
-            width: '100%',
-            resize: 'both',
-            overflow: 'auto',
-          }}
-        />
-      </Resizable>
-    </InfoCard>
+    <Grid container spacing={3}>
+      {allDashboardUrls.map((value, index) => (
+        <Grid item md={12}>
+          <InfoCard title={`Datadog dashboard ${index}`} variant="gridItem">
+            <Resizable
+              defaultSize={{
+                width: '100%',
+                height: 500,
+              }}
+              handleComponent={{ bottomRight: <ZoomOutMapIcon /> }}
+            >
+              <iframe
+                title="dashboard"
+                src={`${value}`}
+                style={{
+                  border: 'none',
+                  height: '100%',
+                  width: '100%',
+                  resize: 'both',
+                  overflow: 'auto',
+                }}
+              />
+            </Resizable>
+          </InfoCard>
+        </Grid>
+      ))}
+    </Grid>
   );
 };

@@ -29,6 +29,7 @@ import {
   isPrometheusGraphAvailable,
   PROMETHEUS_ALERT_ANNOTATION,
   PROMETHEUS_RULE_ANNOTATION,
+  PROMETHEUS_PLUGIN_DOCUMENTATION,
 } from './util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
 
@@ -47,7 +48,8 @@ const PrometheusContentWrapper = ({
   if (!graphContent && !alertContent) {
     return (
       <MissingAnnotationEmptyState
-        annotation={`${PROMETHEUS_RULE_ANNOTATION} or ${PROMETHEUS_ALERT_ANNOTATION}`}
+        annotation={[PROMETHEUS_RULE_ANNOTATION, PROMETHEUS_ALERT_ANNOTATION]}
+        readMoreUrl={PROMETHEUS_PLUGIN_DOCUMENTATION}
       />
     );
   }

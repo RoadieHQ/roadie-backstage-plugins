@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.9
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
 ## 2.3.8
 
 ### Patch Changes

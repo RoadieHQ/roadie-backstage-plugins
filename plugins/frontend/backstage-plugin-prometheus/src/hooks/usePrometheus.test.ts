@@ -30,6 +30,7 @@ describe('usePrometheus', () => {
     getApiUrl: () => 'dontcare',
     query: () => ['this', 'is', 'mocked', 'via', 'other', 'hook'],
     getAlerts: () => ['alert'],
+    getUiUrl: () => undefined,
   });
 
   (useEntity as any).mockReturnValue({

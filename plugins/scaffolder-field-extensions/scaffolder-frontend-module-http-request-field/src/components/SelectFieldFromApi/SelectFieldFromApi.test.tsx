@@ -15,7 +15,7 @@
  */
 
 import React from 'react';
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import {
   renderWithEffects,
   TestApiProvider,
@@ -60,7 +60,10 @@ describe('SelectFieldFromApi', () => {
       json: jest.fn().mockResolvedValue(['result1', 'result2']),
     });
     const uiSchema = { 'ui:options': { path: '/test-endpoint' } };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -69,8 +72,8 @@ describe('SelectFieldFromApi', () => {
       ),
     );
     const input = await getByTestId('select');
-
-    fireEvent.click(input);
+    expect(input.textContent).toBe('Select from results');
+    fireEvent.mouseDown(within(input).getByRole('button'));
 
     expect(getByText('result1')).toBeInTheDocument();
     expect(getByText('result2')).toBeInTheDocument();
@@ -83,7 +86,10 @@ describe('SelectFieldFromApi', () => {
     const uiSchema = {
       'ui:options': { path: '/test-endpoint', arraySelector: 'myarray' },
     };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -92,8 +98,8 @@ describe('SelectFieldFromApi', () => {
       ),
     );
     const input = await getByTestId('select');
-
-    fireEvent.click(input);
+    expect(input.textContent).toBe('Select from results');
+    fireEvent.mouseDown(within(input).getByRole('button'));
 
     expect(getByText('result1')).toBeInTheDocument();
     expect(getByText('result2')).toBeInTheDocument();

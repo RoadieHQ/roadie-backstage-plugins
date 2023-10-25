@@ -67,11 +67,11 @@ const EnvironmentsCard = () => {
     <InfoCard
       title="Environments"
       deepLink={{
-        link: `//${hostname}/${owner}/${repo}/deployments`,
+        link: `https://${hostname}/${owner}/${repo}/deployments`,
         title: 'Environments',
         onClick: e => {
           e.preventDefault();
-          window.open(`//${hostname}/${owner}/${repo}/deployments`);
+          window.open(`https://${hostname}/${owner}/${repo}/deployments`);
         },
       }}
       className={classes.infoCard}

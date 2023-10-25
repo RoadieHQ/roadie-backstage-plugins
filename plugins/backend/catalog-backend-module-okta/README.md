@@ -75,6 +75,7 @@ Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+- profile-name | Group entities will be named exactly as their group profile name. ⚠ The Okta field supports characters not supported as [entity names in backstage](https://backstage.io/docs/features/software-catalog/descriptor-format#name-required). ⚠
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -147,6 +148,83 @@ export default async function createPlugin(
 }
 ```
 
+In case you want to customize the emitted entities, the provider allows to pass custom transformers for users and groups by providing `userTransformer` and `groupTransformer`.
+
+1. Create a transformer:
+
+```typescript
+import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { GroupEntity } from '@backstage/catalog-model';
+import { Group } from '@okta/okta-sdk-nodejs';
+
+function myGroupTransformer(
+  group: Group,
+  namingStrategy: GroupNamingStrategy,
+  parentGroup: Group | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
+): GroupEntity {
+  // Enrich it with your logic
+  const groupEntity: GroupEntity = {
+    kind: 'Group',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: {
+        ...options.annotations,
+      },
+      name: namingStrategy(group),
+      title: group.profile.name,
+      title: group.profile.description || group.profile.name,
+      description: group.profile.description || '',
+    },
+    spec: {
+      members: options.members,
+      type: 'group',
+      children: [],
+    },
+  };
+
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
+  }
+  return groupEntity;
+}
+```
+
+2. Configure the provider with the transformer:
+
+```typescript
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
+import { myGroupTransformer } from './myGroupTransformer';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = await CatalogBuilder.create(env);
+
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
+    logger: env.logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    groupTransformer: myGroupTransformer,
+  });
+
+  builder.addEntityProvider(orgProvider);
+
+  const { processingEngine, router } = await builder.build();
+
+  orgProvider.run();
+
+  await processingEngine.start();
+
+  // ...
+
+  return router;
+}
+```
+
 ## Load Users and Groups Separately
 
 ### OktaUserEntityProvider
@@ -162,6 +240,71 @@ You may also choose to implement a custom naming strategy by providing a functio
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
   user.profile.customField;
+```
+
+In case you want to customize the emitted entities, the provider allows to pass custom transformer by providing `userTransformer`.
+
+1. Create a transformer:
+
+```typescript
+import { UserEntity } from '@backstage/catalog-model';
+import { User } from '@okta/okta-sdk-nodejs';
+import { UserNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+
+function myUserTransformer(
+  user: User,
+  namingStrategy: UserNamingStrategy,
+  options: { annotations: Record<string, string> },
+): UserEntity {
+  // Enrich it with your logic
+  return {
+    kind: 'User',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: { ...options.annotations },
+      name: namingStrategy(user),
+      title: user.profile.email,
+    },
+    spec: {
+      profile: {
+        displayName: user.profile.displayName,
+        email: user.profile.email,
+      },
+      memberOf: [],
+    },
+  };
+}
+```
+
+2. Configure the provider with the transformer:
+
+```typescript
+import { OktaUserEntityProvider } from '@roadiehq/catalog-backend-module-okta';
+import { myUserTransformer } from './myUserTransformer';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = await CatalogBuilder.create(env);
+
+  const userProvider = OktaUserEntityProvider.fromConfig(env.config, {
+    logger: env.logger,
+    namingStrategy: 'strip-domain-email',
+    userTransformer: myUserTransformer,
+  });
+
+  builder.addEntityProvider(userProvider);
+
+  const { processingEngine, router } = await builder.build();
+
+  userProvider.run();
+
+  await processingEngine.start();
+
+  // ...
+
+  return router;
+}
 ```
 
 ### OktaGroupEntityProvider
@@ -185,6 +328,7 @@ Group naming strategies:
 
 - id (default) | Group entities will be named by the group id.
 - kebab-case-name | Group entities will be named by their group profile name converted to kebab case.
+- profile-name | Group entities will be named exactly as their group profile name. ⚠ The Okta field supports characters not supported as [entity names in backstage](https://backstage.io/docs/features/software-catalog/descriptor-format#name-required). ⚠
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -272,6 +416,83 @@ export default async function createPlugin(
   const { processingEngine, router } = await builder.build();
 
   userProvider.run();
+  groupProvider.run();
+
+  await processingEngine.start();
+
+  // ...
+
+  return router;
+}
+```
+
+In case you want to customize the emitted entities, the provider allows to pass custom transformer by providing `groupTransformer`.
+
+1. Create a transformer:
+
+```typescript
+import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { GroupEntity } from '@backstage/catalog-model';
+import { Group } from '@okta/okta-sdk-nodejs';
+
+function myGroupTransformer(
+  group: Group,
+  namingStrategy: GroupNamingStrategy,
+  parentGroup: Group | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
+): GroupEntity {
+  // Enrich it with your logic
+  const groupEntity: GroupEntity = {
+    kind: 'Group',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: {
+        ...options.annotations,
+      },
+      name: namingStrategy(group),
+      title: group.profile.name,
+      title: group.profile.description || group.profile.name,
+      description: group.profile.description || '',
+    },
+    spec: {
+      members: options.members,
+      type: 'group',
+      children: [],
+    },
+  };
+
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
+  }
+  return groupEntity;
+}
+```
+
+2. Configure the provider with the transformer:
+
+```typescript
+import { OktaGroupEntityProvider } from '@roadiehq/catalog-backend-module-okta';
+import { myGroupTransformer } from './myGroupTransformer';
+
+export default async function createPlugin(
+  env: PluginEnvironment,
+): Promise<Router> {
+  const builder = await CatalogBuilder.create(env);
+
+  const groupProvider = OktaGroupEntityProvider.fromConfig(env.config, {
+    logger: env.logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    groupTransformer: myGroupTransformer,
+  });
+
+  builder.addEntityProvider(groupProvider);
+
+  const { processingEngine, router } = await builder.build();
+
   groupProvider.run();
 
   await processingEngine.start();

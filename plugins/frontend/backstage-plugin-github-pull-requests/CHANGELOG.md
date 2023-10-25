@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.18
+
+### Patch Changes
+
+- ff9d7b04: Updated `PullRequestsListView` to fit the full height of the content it is in
+
+## 2.5.17
+
+### Patch Changes
+
+- 528722d1: Updated to use `@backstage/plugin-home-react` instead of `@backstage/plugin-home`
+
+## 2.5.16
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
 ## 2.5.15
 
 ### Patch Changes

@@ -28,14 +28,15 @@ import {
   UserNamingStrategy,
   userNamingStrategyFactory,
 } from './userNamingStrategies';
-import { userEntityFromOktaUser } from './userEntityFromOktaUser';
+import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userEntityFromOktaUser';
 import { AccountConfig } from '../types';
-import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
+import { groupEntityFromOktaGroup as defaultGroupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
+import { OktaGroupEntityTransformer, OktaUserEntityTransformer } from './types';
 
 /**
  * Provides entities from Okta Org service.
@@ -43,6 +44,8 @@ import { GroupTree } from './GroupTree';
 export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly groupNamingStrategy: GroupNamingStrategy;
   private readonly userNamingStrategy: UserNamingStrategy;
+  private readonly groupEntityFromOktaGroup: OktaGroupEntityTransformer;
+  private readonly userEntityFromOktaUser: OktaUserEntityTransformer;
   private readonly includeEmptyGroups: boolean;
   private readonly hierarchyConfig:
     | { parentKey: string; key?: string }
@@ -55,6 +58,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      groupTransformer?: OktaGroupEntityTransformer;
+      userTransformer?: OktaUserEntityTransformer;
       includeEmptyGroups?: boolean;
       /*
        * @deprecated, please use hierarchyConfig.parentKey
@@ -85,6 +90,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       logger: winston.Logger;
       groupNamingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
+      groupTransformer?: OktaGroupEntityTransformer;
+      userTransformer?: OktaUserEntityTransformer;
       includeEmptyGroups?: boolean;
       hierarchyConfig?: {
         parentKey: string;
@@ -100,6 +107,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
     );
+    this.groupEntityFromOktaGroup =
+      options?.groupTransformer || defaultGroupEntityFromOktaGroup;
+    this.userEntityFromOktaUser =
+      options.userTransformer || defaultUserEntityFromOktaUser;
     this.includeEmptyGroups = !!options.includeEmptyGroups;
     this.hierarchyConfig = options.hierarchyConfig;
     this.customAttributesToAnnotationAllowlist =
@@ -133,7 +144,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         await client.listUsers({ search: account.userFilter }).each(user => {
           try {
             const userName = this.userNamingStrategy(user);
-            userResources[userName] = userEntityFromOktaUser(
+            userResources[userName] = this.userEntityFromOktaUser(
               user,
               this.userNamingStrategy,
               {
@@ -191,14 +202,14 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               ...profileAnnotations,
             };
             try {
-              const groupEntity = groupEntityFromOktaGroup(
+              const groupEntity = this.groupEntityFromOktaGroup(
                 group,
                 this.groupNamingStrategy,
-                parentGroup,
                 {
                   annotations,
                   members,
                 },
+                parentGroup,
               );
               groupResources.push(groupEntity);
             } catch (e: unknown) {

@@ -1,5 +1,23 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.15
+
+### Patch Changes
+
+- 3de4ad45: Return AWS ECR errors
+
+## 2.4.14
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 2.4.13
+
+### Patch Changes
+
+- 2fbcbee1: Bump to Backstage version 1.17.5
+
 ## 2.4.12
 
 ### Patch Changes

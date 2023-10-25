@@ -33,6 +33,29 @@ import sortBy from 'lodash/sortBy';
 import { OAuthConfig, selectFieldFromApiConfigSchema } from '../../types';
 import { Box, Button, FormHelperText, Typography } from '@material-ui/core';
 import { useOauthSignIn } from '../../hooks/useOauthSignIn';
+import { renderString } from 'nunjucks';
+import fromPairs from 'lodash/fromPairs';
+
+const renderOption = (input: any, context: object): any => {
+  if (!input) {
+    return input;
+  }
+  if (typeof input === 'string') {
+    return renderString(input, context);
+  }
+  if (Array.isArray(input)) {
+    return input.map(item => renderOption(item, context));
+  }
+  if (typeof input === 'object') {
+    return fromPairs(
+      Object.keys(input).map(key => [
+        key as keyof typeof input,
+        renderOption(input[key], context),
+      ]),
+    );
+  }
+  return input;
+};
 
 const SelectFieldFromApiComponent = (
   props: FieldProps<string> & { token?: string },
@@ -40,8 +63,9 @@ const SelectFieldFromApiComponent = (
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
+  const { formContext, uiSchema } = props;
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
-    props.uiSchema['ui:options'],
+    uiSchema['ui:options'],
   );
 
   const { error } = useAsync(async () => {
@@ -55,23 +79,42 @@ const SelectFieldFromApiComponent = (
     if (props.token) {
       headers.Authorization = `Bearer ${props.token}`;
     }
-    const params = new URLSearchParams(options.params);
+    const params = new URLSearchParams(
+      renderOption(options.params, { parameters: formContext.formData }),
+    );
     const response = await fetchApi.fetch(
-      `${baseUrl}${options.path}?${params}`,
+      `${baseUrl}${renderOption(options.path, {
+        parameters: formContext.formData,
+      })}?${params}`,
       { headers },
     );
     const body = await response.json();
     const array = options.arraySelector
-      ? get(body, options.arraySelector)
+      ? get(
+          body,
+          renderOption(options.arraySelector, {
+            parameters: formContext.formData,
+          }),
+        )
       : body;
     const constructedData = array.map((item: unknown) => {
       let value: string | undefined;
       let label: string | undefined;
 
       if (options.valueSelector) {
-        value = get(item, options.valueSelector);
+        value = get(
+          item,
+          renderOption(options.valueSelector, {
+            parameters: formContext.formData,
+          }),
+        );
         label = options.labelSelector
-          ? get(item, options.labelSelector)
+          ? get(
+              item,
+              renderOption(options.labelSelector, {
+                parameters: formContext.formData,
+              }),
+            )
           : value;
       } else {
         if (!(typeof item === 'string')) {
@@ -95,9 +138,11 @@ const SelectFieldFromApiComponent = (
     setDropDownData(sortBy(constructedData, 'label'));
   });
 
-  const { title = 'Select', description = '' } = optionsParsingState.success
-    ? optionsParsingState.data
-    : {};
+  const {
+    title = 'Select',
+    description = '',
+    placeholder = 'Select from results',
+  } = optionsParsingState.success ? optionsParsingState.data : {};
   if (error) {
     return <ErrorPanel error={error} />;
   }
@@ -105,7 +150,6 @@ const SelectFieldFromApiComponent = (
   if (!dropDownData) {
     return <Progress />;
   }
-
   return (
     <FormControl
       margin="normal"
@@ -114,9 +158,9 @@ const SelectFieldFromApiComponent = (
     >
       <Select
         items={dropDownData}
+        placeholder={placeholder}
         label={title}
         onChange={props.onChange}
-        native
       />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>

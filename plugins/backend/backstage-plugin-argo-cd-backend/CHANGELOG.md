@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.11.3
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 2.11.2
+
+### Patch Changes
+
+- 56c40ed5: fix bug that throws error when some argo instances are unavailable
+
 ## 2.11.1
 
 ### Patch Changes

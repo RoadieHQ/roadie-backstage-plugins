@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.7.0
+
+### Minor Changes
+
+- 1078f16e: Add `uiUrl` as config to enable links to Prometheus.
+
+## 2.6.1
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 2.6.0
+
+### Minor Changes
+
+- d4fb212c: Prometheus service name will now be sent to the backstage backend proxy as a request header to support advanced proxying configs
+
+## 2.5.0
+
+### Minor Changes
+
+- 7a7a0b5f: updated documentation links for MissingAnnotationEmptyState components
+
 ## 2.4.11
 
 ### Patch Changes

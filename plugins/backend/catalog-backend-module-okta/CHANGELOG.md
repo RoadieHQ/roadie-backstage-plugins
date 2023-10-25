@@ -1,5 +1,24 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.1
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 0.9.0
+
+### Minor Changes
+
+- cfc712b7: Adds option to provide custom user transformer for user and org providers
+
+## 0.8.7
+
+### Patch Changes
+
+- 2fbcbee1: Bump to Backstage version 1.17.5
+- 42574014: Added the `profile-name` `GroupNamingStrategy`. This strategy names Group entities exactly as their group profile name. ⚠ The Okta field supports characters not supported as [entity names in backstage](https://backstage.io/docs/features/software-catalog/descriptor-format#name-required). ⚠
+
 ## 0.8.6
 
 ### Patch Changes

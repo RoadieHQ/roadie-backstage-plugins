@@ -27,7 +27,7 @@ describe('Bugsnag', () => {
     ).as('getOrganizations');
     cy.intercept(
       'GET',
-      'http://localhost:7007/api/proxy/bugsnag/api/organizations/129876sdfgh/projects?per_page=50',
+      'http://localhost:7007/api/proxy/bugsnag/api/organizations/129876sdfgh/projects?q=Test%20bugsnag%20application&per_page=50',
       { fixture: 'Bugsnag/projects.json' },
     ).as('getProjects');
     cy.intercept(
@@ -43,7 +43,9 @@ describe('Bugsnag', () => {
 
   describe('Navigating to Bugsnag', () => {
     it('should show Bugsnag when navigating to Bugsnag tab', () => {
-      cy.contains('Errors overview');
+      cy.contains('Description');
+      cy.contains('This is a test error');
+      cy.contains('Development, Test');
     });
   });
 });

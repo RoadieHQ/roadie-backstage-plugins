@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.10.4
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 1.10.3
+
+### Patch Changes
+
+- 2fbcbee1: Bump to Backstage version 1.17.5
+
 ## 1.10.2
 
 ### Patch Changes

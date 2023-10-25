@@ -64,12 +64,14 @@ export const DenseTable = ({
 }) => {
   const columns: TableColumn[] = [
     { title: '', field: 'class' },
+    { title: 'Description', field: 'message', width: '40%' },
     { title: 'Events', field: 'events' },
     { title: 'Users', field: 'users' },
     { title: 'Stage', field: 'stage' },
     { title: 'First seen', field: 'first_seen' },
     { title: 'Last seen', field: 'last_seen' },
     { title: 'Severity', field: 'severity' },
+    { title: 'Status', field: 'status' },
   ];
 
   const data = errors.map(error => {
@@ -81,7 +83,9 @@ export const DenseTable = ({
         organisationName,
         projectName,
       ),
-      stage: error.release_stages,
+      message: error.message,
+      status: error.status,
+      stage: error.release_stages.join(', '),
       events: error.events,
       id: error.id,
       project_id: error.project_id,
@@ -93,10 +97,23 @@ export const DenseTable = ({
 
   return (
     <Table
-      title="Errors overview"
       options={{ search: true, paging: true }}
       columns={columns}
       data={data}
+      filters={[
+        {
+          column: 'Severity',
+          type: 'multiple-select',
+        },
+        {
+          column: 'Status',
+          type: 'multiple-select',
+        },
+        {
+          column: 'Stage',
+          type: 'multiple-select',
+        },
+      ]}
     />
   );
 };

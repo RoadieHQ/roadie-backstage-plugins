@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.1.16
+
+### Patch Changes
+
+- c6b0af08: Bump plugins version to backstage version 1.18.3
+
+## 2.1.15
+
+### Patch Changes
+
+- 71b0340b: Modify DatadogDashboardPage to allow for multiple comma-separated urls to be provided and rendered for a given component.
+
 ## 2.1.14
 
 ### Patch Changes

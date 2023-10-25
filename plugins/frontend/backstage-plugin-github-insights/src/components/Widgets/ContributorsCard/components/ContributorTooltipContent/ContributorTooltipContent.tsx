@@ -65,7 +65,7 @@ const ContributorTooltipContent = ({ contributorLogin }: Props) => {
         <Grid item xs={12}>
           <Typography variant="h6">
             <Link
-              href={`//${hostname}/${contributor.login}`}
+              href={`https://${hostname}/${contributor.login}`}
               color="inherit"
               target="_blank"
               rel="noopener noreferrer"

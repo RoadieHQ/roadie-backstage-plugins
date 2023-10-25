@@ -13,7 +13,9 @@ metadata:
     datadoghq.com/dashboard-url: https://p.datadoghq.eu/sb/test-datadog-link
     datadoghq.com/graph-token: qwertytoken1234
     argocd/app-name: test-app
-    bugsnag.com/project-key: RoadieHQTest/qwerty12345
+    bugsnag.com/project-key: RoadieHQTest/Test bugsnag application
+    prometheus.io/rule: prometheus_http_requests_total,sum by (handler) (prometheus_http_requests_total),prometheus_http_requests_total|component
+    prometheus.io/alert: all
 spec:
   type: service
   owner: roadie
