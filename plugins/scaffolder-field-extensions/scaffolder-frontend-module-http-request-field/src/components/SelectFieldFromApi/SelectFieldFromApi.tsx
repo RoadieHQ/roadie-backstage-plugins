@@ -141,21 +141,28 @@ const SelectFieldFromApiOauthWrapper = ({
 
   if (!isSignedIn || !token) {
     return (
-      <Box height="100%" width="100%" display="flex">
-        <Box paddingRight={1}>
-          <Typography>
-            This input requires authentication with {oauthConfig.provider}
+      <Box height="100%" width="100%">
+        <Box>
+          <Typography variant="body2">
+            <b>{props.uiSchema['ui:options']?.title || props.name}</b>
           </Typography>
         </Box>
-        <Box>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={showSignInModal}
-            size="small"
-          >
-            Sign In
-          </Button>
+        <Box display="flex">
+          <Box paddingRight={1}>
+            <Typography>
+              This input requires authentication with {oauthConfig.provider}
+            </Typography>
+          </Box>
+          <Box>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={showSignInModal}
+              size="small"
+            >
+              Sign In
+            </Button>
+          </Box>
         </Box>
       </Box>
     );
