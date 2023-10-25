@@ -32,7 +32,7 @@ export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
           <InfoCard title={`Datadog dashboard ${index}`} variant="gridItem">
             <Resizable
               defaultSize={{
-                width: 100,
+                width: '100%',
                 height: 500,
               }}
               handleComponent={{ bottomRight: <ZoomOutMapIcon /> }}
