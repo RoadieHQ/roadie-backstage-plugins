@@ -15,6 +15,11 @@
  */
 import { z } from 'zod';
 
+export type OAuthConfig = {
+  provider: 'microsoft' | 'github' | 'google' | 'bitbucket';
+  scopes: string[];
+};
+
 export const selectFieldFromApiConfigSchema = z.object({
   params: z.record(z.string(), z.string()).optional(),
   path: z.string(),
@@ -23,4 +28,10 @@ export const selectFieldFromApiConfigSchema = z.object({
   labelSelector: z.string().or(z.array(z.string())).optional(),
   title: z.string().optional(),
   description: z.string().optional(),
+  oauth: z
+    .object({
+      provider: z.enum(['microsoft', 'github', 'bitbucket', 'google']),
+      scopes: z.array(z.string()),
+    })
+    .optional(),
 });
