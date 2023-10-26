@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.6.0
+
+### Minor Changes
+
+- dacf31c1: Allow SelectFieldFromApi to use OAuth
+
 ## 1.5.2
 
 ### Patch Changes
