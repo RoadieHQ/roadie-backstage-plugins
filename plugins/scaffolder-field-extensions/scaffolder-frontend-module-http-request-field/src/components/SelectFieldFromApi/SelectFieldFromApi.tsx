@@ -30,8 +30,9 @@ import {
 import { useAsync } from 'react-use';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
-import { selectFieldFromApiConfigSchema } from '../../types';
-import { FormHelperText } from '@material-ui/core';
+import { OAuthConfig, selectFieldFromApiConfigSchema } from '../../types';
+import { Box, Button, FormHelperText, Typography } from '@material-ui/core';
+import { useOauthSignIn } from '../../hooks/useOauthSignIn';
 import { renderString } from 'nunjucks';
 import fromPairs from 'lodash/fromPairs';
 
@@ -56,16 +57,28 @@ const renderOption = (input: any, context: object): any => {
   return input;
 };
 
-export const SelectFieldFromApi = (props: FieldProps<string>) => {
+const SelectFieldFromApiComponent = (
+  props: FieldProps<string> & { token?: string },
+) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
   const { formContext, uiSchema } = props;
-  const options = selectFieldFromApiConfigSchema.parse(uiSchema['ui:options']);
-  const { title = 'Select', description = '' } = options;
+  const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
+    uiSchema['ui:options'],
+  );
 
   const { error } = useAsync(async () => {
+    if (!optionsParsingState.success) {
+      throw optionsParsingState.error;
+    }
+    const options = optionsParsingState.data;
     const baseUrl = await discoveryApi.getBaseUrl('');
+    const headers: Record<string, string> = {};
+
+    if (props.token) {
+      headers.Authorization = `Bearer ${props.token}`;
+    }
     const params = new URLSearchParams(
       renderOption(options.params, { parameters: formContext.formData }),
     );
@@ -73,6 +86,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       `${baseUrl}${renderOption(options.path, {
         parameters: formContext.formData,
       })}?${params}`,
+      { headers },
     );
     const body = await response.json();
     const array = options.arraySelector
@@ -124,6 +138,11 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     setDropDownData(sortBy(constructedData, 'label'));
   });
 
+  const {
+    title = 'Select',
+    description = '',
+    placeholder = 'Select from results',
+  } = optionsParsingState.success ? optionsParsingState.data : {};
   if (error) {
     return <ErrorPanel error={error} />;
   }
@@ -139,11 +158,74 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
     >
       <Select
         items={dropDownData}
-        placeholder={options.placeholder || 'Select from results'}
+        placeholder={placeholder}
         label={title}
         onChange={props.onChange}
       />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>
   );
+};
+
+const SelectFieldFromApiOauthWrapper = ({
+  oauthConfig,
+  ...props
+}: FieldProps<string> & {
+  oauthConfig: OAuthConfig;
+}) => {
+  const { token, loading, error, isSignedIn, showSignInModal } =
+    useOauthSignIn(oauthConfig);
+
+  if (loading && !isSignedIn) {
+    return <Progress />;
+  }
+  if (error) {
+    return <ErrorPanel error={error} />;
+  }
+
+  if (!isSignedIn || !token) {
+    return (
+      <Box height="100%" width="100%">
+        <Box>
+          <Typography variant="body2">
+            <b>{props.uiSchema['ui:options']?.title || props.name}</b>
+          </Typography>
+        </Box>
+        <Box display="flex">
+          <Box paddingRight={1}>
+            <Typography>
+              This input requires authentication with {oauthConfig.provider}
+            </Typography>
+          </Box>
+          <Box>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={showSignInModal}
+              size="small"
+            >
+              Sign In
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+
+  return <SelectFieldFromApiComponent {...props} token={token} />;
+};
+
+export const SelectFieldFromApi = (props: FieldProps<string>) => {
+  const result = selectFieldFromApiConfigSchema.safeParse(
+    props.uiSchema['ui:options'],
+  );
+  if (result.success && result.data.oauth) {
+    return (
+      <SelectFieldFromApiOauthWrapper
+        oauthConfig={result.data.oauth}
+        {...props}
+      />
+    );
+  }
+  return <SelectFieldFromApiComponent {...props} />;
 };

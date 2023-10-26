@@ -26,8 +26,11 @@ import {
   AnyApiRef,
   discoveryApiRef,
   fetchApiRef,
+  githubAuthApiRef,
+  OAuthApi,
 } from '@backstage/core-plugin-api';
 import { FieldProps } from '@rjsf/core';
+import Mocked = jest.Mocked;
 
 describe('SelectFieldFromApi', () => {
   const fetchApi = { fetch: jest.fn() };
@@ -38,9 +41,14 @@ describe('SelectFieldFromApi', () => {
     },
   };
 
+  const mockGithubAuthApi: Mocked<OAuthApi> = {
+    getAccessToken: jest.fn(),
+  };
+
   const apis: [AnyApiRef, any][] = [
     [fetchApiRef, fetchApi],
     [discoveryApiRef, discovery],
+    [githubAuthApiRef, mockGithubAuthApi],
   ];
 
   beforeEach(() => {
@@ -95,5 +103,42 @@ describe('SelectFieldFromApi', () => {
 
     expect(getByText('result1')).toBeInTheDocument();
     expect(getByText('result2')).toBeInTheDocument();
+  });
+
+  it('should pass an access token through in the Authorization header if "oauth" is configured', async () => {
+    fetchApi.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue({ myarray: ['result1', 'result2'] }),
+    });
+    mockGithubAuthApi.getAccessToken.mockResolvedValue('my-github-auth-token');
+    const uiSchema = {
+      'ui:options': {
+        path: '/test-endpoint',
+        arraySelector: 'myarray',
+        oauth: { provider: 'github', scopes: ['repo'] },
+      },
+    };
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
+
+    await renderWithEffects(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <SelectFieldFromApi {...props} />
+        </TestApiProvider>,
+      ),
+    );
+
+    expect(mockGithubAuthApi.getAccessToken).toHaveBeenCalledWith(
+      ['repo'],
+      expect.anything(),
+    );
+    expect(fetchApi.fetch).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        headers: { Authorization: 'Bearer my-github-auth-token' },
+      }),
+    );
   });
 });
