@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.2.0
+
+### Minor Changes
+
+- 87641f1d: Changed the default width of Resizable in Datadog Dashboard to 100% to cover full width of parent card.
+
 ## 2.1.16
 
 ### Patch Changes
