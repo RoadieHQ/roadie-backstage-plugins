@@ -117,7 +117,10 @@ describe('SelectFieldFromApi', () => {
         oauth: { provider: 'github', scopes: ['repo'] },
       },
     };
-    const props = { uiSchema } as unknown as FieldProps<string>;
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldProps<string>;
 
     await renderWithEffects(
       wrapInTestApp(
