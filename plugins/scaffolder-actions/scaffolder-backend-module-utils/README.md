@@ -430,7 +430,7 @@ spec:
         type: string
         description: The name of the repository
       org:
-        title: Repository Organisation
+        title: Repository Organization
         type: string
         description: The Github org that the repository is in
       pr_branch:
@@ -496,7 +496,7 @@ spec:
         type: string
         description: The name of the repository
       org:
-        title: Repository Organisation
+        title: Repository Organization
         type: string
         description: The Github org that the repository is in
       pr_branch:
@@ -653,7 +653,7 @@ spec:
           type: string
           description: The name of the repository
         org:
-          title: Repository Organisation
+          title: Repository Organization
           type: string
           description: The Github org that the repository is in
         pr_branch:
