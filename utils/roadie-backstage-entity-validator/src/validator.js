@@ -138,6 +138,8 @@ export const validate = async (
       console.log('Entity Schema policies validated\n');
       responses.forEach(it => console.log(yaml.dump(it)));
     }
+
+    return responses.filter(e => e !== undefined);
   } catch (e) {
     throw new Error(e);
   }
@@ -153,6 +155,12 @@ export const validateFromFile = async (
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
 
-  await validate(fileContents, verbose, customAnnotationSchemaLocation);
+  const entities = await validate(
+    fileContents,
+    verbose,
+    customAnnotationSchemaLocation,
+  );
   await relativeSpaceValidation(fileContents, filepath, verbose);
+
+  return entities;
 };
