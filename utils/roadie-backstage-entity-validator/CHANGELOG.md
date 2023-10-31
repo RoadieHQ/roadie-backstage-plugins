@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.0
+
+### Minor Changes
+
+- 4fc80b5d: the validation functions return the validated entities
+
 ## 2.3.7
 
 ### Patch Changes
