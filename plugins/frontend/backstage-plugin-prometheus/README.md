@@ -72,6 +72,7 @@ const serviceEntityPage = (
 import {
   EntityPrometheusAlertCard,
   EntityPrometheusGraphCard,
+  isPrometheusAvailable
 } from '@roadiehq/backstage-plugin-prometheus';
 
 ...
@@ -79,12 +80,16 @@ import {
 const overviewContent = (
   <Grid container spacing={3}>
     ...
-    <Grid item md={8}>
-      <EntityPrometheusAlertCard />
-    </Grid>
-    <Grid item md={6}>
-      <EntityPrometheusGraphCard />
-    </Grid>
+    <EntitySwitch>
+      <EntitySwitch.Case if={isPrometheusAvailable}>
+        <Grid item md={8}>
+          <EntityPrometheusAlertCard />
+        </Grid>
+        <Grid item md={6}>
+          <EntityPrometheusGraphCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
     ...
   </Grid>
 );
