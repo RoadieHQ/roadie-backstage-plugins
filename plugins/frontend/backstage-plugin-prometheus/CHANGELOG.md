@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.8.0
+
+### Minor Changes
+
+- e7c7ff99: Add condition to control the Prometheus cards display in the entity overview page
+
 ## 2.7.0
 
 ### Minor Changes
