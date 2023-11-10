@@ -31,15 +31,15 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.6",
-    "@backstage/config": "^1.1.0",
-    "@backstage/plugin-scaffolder-backend": "^1.17.2",
+    "@backstage/backend-common": "^0.19.8",
+    "@backstage/config": "^1.1.1",
+    "@backstage/plugin-scaffolder-backend": "^1.18.1",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.11.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
-    "@backstage/cli": "^0.22.13"
+    "@backstage/cli": "^0.23.1"
   },
   "files": [
     "dist"
