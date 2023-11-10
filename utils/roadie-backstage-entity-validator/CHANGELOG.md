@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.1
+
+### Patch Changes
+
+- 9bb000a6: Version bump to Backstage 1.19.6
+
 ## 2.4.0
 
 ### Minor Changes

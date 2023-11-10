@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.1.16
+
+### Patch Changes
+
+- 9bb000a6: Version bump to Backstage 1.19.6
+
 ## 2.1.15
 
 ### Patch Changes

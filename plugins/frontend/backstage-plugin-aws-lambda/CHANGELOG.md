@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.2
+
+### Patch Changes
+
+- 9bb000a6: Version bump to Backstage 1.19.6
+
 ## 2.2.1
 
 ### Patch Changes
