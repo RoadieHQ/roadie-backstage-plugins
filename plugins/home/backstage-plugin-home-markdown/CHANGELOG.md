@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.16
+
+### Patch Changes
+
+- 9bb000a6: Version bump to Backstage 1.19.6
+
 ## 2.5.15
 
 ### Patch Changes
