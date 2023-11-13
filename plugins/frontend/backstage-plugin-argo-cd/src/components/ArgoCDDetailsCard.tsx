@@ -230,13 +230,15 @@ const ArgoCDDetails = ({
   entity: Entity;
   extraColumns: TableColumn[];
 }) => {
-  const { url, appName, appSelector, projectName } = useArgoCDAppData({
-    entity,
-  });
+  const { url, appName, appSelector, appNamespace, projectName } =
+    useArgoCDAppData({
+      entity,
+    });
   const { loading, value, error, retry } = useAppDetails({
     url,
     appName,
     appSelector,
+    appNamespace,
     projectName,
   });
   if (loading) {

@@ -27,13 +27,17 @@ describe('API calls', () => {
       backendBaseUrl: '',
       searchInstances: true,
       identityApi: getIdentityApiStub,
+      useNamespacedApps: false,
     });
 
-    const response = await client.serviceLocatorUrl({ appName: 'test' });
+    const response = await client.serviceLocatorUrl({
+      appName: 'test',
+      appNamespace: 'my-test-ns',
+    });
 
     // Let's verify the fetch was called with the requested URL and Authorization header
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.anything(),
+      expect.not.stringMatching('appNamespace'),
       expect.objectContaining({
         headers: {
           'Content-Type': 'application/json',
@@ -51,6 +55,7 @@ describe('API calls', () => {
       backendBaseUrl: '',
       searchInstances: true,
       identityApi: getIdentityApiStub,
+      useNamespacedApps: false,
     });
 
     const response = await client.serviceLocatorUrl({ appName: 'test' });
@@ -63,10 +68,39 @@ describe('API calls', () => {
       backendBaseUrl: '',
       searchInstances: true,
       identityApi: getIdentityApiStub,
+      useNamespacedApps: false,
     });
 
     const error = new Error('Need to provide appName or appSelector');
 
     await expect(client.serviceLocatorUrl({})).rejects.toThrow(error);
+  });
+
+  it('serviceLocatorUrl: fetches namespaced applications', async () => {
+    const client = new ArgoCDApiClient({
+      discoveryApi: getDiscoveryApiStub,
+      backendBaseUrl: '',
+      searchInstances: true,
+      identityApi: getIdentityApiStub,
+      useNamespacedApps: true,
+    });
+
+    const response = await client.serviceLocatorUrl({
+      appName: 'test',
+      appNamespace: 'my-test-ns',
+    });
+
+    // Let's verify the fetch was called with the requested URL and Authorization header
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringMatching('appNamespace=my-test-ns'),
+      expect.objectContaining({
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer fake-id-token`,
+        },
+      }),
+    );
+
+    expect(response).toEqual(getServiceListStub);
   });
 });
