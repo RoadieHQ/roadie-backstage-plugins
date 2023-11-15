@@ -72,14 +72,6 @@ export const http = async (
     throw new HttpError(`Could not get response: ${e}`);
   }
 
-  if (res.status >= 400) {
-    logger.error(
-      `There was an issue with your request. Status code: ${
-        res.status
-      } Response body: ${JSON.stringify(body)}`,
-    );
-    throw new HttpError('Unable to complete request');
-  }
   return { code: res.status, headers, body };
 };
 
