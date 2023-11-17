@@ -78,7 +78,7 @@ export const http = async (
         res.status
       } Response body: ${JSON.stringify(body)}`,
     );
-    throw new HttpError('Unable to complete request');
+    return { code: res.status, headers: {}, body };
   }
   return { code: res.status, headers, body };
 };
