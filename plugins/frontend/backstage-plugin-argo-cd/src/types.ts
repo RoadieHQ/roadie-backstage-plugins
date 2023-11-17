@@ -8,6 +8,7 @@ export const argoCDAppDeployRevisionDetails = t.type({
 export const argoCDAppDetails = t.type({
   metadata: t.type({
     name: t.string,
+    namespace: t.string,
     instance: t.union([
       t.type({
         name: t.union([t.string, t.undefined]),

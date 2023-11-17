@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.4.0
+
+### Minor Changes
+
+- 32866432: Adds support for Applications in any namespace (as per https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/)
+
 ## 2.3.6
 
 ### Patch Changes

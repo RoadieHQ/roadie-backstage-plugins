@@ -145,6 +145,26 @@ The Argo plugin will fetch the Argo CD instances an app is deployed to and use t
 
 Please visit the [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) for more information
 
+## Support for apps in any namespace beta feature
+
+If you want to use the "Applications in any namespace" beta [feature](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/), you have to explicitly enable it in the configuration.
+
+In the configuration file, you need to toggle the feature:
+
+```yaml
+argocd:
+  ...
+  namespacedApps: true
+```
+
+After enabling the feature, you can use the newly available `argocd/app-namespace` annotation on entities:
+
+```yaml
+metadata:
+  annotations:
+    argocd/app-namespace: my-test-ns
+```
+
 ## Develop plugin locally
 
 You can run the application by running `yarn dev` at the root of this monorepo.

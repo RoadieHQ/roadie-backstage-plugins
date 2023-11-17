@@ -29,6 +29,9 @@ export const argocdPlugin = createPlugin({
           discoveryApi,
           identityApi,
           backendBaseUrl: configApi.getString('backend.baseUrl'),
+          useNamespacedApps: Boolean(
+            configApi.getOptionalBoolean('argocd.namespacedApps'),
+          ),
           searchInstances: Boolean(
             configApi.getOptionalConfigArray('argocd.appLocatorMethods')
               ?.length,

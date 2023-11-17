@@ -41,6 +41,8 @@ import {
   getEntityStubWithAppSelector,
   getEmptyResponseStub,
   getIdentityApiStub,
+  getResponseStubNamespaced,
+  getEntityStubWithAppNamespace,
 } from './mocks/mocks';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
@@ -57,6 +59,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
       identityApi: getIdentityApiStub,
       backendBaseUrl: 'https://testbackend.com',
       searchInstances: false,
+      useNamespacedApps: false,
     }),
   ],
 ];
@@ -65,6 +68,7 @@ const apisScan: [AnyApiRef, Partial<unknown>][] = [
     configApiRef,
     new ConfigReader({
       argocd: {
+        namespacedApps: false,
         appLocatorMethods: [
           {
             type: 'config',
@@ -87,6 +91,7 @@ const apisScan: [AnyApiRef, Partial<unknown>][] = [
       identityApi: getIdentityApiStub,
       backendBaseUrl: 'https://testbackend.com',
       searchInstances: true,
+      useNamespacedApps: false,
     }),
   ],
 ];
@@ -95,6 +100,7 @@ const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
     configApiRef,
     new ConfigReader({
       argocd: {
+        namespacedApps: false,
         appLocatorMethods: [
           {
             type: 'config',
@@ -121,6 +127,7 @@ const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
       identityApi: getIdentityApiStub,
       backendBaseUrl: 'https://testbackend.com',
       searchInstances: true,
+      useNamespacedApps: false,
     }),
   ],
 ];
@@ -194,6 +201,7 @@ describe('argo-cd', () => {
             identityApi: getIdentityApiStub,
             backendBaseUrl: 'https://testbackend.com',
             searchInstances: false,
+            useNamespacedApps: false,
           }),
         ],
       ];
@@ -308,6 +316,101 @@ describe('argo-cd', () => {
         await rendered.findByText(/remote data validation failed: /),
       ).toBeInTheDocument();
     });
+
+    it('should display namespaced apps', async () => {
+      const apisWithArgoCDNamespacedApps: [AnyApiRef, Partial<unknown>][] = [
+        [
+          configApiRef,
+          new ConfigReader({
+            argocd: { namespacedApps: true },
+          }),
+        ],
+        [errorApiRef, errorApiMock],
+        [
+          argoCDApiRef,
+          new ArgoCDApiClient({
+            discoveryApi,
+            identityApi: getIdentityApiStub,
+            backendBaseUrl: 'https://testbackend.com',
+            searchInstances: false,
+            useNamespacedApps: true,
+          }),
+        ],
+      ];
+      worker.use(
+        rest.get('*', (_, res, ctx) =>
+          res(ctx.json(getResponseStubNamespaced)),
+        ),
+      );
+      const rendered = render(
+        <TestApiProvider apis={apisWithArgoCDNamespacedApps}>
+          <EntityProvider entity={getEntityStubWithAppNamespace}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText('namespaced-guestbook'),
+      ).toBeInTheDocument();
+      expect(
+        await rendered.findByText('namespaced-guestbook'),
+      ).not.toHaveAttribute('href');
+      expect(await rendered.findByText('Synced')).toBeInTheDocument();
+      expect(await rendered.findByText('Healthy')).toBeInTheDocument();
+    });
+
+    it('should display namespaced apps with a base url', async () => {
+      const apisWithArgoCDBaseURLAndNamespacedApps: [
+        AnyApiRef,
+        Partial<unknown>,
+      ][] = [
+        [
+          configApiRef,
+          new ConfigReader({
+            argocd: {
+              namespacedApps: true,
+              baseUrl: 'www.example-argocd-url.com',
+            },
+          }),
+        ],
+        [errorApiRef, errorApiMock],
+        [
+          argoCDApiRef,
+          new ArgoCDApiClient({
+            discoveryApi,
+            identityApi: getIdentityApiStub,
+            backendBaseUrl: 'https://testbackend.com',
+            searchInstances: false,
+            useNamespacedApps: true,
+          }),
+        ],
+      ];
+
+      worker.use(
+        rest.get('*', (_, res, ctx) =>
+          res(ctx.json(getResponseStubNamespaced)),
+        ),
+      );
+
+      const rendered = render(
+        <TestApiProvider apis={apisWithArgoCDBaseURLAndNamespacedApps}>
+          <EntityProvider entity={getEntityStubWithAppNamespace}>
+            <ArgoCDDetailsCard />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const drawerButton = await rendered.findByTitle('namespaced-guestbook');
+      fireEvent.click(drawerButton);
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toBeInTheDocument();
+      expect(
+        await rendered.findByTitle('Open Argo CD Dashboard'),
+      ).toHaveAttribute(
+        'href',
+        'www.example-argocd-url.com/applications/my-test-ns/namespaced-guestbook',
+      );
+    });
   });
   describe('widget - scan instances', () => {
     it('should display fetched data', async () => {
@@ -415,6 +518,7 @@ describe('argo-cd', () => {
             identityApi: getIdentityApiStub,
             backendBaseUrl: 'https://testbackend.com',
             searchInstances: true,
+            useNamespacedApps: false,
           }),
         ],
       ];
@@ -506,6 +610,7 @@ describe('argo-cd', () => {
             identityApi: getIdentityApiStub,
             backendBaseUrl: 'https://testbackend.com',
             searchInstances: true,
+            useNamespacedApps: false,
           }),
         ],
       ];
