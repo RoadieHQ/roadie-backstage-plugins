@@ -1,5 +1,5 @@
 ---
-'@roadiehq/scaffolder-backend-module-http-request': patch
+'@roadiehq/scaffolder-backend-module-http-request': minor
 ---
 
-Return error responses as well as successful responses in templates
+Add flag that allows return of error responses as well as successful responses in templates so that the next step can run.

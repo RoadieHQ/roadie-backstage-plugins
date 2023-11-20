@@ -34,6 +34,7 @@ export const generateBackstageUrl = async (
 export const http = async (
   options: HttpOptions,
   logger: Logger,
+  continueOnBadResponse: boolean = false,
 ): Promise<any> => {
   let res: any;
   const controller = new AbortController();
@@ -69,7 +70,7 @@ export const http = async (
   try {
     body = isJSON() ? await res.json() : { message: await res.text() };
   } catch (e) {
-    throw new HttpError(`Could not get response: ${e}`);
+    throw new HttpError(`Could not parse response body: ${e}`);
   }
 
   if (res.status >= 400) {
@@ -78,7 +79,10 @@ export const http = async (
         res.status
       } Response body: ${JSON.stringify(body)}`,
     );
-    return { code: res.status, headers: {}, body };
+    if (continueOnBadResponse) {
+      return { code: res.status, headers: {}, body };
+    }
+    throw new HttpError('Unable to complete request');
   }
   return { code: res.status, headers, body };
 };
