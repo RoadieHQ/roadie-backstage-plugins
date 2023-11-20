@@ -89,7 +89,7 @@ export function createHttpBackstageAction(options: {
           continueOnBadResponse: {
             title: 'Continue on error',
             description:
-              'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. False by default.',
+              'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
             type: 'boolean',
             default: 'false',
           },
