@@ -183,7 +183,7 @@ catalog:
     #   rules:
     #     - allow: [Template]
 argocd:
-  baseUrl: http://localhost:8080
+  baseUrl: https://localhost:8080
   username: ${ARGOCD_USERNAME}
   password: ${ARGOCD_PASSWORD}
   projectSettings:
