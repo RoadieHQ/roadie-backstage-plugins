@@ -197,6 +197,7 @@ describe('http', () => {
           const response = await http(options, logger, true);
           expect(response.code).toEqual(401);
           expect(await response.body).toEqual({ error: 'bad request' });
+          expect(await response.headers).toMatchObject({});
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
