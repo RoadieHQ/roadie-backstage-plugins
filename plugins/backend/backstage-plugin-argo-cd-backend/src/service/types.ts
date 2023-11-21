@@ -166,6 +166,8 @@ export type BuildArgoProjectArgs = {
   sourceRepo: string | string[];
   resourceVersion?: string;
   destinationServer?: string;
+  clusterResourceBlacklist?: ResourceItem[];
+  clusterResourceWhitelist?: ResourceItem[];
 };
 
 export type BuildArgoApplicationArgs = {
@@ -190,4 +192,34 @@ export type GetArgoProjectResp = {
   metadata: {
     resourceVersion: string;
   };
+};
+
+export type ArgoProject = {
+  metadata: Metadata;
+  spec: ArgoProjectSpec;
+};
+
+export type Destination = {
+  name: string;
+  namespace: string;
+  server: string;
+};
+
+export type ArgoProjectSpec = {
+  destinations: Destination[];
+  sourceRepos: string[];
+  clusterResourceBlacklist?: ResourceItem[];
+  clusterResourceWhitelist?: ResourceItem[];
+  namespaceResourceBlacklist?: ResourceItem[];
+  namespaceResourceWhitelist?: ResourceItem[];
+};
+
+export type Metadata = {
+  name: string;
+  resourceVersion: string | undefined;
+};
+
+export type ResourceItem = {
+  group: string;
+  kind: string;
 };

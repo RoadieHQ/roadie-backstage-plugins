@@ -183,19 +183,36 @@ catalog:
     #   rules:
     #     - allow: [Template]
 argocd:
-  baseUrl: https://localhost:8080
+  baseUrl: http://localhost:8080
   username: ${ARGOCD_USERNAME}
   password: ${ARGOCD_PASSWORD}
+  projectSettings:
+#    Sets the allowed resources at the cluster level
+#    clusterResourceWhitelist:
+#      - group: '*'
+#        kind: '*'
+#    Sets the blocked resources at the cluster level
+    clusterResourceBlacklist:
+      - group: '*'
+        kind: '*'
+#    Sets the allowed resources at the namespace level
+    namespaceResourceWhitelist:
+      - group: '*'
+        kind: '*'
+#    Sets the blocked resources at the namespace level
+#    namespaceResourceBlacklist:
+#      - group: '*'
+#        kind: 'Deployment'
   appLocatorMethods:
-    []
+    # []
     ## The below is if you wish to scan all Argo CD instances, however
     ## you must also configure the `backstage-plugin-argo-cd-backend`
     ## plugin to use the below. Please see the README.md for plugin
     ## `backstage-plugin-argo-cd-backend`.
-    # - type: 'config'
-    #   instances:
-    #     - name: argoInstance2
-    #       url: https://argoInstance2.com
+    - type: 'config'
+      instances:
+        - name: colima
+          url: http://localhost:8080
 
 prometheus:
   proxyPath: /prometheus/api
