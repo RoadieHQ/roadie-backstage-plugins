@@ -187,22 +187,22 @@ argocd:
   username: ${ARGOCD_USERNAME}
   password: ${ARGOCD_PASSWORD}
   projectSettings:
-#    Sets the allowed resources at the cluster level
-#    clusterResourceWhitelist:
-#      - group: '*'
-#        kind: '*'
-#    Sets the blocked resources at the cluster level
+    #    Sets the allowed resources at the cluster level
+    #    clusterResourceWhitelist:
+    #      - group: '*'
+    #        kind: '*'
+    #    Sets the blocked resources at the cluster level
     clusterResourceBlacklist:
       - group: '*'
         kind: '*'
-#    Sets the allowed resources at the namespace level
+    #    Sets the allowed resources at the namespace level
     namespaceResourceWhitelist:
       - group: '*'
         kind: '*'
-#    Sets the blocked resources at the namespace level
-#    namespaceResourceBlacklist:
-#      - group: '*'
-#        kind: 'Deployment'
+  #    Sets the blocked resources at the namespace level
+  #    namespaceResourceBlacklist:
+  #      - group: '*'
+  #        kind: 'Deployment'
   appLocatorMethods:
     # []
     ## The below is if you wish to scan all Argo CD instances, however
