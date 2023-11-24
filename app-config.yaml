@@ -210,9 +210,9 @@ argocd:
     ## plugin to use the below. Please see the README.md for plugin
     ## `backstage-plugin-argo-cd-backend`.
     # - type: 'config'
-     #   instances:
-     #     - name: argoInstance2
-     #       url: https://argoInstance2.com
+    #   instances:
+    #     - name: argoInstance2
+    #       url: https://argoInstance2.com
 
 prometheus:
   proxyPath: /prometheus/api
