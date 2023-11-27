@@ -34,6 +34,7 @@ export function createHttpBackstageAction(options: {
     params?: Params;
     body?: any;
     logRequestPath?: boolean;
+    continueOnBadResponse?: boolean;
   }>({
     id: 'http:backstage:request',
     description:
@@ -85,6 +86,13 @@ export function createHttpBackstageAction(options: {
               'Option to turn request path logging off. On by default',
             type: 'boolean',
           },
+          continueOnBadResponse: {
+            title: 'Continue on error',
+            description:
+              'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
+            type: 'boolean',
+            default: 'false',
+          },
         },
       },
       output: {
@@ -111,6 +119,7 @@ export function createHttpBackstageAction(options: {
       const token = ctx.secrets?.backstageToken;
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
+      const continueOnBadResponse = input.continueOnBadResponse || false;
       const url = await generateBackstageUrl(discovery, input.path);
 
       if (logRequestPath) {
@@ -158,7 +167,11 @@ export function createHttpBackstageAction(options: {
         httpOptions.headers.authorization = `Bearer ${token}`;
       }
 
-      const { code, headers, body } = await http(httpOptions, ctx.logger);
+      const { code, headers, body } = await http(
+        httpOptions,
+        ctx.logger,
+        continueOnBadResponse,
+      );
 
       ctx.output('code', code);
       ctx.output('headers', headers);

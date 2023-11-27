@@ -67,6 +67,7 @@ describe('http:backstage:request', () => {
             headers: {},
           },
           logger,
+          false,
         );
       });
     });
@@ -101,6 +102,7 @@ describe('http:backstage:request', () => {
             body: '{"name":"test"}',
           },
           logger,
+          false,
         );
       });
     });
@@ -135,6 +137,7 @@ describe('http:backstage:request', () => {
             body: '{"name":"test"}',
           },
           logger,
+          false,
         );
       });
     });
@@ -162,6 +165,7 @@ describe('http:backstage:request', () => {
             body: 'test',
           },
           logger,
+          false,
         );
       });
     });
@@ -189,6 +193,7 @@ describe('http:backstage:request', () => {
             body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
           logger,
+          false,
         );
       });
     });
@@ -223,6 +228,7 @@ describe('http:backstage:request', () => {
             body: 'test',
           },
           logger,
+          false,
         );
       });
 
@@ -257,6 +263,7 @@ describe('http:backstage:request', () => {
             body: 'test',
           },
           logger,
+          false,
         );
       });
     });
@@ -288,6 +295,7 @@ describe('http:backstage:request', () => {
             body: undefined,
           },
           logger,
+          false,
         );
       });
     });
@@ -316,6 +324,7 @@ describe('http:backstage:request', () => {
             },
           },
           logger,
+          false,
         );
       });
     });
@@ -345,6 +354,7 @@ describe('http:backstage:request', () => {
             headers: {},
           },
           logger,
+          false,
         );
       });
     });
@@ -375,6 +385,7 @@ describe('http:backstage:request', () => {
             headers: {},
           },
           logger,
+          false,
         );
       });
     });

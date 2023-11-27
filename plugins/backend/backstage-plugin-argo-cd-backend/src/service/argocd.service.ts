@@ -28,7 +28,9 @@ import {
   GetArgoProjectResp,
   ArgoProject,
   ResourceItem,
+  GetArgoApplicationResp,
 } from './types';
+import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
@@ -924,5 +926,49 @@ export class ArgoService implements ArgoServiceApi {
     });
 
     return true;
+  }
+
+  async getArgoApplicationInfo({
+    argoApplicationName,
+    argoInstanceName,
+  }: {
+    argoApplicationName: string;
+    argoInstanceName: string;
+  }) {
+    const matchedArgoInstance = getArgoConfigByInstanceName({
+      argoConfigs: this.instanceConfigs,
+      argoInstanceName,
+    });
+    if (!matchedArgoInstance)
+      throw new Error(
+        `config does not have argo information for the cluster named "${argoInstanceName}"`,
+      );
+    const token: string =
+      matchedArgoInstance.token ??
+      (await this.getArgoToken(matchedArgoInstance));
+
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'GET',
+    };
+
+    let statusText: string = '';
+    try {
+      const response = (await fetch(
+        `${matchedArgoInstance.url}/api/v1/applications/${argoApplicationName}`,
+        options,
+      )) as GetArgoApplicationResp;
+      statusText = response.statusText;
+      return { ...(await response.json()), statusCode: response.status };
+    } catch (error) {
+      this.logger.error(
+        `Error Getting Argo Application Information For Argo Instance Name ${argoInstanceName} - searching for application ${argoApplicationName} - ${JSON.stringify(
+          { statusText, error: (error as Error).message },
+        )}`,
+      );
+      throw error;
+    }
   }
 }

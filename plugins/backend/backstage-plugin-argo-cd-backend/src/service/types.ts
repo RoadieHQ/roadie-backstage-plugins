@@ -194,9 +194,22 @@ export type GetArgoProjectResp = {
   };
 };
 
+export type FetchResponse<T, K> = Omit<Response, 'json'> & {
+  status: K;
+  json: () => Promise<T>;
+};
+
+export type GetArgoApplicationResp =
+  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
+  | FetchResponse<ArgoApplication, 200>;
+
 export type ArgoProject = {
   metadata: Metadata;
   spec: ArgoProjectSpec;
+};
+
+export type ArgoApplication = {
+  metadata: Metadata;
 };
 
 export type Destination = {
@@ -216,7 +229,12 @@ export type ArgoProjectSpec = {
 
 export type Metadata = {
   name: string;
-  resourceVersion: string | undefined;
+  namespace?: string;
+  uid?: string;
+  creationTimestamp?: string;
+  deletionTimestamp?: string;
+  deletionGracePeriodSeconds?: number;
+  resourceVersion?: string;
 };
 
 export type ResourceItem = {

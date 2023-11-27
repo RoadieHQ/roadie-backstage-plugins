@@ -157,7 +157,7 @@ describe('http', () => {
       });
 
       describe("when there's a status code >= 400", () => {
-        it('fails with an error', async () => {
+        it('fails with an error by default', async () => {
           const mockedResponse: Response = {
             ...mockResponse,
             ok: false,
@@ -173,6 +173,31 @@ describe('http', () => {
           await expect(
             async () => await http(options, logger),
           ).rejects.toThrowError('Unable to complete request');
+
+          const logEvents = logOutput.trim().split('\n');
+          expect(logEvents).toEqual(
+            expect.arrayContaining([
+              expect.stringContaining(`"error":"bad request"`),
+            ]),
+          );
+        });
+        it('returns response without headers if continueOnBadResponse', async () => {
+          const mockedResponse: Response = {
+            ...mockResponse,
+            ok: false,
+            status: 401,
+            json: async () => ({
+              error: 'bad request',
+            }),
+          };
+
+          (fetch as unknown as jest.Mock).mockResolvedValue(
+            Promise.resolve(mockedResponse),
+          );
+          const response = await http(options, logger, true);
+          expect(response.code).toEqual(401);
+          expect(await response.body).toEqual({ error: 'bad request' });
+          expect(await response.headers).toMatchObject({});
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
@@ -230,7 +255,7 @@ describe('http', () => {
           await expect(
             async () => await http(options, logger),
           ).rejects.toThrowError(
-            'Could not get response: Error: Unable to get JSON',
+            'Could not parse response body: Error: Unable to get JSON',
           );
         });
       });
