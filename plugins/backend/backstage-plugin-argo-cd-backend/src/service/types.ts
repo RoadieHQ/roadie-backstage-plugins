@@ -191,3 +191,24 @@ export type GetArgoProjectResp = {
     resourceVersion: string;
   };
 };
+
+// There are more attributes, just not documented.
+export type ArgoApplication = {
+  metadata: {
+    name: string;
+    namespace: string;
+    uid: string;
+    creationTimestamp: string;
+    deletionTimestamp?: string;
+    deletionGracePeriodSeconds?: number;
+  };
+};
+
+export type FetchResponse<T, K> = Omit<Response, 'json'> & {
+  status: K;
+  json: () => Promise<T>;
+};
+
+export type GetArgoApplicationResp =
+  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
+  | FetchResponse<ArgoApplication, 200>;

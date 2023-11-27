@@ -1194,4 +1194,109 @@ describe('ArgoCD service', () => {
       );
     });
   });
+
+  describe('getApplicationData', () => {
+    it('returns argo application data by calling argo api', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          metadata: { name: 'application' },
+        }),
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({ metadata: { name: 'application' } }),
+      );
+      expect(fetchMock).toBeCalledTimes(1);
+      expect(fetchMock).toBeCalledWith(
+        'https://argoInstance1.com/api/v1/applications/application',
+        expect.objectContaining({ headers: { Authorization: 'Bearer token' } }),
+      );
+    });
+
+    it('fails to find argo application data because application is not found', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'application not found',
+          message: 'application not found',
+        }),
+        { status: 404 },
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'application not found',
+          message: 'application not found',
+          statusCode: 404,
+        }),
+      );
+    });
+
+    it('fails because argo cluster is not found', async () => {
+      await expect(
+        argoService.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'cluster',
+        }),
+      ).rejects.toThrow(/does not have argo information/i);
+    });
+
+    it('fails because credentials are incorrect', async () => {
+      const mockGetArgoToken = jest
+        .spyOn(ArgoService.prototype, 'getArgoToken')
+        .mockRejectedValueOnce('Unauthorized');
+
+      await expect(
+        argoServiceForNoToken.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toEqual('Unauthorized');
+
+      expect(mockGetArgoToken).toBeCalledTimes(1);
+    });
+
+    it('fails because unauthorized to get application information', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'Unauthorized',
+          message: 'Unauthorized',
+        }),
+        { status: 401 },
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'Unauthorized',
+          message: 'Unauthorized',
+          statusCode: 401,
+        }),
+      );
+    });
+
+    it('fails to get argo application information for other reasons', async () => {
+      fetchMock.mockResponseOnce('', { status: 500 });
+
+      await expect(
+        argoService.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toThrow(/invalid json/i);
+    });
+  });
 });
