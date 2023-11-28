@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.12.0
+
+### Minor Changes
+
+- 1021aa09: added new endpoint to get argo application information based on the application name and argo instance.
+- 50aeebf0: adds cluster and namespace resource black/white lists to argo projects
+
 ## 2.11.4
 
 ### Patch Changes

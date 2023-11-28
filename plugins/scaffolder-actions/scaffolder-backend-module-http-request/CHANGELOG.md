@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.0
+
+### Minor Changes
+
+- 6f2ec523: Add flag that allows return of error responses as well as successful responses in templates so that the next step can run.
+
 ## 4.0.14
 
 ### Patch Changes
