@@ -166,6 +166,8 @@ export type BuildArgoProjectArgs = {
   sourceRepo: string | string[];
   resourceVersion?: string;
   destinationServer?: string;
+  clusterResourceBlacklist?: ResourceItem[];
+  clusterResourceWhitelist?: ResourceItem[];
 };
 
 export type BuildArgoApplicationArgs = {
@@ -192,18 +194,6 @@ export type GetArgoProjectResp = {
   };
 };
 
-// There are more attributes, just not documented.
-export type ArgoApplication = {
-  metadata: {
-    name: string;
-    namespace: string;
-    uid: string;
-    creationTimestamp: string;
-    deletionTimestamp?: string;
-    deletionGracePeriodSeconds?: number;
-  };
-};
-
 export type FetchResponse<T, K> = Omit<Response, 'json'> & {
   status: K;
   json: () => Promise<T>;
@@ -212,3 +202,42 @@ export type FetchResponse<T, K> = Omit<Response, 'json'> & {
 export type GetArgoApplicationResp =
   | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
   | FetchResponse<ArgoApplication, 200>;
+
+export type ArgoProject = {
+  metadata: Metadata;
+  spec: ArgoProjectSpec;
+};
+
+export type ArgoApplication = {
+  metadata: Metadata;
+};
+
+export type Destination = {
+  name: string;
+  namespace: string;
+  server: string;
+};
+
+export type ArgoProjectSpec = {
+  destinations: Destination[];
+  sourceRepos: string[];
+  clusterResourceBlacklist?: ResourceItem[];
+  clusterResourceWhitelist?: ResourceItem[];
+  namespaceResourceBlacklist?: ResourceItem[];
+  namespaceResourceWhitelist?: ResourceItem[];
+};
+
+export type Metadata = {
+  name: string;
+  namespace?: string;
+  uid?: string;
+  creationTimestamp?: string;
+  deletionTimestamp?: string;
+  deletionGracePeriodSeconds?: number;
+  resourceVersion?: string;
+};
+
+export type ResourceItem = {
+  group: string;
+  kind: string;
+};

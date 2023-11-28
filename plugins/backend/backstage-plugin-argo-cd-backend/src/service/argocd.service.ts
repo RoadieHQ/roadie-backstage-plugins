@@ -26,6 +26,8 @@ import {
   UpdateArgoProjectProps,
   GetArgoProjectProps,
   GetArgoProjectResp,
+  ArgoProject,
+  ResourceItem,
   GetArgoApplicationResp,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
@@ -260,27 +262,41 @@ export class ArgoService implements ArgoServiceApi {
     destinationServer,
     resourceVersion,
     sourceRepo,
-  }: BuildArgoProjectArgs) {
-    return {
-      project: {
-        metadata: {
-          name: projectName,
-          resourceVersion,
-        },
-        spec: {
-          destinations: [
-            {
-              name: 'local',
-              namespace: namespace,
-              server: destinationServer
-                ? destinationServer
-                : 'https://kubernetes.default.svc',
-            },
-          ],
-          sourceRepos: Array.isArray(sourceRepo) ? sourceRepo : [sourceRepo],
-        },
+  }: BuildArgoProjectArgs): ArgoProject {
+    const clusterResourceBlacklist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.clusterResourceBlacklist`,
+    );
+    const clusterResourceWhitelist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.clusterResourceWhitelist`,
+    );
+    const namespaceResourceBlacklist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.namespaceResourceBlacklist`,
+    );
+    const namespaceResourceWhitelist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.namespaceResourceWhitelist`,
+    );
+
+    const project: ArgoProject = {
+      metadata: {
+        name: projectName,
+        resourceVersion,
+      },
+      spec: {
+        destinations: [
+          {
+            name: 'local',
+            namespace: namespace,
+            server: destinationServer ?? 'https://kubernetes.default.svc',
+          },
+        ],
+        ...(clusterResourceBlacklist && { clusterResourceBlacklist }),
+        ...(clusterResourceWhitelist && { clusterResourceWhitelist }),
+        ...(namespaceResourceBlacklist && { namespaceResourceBlacklist }),
+        ...(namespaceResourceWhitelist && { namespaceResourceWhitelist }),
+        sourceRepos: Array.isArray(sourceRepo) ? sourceRepo : [sourceRepo],
       },
     };
+    return project;
   }
 
   async createArgoProject({
@@ -291,12 +307,14 @@ export class ArgoService implements ArgoServiceApi {
     sourceRepo,
     destinationServer,
   }: CreateArgoProjectProps): Promise<object> {
-    const data = this.buildArgoProjectPayload({
-      projectName,
-      namespace,
-      sourceRepo,
-      destinationServer,
-    });
+    const data = {
+      project: this.buildArgoProjectPayload({
+        projectName,
+        namespace,
+        sourceRepo,
+        destinationServer,
+      }),
+    };
 
     const options: RequestInit = {
       method: 'POST',
@@ -657,9 +675,12 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error('cannot find an argo instance to match this cluster');
     }
 
-    const token: string =
-      matchedArgoInstance.token ??
-      (await this.getArgoToken(matchedArgoInstance));
+    let token: string;
+    if (!matchedArgoInstance.token) {
+      token = await this.getArgoToken(matchedArgoInstance);
+    } else {
+      token = matchedArgoInstance.token;
+    }
 
     let countinueToDeleteProject: boolean = true;
     let isAppExist: boolean = true;
@@ -774,14 +795,16 @@ export class ArgoService implements ArgoServiceApi {
     logger,
   }: CreateArgoResourcesProps): Promise<boolean> {
     logger.info(`Getting app ${appName} on ${argoInstance}`);
-    const matchedArgoInstance = getArgoConfigByInstanceName({
-      argoConfigs: this.instanceConfigs,
-      argoInstanceName: argoInstance,
-    });
-    if (!matchedArgoInstance)
+    const matchedArgoInstance = this.instanceConfigs.find(
+      argoHost => argoHost.name === argoInstance,
+    );
+
+    if (!matchedArgoInstance) {
       throw new Error(`Unable to find Argo instance named "${argoInstance}"`);
-    const token: string =
-      matchedArgoInstance.token ??
+    }
+
+    const token =
+      matchedArgoInstance.token ||
       (await this.getArgoToken(matchedArgoInstance));
 
     await this.createArgoProject({
