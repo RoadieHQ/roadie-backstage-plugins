@@ -24,6 +24,7 @@
     "@backstage/plugin-home": "^0.5.11",
     "@backstage/plugin-org": "^0.6.17",
     "@backstage/plugin-scaffolder": "^1.16.1",
+    "@backstage/plugin-scaffolder-react": "^1.6.1",
     "@backstage/plugin-search": "^1.4.3",
     "@backstage/plugin-tech-radar": "^0.6.10",
     "@backstage/plugin-techdocs": "^1.9.1",

@@ -29,7 +29,7 @@ import {
   githubAuthApiRef,
   OAuthApi,
 } from '@backstage/core-plugin-api';
-import { FieldProps } from '@rjsf/core';
+import { FieldProps } from '@rjsf/utils';
 import Mocked = jest.Mocked;
 
 describe('SelectFieldFromApi', () => {
