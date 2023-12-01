@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.16
+
+### Patch Changes
+
+- 87f90089: Version bump to Backstage 1.20.3
+
 ## 1.0.15
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.1.17
+
+### Patch Changes
+
+- 87f90089: Version bump to Backstage 1.20.3
+
 ## 2.1.16
 
 ### Patch Changes

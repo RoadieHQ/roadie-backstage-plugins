@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.11
+
+### Patch Changes
+
+- 87f90089: Version bump to Backstage 1.20.3
+
 ## 2.3.10
 
 ### Patch Changes
