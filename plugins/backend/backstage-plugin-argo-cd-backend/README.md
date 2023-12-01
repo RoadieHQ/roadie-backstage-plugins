@@ -79,6 +79,74 @@ argocd:
           token: ${ARGOCD_AUTH_TOKEN} # Token to use to instance 1
 ```
 
+### Project Resource Restrictions
+
+In order to control what kind of resources are allowed or blocked by default on the created argo projects you can configure a black and/or white list at both the cluster and namespace levels.
+
+_Example_
+
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  projectSettings:
+    # Sets the allowed resources at the cluster level
+    clusterResourceWhitelist:
+      - group: '*'
+        kind: '*'
+    # Sets the blocked resources at the cluster level
+    clusterResourceBlacklist:
+      - group: '*'
+        kind: '*'
+    # Sets the allowed resources at the namespace level
+    namespaceResourceWhitelist:
+      - group: '*'
+        kind: '*'
+    # Sets the blocked resources at the namespace level
+    namespaceResourceBlacklist:
+      - group: '*'
+        kind: '*'
+```
+
+For example to block specific resources
+
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  projectSettings:
+    # block cluster roles and bindings
+    clusterResourceBlacklist:
+      - group: 'rbac.authorization.k8s.io'
+        kind: 'ClusterRole'
+      - group: 'rbac.authorization.k8s.io'
+        kind: 'ClusterRoleBinding'
+    # Blocks the creation of cron jobs
+    namespaceResourceBlacklist:
+      - group: 'batch'
+        kind: 'CronJob'
+```
+
+Similarly you can instead allow only a certain set of resources
+
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  projectSettings:
+    clusterResourceBlacklist:
+      - group: '*'
+        kind: '*'
+    # Only the listed resources will be allowed
+    namespaceResourceWhitelist:
+      - group: 'apps'
+        kind: 'Deployment'
+      - group: ''
+        kind: 'Service'
+      - group: 'networking.k8s.io'
+        kind: 'Ingress'
+```
+
 ### Wait Cycles
 
 Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. Between each check there is a 3 second timer. The number of cycles to wait is an optional configuration value as shown above as `waitCycles`. If `waitCycles` is set to 25, the total time the loop can last before erroring out is 75 seconds.

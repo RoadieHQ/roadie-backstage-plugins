@@ -26,7 +26,11 @@ import {
   UpdateArgoProjectProps,
   GetArgoProjectProps,
   GetArgoProjectResp,
+  ArgoProject,
+  ResourceItem,
+  GetArgoApplicationResp,
 } from './types';
+import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
@@ -258,27 +262,41 @@ export class ArgoService implements ArgoServiceApi {
     destinationServer,
     resourceVersion,
     sourceRepo,
-  }: BuildArgoProjectArgs) {
-    return {
-      project: {
-        metadata: {
-          name: projectName,
-          resourceVersion,
-        },
-        spec: {
-          destinations: [
-            {
-              name: 'local',
-              namespace: namespace,
-              server: destinationServer
-                ? destinationServer
-                : 'https://kubernetes.default.svc',
-            },
-          ],
-          sourceRepos: Array.isArray(sourceRepo) ? sourceRepo : [sourceRepo],
-        },
+  }: BuildArgoProjectArgs): ArgoProject {
+    const clusterResourceBlacklist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.clusterResourceBlacklist`,
+    );
+    const clusterResourceWhitelist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.clusterResourceWhitelist`,
+    );
+    const namespaceResourceBlacklist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.namespaceResourceBlacklist`,
+    );
+    const namespaceResourceWhitelist = this.config.getOptional<ResourceItem[]>(
+      `argocd.projectSettings.namespaceResourceWhitelist`,
+    );
+
+    const project: ArgoProject = {
+      metadata: {
+        name: projectName,
+        resourceVersion,
+      },
+      spec: {
+        destinations: [
+          {
+            name: 'local',
+            namespace: namespace,
+            server: destinationServer ?? 'https://kubernetes.default.svc',
+          },
+        ],
+        ...(clusterResourceBlacklist && { clusterResourceBlacklist }),
+        ...(clusterResourceWhitelist && { clusterResourceWhitelist }),
+        ...(namespaceResourceBlacklist && { namespaceResourceBlacklist }),
+        ...(namespaceResourceWhitelist && { namespaceResourceWhitelist }),
+        sourceRepos: Array.isArray(sourceRepo) ? sourceRepo : [sourceRepo],
       },
     };
+    return project;
   }
 
   async createArgoProject({
@@ -289,12 +307,14 @@ export class ArgoService implements ArgoServiceApi {
     sourceRepo,
     destinationServer,
   }: CreateArgoProjectProps): Promise<object> {
-    const data = this.buildArgoProjectPayload({
-      projectName,
-      namespace,
-      sourceRepo,
-      destinationServer,
-    });
+    const data = {
+      project: this.buildArgoProjectPayload({
+        projectName,
+        namespace,
+        sourceRepo,
+        destinationServer,
+      }),
+    };
 
     const options: RequestInit = {
       method: 'POST',
@@ -906,5 +926,49 @@ export class ArgoService implements ArgoServiceApi {
     });
 
     return true;
+  }
+
+  async getArgoApplicationInfo({
+    argoApplicationName,
+    argoInstanceName,
+  }: {
+    argoApplicationName: string;
+    argoInstanceName: string;
+  }) {
+    const matchedArgoInstance = getArgoConfigByInstanceName({
+      argoConfigs: this.instanceConfigs,
+      argoInstanceName,
+    });
+    if (!matchedArgoInstance)
+      throw new Error(
+        `config does not have argo information for the cluster named "${argoInstanceName}"`,
+      );
+    const token: string =
+      matchedArgoInstance.token ??
+      (await this.getArgoToken(matchedArgoInstance));
+
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'GET',
+    };
+
+    let statusText: string = '';
+    try {
+      const response = (await fetch(
+        `${matchedArgoInstance.url}/api/v1/applications/${argoApplicationName}`,
+        options,
+      )) as GetArgoApplicationResp;
+      statusText = response.statusText;
+      return { ...(await response.json()), statusCode: response.status };
+    } catch (error) {
+      this.logger.error(
+        `Error Getting Argo Application Information For Argo Instance Name ${argoInstanceName} - searching for application ${argoApplicationName} - ${JSON.stringify(
+          { statusText, error: (error as Error).message },
+        )}`,
+      );
+      throw error;
+    }
   }
 }

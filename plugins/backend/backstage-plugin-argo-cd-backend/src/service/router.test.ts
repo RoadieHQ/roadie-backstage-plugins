@@ -16,6 +16,7 @@ const mockCreateArgoApplication = jest.fn();
 const mockDeleteAppandProject = jest.fn();
 const mockGetArgoInstanceArray = jest.fn();
 const mockUpdateArgoProjectAndApp = jest.fn();
+const mockGetArgoApplicationInfo = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -29,6 +30,7 @@ jest.mock('./argocd.service', () => {
         deleteAppandProject: mockDeleteAppandProject,
         getArgoInstanceArray: mockGetArgoInstanceArray,
         updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
+        getArgoApplicationInfo: mockGetArgoApplicationInfo,
       };
     }),
   };
@@ -41,7 +43,6 @@ const config = ConfigReader.fromConfigs([
     context: '',
     data: {
       argocd: {
-        // waitCycles: 0,
         username: 'testusername',
         password: 'testpassword',
         appLocatorMethods: [
@@ -282,6 +283,52 @@ describe('router', () => {
         argoAppName: 'appName',
         kubernetesNamespace: 'namespace',
       });
+    });
+  });
+
+  describe('/argoInstance/:argoInstanceName/applications/:argoAppName', () => {
+    it('fails to get argo application because of some error', async () => {
+      mockGetArgoApplicationInfo.mockRejectedValueOnce(new Error('error'));
+      const resp = await request(app).get(
+        '/argoInstance/argoInstance1/applications/application',
+      );
+
+      expect(resp.status).toBe(500);
+    });
+
+    it('succeeds in finding argo application', async () => {
+      const mockedResponseObj = {
+        statusCode: 200,
+        metadata: { name: 'application' },
+      };
+
+      mockGetArgoApplicationInfo.mockResolvedValueOnce(mockedResponseObj);
+      const resp = await request(app).get(
+        '/argoInstance/argoInstance1/applications/application',
+      );
+
+      expect(resp.body).toEqual(
+        expect.objectContaining({ metadata: { name: 'application' } }),
+      );
+      expect(resp.status).toBe(200);
+    });
+
+    it('returns no argo application because not found', async () => {
+      const mockedResponseObj = {
+        statusCode: 404,
+        error: 'error',
+        message: 'message',
+      };
+
+      mockGetArgoApplicationInfo.mockResolvedValueOnce(mockedResponseObj);
+      const resp = await request(app).get(
+        '/argoInstance/argoInstance1/applications/application',
+      );
+
+      expect(resp.body).toEqual(
+        expect.objectContaining({ error: 'error', message: 'message' }),
+      );
+      expect(resp.status).toBe(404);
     });
   });
 });

@@ -26,11 +26,7 @@ import {
   CatalogImportPage,
   catalogImportPlugin,
 } from '@backstage/plugin-catalog-import';
-import {
-  ScaffolderFieldExtensions,
-  ScaffolderPage,
-  scaffolderPlugin,
-} from '@backstage/plugin-scaffolder';
+import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
 import { SearchPage } from '@backstage/plugin-search';
 import { TechRadarPage } from '@backstage/plugin-tech-radar';
@@ -47,6 +43,7 @@ import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
 import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
+import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 
 const app = createApp({
   apis,

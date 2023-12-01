@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-argo-cd-backend",
-  "version": "2.11.4",
+  "version": "2.12.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -27,8 +27,8 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.8",
-    "@backstage/catalog-client": "^1.4.5",
+    "@backstage/backend-common": "^0.19.9",
+    "@backstage/catalog-client": "^1.4.6",
     "@backstage/config": "^1.1.1",
     "@types/express": "^4.17.6",
     "cross-fetch": "^3.1.4",
@@ -38,7 +38,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.23.1",
+    "@backstage/cli": "^0.24.0",
     "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",
     "supertest": "^4.0.2",
