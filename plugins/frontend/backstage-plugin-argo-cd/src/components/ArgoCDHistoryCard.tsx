@@ -20,12 +20,16 @@ import {
   InfoCard,
   MissingAnnotationEmptyState,
 } from '@backstage/core-components';
-import { useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { LinearProgress } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { isArgocdAvailable } from '../conditions';
-import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
+import {
+  ArgoCDAppDetails,
+  ArgoCDAppHistoryDetails,
+  ArgoCDAppList,
+} from '../types';
 import { useAppDetails } from './useAppDetails';
 import {
   ARGOCD_ANNOTATION_APP_NAME,
@@ -82,6 +86,9 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
     projectName,
   });
 
+  const revisionsToLoad =
+    useApi(configApiRef).getOptionalNumber('argocd.revisionsToLoad') || -1;
+
   useEffect(() => {
     if (!value) {
       return;
@@ -94,27 +101,38 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
     } else {
       apps = [value as ArgoCDAppDetails];
     }
-    const rows: ArgoCDHistoryTableRow[] = apps
+
+    const revisions: ArgoCDHistoryTableRow[] = apps
       .filter(app => app?.status?.history)
-      .flatMap(app =>
+      .flatMap(app => {
         // @ts-ignore TS2532: The filter statement above prevents this from being undefined
-        app.status.history.map(entry => ({
-          key: `${app.metadata.name}-${entry.revision}`,
-          app: app.metadata.name,
-          appNamespace: app.metadata.namespace,
-          instance: app.metadata?.instance?.name,
-          ...entry,
-        })),
-      );
-    setTableRows(rows);
+        return app.status.history
+          .sort(
+            (a, b) =>
+              new Date(b.deployedAt || '').valueOf() -
+              new Date(a.deployedAt || '').valueOf(),
+          )
+          .slice(0, revisionsToLoad)
+          .map((entry: ArgoCDAppHistoryDetails) => ({
+            key: `${app.metadata.name}-${entry.revision}`,
+            app: app.metadata.name,
+            appNamespace: app.metadata.namespace,
+            instance: app.metadata?.instance?.name,
+            ...entry,
+          }));
+      });
+
+    setTableRows(revisions);
 
     // Update all items at once because otherwise it could lead to the too many re-renders error
     Promise.all(
-      rows.map(async row => await withRevisionDetails(argoCDApi, url, row)),
+      revisions.map(
+        async row => await withRevisionDetails(argoCDApi, url, row),
+      ),
     ).then(rowsWithRevisions => {
       setTableRows(rowsWithRevisions);
     });
-  }, [value, argoCDApi, url]);
+  }, [value, argoCDApi, url, revisionsToLoad]);
 
   if (loading) {
     return (

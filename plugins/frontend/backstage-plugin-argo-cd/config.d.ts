@@ -7,10 +7,15 @@ export interface Config {
      */
     baseUrl?: string;
     /**
-     * Support for the ArgoCD beta feature "Applications in any namespace"
+     * Support for the ArgoCD beta feature "Applications in any namespace".
      * @visibility frontend
      */
     namespacedApps?: boolean;
+    /**
+     * The number of revisions to load per application in the history table.
+     * @visibility frontend
+     */
+    revisionsToLoad?: number;
     /**
      * The base url of the ArgoCD instance.
      * @visibility frontend
