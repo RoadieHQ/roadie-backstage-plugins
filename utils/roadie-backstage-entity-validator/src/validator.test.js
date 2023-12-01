@@ -129,6 +129,20 @@ spec:
   providesApis:
     - sample-service
 `,
+      'catalog-info-with-date-annotation.yml': `
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-6
+  annotations:
+    annotation-with-date-like-value: 1955-11-05
+spec:
+  type: service
+  owner: group:team-atools
+  lifecycle: experimental
+`,
       'catalog-info-with-custom-fields.yml': `
     apiVersion: backstage.io/v1alpha1
     kind: Component
@@ -361,6 +375,29 @@ spec:
           lifecycle: 'production',
           owner: 'group:team-atools',
           definition: 'DUMMY TEXT',
+        },
+      },
+    ]);
+  });
+
+  it('Should successfully validate catalog info with an annotation that look like a date', async () => {
+    await expect(
+      validator.validateFromFile('catalog-info-with-date-annotation.yml'),
+    ).resolves.toEqual([
+      {
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Component',
+        metadata: {
+          name: 'sample-service-6',
+          namespace: 'default',
+          annotations: {
+            'annotation-with-date-like-value': '1955-11-05',
+          },
+        },
+        spec: {
+          type: 'service',
+          lifecycle: 'experimental',
+          owner: 'group:team-atools',
         },
       },
     ]);
