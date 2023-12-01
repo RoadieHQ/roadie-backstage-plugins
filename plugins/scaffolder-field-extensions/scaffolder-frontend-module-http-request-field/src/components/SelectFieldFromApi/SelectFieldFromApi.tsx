@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { FieldProps } from '@rjsf/core';
+import { FieldProps, UiSchema } from '@rjsf/utils';
 import FormControl from '@material-ui/core/FormControl';
 import {
   discoveryApiRef,
@@ -58,12 +58,15 @@ const renderOption = (input: any, context: object): any => {
 };
 
 const SelectFieldFromApiComponent = (
-  props: FieldProps<string> & { token?: string },
+  props: FieldProps<string> & { token?: string } & {
+    uiSchema: UiSchema<string>;
+  },
 ) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
   const { formContext, uiSchema } = props;
+
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
     uiSchema['ui:options'],
   );
@@ -154,13 +157,13 @@ const SelectFieldFromApiComponent = (
     <FormControl
       margin="normal"
       required={props.required}
-      error={props.rawErrors?.length > 0 && !props.formData}
+      error={(props?.rawErrors?.length || 0) > 0 && !props.formData}
     >
       <Select
         items={dropDownData}
         placeholder={placeholder}
         label={title}
-        onChange={props.onChange}
+        onChange={selected => props.onChange(selected as string)}
       />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>
@@ -181,6 +184,10 @@ const SelectFieldFromApiOauthWrapper = ({
   }
   if (error) {
     return <ErrorPanel error={error} />;
+  }
+
+  if (!props.uiSchema) {
+    return <ErrorPanel error={new Error('No UI Schema defined')} />;
   }
 
   if (!isSignedIn || !token) {
@@ -212,10 +219,18 @@ const SelectFieldFromApiOauthWrapper = ({
     );
   }
 
-  return <SelectFieldFromApiComponent {...props} token={token} />;
+  return (
+    <SelectFieldFromApiComponent
+      {...{ ...props, uiSchema: props.uiSchema }}
+      token={token}
+    />
+  );
 };
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
+  if (!props.uiSchema) {
+    return <ErrorPanel error={new Error('No UI Schema defined')} />;
+  }
   const result = selectFieldFromApiConfigSchema.safeParse(
     props.uiSchema['ui:options'],
   );
@@ -227,5 +242,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
       />
     );
   }
-  return <SelectFieldFromApiComponent {...props} />;
+  return (
+    <SelectFieldFromApiComponent {...{ ...props, uiSchema: props.uiSchema }} />
+  );
 };
