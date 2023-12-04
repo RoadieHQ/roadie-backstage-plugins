@@ -1,5 +1,5 @@
 import { getVoidLogger } from '@backstage/backend-common';
-import { ConfigReader } from '@backstage/config';
+import { Config, ConfigReader } from '@backstage/config';
 import { ArgoService } from './argocd.service';
 import {
   argocdCreateApplicationResp,
@@ -9,7 +9,7 @@ import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'ts-jest/utils';
 import { Logger } from 'winston';
-import { UpdateArgoProjectAndAppProps } from './types';
+import { ResourceItem, UpdateArgoProjectAndAppProps } from './types';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services');
@@ -18,36 +18,30 @@ const loggerMock = {
   info: jest.fn(),
 } as unknown as Logger;
 
-const config = ConfigReader.fromConfigs([
-  {
+const getConfig = (options: {
+  token?: string;
+  clusterResourceBlacklist?: ResourceItem[];
+  clusterResourceWhitelist?: ResourceItem[];
+  namespaceResourceBlacklist?: ResourceItem[];
+  namespaceResourceWhitelist?: ResourceItem[];
+}): Config => {
+  const {
+    token,
+    clusterResourceBlacklist,
+    clusterResourceWhitelist,
+    namespaceResourceBlacklist,
+    namespaceResourceWhitelist,
+  } = options;
+  const configObject = {
     context: '',
     data: {
       argocd: {
-        appLocatorMethods: [
-          {
-            type: 'config',
-            instances: [
-              {
-                name: 'argoInstance1',
-                url: 'https://argoInstance1.com',
-                token: 'token',
-                username: 'user',
-                password: 'pass',
-              },
-            ],
-          },
-        ],
-        waitCycles: 3,
-      },
-    },
-  },
-]);
-
-const configWithoutToken = ConfigReader.fromConfigs([
-  {
-    context: '',
-    data: {
-      argocd: {
+        projectSettings: {
+          ...(clusterResourceBlacklist && { clusterResourceBlacklist }),
+          ...(clusterResourceWhitelist && { clusterResourceWhitelist }),
+          ...(namespaceResourceBlacklist && { namespaceResourceBlacklist }),
+          ...(namespaceResourceWhitelist && { namespaceResourceWhitelist }),
+        },
         appLocatorMethods: [
           {
             type: 'config',
@@ -57,6 +51,7 @@ const configWithoutToken = ConfigReader.fromConfigs([
                 url: 'https://argoInstance1.com',
                 username: 'user',
                 password: 'pass',
+                ...(token && { token }),
               },
             ],
           },
@@ -64,21 +59,22 @@ const configWithoutToken = ConfigReader.fromConfigs([
         waitCycles: 3,
       },
     },
-  },
-]);
+  };
+  return ConfigReader.fromConfigs([configObject]);
+};
 
 describe('ArgoCD service', () => {
   const argoService = new ArgoService(
     'testusername',
     'testpassword',
-    config,
+    getConfig({ token: 'token' }),
     loggerMock,
   );
 
   const argoServiceForNoToken = new ArgoService(
     'testusername',
     'testpassword',
-    configWithoutToken,
+    getConfig({}),
     loggerMock,
   );
 
@@ -1191,6 +1187,276 @@ describe('ArgoCD service', () => {
 
       await expect(argoService.getArgoProject(argoProjectReq)).rejects.toThrow(
         'Failed to get argo project: ERROR',
+      );
+    });
+  });
+
+  describe('getApplicationData', () => {
+    it('returns argo application data by calling argo api', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          metadata: { name: 'application' },
+        }),
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({ metadata: { name: 'application' } }),
+      );
+      expect(fetchMock).toBeCalledTimes(1);
+      expect(fetchMock).toBeCalledWith(
+        'https://argoInstance1.com/api/v1/applications/application',
+        expect.objectContaining({ headers: { Authorization: 'Bearer token' } }),
+      );
+    });
+
+    it('fails to find argo application data because application is not found', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'application not found',
+          message: 'application not found',
+        }),
+        { status: 404 },
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'application not found',
+          message: 'application not found',
+          statusCode: 404,
+        }),
+      );
+    });
+
+    it('fails because argo cluster is not found', async () => {
+      await expect(
+        argoService.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'cluster',
+        }),
+      ).rejects.toThrow(/does not have argo information/i);
+    });
+
+    it('fails because credentials are incorrect', async () => {
+      const mockGetArgoToken = jest
+        .spyOn(ArgoService.prototype, 'getArgoToken')
+        .mockRejectedValueOnce('Unauthorized');
+
+      await expect(
+        argoServiceForNoToken.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toEqual('Unauthorized');
+
+      expect(mockGetArgoToken).toBeCalledTimes(1);
+    });
+
+    it('fails because unauthorized to get application information', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'Unauthorized',
+          message: 'Unauthorized',
+        }),
+        { status: 401 },
+      );
+
+      const resp = await argoService.getArgoApplicationInfo({
+        argoApplicationName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'Unauthorized',
+          message: 'Unauthorized',
+          statusCode: 401,
+        }),
+      );
+    });
+
+    it('fails to get argo application information for other reasons', async () => {
+      fetchMock.mockResponseOnce('', { status: 500 });
+
+      await expect(
+        argoService.getArgoApplicationInfo({
+          argoApplicationName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toThrow(/invalid json/i);
+    });
+  });
+
+  describe('resource black and white lists', () => {
+    beforeEach(() => {
+      fetchMock.mockResponseOnce(JSON.stringify({}));
+    });
+
+    it('should include cluster and namespace white and black list if provided in the config', async () => {
+      const service = new ArgoService(
+        'testusername',
+        'testpassword',
+        getConfig({
+          token: 'token',
+          clusterResourceWhitelist: [
+            { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
+          ],
+          clusterResourceBlacklist: [
+            { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
+          ],
+          namespaceResourceWhitelist: [
+            {
+              kind: 'namespaceWhitelistKind',
+              group: 'namespaceWhitelistGroup',
+            },
+          ],
+          namespaceResourceBlacklist: [
+            {
+              kind: 'namespaceBlacklistKind',
+              group: 'namespaceBlacklistGroup',
+            },
+          ],
+        }),
+        loggerMock,
+      );
+
+      await service.createArgoProject({
+        baseUrl: 'baseUrl',
+        argoToken: 'token',
+        projectName: 'projectName',
+        namespace: 'namespace',
+        sourceRepo: 'repo',
+      });
+
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'clusterBlacklistKind',
+            group: 'clusterBlacklistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'clusterWhitelistKind',
+            group: 'clusterWhitelistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'namespaceBlacklistKind',
+            group: 'namespaceBlacklistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'namespaceWhitelistKind',
+            group: 'namespaceWhitelistGroup',
+          },
+        ]),
+      );
+    });
+
+    it('should not include namespace white or black lists', async () => {
+      const service = new ArgoService(
+        'testusername',
+        'testpassword',
+        getConfig({
+          token: 'token',
+          clusterResourceWhitelist: [
+            { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
+          ],
+          clusterResourceBlacklist: [
+            { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
+          ],
+        }),
+        loggerMock,
+      );
+
+      await service.createArgoProject({
+        baseUrl: 'baseUrl',
+        argoToken: 'token',
+        projectName: 'projectName',
+        namespace: 'namespace',
+        sourceRepo: 'repo',
+      });
+
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'clusterBlacklistKind',
+            group: 'clusterBlacklistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).toContain(
+        JSON.stringify([
+          {
+            kind: 'clusterWhitelistKind',
+            group: 'clusterWhitelistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        JSON.stringify([
+          {
+            kind: 'namespaceBlacklistKind',
+            group: 'namespaceBlacklistGroup',
+          },
+        ]),
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        JSON.stringify([
+          {
+            kind: 'namespaceWhitelistKind',
+            group: 'namespaceWhitelistGroup',
+          },
+        ]),
+      );
+    });
+
+    it('should not include any black or white lists', async () => {
+      const service = new ArgoService(
+        'testusername',
+        'testpassword',
+        getConfig({
+          token: 'token',
+        }),
+        loggerMock,
+      );
+
+      await service.createArgoProject({
+        baseUrl: 'baseUrl',
+        argoToken: 'token',
+        projectName: 'projectName',
+        namespace: 'namespace',
+        sourceRepo: 'repo',
+      });
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        'clusterResourceWhitelist',
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        'clusterResourceBlacklist',
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        'namespaceResourceWhitelist',
+      );
+      expect(fetchMock.mock.calls[0][1]?.body).not.toContain(
+        'namespaceResourceBlacklist',
       );
     });
   });

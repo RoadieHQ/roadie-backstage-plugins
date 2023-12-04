@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.23
+
+### Patch Changes
+
+- 87f90089: Version bump to Backstage 1.20.3
+
 ## 2.3.22
 
 ### Patch Changes
