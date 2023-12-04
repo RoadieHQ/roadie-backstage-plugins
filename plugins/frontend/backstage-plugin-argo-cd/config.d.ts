@@ -7,7 +7,7 @@ export interface Config {
      */
     baseUrl?: string;
     /**
-     * Support for the ArgoCD beta feature "Applications in any namespace".
+     * Support for the ArgoCD beta feature "Applications in any namespace"
      * @visibility frontend
      */
     namespacedApps?: boolean;

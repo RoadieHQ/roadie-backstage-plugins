@@ -41,7 +41,7 @@ export const useAppDetails = ({
     );
     try {
       if (!argoSearchMethod && appName) {
-        return await api.getAppDetails({ url, appName, appNamespace });
+        return api.getAppDetails({ url, appName, appNamespace });
       }
       if (argoSearchMethod && appName) {
         const kubeInfo = await api.serviceLocatorUrl({
@@ -70,7 +70,7 @@ export const useAppDetails = ({
           apiOut.metadata.instance = instance;
           return apiOut;
         });
-        return await Promise.all(promises);
+        return Promise.all(promises);
       }
       if (argoSearchMethod && appSelector) {
         const kubeInfo = await api.serviceLocatorUrl({
@@ -79,7 +79,7 @@ export const useAppDetails = ({
         });
         if (kubeInfo instanceof Error) return kubeInfo;
         const promises = kubeInfo.map(async (instance: any) => {
-          return await api.getAppListDetails({
+          return api.getAppListDetails({
             url,
             appSelector,
             appNamespace,
@@ -94,7 +94,7 @@ export const useAppDetails = ({
         };
       }
       if (appSelector || projectName) {
-        return await api.listApps({
+        return api.listApps({
           url,
           appSelector,
           appNamespace,

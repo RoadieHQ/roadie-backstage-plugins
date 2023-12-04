@@ -26,8 +26,7 @@ If you have your own backstage application without this plugin, here it's how to
 yarn add @roadiehq/backstage-plugin-argo-cd
 ```
 
-2. In the `app-config.yaml` file in the root directory, add argo-cd to the proxy object and optionally add the base url
-   for your argoCD web UI:
+2. In the `app-config.yaml` file in the root directory, add argo-cd to the proxy object and optionally add the base url for your argoCD web UI:
 
 ```yml
 proxy:
@@ -61,38 +60,30 @@ export { argocdPlugin } from '@roadiehq/backstage-plugin-argo-cd';
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
 import {
-    EntityArgoCDHistoryCard,
-    isArgocdAvailable,
+  EntityArgoCDHistoryCard,
+  isArgocdAvailable,
 } from '@roadiehq/backstage-plugin-argo-cd';
 
 const overviewContent = (
-    <Grid container
-spacing = {3}
-alignItems = "stretch" >
-...
-<EntitySwitch>
-    <EntitySwitch.Case
-if= {e =>
-Boolean(isArgocdAvailable(e))
-}>
-<Grid item
-sm = {6} >
-    <EntityArgoCDHistoryCard / >
-    </Grid>
-    < /EntitySwitch.Case>
-    < /EntitySwitch>
-...
-</Grid>
-)
-;
+  <Grid container spacing={3} alignItems="stretch">
+    ...
+    <EntitySwitch>
+      <EntitySwitch.Case if={e => Boolean(isArgocdAvailable(e))}>
+        <Grid item sm={6}>
+          <EntityArgoCDHistoryCard />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+    ...
+  </Grid>
+);
 ```
 
 ## How to use Argo-cd plugin in Backstage
 
 The Argo CD plugin is a part of the Backstage sample app. To start using it for your component, you have to:
 
-1. Add an annotation to the YAML config file of a component. If there is only a single Argo CD application for the
-   component, you can use
+1. Add an annotation to the YAML config file of a component. If there is only a single Argo CD application for the component, you can use
 
    ```yml
    argocd/app-name: <app-name>
@@ -106,16 +97,14 @@ The Argo CD plugin is a part of the Backstage sample app. To start using it for 
 
    **Note:** You can only use one of the options per component.
 
-2. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a
-   GET HTTP request to Argo CD's `/session` endpoint with username and password):
+2. Add your auth key to the environmental variables for your backstage backend server (you can acquire it by sending a GET HTTP request to Argo CD's `/session` endpoint with username and password):
    ```
    ARGOCD_AUTH_TOKEN="argocd.token=<auth-token>"
    ```
 
 ## Support for multiple ArgoCD instances - Option 1
 
-If you want to create multiple components that fetch data from different argoCD instances, you have to add a proxy
-config for each instance:
+If you want to create multiple components that fetch data from different argoCD instances, you have to add a proxy config for each instance:
 
 ```yml
 proxy:
@@ -150,20 +139,15 @@ argocd/proxy-url: '/argocd/api2'
 
 ## Support for multiple Argo CD instances - Option 2 - Argo CD backend plugin
 
-If you want to create multiple components that fetch data from different Argo CD instances, you can dynamically set the
-Argo CD instance url by adding the following to your app-config.yaml files.
+If you want to create multiple components that fetch data from different Argo CD instances, you can dynamically set the Argo CD instance url by adding the following to your app-config.yaml files.
 
-The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend
-plugin to reach out to each Argo instance based on the mapping mentioned below.
+The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
 
-Please visit the [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) for
-more information
+Please visit the [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend) for more information
 
 ## Support for apps in any namespace beta feature
 
-If you want to use the "Applications in any namespace"
-beta [feature](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/), you have to explicitly
-enable it in the configuration.
+If you want to use the "Applications in any namespace" beta [feature](https://argo-cd.readthedocs.io/en/stable/operator-manual/app-any-namespace/), you have to explicitly enable it in the configuration.
 
 In the configuration file, you need to toggle the feature:
 
@@ -183,8 +167,7 @@ metadata:
 
 ## Limit the number of revisions to load
 
-The `ArgoCDHistoryCard` loads all app revisions by default. If your app has many revisions, this can lead to a lot of
-requests and long loading times. Therefore, you can limit the number of revisions to load in your configuration file:
+The `ArgoCDHistoryCard` loads all app revisions by default. If your app has many revisions, this can lead to a lot of requests and long loading times. Therefore, you can limit the number of revisions to load in your configuration file:
 
 ```yaml
 argocd:

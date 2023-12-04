@@ -130,7 +130,7 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
         async row => await withRevisionDetails(argoCDApi, url, row),
       ),
     ).then(rowsWithRevisions => {
-      setTableRows(rowsWithRevisions);
+      setTableRows(rowsWithRevisions.filter(row => row));
     });
   }, [value, argoCDApi, url, revisionsToLoad]);
 
