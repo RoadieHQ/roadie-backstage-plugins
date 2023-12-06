@@ -18,12 +18,23 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { extname } from 'path';
-import { merge } from 'lodash';
+import { isArray, isNull, mergeWith } from 'lodash';
 import yaml from 'js-yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
+function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
+  if (isArray(objValue) && !isNull(objValue)) {
+    return Array.from(new Set(objValue.concat(srcValue)));
+  }
+  return undefined;
+}
+
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
-  return createTemplateAction<{ path: string; content: any }>({
+  return createTemplateAction<{
+    path: string;
+    content: any;
+    mergeArrays?: boolean;
+  }>({
     id: actionId || 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
     supportsDryRun: true,
@@ -42,6 +53,13 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
               'This will be merged into to the file. Can be either an object or a string.',
             title: 'Content',
             type: ['string', 'object'],
+          },
+          mergeArrays: {
+            type: 'boolean',
+            default: false,
+            title: 'Merge Arrays?',
+            description:
+              'Where a value is an array the merge function should concatenate the provided array value with the target array',
           },
         },
       },
@@ -80,7 +98,15 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
 
       fs.writeFileSync(
         sourceFilepath,
-        JSON.stringify(merge(existingContent, content), null, 2),
+        JSON.stringify(
+          mergeWith(
+            existingContent,
+            content,
+            ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+          ),
+          null,
+          2,
+        ),
       );
       ctx.output('path', sourceFilepath);
     },
@@ -91,6 +117,7 @@ export function createMergeAction() {
   return createTemplateAction<{
     path: string;
     content: any;
+    mergeArrays?: boolean;
     options?: supportedDumpOptions;
   }>({
     id: 'roadiehq:utils:merge',
@@ -111,6 +138,13 @@ export function createMergeAction() {
               'This will be merged into to the file. Can be either an object or a string.',
             title: 'Content',
             type: ['string', 'object'],
+          },
+          mergeArrays: {
+            type: 'boolean',
+            default: false,
+            title: 'Merge Arrays?',
+            description:
+              'Where a value is an array the merge function should concatenate the provided array value with the target array',
           },
           options: {
             ...yamlOptionsSchema,
@@ -148,7 +182,11 @@ export function createMergeAction() {
               ? JSON.parse(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = JSON.stringify(
-            merge(JSON.parse(originalContent), newContent),
+            mergeWith(
+              yaml.load(originalContent),
+              newContent,
+              ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+            ),
             null,
             2,
           );
@@ -161,7 +199,11 @@ export function createMergeAction() {
               ? yaml.load(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = yaml.dump(
-            merge(yaml.load(originalContent), newContent),
+            mergeWith(
+              yaml.load(originalContent),
+              newContent,
+              ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+            ),
             ctx.input.options,
           );
           break;
