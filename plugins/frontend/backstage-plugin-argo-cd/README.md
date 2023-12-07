@@ -165,6 +165,16 @@ metadata:
     argocd/app-namespace: my-test-ns
 ```
 
+## Limit the number of revisions to load
+
+The `ArgoCDHistoryCard` loads all app revisions by default. If your app has many revisions, this can lead to a lot of requests and long loading times. Therefore, you can limit the number of revisions to load in your configuration file:
+
+```yaml
+argocd:
+  ...
+  revisionsToLoad: 3
+```
+
 ## Develop plugin locally
 
 You can run the application by running `yarn dev` at the root of this monorepo.

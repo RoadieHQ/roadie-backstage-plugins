@@ -5,6 +5,23 @@ export const argoCDAppDeployRevisionDetails = t.type({
   date: t.union([t.string, t.undefined]),
   message: t.union([t.string, t.undefined]),
 });
+
+export const argoCDAppHistory = t.type({
+  id: t.union([t.number, t.undefined]),
+  revision: t.union([
+    t.type({
+      revisionID: t.union([t.number, t.undefined]),
+      author: t.union([t.number, t.undefined]),
+      date: t.union([t.string, t.undefined]),
+      message: t.union([t.string, t.undefined]),
+    }),
+    t.undefined,
+    t.string,
+  ]),
+  deployStartedAt: t.union([t.string, t.undefined]),
+  deployedAt: t.union([t.string, t.undefined]),
+});
+
 export const argoCDAppDetails = t.type({
   metadata: t.type({
     name: t.string,
@@ -31,30 +48,12 @@ export const argoCDAppDetails = t.type({
       }),
       t.undefined,
     ]),
-    history: t.union([
-      t.array(
-        t.type({
-          id: t.union([t.number, t.undefined]),
-          revision: t.union([
-            t.type({
-              revisionID: t.union([t.number, t.undefined]),
-              author: t.union([t.number, t.undefined]),
-              date: t.union([t.string, t.undefined]),
-              message: t.union([t.string, t.undefined]),
-            }),
-            t.undefined,
-            t.string,
-          ]),
-          deployStartedAt: t.union([t.string, t.undefined]),
-          deployedAt: t.union([t.string, t.undefined]),
-        }),
-      ),
-      t.undefined,
-    ]),
+    history: t.union([t.array(argoCDAppHistory), t.undefined]),
   }),
 });
 
 export type ArgoCDAppDetails = t.TypeOf<typeof argoCDAppDetails>;
+export type ArgoCDAppHistoryDetails = t.TypeOf<typeof argoCDAppHistory>;
 export type ArgoCDAppDeployRevisionDetails = t.TypeOf<
   typeof argoCDAppDeployRevisionDetails
 >;

@@ -16,168 +16,68 @@
 
 import { Entity } from '@backstage/catalog-model';
 import {
-  InfoCard,
   ErrorBoundary,
+  InfoCard,
   MissingAnnotationEmptyState,
-  Table,
-  TableColumn,
 } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { LinearProgress, Link, List, ListItem } from '@material-ui/core';
-import React from 'react';
+import { LinearProgress } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { isArgocdAvailable } from '../conditions';
-import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
+import {
+  ArgoCDAppDetails,
+  ArgoCDAppHistoryDetails,
+  ArgoCDAppList,
+} from '../types';
 import { useAppDetails } from './useAppDetails';
 import {
   ARGOCD_ANNOTATION_APP_NAME,
   useArgoCDAppData,
 } from './useArgoCDAppData';
-import SyncIcon from '@material-ui/icons/Sync';
-import moment from 'moment';
+import { ArgoCDApi, argoCDApiRef } from '../api';
+import {
+  ArgoCDHistoryTable,
+  ArgoCDHistoryTableRow,
+} from './ArgoCDHistoryTable';
 
-const HistoryTable = ({
-  data,
-  retry,
-}: {
-  data: ArgoCDAppList;
-  retry: () => void;
-}) => {
-  const configApi = useApi(configApiRef);
-  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
-  const namespaced =
-    configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
-  const supportsMultipleArgoInstances: boolean = Boolean(
-    configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
-  );
+const isHelmChart = (row: any): boolean => {
+  return row.source?.chart !== undefined;
+};
 
-  const history = data.items
-    ? data.items
-        .filter(Boolean)
-        .map(app => {
-          if (app?.status?.history) {
-            return app.status.history.map(entry => {
-              return {
-                app: app.metadata.name,
-                appNamespace: app.metadata.namespace,
-                instance: app.metadata?.instance?.name,
-                ...entry,
-              };
-            });
-          }
-          return {};
-        })
-        .filter(value => Object.keys(value).length !== 0)
-        .flat()
-    : [];
-  const columns: TableColumn[] = [
-    {
-      title: 'Name',
-      field: 'name',
-      render: (row: any): React.ReactNode =>
-        baseUrl ? (
-          <Link
-            href={`${baseUrl}/applications/${
-              namespaced ? `${row.appNamespace}/${row.app}` : row.app
-            }`}
-            target="_blank"
-            rel="noopener"
-          >
-            {row.app}
-          </Link>
-        ) : (
-          row.app
-        ),
-    },
-    {
-      title: 'Deploy Details',
-      defaultSort: 'desc',
-      field: 'deployedAt',
-      render: (row: any): React.ReactNode => (
-        <List dense style={{ padding: '0px' }}>
-          <ListItem style={{ paddingLeft: '0px' }}>
-            {row.deployedAt
-              ? `Deployed at ${moment(row.deployedAt)
-                  .local()
-                  .format('DD MMM YYYY, H:mm:ss')}`
-              : null}
-          </ListItem>
-          <ListItem style={{ paddingLeft: '0px' }}>
-            {row.deployedAt
-              ? `Run ${moment(row.deployStartedAt).local().fromNow()}`
-              : null}
-          </ListItem>
-          <ListItem style={{ paddingLeft: '0px' }}>
-            {row.deployedAt && row.deployStartedAt
-              ? `Took
-            ${moment
-              .duration(
-                moment(row.deployStartedAt).diff(moment(row.deployedAt)),
-              )
-              .humanize()}`
-              : null}
-          </ListItem>
-        </List>
-      ),
-    },
-    {
-      title: 'Author',
-      field: 'revision.author',
-      render: (row: any): React.ReactNode => <div>{row.revision?.author}</div>,
-    },
-    {
-      title: 'Message',
-      field: 'revision.message',
-      render: (row: any): React.ReactNode => <div>{row.revision?.message}</div>,
-    },
-    {
-      title: 'Revision',
-      field: 'revision.revisionID',
-      render: (row: any): React.ReactNode => (
-        <div>{row.revision?.revisionID}</div>
-      ),
-    },
-  ];
+const getRevisionId = (row: any): string => {
+  if (row.revision.hasOwnProperty('revisionID')) {
+    return row.revision.revisionID;
+  }
+  return row.revision;
+};
 
-  if (supportsMultipleArgoInstances) {
-    columns.splice(1, 0, {
-      title: 'Instance',
-      field: 'instance',
-      render: (row: any): React.ReactNode =>
-        row.metadata?.instance?.name
-          ? row.metadata?.instance?.name
-          : row.instance,
-    });
+const withRevisionDetails = async (
+  api: ArgoCDApi,
+  url: string,
+  row: any,
+): Promise<ArgoCDHistoryTableRow> => {
+  if (isHelmChart(row)) {
+    row.revisionDetails = { author: 'n/a', message: 'n/a', date: 'n/a' };
+    return row;
   }
 
-  return (
-    <Table
-      title="ArgoCD history"
-      options={{
-        paging: true,
-        search: false,
-        draggable: false,
-        padding: 'dense',
-      }}
-      data={history}
-      columns={columns}
-      actions={[
-        {
-          icon: () => <SyncIcon />,
-          tooltip: 'Refresh',
-          isFreeAction: true,
-          onClick: () => retry(),
-        },
-      ]}
-    />
-  );
+  row.revisionDetails = await api.getRevisionDetails({
+    url: url,
+    app: row.app,
+    appNamespace: row.appNamespace,
+    revisionID: getRevisionId(row),
+    instanceName: row.instance,
+  });
+  return row;
 };
 
 const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
+  const [tableRows, setTableRows] = useState<ArgoCDHistoryTableRow[]>([]);
+
+  const argoCDApi = useApi(argoCDApiRef);
   const { url, appName, appSelector, appNamespace, projectName } =
-    useArgoCDAppData({
-      entity,
-    });
+    useArgoCDAppData({ entity });
   const { loading, value, error, retry } = useAppDetails({
     url,
     appName,
@@ -185,6 +85,55 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
     appNamespace,
     projectName,
   });
+
+  const revisionsToLoad =
+    useApi(configApiRef).getOptionalNumber('argocd.revisionsToLoad') || -1;
+
+  useEffect(() => {
+    if (!value) {
+      return;
+    }
+    let apps: ArgoCDAppDetails[];
+    if ((value as ArgoCDAppList).items !== undefined) {
+      apps = (value as ArgoCDAppList).items ?? [];
+    } else if (Array.isArray(value)) {
+      apps = value as Array<ArgoCDAppDetails>;
+    } else {
+      apps = [value as ArgoCDAppDetails];
+    }
+
+    const revisions: ArgoCDHistoryTableRow[] = apps
+      .filter(app => app?.status?.history)
+      .flatMap(app => {
+        // @ts-ignore TS2532: The filter statement above prevents this from being undefined
+        return app.status.history
+          .sort(
+            (a, b) =>
+              new Date(b.deployedAt || '').valueOf() -
+              new Date(a.deployedAt || '').valueOf(),
+          )
+          .slice(0, revisionsToLoad)
+          .map((entry: ArgoCDAppHistoryDetails) => ({
+            key: `${app.metadata.name}-${entry.revision}`,
+            app: app.metadata.name,
+            appNamespace: app.metadata.namespace,
+            instance: app.metadata?.instance?.name,
+            ...entry,
+          }));
+      });
+
+    setTableRows(revisions);
+
+    // Update all items at once because otherwise it could lead to the too many re-renders error
+    Promise.all(
+      revisions.map(
+        async row => await withRevisionDetails(argoCDApi, url, row),
+      ),
+    ).then(rowsWithRevisions => {
+      setTableRows(rowsWithRevisions.filter(row => row));
+    });
+  }, [value, argoCDApi, url, revisionsToLoad]);
+
   if (loading) {
     return (
       <InfoCard title="ArgoCD history">
@@ -200,25 +149,12 @@ const ArgoCDHistory = ({ entity }: { entity: Entity }) => {
     );
   }
 
-  if (value) {
-    if ((value as ArgoCDAppList).items !== undefined) {
-      return <HistoryTable data={value as ArgoCDAppList} retry={retry} />;
-    }
-    if (Array.isArray(value)) {
-      const wrapped: ArgoCDAppList = {
-        items: value as Array<ArgoCDAppDetails>,
-      };
-      return <HistoryTable data={wrapped} retry={retry} />;
-    }
-    const wrapped: ArgoCDAppList = {
-      items: [value as ArgoCDAppDetails],
-    };
-    return <HistoryTable data={wrapped} retry={retry} />;
+  if (tableRows.length) {
+    return <ArgoCDHistoryTable data={tableRows} retry={retry} />;
   }
 
   return null;
 };
-
 export const ArgoCDHistoryCard = () => {
   const { entity } = useEntity();
   return !isArgocdAvailable(entity) ? (
