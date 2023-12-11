@@ -99,7 +99,7 @@ export const validate = async (
   };
 
   try {
-    const data = yaml.loadAll(fileContents);
+    const data = yaml.loadAll(fileContents, { schema: yaml.CORE_SCHEMA });
     data.forEach(it => {
       modifyPlaceholders(it);
     });
