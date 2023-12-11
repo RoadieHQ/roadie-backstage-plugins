@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.11.0
+
+### Minor Changes
+
+- ff63486f: Add merge array value option
+
 ## 1.10.6
 
 ### Patch Changes

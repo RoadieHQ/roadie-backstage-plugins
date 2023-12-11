@@ -88,7 +88,8 @@ describe('roadiehq:utils:json:merge', () => {
   it('should append the content to the file if it already exists', async () => {
     mock({
       'fake-tmp-dir': {
-        'fake-file.json': '{ "scripts": { "lsltr": "ls -ltr" } }',
+        'fake-file.json':
+          '{ "scripts": { "lsltr": "ls -ltr" }, "array": ["first item"] }',
       },
     });
 
@@ -101,6 +102,7 @@ describe('roadiehq:utils:json:merge', () => {
           scripts: {
             lsltrh: 'ls -ltrh',
           },
+          array: ['second item'],
         },
       },
     });
@@ -109,6 +111,41 @@ describe('roadiehq:utils:json:merge', () => {
     const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
     expect(JSON.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+      array: ['second item'],
+    });
+  });
+
+  it('should merge arrays if configured', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json':
+          '{ "scripts": { "lsltr": "ls -ltr" }, "array": ["first item"] }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        mergeArrays: true,
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+          array: ['second item'],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+      array: ['first item', 'second item'],
     });
   });
 
@@ -277,7 +314,7 @@ scripts:
   it('can merge content into a yaml file', async () => {
     mock({
       'fake-tmp-dir': {
-        'fake-file.yaml': 'scripts:\n  lsltr: ls -ltr\n',
+        'fake-file.yaml': 'array: ["first item"]\nscripts:\n  lsltr: ls -ltr\n',
       },
     });
 
@@ -290,6 +327,7 @@ scripts:
           scripts: {
             lsltrh: 'ls -ltrh',
           },
+          array: ['second item'],
         },
       },
     });
@@ -298,6 +336,33 @@ scripts:
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
     expect(yaml.load(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+      array: ['second item'],
+    });
+  });
+
+  it('can merge arrays if configured', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': "array: ['first item']",
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        mergeArrays: true,
+        content: {
+          array: ['second item'],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(yaml.load(file)).toEqual({
+      array: ['first item', 'second item'],
     });
   });
 

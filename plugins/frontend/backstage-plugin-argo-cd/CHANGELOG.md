@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.5.0
+
+### Minor Changes
+
+- 24eac291: Lazy load revisions and allow admins to limit the numbers of revisions to load in the configuration
+
 ## 2.4.1
 
 ### Patch Changes
