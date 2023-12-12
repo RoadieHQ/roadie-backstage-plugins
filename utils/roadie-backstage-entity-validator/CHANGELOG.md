@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.3
+
+### Patch Changes
+
+- 35c271aa: use CORE_SCHEMA when processing entity YAML to more closely reflect how Backstage core parses YAML
+
 ## 2.4.2
 
 ### Patch Changes
