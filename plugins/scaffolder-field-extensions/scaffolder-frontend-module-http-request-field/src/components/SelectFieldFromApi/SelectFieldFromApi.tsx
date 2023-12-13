@@ -91,6 +91,9 @@ const SelectFieldFromApiComponent = (
       })}?${params}`,
       { headers },
     );
+    if (!response.ok) {
+      throw new Error(`Failed to populate SelectFieldFromApi dropdown due to error retrieving from ${options.path}: ${response.statusText}`);
+    }
     const body = await response.json();
     const array = options.arraySelector
       ? get(
