@@ -192,6 +192,46 @@ describe('roadiehq:utils:json:merge', () => {
     });
   });
 
+  it('output file indentation should match default file indentation of 2 spaces', async () => {
+    const jsonData = {
+      scripts: {
+        lsltr: 'ls -ltr',
+      },
+      array: ['first item'],
+    };
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json': JSON.stringify(jsonData, null, 4),
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        mergeArrays: true,
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+          array: ['second item'],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+      array: ['first item', 'second item'],
+    });
+    expect(detectIndent(file).amount).toBe(2);
+  });
+
   it('output file indentation should match input file indentation', async () => {
     const jsonData = {
       scripts: {
