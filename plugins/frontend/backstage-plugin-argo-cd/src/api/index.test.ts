@@ -9,98 +9,224 @@ describe('API calls', () => {
   let fetchSpy: jest.SpyInstance;
 
   beforeEach(() => {
-    fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(() =>
-      Promise.resolve<Response>({
-        ok: true,
-        json: () => Promise.resolve(getServiceListStub),
-      } as Response),
-    );
+    fetchSpy = jest.spyOn(global, 'fetch');
   });
 
   afterEach(() => {
     fetchSpy.mockRestore(); // restore original fetch after each test
   });
 
-  it('serviceLocatorUrl: should make API call with proper authorization in headers', async () => {
-    const client = new ArgoCDApiClient({
-      discoveryApi: getDiscoveryApiStub,
-      backendBaseUrl: '',
-      searchInstances: true,
-      identityApi: getIdentityApiStub,
-      useNamespacedApps: false,
+  describe('#listApps', () => {
+    beforeEach(() => {
+      fetchSpy.mockImplementation(() =>
+        Promise.resolve<Response>({
+          ok: true,
+          json: () => Promise.resolve({ items: [] }),
+        } as Response),
+      );
     });
 
-    const response = await client.serviceLocatorUrl({
-      appName: 'test',
-      appNamespace: 'my-test-ns',
+    it('fetches app based on provided projectName', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: false,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
+
+      await client.listApps({
+        url: '/argocd/api',
+        projectName: 'test',
+        appNamespace: 'my-test-ns',
+      });
+
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test.com/proxy/argocd/api/applications?project=test',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
     });
 
-    // Let's verify the fetch was called with the requested URL and Authorization header
-    expect(global.fetch).toHaveBeenCalledWith(
-      expect.not.stringMatching('appNamespace'),
-      expect.objectContaining({
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer fake-id-token`,
-        },
-      }),
-    );
+    it('fetches app based on provided appSelector', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: false,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
 
-    expect(response).toEqual(getServiceListStub);
+      await client.listApps({
+        url: '/argocd/api',
+        appSelector: 'app=test',
+        appNamespace: 'my-test-ns',
+      });
+
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test.com/proxy/argocd/api/applications?selector=app%3Dtest',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
+    });
+
+    it('fetches apps when using namespaced apps', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: false,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: true,
+      });
+
+      await client.listApps({
+        url: '/argocd/api',
+        appSelector: 'app=test',
+        appNamespace: 'my-test-ns',
+      });
+
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        'http://test.com/proxy/argocd/api/applications?selector=app%3Dtest&appNamespace=my-test-ns',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
+    });
   });
 
-  it('serviceLocatorUrl: returns a response when passed valid appName', async () => {
-    const client = new ArgoCDApiClient({
-      discoveryApi: getDiscoveryApiStub,
-      backendBaseUrl: '',
-      searchInstances: true,
-      identityApi: getIdentityApiStub,
-      useNamespacedApps: false,
+  describe('#serviceLocatorUrl', () => {
+    beforeEach(() => {
+      fetchSpy.mockImplementation(() =>
+        Promise.resolve<Response>({
+          ok: true,
+          json: () => Promise.resolve(getServiceListStub),
+        } as Response),
+      );
     });
 
-    const response = await client.serviceLocatorUrl({ appName: 'test' });
-    expect(response).toEqual(getServiceListStub);
-  });
+    it('should make API call with proper authorization in headers', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: true,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
 
-  it('serviceLocatorUrl: throws error when appName and appSelector are not provided', async () => {
-    const client = new ArgoCDApiClient({
-      discoveryApi: getDiscoveryApiStub,
-      backendBaseUrl: '',
-      searchInstances: true,
-      identityApi: getIdentityApiStub,
-      useNamespacedApps: false,
+      const response = await client.serviceLocatorUrl({
+        appName: 'test',
+        appNamespace: 'my-test-ns',
+      });
+
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/argocd/find/name/test',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
+
+      expect(response).toEqual(getServiceListStub);
     });
 
-    const error = new Error('Need to provide appName or appSelector');
+    it('should make API call when appSelector provided', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: true,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
 
-    await expect(client.serviceLocatorUrl({})).rejects.toThrow(error);
-  });
+      const response = await client.serviceLocatorUrl({
+        appSelector: 'app=test',
+        appNamespace: 'my-test-ns',
+      });
 
-  it('serviceLocatorUrl: fetches namespaced applications', async () => {
-    const client = new ArgoCDApiClient({
-      discoveryApi: getDiscoveryApiStub,
-      backendBaseUrl: '',
-      searchInstances: true,
-      identityApi: getIdentityApiStub,
-      useNamespacedApps: true,
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/argocd/find/selector/app%3Dtest',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
+
+      expect(response).toEqual(getServiceListStub);
     });
 
-    const response = await client.serviceLocatorUrl({
-      appName: 'test',
-      appNamespace: 'my-test-ns',
+    it('returns a response when passed valid appName', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: true,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
+
+      const response = await client.serviceLocatorUrl({ appName: 'test' });
+      expect(response).toEqual(getServiceListStub);
     });
 
-    // Let's verify the fetch was called with the requested URL and Authorization header
-    expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringMatching('appNamespace=my-test-ns'),
-      expect.objectContaining({
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer fake-id-token`,
-        },
-      }),
-    );
+    it('throws error when appName and appSelector are not provided', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: true,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: false,
+      });
 
-    expect(response).toEqual(getServiceListStub);
+      const error = new Error('Need to provide appName or appSelector');
+
+      await expect(client.serviceLocatorUrl({})).rejects.toThrow(error);
+    });
+
+    it('fetches namespaced applications', async () => {
+      const client = new ArgoCDApiClient({
+        discoveryApi: getDiscoveryApiStub,
+        backendBaseUrl: '',
+        searchInstances: true,
+        identityApi: getIdentityApiStub,
+        useNamespacedApps: true,
+      });
+
+      const response = await client.serviceLocatorUrl({
+        appName: 'test',
+        appNamespace: 'my-test-ns',
+      });
+
+      // Let's verify the fetch was called with the requested URL and Authorization header
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/argocd/find/name/test?appNamespace=my-test-ns',
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer fake-id-token`,
+          },
+        }),
+      );
+
+      expect(response).toEqual(getServiceListStub);
+    });
   });
 });
