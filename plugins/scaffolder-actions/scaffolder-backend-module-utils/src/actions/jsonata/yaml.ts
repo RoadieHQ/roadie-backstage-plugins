@@ -87,3 +87,73 @@ export function createYamlJSONataTransformAction() {
     },
   });
 }
+
+export function createYamlJSONataTransformAllAction() {
+  return createTemplateAction<{
+    path: string;
+    expression: string;
+    options?: supportedDumpOptions;
+    as?: 'string' | 'object';
+  }>({
+    id: 'roadiehq:utils:jsonata:yaml:transform',
+    description:
+      'Allows performing JSONata operations and transformations on a multi-document YAML file in the workspace. The result can be read from the `result` step output.',
+    supportsDryRun: true,
+    schema: {
+      input: {
+        type: 'object',
+        required: ['path', 'expression'],
+        properties: {
+          path: {
+            title: 'Path',
+            description: 'Input path to read yaml file',
+            type: 'string',
+          },
+          expression: {
+            title: 'Expression',
+            description: 'JSONata expression to perform on the input',
+            type: 'string',
+          },
+          as: {
+            title: 'Desired Result Type',
+            description:
+              'Permitted values are: "string" (default) and "object"',
+            type: 'string',
+            enum: ['string', 'object'],
+          },
+          options: yamlOptionsSchema,
+        },
+      },
+      output: {
+        type: 'object',
+        properties: {
+          result: {
+            title: 'Output result from JSONata',
+            type: 'object | string',
+          },
+        },
+      },
+    },
+    async handler(ctx) {
+      let resultHandler: (rz: any) => any;
+
+      if (ctx.input.as === 'object') {
+        resultHandler = rz => rz;
+      } else {
+        resultHandler = rz => yaml.dump(rz, ctx.input.options);
+      }
+      const sourceFilepath = resolveSafeChildPath(
+        ctx.workspacePath,
+        ctx.input.path,
+      );
+
+      const data = yaml.loadAll(fs.readFileSync(sourceFilepath).toString());
+      const expression = jsonata(ctx.input.expression);
+      data.forEach( (i) => {
+        expression.evaluate(i);
+      });
+
+      ctx.output('result', resultHandler(data));
+    },
+  });
+}
