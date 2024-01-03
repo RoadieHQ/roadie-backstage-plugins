@@ -409,6 +409,11 @@ spec:
 - path: The file path for the JSON you want to edit.
 - content: The JSON you want to merge in, as a string or a YAML object.
 
+**Optional params:**
+
+- mergeArrays: If `true` then where a value is an array the merge function will concatenate the provided array value with the target array.
+- matchFileIndent: If `true` then it will try and identify the indentation in the file specified by `path` and apply the same indentation to the output file. If not set (or `false`) it will use the default indentation of `2` spaces in the output file.
+
 #### Example Merge JSON template using an object input
 
 ```yaml

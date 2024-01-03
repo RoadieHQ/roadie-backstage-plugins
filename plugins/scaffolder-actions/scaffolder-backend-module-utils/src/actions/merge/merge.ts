@@ -21,6 +21,7 @@ import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import yaml from 'js-yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import detectIndent from 'detect-indent';
 
 function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
   if (isArray(objValue) && !isNull(objValue)) {
@@ -34,6 +35,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
     path: string;
     content: any;
     mergeArrays?: boolean;
+    matchFileIndent?: boolean;
   }>({
     id: actionId || 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
@@ -60,6 +62,13 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
             title: 'Merge Arrays?',
             description:
               'Where a value is an array the merge function should concatenate the provided array value with the target array',
+          },
+          matchFileIndent: {
+            type: 'boolean',
+            default: false,
+            title: 'Match file indent?',
+            description:
+              'Make the output file indentation match that of the specified input file.',
           },
         },
       },
@@ -96,6 +105,18 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
           ? JSON.parse(ctx.input.content)
           : ctx.input.content;
 
+      let fileIndent = 2;
+      if (ctx.input.matchFileIndent) {
+        fileIndent = detectIndent(
+          fs.readFileSync(sourceFilepath, 'utf8'),
+        ).amount;
+        if (!fileIndent) {
+          fileIndent = 2;
+          ctx.logger.info(
+            `Failed to detect source file indentation, using default value of 2.`,
+          );
+        }
+      }
       fs.writeFileSync(
         sourceFilepath,
         JSON.stringify(
@@ -105,7 +126,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
             ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
           ),
           null,
-          2,
+          fileIndent,
         ),
       );
       ctx.output('path', sourceFilepath);
