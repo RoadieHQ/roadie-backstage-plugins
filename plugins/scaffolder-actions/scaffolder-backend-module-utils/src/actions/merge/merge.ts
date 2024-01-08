@@ -21,6 +21,7 @@ import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import yaml from 'js-yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import detectIndent from 'detect-indent';
 
 function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
   if (isArray(objValue) && !isNull(objValue)) {
@@ -106,7 +107,6 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
 
       let fileIndent = 2;
       if (ctx.input.matchFileIndent) {
-        const detectIndent = (await import('detect-indent')).default;
         fileIndent = detectIndent(
           fs.readFileSync(sourceFilepath, 'utf8'),
         ).amount;
