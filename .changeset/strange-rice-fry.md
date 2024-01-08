@@ -2,4 +2,4 @@
 '@roadiehq/scaffolder-backend-module-utils': patch
 ---
 
-Resolve CommonJS vs ESM Module import use dynamic import)
+Fix version of detect-indent to 6.1.0 to avoid ESM/CommonJS issues.
