@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.12.1
+
+### Patch Changes
+
+- 276be989: Fix version of detect-indent to 6.1.0 to avoid ESM/CommonJS issues.
+
 ## 1.12.0
 
 ### Minor Changes
