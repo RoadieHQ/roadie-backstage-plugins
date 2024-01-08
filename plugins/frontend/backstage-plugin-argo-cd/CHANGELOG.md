@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.5.1
+
+### Patch Changes
+
+- 52a1b6b3: Fix issue where query params were stripped when not using namespaced apps
+
 ## 2.5.0
 
 ### Minor Changes
