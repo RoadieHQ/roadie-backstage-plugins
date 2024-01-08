@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.12.0
+
+### Minor Changes
+
+- c9530c12: Allow option for JSON output files after merging to match the input file indentation
+
 ## 1.11.0
 
 ### Minor Changes
