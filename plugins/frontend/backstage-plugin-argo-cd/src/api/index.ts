@@ -19,7 +19,6 @@ import {
   isDecodeError as tsIsDecodeError,
 } from 'io-ts-promise';
 import reporter from 'io-ts-reporters';
-import { ARGOCD_ANNOTATION_APP_NAMESPACE } from '../components/useArgoCDAppData';
 
 export interface ArgoCDApi {
   listApps(options: {
@@ -67,6 +66,8 @@ export type Options = {
   useNamespacedApps: boolean;
 };
 
+const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
+
 export class ArgoCDApiClient implements ArgoCDApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly backendBaseUrl: string;
@@ -93,8 +94,7 @@ export class ArgoCDApiClient implements ArgoCDApi {
     const result = Object.keys(params)
       .filter(key => params[key] !== undefined)
       .filter(
-        key =>
-          this.useNamespacedApps || key === ARGOCD_ANNOTATION_APP_NAMESPACE,
+        key => key !== APP_NAMESPACE_QUERY_PARAM || this.useNamespacedApps,
       )
       .map(
         k =>
