@@ -109,9 +109,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
         userResources.push(userEntity);
       } catch (e: unknown) {
         this.logger.warn(
-          `failed to add user to group: ${
-            isError(e) ? e.message : 'unknown error'
-          }`,
+           `Failed to add user: ${isError(e) ? e.message : 'unknown error'}`,
         );
       }
     });
