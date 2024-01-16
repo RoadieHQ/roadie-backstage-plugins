@@ -32,6 +32,8 @@ import {
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
+const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
+
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
 
@@ -83,15 +85,12 @@ export class ArgoService implements ArgoServiceApi {
   async getRevisionData(
     baseUrl: string,
     options: {
-      name?: string;
-      selector?: string;
+      name: string;
+      namespace?: string;
     },
     argoToken: string,
     revisionID: string,
   ): Promise<getRevisionDataResp> {
-    const urlSuffix = options.name
-      ? `/${options.name}`
-      : `?selector=${options.selector}`;
     const requestOptions: RequestInit = {
       method: 'GET',
       headers: {
@@ -100,10 +99,12 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    const resp = await fetch(
-      `${baseUrl}/api/v1/applications${urlSuffix}/revisions/${revisionID}/metadata`,
-      requestOptions,
-    );
+    let url = `${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`;
+    if (options.namespace) {
+      url = `${url}?${APP_NAMESPACE_QUERY_PARAM}=${options.namespace}`;
+    }
+
+    const resp = await fetch(url, requestOptions);
 
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} Error`);
@@ -116,6 +117,7 @@ export class ArgoService implements ArgoServiceApi {
   async findArgoApp(options: {
     name?: string;
     selector?: string;
+    namespace?: string;
   }): Promise<findArgoAppResp[]> {
     if (!options.name && !options.selector) {
       throw new Error('name or selector is required');
@@ -123,9 +125,17 @@ export class ArgoService implements ArgoServiceApi {
     const resp = await Promise.all(
       this.instanceConfigs.map(async (argoInstance: any) => {
         let getArgoAppDataResp: any;
+        let token: string;
         try {
-          const token =
-            argoInstance.token || (await this.getArgoToken(argoInstance));
+          token = argoInstance.token || (await this.getArgoToken(argoInstance));
+        } catch (error: any) {
+          this.logger.error(
+            `Error getting token from Argo Instance ${argoInstance.name}: ${error.message}`,
+          );
+          return null;
+        }
+
+        try {
           getArgoAppDataResp = await this.getArgoAppData(
             argoInstance.url,
             argoInstance.name,
@@ -134,7 +144,7 @@ export class ArgoService implements ArgoServiceApi {
           );
         } catch (error: any) {
           this.logger.error(
-            `Error getting token from Argo Instance ${argoInstance.name}: ${error.message}`,
+            `Error getting Argo App Data from Argo Instance ${argoInstance.name}: ${error.message}`,
           );
           return null;
         }
@@ -219,15 +229,26 @@ export class ArgoService implements ArgoServiceApi {
     options?: {
       name?: string;
       selector?: string;
+      namespace?: string;
     },
   ): Promise<any> {
     let urlSuffix = '';
+
     if (options?.name) {
       urlSuffix = `/${options.name}`;
+      if (options?.namespace) {
+        urlSuffix = `${urlSuffix}?${APP_NAMESPACE_QUERY_PARAM}=${options.namespace}`;
+      }
     }
+
     if (options?.selector) {
       urlSuffix = `?selector=${options.selector}`;
+      // add query param for namespace if it exists
+      if (options?.namespace) {
+        urlSuffix = `${urlSuffix}&${APP_NAMESPACE_QUERY_PARAM}=${options.namespace}`;
+      }
     }
+
     const requestOptions: RequestInit = {
       method: 'GET',
       headers: {
