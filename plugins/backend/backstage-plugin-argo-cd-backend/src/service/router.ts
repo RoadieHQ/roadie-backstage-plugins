@@ -102,7 +102,13 @@ export function createRouter({
 
   router.get('/find/name/:argoAppName', async (request, response) => {
     const argoAppName = request.params.argoAppName;
-    response.send(await argoSvc.findArgoApp({ name: argoAppName }));
+    const argoAppNamespace = request.query?.appNamespace;
+    response.send(
+      await argoSvc.findArgoApp({
+        name: argoAppName as string,
+        namespace: argoAppNamespace as string,
+      }),
+    );
   });
 
   router.get(
@@ -111,6 +117,7 @@ export function createRouter({
       const revisionID: string = request.params.revisionID;
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
+      const argoAppNamespace = request.query?.appNamespace;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = getArgoConfigByInstanceName({
@@ -129,7 +136,10 @@ export function createRouter({
 
       const resp = await argoSvc.getRevisionData(
         matchedArgoInstance.url,
-        { name: argoAppName },
+        {
+          name: argoAppName,
+          namespace: argoAppNamespace as string,
+        },
         token,
         revisionID,
       );
@@ -142,6 +152,7 @@ export function createRouter({
     async (request, response) => {
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
+      const argoAppNamespace = request.query?.appNamespace;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = getArgoConfigByInstanceName({
@@ -162,20 +173,28 @@ export function createRouter({
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
-        { name: argoAppName },
+        { name: argoAppName, namespace: argoAppNamespace as string },
       );
       return response.send(resp);
     },
   );
   router.get('/find/selector/:argoAppSelector', async (request, response) => {
     const argoAppSelector = request.params.argoAppSelector;
-    response.send(await argoSvc.findArgoApp({ selector: argoAppSelector }));
+    const argoAppNamespace = request.query?.appNamespace;
+    logger.info(`Getting apps for selector ${argoAppSelector}`);
+    response.send(
+      await argoSvc.findArgoApp({
+        selector: argoAppSelector,
+        namespace: argoAppNamespace as string,
+      }),
+    );
   });
   router.get(
     '/argoInstance/:argoInstanceName/applications/selector/:argoAppSelector',
     async (request, response) => {
       const argoInstanceName = request.params.argoInstanceName;
       const argoAppSelector = request.params.argoAppSelector;
+      const argoAppNamespace = request.query?.appNamespace;
       logger.info(
         `Getting apps for selector ${argoAppSelector} on ${argoInstanceName}`,
       );
@@ -197,7 +216,10 @@ export function createRouter({
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
-        { selector: argoAppSelector },
+        {
+          selector: argoAppSelector,
+          namespace: argoAppNamespace as string,
+        },
       );
       return response.send(resp);
     },
