@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.14.0
+
+### Minor Changes
+
+- f96282c5: Support application in any namespace.
+
 ## 2.13.0
 
 ### Minor Changes
