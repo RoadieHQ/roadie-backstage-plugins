@@ -101,7 +101,7 @@ describe('JiraCard', () => {
       expect.stringContaining('mocked_icon_filename.gif'),
     );
     expect(
-      await rendered.findByText(/filter issue status/),
+      await rendered.findByText(/Filter issue status/),
     ).toBeInTheDocument();
   });
 

@@ -1,10 +1,12 @@
 # Jira Plugin for Backstage
 
 ![a Jira plugin for Backstage](./docs/jira-plugin.gif).
+![a Jira plugin Issues View for Backstage](./docs/jira-plugin-issues-view.png).
 
 ## Features
 
 - Show project details and tasks
+- View JIRA issues of the Project
 - Activity Stream
 
 ## How to add Jira project dependency to Backstage app
