@@ -21,12 +21,6 @@ import mock from 'mock-fs';
 import yaml from 'js-yaml';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
-  beforeEach(() => {
-    mock({
-      'fake-tmp-dir': {},
-    });
-  });
-  afterEach(() => mock.restore());
   const mockContext = {
     workspacePath: 'lol',
     logger: getVoidLogger(),
@@ -34,6 +28,15 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };
+
+  beforeEach(() => {
+    mockContext.output.mockReset();
+    mock({
+      'fake-tmp-dir': {},
+    });
+  });
+  afterEach(() => mock.restore());
+
   const action = createYamlJSONataTransformAction();
 
   it('should output default string result of having applied the given transformation', async () => {
@@ -133,6 +136,28 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith('result', {
       hello: ['world', 'item2'],
+    });
+  });
+
+  it('should be able to handle multi yaml and apply a transformation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': '---\nhello: [world]\n---\nfoo: [bar]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$[0]',
+        loadAll: true,
+        as: 'object',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith('result', {
+      hello: ['world'],
     });
   });
 });
