@@ -25,6 +25,7 @@ export function createYamlJSONataTransformAction() {
     path: string;
     expression: string;
     options?: supportedDumpOptions;
+    loadAll?: boolean;
     as?: 'string' | 'object';
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
@@ -45,6 +46,14 @@ export function createYamlJSONataTransformAction() {
             title: 'Expression',
             description: 'JSONata expression to perform on the input',
             type: 'string',
+          },
+          loadAll: {
+            expression: {
+              title: 'Load All',
+              description:
+                'Use this if the yaml source file contains mutliple yaml objects',
+              type: 'boolean',
+            },
           },
           as: {
             title: 'Desired Result Type',
@@ -78,8 +87,12 @@ export function createYamlJSONataTransformAction() {
         ctx.workspacePath,
         ctx.input.path,
       );
-
-      const data = yaml.load(fs.readFileSync(sourceFilepath).toString());
+      let data;
+      if (ctx.input.loadAll) {
+        data = yaml.loadAll(fs.readFileSync(sourceFilepath).toString());
+      } else {
+        data = yaml.load(fs.readFileSync(sourceFilepath).toString());
+      }
       const expression = jsonata(ctx.input.expression);
       const result = expression.evaluate(data);
 
