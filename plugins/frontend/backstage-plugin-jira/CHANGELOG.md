@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.5.0
+
+### Minor Changes
+
+- be3c910f: Included the Issues view for the JIRA Plugin
+
 ## 2.4.13
 
 ### Patch Changes
