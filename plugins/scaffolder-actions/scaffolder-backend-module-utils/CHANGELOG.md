@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.13.1
+
+### Patch Changes
+
+- 26bd3e42: Fix `loadAll` documentation for yaml JSONata transformer action.
+
 ## 1.13.0
 
 ### Minor Changes
