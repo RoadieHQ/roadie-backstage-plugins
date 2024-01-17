@@ -48,12 +48,10 @@ export function createYamlJSONataTransformAction() {
             type: 'string',
           },
           loadAll: {
-            expression: {
-              title: 'Load All',
-              description:
-                'Use this if the yaml source file contains mutliple yaml objects',
-              type: 'boolean',
-            },
+            title: 'Load All',
+            description:
+              'Use this if the yaml source file contains multiple yaml objects',
+            type: 'boolean',
           },
           as: {
             title: 'Desired Result Type',
