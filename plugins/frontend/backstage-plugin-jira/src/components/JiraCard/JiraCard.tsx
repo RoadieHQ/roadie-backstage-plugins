@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -28,6 +28,14 @@ import {
   MenuItem,
   Checkbox,
   Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Button,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { InfoCard, Progress } from '@backstage/core-components';
@@ -39,6 +47,7 @@ import { ActivityStream } from './components/ActivityStream';
 import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,6 +62,14 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '0.75rem',
       '& > * + *': {
         marginTop: theme.spacing(1),
+      },
+    },
+    ticketLink: {
+      color: theme.palette.link,
+      textDecoration: 'none',
+      transition: 'color 0.3s',
+      '&:hover': {
+        color: theme.palette.linkHover,
       },
     },
   }),
@@ -87,6 +104,7 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
   const {
     project,
     issues,
+    tickets,
     ticketIds,
     projectLoading,
     projectError,
@@ -99,6 +117,12 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
   } = useEmptyIssueTypeFilter(issues);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  useEffect(() => {
+    setPage(0);
+  }, [tickets]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -114,41 +138,52 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
       title="Jira"
       subheader={
         project && (
-          <Box>
-            <CardProjectDetails project={project} component={component} />
-            <Box display="inline-flex" pl={1}>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            width="100%"
+            alignItems="center"
+          >
+            <Box>
+              <CardProjectDetails project={project} component={component} />
+              <Box display="inline-flex" pl={1}>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={changeType}>
+                    <Checkbox checked={type === 'all'} />
+                    <>Show empty issue types</>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </Box>
+            <Box>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="medium"
+                endIcon={<ArrowForwardIcon />}
+                href={`${project?.url}/browse/${projectKey}`}
+                target="_blank"
               >
-                <MoreVertIcon />
-              </IconButton>
-              <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={changeType}>
-                  <Checkbox checked={type === 'all'} />
-                  <>Show empty issue types</>
-                </MenuItem>
-              </Menu>
+                Open in JIRA
+              </Button>
             </Box>
           </Box>
         )
       }
-      deepLink={{
-        link: `${project?.url}/browse/${projectKey}`,
-        title: 'Go to project',
-        onClick: e => {
-          e.preventDefault();
-          window.open(`${project?.url}/browse/${projectKey}`);
-        },
-      }}
     >
       {projectLoading && !(project && issues) ? <Progress /> : null}
       {projectError ? (
@@ -183,6 +218,94 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
             ))}
           </Grid>
           <Divider />
+          <TableContainer>
+            <Table className={classes.infoCard} aria-label="tickets-table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Key</TableCell>
+                  <TableCell align="left">Summary</TableCell>
+                  <TableCell align="left">Priority</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Created</TableCell>
+                  <TableCell align="left">Updated</TableCell>
+                  <TableCell align="left">Assignee</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tickets && tickets.length > 0 ? (
+                  tickets
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((ticket: any) => (
+                      <TableRow key={ticket?.key}>
+                        <TableCell component="th">
+                          <a
+                            href={`${project?.url}/browse/${ticket?.key}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={classes.ticketLink}
+                          >
+                            {ticket?.key}
+                          </a>
+                        </TableCell>
+                        <TableCell align="left">{ticket?.summary}</TableCell>
+                        <TableCell align="left">
+                          <img
+                            src={ticket?.priority?.iconUrl}
+                            alt={ticket?.priority?.name}
+                            title={ticket?.priority?.name}
+                            width="20px"
+                          />
+                        </TableCell>
+                        <TableCell align="left">{ticket?.status}</TableCell>
+                        <TableCell align="left">
+                          {new Date(ticket?.created).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell align="left">
+                          {new Date(ticket?.updated).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          style={{ display: 'flex', alignItems: 'center' }}
+                        >
+                          {ticket?.assignee?.displayName ? (
+                            <>
+                              <img
+                                src={ticket?.assignee?.avatarUrl}
+                                alt={ticket?.assignee?.displayName}
+                                title={ticket?.assignee?.displayName}
+                                style={{ marginRight: '10px' }}
+                                width="30px"
+                              />
+                              {ticket?.assignee?.displayName}
+                            </>
+                          ) : (
+                            <span>Not Assigned</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} align="center">
+                      No Jira tickets available.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 20]}
+              component="div"
+              count={tickets?.length || 0}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={(_event, newPage) => setPage(newPage)}
+              onRowsPerPageChange={event => {
+                setRowsPerPage(parseInt(event.target.value, 10));
+                setPage(0);
+              }}
+            />
+          </TableContainer>
           <ActivityStream
             projectKey={projectKey}
             tokenType={tokenType}

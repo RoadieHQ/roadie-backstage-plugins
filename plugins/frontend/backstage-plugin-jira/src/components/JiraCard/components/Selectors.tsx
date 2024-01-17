@@ -69,10 +69,10 @@ export const Selectors = ({
     !statusesError &&
     statuses &&
     statuses.length >= 2 ? (
-    <Box display="flex" justifyContent="flex-end">
+    <Box display="flex" justifyContent="flex-start">
       <FormControl className={classes.formControl}>
         <InputLabel id="select-multiple-projects-statuses">
-          filter issue status
+          Filter issue status
         </InputLabel>
         <Select
           labelId="select-statuses-label"
