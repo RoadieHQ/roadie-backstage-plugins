@@ -27,16 +27,13 @@ Configure the action:
 
 ```typescript
 // packages/backend/src/plugins/scaffolder.ts
-const actions = [
-  createHttpBackstageAction({ discovery }),
-  ...createBuiltinActions({
-    containerRunner,
+  const builtInActions = createBuiltinActions({
     integrations,
-    config,
     catalogClient,
-    reader,
-  }),
-];
+    config: env.config,
+    reader: env.reader,
+  });
+  const actions = [...builtInActions, createHttpBackstageAction({ discovery })];
 
 return await createRouter({
   containerRunner,
