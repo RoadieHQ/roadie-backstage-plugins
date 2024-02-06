@@ -18,13 +18,13 @@ import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import YAML from 'yaml';
-import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import { yamlOptionsSchema } from '../../types';
 
 export function createYamlJSONataTransformAction() {
   return createTemplateAction<{
     path: string;
     expression: string;
-    options?: supportedDumpOptions;
+    options?: any;
     loadAll?: boolean;
     as?: 'string' | 'object';
   }>({

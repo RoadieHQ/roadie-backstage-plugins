@@ -15,12 +15,12 @@
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import YAML from 'yaml';
-import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import { yamlOptionsSchema } from '../../types';
 
 export function createSerializeYamlAction() {
   return createTemplateAction<{
     data: any;
-    options?: supportedDumpOptions;
+    options?: any;
   }>({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
