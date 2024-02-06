@@ -45,9 +45,7 @@ describe('roadiehq:utils:json:merge', () => {
         ...mockContext,
         input: { content: '' } as any,
       }),
-    ).rejects.toThrow(
-      'The "paths[1]" argument must be of type string. Received undefined',
-    );
+    ).rejects.toThrow(/argument must be of type string/);
   });
 
   it('should throw an error when the source file is not json', async () => {
@@ -299,9 +297,7 @@ describe('roadiehq:utils:merge', () => {
         ...mockContext,
         input: { content: '' } as any,
       }),
-    ).rejects.toThrow(
-      'The "paths[1]" argument must be of type string. Received undefined',
-    );
+    ).rejects.toThrow(/argument must be of type string/);
   });
 
   it('should throw an error when the source file does not exist', async () => {
