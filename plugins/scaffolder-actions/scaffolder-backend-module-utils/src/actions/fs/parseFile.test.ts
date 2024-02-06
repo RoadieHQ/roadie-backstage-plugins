@@ -40,7 +40,9 @@ describe('roadiehq:utils:fs:parse', () => {
         ...mockContext,
         input: {} as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(
+      'The "paths[1]" argument must be of type string. Received undefined',
+    );
   });
   it('should pasrs text data by default', async () => {
     mock({

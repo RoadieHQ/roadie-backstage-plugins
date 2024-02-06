@@ -17,7 +17,7 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 
 export function createYamlJSONataTransformAction() {
@@ -79,7 +79,7 @@ export function createYamlJSONataTransformAction() {
       if (ctx.input.as === 'object') {
         resultHandler = rz => rz;
       } else {
-        resultHandler = rz => yaml.dump(rz, ctx.input.options);
+        resultHandler = rz => YAML.stringify(rz, ctx.input.options);
       }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,
@@ -87,9 +87,11 @@ export function createYamlJSONataTransformAction() {
       );
       let data;
       if (ctx.input.loadAll) {
-        data = yaml.loadAll(fs.readFileSync(sourceFilepath).toString());
+        data = YAML.parseAllDocuments(
+          fs.readFileSync(sourceFilepath).toString(),
+        ).map(doc => doc.toJSON());
       } else {
-        data = yaml.load(fs.readFileSync(sourceFilepath).toString());
+        data = YAML.parse(fs.readFileSync(sourceFilepath).toString());
       }
       const expression = jsonata(ctx.input.expression);
       const result = expression.evaluate(data);

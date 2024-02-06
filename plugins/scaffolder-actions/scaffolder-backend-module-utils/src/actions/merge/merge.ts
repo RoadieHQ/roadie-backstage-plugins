@@ -19,7 +19,7 @@ import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
 
@@ -204,7 +204,7 @@ export function createMergeAction() {
               : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = JSON.stringify(
             mergeWith(
-              yaml.load(originalContent),
+              YAML.parse(originalContent),
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
             ),
@@ -217,11 +217,11 @@ export function createMergeAction() {
         case '.yaml': {
           const newContent =
             typeof ctx.input.content === 'string'
-              ? yaml.load(ctx.input.content)
+              ? YAML.parse(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = yaml.dump(
+          mergedContent = YAML.stringify(
             mergeWith(
-              yaml.load(originalContent),
+              YAML.parse(originalContent),
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
             ),

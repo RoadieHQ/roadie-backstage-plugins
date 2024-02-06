@@ -53,7 +53,9 @@ describe('roadiehq:utils:zip', () => {
         ...mockContext,
         input: {} as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(
+      'The "paths[1]" argument must be of type string. Received undefined',
+    );
   });
   it("should create a zip file called 'outputPath' from the given 'path'", async () => {
     await action.handler({

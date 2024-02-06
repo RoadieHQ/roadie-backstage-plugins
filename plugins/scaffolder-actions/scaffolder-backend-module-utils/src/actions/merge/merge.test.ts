@@ -19,7 +19,7 @@ import { createMergeAction, createMergeJSONAction } from './merge';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 import detectIndent from 'detect-indent';
 
 describe('roadiehq:utils:json:merge', () => {
@@ -45,7 +45,9 @@ describe('roadiehq:utils:json:merge', () => {
         ...mockContext,
         input: { content: '' } as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(
+      'The "paths[1]" argument must be of type string. Received undefined',
+    );
   });
 
   it('should throw an error when the source file is not json', async () => {
@@ -297,7 +299,9 @@ describe('roadiehq:utils:merge', () => {
         ...mockContext,
         input: { content: '' } as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(
+      'The "paths[1]" argument must be of type string. Received undefined',
+    );
   });
 
   it('should throw an error when the source file does not exist', async () => {
@@ -388,7 +392,7 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(yaml.load(file)).toEqual({
+    expect(YAML.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
@@ -416,7 +420,7 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(yaml.load(file)).toEqual({
+    expect(YAML.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
       array: ['second item'],
     });
@@ -443,19 +447,19 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(yaml.load(file)).toEqual({
+    expect(YAML.parse(file)).toEqual({
       array: ['first item', 'second item'],
     });
   });
 
-  it('can pass options to yaml.dump', async () => {
+  it('can pass options to YAML.stringify', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': '',
       },
     });
 
-    const mockDump = jest.spyOn(yaml, 'dump');
+    const mockDump = jest.spyOn(YAML, 'stringify');
 
     const opts = {
       indent: 3,
