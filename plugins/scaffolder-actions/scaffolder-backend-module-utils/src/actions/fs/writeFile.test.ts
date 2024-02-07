@@ -41,7 +41,7 @@ describe('roadiehq:utils:fs:write', () => {
         ...mockContext,
         input: {} as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(/argument must be of type string/);
   });
   it('should write file to the workspacePath with the given content', async () => {
     await action.handler({

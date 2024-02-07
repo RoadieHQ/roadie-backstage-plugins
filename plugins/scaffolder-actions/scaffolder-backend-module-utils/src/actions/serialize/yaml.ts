@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
-import yaml from 'js-yaml';
-import { supportedDumpOptions, yamlOptionsSchema } from '../../types';
+import YAML from 'yaml';
+import { stringifyOptions, yamlOptionsSchema } from '../../types';
 
 export function createSerializeYamlAction() {
   return createTemplateAction<{
     data: any;
-    options?: supportedDumpOptions;
+    options?: stringifyOptions;
   }>({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
@@ -58,7 +58,10 @@ export function createSerializeYamlAction() {
     },
 
     async handler(ctx) {
-      ctx.output('serialized', yaml.dump(ctx.input.data, ctx.input.options));
+      ctx.output(
+        'serialized',
+        YAML.stringify(ctx.input.data, ctx.input.options),
+      );
     },
   });
 }

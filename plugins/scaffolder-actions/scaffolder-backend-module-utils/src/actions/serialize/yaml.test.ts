@@ -16,7 +16,7 @@
 import { getVoidLogger } from '@backstage/backend-common';
 import { createSerializeYamlAction } from './yaml';
 import { PassThrough } from 'stream';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 
 describe('roadiehq:utils:serialize:yaml', () => {
   const mockContext = {
@@ -39,7 +39,7 @@ describe('roadiehq:utils:serialize:yaml', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith(
       'serialized',
-      yaml.dump({ hello: 'world' }),
+      YAML.stringify({ hello: 'world' }),
     );
   });
 
@@ -57,12 +57,15 @@ describe('roadiehq:utils:serialize:yaml', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith(
       'serialized',
-      yaml.dump({ hello1: 'world1', hello2: { asdf: 'blah' } }, { indent: 10 }),
+      YAML.stringify(
+        { hello1: 'world1', hello2: { asdf: 'blah' } },
+        { indent: 10 },
+      ),
     );
   });
 
-  it('should pass options to yaml.dump', async () => {
-    const mockDump = jest.spyOn(yaml, 'dump');
+  it('should pass options to YAML.stringify', async () => {
+    const mockDump = jest.spyOn(YAML, 'stringify');
 
     const opts = {
       indent: 3,

@@ -18,7 +18,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { createYamlJSONataTransformAction } from './yaml';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const mockContext = {
@@ -56,7 +56,7 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith(
       'result',
-      yaml.dump({ hello: ['world', 'item2'] }),
+      YAML.stringify({ hello: ['world', 'item2'] }),
     );
   });
 
@@ -78,18 +78,18 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith(
       'result',
-      yaml.dump({ hello: ['world', 'item2'] }),
+      YAML.stringify({ hello: ['world', 'item2'] }),
     );
   });
 
-  it('should pass options to yaml.dump', async () => {
+  it('should pass options to YAML.stringify', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': '',
       },
     });
 
-    const mockDump = jest.spyOn(yaml, 'dump');
+    const mockDump = jest.spyOn(YAML, 'stringify');
 
     const opts = {
       indent: 3,
