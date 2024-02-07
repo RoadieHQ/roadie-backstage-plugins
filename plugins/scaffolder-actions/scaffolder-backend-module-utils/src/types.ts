@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+import { ToStringOptions } from 'yaml';
+
+export type stringifyOptions = Omit<ToStringOptions, 'commentString'>;
+
 export const yamlOptionsSchema = {
   title: 'Options',
   description: 'YAML stringify options',

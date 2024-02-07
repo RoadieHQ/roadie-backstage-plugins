@@ -20,7 +20,7 @@ import fs from 'fs-extra';
 import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import YAML from 'yaml';
-import { yamlOptionsSchema } from '../../types';
+import { stringifyOptions, yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
 
 function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
@@ -139,7 +139,7 @@ export function createMergeAction() {
     path: string;
     content: any;
     mergeArrays?: boolean;
-    options?: any;
+    options?: stringifyOptions;
   }>({
     id: 'roadiehq:utils:merge',
     description: 'Merges data into an existing structured file.',
