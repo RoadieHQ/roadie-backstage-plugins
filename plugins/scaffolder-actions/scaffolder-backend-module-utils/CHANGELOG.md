@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.13.2
+
+### Patch Changes
+
+- 3d55eb2f: Swapping 'js-yaml' library for 'yaml'
+
 ## 1.13.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.2
+
+### Patch Changes
+
+- 9bfc49e1: Allow dry-run for HTTP methods that don't modify resources
+
 ## 4.1.1
 
 ### Patch Changes
