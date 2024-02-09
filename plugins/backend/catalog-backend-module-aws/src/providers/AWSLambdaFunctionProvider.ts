@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ComponentEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
@@ -55,7 +55,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       `Providing lambda function resources from aws: ${this.accountId}`,
     );
 
-    const lambdaComponents: ComponentEntity[] = [];
+    const lambdaComponents: ResourceEntity[] = [];
 
     const credentials = this.getCredentials();
     const lambda = new Lambda({ credentials, region: this.region });
@@ -83,17 +83,22 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = lambdaFunction.Role;
           }
           lambdaComponents.push({
-            kind: 'Component',
+            kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations,
               name: arnToName(lambdaFunction.FunctionArn),
               title: lambdaFunction.FunctionName,
+              description: lambdaFunction.Description,
+              runtime: lambdaFunction.Runtime,
+              memorySize: lambdaFunction.MemorySize,
+              ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
+              timeout: lambdaFunction.Timeout,
+              architectures: lambdaFunction.Architectures,
             },
             spec: {
               owner: 'unknown',
               type: 'lambda-function',
-              lifecycle: 'production',
               dependsOn: [],
             },
           });

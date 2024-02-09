@@ -10,6 +10,7 @@ import {
   AWSLambdaFunctionProvider,
   AWSS3BucketProvider,
   AWSIAMUserProvider,
+  AWSEC2Provider,
 } from '@roadiehq/catalog-backend-module-aws';
 
 export default async function createPlugin(
@@ -19,14 +20,17 @@ export default async function createPlugin(
   const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
   const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
   const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
+  const ec2Provider = AWSEC2Provider.fromConfig(config, env);
 
   builder.addEntityProvider(s3Provider);
   builder.addEntityProvider(lambdaProvider);
   builder.addEntityProvider(iamUserProvider);
+  builder.addEntityProvider(ec2Provider);
 
   s3Provider.run();
   lambdaProvider.run();
   iamUserProvider.run();
+  ec2Provider.run();
 
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
