@@ -436,7 +436,7 @@ describe('http:backstage:request', () => {
           body: {},
         });
         const expectedLog =
-          "Dry run mode. Skipping non dry-run safe method 'POST' request to http://backstage.tests/api/proxy/foo";
+          "Dry run mode. Skipping non dry-run safe method 'POST' request to /api/proxy/foo";
         await action.handler({
           ...mockContext,
           input: {
