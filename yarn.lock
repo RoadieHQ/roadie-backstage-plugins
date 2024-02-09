@@ -771,6 +771,49 @@
     "@aws-sdk/util-waiter" "3.55.0"
     tslib "^2.3.1"
 
+"@aws-sdk/client-rds@3.76.0":
+  version "3.76.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-rds/-/client-rds-3.76.0.tgz#bf0faa84585a2809c0608e5ddbff0dc150e40fa6"
+  integrity sha512-Vr4VSVUu09i7NZJ0GbN8Jg67imIOyFm8SF9jTNvdO4JEn1gajpH533Pbjp0NHzxUx5Mbghu2ILodWxHB2yhD7Q==
+  dependencies:
+    "@aws-crypto/sha256-browser" "2.0.0"
+    "@aws-crypto/sha256-js" "2.0.0"
+    "@aws-sdk/client-sts" "3.76.0"
+    "@aws-sdk/config-resolver" "3.75.0"
+    "@aws-sdk/credential-provider-node" "3.76.0"
+    "@aws-sdk/fetch-http-handler" "3.58.0"
+    "@aws-sdk/hash-node" "3.55.0"
+    "@aws-sdk/invalid-dependency" "3.55.0"
+    "@aws-sdk/middleware-content-length" "3.58.0"
+    "@aws-sdk/middleware-host-header" "3.58.0"
+    "@aws-sdk/middleware-logger" "3.55.0"
+    "@aws-sdk/middleware-retry" "3.75.0"
+    "@aws-sdk/middleware-sdk-rds" "3.58.0"
+    "@aws-sdk/middleware-serde" "3.55.0"
+    "@aws-sdk/middleware-signing" "3.58.0"
+    "@aws-sdk/middleware-stack" "3.55.0"
+    "@aws-sdk/middleware-user-agent" "3.58.0"
+    "@aws-sdk/node-config-provider" "3.75.0"
+    "@aws-sdk/node-http-handler" "3.76.0"
+    "@aws-sdk/protocol-http" "3.58.0"
+    "@aws-sdk/smithy-client" "3.72.0"
+    "@aws-sdk/types" "3.55.0"
+    "@aws-sdk/url-parser" "3.55.0"
+    "@aws-sdk/util-base64-browser" "3.58.0"
+    "@aws-sdk/util-base64-node" "3.55.0"
+    "@aws-sdk/util-body-length-browser" "3.55.0"
+    "@aws-sdk/util-body-length-node" "3.55.0"
+    "@aws-sdk/util-defaults-mode-browser" "3.72.0"
+    "@aws-sdk/util-defaults-mode-node" "3.75.0"
+    "@aws-sdk/util-user-agent-browser" "3.58.0"
+    "@aws-sdk/util-user-agent-node" "3.75.0"
+    "@aws-sdk/util-utf8-browser" "3.55.0"
+    "@aws-sdk/util-utf8-node" "3.55.0"
+    "@aws-sdk/util-waiter" "3.55.0"
+    entities "2.2.0"
+    fast-xml-parser "3.19.0"
+    tslib "^2.3.1"
+
 "@aws-sdk/client-s3@3.76.0":
   version "3.76.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.76.0.tgz#ad372c4fbe208b0a83b1ed24845d2bc1c2b1038c"
@@ -2806,6 +2849,17 @@
   version "3.58.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-ec2/-/middleware-sdk-ec2-3.58.0.tgz#690bfddbd416d9c262c42bf16c31f4a11461747b"
   integrity sha512-0xtIpqUshvND4APMy+Zd/7ukJTWvTaU2mkX9UkzSKSRIfd82ftZBtIuKwE21i2Y1mqm4QGQwPRdQawoSaSizHQ==
+  dependencies:
+    "@aws-sdk/protocol-http" "3.58.0"
+    "@aws-sdk/signature-v4" "3.58.0"
+    "@aws-sdk/types" "3.55.0"
+    "@aws-sdk/util-format-url" "3.58.0"
+    tslib "^2.3.1"
+
+"@aws-sdk/middleware-sdk-rds@3.58.0":
+  version "3.58.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-sdk-rds/-/middleware-sdk-rds-3.58.0.tgz#e5880841645091ef49528e5a843b4f6189c145e0"
+  integrity sha512-N6PucPmfwYerPwD/qxlN4OaVIdwAE2U+0GRuhZl3q4g3dS3200TLoZK3fEMb/iuAwQEYDeTIApjIpElnC67U0g==
   dependencies:
     "@aws-sdk/protocol-http" "3.58.0"
     "@aws-sdk/signature-v4" "3.58.0"
