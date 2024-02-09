@@ -25,7 +25,10 @@ import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
  * Provides entities from AWS Elastic Compute Cloud.
  */
 export class AWSEC2Provider extends AWSEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; providerId?: string },
+  ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
     const externalId = config.getOptionalString('externalId');
@@ -38,7 +41,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-ec2-provider-${this.accountId}`;
+    return `aws-ec2-provider-${this.accountId}-${this.providerId ?? 0}`;
   }
 
   async run(): Promise<void> {

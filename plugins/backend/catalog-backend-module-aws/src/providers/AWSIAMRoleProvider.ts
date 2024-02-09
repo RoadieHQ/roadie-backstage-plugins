@@ -27,7 +27,10 @@ import { ARN } from 'link2aws';
  * Provides entities from AWS IAM Role service.
  */
 export class AWSIAMRoleProvider extends AWSEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; providerId?: string },
+  ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
     const externalId = config.getOptionalString('externalId');
@@ -40,7 +43,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-iam-role-${this.accountId}`;
+    return `aws-iam-role-${this.accountId}-${this.providerId ?? 0}`;
   }
 
   async run(): Promise<void> {

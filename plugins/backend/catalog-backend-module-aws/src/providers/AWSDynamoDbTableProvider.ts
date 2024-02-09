@@ -26,7 +26,10 @@ import { arnToName } from '../utils/arnToName';
  * Provides entities from AWS DynamoDB service.
  */
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; providerId?: string },
+  ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
     const externalId = config.getOptionalString('externalId');
@@ -39,7 +42,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-dynamo-db-table-${this.accountId}`;
+    return `aws-dynamo-db-table-${this.accountId}-${this.providerId ?? 0}`;
   }
 
   async run(): Promise<void> {
