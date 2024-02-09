@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.0.1
+
+### Patch Changes
+
+- 1c02b489: Add uniqueness to AWS providers to allow multiple configuration if wanted.
+
 ## 2.0.0
 
 ### Major Changes
