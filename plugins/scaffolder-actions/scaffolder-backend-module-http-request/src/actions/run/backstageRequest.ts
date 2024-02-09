@@ -171,7 +171,9 @@ export function createHttpBackstageAction(options: {
       const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
       if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
         ctx.logger.info(
-          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${httpOptions.url}`,
+          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
+            queryParams !== '' ? `${input.path}?${queryParams}` : input.path
+          }`,
         );
         return;
       }
