@@ -33,6 +33,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly roleArn: string;
   private readonly externalId?: string;
   protected readonly region: string;
+  protected readonly providerId?: string;
   protected readonly logger: winston.Logger;
   protected connection?: EntityProviderConnection;
 
@@ -40,13 +41,14 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   protected constructor(
     account: AccountConfig,
-    options: { logger: winston.Logger },
+    options: { logger: winston.Logger; providerId?: string },
   ) {
     this.accountId = account.accountId;
     this.roleArn = account.roleArn;
     this.externalId = account.externalId;
     this.region = account.region;
     this.logger = options.logger;
+    this.providerId = options.providerId;
   }
 
   protected getCredentials() {
