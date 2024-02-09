@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-import { DumpOptions } from 'js-yaml';
+import { ToStringOptions } from 'yaml';
 
-export type supportedDumpOptions = Omit<
-  DumpOptions,
-  'styles' | 'schema' | 'replacer' | 'sortKeys'
->;
+export type stringifyOptions = Omit<ToStringOptions, 'commentString'>;
 
 export const yamlOptionsSchema = {
   title: 'Options',

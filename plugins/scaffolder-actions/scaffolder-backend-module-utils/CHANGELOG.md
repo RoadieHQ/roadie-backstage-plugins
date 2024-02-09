@@ -1,5 +1,23 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.13.2
+
+### Patch Changes
+
+- 3d55eb2f: Swapping 'js-yaml' library for 'yaml'
+
+## 1.13.1
+
+### Patch Changes
+
+- 26bd3e42: Fix `loadAll` documentation for yaml JSONata transformer action.
+
+## 1.13.0
+
+### Minor Changes
+
+- 70af2a36: Add ability to load multi-yaml files using the yaml JSONata transformer.
+
 ## 1.12.1
 
 ### Patch Changes

@@ -21,13 +21,13 @@ import {
   IdentityApi,
 } from '@backstage/core-plugin-api';
 import {
-  IssueCountElement,
   IssueCountResult,
   IssueCountSearchParams,
   IssuesCounter,
   IssueType,
   Project,
   Status,
+  Ticket,
 } from '../types';
 import fetch from 'cross-fetch';
 
@@ -96,7 +96,16 @@ export class JiraAPI {
     const data = {
       jql,
       maxResults: -1,
-      fields: ['key', 'issuetype'],
+      fields: [
+        'key',
+        'issuetype',
+        'summary',
+        'status',
+        'assignee',
+        'priority',
+        'created',
+        'updated',
+      ],
       startAt,
     };
 
@@ -146,7 +155,7 @@ export class JiraAPI {
     `;
 
     let startAt: number | undefined = 0;
-    const issues: IssueCountElement[] = [];
+    const issues: Ticket[] = [];
 
     while (startAt !== undefined) {
       const res: IssueCountResult = await this.pagedIssueCountRequest(
@@ -240,7 +249,14 @@ export class JiraAPI {
     // to fetch also the issue-keys of all the tasks for that component.
     let issuesCounter: IssuesCounter[] = [];
     let ticketIds: string[] = [];
-
+    let tickets: Ticket[] = [];
+    const foundIssues = await this.getIssueCountPaged({
+      apiUrl,
+      projectKey,
+      component,
+      label,
+      statusesNames,
+    });
     if (!component && !label) {
       // Generate counters for each issue type
       const issuesTypes = project.issueTypes.map((status: IssueType) => ({
@@ -275,17 +291,9 @@ export class JiraAPI {
           total: 0,
         }),
       );
-      const foundIssues = await this.getIssueCountPaged({
-        apiUrl,
-        projectKey,
-        component,
-        label,
-        statusesNames,
-      });
-
       issuesCounter = foundIssues
         .reduce((prev, curr) => {
-          const name = curr.fields.issuetype.name;
+          const name = curr.fields?.issuetype.name;
           const idx = issuesTypes.findIndex(i => i.name === name);
           if (idx !== -1) {
             issuesTypes[idx].total++;
@@ -296,7 +304,20 @@ export class JiraAPI {
 
       ticketIds = foundIssues.map(i => i.key);
     }
-
+    tickets = foundIssues.map(index => {
+      return {
+        key: index.key,
+        summary: index?.fields?.summary,
+        assignee: {
+          displayName: index?.fields?.assignee?.displayName,
+          avatarUrl: index?.fields?.assignee?.avatarUrls['48x48'],
+        },
+        status: index?.fields?.status?.name,
+        priority: index?.fields?.priority,
+        created: index?.fields?.created,
+        updated: index?.fields?.updated,
+      };
+    });
     return {
       project: {
         name: project.name,
@@ -311,6 +332,7 @@ export class JiraAPI {
             }))
           : [],
       ticketIds: ticketIds,
+      tickets,
     };
   }
 

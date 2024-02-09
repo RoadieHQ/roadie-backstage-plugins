@@ -43,6 +43,7 @@ describe('http:backstage:request', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    isDryRun: false,
   };
 
   describe('when the action runs correctly', () => {
@@ -387,6 +388,66 @@ describe('http:backstage:request', () => {
           logger,
           false,
         );
+      });
+    });
+
+    describe('with dry run enabled', () => {
+      beforeEach(() => {
+        mockContext.isDryRun = true;
+      });
+
+      afterEach(() => {
+        mockContext.isDryRun = false;
+      });
+
+      it('should call http when a safe method is passed', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          'Creating GET request with http:backstage:request scaffolder action';
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+            logRequestPath: false,
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(http).toBeCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: {},
+          },
+          logger,
+          false,
+        );
+      });
+
+      it('should skip when an unsafe method is passed', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        const expectedLog =
+          "Dry run mode. Skipping non dry-run safe method 'POST' request to http://backstage.tests/api/proxy/foo";
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            logRequestPath: false,
+          },
+        });
+        expect(loggerSpy).toBeCalledTimes(2);
+        expect(loggerSpy.mock.calls[1]).toContain(expectedLog);
+        expect(http).not.toHaveBeenCalled();
       });
     });
   });

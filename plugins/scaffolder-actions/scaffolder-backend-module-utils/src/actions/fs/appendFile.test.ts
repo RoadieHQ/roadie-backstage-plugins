@@ -42,7 +42,7 @@ describe('roadiehq:utils:fs:append', () => {
         ...mockContext,
         input: { content: '' } as any,
       }),
-    ).rejects.toThrow(/"path" argument must/);
+    ).rejects.toThrow(/argument must be of type string/);
   });
   it('should write file to the workspacePath with the given content if it doesnt exist', async () => {
     await action.handler({

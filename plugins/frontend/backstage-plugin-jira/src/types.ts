@@ -122,13 +122,29 @@ export type IssueCountSearchParams = {
   startAt: number;
   maxResults: number;
   total: number;
-  issues: IssueCountElement[];
+  issues: Ticket[];
 };
 
-export type IssueCountElement = {
+export type Ticket = {
   key: string;
-  fields: {
+  fields?: {
     issuetype: {
+      iconUrl: string;
+      name: string;
+    };
+    summary: string;
+    assignee: {
+      displayName: string;
+      avatarUrls: {
+        [key: string]: string;
+      };
+    };
+    status: {
+      name: string;
+    };
+    updated: Date;
+    created: Date;
+    priority: {
       iconUrl: string;
       name: string;
     };
@@ -137,5 +153,5 @@ export type IssueCountElement = {
 
 export type IssueCountResult = {
   next: number | undefined;
-  issues: IssueCountElement[];
+  issues: Ticket[];
 };

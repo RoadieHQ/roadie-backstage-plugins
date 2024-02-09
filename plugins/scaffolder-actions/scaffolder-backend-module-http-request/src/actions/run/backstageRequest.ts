@@ -39,6 +39,7 @@ export function createHttpBackstageAction(options: {
     id: 'http:backstage:request',
     description:
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
+    supportsDryRun: true,
     schema: {
       input: {
         type: 'object',
@@ -165,6 +166,14 @@ export function createHttpBackstageAction(options: {
       if (token && !authToken) {
         ctx.logger.info(`Token is defined. Setting authorization header.`);
         httpOptions.headers.authorization = `Bearer ${token}`;
+      }
+
+      const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
+      if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
+        ctx.logger.info(
+          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${httpOptions.url}`,
+        );
+        return;
       }
 
       const { code, headers, body } = await http(

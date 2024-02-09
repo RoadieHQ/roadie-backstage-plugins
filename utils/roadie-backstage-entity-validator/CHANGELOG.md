@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.4
+
+### Patch Changes
+
+- d60dc611: use CORE_SCHEMA when parsing catalog YAML files for validation
+
 ## 2.4.3
 
 ### Patch Changes

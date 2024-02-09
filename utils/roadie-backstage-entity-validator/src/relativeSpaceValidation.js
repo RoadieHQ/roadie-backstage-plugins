@@ -53,7 +53,7 @@ export const relativeSpaceValidation = async (
   verbose,
 ) => {
   try {
-    const data = yaml.loadAll(fileContents);
+    const data = yaml.loadAll(fileContents, { schema: yaml.CORE_SCHEMA });
     if (verbose) {
       console.log('Validating locally dependant catalog contents');
     }

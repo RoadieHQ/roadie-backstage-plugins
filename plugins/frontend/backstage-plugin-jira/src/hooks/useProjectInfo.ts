@@ -55,6 +55,7 @@ export const useProjectInfo = (
     projectLoading: state.loading,
     project: state?.value?.project,
     issues: state?.value?.issues,
+    tickets: state?.value?.tickets,
     ticketIds: state?.value?.ticketIds,
     projectError: state.error,
     fetchProjectInfo,
