@@ -18,7 +18,7 @@ import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
 import { Config } from '@backstage/config';
 import * as winston from 'winston';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ComponentEntity } from '@backstage/catalog-model';
+import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 
@@ -62,7 +62,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
 
     const tablePages = paginateListTables(paginatorConfig, {});
 
-    const ddbComponents: ComponentEntity[] = [];
+    let ddbComponents: ResourceEntity[] = [];
     for await (const tablePage of tablePages) {
       if (!tablePage.TableNames) {
         continue;
@@ -75,8 +75,8 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             });
             const table = tableDescriptionResult.Table;
             if (table && table.TableName && table.TableArn) {
-              const component: ComponentEntity = {
-                kind: 'Component',
+              const component: ResourceEntity = {
+                kind: 'Resource',
                 apiVersion: 'backstage.io/v1beta1',
                 metadata: {
                   annotations: {
@@ -89,7 +89,6 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 spec: {
                   owner: this.accountId,
                   type: 'dynamo-db-table',
-                  lifecycle: 'production',
                 },
               };
               return component;
@@ -100,7 +99,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       )
         .filter(it => it)
         .map(it => it!);
-      ddbComponents.concat(...newComponents);
+      ddbComponents = ddbComponents.concat(...newComponents);
     }
 
     await this.connection.applyMutation({
