@@ -30,7 +30,10 @@ import { ARN } from 'link2aws';
  * Provides entities from AWS Lambda Function service.
  */
 export class AWSLambdaFunctionProvider extends AWSEntityProvider {
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger; providerId?: string },
+  ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
     const externalId = config.getOptionalString('externalId');
@@ -43,7 +46,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-lambda-function-${this.accountId}`;
+    return `aws-lambda-function-${this.accountId}-${this.providerId ?? 0}`;
   }
 
   async run(): Promise<void> {
