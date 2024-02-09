@@ -38,6 +38,7 @@ import {
 import { ValueMapping } from '../types';
 
 type DdbTableDataConfigOptions = {
+  entityKind?: string;
   tableName: string;
   identifierColumn?: string;
   columnValueMapping?: { [key: string]: ValueMapping };
@@ -132,7 +133,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
       const entities =
         tableRows.Items?.map(row => {
           const o = {
-            kind: 'Component',
+            kind: this.tableDataConfig.entityKind ?? 'Component',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations: {
