@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.3
+
+### Patch Changes
+
+- 78617c07: Don't log the internal backend url.
+
 ## 4.1.2
 
 ### Patch Changes
