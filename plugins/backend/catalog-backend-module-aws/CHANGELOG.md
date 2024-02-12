@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.0
+
+### Minor Changes
+
+- a7f8d4d8: Add AWS RDS entity provider.
+
 ## 2.0.1
 
 ### Patch Changes
