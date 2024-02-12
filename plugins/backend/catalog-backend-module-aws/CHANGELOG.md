@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.1
+
+### Patch Changes
+
+- 04df9795: Use deterministic provider names for location entry when creating entities to enable garbage collection possibility.
+
 ## 2.1.0
 
 ### Minor Changes
