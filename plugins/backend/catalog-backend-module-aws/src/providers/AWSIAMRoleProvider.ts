@@ -100,7 +100,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       type: 'full',
       entities: roleResources.map(entity => ({
         entity,
-        locationKey: `aws-iam-role-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

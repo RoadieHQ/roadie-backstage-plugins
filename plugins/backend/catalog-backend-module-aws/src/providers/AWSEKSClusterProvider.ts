@@ -110,7 +110,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       type: 'full',
       entities: s3Resources.map(entity => ({
         entity,
-        locationKey: `aws-eks-cluster-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

@@ -113,7 +113,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       type: 'full',
       entities: lambdaComponents.map(entity => ({
         entity,
-        locationKey: `aws-lambda-function-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }
