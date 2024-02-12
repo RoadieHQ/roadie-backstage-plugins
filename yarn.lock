@@ -21876,10 +21876,10 @@ lines-and-columns@~2.0.3:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-2.0.3.tgz#b2f0badedb556b747020ab8ea7f0373e22efac1b"
   integrity sha512-cNOjgCnLB+FnvWWtyRTzmB3POJ+cXxTA81LoW7u8JdmhfXzriropYwpjShnz1QLLWsQwY7nIxoDmcPTwphDK9w==
 
-link2aws@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/link2aws/-/link2aws-1.0.8.tgz#30fd28ac7ffac0fada66bd6cfd41cd3cdac4cd9d"
-  integrity sha512-7cIiNux2l+csFyZTWyVBVkZSyADxQI4ibXeEq/xUcyJw+rd50bJ3P5QrhRkuIqbVUpKRVJtF2I2VOldwTy99zQ==
+link2aws@^1.0.18:
+  version "1.0.18"
+  resolved "https://registry.yarnpkg.com/link2aws/-/link2aws-1.0.18.tgz#ac1964c48fc9dfd9950dac21971cf4aa8889ed52"
+  integrity sha512-/RY97qvN4hA1TJoVcFEgUnG0xeLYalEV2PQNjWJisgG97QBCe1ZESIi/rO2ICEkRtE91isyJZRTVzDyM/CN8qA==
 
 linkify-it@^3.0.1:
   version "3.0.3"

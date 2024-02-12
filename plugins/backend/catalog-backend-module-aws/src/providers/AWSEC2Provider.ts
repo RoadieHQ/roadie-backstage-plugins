@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { EC2 } from '@aws-sdk/client-ec2';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
@@ -65,12 +66,15 @@ export class AWSEC2Provider extends AWSEntityProvider {
       if (reservation.Instances) {
         for (const instance of reservation.Instances) {
           const instanceId = instance.InstanceId;
+          const arn = `arn:aws:ec2:${this.region}:${this.accountId}:instance/${instanceId}`;
+          const consoleLink = new ARN(arn).consoleLink;
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations: {
                 ...(await defaultAnnotations),
+                [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
               },
               labels: instance.Tags?.reduce(

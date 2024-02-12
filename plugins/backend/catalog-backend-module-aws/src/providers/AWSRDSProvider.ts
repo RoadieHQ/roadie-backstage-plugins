@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { ResourceEntity } from '@backstage/catalog-model';
-import { paginateDescribeDBInstances, RDS } from '@aws-sdk/client-rds';
+import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
+import { ARN } from 'link2aws';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -69,12 +70,14 @@ export class AWSRDSProvider extends AWSEntityProvider {
         if (dbInstance.DBInstanceIdentifier && dbInstance.DBInstanceArn) {
           const instanceId = dbInstance.DBInstanceIdentifier;
           const instanceArn = dbInstance.DBInstanceArn;
+          const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations: {
                 ...(await defaultAnnotations),
+                [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
               },
               labels: dbInstance.TagList?.reduce(
