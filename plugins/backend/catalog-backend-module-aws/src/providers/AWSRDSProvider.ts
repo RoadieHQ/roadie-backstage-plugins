@@ -15,17 +15,17 @@
  */
 
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
-import { EC2 } from '@aws-sdk/client-ec2';
+import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
 
 /**
- * Provides entities from AWS Elastic Compute Cloud.
+ * Provides entities from AWS Relational Database Service.
  */
-export class AWSEC2Provider extends AWSEntityProvider {
+export class AWSRDSProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: { logger: winston.Logger; providerId?: string },
@@ -35,14 +35,14 @@ export class AWSEC2Provider extends AWSEntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSEC2Provider(
+    return new AWSRDSProvider(
       { accountId, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-ec2-provider-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-rds-provider-${this.accountId}-${this.providerId ?? 0}`;
   }
 
   async run(): Promise<void> {
@@ -50,24 +50,27 @@ export class AWSEC2Provider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
 
-    this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
-    const ec2Resources: ResourceEntity[] = [];
+    this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
+    const rdsResources: ResourceEntity[] = [];
 
     const credentials = this.getCredentials();
-    const ec2 = new EC2({ credentials, region: this.region });
+    const rdsClient = new RDS({ credentials, region: this.region });
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
-    const instances = await ec2.describeInstances({
-      Filters: [{ Name: 'instance-state-name', Values: ['running'] }],
-    });
+    const paginatorConfig = {
+      client: rdsClient,
+      pageSize: 100,
+    };
 
-    for (const reservation of instances.Reservations || []) {
-      if (reservation.Instances) {
-        for (const instance of reservation.Instances) {
-          const instanceId = instance.InstanceId;
-          const arn = `arn:aws:ec2:${this.region}:${this.accountId}:instance/${instanceId}`;
-          const consoleLink = new ARN(arn).consoleLink;
+    const dbInstancePages = paginateDescribeDBInstances(paginatorConfig, {});
+
+    for await (const instances of dbInstancePages) {
+      for (const dbInstance of instances.DBInstances || []) {
+        if (dbInstance.DBInstanceIdentifier && dbInstance.DBInstanceArn) {
+          const instanceId = dbInstance.DBInstanceIdentifier;
+          const instanceArn = dbInstance.DBInstanceArn;
+          const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
@@ -75,9 +78,9 @@ export class AWSEC2Provider extends AWSEntityProvider {
               annotations: {
                 ...(await defaultAnnotations),
                 [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
+                [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
               },
-              labels: instance.Tags?.reduce(
+              labels: dbInstance.TagList?.reduce(
                 (acc: Record<string, string>, tag) => {
                   if (tag.Key && tag.Value) {
                     acc[tag.Key] = tag.Value;
@@ -86,36 +89,36 @@ export class AWSEC2Provider extends AWSEntityProvider {
                 },
                 {},
               ),
-              name:
-                instanceId ??
-                `${reservation.ReservationId}-instance-${instance.InstanceId}`,
-              title:
-                instance?.Tags?.find(
-                  tag => tag.Key === 'Name' || tag.Key === 'name',
-                )?.Value ?? undefined,
-              instancePlatform: instance.Platform,
-              instanceType: instance.InstanceType,
-              monitoringState: instance.Monitoring?.State,
-              instancePlacement: instance.Placement?.AvailabilityZone,
-              amountOfBlockDevices: instance.BlockDeviceMappings?.length ?? 0,
-              instanceCpuCores: instance.CpuOptions?.CoreCount,
-              instanceCpuThreadsPerCode: instance.CpuOptions?.ThreadsPerCore,
-              reservationId: reservation.ReservationId,
+              name: instanceId,
+              title: instanceId,
+              dbInstanceClass: dbInstance.DBInstanceClass,
+              dbEngine: dbInstance.Engine,
+              dbEngineVersion: dbInstance.EngineVersion,
+              allocatedStorage: dbInstance.AllocatedStorage,
+              preferredMaintenanceWindow: dbInstance.PreferredMaintenanceWindow,
+              preferredBackupWindow: dbInstance.PreferredBackupWindow,
+              backupRetentionPeriod: dbInstance.BackupRetentionPeriod,
+              isMultiAz: dbInstance.MultiAZ,
+              automaticMinorVersionUpgrade: dbInstance.AutoMinorVersionUpgrade,
+              isPubliclyAccessible: dbInstance.PubliclyAccessible,
+              storageType: dbInstance.StorageType,
+              isPerformanceInsightsEnabled:
+                dbInstance.PerformanceInsightsEnabled,
             },
             spec: {
               owner: 'unknown',
-              type: 'ec2-instance',
+              type: 'rds-instance',
             },
           };
 
-          ec2Resources.push(resource);
+          rdsResources.push(resource);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: ec2Resources.map(entity => ({
+      entities: rdsResources.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

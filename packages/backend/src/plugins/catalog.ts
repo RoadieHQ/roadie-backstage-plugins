@@ -30,6 +30,7 @@ import {
   AWSIAMRoleProcessor,
   AWSEKSClusterProvider,
   AWSEC2Provider,
+  AWSRDSProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -61,6 +62,7 @@ export default async function createPlugin(
     const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
     const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, env);
     const ec2Provider = AWSEC2Provider.fromConfig(config, env);
+    const rdsProvider = AWSRDSProvider.fromConfig(config, env);
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
@@ -69,6 +71,7 @@ export default async function createPlugin(
     builder.addEntityProvider(ddbTableProvider);
     builder.addEntityProvider(eksClusterProvider);
     builder.addEntityProvider(ec2Provider);
+    builder.addEntityProvider(rdsProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
@@ -76,6 +79,7 @@ export default async function createPlugin(
     providers.push(ddbTableProvider);
     providers.push(eksClusterProvider);
     providers.push(ec2Provider);
+    providers.push(rdsProvider);
 
     const useDdbData = config.has('dynamodbTableData');
     if (useDdbData) {
