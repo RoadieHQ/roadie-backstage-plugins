@@ -103,7 +103,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       type: 'full',
       entities: userResources.map(entity => ({
         entity,
-        locationKey: `aws-iam-user-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

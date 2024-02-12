@@ -109,7 +109,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       type: 'full',
       entities: ddbComponents.map(entity => ({
         entity,
-        locationKey: `aws-dynamo-db-table-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

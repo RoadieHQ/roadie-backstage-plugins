@@ -93,7 +93,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
       type: 'full',
       entities: s3Resources.map(entity => ({
         entity,
-        locationKey: `aws-s3-bucket-provider:${this.accountId}`,
+        locationKey: this.getProviderName(),
       })),
     });
   }

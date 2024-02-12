@@ -164,7 +164,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
         type: 'full',
         entities: entities.map(entity => ({
           entity,
-          locationKey: `aws-dynamo-db-table-${this.tableDataConfig.tableName}-provider:${this.accountId}`,
+          locationKey: this.getProviderName(),
         })),
       });
     } catch (e) {
