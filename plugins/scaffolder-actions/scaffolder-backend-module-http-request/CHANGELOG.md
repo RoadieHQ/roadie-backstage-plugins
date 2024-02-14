@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.4
+
+### Patch Changes
+
+- 84e3119c: Bump `cross-fetch` to version "^4.0.0"
+
 ## 4.1.3
 
 ### Patch Changes
