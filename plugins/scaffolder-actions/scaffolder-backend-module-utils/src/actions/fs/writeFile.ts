@@ -56,7 +56,15 @@ export function createWriteFileAction() {
         ctx.input.path,
       );
 
-      fs.outputFileSync(destFilepath, ctx.input.content);
+      let formattedContent = ctx.input.content;
+      try {
+        const parsedContent = JSON.parse(ctx.input.content);
+        formattedContent = JSON.stringify(parsedContent, null, 2);
+      } catch (error) {
+        // Content is not JSON, no need to format
+      }
+
+      fs.outputFileSync(destFilepath, formattedContent);
       ctx.output('path', destFilepath);
     },
   });
