@@ -64,7 +64,6 @@ const MessageComponent = ({
   useEffect(() => {
     setMapped(
       conditions?.map((condition: Condition) => {
-        console.log(`${condition.lastTransitionTime}-${condition.type}`);
         return {
           key: `${condition.lastTransitionTime}-${condition.type}`,
           ...condition,
