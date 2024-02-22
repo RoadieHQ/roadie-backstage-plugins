@@ -19,7 +19,11 @@ import { resolveSafeChildPath } from '@backstage/backend-common';
 import fs from 'fs-extra';
 
 export function createWriteFileAction() {
-  return createTemplateAction<{ path: string; content: string }>({
+  return createTemplateAction<{
+    path: string;
+    content: string;
+    preserveFormatting?: boolean;
+  }>({
     id: 'roadiehq:utils:fs:write',
     description: 'Creates a file with the content on the given path',
     supportsDryRun: true,
@@ -38,6 +42,13 @@ export function createWriteFileAction() {
             description: 'This will be the content of the file',
             type: 'string',
           },
+          preserveFormatting: {
+            title: 'Preserve Formatting',
+            description:
+              'Specify whether to preserve formatting for JSON content',
+            type: 'boolean',
+            default: false,
+          },
         },
       },
       output: {
@@ -55,16 +66,19 @@ export function createWriteFileAction() {
         ctx.workspacePath,
         ctx.input.path,
       );
-
       let formattedContent = ctx.input.content;
-      try {
-        const parsedContent = JSON.parse(ctx.input.content);
-        formattedContent = JSON.stringify(parsedContent, null, 2);
-      } catch (error) {
-        // Content is not JSON, no need to format
+      if (ctx.input.preserveFormatting) {
+        try {
+          const parsedContent = JSON.parse(ctx.input.content);
+          formattedContent = JSON.stringify(parsedContent, null, 2);
+        } catch (error) {
+          // Content is not JSON, no need to format
+        }
       }
 
       fs.outputFileSync(destFilepath, formattedContent);
+
+      // fs.outputFileSync(destFilepath, ctx.input.content);
       ctx.output('path', destFilepath);
     },
   });
