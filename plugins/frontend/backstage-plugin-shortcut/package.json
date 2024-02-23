@@ -41,7 +41,7 @@
     "@material-ui/lab": "^4.0.0-alpha.45",
     "react-use": "^17.2.4",
     "msw": "^1.0.1",
-    "@backstage/plugin-home": "^0.5.11"
+    "@backstage/plugin-home": "^0.6.0"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17.0.0"
