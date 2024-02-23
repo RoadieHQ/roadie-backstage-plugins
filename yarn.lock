@@ -12019,25 +12019,15 @@
   resolved "https://registry.yarnpkg.com/@types/lunr/-/lunr-2.3.4.tgz#728f445855818fb17776d10ef4678f278072eb03"
   integrity sha512-j4x4XJwZvorEUbA519VdQ5b9AOU9TSvfi8tvxMAfP8XzNLtFex7A8vFQwqOx3WACbV0KMXbACV3cZl4/gynQ7g==
 
-"@types/luxon@^1.27.0":
-  version "1.27.1"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-1.27.1.tgz#aceeb2d5be8fccf541237e184e37ecff5faa9096"
-  integrity sha512-cPiXpOvPFDr2edMnOXlz3UBDApwUfR+cpizvxCy0n3vp9bz/qe8BWzHPIEFcy+ogUOyjKuCISgyq77ELZPmkkg==
-
-"@types/luxon@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-2.3.1.tgz#e34763178b46232e4c5f079f1706e18692415519"
-  integrity sha512-nAPUltOT28fal2eDZz8yyzNhBjHw1NEymFBP7Q9iCShqpflWPybxHbD7pw/46jQmT+HXOy1QN5hNTms8MOTlOQ==
-
 "@types/luxon@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.0.0.tgz#47fb7891e41875fce7018a8bd3d09b204c5621f5"
   integrity sha512-Lx+EZoJxUKw4dp8uei9XiUVNlgkYmax5+ovqt6Xf3LzJOnWhlfJw/jLBmqfGVwOP/pDr4HT8bI1WtxK0IChMLw==
 
-"@types/luxon@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.0.tgz#a61043a62c0a72696c73a0a305c544c96501e006"
-  integrity sha512-uKRI5QORDnrGFYgcdAVnHvEIvEZ8noTpP/Bg+HeUzZghwinDlIS87DEenV5r1YoOF9G4x600YsUXLWZ19rmTmg==
+"@types/luxon@^3.0.1":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.4.2.tgz#e4fc7214a420173cea47739c33cdf10874694db7"
+  integrity sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==
 
 "@types/markdown-it@^12.2.3":
   version "12.2.3"
@@ -22295,11 +22285,6 @@ luxon@^3.0.0, luxon@^3.0.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.2.1.tgz#14f1af209188ad61212578ea7e3d518d18cee45f"
   integrity sha512-QrwPArQCNLAKGO/C+ZIilgIuDnEnKx5QYODdDtbFaxzsbZcc/a7WFq7MhsVYgRlwawLtvOUESTlfJ+hc/USqPg==
-
-luxon@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.3.0.tgz#d73ab5b5d2b49a461c47cedbc7e73309b4805b48"
-  integrity sha512-An0UCfG/rSiqtAIiBPO0Y9/zAnHUZxAMiCpTd5h2smgsj7GGmcenvrvww2cqNA8/4A5ZrD1gJpHN2mIHZQF+Mg==
 
 luxon@^3.4.3:
   version "3.4.3"

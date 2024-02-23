@@ -48,7 +48,7 @@
     "@types/node-fetch": "^2.5.7",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
-    "luxon": "^3.3.0",
+    "luxon": "^3.0.1",
     "msw": "^1.0.1",
     "node-fetch": "^2.6.1",
     "react-use": "^17.2.4"
@@ -71,7 +71,7 @@
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "rollup-plugin-esbuild": "^5.0.0",
-    "@types/luxon": "^3.3.0"
+    "@types/luxon": "^3.0.1"
   },
   "files": [
     "dist"

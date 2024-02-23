@@ -45,7 +45,7 @@
     "@roadiehq/scaffolder-backend-module-utils": "^1.10.6",
     "@roadiehq/scaffolder-backend-module-aws": "^2.4.17",
     "better-sqlite3": "^7.5.1",
-    "@types/luxon": "^2.3.1",
+    "@types/luxon": "^3.0.1",
     "luxon": "^3.0.1",
     "app": "^1.0.10",
     "dockerode": "^3.2.1",
