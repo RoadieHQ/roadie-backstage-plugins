@@ -6439,7 +6439,7 @@
     semver "^7.5.3"
     zod "^3.22.4"
 
-"@backstage/cli@^0.25.0":
+"@backstage/cli@^0.25.0", "@backstage/cli@^0.25.1":
   version "0.25.2"
   resolved "https://registry.yarnpkg.com/@backstage/cli/-/cli-0.25.2.tgz#53f27c99c988f17edffb9e77b1864a53bccb3334"
   integrity sha512-PljPYaxljPtgrs+wFUSw30UXNq7/lTsMPqC4SgCzPXNCA1XDKGK0mnNkJJJD2r4bYwBXZ9mRdcs+zCf7MBrOmg==
@@ -19016,7 +19016,7 @@ eslint-plugin-react@^7.20.5, eslint-plugin-react@^7.23.2, eslint-plugin-react@^7
     semver "^6.3.0"
     string.prototype.matchall "^4.0.6"
 
-eslint-plugin-unused-imports@^3.0.0:
+eslint-plugin-unused-imports@^3.0.0, eslint-plugin-unused-imports@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-3.1.0.tgz#db015b569d3774e17a482388c95c17bd303bc602"
   integrity sha512-9l1YFCzXKkw1qtAru1RWUtG2EVDZY0a0eChKXcL+EZ5jitG7qxdctu4RnvhOJHv4xfmUf7h+JJPINlVpGhZMrw==
