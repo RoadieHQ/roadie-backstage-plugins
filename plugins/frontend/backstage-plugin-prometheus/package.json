@@ -45,7 +45,7 @@
     "classnames": "^2.2.6",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
-    "luxon": "^3.0.1",
+    "luxon": "^3.0.0",
     "react-use": "^17.2.4",
     "react-use-dimensions": "^1.2.1",
     "recharts": "^1.8.5"
@@ -55,6 +55,7 @@
     "react-dom": "^16.13.1 || ^17.0.0"
   },
   "devDependencies": {
+    "@types/luxon": "^3.0.0",
     "@backstage/cli": "^0.25.0",
     "@backstage/core-app-api": "^1.11.2",
     "@backstage/dev-utils": "^1.0.25",
