@@ -651,7 +651,7 @@ spec:
           false,
           'custom-validation-schema.json',
         ),
-      ).rejects.toThrowError(
+      ).rejects.toThrow(
         'Error: Malformed annotation, /metadata/annotations/custom~1source-location must match pattern "^custom-field-value:\\d*$"',
       );
     });

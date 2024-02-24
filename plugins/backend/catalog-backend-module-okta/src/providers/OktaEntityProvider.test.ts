@@ -56,7 +56,7 @@ describe('OktaEntityProvider', () => {
       });
       provider.getClient('http://someorg', ['okta.users.read']);
 
-      expect(Client).toBeCalledWith({
+      expect(Client).toHaveBeenCalledWith({
         orgUrl: 'http://someorg',
         token: 'secret',
       });
@@ -75,7 +75,7 @@ describe('OktaEntityProvider', () => {
       });
       provider.getClient('http://someorg', ['okta.users.read']);
 
-      expect(Client).toBeCalledWith({
+      expect(Client).toHaveBeenCalledWith({
         authorizationMode: 'PrivateKey',
         clientId: 'theclientid',
         keyId: 'thekeyid',

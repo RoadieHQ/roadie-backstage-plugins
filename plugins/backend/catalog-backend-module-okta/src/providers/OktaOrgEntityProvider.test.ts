@@ -97,7 +97,7 @@ describe('OktaOrgEntityProvider', () => {
       const provider = OktaOrgEntityProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.not.arrayContaining([
           {
@@ -171,7 +171,7 @@ describe('OktaOrgEntityProvider', () => {
       const provider = OktaOrgEntityProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -213,7 +213,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -240,7 +240,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -270,7 +270,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -301,7 +301,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -333,7 +333,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.not.arrayContaining([
           expect.objectContaining({
@@ -391,7 +391,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -476,7 +476,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -574,7 +574,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -650,7 +650,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -725,7 +725,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({
@@ -803,7 +803,7 @@ describe('OktaOrgEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
           expect.objectContaining({

@@ -39,10 +39,11 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.25.0",
+    "jest-mock": "^29.0.0",
     "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",
     "supertest": "^4.0.2",
-    "ts-jest": "^26.1.0"
+    "ts-jest": "^29.0.0"
   },
   "files": [
     "dist",
