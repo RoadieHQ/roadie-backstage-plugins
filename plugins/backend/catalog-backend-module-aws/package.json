@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.25.0",
+    "@testing-library/jest-dom": "^6.4.2",
     "@types/crypto-js": "^4.1.1",
     "@types/link2aws": "^1.0.0",
     "@types/lodash": "^4.14.151",

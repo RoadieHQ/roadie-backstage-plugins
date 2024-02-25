@@ -20,7 +20,7 @@ import {
   errorApiRef,
   githubAuthApiRef,
 } from '@backstage/core-plugin-api';
-import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
+import { TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
 import { Content } from './Content';
 import {

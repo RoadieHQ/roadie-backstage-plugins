@@ -448,7 +448,7 @@ scripts:
     });
   });
 
-  it.only('can pass options to YAML.stringify', async () => {
+  it('can pass options to YAML.stringify', async () => {
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': 'zoo: bar',
