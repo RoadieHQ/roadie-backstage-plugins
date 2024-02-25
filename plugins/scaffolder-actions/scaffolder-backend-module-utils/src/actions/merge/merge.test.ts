@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
 import { createMergeAction, createMergeJSONAction } from './merge';
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
@@ -448,14 +448,12 @@ scripts:
     });
   });
 
-  it('can pass options to YAML.stringify', async () => {
+  it.only('can pass options to YAML.stringify', async () => {
     mock({
       'fake-tmp-dir': {
-        'fake-file.yaml': '',
+        'fake-file.yaml': 'zoo: bar',
       },
     });
-
-    const mockDump = jest.spyOn(YAML, 'stringify');
 
     const opts = {
       indent: 3,
@@ -476,12 +474,17 @@ scripts:
       workspacePath: 'fake-tmp-dir',
       input: {
         path: 'fake-file.yaml',
-        content: '',
+        content: YAML.stringify({ foo: { bar: { nested: 'deep' } } }),
         options: opts,
       },
     });
+    const expectedPath = resolveSafeChildPath('fake-tmp-dir', 'fake-file.yaml');
 
-    expect(mockDump).toHaveBeenCalledWith({}, opts);
+    expect(mockContext.output).toHaveBeenCalledWith('path', expectedPath);
+    const expectedContent = fs.readFileSync(expectedPath, 'utf-8');
+    expect(expectedContent).toEqual(
+      YAML.stringify({ zoo: 'bar', foo: { bar: { nested: 'deep' } } }, opts),
+    );
   });
 
   it('should put path on the output property', async () => {

@@ -241,6 +241,9 @@ spec:
   afterEach(() => {
     vol.reset();
   });
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
   it('Should successfully validate simple catalog info', async () => {
     await expect(
       validator.validateFromFile('catalog-info.yml'),

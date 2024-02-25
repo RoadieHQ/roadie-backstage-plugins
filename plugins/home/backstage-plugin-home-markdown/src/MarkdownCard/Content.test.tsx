@@ -15,7 +15,11 @@
  */
 
 import React from 'react';
-import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  AnyApiRef,
+  errorApiRef,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
 import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
 import { Content } from './Content';
@@ -78,6 +82,7 @@ const mockGithubApi: GithubApi = {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [githubApiRef, mockGithubApi],
+  [errorApiRef, jest.fn()],
 ];
 
 describe('<MarkdownContent>', () => {
@@ -96,15 +101,13 @@ describe('<MarkdownContent>', () => {
       [githubAuthApiRef, mockGithubUnAuth],
     ];
     render(
-      wrapInTestApp(
-        <TestApiProvider apis={api}>
-          <Content
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
+      <TestApiProvider apis={api}>
+        <Content
+          owner="test"
+          path=".backstage/home-page.md"
+          repo="roadie-backstage-plugins"
+        />
+      </TestApiProvider>,
       {},
     );
 
@@ -116,15 +119,13 @@ describe('<MarkdownContent>', () => {
   });
   it('should render markdown card', async () => {
     render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <Content
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
+      <TestApiProvider apis={apis}>
+        <Content
+          owner="test"
+          path=".backstage/home-page.md"
+          repo="roadie-backstage-plugins"
+        />
+      </TestApiProvider>,
       {},
     );
 
