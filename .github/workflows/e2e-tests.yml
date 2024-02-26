@@ -49,7 +49,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: yarn dev:ci
-          wait-on: 'http://localhost:3000, http://localhost:7007'
+          wait-on: 'http://localhost:7007'
           project: ./packages/app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
