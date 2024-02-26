@@ -44,6 +44,7 @@ import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
 import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
+import { RagModal } from '@roadiehq/rag-ai';
 
 const app = createApp({
   apis,
@@ -111,6 +112,7 @@ const App = () => (
     <AlertDisplay />
     <OAuthRequestDialog />
     <AppRouter>
+      <RagModal />
       <Root>{routes}</Root>
     </AppRouter>
   </AppProvider>

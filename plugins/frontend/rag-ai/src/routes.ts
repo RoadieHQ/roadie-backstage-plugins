@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2024 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-var path = require('path');
+import { createRouteRef } from '@backstage/core-plugin-api';
 
-module.exports = {
-  root: true,
-  plugins: ['notice'],
-  rules: {
-    'notice/notice': [
-      'error',
-      {
-        // eslint-disable-next-line no-restricted-syntax
-        templateFile: path.resolve(__dirname, './scripts/copyright-header.txt'),
-        templateVars: {
-          NAME: 'Larder Software Limited',
-        },
-        varRegexps: { NAME: /(Larder Software Limited)/ },
-        onNonMatchingHeader: 'replace',
-      },
-    ],
-    eqeqeq: ['error', 'smart'],
-  },
-};
+export const rootRouteRef = createRouteRef({
+  id: 'rag-ai-frontend',
+});

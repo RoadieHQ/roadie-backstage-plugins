@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2024 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { RoadieEmbeddings } from '@roadiehq/rag-ai-node';
+import { Logger } from 'winston';
+import { BaseLLM } from '@langchain/core/language_models/llms';
+import { Config } from '@backstage/config';
 
-var path = require('path');
-
-module.exports = {
-  root: true,
-  plugins: ['notice'],
-  rules: {
-    'notice/notice': [
-      'error',
-      {
-        // eslint-disable-next-line no-restricted-syntax
-        templateFile: path.resolve(__dirname, './scripts/copyright-header.txt'),
-        templateVars: {
-          NAME: 'Larder Software Limited',
-        },
-        varRegexps: { NAME: /(Larder Software Limited)/ },
-        onNonMatchingHeader: 'replace',
-      },
-    ],
-    eqeqeq: ['error', 'smart'],
-  },
-};
+export interface RagAiConfig {
+  logger: Logger;
+  embeddings: RoadieEmbeddings;
+  model: BaseLLM;
+  config: Config;
+}
