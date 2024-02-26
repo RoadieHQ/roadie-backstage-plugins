@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
-    "dev:ci": "concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
+    "dev:ci": "concurrently \"http-server packages/app/dist -a localhost --port 3000 --gzip --proxy http://localhost:3000?\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
     "start-backend:ci": "yarn workspace backend backstage-cli package build && node packages/backend",
