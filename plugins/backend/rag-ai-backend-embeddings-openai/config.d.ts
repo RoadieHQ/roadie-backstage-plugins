@@ -28,7 +28,7 @@ export interface Config {
         openAIApiKey?: string;
 
         /**
-         * Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-large
+         * Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-small
          */
         modelName?: string;
 

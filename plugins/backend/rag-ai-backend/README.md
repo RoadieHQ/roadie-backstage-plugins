@@ -2,8 +2,7 @@
 
 This plugin is the backend for RAG AI Backstage plugin. You can see the corresponding frontend plugin in [here](/plugins/frontend/rag-ai/README.md).
 
-This plugin provides functionality to install and configure a Retrieval Augmented Generation backend within your Backstage instance. The plugin is capable of creating embeddings to enhance questions asked from LLMs with contextual information from your Backstage catalog, giving you the opportunity to get tailored responses based on your company's entities and other configured data sets. The plugin is configurable with customizable prompts, vector embeddings queries, additional search based embeddings and can be extended to support any LLM providing an API. 
-
+This plugin provides functionality to install and configure a Retrieval Augmented Generation backend within your Backstage instance. The plugin is capable of creating embeddings to enhance questions asked from LLMs with contextual information from your Backstage catalog, giving you the opportunity to get tailored responses based on your company's entities and other configured data sets. The plugin is configurable with customizable prompts, vector embeddings queries, additional search based embeddings and can be extended to support any LLM providing an API.
 
 # Configuration
 
@@ -66,14 +65,14 @@ ai:
       # (Optional) The API key for accessing OpenAI services. Defaults to process.env.OPENAI_API_KEY
       openAIApiKey: 'sk-123...'
 
-      # (Optional) Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-large
-      modelName: 'text-embedding-3-large'
+      # (Optional) Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-small
+      modelName: 'text-embedding-3-small'
 
       # (Optional) The size of the batch to use when creating embeddings. Defaults to 512, max is 2048
       batchSize: 512
 
       # (Optional) The number of dimensions to generate. Defaults to use the default value from the chosen model
-      embeddingsDimensions: 3072
+      embeddingsDimensions: 1536
 ```
 
 <details><summary>Example minimal configuration</summary>
@@ -125,14 +124,11 @@ const vectorStore = await createRoadiePgVectorStore({
 
 ## Embeddings configurations
 
-
-The RAG AI plugin depends largely on embeddings submodules to construct good and relevant embeddings that can be included as a context to the queries sent to configured LLMs. There are two implementations included within this repository, as well as a base functionality to construct initial embeddings. 
+The RAG AI plugin depends largely on embeddings submodules to construct good and relevant embeddings that can be included as a context to the queries sent to configured LLMs. There are two implementations included within this repository, as well as a base functionality to construct initial embeddings.
 
 > It is highly recommended to modify these embeddings creations and retrievals to match the specific use case you are targeting with this plugin.
 
-
 Below are the configuration examples on how to initialize and use the included submodules.
-
 
 ### AWS Bedrock Configuration
 
@@ -290,7 +286,6 @@ The ideal option to manage embeddings creation is to make them event based. They
 
 > If you don't want to create embeddings and don't want to provide contextual information to your queries, you can configure the plugin prompt templates to not refer to embedded contextual information, thus providing you an interface to ask generic questions from configured LLMs.
 
-
 ### Calling the endpoint
 
 The endpoint exposed from the plugin lives under a path `/embeddings/:source`. Assuming the application is running on localhost port 7007 and the `@roadiehq/rag-ai-backend` is mounted on path `rag-ai` the call to construct embeddings for Catalog entries of kind `component` would be the following:
@@ -321,7 +316,7 @@ export const configureEmbeddingsCreation = async (opts: {
   logger: Logger;
 }) => {
   const { logger, discovery, scheduler } = opts;
-  
+
   const scheduleLogger = logger.child({ name: 'EmbeddingsCreationScheduler' });
   const baseUrl = await discovery.getBaseUrl('rag-ai');
   scheduler.scheduleTask({
