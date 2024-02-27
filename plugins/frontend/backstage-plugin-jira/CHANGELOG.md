@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.5.1
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.5.0
 
 ### Minor Changes

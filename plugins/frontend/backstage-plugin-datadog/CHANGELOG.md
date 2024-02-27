@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.2.3
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.2.2
 
 ### Patch Changes

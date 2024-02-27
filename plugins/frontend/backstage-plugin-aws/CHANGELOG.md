@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.1.18
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 1.1.17
 
 ### Patch Changes

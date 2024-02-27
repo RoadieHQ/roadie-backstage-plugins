@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.6
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 1.3.5
 
 ### Patch Changes

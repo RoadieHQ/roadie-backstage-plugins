@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.2.4
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.2.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.13.3
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 1.13.2
 
 ### Patch Changes
