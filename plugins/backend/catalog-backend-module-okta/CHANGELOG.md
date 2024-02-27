@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.5
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 0.9.4
 
 ### Patch Changes

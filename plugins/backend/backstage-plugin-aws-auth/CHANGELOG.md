@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.18
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 0.4.17
 
 ### Patch Changes

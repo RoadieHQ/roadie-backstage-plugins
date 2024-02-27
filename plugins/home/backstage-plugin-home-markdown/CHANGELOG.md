@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.19
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.5.18
 
 ### Patch Changes

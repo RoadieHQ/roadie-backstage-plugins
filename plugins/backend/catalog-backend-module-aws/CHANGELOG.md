@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.3
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.1.2
 
 ### Patch Changes

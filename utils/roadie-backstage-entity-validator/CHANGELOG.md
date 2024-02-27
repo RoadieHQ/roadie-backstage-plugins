@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.6
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.4.5
 
 ### Patch Changes

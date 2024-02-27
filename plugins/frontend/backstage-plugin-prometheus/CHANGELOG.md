@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.8.4
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.8.3
 
 ### Patch Changes

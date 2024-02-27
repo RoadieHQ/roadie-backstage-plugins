@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.1.19
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.1.18
 
 ### Patch Changes

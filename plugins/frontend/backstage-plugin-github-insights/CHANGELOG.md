@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.25
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.3.24
 
 ### Patch Changes
