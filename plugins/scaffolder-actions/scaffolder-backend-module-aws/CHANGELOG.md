@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.20
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.4.19
 
 ### Patch Changes

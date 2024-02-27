@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.19
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 1.1.18
 
 ### Patch Changes

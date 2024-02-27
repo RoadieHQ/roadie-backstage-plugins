@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.2.5
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.2.4
 
 ### Patch Changes

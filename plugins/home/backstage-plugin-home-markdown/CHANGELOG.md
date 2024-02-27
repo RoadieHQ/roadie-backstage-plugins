@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.20
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.5.19
 
 ### Patch Changes
