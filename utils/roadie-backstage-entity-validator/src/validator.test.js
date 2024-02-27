@@ -1,4 +1,6 @@
-jest.mock('fs');
+jest.mock('fs', () => {
+  return require('memfs');
+});
 const validator = require('./validator');
 const { vol } = require('memfs');
 
@@ -238,7 +240,15 @@ spec:
 }`,
     });
   });
+  beforeAll(() => {
+    jest.clearAllMocks();
+    vol.reset();
+  });
   afterEach(() => {
+    vol.reset();
+  });
+  afterAll(() => {
+    jest.clearAllMocks();
     vol.reset();
   });
   it('Should successfully validate simple catalog info', async () => {
@@ -651,7 +661,7 @@ spec:
           false,
           'custom-validation-schema.json',
         ),
-      ).rejects.toThrowError(
+      ).rejects.toThrow(
         'Error: Malformed annotation, /metadata/annotations/custom~1source-location must match pattern "^custom-field-value:\\d*$"',
       );
     });

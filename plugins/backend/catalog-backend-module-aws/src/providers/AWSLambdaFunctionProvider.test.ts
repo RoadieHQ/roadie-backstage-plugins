@@ -56,7 +56,7 @@ describe('AWSLambdaFunctionProvider', () => {
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
       });
@@ -96,7 +96,7 @@ describe('AWSLambdaFunctionProvider', () => {
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({

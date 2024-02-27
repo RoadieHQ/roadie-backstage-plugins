@@ -100,7 +100,7 @@ describe('BuildKiteBuildsTable', () => {
     );
 
     await waitFor(() =>
-      expect(postMock).toBeCalledWith(
+      expect(postMock).toHaveBeenCalledWith(
         new Error('failed to fetch data, status 403: Forbidden'),
       ),
     );

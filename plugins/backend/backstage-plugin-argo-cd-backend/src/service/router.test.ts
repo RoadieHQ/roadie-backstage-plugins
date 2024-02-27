@@ -5,7 +5,7 @@ import request from 'supertest';
 import { getVoidLogger } from '@backstage/backend-common';
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 const mockDeleteApp = jest.fn();
 const mockDeleteProject = jest.fn();
