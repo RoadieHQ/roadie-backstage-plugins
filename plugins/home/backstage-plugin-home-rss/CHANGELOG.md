@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.7
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 1.3.6
 
 ### Patch Changes

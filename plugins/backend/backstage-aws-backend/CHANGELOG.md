@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.18
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 1.1.17
 
 ### Patch Changes

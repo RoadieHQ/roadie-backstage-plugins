@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.19
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.4.18
 
 ### Patch Changes

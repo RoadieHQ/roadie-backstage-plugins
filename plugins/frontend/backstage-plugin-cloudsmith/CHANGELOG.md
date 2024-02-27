@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.18
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 1.0.17
 
 ### Patch Changes

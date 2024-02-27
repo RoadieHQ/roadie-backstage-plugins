@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.13
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 1.3.12
 
 ### Patch Changes

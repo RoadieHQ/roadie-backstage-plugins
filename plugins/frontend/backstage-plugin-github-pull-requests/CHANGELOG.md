@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.22
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.5.21
 
 ### Patch Changes

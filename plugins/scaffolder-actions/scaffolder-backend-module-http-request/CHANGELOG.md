@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.6
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 4.1.5
 
 ### Patch Changes

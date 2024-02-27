@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.13
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.3.12
 
 ### Patch Changes

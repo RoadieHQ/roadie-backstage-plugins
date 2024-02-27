@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.14.2
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
 ## 2.14.1
 
 ### Patch Changes
