@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.1.18
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.1.17
 
 ### Patch Changes

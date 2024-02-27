@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.24
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.3.23
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.5.2
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.5.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.8.3
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.8.2
 
 ### Patch Changes

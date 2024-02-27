@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.12
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- 84f7e01: Bump dependencies to match
+
 ## 2.3.11
 
 ### Patch Changes

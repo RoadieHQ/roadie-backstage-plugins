@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.2
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.1.1
 
 ### Patch Changes

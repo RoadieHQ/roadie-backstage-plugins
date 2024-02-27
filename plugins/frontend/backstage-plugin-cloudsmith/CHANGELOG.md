@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.17
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 1.0.16
 
 ### Patch Changes
