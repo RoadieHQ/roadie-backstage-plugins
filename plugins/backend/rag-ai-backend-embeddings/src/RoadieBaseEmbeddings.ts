@@ -59,6 +59,15 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
     this.logger = logger;
   }
 
+  // Retrieval -> Retrievers array
+  // * Metadata filtering. Entity ref/type etc.
+  // Routers => Determine the correct retriever
+  // Post-Processing -> Node PostProcessor array
+  // * Reranking
+  // * small-to-big retrieval
+  // * embedded tables
+  // Synthesis -> Synthesizer array => LLM Query
+
   /**
    * Returns the splitter object. Default implementation is using a naive RecursiveCharacterTextSplitter
    * which is likely not the best candidate for structured data splitting.

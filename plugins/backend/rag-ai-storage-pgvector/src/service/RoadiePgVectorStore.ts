@@ -31,6 +31,11 @@ export interface RoadiePgVectorStoreConfig {
    * @default 500
    */
   chunkSize?: number;
+
+  /**
+   * The default amount of embeddings to return when querying vectors with similarity search
+   */
+  amount?: number;
 }
 
 /**
@@ -40,6 +45,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
   private readonly tableName: string = 'embeddings';
   private readonly client: Knex;
   private readonly chunkSize;
+  private readonly amount;
   private embeddings?: Embeddings;
   private readonly logger: Logger;
 
@@ -68,6 +74,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
     this.client = config.db;
     this.logger = config.logger;
     this.chunkSize = config.chunkSize ?? 500;
+    this.amount = config.amount ?? 4;
   }
 
   connectEmbeddings(embeddings: Embeddings) {
@@ -246,7 +253,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
   async similaritySearch(
     query: string,
     filter: EmbeddingDocMetadata,
-    amount = 4,
+    amount: number = this.amount,
   ): Promise<RoadieEmbeddingDoc[]> {
     if (!this.embeddings) {
       throw new Error('No Embeddings configured for the vector store.');

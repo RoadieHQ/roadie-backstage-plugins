@@ -19,28 +19,40 @@ import { applyDatabaseMigrations } from '../database/migrations';
 
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { RoadiePgVectorStore } from './RoadiePgVectorStore';
+import { Config } from '@backstage/config';
 
 export interface PgVectorStoreInitConfig {
   logger: Logger;
   database: PluginDatabaseManager;
-  options?: {
-    chunksize?: number;
-    tableName?: string;
-  };
+  config: Config;
+}
+
+export interface RoadiePgVectorStoreOptions {
+  chunkSize?: number;
+  amount?: number;
 }
 
 export async function createRoadiePgVectorStore({
   logger,
   database,
-  options,
+  config,
 }: PgVectorStoreInitConfig): Promise<RoadieVectorStore> {
   logger.info('Starting Roadie PgVectorStore');
 
   const dbClient = await database.getClient();
   await applyDatabaseMigrations(dbClient);
+
+  const pgVectorConfig = config.getOptionalConfig('ai.storage.pgVector');
+  const options: RoadiePgVectorStoreOptions = {};
+  if (pgVectorConfig) {
+    options.amount = pgVectorConfig.getOptionalNumber('amount');
+    options.chunkSize = pgVectorConfig.getOptionalNumber('chunkSize');
+  }
+
   return RoadiePgVectorStore.initialize({
     logger,
     db: dbClient,
-    chunkSize: options?.chunksize,
+    chunkSize: options?.chunkSize,
+    amount: options?.amount,
   });
 }

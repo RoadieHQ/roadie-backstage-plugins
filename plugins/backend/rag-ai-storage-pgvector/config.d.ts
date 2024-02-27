@@ -21,11 +21,16 @@ export interface Config {
    */
   ai?: {
     storage: {
-      pgvector: {
+      pgVector: {
         /**
          * The size of the chunk to flush when storing embeddings to the DB
          */
-        chunksize?: number;
+        chunkSize?: number;
+
+        /**
+         * The default amount of embeddings to return when querying vectors with similarity search
+         */
+        amount?: number;
       };
     };
   };
