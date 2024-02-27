@@ -475,6 +475,24 @@ describe('ArgoCD service', () => {
     expect(resp).toStrictEqual(true);
   });
 
+  it('should delete project with json content type header', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+    await argoService.deleteProject({
+      baseUrl: 'https://argoInstance1.com',
+      argoProjectName: 'testApp',
+      argoToken: 'testToken',
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+      }),
+    );
+  });
+
   it('should fail to delete project in argo when bad status', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
 
@@ -537,6 +555,24 @@ describe('ArgoCD service', () => {
     });
 
     expect(resp).toStrictEqual(true);
+  });
+
+  it('should delete app with json content type header', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+    await argoService.deleteApp({
+      baseUrl: 'https://argoInstance1.com',
+      argoApplicationName: 'testApp',
+      argoToken: 'testToken',
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+      }),
+    );
   });
 
   it('should fail to delete app in argo when bad status', async () => {
