@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.1.20
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.1.19
 
 ### Patch Changes

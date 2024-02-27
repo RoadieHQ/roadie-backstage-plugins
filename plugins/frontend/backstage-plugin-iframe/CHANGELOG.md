@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.14
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 1.3.13
 
 ### Patch Changes

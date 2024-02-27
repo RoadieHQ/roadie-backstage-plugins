@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.8.5
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.8.4
 
 ### Patch Changes

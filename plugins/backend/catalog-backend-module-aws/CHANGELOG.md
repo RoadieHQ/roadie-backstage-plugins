@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.4
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.1.3
 
 ### Patch Changes

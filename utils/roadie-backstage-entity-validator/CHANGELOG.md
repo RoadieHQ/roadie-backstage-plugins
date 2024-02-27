@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.7
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.4.6
 
 ### Patch Changes

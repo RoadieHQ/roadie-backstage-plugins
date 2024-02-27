@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.6.5
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 1.6.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.8
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 1.3.7
 
 ### Patch Changes

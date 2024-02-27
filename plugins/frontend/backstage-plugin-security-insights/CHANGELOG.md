@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.14
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 2.3.13
 
 ### Patch Changes

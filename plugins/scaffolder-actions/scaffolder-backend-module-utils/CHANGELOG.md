@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.13.5
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
 ## 1.13.4
 
 ### Patch Changes
