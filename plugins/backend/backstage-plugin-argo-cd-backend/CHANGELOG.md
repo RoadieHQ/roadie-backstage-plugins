@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.14.4
+
+### Patch Changes
+
+- c5890a8: add proper content type header to argo DELETE request on app and project
+
 ## 2.14.3
 
 ### Patch Changes
