@@ -56,7 +56,7 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
       });
@@ -84,7 +84,7 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({

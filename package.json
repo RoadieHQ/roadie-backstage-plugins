@@ -7,12 +7,12 @@
   },
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
-    "dev:ci": "concurrently \"http-server --port 3000 --proxy http://localhost:3000? packages/app/dist\" \"yarn start-backend\"",
+    "dev:ci": "concurrently \"http-server packages/app/dist -a localhost --port 3000 --gzip --proxy http://localhost:3000?\" \"yarn start-backend\"",
     "start": "yarn workspace app start",
     "start-backend": "yarn workspace backend start",
     "start-backend:ci": "yarn workspace backend backstage-cli package build && node packages/backend",
     "start:ci": "concurrently \"yarn start\" \"yarn start-backend:ci\"",
-    "build": "lerna run build",
+    "build": "backstage-cli repo build --all",
     "build-image": "yarn workspace backend build-image",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
@@ -20,12 +20,16 @@
     "diff": "lerna run diff --",
     "test": "yarn backstage-cli repo test --workerIdleMemoryLimit=800M --coverage --runInBand",
     "test:all": "lerna run test -- --coverage --runInBand",
-    "lint": "lerna run lint --since origin/main --",
+    "lint": "backstage-cli repo lint --since origin/main",
     "lint:all": "lerna run lint --",
     "create-plugin": "backstage-cli create-plugin --scope roadiehq --no-private",
     "remove-plugin": "backstage-cli remove-plugin",
     "release": "changeset version && yarn prettier --write '{packages,plugins}/*/{package.json,CHANGELOG.md}' && yarn install",
     "prepare": "husky install"
+  },
+  "resolutions": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
   },
   "workspaces": {
     "packages": [
@@ -35,16 +39,19 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.24.0",
+    "@backstage/cli": "^0.25.0",
     "@spotify/prettier-config": "^14.0.0",
     "@types/webpack": "^5.28.0",
     "concurrently": "^7.0.0",
+    "eslint": "^8.6.0",
     "eslint-plugin-notice": "^0.9.10",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
     "husky": "^8.0.1",
     "lerna": "^6.0.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.3.2",
-    "typescript": "~4.7.0"
+    "typescript": "~5.2.0"
   },
   "prettier": "@spotify/prettier-config",
   "dependencies": {

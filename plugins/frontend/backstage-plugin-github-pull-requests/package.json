@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-github-pull-requests",
-  "version": "2.5.20",
+  "version": "2.5.23",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -36,11 +36,11 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "^1.4.3",
-    "@backstage/core-components": "^0.13.8",
-    "@backstage/core-plugin-api": "^1.8.0",
-    "@backstage/plugin-catalog-react": "^1.9.1",
-    "@backstage/plugin-home-react": "^0.1.5",
-    "@material-ui/core": "^4.11.0",
+    "@backstage/core-components": "^0.14.0",
+    "@backstage/core-plugin-api": "^1.8.1",
+    "@backstage/plugin-catalog-react": "^1.9.2",
+    "@backstage/plugin-home-react": "^0.1.6",
+    "@material-ui/core": "^4.12.2",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@octokit/rest": "^19.0.3",
@@ -48,30 +48,30 @@
     "@types/node-fetch": "^2.5.7",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
-    "luxon": "^3.3.0",
+    "luxon": "^3.0.0",
     "msw": "^1.0.1",
     "node-fetch": "^2.6.1",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17.0.0",
-    "react-dom": "^16.13.1 || ^17.0.0",
+    "react": "^16.13.1 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.0",
     "react-router": "6.0.0-beta.0 || ^6.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.24.0",
-    "@backstage/core-app-api": "^1.11.1",
-    "@backstage/dev-utils": "^1.0.24",
-    "@backstage/test-utils": "^1.4.5",
-    "@testing-library/jest-dom": "^5.10.1",
-    "@testing-library/react": "^11.2.5",
+    "@types/luxon": "^3.0.0",
+    "@backstage/cli": "^0.25.0",
+    "@backstage/core-app-api": "^1.11.2",
+    "@backstage/dev-utils": "^1.0.25",
+    "@backstage/test-utils": "^1.4.6",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
     "cross-fetch": "^3.1.4",
     "jest-environment-jsdom": "^29.2.1",
     "rollup-plugin-dts": "^5.2.0",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "rollup-plugin-esbuild": "^5.0.0",
-    "@types/luxon": "^3.3.0"
+    "rollup-plugin-esbuild": "^5.0.0"
   },
   "files": [
     "dist"

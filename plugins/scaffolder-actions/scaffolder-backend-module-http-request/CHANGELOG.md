@@ -1,5 +1,23 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.7
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 4.1.6
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 4.1.5
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 4.1.4
 
 ### Patch Changes

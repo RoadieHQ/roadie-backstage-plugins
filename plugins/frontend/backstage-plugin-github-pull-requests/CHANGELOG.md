@@ -1,5 +1,24 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.23
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.5.22
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.5.21
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- 84f7e01: Bump dependencies to match
+
 ## 2.5.20
 
 ### Patch Changes

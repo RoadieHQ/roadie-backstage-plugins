@@ -1,5 +1,23 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.6
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 0.9.5
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 0.9.4
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 0.9.3
 
 ### Patch Changes

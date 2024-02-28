@@ -1,5 +1,56 @@
 # backend
 
+## 2.0.35
+
+### Patch Changes
+
+- Updated dependencies [c5890a8]
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.14.4
+
+## 2.0.34
+
+### Patch Changes
+
+- Updated dependencies [6d5e4bf]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.19
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.14.3
+  - @roadiehq/backstage-plugin-aws-auth@0.4.19
+  - @roadiehq/catalog-backend-module-aws@2.1.4
+  - @roadiehq/catalog-backend-module-okta@0.9.6
+  - @roadiehq/scaffolder-backend-module-aws@2.4.20
+  - @roadiehq/scaffolder-backend-module-http-request@4.1.7
+  - @roadiehq/scaffolder-backend-module-utils@1.13.5
+
+## 2.0.33
+
+### Patch Changes
+
+- Updated dependencies [aef7096]
+  - @roadiehq/backstage-plugin-aws-backend@1.1.18
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.14.2
+  - @roadiehq/backstage-plugin-aws-auth@0.4.18
+  - @roadiehq/catalog-backend-module-aws@2.1.3
+  - @roadiehq/catalog-backend-module-okta@0.9.5
+  - @roadiehq/scaffolder-backend-module-aws@2.4.19
+  - @roadiehq/scaffolder-backend-module-http-request@4.1.6
+  - @roadiehq/scaffolder-backend-module-utils@1.13.4
+
+## 2.0.32
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- Updated dependencies [f7287ee]
+  - app@1.0.11
+  - @roadiehq/backstage-plugin-aws-backend@1.1.17
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.14.1
+  - @roadiehq/backstage-plugin-aws-auth@0.4.17
+  - @roadiehq/catalog-backend-module-aws@2.1.2
+  - @roadiehq/catalog-backend-module-okta@0.9.4
+  - @roadiehq/scaffolder-backend-module-aws@2.4.18
+  - @roadiehq/scaffolder-backend-module-http-request@4.1.5
+  - @roadiehq/scaffolder-backend-module-utils@1.13.3
+
 ## 2.0.31
 
 ### Patch Changes

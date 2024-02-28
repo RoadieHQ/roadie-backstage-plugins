@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.1.20
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.1.19
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.1.18
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.1.17
 
 ### Patch Changes

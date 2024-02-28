@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.6
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.2.5
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.2.4
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.2.3
 
 ### Patch Changes

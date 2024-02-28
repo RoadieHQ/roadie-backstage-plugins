@@ -1,5 +1,24 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.14
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 1.3.13
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 1.3.12
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- 84f7e01: Bump dependencies to match
+
 ## 1.3.11
 
 ### Patch Changes
