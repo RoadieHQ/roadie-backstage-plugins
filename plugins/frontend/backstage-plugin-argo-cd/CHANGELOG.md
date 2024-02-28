@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.6.0
+
+### Minor Changes
+
+- e810239: Added pagination and sorting for contents of ArgoCDDetailsCard which improves readability of the component
+
 ## 2.5.4
 
 ### Patch Changes
