@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   LinearProgress,
@@ -50,17 +50,34 @@ interface Condition {
   type: string;
 }
 
+interface ConditionRow extends Condition {
+  key: string;
+}
+
 const MessageComponent = ({
   conditions,
 }: {
   conditions: Condition[] | undefined;
 }) => {
+  const [mapped, setMapped] = useState<ConditionRow[]>([]);
+
+  useEffect(() => {
+    setMapped(
+      conditions?.map((condition: Condition) => {
+        return {
+          key: `${condition.lastTransitionTime}-${condition.type}`,
+          ...condition,
+        };
+      }) || [],
+    );
+  }, [conditions]);
+
   return (
     <>
-      {conditions ? (
+      {mapped ? (
         <List dense>
-          {conditions.map((condition: Condition, index: number) => (
-            <ListItem style={{ padding: 0 }} key={index}>
+          {mapped.map((condition: ConditionRow) => (
+            <ListItem style={{ padding: 0 }} key={condition.key}>
               {condition.message}
             </ListItem>
           ))}
@@ -72,6 +89,12 @@ const MessageComponent = ({
 
 const getElapsedTime = (start: string) => {
   return moment(start).fromNow();
+};
+
+const getLastSyncState = (operationState: any) => {
+  return operationState.finishedAt
+    ? getElapsedTime(operationState.finishedAt!)
+    : operationState.phase;
 };
 
 const State = ({
@@ -165,37 +188,61 @@ const OverviewComponent = ({
     {
       title: 'Name',
       highlight: true,
+      field: 'name',
       render: (row: any): React.ReactNode =>
         detailsDrawerComponent(row, getBaseUrl(row)),
+      customSort: (a: any, b: any) =>
+        a.metadata.name.localeCompare(b.metadata.name),
     },
     {
       title: 'Sync Status',
+      field: 'syncStatus',
       render: (row: any): React.ReactNode => (
         <State
           value={row.status.sync.status}
           conditions={row.status.conditions}
         />
       ),
+      customSort: (a: any, b: any) =>
+        a.status.sync.status.localeCompare(b.status.sync.status),
     },
     {
       title: 'Health Status',
+      field: 'healthStatus',
       render: (row: any): React.ReactNode => (
         <State value={row.status.health.status} conditions={undefined} />
       ),
+      customSort: (a: any, b: any) =>
+        a.status.health.status.localeCompare(b.status.health.status),
     },
     {
       title: 'Last Synced',
+      defaultSort: 'desc',
+      field: 'lastSynced',
       render: (row: any): React.ReactNode =>
         row.status.operationState
-          ? getElapsedTime(row.status.operationState.finishedAt!)
+          ? getLastSyncState(row.status.operationState)
           : '',
+      customSort: (a: any, b: any) => {
+        return (
+          moment(
+            a.status.operationState.finishedAt || '3000-01-01T00:00:00.000Z',
+          ).valueOf() -
+          moment(
+            b.status.operationState.finishedAt || '3000-01-01T00:00:00.000Z',
+          ).valueOf()
+        );
+      },
     },
   ];
 
   if (supportsMultipleArgoInstances) {
     columns.splice(1, 0, {
       title: 'Instance',
+      field: 'instance',
       render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+      customSort: (a: any, b: any) =>
+        a.metadata?.instance?.name.localeCompare(b.metadata?.instance?.name),
     });
   }
 
@@ -203,9 +250,9 @@ const OverviewComponent = ({
     <Table
       title="ArgoCD overview"
       options={{
-        paging: false,
+        paging: true,
         search: false,
-        sorting: false,
+        sorting: true,
         draggable: false,
         padding: 'dense',
       }}
