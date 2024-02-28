@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.0.34",
+  "version": "2.0.35",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -36,7 +36,7 @@
     "@backstage/plugin-techdocs-backend": "^1.9.1",
     "@gitbeaker/node": "^35.1.0",
     "@octokit/rest": "^19.0.3",
-    "@roadiehq/backstage-plugin-argo-cd-backend": "2.14.3",
+    "@roadiehq/backstage-plugin-argo-cd-backend": "2.14.4",
     "@roadiehq/catalog-backend-module-aws": "^2.1.4",
     "@roadiehq/catalog-backend-module-okta": "^0.9.6",
     "@roadiehq/backstage-plugin-aws-backend": "^1.1.19",
