@@ -33,12 +33,12 @@
   "dependencies": {
     "@backstage/backend-common": "^0.21.2",
     "@backstage/config": "^1.1.1",
-    "@backstage/plugin-scaffolder-backend": "^1.19.2",
+    "@backstage/plugin-scaffolder-backend": "^1.21.2",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.14.3",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.0"
+    "@backstage/cli": "^0.25.2"
   },
   "files": [
     "dist"
