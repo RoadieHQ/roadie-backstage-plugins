@@ -32,14 +32,14 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.21.2",
-    "@backstage/core-app-api": "^1.11.2",
-    "@backstage/core-plugin-api": "^1.8.1",
-    "@backstage/plugin-scaffolder-backend": "^1.19.2",
+    "@backstage/core-app-api": "^1.12.0",
+    "@backstage/core-plugin-api": "^1.9.0",
+    "@backstage/plugin-scaffolder-backend": "^1.21.2",
     "cross-fetch": "^4.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.0"
+    "@backstage/cli": "^0.25.2"
   },
   "files": [
     "dist"
