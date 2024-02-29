@@ -238,7 +238,7 @@ export const DependabotAlertsTable: FC<{}> = () => {
         authorization: `token ${token}`,
       },
     });
-    const { repository } = await gqlEndpoint(query, {
+    const { repository } = await gqlEndpoint<any>(query, {
       name: repo,
       owner: owner,
     });

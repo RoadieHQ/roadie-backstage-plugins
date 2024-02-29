@@ -65,8 +65,6 @@ describe('roadiehq:utils:serialize:yaml', () => {
   });
 
   it('should pass options to YAML.stringify', async () => {
-    const mockDump = jest.spyOn(YAML, 'stringify');
-
     const opts = {
       indent: 3,
       noArrayIndent: true,
@@ -90,6 +88,9 @@ describe('roadiehq:utils:serialize:yaml', () => {
       },
     });
 
-    expect(mockDump).toHaveBeenCalledWith({ hello3: 'world3' }, opts);
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      YAML.stringify({ hello3: 'world3' }, opts),
+    );
   });
 });

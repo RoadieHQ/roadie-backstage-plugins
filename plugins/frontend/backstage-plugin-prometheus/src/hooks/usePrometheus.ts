@@ -66,6 +66,7 @@ export function resultToGraphData(
     })
     .groupBy('time')
     .map(_.spread(_.assign))
+    // @ts-ignore
     .map(it => ({ ...it, time: DateTime.fromISO(it.time).toSeconds() }))
     .value();
   return { data, keys, metrics };
