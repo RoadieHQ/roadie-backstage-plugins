@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.15
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 1.3.14
 
 ### Patch Changes

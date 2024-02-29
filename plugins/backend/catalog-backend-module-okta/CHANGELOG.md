@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.7
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 0.9.6
 
 ### Patch Changes

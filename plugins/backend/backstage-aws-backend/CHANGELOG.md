@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.20
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 1.1.19
 
 ### Patch Changes

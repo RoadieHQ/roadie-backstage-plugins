@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.24
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 2.5.23
 
 ### Patch Changes
