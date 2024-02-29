@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.5.4
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 2.5.3
 
 ### Patch Changes

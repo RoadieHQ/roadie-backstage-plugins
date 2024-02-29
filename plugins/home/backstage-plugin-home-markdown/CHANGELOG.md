@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.21
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
 ## 2.5.20
 
 ### Patch Changes
