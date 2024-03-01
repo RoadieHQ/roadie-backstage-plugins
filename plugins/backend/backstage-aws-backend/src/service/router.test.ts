@@ -22,7 +22,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { CloudControl, GetResourceCommand } from '@aws-sdk/client-cloudcontrol';
 import { mockClient } from 'aws-sdk-client-mock';
 
-const cloudControl = mockClient(CloudControl);
+const cloudControl = mockClient(CloudControl as any);
 
 const logger = getVoidLogger();
 const config = ConfigReader.fromConfigs([

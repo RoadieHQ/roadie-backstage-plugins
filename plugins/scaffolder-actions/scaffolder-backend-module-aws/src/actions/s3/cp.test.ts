@@ -63,7 +63,7 @@ describe('roadiehq:aws:s3:cp', () => {
       input: { bucket: 'test', region: 'eu1' },
     });
 
-    expect(mockS3Client.send).toBeCalledWith(
+    expect(mockS3Client.send).toHaveBeenCalledWith(
       expect.objectContaining({
         input: {
           Bucket: 'test',
@@ -80,7 +80,7 @@ describe('roadiehq:aws:s3:cp', () => {
       input: { bucket: 'test', region: 'eu1', prefix: 'upload-to-this' },
     });
 
-    expect(mockS3Client.send).toBeCalledWith(
+    expect(mockS3Client.send).toHaveBeenCalledWith(
       expect.objectContaining({
         input: {
           Bucket: 'test',

@@ -1,5 +1,35 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 2.14.5
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 2.14.4
+
+### Patch Changes
+
+- c5890a8: add proper content type header to argo DELETE request on app and project
+
+## 2.14.3
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.14.2
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.14.1
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.14.0
 
 ### Minor Changes

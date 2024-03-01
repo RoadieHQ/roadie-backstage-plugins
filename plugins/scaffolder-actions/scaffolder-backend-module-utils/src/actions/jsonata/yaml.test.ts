@@ -89,8 +89,6 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       },
     });
 
-    const mockDump = jest.spyOn(YAML, 'stringify');
-
     const opts = {
       indent: 3,
       noArrayIndent: true,
@@ -110,12 +108,15 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       workspacePath: 'fake-tmp-dir',
       input: {
         path: 'fake-file.yaml',
-        expression: '{ "hello": "beautiful world" }',
+        expression: '{ "hello": "beautiful world", "foo": {"bar":"deep"} }',
         options: opts,
       },
     });
 
-    expect(mockDump).toHaveBeenCalledWith({ hello: 'beautiful world' }, opts);
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      YAML.stringify({ hello: 'beautiful world', foo: { bar: 'deep' } }, opts),
+    );
   });
 
   it('should output object result of having applied the given transformation', async () => {

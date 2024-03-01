@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-module.exports = {
-  extends: [require.resolve('@backstage/cli/config/eslint')],
-};
+module.exports = require('@backstage/cli/config/eslint-factory')(__dirname);

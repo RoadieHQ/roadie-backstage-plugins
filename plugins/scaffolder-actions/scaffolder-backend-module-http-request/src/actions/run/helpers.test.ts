@@ -148,9 +148,7 @@ describe('http', () => {
           (fetch as unknown as jest.Mock).mockImplementation(() => {
             throw new Error('fetch error');
           });
-          await expect(
-            async () => await http(options, logger),
-          ).rejects.toThrowError(
+          await expect(async () => await http(options, logger)).rejects.toThrow(
             'There was an issue with the request: Error: fetch error',
           );
         });
@@ -170,9 +168,9 @@ describe('http', () => {
           (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
-          await expect(
-            async () => await http(options, logger),
-          ).rejects.toThrowError('Unable to complete request');
+          await expect(async () => await http(options, logger)).rejects.toThrow(
+            'Unable to complete request',
+          );
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
@@ -252,9 +250,7 @@ describe('http', () => {
           (fetch as unknown as jest.Mock).mockResolvedValue(
             Promise.resolve(mockedResponse),
           );
-          await expect(
-            async () => await http(options, logger),
-          ).rejects.toThrowError(
+          await expect(async () => await http(options, logger)).rejects.toThrow(
             'Could not parse response body: Error: Unable to get JSON',
           );
         });
@@ -265,9 +261,7 @@ describe('http', () => {
           (fetch as unknown as jest.Mock).mockResolvedValue(
             new AbortController().abort(),
           );
-          await expect(
-            async () => await http(options, logger),
-          ).rejects.toThrowError(
+          await expect(async () => await http(options, logger)).rejects.toThrow(
             'There was an issue with the request: Error: Request was aborted as it took longer than 60 seconds',
           );
         });
