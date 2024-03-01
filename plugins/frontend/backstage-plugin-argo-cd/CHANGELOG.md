@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.6.2
+
+### Patch Changes
+
+- 92ad85a: Export ARGOCD*ANNOTATION*\* constants from the plugin.
+
 ## 2.6.1
 
 ### Patch Changes
