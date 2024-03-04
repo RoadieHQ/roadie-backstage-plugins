@@ -2,4 +2,4 @@
 '@roadiehq/catalog-backend-module-okta': patch
 ---
 
-Allow configuration to allow some crude throttling of Okta group membership requests.
+Allow configuration to chunk the number of group membership requests to the Okta API.

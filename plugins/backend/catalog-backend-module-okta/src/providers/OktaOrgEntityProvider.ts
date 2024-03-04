@@ -119,7 +119,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.hierarchyConfig = options.hierarchyConfig;
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
-    this.chunkSize = options.chunkSize || 500;
+    this.chunkSize = options.chunkSize || 250;
   }
 
   getProviderName(): string {
@@ -177,7 +177,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
           Object.values(oktaGroups),
           this.chunkSize,
         )) {
-          const promises = await Promise.allSettled(
+          const promiseResults = await Promise.allSettled(
             chunkOfGroups.map(async group => {
               const members: string[] = [];
               await group.listUsers().each(user => {
@@ -230,7 +230,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               }
             }),
           );
-          for (const promise of promises) {
+          for (const promise of promiseResults) {
             if (promise.status === 'fulfilled') {
               groupResources.push(promise.value);
             } else {
