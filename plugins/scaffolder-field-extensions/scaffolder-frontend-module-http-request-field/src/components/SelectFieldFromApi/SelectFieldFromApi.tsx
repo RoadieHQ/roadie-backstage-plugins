@@ -19,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import {
   discoveryApiRef,
   fetchApiRef,
+  identityApiRef,
   useApi,
 } from '@backstage/core-plugin-api';
 import {
@@ -71,7 +72,20 @@ const SelectFieldFromApiComponent = (
     uiSchema['ui:options'],
   );
 
+  const identityApi = useApi(identityApiRef);
+  const { loading, value: identity } = useAsync(async () => {
+    return await identityApi.getBackstageIdentity();
+  });
+
   const { error } = useAsync(async () => {
+    if (loading) {
+      setDropDownData([
+        {
+          label: 'Loading...',
+          value: '',
+        },
+      ]);
+    }
     if (!optionsParsingState.success) {
       throw optionsParsingState.error;
     }
@@ -83,7 +97,10 @@ const SelectFieldFromApiComponent = (
       headers.Authorization = `Bearer ${props.token}`;
     }
     const params = new URLSearchParams(
-      renderOption(options.params, { parameters: formContext.formData }),
+      renderOption(options.params, {
+        parameters: formContext.formData,
+        identity,
+      }),
     );
     const response = await fetchApi.fetch(
       `${baseUrl}${renderOption(options.path, {
