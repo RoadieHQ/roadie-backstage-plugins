@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.6.7
+
+### Patch Changes
+
+- 5c76e25: Add possibility to use identity within the HTTP Request Field Scaffolder Field Extension
+
 ## 1.6.6
 
 ### Patch Changes
