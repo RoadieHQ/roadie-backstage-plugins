@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import Alert from '@material-ui/lab/Alert';
 
-interface Props {}
-interface MyProps {}
+interface Props {
+  children: JSX.Element;
+}
+interface MyProps {
+  children: JSX.Element;
+}
 
 interface MyState {
   hasError: boolean;

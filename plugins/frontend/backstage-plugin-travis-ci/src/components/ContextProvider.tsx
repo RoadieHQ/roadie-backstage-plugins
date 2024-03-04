@@ -28,7 +28,7 @@ export const StateContext = React.createContext<
 >([] as any);
 const STORAGE_KEY = `${travisCIApiRef.id}.settings`;
 
-type Props = { entity: Entity };
+type Props = { entity: Entity; children: JSX.Element };
 export const ContextProvider: React.FC<Props> = ({ entity, children }) => {
   const [settings, setSettings] = useLocalStorage(STORAGE_KEY, { entity });
   if (settings === undefined) {

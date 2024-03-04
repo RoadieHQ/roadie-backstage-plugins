@@ -1,5 +1,30 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.15
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 2.3.14
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.3.13
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.3.12
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- 84f7e01: Bump dependencies to match
+
 ## 2.3.11
 
 ### Patch Changes

@@ -1,5 +1,56 @@
 # app
 
+## 1.0.12
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+- Updated dependencies [23195a8]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.6.6
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.24
+  - @roadiehq/backstage-plugin-security-insights@2.3.15
+  - @roadiehq/backstage-plugin-github-insights@2.3.27
+  - @roadiehq/backstage-plugin-aws-lambda@2.2.7
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.20
+  - @roadiehq/backstage-plugin-prometheus@2.8.6
+  - @roadiehq/backstage-plugin-buildkite@2.1.21
+  - @roadiehq/backstage-plugin-travis-ci@2.1.21
+  - @roadiehq/backstage-plugin-home-markdown@2.5.21
+  - @roadiehq/backstage-plugin-shortcut@1.1.21
+  - @roadiehq/backstage-plugin-argo-cd@2.6.1
+  - @roadiehq/backstage-plugin-bugsnag@2.2.7
+  - @roadiehq/backstage-plugin-datadog@2.2.6
+  - @roadiehq/backstage-plugin-iframe@1.3.15
+  - @roadiehq/backstage-plugin-jira@2.5.4
+  - @roadiehq/backstage-plugin-home-rss@1.3.9
+  - @roadiehq/backstage-plugin-aws@1.1.21
+
+## 1.0.11
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+- Updated dependencies [f7287ee]
+- Updated dependencies [84f7e01]
+  - @roadiehq/backstage-plugin-argo-cd@2.5.2
+  - @roadiehq/backstage-plugin-aws@1.1.18
+  - @roadiehq/backstage-plugin-aws-lambda@2.2.4
+  - @roadiehq/backstage-plugin-bugsnag@2.2.4
+  - @roadiehq/backstage-plugin-buildkite@2.1.18
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.17
+  - @roadiehq/backstage-plugin-datadog@2.2.3
+  - @roadiehq/backstage-plugin-github-insights@2.3.24
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.21
+  - @roadiehq/backstage-plugin-iframe@1.3.12
+  - @roadiehq/backstage-plugin-jira@2.5.1
+  - @roadiehq/backstage-plugin-prometheus@2.8.3
+  - @roadiehq/backstage-plugin-security-insights@2.3.12
+  - @roadiehq/backstage-plugin-shortcut@1.1.18
+  - @roadiehq/backstage-plugin-travis-ci@2.1.18
+  - @roadiehq/backstage-plugin-home-markdown@2.5.18
+  - @roadiehq/backstage-plugin-home-rss@1.3.6
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.6.3
+
 ## 1.0.10
 
 ### Patch Changes

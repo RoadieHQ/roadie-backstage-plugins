@@ -61,7 +61,7 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
@@ -93,7 +93,7 @@ describe('http:backstage:request', () => {
             },
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -128,7 +128,7 @@ describe('http:backstage:request', () => {
             }),
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -158,7 +158,7 @@ describe('http:backstage:request', () => {
             body: 'test',
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -186,7 +186,7 @@ describe('http:backstage:request', () => {
             body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -219,7 +219,7 @@ describe('http:backstage:request', () => {
             headers: {},
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -256,7 +256,7 @@ describe('http:backstage:request', () => {
             headers: HEADERS,
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -286,7 +286,7 @@ describe('http:backstage:request', () => {
             },
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'POST',
@@ -316,7 +316,7 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: `${mockBaseUrl}/api/proxy/foo`,
             method: 'GET',
@@ -346,9 +346,9 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(1);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
@@ -377,9 +377,9 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(1);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
@@ -416,9 +416,9 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toBeCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(1);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
-        expect(http).toBeCalledWith(
+        expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
@@ -445,7 +445,7 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toBeCalledTimes(2);
+        expect(loggerSpy).toHaveBeenCalledTimes(2);
         expect(loggerSpy.mock.calls[1]).toContain(expectedLog);
         expect(http).not.toHaveBeenCalled();
       });

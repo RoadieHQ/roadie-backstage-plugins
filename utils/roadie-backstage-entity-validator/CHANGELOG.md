@@ -1,5 +1,29 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.8
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 2.4.7
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.4.6
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.4.5
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.4.4
 
 ### Patch Changes

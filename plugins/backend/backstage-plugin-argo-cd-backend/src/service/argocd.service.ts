@@ -619,6 +619,7 @@ export class ArgoService implements ArgoServiceApi {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${argoToken}`,
+        'Content-Type': 'application/json',
       },
     };
 
@@ -650,6 +651,7 @@ export class ArgoService implements ArgoServiceApi {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${argoToken}`,
+        'Content-Type': 'application/json',
       },
     };
 
