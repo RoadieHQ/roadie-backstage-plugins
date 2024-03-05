@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.22
+
+### Patch Changes
+
+- f2e39a0: Backstage version bump to 1.23.4
+
 ## 2.5.21
 
 ### Patch Changes
