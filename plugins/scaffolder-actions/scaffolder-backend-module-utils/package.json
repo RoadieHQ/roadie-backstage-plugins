@@ -31,11 +31,11 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.2",
+    "@backstage/backend-common": "^0.21.3",
     "@backstage/config": "^1.1.1",
     "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-scaffolder-backend": "^1.21.2",
-    "@backstage/plugin-scaffolder-node": "^0.3.2",
+    "@backstage/plugin-scaffolder-backend": "^1.21.3",
+    "@backstage/plugin-scaffolder-node": "^0.3.3",
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
