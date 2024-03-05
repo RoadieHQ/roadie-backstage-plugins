@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.22
+
+### Patch Changes
+
+- f2e39a0: Backstage version bump to 1.23.4
+
 ## 2.4.21
 
 ### Patch Changes
