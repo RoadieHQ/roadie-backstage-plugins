@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
-import {
-  RoadieEmbeddingDoc,
-  RoadieEmbeddingsSource,
-} from '@roadiehq/rag-ai-node';
+import { EmbeddingDoc, EmbeddingsSource } from '@roadiehq/rag-ai-node';
 import { SearchResultSet } from '@backstage/plugin-search-common';
 import { Logger } from 'winston';
 
 export type SearchClientQuery = {
   term: string;
-  source: RoadieEmbeddingsSource;
+  source: EmbeddingsSource;
 };
 
-const embeddingsSourceToBackstageSearchType = (
-  source: RoadieEmbeddingsSource,
-) => {
+const embeddingsSourceToBackstageSearchType = (source: EmbeddingsSource) => {
   switch (source) {
     case 'catalog':
       return 'software-catalog';
@@ -51,7 +46,7 @@ export class SearchClient {
     this.logger = options.logger;
   }
 
-  async query(query: SearchClientQuery): Promise<RoadieEmbeddingDoc[]> {
+  async query(query: SearchClientQuery): Promise<EmbeddingDoc[]> {
     const url = `${await this.discoveryApi.getBaseUrl('search')}/query?term=${
       query.term
     }&types[0]=${embeddingsSourceToBackstageSearchType(query.source)}`;

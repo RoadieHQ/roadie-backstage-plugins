@@ -15,10 +15,9 @@
  */
 import { OpenAIEmbeddings } from '@langchain/openai';
 import {
-  RoadieBaseEmbeddings,
+  DefaultVectorAugmentationIndexer,
   RoadieEmbeddingsConfig,
-  SearchClient,
-} from '@roadiehq/rag-ai-backend-embeddings';
+} from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export type OpenAiConfig = {
   modelName?: string;
@@ -27,10 +26,9 @@ export type OpenAiConfig = {
   embeddingsDimensions?: number;
 };
 
-export class RoadieOpenAiEmbeddings extends RoadieBaseEmbeddings {
+export class RoadieOpenAiAugmenter extends DefaultVectorAugmentationIndexer {
   constructor(
     config: RoadieEmbeddingsConfig & {
-      searchClient: SearchClient;
       config: OpenAiConfig;
     },
   ) {

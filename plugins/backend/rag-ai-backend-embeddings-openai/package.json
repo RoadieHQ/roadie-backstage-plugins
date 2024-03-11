@@ -38,7 +38,7 @@
     "@backstage/config": "^1.1.1",
     "@langchain/core": "^0.1.2",
     "@langchain/openai": "^0.0.14",
-    "@roadiehq/rag-ai-backend-embeddings": "^0.0.1",
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.0.1",
     "@roadiehq/rag-ai-node": "^0.0.1",
     "langchain": "^0.0.209",
     "winston": "^3.11.0"

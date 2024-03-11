@@ -9,7 +9,7 @@ const vectorStore = await createRoadiePgVectorStore({ logger, database });
 const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
 const credProvider = await awsCredentialsManager.getCredentialProvider();
 
-const bedrockEmbeddings = await initializeBedrockEmbeddings({
+const augmentationIndexer = await initializeBedrockEmbeddings({
   logger,
   catalogApi,
   vectorStore,
@@ -24,10 +24,10 @@ const bedrockEmbeddings = await initializeBedrockEmbeddings({
 
 ## Configuration Options
 
-The module expects 2 pieces of configuration: 
+The module expects 2 pieces of configuration:
+
 1. The configuration of the module to configure AWS Bedrock
 2. AWS integration configuration for credentials provisioning
-
 
 ### AWS Bedrock configuration
 
@@ -40,7 +40,6 @@ ai:
       # Name of the Bedrock model to use to create Embeddings
       modelName: 'amazon.titan-embed-text-v1'
 ```
-
 
 ### AWS Credentials Configuration
 

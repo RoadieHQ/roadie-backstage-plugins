@@ -13,33 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import { CatalogApi } from '@backstage/catalog-client';
+import { Logger } from 'winston';
+import { SplitterOptions } from './types';
+import { Embeddings } from '@langchain/core/embeddings';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 import {
+  AugmentationIndexer,
+  EmbeddingDoc,
+  EmbeddingsSource,
   EntityFilterShape,
-  RoadieEmbeddingDoc,
-  RoadieEmbeddings,
-  RoadieEmbeddingsSource,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { CatalogApi } from '@backstage/catalog-client';
-import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
-import { Embeddings } from '@langchain/core/embeddings';
-import { Logger } from 'winston';
-import { SearchClient } from './SearchClient';
-import { SplitterOptions } from './types';
 
-export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
-  private readonly vectorStore: RoadieVectorStore;
+export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
+  private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
   private readonly logger: Logger;
 
-  private readonly searchClient?: SearchClient;
   private readonly splitterOptions?: SplitterOptions;
 
   protected constructor({
     vectorStore,
     catalogApi,
-    searchClient,
     logger,
     embeddings,
     splitterOptions,
@@ -49,24 +47,17 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
     logger: Logger;
     embeddings: Embeddings;
     splitterOptions?: SplitterOptions;
-    searchClient?: SearchClient;
   }) {
     vectorStore.connectEmbeddings(embeddings);
-    this.vectorStore = vectorStore;
+    this._vectorStore = vectorStore;
     this.splitterOptions = splitterOptions;
     this.catalogApi = catalogApi;
-    this.searchClient = searchClient;
     this.logger = logger;
   }
 
-  // Retrieval -> Retrievers array
-  // * Metadata filtering. Entity ref/type etc.
-  // Routers => Determine the correct retriever
-  // Post-Processing -> Node PostProcessor array
-  // * Reranking
-  // * small-to-big retrieval
-  // * embedded tables
-  // Synthesis -> Synthesizer array => LLM Query
+  get vectorStore() {
+    return this._vectorStore;
+  }
 
   /**
    * Returns the splitter object. Default implementation is using a naive RecursiveCharacterTextSplitter
@@ -78,19 +69,18 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
    */
   protected getSplitter() {
     // Defaults to 1000 chars, 200 overlap
-    const splitter = new RecursiveCharacterTextSplitter({
+    return new RecursiveCharacterTextSplitter({
       chunkSize: this.splitterOptions?.chunkSize,
       chunkOverlap: this.splitterOptions?.chunkOverlap,
     });
-    return splitter;
   }
 
   protected async constructCatalogEmbeddingDocuments(
     entities: Entity[],
-    source: RoadieEmbeddingsSource,
-  ): Promise<RoadieEmbeddingDoc[]> {
+    source: EmbeddingsSource,
+  ): Promise<EmbeddingDoc[]> {
     const splitter = this.getSplitter();
-    let docs: RoadieEmbeddingDoc[] = [];
+    let docs: EmbeddingDoc[] = [];
     for (const entity of entities) {
       const splits = await splitter.splitText(JSON.stringify(entity));
       docs = docs.concat(
@@ -110,7 +100,7 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
   }
 
   protected async getDocuments(
-    source: RoadieEmbeddingsSource,
+    source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
     switch (source) {
@@ -137,17 +127,17 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
   }
 
   async createEmbeddings(
-    source: RoadieEmbeddingsSource,
+    source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<number> {
     await this.deleteEmbeddings(source, filter);
     const documents = await this.getDocuments(source, filter);
-    await this.vectorStore.addDocuments(documents);
+    await this._vectorStore.addDocuments(documents);
     return documents.length;
   }
 
   async deleteEmbeddings(
-    source: RoadieEmbeddingsSource,
+    source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<void> {
     const entities = (await this.catalogApi.getEntities({ filter })).items.map(
@@ -155,37 +145,9 @@ export abstract class RoadieBaseEmbeddings implements RoadieEmbeddings {
     );
 
     for (const entityRef of entities) {
-      await this.vectorStore.deleteDocuments({
+      await this._vectorStore.deleteDocuments({
         filter: { source, entityRef },
       });
     }
-  }
-
-  async getEmbeddingDocs(
-    query: string,
-    source: RoadieEmbeddingsSource,
-  ): Promise<RoadieEmbeddingDoc[]> {
-    const embeddings = await this.vectorStore.similaritySearch(query, {
-      source,
-    });
-
-    this.logger.info(
-      `Received ${embeddings.length} embeddings from Vector store`,
-    );
-
-    if (!this.searchClient) {
-      return embeddings;
-    }
-
-    const queryResults = await this.searchClient.query({
-      term: query,
-      source: source,
-    });
-
-    this.logger.info(
-      `Received ${queryResults.length} query results from Backstage search`,
-    );
-
-    return embeddings.concat(queryResults);
   }
 }

@@ -15,7 +15,7 @@
  */
 import {
   EmbeddingDocMetadata,
-  RoadieEmbeddingDoc,
+  EmbeddingDoc,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
 import { Embeddings } from '@langchain/core/embeddings';
@@ -88,11 +88,11 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
   /**
    * Add documents to the vector store.
    *
-   * @param {RoadieEmbeddingDoc[]} documents - The array of documents to be added.
+   * @param {EmbeddingDoc[]} documents - The array of documents to be added.
    * @throws {Error} When no embeddings are configured for the vector store.
    * @returns {Promise<void>} Resolves when the documents have been added successfully.
    */
-  async addDocuments(documents: RoadieEmbeddingDoc[]): Promise<void> {
+  async addDocuments(documents: EmbeddingDoc[]): Promise<void> {
     const texts = documents.map(({ content }) => content);
     if (!this.embeddings) {
       throw new Error('No Embeddings configured for the vector store.');
@@ -109,13 +109,13 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * Adds vectors to the database along with corresponding documents.
    *
    * @param {number[][]} vectors - The vectors to be added.
-   * @param {RoadieEmbeddingDoc[]} documents - The corresponding documents.
+   * @param {EmbeddingDoc[]} documents - The corresponding documents.
    * @return {Promise<void>} - A promise that resolves when the vectors are added successfully.
    * @throws {Error} - If there is an error inserting the vectors.
    */
   private async addVectors(
     vectors: number[][],
-    documents: RoadieEmbeddingDoc[],
+    documents: EmbeddingDoc[],
   ): Promise<void> {
     try {
       const rows = [];
@@ -202,14 +202,14 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @param {number[]} query - The query vector to compare against.
    * @param {number} amount - The maximum number of results to return.
    * @param {EmbeddingDocMetadata} [filter] - Optional filter to limit the search results.
-   * @returns {Promise<[RoadieEmbeddingDoc, number][]>} - An array of document similarity results, where each
+   * @returns {Promise<[EmbeddingDoc, number][]>} - An array of document similarity results, where each
    * result is a tuple containing the document and its similarity score.
    */
   private async similaritySearchVectorWithScore(
     query: number[],
     amount: number,
     filter?: EmbeddingDocMetadata,
-  ): Promise<[RoadieEmbeddingDoc, number][]> {
+  ): Promise<[EmbeddingDoc, number][]> {
     const embeddingString = `[${query.join(',')}]`;
     const queryString = `
       SELECT *, vector <=> :embeddingString as "_distance"
@@ -227,7 +227,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
       })
     ).rows;
 
-    const results = [] as [RoadieEmbeddingDoc, number][];
+    const results = [] as [EmbeddingDoc, number][];
     for (const doc of documents) {
       // eslint-ignore-next-line
       if (doc._distance != null && doc.content != null) {
@@ -247,14 +247,14 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @param {string} query - The query to perform the similarity search on.
    * @param {EmbeddingDocMetadata} filter - The filter to apply to the search results.
    * @param {number} [amount=4] - The number of results to return.
-   * @return {Promise<RoadieEmbeddingDoc[]>} - A promise that resolves to an array of RoadieEmbeddingDoc objects representing the search results.
+   * @return {Promise<EmbeddingDoc[]>} - A promise that resolves to an array of RoadieEmbeddingDoc objects representing the search results.
    * @throws {Error} - Throws an error if there are no embeddings configured for the vector store.
    */
   async similaritySearch(
     query: string,
     filter: EmbeddingDocMetadata,
     amount: number = this.amount,
-  ): Promise<RoadieEmbeddingDoc[]> {
+  ): Promise<EmbeddingDoc[]> {
     if (!this.embeddings) {
       throw new Error('No Embeddings configured for the vector store.');
     }

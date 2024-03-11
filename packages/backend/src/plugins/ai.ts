@@ -18,8 +18,10 @@ import { createApiRoutes as initializeRagAiBackend } from '@roadiehq/rag-ai-back
 import { PluginEnvironment } from '../types';
 import { createRoadiePgVectorStore } from '@roadiehq/rag-ai-storage-pgvector';
 import { CatalogClient } from '@backstage/catalog-client';
-import { initializeOpenAiEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-openai';
-import { OpenAI } from '@langchain/openai';
+import { createDefaultRetrievalPipeline } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
+import { initializeBedrockEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-aws';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
+import { Bedrock } from '@langchain/community/llms/bedrock';
 
 export default async function createPlugin({
   logger,
@@ -37,19 +39,35 @@ export default async function createPlugin({
     config,
   });
 
-  const bedrockEmbeddings = await initializeOpenAiEmbeddings({
+  const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
+  const credProvider = await awsCredentialsManager.getCredentialProvider();
+  const augmentationIndexer = await initializeBedrockEmbeddings({
     logger,
     catalogApi,
     vectorStore,
     discovery,
     config,
+    options: {
+      region: 'eu-central-1',
+      credentials: credProvider.sdkCredentialProvider,
+    },
   });
 
-  const model = new OpenAI();
+  const model = new Bedrock({
+    maxTokens: 4096,
+    model: 'anthropic.claude-instant-v1', // 'amazon.titan-text-express-v1', 'anthropic.claude-v2', 'mistral-xx'
+    region: 'eu-central-1',
+    credentials: credProvider.sdkCredentialProvider,
+  });
 
   const ragAi = await initializeRagAiBackend({
     logger,
-    embeddings: bedrockEmbeddings,
+    augmentationIndexer,
+    retrievalPipeline: createDefaultRetrievalPipeline({
+      discovery,
+      logger,
+      vectorStore: augmentationIndexer.vectorStore,
+    }),
     model,
     config,
   });

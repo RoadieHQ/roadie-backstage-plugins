@@ -15,10 +15,10 @@
  */
 import { Embeddings } from '@langchain/core/embeddings';
 
-export type RoadieEmbeddingsSource = 'catalog' | 'tech-docs';
+export type EmbeddingsSource = 'catalog' | 'tech-docs';
 
 export type EmbeddingDocMetadata = {
-  source: RoadieEmbeddingsSource;
+  source: EmbeddingsSource;
   [key: string]: string;
 };
 
@@ -34,24 +34,53 @@ export type RoadieEmbedding = {
   id: string;
 };
 
-export type RoadieEmbeddingDoc = {
+export type EmbeddingDoc = {
   metadata: EmbeddingDocMetadata;
   content: string;
 };
 
-export interface RoadieEmbeddings {
+export interface AugmentationIndexer {
+  vectorStore: RoadieVectorStore;
   createEmbeddings(
-    source: RoadieEmbeddingsSource,
+    source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ): Promise<number>;
   deleteEmbeddings(
-    source: RoadieEmbeddingsSource,
+    source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<void>;
-  getEmbeddingDocs(
+}
+
+export interface RetrievalRouter {
+  determineRetriever(
     query: string,
-    source: RoadieEmbeddingsSource,
-  ): Promise<RoadieEmbeddingDoc[]>;
+    source: EmbeddingsSource,
+  ): Promise<AugmentationRetriever[]>;
+}
+
+export interface AugmentationRetriever {
+  id: string;
+  retrieve(
+    query: string,
+    source: EmbeddingsSource,
+    filter?: EntityFilterShape,
+  ): Promise<EmbeddingDoc[]>;
+}
+
+export interface AugmentationPostProcessor {
+  process(
+    query: string,
+    source: EmbeddingsSource,
+    embeddingDocs: Map<string, EmbeddingDoc[]>,
+  ): Promise<EmbeddingDoc[]>;
+}
+
+export interface RetrievalPipeline {
+  retrieveAugmentationContext(
+    query: string,
+    source: EmbeddingsSource,
+    filter?: EntityFilterShape,
+  ): Promise<EmbeddingDoc[]>;
 }
 
 type DeletionParams = {
@@ -61,11 +90,11 @@ type DeletionParams = {
 
 export interface RoadieVectorStore {
   connectEmbeddings(embeddings: Embeddings): void;
-  addDocuments(docs: RoadieEmbeddingDoc[]): Promise<void>;
+  addDocuments(docs: EmbeddingDoc[]): Promise<void>;
   deleteDocuments(deletionParams: DeletionParams): Promise<void>;
   similaritySearch(
     query: string,
     filter?: EmbeddingDocMetadata,
     amount?: number,
-  ): Promise<RoadieEmbeddingDoc[]>;
+  ): Promise<EmbeddingDoc[]>;
 }

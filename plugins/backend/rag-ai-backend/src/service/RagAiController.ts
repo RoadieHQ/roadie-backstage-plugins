@@ -17,51 +17,58 @@ import { Request, Response } from 'express';
 import { Logger } from 'winston';
 import { LlmService } from './LlmService';
 import {
-  RoadieEmbeddings,
-  RoadieEmbeddingsSource,
+  AugmentationIndexer,
+  EmbeddingsSource,
+  RetrievalPipeline,
 } from '@roadiehq/rag-ai-node';
 
 export class RagAiController {
   private static instance: RagAiController;
   private readonly llmService: LlmService;
-  private readonly embeddings: RoadieEmbeddings;
+  private readonly augmentationIndexer: AugmentationIndexer;
+  private readonly retrievalPipeline: RetrievalPipeline;
   private logger: Logger;
 
   constructor(
     logger: Logger,
     llmService: LlmService,
-    embeddings: RoadieEmbeddings,
+    augmentationIndexer: AugmentationIndexer,
+    retrievalPipeline: RetrievalPipeline,
   ) {
     this.logger = logger;
     this.llmService = llmService;
-    this.embeddings = embeddings;
+    this.augmentationIndexer = augmentationIndexer;
+    this.retrievalPipeline = retrievalPipeline;
   }
 
   static getInstance({
     logger,
     llmService,
-    embeddings,
+    augmentationIndexer,
+    retrievalPipeline,
   }: {
     logger: Logger;
     llmService: LlmService;
-    embeddings: RoadieEmbeddings;
+    augmentationIndexer: AugmentationIndexer;
+    retrievalPipeline: RetrievalPipeline;
   }): RagAiController {
     if (!RagAiController.instance) {
       RagAiController.instance = new RagAiController(
         logger,
         llmService,
-        embeddings,
+        augmentationIndexer,
+        retrievalPipeline,
       );
     }
     return RagAiController.instance;
   }
 
   createEmbeddings = async (req: Request, res: Response) => {
-    const source = req.params.source as RoadieEmbeddingsSource;
+    const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
 
     this.logger.info(`Creating embeddings for source ${source}`);
-    const amountOfEmbeddings = await this.embeddings.createEmbeddings(
+    const amountOfEmbeddings = await this.augmentationIndexer.createEmbeddings(
       source,
       entityFilter,
     );
@@ -73,17 +80,22 @@ export class RagAiController {
   };
 
   getEmbeddings = async (req: Request, res: Response) => {
-    const source = req.params.source as RoadieEmbeddingsSource;
+    const source = req.params.source as EmbeddingsSource;
     const query = req.query.query as string;
+    const entityFilter = req.body.entityFilter;
 
-    const response = await this.embeddings.getEmbeddingDocs(query, source);
+    const response = await this.retrievalPipeline.retrieveAugmentationContext(
+      query,
+      source,
+      entityFilter,
+    );
     return res.status(200).send({ response });
   };
 
   deleteEmbeddings = async (req: Request, res: Response) => {
-    const source = req.params.source as RoadieEmbeddingsSource;
+    const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
-    await this.embeddings.deleteEmbeddings(source, entityFilter);
+    await this.augmentationIndexer.deleteEmbeddings(source, entityFilter);
     return res
       .status(201)
       .send({ response: `Embeddings deleted for source ${source}` });
@@ -91,10 +103,16 @@ export class RagAiController {
 
   query = async (req: Request, res: Response) => {
     // TODO: Remove the need for source in query when we have magical abilities to create very good embeddings
-    const source = req.params.source as RoadieEmbeddingsSource;
+    const source = req.params.source as EmbeddingsSource;
     const query = req.body.query;
+    const entityFilter = req.body.entityFilter;
 
-    const embeddingDocs = await this.embeddings.getEmbeddingDocs(query, source);
+    const embeddingDocs =
+      await this.retrievalPipeline.retrieveAugmentationContext(
+        query,
+        source,
+        entityFilter,
+      );
     const llmResponse = await this.llmService.query(embeddingDocs, query);
     return res
       .status(200)

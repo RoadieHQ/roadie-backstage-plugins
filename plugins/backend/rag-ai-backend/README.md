@@ -122,6 +122,28 @@ const vectorStore = await createRoadiePgVectorStore({
 });
 ```
 
+## Retrieval Pipeline Configuration
+
+See more information from the [module package](/plugins/backend/rag-ai-backend-retrieval-augmenter/README.md).
+
+The Roadie RAG AI backend expects a retrieval pipeline that is used to retrieve augmentation context when querying information from the LLM. This retrieval pipeline retrieves, processes and sorts information based on queries and other information, providing data that can be used to augment the query sent to the LLM.
+
+This repository provides default retrieval pipeline implementations that can be configured to retrieve as much (or as little ) data as is needed. The pipeline can also be run in a pass-through mode where additional context is not added to the queries and users can interact with the configured LLMs directly.
+
+A bare-bones implementation of the pipeline can be initialized by calling the `DefaultRetrievalPipeline` constructor with an empty configuration object (`{}`).
+
+To start appending important functionality to the RAG pipeline, it is recommended to start implementing and using routers to define correct augmentation information retrievers and to use post processor with enough logic to rerank, sort, and manipulate the retrieved information. The initial starting point, to use a vector store with optional search functionality, is provided by Roadie within this repository. You can get a naive RAG pipeline running this way and start tweaking and configuring the optimal embeddings configuration to provide relevant context for your queries.
+
+```typescript
+const retrievalPipeline = createDefaultRetrievalPipeline({
+  discovery,
+  logger,
+  vectorStore: augmentationIndexer.vectorStore,
+});
+```
+
+> You are able to get the vector store implementation from your constructed augmentation indexer. See below for more information.
+
 ## Embeddings configurations
 
 The RAG AI plugin depends largely on embeddings submodules to construct good and relevant embeddings that can be included as a context to the queries sent to configured LLMs. There are two implementations included within this repository, as well as a base functionality to construct initial embeddings.
@@ -153,6 +175,7 @@ import { createApiRoutes as initializeRagAiBackend } from '@roadiehq/rag-ai-back
 import { PluginEnvironment } from '../types';
 import { initializeBedrockEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-aws';
 import { createRoadiePgVectorStore } from '@roadiehq/rag-ai-storage-pgvector';
+import { createDefaultRetrievalPipeline } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 import { Bedrock } from '@langchain/community/llms/bedrock/web';
 import { CatalogClient } from '@backstage/catalog-client';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
@@ -171,7 +194,7 @@ export default async function createPlugin({
   const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
   const credProvider = await awsCredentialsManager.getCredentialProvider();
 
-  const bedrockEmbeddings = await initializeBedrockEmbeddings({
+  const augmentationIndexer = await initializeBedrockEmbeddings({
     logger,
     catalogApi,
     vectorStore,
@@ -192,7 +215,12 @@ export default async function createPlugin({
 
   const ragAi = await initializeRagAiBackend({
     logger,
-    embeddings: bedrockEmbeddings,
+    augmentationIndexer,
+    retrievalPipeline: createDefaultRetrievalPipeline({
+      discovery,
+      logger,
+      vectorStore: augmentationIndexer.vectorStore,
+    }),
     model,
     config,
   });
@@ -223,6 +251,7 @@ See more information from the [module package](/plugins/backend/rag-ai-backend-e
 import { createApiRoutes as initializeRagAiBackend } from '@roadiehq/rag-ai-backend';
 import { initializeOpenAiEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-openai';
 import { createRoadiePgVectorStore } from '@roadiehq/rag-ai-storage-pgvector';
+import { createDefaultRetrievalPipeline } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 import { OpenAI } from '@langchain/openai';
 import { CatalogClient } from '@backstage/catalog-client';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
@@ -239,7 +268,7 @@ export default async function createPlugin({
 
   const vectorStore = await createRoadiePgVectorStore({ logger, database });
 
-  const openAiEmbeddings = await initializeOpenAiEmbeddings({
+  const augmentationIndexer = await initializeOpenAiEmbeddings({
     logger,
     catalogApi,
     vectorStore,
@@ -251,7 +280,12 @@ export default async function createPlugin({
 
   const ragAi = await initializeRagAiBackend({
     logger,
-    embeddings: openAiEmbeddings,
+    augmentationIndexer,
+    retrievalPipeline: createDefaultRetrievalPipeline({
+      discovery,
+      logger,
+      vectorStore: augmentationIndexer.vectorStore,
+    }),
     model,
     config,
   });

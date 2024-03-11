@@ -7,14 +7,16 @@ This is a submodule for the `@roadiehq/rag-ai-backend-embeddings` module, which 
 ```typescript
 const vectorStore = await createRoadiePgVectorStore({ logger, database });
 
-const openAiEmbeddings = await initializeOpenAiEmbeddings({
-    logger,
-    catalogApi,
-    vectorStore,
-    discovery,
-    config,
+const augmentationIndexer = await initializeOpenAiEmbeddings({
+  logger,
+  catalogApi,
+  vectorStore,
+  discovery,
+  config,
 });
 ```
+
+>
 
 ## Configuration Options
 
@@ -45,7 +47,7 @@ ai:
 ```yaml
 ai:
   embeddings:
-    openAI: {} # uses env variable OPENAI_API_KEY for API key, model 'text-embedding-3-large' for embeddings creation model 
+    openAI: {} # uses env variable OPENAI_API_KEY for API key, model 'text-embedding-3-large' for embeddings creation model
 ```
 
 </details>

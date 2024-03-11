@@ -17,19 +17,17 @@
 import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
-  RoadieBaseEmbeddings,
+  DefaultVectorAugmentationIndexer,
   RoadieEmbeddingsConfig,
-  SearchClient,
-} from '@roadiehq/rag-ai-backend-embeddings';
+} from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export type BedrockConfig = {
   modelName: string;
 };
 
-export class RoadieBedrockEmbeddings extends RoadieBaseEmbeddings {
+export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
   constructor(
     config: RoadieEmbeddingsConfig & {
-      searchClient: SearchClient;
       options: {
         credentials: AwsCredentialIdentity | Provider<AwsCredentialIdentity>;
         region: string;

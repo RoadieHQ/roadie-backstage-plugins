@@ -35,11 +35,13 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.474.0",
     "@aws-sdk/types": "^3.468.0",
+    "@backstage/backend-common": "^0.21.3",
     "@backstage/catalog-client": "^1.4.6",
     "@backstage/config": "^1.1.1",
     "@langchain/community": "^0.0.32",
     "@langchain/core": "^0.1.2",
-    "@roadiehq/rag-ai-backend-embeddings": "^0.0.1",
+    "@roadiehq/rag-ai-backend": "^0.0.1",
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.0.1",
     "@roadiehq/rag-ai-node": "^0.0.1",
     "langchain": "^0.1.21",
     "winston": "^3.11.0"

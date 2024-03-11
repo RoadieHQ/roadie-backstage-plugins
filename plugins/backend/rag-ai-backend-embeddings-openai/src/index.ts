@@ -15,15 +15,12 @@
  */
 
 import { Logger } from 'winston';
-import { RoadieEmbeddings, RoadieVectorStore } from '@roadiehq/rag-ai-node';
-import { OpenAiConfig, RoadieOpenAiEmbeddings } from './RoadieOpenAiEmbeddings';
+import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
+import { OpenAiConfig, RoadieOpenAiAugmenter } from './RoadieOpenAiAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
-import {
-  SearchClient,
-  SplitterOptions,
-} from '@roadiehq/rag-ai-backend-embeddings';
+import { SplitterOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger;
@@ -39,12 +36,8 @@ export async function initializeOpenAiEmbeddings({
   catalogApi,
   discovery,
   config,
-}: RoadieBedrockEmbeddingsConfig): Promise<RoadieEmbeddings> {
+}: RoadieBedrockEmbeddingsConfig): Promise<AugmentationIndexer> {
   logger.info('Initializing Roadie OpenAI Embeddings');
-  const searchClient = new SearchClient({
-    discoveryApi: discovery,
-    logger: logger.child({ label: 'openai-embeddings-searchclient' }),
-  });
   const openAiConfig = config.get<OpenAiConfig>('ai.embeddings.openai');
 
   const embeddingsOptions = config.getOptionalConfig('ai.embeddings');
@@ -55,10 +48,9 @@ export async function initializeOpenAiEmbeddings({
     splitterOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
   }
-  return new RoadieOpenAiEmbeddings({
+  return new RoadieOpenAiAugmenter({
     vectorStore,
     catalogApi,
-    searchClient,
     discovery,
     splitterOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),

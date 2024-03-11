@@ -17,7 +17,7 @@ import { errorHandler } from '@backstage/backend-common';
 import express, { NextFunction, Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
-import { RoadieEmbeddings } from '@roadiehq/rag-ai-node';
+import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
@@ -34,7 +34,8 @@ type AiBackendConfig = {
 
 export interface RouterOptions {
   logger: Logger;
-  embeddings: RoadieEmbeddings;
+  augmentationIndexer: AugmentationIndexer;
+  retrievalPipeline: RetrievalPipeline;
   model: BaseLLM;
   config: Config;
 }
@@ -83,7 +84,8 @@ const bodyQueryValidator = (
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const { logger, embeddings, model, config } = options;
+  const { logger, augmentationIndexer, retrievalPipeline, model, config } =
+    options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
   const supportedSources = aiBackendConfig?.supportedSources ?? ['catalog'];
   const llmService = new LlmService({
@@ -93,7 +95,8 @@ export async function createRouter(
   });
   const controller = RagAiController.getInstance({
     logger,
-    embeddings,
+    augmentationIndexer,
+    retrievalPipeline,
     llmService,
   });
   const router = Router();

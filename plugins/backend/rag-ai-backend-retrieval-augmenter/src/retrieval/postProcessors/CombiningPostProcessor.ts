@@ -14,6 +14,18 @@
  * limitations under the License.
  */
 
-export { RoadieBaseEmbeddings } from './RoadieBaseEmbeddings';
-export { SearchClient } from './SearchClient';
-export type { RoadieEmbeddingsConfig, SplitterOptions } from './types';
+import {
+  AugmentationPostProcessor,
+  EmbeddingDoc,
+  EmbeddingsSource,
+} from '@roadiehq/rag-ai-node';
+
+export class CombiningPostProcessor implements AugmentationPostProcessor {
+  async process(
+    _query: string,
+    _source: EmbeddingsSource,
+    embeddingDocs: Map<string, EmbeddingDoc[]>,
+  ): Promise<EmbeddingDoc[]> {
+    return Array.from(embeddingDocs.values()).flat();
+  }
+}

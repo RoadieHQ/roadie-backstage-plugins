@@ -15,19 +15,16 @@
  */
 
 import { Logger } from 'winston';
-import { RoadieEmbeddings, RoadieVectorStore } from '@roadiehq/rag-ai-node';
+import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import {
   BedrockConfig,
-  RoadieBedrockEmbeddings,
-} from './RoadieBedrockEmbeddings';
+  RoadieBedrockAugmenter,
+} from './RoadieBedrockAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
-import {
-  SearchClient,
-  SplitterOptions,
-} from '@roadiehq/rag-ai-backend-embeddings';
+import { SplitterOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger;
@@ -48,12 +45,8 @@ export async function initializeBedrockEmbeddings({
   discovery,
   config,
   options,
-}: RoadieBedrockEmbeddingsConfig): Promise<RoadieEmbeddings> {
+}: RoadieBedrockEmbeddingsConfig): Promise<AugmentationIndexer> {
   logger.info('Initializing Roadie AWS Bedrock Embeddings');
-  const searchClient = new SearchClient({
-    discoveryApi: discovery,
-    logger: logger.child({ label: 'aws-bedrock-embeddings-searchclient' }),
-  });
   const bedrockConfig = config.get<BedrockConfig>('ai.embeddings.bedrock');
   const embeddingsOptions = config.getOptionalConfig('ai.embeddings');
   const splitterOptions: SplitterOptions = {};
@@ -63,10 +56,9 @@ export async function initializeBedrockEmbeddings({
     splitterOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
   }
-  return new RoadieBedrockEmbeddings({
+  return new RoadieBedrockAugmenter({
     vectorStore,
     catalogApi,
-    searchClient,
     discovery,
     logger: logger.child({ label: 'roadie-bedrock-embedder' }),
     options,

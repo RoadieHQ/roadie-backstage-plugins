@@ -13,15 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
-import { Logger } from 'winston';
-import { BaseLLM } from '@langchain/core/language_models/llms';
-import { Config } from '@backstage/config';
 
-export interface RagAiConfig {
-  logger: Logger;
-  augmentationIndexer: AugmentationIndexer;
-  retrievalPipeline: RetrievalPipeline;
-  model: BaseLLM;
-  config: Config;
-}
+export * from './indexing';
+export * from './retrieval';
+export * from './defaultInitializer';

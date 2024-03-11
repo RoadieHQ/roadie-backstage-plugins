@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { BaseLLM } from '@langchain/core/language_models/llms';
-import { RoadieEmbeddingDoc } from '@roadiehq/rag-ai-node';
+import { EmbeddingDoc } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
 import { createPromptTemplates } from './prompts';
 
@@ -43,7 +43,7 @@ export class LlmService {
     this.prompts = createPromptTemplates(configuredPrompts);
   }
 
-  async query(embeddings: RoadieEmbeddingDoc[], query: string) {
+  async query(embeddings: EmbeddingDoc[], query: string) {
     this.logger.info('Starting to prompt LLM.');
     const promptEmbeddings = embeddings
       .map(embedding => embedding.content)
