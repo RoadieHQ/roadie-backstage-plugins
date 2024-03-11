@@ -28,7 +28,8 @@
     "prepare": "husky install"
   },
   "resolutions": {
-    "@types/react": "^17.0.2"
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
   },
   "workspaces": {
     "packages": [
