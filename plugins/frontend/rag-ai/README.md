@@ -4,19 +4,16 @@ This plugin is the frontend for RAG AI Backstage plugin. You can see the corresp
 
 ## Getting started
 
-The plugin exposes a single Modal React component which can be triggered on the application UI by pressing `ctrl+,` (control + comma). 
+The plugin exposes a single Modal React component which can be triggered on the application UI by pressing `ctrl+,` (control + comma).
 ![docs/empty-modal.png](docs/empty-modal.png)
 
 You can ask the plugin information about your catalog and request assistance on how to better interact with the catalog entities that have been configured to your system. The plugin provides functionality to call the RAG AI backend, which enhances your queries with additional context and requests responses from configured LLMs to provide answers based on that context.
 
 ![docs/simple-q-a.png](docs/simple-q-a.png)
 
-
 Depending on how you implement your Embeddings providers and retrieval functionality, you can use the LLM, for example, to construct specific code samples from your Catalog Entity API endpoints, while using the wider knowledge of specific best practices from various programming languages and frameworks.
 
-
 ![docs/api-spec-query.png](docs/api-spec-query.png)
-
 
 ## Configuration
 
