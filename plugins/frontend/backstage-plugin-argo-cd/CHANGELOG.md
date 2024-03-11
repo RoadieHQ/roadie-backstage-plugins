@@ -1,5 +1,41 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.6.2
+
+### Patch Changes
+
+- 92ad85a: Export ARGOCD*ANNOTATION*\* constants from the plugin.
+
+## 2.6.1
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 2.6.0
+
+### Minor Changes
+
+- e810239: Added pagination and sorting for contents of ArgoCDDetailsCard which improves readability of the component
+
+## 2.5.4
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.5.3
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.5.2
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.5.1
 
 ### Patch Changes

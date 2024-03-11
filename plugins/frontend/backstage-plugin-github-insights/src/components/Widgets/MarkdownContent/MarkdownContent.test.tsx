@@ -15,8 +15,12 @@
  */
 
 import React from 'react';
-import { AnyApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
+import {
+  AnyApiRef,
+  errorApiRef,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
+import { TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
 import MarkdownContent from './MarkdownContent';
 import {
@@ -78,6 +82,7 @@ const mockGithubApi: GithubApi = {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [githubAuthApiRef, mockGithubAuth],
   [githubApiRef, mockGithubApi],
+  [errorApiRef, jest.fn()],
 ];
 
 describe('<MarkdownContent>', () => {
@@ -96,15 +101,13 @@ describe('<MarkdownContent>', () => {
       [githubAuthApiRef, mockGithubUnAuth],
     ];
     render(
-      wrapInTestApp(
-        <TestApiProvider apis={api}>
-          <MarkdownContent
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
+      <TestApiProvider apis={api}>
+        <MarkdownContent
+          owner="test"
+          path=".backstage/home-page.md"
+          repo="roadie-backstage-plugins"
+        />
+      </TestApiProvider>,
       {},
     );
 
@@ -116,18 +119,16 @@ describe('<MarkdownContent>', () => {
   });
   it('should render markdown card', async () => {
     render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <MarkdownContent
-            owner="test"
-            path=".backstage/home-page.md"
-            repo="roadie-backstage-plugins"
-          />
-        </TestApiProvider>,
-      ),
+      <TestApiProvider apis={apis}>
+        <MarkdownContent
+          owner="test"
+          path=".backstage/home-page.md"
+          repo="roadie-backstage-plugins"
+        />
+      </TestApiProvider>,
       {},
     );
 
-    expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
+    expect(await screen.findByText('⭐')).toBeVisible();
   });
 });

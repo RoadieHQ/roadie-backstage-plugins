@@ -54,7 +54,7 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
       });
@@ -84,7 +84,7 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
@@ -110,7 +110,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
@@ -136,7 +136,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
@@ -162,7 +162,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
@@ -190,7 +190,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
       });
@@ -207,7 +207,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
@@ -252,7 +252,7 @@ describe('OktaUserEntityProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toBeCalledWith({
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({

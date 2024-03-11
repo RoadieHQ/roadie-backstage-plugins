@@ -17,8 +17,10 @@ import React, { useState } from 'react';
 import { FieldProps, UiSchema } from '@rjsf/utils';
 import FormControl from '@material-ui/core/FormControl';
 import {
+  BackstageUserIdentity,
   discoveryApiRef,
   fetchApiRef,
+  identityApiRef,
   useApi,
 } from '@backstage/core-plugin-api';
 import {
@@ -60,12 +62,13 @@ const renderOption = (input: any, context: object): any => {
 const SelectFieldFromApiComponent = (
   props: FieldProps<string> & { token?: string } & {
     uiSchema: UiSchema<string>;
+    identity?: BackstageUserIdentity;
   },
 ) => {
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const { formContext, uiSchema } = props;
+  const { formContext, uiSchema, identity } = props;
 
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
     uiSchema['ui:options'],
@@ -83,7 +86,10 @@ const SelectFieldFromApiComponent = (
       headers.Authorization = `Bearer ${props.token}`;
     }
     const params = new URLSearchParams(
-      renderOption(options.params, { parameters: formContext.formData }),
+      renderOption(options.params, {
+        parameters: formContext.formData,
+        identity,
+      }),
     );
     const response = await fetchApi.fetch(
       `${baseUrl}${renderOption(options.path, {
@@ -175,6 +181,7 @@ const SelectFieldFromApiOauthWrapper = ({
   ...props
 }: FieldProps<string> & {
   oauthConfig: OAuthConfig;
+  identity?: BackstageUserIdentity;
 }) => {
   const { token, loading, error, isSignedIn, showSignInModal } =
     useOauthSignIn(oauthConfig);
@@ -228,21 +235,34 @@ const SelectFieldFromApiOauthWrapper = ({
 };
 
 export const SelectFieldFromApi = (props: FieldProps<string>) => {
+  const identityApi = useApi(identityApiRef);
+  const { loading, value: identity } = useAsync(async () => {
+    return await identityApi.getBackstageIdentity();
+  });
   if (!props.uiSchema) {
     return <ErrorPanel error={new Error('No UI Schema defined')} />;
   }
   const result = selectFieldFromApiConfigSchema.safeParse(
     props.uiSchema['ui:options'],
   );
+
+  if (loading) {
+    return null;
+  }
+
   if (result.success && result.data.oauth) {
     return (
       <SelectFieldFromApiOauthWrapper
+        identity={identity}
         oauthConfig={result.data.oauth}
         {...props}
       />
     );
   }
   return (
-    <SelectFieldFromApiComponent {...{ ...props, uiSchema: props.uiSchema }} />
+    <SelectFieldFromApiComponent
+      {...{ ...props, uiSchema: props.uiSchema }}
+      identity={identity}
+    />
   );
 };

@@ -37,6 +37,7 @@ import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
 import { OktaGroupEntityTransformer, OktaUserEntityTransformer } from './types';
+import chunk from 'lodash/chunk';
 
 /**
  * Provides entities from Okta Org service.
@@ -51,6 +52,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     | { parentKey: string; key?: string }
     | undefined;
   private readonly customAttributesToAnnotationAllowlist: string[];
+  private readonly chunkSize: number;
 
   static fromConfig(
     config: Config,
@@ -70,6 +72,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         key?: string;
       };
       customAttributesToAnnotationAllowlist?: string[];
+      chunkSize?: number;
     },
   ) {
     const oktaConfigs = config
@@ -98,6 +101,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
         key?: string;
       };
       customAttributesToAnnotationAllowlist?: string[];
+      chunkSize?: number;
     },
   ) {
     super(accountConfigs, options);
@@ -115,6 +119,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.hierarchyConfig = options.hierarchyConfig;
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
+    this.chunkSize = options.chunkSize || 250;
   }
 
   getProviderName(): string {
@@ -168,59 +173,75 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
           logger: this.logger,
         });
 
-        await Promise.allSettled(
-          Object.entries(oktaGroups).map(async ([_, group]) => {
-            const members: string[] = [];
-            await group.listUsers().each(user => {
-              try {
-                const userName = this.userNamingStrategy(user);
-                if (userResources[userName]) {
-                  members.push(userName);
+        for (const chunkOfGroups of chunk(
+          Object.values(oktaGroups),
+          this.chunkSize,
+        )) {
+          const promiseResults = await Promise.allSettled(
+            chunkOfGroups.map(async group => {
+              const members: string[] = [];
+              await group.listUsers().each(user => {
+                try {
+                  const userName = this.userNamingStrategy(user);
+                  if (userResources[userName]) {
+                    members.push(userName);
+                  }
+                } catch (e: unknown) {
+                  this.logger.warn(
+                    `failed to add user to group: ${
+                      isError(e) ? e.message : 'unknown error'
+                    }`,
+                  );
                 }
+              });
+
+              const parentGroup = getParentGroup({
+                parentKey: this.hierarchyConfig?.parentKey,
+                group,
+                oktaGroups,
+              });
+
+              const profileAnnotations = this.getCustomAnnotations(
+                group,
+                this.customAttributesToAnnotationAllowlist,
+              );
+
+              const annotations = {
+                ...defaultAnnotations,
+                ...profileAnnotations,
+              };
+              try {
+                const groupEntity = this.groupEntityFromOktaGroup(
+                  group,
+                  this.groupNamingStrategy,
+                  {
+                    annotations,
+                    members,
+                  },
+                  parentGroup,
+                );
+                return groupEntity;
               } catch (e: unknown) {
-                this.logger.warn(
-                  `failed to add user to group: ${
+                throw new Error(
+                  `failed to add group: ${
                     isError(e) ? e.message : 'unknown error'
                   }`,
                 );
               }
-            });
-
-            const parentGroup = getParentGroup({
-              parentKey: this.hierarchyConfig?.parentKey,
-              group,
-              oktaGroups,
-            });
-
-            const profileAnnotations = this.getCustomAnnotations(
-              group,
-              this.customAttributesToAnnotationAllowlist,
-            );
-
-            const annotations = {
-              ...defaultAnnotations,
-              ...profileAnnotations,
-            };
-            try {
-              const groupEntity = this.groupEntityFromOktaGroup(
-                group,
-                this.groupNamingStrategy,
-                {
-                  annotations,
-                  members,
-                },
-                parentGroup,
-              );
-              groupResources.push(groupEntity);
-            } catch (e: unknown) {
-              this.logger.warn(
-                `failed to add group: ${
-                  isError(e) ? e.message : 'unknown error'
-                }`,
+            }),
+          );
+          for (const promise of promiseResults) {
+            if (promise.status === 'fulfilled') {
+              groupResources.push(promise.value);
+            } else {
+              this.logger.info(
+                isError(promise.reason)
+                  ? promise.reason.message
+                  : 'unknown error',
               );
             }
-          }),
-        );
+          }
+        }
       }),
     );
 

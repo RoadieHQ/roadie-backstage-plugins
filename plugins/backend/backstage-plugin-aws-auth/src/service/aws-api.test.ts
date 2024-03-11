@@ -63,8 +63,8 @@ describe('aws-api', () => {
       mockResponse(),
     );
 
-    expect((await response).json).toBeCalledWith(credentialsStub);
-    expect(generateTemporaryCredentialsMock).toBeCalledWith(
+    expect((await response).json).toHaveBeenCalledWith(credentialsStub);
+    expect(generateTemporaryCredentialsMock).toHaveBeenCalledWith(
       keyIdStub,
       keySecretStub,
       undefined,
@@ -90,8 +90,8 @@ describe('aws-api', () => {
       mockResponse(),
     );
 
-    expect((await response).json).toBeCalledWith(credentialsStub);
-    expect(generateTemporaryCredentialsMock).toBeCalledWith(
+    expect((await response).json).toHaveBeenCalledWith(credentialsStub);
+    expect(generateTemporaryCredentialsMock).toHaveBeenCalledWith(
       keyIdStub,
       keySecretStub,
       roleArnStub,

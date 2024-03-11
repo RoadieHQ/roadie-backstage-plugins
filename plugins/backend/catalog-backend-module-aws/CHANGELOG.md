@@ -1,5 +1,35 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.1.6
+
+### Patch Changes
+
+- f2e39a0: Backstage version bump to 1.23.4
+
+## 2.1.5
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 2.1.4
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 2.1.3
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 2.1.2
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 2.1.1
 
 ### Patch Changes

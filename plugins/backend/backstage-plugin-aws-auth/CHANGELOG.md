@@ -1,5 +1,35 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.21
+
+### Patch Changes
+
+- f2e39a0: Backstage version bump to 1.23.4
+
+## 0.4.20
+
+### Patch Changes
+
+- 23195a8: Version bump to backstage 1.23.3
+
+## 0.4.19
+
+### Patch Changes
+
+- 6d5e4bf: Release all of the packages
+
+## 0.4.18
+
+### Patch Changes
+
+- aef7096: Fix failed release
+
+## 0.4.17
+
+### Patch Changes
+
+- f7287ee: Bump to backstage@1.21.1
+
 ## 0.4.16
 
 ### Patch Changes
