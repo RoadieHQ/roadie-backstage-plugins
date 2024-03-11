@@ -53,13 +53,12 @@
     "@roadiehq/scaffolder-backend-module-utils": "^1.13.7",
     "@roadiehq/scaffolder-backend-module-aws": "^2.4.22",
     "better-sqlite3": "^9.0.0",
-    "luxon": "^3.0.0",
+    "luxon": "^3.0.1",
     "app": "^1.0.12",
     "dockerode": "^3.3.0",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "knex": "^2.4.0",
-    "luxon": "^3.0.1",
     "winston": "^3.2.1"
   },
   "devDependencies": {

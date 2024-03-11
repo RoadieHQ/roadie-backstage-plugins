@@ -9,7 +9,7 @@
   "dependencies": {
     "@backstage/app-defaults": "^1.5.0",
     "@backstage/catalog-model": "^1.4.4",
-    "@roadiehq/backstage-plugin-cloudsmith": "^1.0.20",
+    "@roadiehq/backstage-plugin-cloudsmith": "^1.0.10",
     "@backstage/cli": "^0.25.2",
     "@backstage/core-app-api": "^1.12.0",
     "@backstage/core-components": "^0.14.0",
@@ -38,7 +38,6 @@
     "@roadiehq/backstage-plugin-aws-lambda": "^2.2.7",
     "@roadiehq/backstage-plugin-bugsnag": "^2.2.7",
     "@roadiehq/backstage-plugin-buildkite": "^2.1.21",
-    "@roadiehq/backstage-plugin-cloudsmith": "^1.0.10",
     "@roadiehq/backstage-plugin-datadog": "^2.2.6",
     "@roadiehq/backstage-plugin-github-insights": "^2.3.27",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.5.24",

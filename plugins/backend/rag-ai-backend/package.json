@@ -32,7 +32,7 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.19.9",
+    "@backstage/backend-common": "^0.21.3",
     "@backstage/config": "^1.1.1",
     "@langchain/core": "^0.1.2",
     "@roadiehq/rag-ai-node": "^0.0.1",
@@ -45,7 +45,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.24.0",
+    "@backstage/cli": "^0.25.2",
     "@types/supertest": "^2.0.8",
     "msw": "^1.0.0",
     "supertest": "^6.1.3"

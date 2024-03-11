@@ -28,8 +28,7 @@
     "prepare": "husky install"
   },
   "resolutions": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react": "^17.0.2"
   },
   "workspaces": {
     "packages": [
@@ -56,8 +55,5 @@
   "prettier": "@spotify/prettier-config",
   "dependencies": {
     "@changesets/cli": "^2.18.0"
-  },
-  "resolutions": {
-    "@types/react": "^17.0.2"
   }
 }
