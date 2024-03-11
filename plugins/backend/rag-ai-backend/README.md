@@ -4,6 +4,10 @@ This plugin is the backend for RAG AI Backstage plugin. You can see the correspo
 
 This plugin provides functionality to install and configure a Retrieval Augmented Generation backend within your Backstage instance. The plugin is capable of creating embeddings to enhance questions asked from LLMs with contextual information from your Backstage catalog, giving you the opportunity to get tailored responses based on your company's entities and other configured data sets. The plugin is configurable with customizable prompts, vector embeddings queries, additional search based embeddings and can be extended to support any LLM providing an API.
 
+![docs/data-flow-diagram.png](docs/data-flow-diagram.png)
+
+![docs/question-flow.png](docs/question-flow.png)
+
 # Configuration
 
 The RAG AI Backend does not contain bindings for the supported LLMs themselves, but those will need to be injected into the plugin during configuration phase.
