@@ -26,14 +26,14 @@ export class RagAiController {
   private static instance: RagAiController;
   private readonly llmService: LlmService;
   private readonly augmentationIndexer: AugmentationIndexer;
-  private readonly retrievalPipeline: RetrievalPipeline;
+  private readonly retrievalPipeline?: RetrievalPipeline;
   private logger: Logger;
 
   constructor(
     logger: Logger,
     llmService: LlmService,
     augmentationIndexer: AugmentationIndexer,
-    retrievalPipeline: RetrievalPipeline,
+    retrievalPipeline?: RetrievalPipeline,
   ) {
     this.logger = logger;
     this.llmService = llmService;
@@ -50,7 +50,7 @@ export class RagAiController {
     logger: Logger;
     llmService: LlmService;
     augmentationIndexer: AugmentationIndexer;
-    retrievalPipeline: RetrievalPipeline;
+    retrievalPipeline?: RetrievalPipeline;
   }): RagAiController {
     if (!RagAiController.instance) {
       RagAiController.instance = new RagAiController(
@@ -80,6 +80,11 @@ export class RagAiController {
   };
 
   getEmbeddings = async (req: Request, res: Response) => {
+    if (!this.retrievalPipeline) {
+      return res.status(500).send({
+        message: 'No retrieval pipeline configured for this AI backend. ',
+      });
+    }
     const source = req.params.source as EmbeddingsSource;
     const query = req.query.query as string;
     const entityFilter = req.body.entityFilter;
@@ -107,12 +112,13 @@ export class RagAiController {
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
 
-    const embeddingDocs =
-      await this.retrievalPipeline.retrieveAugmentationContext(
-        query,
-        source,
-        entityFilter,
-      );
+    const embeddingDocs = this.retrievalPipeline
+      ? await this.retrievalPipeline.retrieveAugmentationContext(
+          query,
+          source,
+          entityFilter,
+        )
+      : [];
     const llmResponse = await this.llmService.query(embeddingDocs, query);
     return res
       .status(200)

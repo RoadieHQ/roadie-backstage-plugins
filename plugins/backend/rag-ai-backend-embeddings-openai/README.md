@@ -1,6 +1,6 @@
 # RAG AI Backend-embeddings OpenAI submodule
 
-This is a submodule for the `@roadiehq/rag-ai-backend-embeddings` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
+This is a submodule for the `@roadiehq/rag-ai-backend` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
 
 ## Initialization
 
