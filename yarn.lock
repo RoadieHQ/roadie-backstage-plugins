@@ -20266,9 +20266,9 @@ json5@^2.1.2, json5@^2.1.3, json5@^2.2.2, json5@^2.2.3:
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
 jsonata@^1.8.6:
-  version "1.8.6"
-  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-1.8.6.tgz#e5f0e6ace870a34bac881a182ca2b31227122791"
-  integrity sha512-ZH2TPYdNP2JecOl/HvrH47Xc+9imibEMQ4YqKy/F/FrM+2a6vfbGxeCX23dB9Fr6uvGwv+ghf1KxWB3iZk09wA==
+  version "1.8.7"
+  resolved "https://registry.yarnpkg.com/jsonata/-/jsonata-1.8.7.tgz#e5cf5a4e28e3c88dd79e23282bffb7797350d035"
+  integrity sha512-tOW2/hZ+nR2bcQZs+0T62LVe5CHaNa3laFFWb/262r39utN6whJGBF7IR2Wq1QXrDbhftolk5gggW8uUJYlBTQ==
 
 jsonc-parser@3.2.0:
   version "3.2.0"
