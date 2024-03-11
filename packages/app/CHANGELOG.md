@@ -1,5 +1,12 @@
 # app
 
+## 1.0.13
+
+### Patch Changes
+
+- Updated dependencies [7b468fa]
+  - @roadiehq/rag-ai@0.1.0
+
 ## 1.0.12
 
 ### Patch Changes
