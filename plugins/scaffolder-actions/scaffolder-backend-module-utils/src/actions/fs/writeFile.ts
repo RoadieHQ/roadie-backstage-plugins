@@ -78,7 +78,6 @@ export function createWriteFileAction() {
 
       fs.outputFileSync(destFilepath, formattedContent);
 
-      // fs.outputFileSync(destFilepath, ctx.input.content);
       ctx.output('path', destFilepath);
     },
   });
