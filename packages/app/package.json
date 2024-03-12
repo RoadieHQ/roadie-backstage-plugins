@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "private": true,
   "backstage": {
     "role": "frontend"
@@ -9,7 +9,7 @@
   "dependencies": {
     "@backstage/app-defaults": "^1.5.0",
     "@backstage/catalog-model": "^1.4.4",
-    "@roadiehq/backstage-plugin-cloudsmith": "^1.0.20",
+    "@roadiehq/backstage-plugin-cloudsmith": "^1.0.10",
     "@backstage/cli": "^0.25.2",
     "@backstage/core-app-api": "^1.12.0",
     "@backstage/core-components": "^0.14.0",
@@ -50,6 +50,8 @@
     "@roadiehq/backstage-plugin-shortcut": "^1.1.21",
     "@roadiehq/backstage-plugin-travis-ci": "^2.1.21",
     "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^1.6.6",
+    "@roadiehq/rag-ai": "^0.1.0",
+    "cross-fetch": "^4.0.0",
     "history": "^5.0.0",
     "react": "^18.0.2",
     "react-dom": "^18.0.2",

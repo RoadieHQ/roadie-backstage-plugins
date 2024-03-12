@@ -32,5 +32,6 @@ module.exports = {
         onNonMatchingHeader: 'replace',
       },
     ],
+    eqeqeq: ['error', 'smart'],
   },
 };

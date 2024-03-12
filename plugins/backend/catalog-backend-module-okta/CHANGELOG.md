@@ -1,5 +1,17 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.9
+
+### Patch Changes
+
+- f2e39a0: Backstage version bump to 1.23.4
+
+## 0.9.8
+
+### Patch Changes
+
+- 3c82d29: Allow configuration to chunk the number of group membership requests to the Okta API.
+
 ## 0.9.7
 
 ### Patch Changes

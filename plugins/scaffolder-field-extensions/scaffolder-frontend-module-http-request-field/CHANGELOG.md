@@ -1,5 +1,17 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.6.8
+
+### Patch Changes
+
+- a63a344: Modify identity injection to be done before rendering the field to avoid intermittent state issues.
+
+## 1.6.7
+
+### Patch Changes
+
+- 5c76e25: Add possibility to use identity within the HTTP Request Field Scaffolder Field Extension
+
 ## 1.6.6
 
 ### Patch Changes
