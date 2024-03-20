@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2024 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,24 @@
  */
 
 import { ResourceEntity } from '@backstage/catalog-model';
-import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
+
+import {
+  OrganizationsClient,
+  paginateListAccounts,
+} from '@aws-sdk/client-organizations';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
-  ANNOTATION_AWS_EKS_CLUSTER_ARN,
-  ANNOTATION_AWS_IAM_ROLE_ARN,
+  ANNOTATION_ACCOUNT_ID,
+  ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 
 /**
- * Provides entities from AWS EKS Cluster service.
+ * Provides entities from AWS Organizations accounts.
  */
-export class AWSEKSClusterProvider extends AWSEntityProvider {
+export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: { logger: winston.Logger; providerId?: string },
@@ -38,14 +42,16 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSEKSClusterProvider(
+    return new AWSOrganizationAccountsProvider(
       { accountId, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-eks-cluster-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-organization-accounts-${this.accountId}-${
+      this.providerId ?? 0
+    }`;
   }
 
   async run(): Promise<void> {
@@ -54,61 +60,60 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     }
 
     this.logger.info(
-      `Providing eks cluster resources from aws: ${this.accountId}`,
+      `Providing organization account resources from aws: ${this.accountId}`,
     );
-    const eksResources: ResourceEntity[] = [];
+    const accountResources: ResourceEntity[] = [];
 
     const credentials = this.getCredentials();
-    const eks = new EKS({ credentials, region: this.region });
+    const organizationsClient = new OrganizationsClient({
+      credentials,
+      region: this.region,
+    });
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
     const paginatorConfig = {
-      client: eks,
-      pageSize: 25,
+      client: organizationsClient,
+      pageSize: 20,
     };
 
-    const clusterPages = paginateListClusters(paginatorConfig, {});
+    const accounts = paginateListAccounts(paginatorConfig, {});
 
-    for await (const clusterPage of clusterPages) {
-      for (const name of clusterPage.clusters || []) {
-        if (name) {
-          const cluster = await eks.describeCluster({ name });
-
+    for await (const accountsPageResponse of accounts) {
+      for (const account of accountsPageResponse.Accounts || []) {
+        if (account) {
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
           };
-
-          if (cluster.cluster?.arn) {
-            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster?.arn;
-          }
-
-          if (cluster.cluster?.roleArn) {
-            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster?.roleArn;
-          }
+          console.log(JSON.stringify(account));
+          annotations[ANNOTATION_AWS_ACCOUNT_ARN] = account.Arn ?? '';
+          annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
 
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations,
-              name: arnToName(name),
-              title: name,
+              name: arnToName(account.Arn!),
+              title: account.Name,
+              joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
+              joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
+              status: account.Status ?? 'UNKNOWN',
             },
             spec: {
               owner: 'unknown',
-              type: 'eks-cluster',
+              type: 'aws-account',
             },
           };
 
-          eksResources.push(resource);
+          accountResources.push(resource);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: eksResources.map(entity => ({
+      entities: accountResources.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

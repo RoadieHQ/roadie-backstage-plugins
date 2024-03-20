@@ -80,7 +80,8 @@ export class AWSEC2Provider extends AWSEntityProvider {
               labels: instance.Tags?.reduce(
                 (acc: Record<string, string>, tag) => {
                   if (tag.Key && tag.Value) {
-                    acc[tag.Key] = tag.Value;
+                    const key = tag.Key.replace(':', '_');
+                    acc[key] = tag.Value;
                   }
                   return acc;
                 },
