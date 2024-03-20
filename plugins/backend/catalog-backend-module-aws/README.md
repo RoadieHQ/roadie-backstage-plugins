@@ -21,16 +21,22 @@ export default async function createPlugin(
   const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
   const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
   const ec2Provider = AWSEC2Provider.fromConfig(config, env);
+  const awsAccountsProvider = AWSOrganizationAccountsProvider.fromConfig(
+    config,
+    env,
+  );
 
   builder.addEntityProvider(s3Provider);
   builder.addEntityProvider(lambdaProvider);
   builder.addEntityProvider(iamUserProvider);
   builder.addEntityProvider(ec2Provider);
+  builder.addEntityProvider(awsAccountsProvider);
 
   s3Provider.run();
   lambdaProvider.run();
   iamUserProvider.run();
   ec2Provider.run();
+  awsAccountsProvider.run();
 
   const { processingEngine, router } = await builder.build();
   await processingEngine.start();
