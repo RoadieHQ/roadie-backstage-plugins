@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.2.0
+
+### Minor Changes
+
+- 5a09b51: Add new AWS Organization Accounts provider.
+
 ## 2.1.6
 
 ### Patch Changes

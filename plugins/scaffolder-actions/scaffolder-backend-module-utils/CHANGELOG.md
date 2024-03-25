@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.14.0
+
+### Minor Changes
+
+- 35c787d: This makes the write file utility action to prettify the json is the input is json.
+
 ## 1.13.7
 
 ### Patch Changes

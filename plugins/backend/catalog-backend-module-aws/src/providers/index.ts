@@ -23,3 +23,4 @@ export { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
 export { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
 export { AWSEC2Provider } from './AWSEC2Provider';
 export { AWSRDSProvider } from './AWSRDSProvider';
+export { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
