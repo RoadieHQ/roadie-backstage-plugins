@@ -1498,4 +1498,97 @@ describe('ArgoCD service', () => {
       );
     });
   });
+
+  describe('terminateArgoAppOperation', () => {
+    it('terminates argo application operation by calling argo api', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
+
+      const resp = await argoService.terminateArgoAppOperation({
+        argoAppName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://argoInstance1.com/api/v1/applications/application/operation',
+        expect.objectContaining({
+          headers: { Authorization: 'Bearer token' },
+          method: 'DELETE',
+        }),
+      );
+    });
+
+    it('fails because application is not found', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'application not found',
+          message: 'application not found',
+        }),
+        { status: 404 },
+      );
+
+      const resp = await argoService.terminateArgoAppOperation({
+        argoAppName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'application not found',
+          message: 'application not found',
+          statusCode: 404,
+        }),
+      );
+    });
+
+    it('fails because no operation is in progress', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'No operation is in progress',
+          message: 'No operation is in progress',
+        }),
+        { status: 400 },
+      );
+
+      const resp = await argoService.terminateArgoAppOperation({
+        argoAppName: 'application',
+        argoInstanceName: 'argoInstance1',
+      });
+
+      expect(resp).toEqual(
+        expect.objectContaining({
+          error: 'No operation is in progress',
+          message: 'No operation is in progress',
+          statusCode: 400,
+        }),
+      );
+    });
+
+    it('fails because credentials are incorrect', async () => {
+      const mockGetArgoToken = jest
+        .spyOn(ArgoService.prototype, 'getArgoToken')
+        .mockRejectedValueOnce('Unauthorized');
+
+      await expect(
+        argoServiceForNoToken.terminateArgoAppOperation({
+          argoAppName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toEqual('Unauthorized');
+
+      expect(mockGetArgoToken).toHaveBeenCalledTimes(1);
+    });
+
+    it('fails to get argo application information for other reasons', async () => {
+      fetchMock.mockResponseOnce('', { status: 500 });
+
+      await expect(
+        argoService.terminateArgoAppOperation({
+          argoAppName: 'application',
+          argoInstanceName: 'argoInstance1',
+        }),
+      ).rejects.toThrow(/invalid json/i);
+    });
+  });
 });

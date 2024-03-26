@@ -208,6 +208,10 @@ export type ArgoProject = {
   spec: ArgoProjectSpec;
 };
 
+export type TerminateArgoAppOperationResp =
+  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
+  | FetchResponse<{}, 200>;
+
 export type ArgoApplication = {
   metadata: Metadata;
 };

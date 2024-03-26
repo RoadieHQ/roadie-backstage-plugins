@@ -29,6 +29,7 @@ import {
   ArgoProject,
   ResourceItem,
   GetArgoApplicationResp,
+  TerminateArgoAppOperationResp,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
@@ -988,6 +989,50 @@ export class ArgoService implements ArgoServiceApi {
     } catch (error) {
       this.logger.error(
         `Error Getting Argo Application Information For Argo Instance Name ${argoInstanceName} - searching for application ${argoApplicationName} - ${JSON.stringify(
+          { statusText, error: (error as Error).message },
+        )}`,
+      );
+      throw error;
+    }
+  }
+
+  async terminateArgoAppOperation({
+    argoAppName,
+    argoInstanceName,
+  }: {
+    argoAppName: string;
+    argoInstanceName: string;
+  }) {
+    const matchedArgoInstance = getArgoConfigByInstanceName({
+      argoConfigs: this.instanceConfigs,
+      argoInstanceName,
+    });
+    if (!matchedArgoInstance)
+      throw new Error(
+        `config does not have argo information for the cluster named "${argoInstanceName}"`,
+      );
+    const token: string =
+      matchedArgoInstance.token ??
+      (await this.getArgoToken(matchedArgoInstance));
+
+    const options = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'DELETE',
+    };
+
+    let statusText: string = '';
+    try {
+      const response = (await fetch(
+        `${matchedArgoInstance.url}/api/v1/applications/${argoAppName}/operation`,
+        options,
+      )) as TerminateArgoAppOperationResp;
+      statusText = response.statusText;
+      return { ...(await response.json()), statusCode: response.status };
+    } catch (error) {
+      this.logger.error(
+        `Error Terminating Argo Application Operation for application ${argoAppName} in Argo Instance Name ${argoInstanceName} - ${JSON.stringify(
           { statusText, error: (error as Error).message },
         )}`,
       );

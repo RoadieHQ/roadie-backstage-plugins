@@ -17,6 +17,7 @@ const mockDeleteAppandProject = jest.fn();
 const mockGetArgoInstanceArray = jest.fn();
 const mockUpdateArgoProjectAndApp = jest.fn();
 const mockGetArgoApplicationInfo = jest.fn();
+const mockTerminateArgoAppOperation = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -31,6 +32,7 @@ jest.mock('./argocd.service', () => {
         getArgoInstanceArray: mockGetArgoInstanceArray,
         updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
         getArgoApplicationInfo: mockGetArgoApplicationInfo,
+        terminateArgoAppOperation: mockTerminateArgoAppOperation,
       };
     }),
   };
@@ -329,6 +331,32 @@ describe('router', () => {
         expect.objectContaining({ error: 'error', message: 'message' }),
       );
       expect(resp.status).toBe(404);
+    });
+  });
+
+  describe('DELETE /argoInstance/:argoInstanceName/applications/:argoAppName/operation', () => {
+    it('succeeds in terminating current operation', async () => {
+      const mockedResponseObj = {
+        statusCode: 200,
+        body: {},
+      };
+      mockTerminateArgoAppOperation.mockResolvedValueOnce(mockedResponseObj);
+
+      const resp = await request(app).delete(
+        '/argoInstance/argoInstance1/applications/application/operation',
+      );
+
+      expect(resp.body).toEqual(expect.objectContaining({}));
+      expect(resp.status).toBe(200);
+    });
+
+    it('fails in terminating current operation because of some error', async () => {
+      mockTerminateArgoAppOperation.mockResolvedValueOnce(new Error('error'));
+      const resp = await request(app).delete(
+        '/argoInstance/argoInstance1/applications/application/operation',
+      );
+
+      expect(resp.status).toBe(500);
     });
   });
 });

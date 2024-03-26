@@ -395,6 +395,26 @@ export function createRouter({
     },
   );
 
+  router.delete(
+    '/argoInstance/:argoInstanceName/applications/:argoAppName/operation',
+    async (request, response) => {
+      const argoInstanceName: string = request.params.argoInstanceName;
+      const argoAppName: string = request.params.argoAppName;
+      logger.info(
+        `Terminating current operation for ${argoInstanceName} and ${argoAppName}`,
+      );
+
+      const terminateArgoAppOperationResp =
+        await argoSvc.terminateArgoAppOperation({
+          argoAppName,
+          argoInstanceName,
+        });
+      return response
+        .status(terminateArgoAppOperationResp.statusCode)
+        .send(terminateArgoAppOperationResp);
+    },
+  );
+
   router.use(errorHandler());
   return Promise.resolve(router);
 }
