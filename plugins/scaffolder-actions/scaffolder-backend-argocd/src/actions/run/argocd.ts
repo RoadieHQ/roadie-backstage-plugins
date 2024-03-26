@@ -16,9 +16,12 @@
 import { Config } from '@backstage/config';
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { ArgoService } from '@roadiehq/backstage-plugin-argo-cd-backend';
-import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
-export const createArgoCdResources = (config: Config, logger: Logger) => {
+export const createArgoCdResources = (
+  config: Config,
+  logger: LoggerService,
+) => {
   return createTemplateAction<{
     argoInstance: string;
     namespace: string;

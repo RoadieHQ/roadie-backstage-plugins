@@ -1,36 +1,36 @@
 import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
-import { Logger } from 'winston';
 import { timer } from './timer.services';
 
 import {
+  ArgoProject,
   ArgoServiceApi,
+  BuildArgoApplicationArgs,
+  BuildArgoProjectArgs,
   CreateArgoApplicationProps,
   CreateArgoProjectProps,
   CreateArgoResourcesProps,
+  DeleteApplicationAndProjectProps,
+  DeleteApplicationAndProjectResponse,
   DeleteApplicationProps,
   DeleteProjectProps,
+  findArgoAppResp,
+  GetArgoApplicationResp,
+  GetArgoProjectProps,
+  GetArgoProjectResp,
+  getRevisionDataResp,
   InstanceConfig,
+  ResourceItem,
+  ResponseSchema,
   ResyncProps,
   SyncArgoApplicationProps,
   SyncResponse,
-  findArgoAppResp,
-  DeleteApplicationAndProjectProps,
-  DeleteApplicationAndProjectResponse,
-  ResponseSchema,
-  getRevisionDataResp,
-  BuildArgoProjectArgs,
-  BuildArgoApplicationArgs,
-  UpdateArgoProjectAndAppProps,
   UpdateArgoApplicationProps,
+  UpdateArgoProjectAndAppProps,
   UpdateArgoProjectProps,
-  GetArgoProjectProps,
-  GetArgoProjectResp,
-  ArgoProject,
-  ResourceItem,
-  GetArgoApplicationResp,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 
@@ -41,7 +41,7 @@ export class ArgoService implements ArgoServiceApi {
     private readonly username: string,
     private readonly password: string,
     private readonly config: Config,
-    private readonly logger: Logger,
+    private readonly logger: LoggerService,
   ) {
     this.instanceConfigs = this.config
       .getConfigArray('argocd.appLocatorMethods')

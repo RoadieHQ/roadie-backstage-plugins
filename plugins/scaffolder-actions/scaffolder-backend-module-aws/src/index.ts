@@ -16,3 +16,4 @@
 export * from './actions/s3';
 export * from './actions/ecr';
 export * from './actions/secrets-manager';
+export { scaffolderAwsModule as default } from './module';

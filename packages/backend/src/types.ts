@@ -18,12 +18,12 @@ import { Config } from '@backstage/config';
 import {
   PluginCacheManager,
   PluginDatabaseManager,
-  PluginEndpointDiscovery,
   TokenManager,
   UrlReader,
 } from '@backstage/backend-common';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 
 export type PluginEnvironment = {
   logger: Logger;
@@ -31,7 +31,7 @@ export type PluginEnvironment = {
   database: PluginDatabaseManager;
   config: Config;
   reader: UrlReader;
-  discovery: PluginEndpointDiscovery;
+  discovery: DiscoveryService;
   tokenManager: TokenManager;
   permissions: ServerPermissionClient;
   scheduler: PluginTaskScheduler;

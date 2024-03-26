@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 import {
+  ContainerRunner,
   DockerContainerRunner,
   UrlReader,
-  ContainerRunner,
 } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
 import {
-  createRouter,
   createBuiltinActions,
+  createRouter,
   TemplateAction,
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
 import {
-  createZipAction,
-  createWriteFileAction,
-  createSleepAction,
   createAppendFileAction,
-  createMergeJSONAction,
-  createMergeAction,
-  createParseFileAction,
-  createSerializeYamlAction,
-  createSerializeJsonAction,
   createJSONataAction,
-  createYamlJSONataTransformAction,
   createJsonJSONataTransformAction,
+  createMergeAction,
+  createMergeJSONAction,
+  createParseFileAction,
+  createSerializeJsonAction,
+  createSerializeYamlAction,
+  createSleepAction,
+  createWriteFileAction,
+  createYamlJSONataTransformAction,
+  createZipAction,
 } from '@roadiehq/scaffolder-backend-module-utils';
 import {
   createAwsS3CpAction,
@@ -48,7 +48,7 @@ import { Router } from 'express';
 import type { PluginEnvironment } from '../types';
 import { ScmIntegrations } from '@backstage/integration';
 import { Config } from '@backstage/config';
-import { DiscoveryApi } from '@backstage/plugin-permission-common';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 
 export const createActions = (options: {
   reader: UrlReader;
@@ -56,7 +56,7 @@ export const createActions = (options: {
   config: Config;
   containerRunner: ContainerRunner;
   catalogClient: CatalogClient;
-  discovery: DiscoveryApi;
+  discovery: DiscoveryService;
 }): TemplateAction<any>[] => {
   const { reader, integrations, config, catalogClient, discovery } = options;
   const defaultActions = createBuiltinActions({

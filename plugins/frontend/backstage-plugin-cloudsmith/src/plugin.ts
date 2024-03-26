@@ -17,14 +17,14 @@
 import {
   createApiFactory,
   createPlugin,
-  FetchApi,
-  fetchApiRef,
   DiscoveryApi,
   discoveryApiRef,
+  FetchApi,
+  fetchApiRef,
 } from '@backstage/core-plugin-api';
-import { createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home-react';
 
-import { CloudsmithClient, cloudsmithApiRef } from './api';
+import { cloudsmithApiRef, CloudsmithClient } from './api';
 
 export const cloudsmithPlugin = createPlugin({
   id: 'cloudsmith',
