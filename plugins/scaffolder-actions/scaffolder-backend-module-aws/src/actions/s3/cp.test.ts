@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
 import { createAwsS3CpAction } from './cp';
-import { PassThrough } from 'stream';
 import mockFs from 'mock-fs';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 const mockS3Client = {
   send: jest.fn().mockReturnThis(),
@@ -38,11 +37,8 @@ jest.mock('fs-extra', () => {
 
 describe('roadiehq:aws:s3:cp', () => {
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createAwsS3CpAction();
   beforeEach(() => {

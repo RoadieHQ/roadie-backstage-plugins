@@ -16,9 +16,9 @@
 import { createHttpBackstageAction } from './backstageRequest';
 import os from 'os'; // eslint-disable-line
 import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
-import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import { mockServices } from '@backstage/backend-test-utils';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 jest.mock('./helpers', () => ({
   ...jest.requireActual('./helpers.ts'),
@@ -30,19 +30,16 @@ describe('http:backstage:request', () => {
   const mockBaseUrl = 'http://backstage.tests';
   const logger = getVoidLogger();
   const loggerSpy = jest.spyOn(logger, 'info');
-  const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
     jest.resetAllMocks();
-    action = createHttpBackstageAction({ discovery });
+    action = createHttpBackstageAction({ discovery: mockServices.discovery() });
   });
 
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: os.tmpdir(),
     logger: logger,
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
     isDryRun: false,
   };
 

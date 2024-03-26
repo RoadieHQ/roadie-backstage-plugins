@@ -2,18 +2,20 @@ import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';
 import Router from 'express-promise-router';
-import { Logger } from 'winston';
 import { ArgoService } from './argocd.service';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export interface RouterOptions {
-  logger: Logger;
+  logger: LoggerService;
   config: Config;
 }
+
 export type Response = {
   status: string;
   message: string;
 };
+
 export function createRouter({
   logger,
   config,

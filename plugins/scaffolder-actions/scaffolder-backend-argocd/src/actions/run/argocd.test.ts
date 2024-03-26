@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream';
 import { TemplateAction } from '@backstage/plugin-scaffolder-backend';
 import { ConfigReader } from '@backstage/config';
 import { createArgoCdResources } from './argocd';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 const mockCreateArgoResources = jest.fn();
 
@@ -58,6 +58,7 @@ describe('argocd:create-resources', () => {
   let action: TemplateAction<any>;
 
   const mockContext = {
+    ...createMockActionContext(),
     input: {
       argoInstance: 'argoInstance1',
       namespace: 'testNamespace',
@@ -67,11 +68,6 @@ describe('argocd:create-resources', () => {
       path: 'kubernetes/nonproduction',
       labelValue: 'backstage-name=testId',
     },
-    workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
 
   beforeEach(() => {

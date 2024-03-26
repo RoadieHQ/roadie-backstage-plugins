@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { Logger } from 'winston';
 import Router from 'express-promise-router';
 import express from 'express';
 import { getAwsApiGenerateTempCredentialsForwarder } from './aws-api';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
-export async function createRouter(logger: Logger): Promise<express.Router> {
+export async function createRouter(
+  logger: LoggerService,
+): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
 

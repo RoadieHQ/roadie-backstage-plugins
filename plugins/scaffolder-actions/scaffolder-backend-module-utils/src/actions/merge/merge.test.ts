@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
+import { resolveSafeChildPath } from '@backstage/backend-common';
 import { createMergeAction, createMergeJSONAction } from './merge';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import YAML from 'yaml';
 import detectIndent from 'detect-indent';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -30,11 +30,9 @@ describe('roadiehq:utils:json:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
     output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
 
   const action = createMergeJSONAction({});
@@ -282,11 +280,9 @@ describe('roadiehq:utils:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
     output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
 
   const action = createMergeAction();

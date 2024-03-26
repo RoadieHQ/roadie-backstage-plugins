@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
 import { createWriteFileAction } from './writeFile';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import { createReplaceInFileAction } from './replaceInFile';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:fs:replace', () => {
   beforeEach(() => {
@@ -28,9 +27,8 @@ describe('roadiehq:utils:fs:replace', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
   };

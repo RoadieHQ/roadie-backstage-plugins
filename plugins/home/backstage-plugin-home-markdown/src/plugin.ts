@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home-react';
 import {
   createApiFactory,
   createPlugin,

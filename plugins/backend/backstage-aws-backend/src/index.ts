@@ -15,3 +15,4 @@
  */
 
 export * from './service/router';
+export { roadieAwsBackendPlugin as default } from './plugin';

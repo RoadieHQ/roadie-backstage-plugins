@@ -19,3 +19,4 @@ export * from './actions/merge';
 export * from './actions/sleep';
 export * from './actions/jsonata';
 export * from './actions/serialize';
+export { scaffolderUtilsModule as default } from './module';

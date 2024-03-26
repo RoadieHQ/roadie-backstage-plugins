@@ -17,14 +17,14 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
 import {
   generateBackstageUrl,
-  http,
   getObjFieldCaseInsensitively,
+  http,
 } from './helpers';
-import { HttpOptions, Headers, Params, Methods, Body } from './types';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { Body, Headers, HttpOptions, Methods, Params } from './types';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 
 export function createHttpBackstageAction(options: {
-  discovery: DiscoveryApi;
+  discovery: DiscoveryService;
 }) {
   const { discovery } = options;
   return createTemplateAction<{

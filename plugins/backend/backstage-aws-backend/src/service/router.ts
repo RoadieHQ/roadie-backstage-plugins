@@ -18,13 +18,13 @@ import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express, { Request } from 'express';
 import Router from 'express-promise-router';
-import { Logger } from 'winston';
 import { CloudControl } from '@aws-sdk/client-cloudcontrol';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { Account } from '../types';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export interface RouterOptions {
-  logger: Logger;
+  logger: LoggerService;
   config: Config;
 }
 

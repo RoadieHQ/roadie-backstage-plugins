@@ -31,15 +31,15 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/config": "^1.1.1",
+    "@backstage/backend-common": "^0.21.5",
+    "@backstage/config": "^1.2.0",
     "@langchain/core": "^0.1.1",
     "@roadiehq/rag-ai-node": "^0.1.0",
     "knex": "^3.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.2",
+    "@backstage/cli": "^0.26.1",
     "@types/supertest": "^2.0.8",
     "msw": "^1.0.0",
     "supertest": "^6.1.3"
