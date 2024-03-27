@@ -36,7 +36,6 @@
     "@backstage/catalog-client": "^1.6.0",
     "@backstage/catalog-model": "^1.4.4",
     "@backstage/config": "^1.1.1",
-    "@backstage/core-plugin-api": "^1.9.1",
     "@backstage/plugin-search-common": "^1.2.10",
     "@langchain/core": "^0.1.2",
     "@roadiehq/rag-ai-node": "^0.1.0",
