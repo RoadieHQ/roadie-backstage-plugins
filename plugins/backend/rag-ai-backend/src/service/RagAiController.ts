@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TokenManager } from '@backstage/backend-common';
 import { Request, Response } from 'express';
 import { Logger } from 'winston';
 import { LlmService } from './LlmService';
@@ -28,14 +29,17 @@ export class RagAiController {
   private readonly augmentationIndexer: AugmentationIndexer;
   private readonly retrievalPipeline?: RetrievalPipeline;
   private logger: Logger;
+  private readonly tokenManager: TokenManager;
 
   constructor(
     logger: Logger,
+    tokenManager: TokenManager,
     llmService: LlmService,
     augmentationIndexer: AugmentationIndexer,
     retrievalPipeline?: RetrievalPipeline,
   ) {
     this.logger = logger;
+    this.tokenManager = tokenManager;
     this.llmService = llmService;
     this.augmentationIndexer = augmentationIndexer;
     this.retrievalPipeline = retrievalPipeline;
@@ -43,11 +47,13 @@ export class RagAiController {
 
   static getInstance({
     logger,
+    tokenManager,
     llmService,
     augmentationIndexer,
     retrievalPipeline,
   }: {
     logger: Logger;
+    tokenManager: TokenManager;
     llmService: LlmService;
     augmentationIndexer: AugmentationIndexer;
     retrievalPipeline?: RetrievalPipeline;
@@ -55,6 +61,7 @@ export class RagAiController {
     if (!RagAiController.instance) {
       RagAiController.instance = new RagAiController(
         logger,
+        tokenManager,
         llmService,
         augmentationIndexer,
         retrievalPipeline,
@@ -64,6 +71,9 @@ export class RagAiController {
   }
 
   createEmbeddings = async (req: Request, res: Response) => {
+    const { token } = await this.tokenManager.getToken();
+    req.headers.authorization = `Bearer ${token}`;
+
     const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
 
@@ -85,6 +95,9 @@ export class RagAiController {
         message: 'No retrieval pipeline configured for this AI backend. ',
       });
     }
+    const { token } = await this.tokenManager.getToken();
+    req.headers.authorization = `Bearer ${token}`;
+
     const source = req.params.source as EmbeddingsSource;
     const query = req.query.query as string;
     const entityFilter = req.body.entityFilter;
@@ -98,6 +111,9 @@ export class RagAiController {
   };
 
   deleteEmbeddings = async (req: Request, res: Response) => {
+    const { token } = await this.tokenManager.getToken();
+    req.headers.authorization = `Bearer ${token}`;
+
     const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
     await this.augmentationIndexer.deleteEmbeddings(source, entityFilter);
@@ -108,6 +124,9 @@ export class RagAiController {
 
   query = async (req: Request, res: Response) => {
     // TODO: Remove the need for source in query when we have magical abilities to create very good embeddings
+    const { token } = await this.tokenManager.getToken();
+    req.headers.authorization = `Bearer ${token}`;
+
     const source = req.params.source as EmbeddingsSource;
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
