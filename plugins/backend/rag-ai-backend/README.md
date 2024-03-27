@@ -307,8 +307,6 @@ export default async function createPlugin({
 
 The `@roadiehq/rag-ai-backend` exposes a router function that can be registered directly into a standard Backstage application.
 
-````typescript
-
 ```typescript
 import ai from './plugins/ai';
 // ...
@@ -319,7 +317,7 @@ async function main() {
   apiRouter.use('/rag-ai', await ai(aiEnv));
   // ...
 }
-````
+```
 
 ## Embeddings creation
 
