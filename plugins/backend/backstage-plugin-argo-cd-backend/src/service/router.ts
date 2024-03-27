@@ -403,9 +403,6 @@ export function createRouter({
     async (request, response) => {
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName: string = request.params.argoAppName;
-      logger.info(
-        `Terminating current operation for ${argoInstanceName} and ${argoAppName}`,
-      );
 
       const terminateArgoAppOperationResp =
         await argoSvc.terminateArgoAppOperation({

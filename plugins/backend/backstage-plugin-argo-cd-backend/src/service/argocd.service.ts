@@ -261,7 +261,7 @@ export class ArgoService implements ArgoServiceApi {
     const resp = await fetch(
       `${baseUrl}/api/v1/applications${urlSuffix}`,
       requestOptions,
-    );
+    ); // TODO: dive deep here and fix this call.  add types, we can see what are the different options, there multiple applications can be returned.
 
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} Error`);
@@ -611,6 +611,8 @@ export class ArgoService implements ArgoServiceApi {
     return respData;
   }
 
+  // we have the functions that are clearly direct proxies
+  // as a direct proxy
   async deleteApp({
     baseUrl,
     argoApplicationName,
@@ -630,6 +632,7 @@ export class ArgoService implements ArgoServiceApi {
         baseUrl: baseUrl,
         argoToken: argoToken,
       });
+
     const resp = await fetch(
       `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
         {
@@ -639,15 +642,21 @@ export class ArgoService implements ArgoServiceApi {
       options,
     );
     const data = await resp?.json();
+
     if (resp.ok) {
+      // at first, when the app is pending delete, it sends an OK 200.
       return true;
     }
 
     if (resp.status === 403 || resp.status === 404) {
+      // it doesnt to delete its already deleted.
       throw new Error(data.message);
     }
     return false;
   }
+
+  // waitForApplicationToBeDeleted()
+  // does a loop
 
   async deleteProject({
     baseUrl,
@@ -664,7 +673,7 @@ export class ArgoService implements ArgoServiceApi {
 
     const resp = await fetch(
       `${baseUrl}/api/v1/projects/${argoProjectName}?${new URLSearchParams({
-        cascade: 'true',
+        cascade: 'true', // todo: project does not have a cascade option.
       })}`,
       options,
     );
@@ -715,6 +724,7 @@ export class ArgoService implements ArgoServiceApi {
 
     let countinueToDeleteProject: boolean = true;
     let isAppExist: boolean = true;
+
     try {
       const deleteAppResp = await this.deleteApp({
         baseUrl: matchedArgoInstance.url,
@@ -727,6 +737,7 @@ export class ArgoService implements ArgoServiceApi {
         argoDeleteAppResp.status = 'failed';
         argoDeleteAppResp.message = 'error with deleteing argo app';
       }
+      // deletionTimestamp on the application metadata
     } catch (e: any) {
       if (typeof e.message === 'string') {
         isAppExist = false;
@@ -739,7 +750,9 @@ export class ArgoService implements ArgoServiceApi {
       this.logger.info(message);
     }
 
+    // we need to fix this section of the code. we no longer need to loop.
     let isAppPendingDelete: boolean = false;
+
     if (isAppExist) {
       for (
         let attempts = 0;
@@ -752,9 +765,9 @@ export class ArgoService implements ArgoServiceApi {
             matchedArgoInstance.name,
             token,
             { name: argoAppName },
-          );
+          ); // throwing an error for 404. when its gone and doesnt exist.
 
-          isAppPendingDelete = 'metadata' in argoApp;
+          isAppPendingDelete = 'metadata' in argoApp; // 200 on this call, not 404. deleteTimestamp field existing?
           if (!isAppPendingDelete) {
             argoDeleteAppResp.status = 'success';
             argoDeleteAppResp.message = 'application is deleted successfully';
@@ -1041,7 +1054,11 @@ export class ArgoService implements ArgoServiceApi {
       },
       method: 'DELETE',
     };
-
+    this.logger.info(
+      `Terminating current operation for ${
+        argoInstanceName ?? url
+      } and ${argoAppName}`,
+    );
     let statusText: string = '';
     try {
       const response = (await fetch(
