@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { TokenManager } from '@backstage/backend-common';
 import { CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
 import { SplitterOptions } from './types';
@@ -32,6 +33,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
   private readonly logger: Logger;
+  private readonly tokenManager: TokenManager;
 
   private readonly splitterOptions?: SplitterOptions;
 
@@ -39,12 +41,14 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     vectorStore,
     catalogApi,
     logger,
+    tokenManager,
     embeddings,
     splitterOptions,
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
     logger: Logger;
+    tokenManager: TokenManager;
     embeddings: Embeddings;
     splitterOptions?: SplitterOptions;
   }) {
@@ -53,6 +57,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     this.splitterOptions = splitterOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
+    this.tokenManager = tokenManager;
   }
 
   get vectorStore() {
@@ -105,9 +110,12 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   ) {
     switch (source) {
       case 'catalog': {
-        const entitiesResponse = await this.catalogApi.getEntities({
-          filter,
-        });
+        const { token } = await this.tokenManager.getToken();
+
+        const entitiesResponse = await this.catalogApi.getEntities(
+          { filter },
+          { token },
+        );
 
         const constructCatalogEmbeddingDocuments =
           await this.constructCatalogEmbeddingDocuments(
@@ -140,9 +148,11 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<void> {
-    const entities = (await this.catalogApi.getEntities({ filter })).items.map(
-      stringifyEntityRef,
-    );
+    const { token } = await this.tokenManager.getToken();
+
+    const entities = (
+      await this.catalogApi.getEntities({ filter }, { token })
+    ).items.map(stringifyEntityRef);
 
     for (const entityRef of entities) {
       await this._vectorStore.deleteDocuments({

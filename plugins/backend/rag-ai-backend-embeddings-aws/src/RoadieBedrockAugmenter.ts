@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { TokenManager } from '@backstage/backend-common';
 import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
@@ -33,6 +33,7 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
         region: string;
       };
       bedrockConfig: BedrockConfig;
+      tokenManager: TokenManager;
     },
   ) {
     const embeddings = new BedrockEmbeddings({
