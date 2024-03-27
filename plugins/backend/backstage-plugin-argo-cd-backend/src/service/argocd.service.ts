@@ -615,6 +615,7 @@ export class ArgoService implements ArgoServiceApi {
     baseUrl,
     argoApplicationName,
     argoToken,
+    terminateOperation,
   }: DeleteApplicationProps): Promise<boolean> {
     const options: RequestInit = {
       method: 'DELETE',
@@ -623,7 +624,12 @@ export class ArgoService implements ArgoServiceApi {
         'Content-Type': 'application/json',
       },
     };
-
+    if (terminateOperation)
+      await this.terminateArgoAppOperation({
+        argoAppName: argoApplicationName,
+        baseUrl: baseUrl,
+        argoToken: argoToken,
+      });
     const resp = await fetch(
       `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
         {
@@ -679,6 +685,7 @@ export class ArgoService implements ArgoServiceApi {
   async deleteAppandProject({
     argoAppName,
     argoInstanceName,
+    terminateOperation,
   }: DeleteApplicationAndProjectProps): Promise<DeleteApplicationAndProjectResponse> {
     const argoDeleteAppResp: ResponseSchema = {
       status: '',
@@ -713,6 +720,7 @@ export class ArgoService implements ArgoServiceApi {
         baseUrl: matchedArgoInstance.url,
         argoApplicationName: argoAppName,
         argoToken: token,
+        terminateOperation,
       });
       if (deleteAppResp === false) {
         countinueToDeleteProject = false;
@@ -999,22 +1007,34 @@ export class ArgoService implements ArgoServiceApi {
   async terminateArgoAppOperation({
     argoAppName,
     argoInstanceName,
+    baseUrl,
+    argoToken,
   }: {
     argoAppName: string;
-    argoInstanceName: string;
+    argoInstanceName?: string;
+    baseUrl?: string;
+    argoToken?: string;
   }) {
-    const matchedArgoInstance = getArgoConfigByInstanceName({
-      argoConfigs: this.instanceConfigs,
-      argoInstanceName,
-    });
-    if (!matchedArgoInstance)
-      throw new Error(
-        `config does not have argo information for the cluster named "${argoInstanceName}"`,
-      );
-    const token: string =
-      matchedArgoInstance.token ??
-      (await this.getArgoToken(matchedArgoInstance));
-
+    let url = baseUrl;
+    let token = argoToken;
+    if (!(baseUrl && argoToken)) {
+      if (!argoInstanceName)
+        throw new Error(
+          `argo instance must be defined when baseurl or token are not given.`,
+        );
+      const matchedArgoInstance = getArgoConfigByInstanceName({
+        argoConfigs: this.instanceConfigs,
+        argoInstanceName,
+      });
+      if (!matchedArgoInstance)
+        throw new Error(
+          `config does not have argo information for the cluster named "${argoInstanceName}"`,
+        );
+      token =
+        matchedArgoInstance.token ??
+        (await this.getArgoToken(matchedArgoInstance));
+      url = matchedArgoInstance.url;
+    }
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -1025,7 +1045,7 @@ export class ArgoService implements ArgoServiceApi {
     let statusText: string = '';
     try {
       const response = (await fetch(
-        `${matchedArgoInstance.url}/api/v1/applications/${argoAppName}/operation`,
+        `${url}/api/v1/applications/${argoAppName}/operation`,
         options,
       )) as TerminateArgoAppOperationResp;
       statusText = response.statusText;

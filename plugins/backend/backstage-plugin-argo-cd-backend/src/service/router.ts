@@ -368,11 +368,14 @@ export function createRouter({
     async (request, response) => {
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName: string = request.params.argoAppName;
+      const terminateOperation: boolean =
+        Boolean(request.query.terminateOperation) ?? false;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
 
       const argoDeleteAppandProjectResp = await argoSvc.deleteAppandProject({
         argoAppName,
         argoInstanceName,
+        terminateOperation,
       });
       return response.send(argoDeleteAppandProjectResp);
     },

@@ -609,6 +609,30 @@ describe('ArgoCD service', () => {
     );
   });
 
+  it('should terminate operation before deleting when terminate set to true', async () => {
+    // terminateOperation
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    // deleteApp
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    const resp = await argoService.deleteApp({
+      baseUrl: 'https://argoInstance1.com',
+      argoApplicationName: 'testApp',
+      argoToken: 'testToken',
+      terminateOperation: true,
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://argoInstance1.com/api/v1/applications/testApp/operation',
+      expect.objectContaining({
+        headers: { Authorization: 'Bearer testToken' },
+        method: 'DELETE',
+      }),
+    );
+    expect(resp).toStrictEqual(true);
+  });
+
   it('should sync app', async () => {
     fetchMock.mockResponseOnce('');
 
@@ -1001,6 +1025,44 @@ describe('ArgoCD service', () => {
       argoDeleteProjectResp: {
         status: 'failed',
         message: 'Cannot Delete Project: something unexpected',
+      },
+    });
+  });
+
+  it('should pass terminate operation to delete app method when terminate set to true', async () => {
+    // terminateOperation
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    // deleteApp
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    // getArgoAppData
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    // deleteProject
+    fetchMock.mockResponseOnce(JSON.stringify({}));
+
+    const resp = await argoService.deleteAppandProject({
+      argoAppName: 'testApp',
+      argoInstanceName: 'argoInstance1',
+      terminateOperation: true,
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://argoInstance1.com/api/v1/applications/testApp/operation',
+      expect.objectContaining({
+        headers: { Authorization: 'Bearer token' },
+        method: 'DELETE',
+      }),
+    );
+    expect(resp).toStrictEqual({
+      argoDeleteAppResp: {
+        status: 'success',
+        message: 'application is deleted successfully',
+      },
+      argoDeleteProjectResp: {
+        status: 'success',
+        message: 'project is deleted successfully',
       },
     });
   });
@@ -1500,7 +1562,7 @@ describe('ArgoCD service', () => {
   });
 
   describe('terminateArgoAppOperation', () => {
-    it('terminates argo application operation by calling argo api', async () => {
+    it('terminates argo application operation by calling argo api with app name and instance provided', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
 
       const resp = await argoService.terminateArgoAppOperation({
@@ -1514,6 +1576,25 @@ describe('ArgoCD service', () => {
         'https://argoInstance1.com/api/v1/applications/application/operation',
         expect.objectContaining({
           headers: { Authorization: 'Bearer token' },
+          method: 'DELETE',
+        }),
+      );
+    });
+    it('terminates argo application operation by calling argo api with app name, baseurl, and token provided', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
+
+      const resp = await argoService.terminateArgoAppOperation({
+        argoAppName: 'application',
+        baseUrl: 'https://passedArgoInstance1.com',
+        argoToken: 'passedToken',
+      });
+
+      expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://passedArgoInstance1.com/api/v1/applications/application/operation',
+        expect.objectContaining({
+          headers: { Authorization: 'Bearer passedToken' },
           method: 'DELETE',
         }),
       );
@@ -1578,6 +1659,15 @@ describe('ArgoCD service', () => {
       ).rejects.toEqual('Unauthorized');
 
       expect(mockGetArgoToken).toHaveBeenCalledTimes(1);
+    });
+
+    it('raises error if argo instance not included and either base url or token not included', async () => {
+      await expect(
+        argoService.terminateArgoAppOperation({
+          argoAppName: 'application',
+          argoToken: 'token',
+        }),
+      ).rejects.toThrow(/argo instance must be defined/i);
     });
 
     it('fails to get argo application information for other reasons', async () => {

@@ -203,6 +203,20 @@ describe('router', () => {
     });
   });
 
+  it('calls deleteappandproject with terminat operation when param included', async () => {
+    mockDeleteAppandProject.mockReturnValue({});
+
+    await request(app).delete(
+      '/argoInstance/argoInstance1/applications/appName?terminateOperation=true',
+    );
+
+    expect(mockDeleteAppandProject).toHaveBeenCalledWith({
+      argoAppName: 'appName',
+      argoInstanceName: 'argoInstance1',
+      terminateOperation: true,
+    });
+  });
+
   describe('/updateArgo/:argoAppName', () => {
     let data: object;
     beforeEach(() => {

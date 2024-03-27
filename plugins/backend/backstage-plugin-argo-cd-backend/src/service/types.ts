@@ -86,11 +86,13 @@ export interface DeleteApplicationProps {
   baseUrl: string;
   argoApplicationName: string;
   argoToken: string;
+  terminateOperation?: boolean;
 }
 
 export interface DeleteApplicationAndProjectProps {
   argoAppName: string;
   argoInstanceName: string;
+  terminateOperation?: boolean;
 }
 
 export type DeleteApplicationAndProjectResponse = {
