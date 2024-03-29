@@ -217,7 +217,7 @@ export default async function createPlugin({
   const model = new Bedrock({
     maxTokens: 4096,
     // model: 'anthropic.claude-instant-v1', // 'amazon.titan-text-express-v1', 'anthropic.claude-v2', 'mistral-xx'*
-    model: 'amazon.titan-text-express-v1', // 'amazon.titan-text-express-v1', 'anthropic.claude-v2', 'mistral-xx'
+    model: 'amazon.titan-text-express-v1',
     region: 'us-east-1',
     credentials: credProvider.sdkCredentialProvider,
   });
