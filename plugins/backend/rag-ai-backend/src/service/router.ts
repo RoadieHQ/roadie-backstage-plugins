@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { errorHandler, TokenManager } from '@backstage/backend-common';
+import { errorHandler } from '@backstage/backend-common';
 import express, { NextFunction, Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
@@ -34,7 +34,6 @@ type AiBackendConfig = {
 
 export interface RouterOptions {
   logger: Logger;
-  tokenManager: TokenManager;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
   model: BaseLLM;
@@ -85,14 +84,8 @@ const bodyQueryValidator = (
 export async function createRouter(
   options: RouterOptions,
 ): Promise<express.Router> {
-  const {
-    logger,
-    tokenManager,
-    augmentationIndexer,
-    retrievalPipeline,
-    model,
-    config,
-  } = options;
+  const { logger, augmentationIndexer, retrievalPipeline, model, config } =
+    options;
   const aiBackendConfig = config.getOptional<AiBackendConfig>('ai');
   const supportedSources = aiBackendConfig?.supportedSources ?? ['catalog'];
   const llmService = new LlmService({
@@ -102,7 +95,6 @@ export async function createRouter(
   });
   const controller = RagAiController.getInstance({
     logger,
-    tokenManager,
     augmentationIndexer,
     retrievalPipeline,
     llmService,
