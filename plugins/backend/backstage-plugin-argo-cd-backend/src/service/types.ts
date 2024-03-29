@@ -135,8 +135,8 @@ export interface ArgoServiceApi {
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
-  deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
-  deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
+  deleteProject: (props: DeleteProjectProps) => Promise<(ArgoErrorResponse & { statusCode: number }) | { statusCode: number }>;
+  deleteApp: (props: DeleteApplicationProps) => Promise<(ArgoErrorResponse & { statusCode: number }) | { statusCode: number }>;
   deleteAppandProject: (
     props: DeleteApplicationAndProjectProps,
   ) => Promise<DeleteApplicationAndProjectResponse>;
@@ -196,13 +196,15 @@ export type GetArgoProjectResp = {
   };
 };
 
+export type ArgoErrorResponse = { message: string; error: string; code: number }
+
 export type FetchResponse<T, K> = Omit<Response, 'json'> & {
   status: K;
   json: () => Promise<T>;
 };
 
 export type GetArgoApplicationResp =
-  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
+  | FetchResponse<ArgoErrorResponse, 401 | 404>
   | FetchResponse<ArgoApplication, 200>;
 
 export type ArgoProject = {
@@ -211,8 +213,16 @@ export type ArgoProject = {
 };
 
 export type TerminateArgoAppOperationResp =
-  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
-  | FetchResponse<{}, 200>;
+  | FetchResponse<ArgoErrorResponse, 401 | 404>
+  | FetchResponse<Record<string, never>, 200>;
+
+export type DeleteArgoAppResp =
+  | FetchResponse<ArgoErrorResponse, 401 | 404>
+  | FetchResponse<Record<string, never>, 200>;
+
+export type DeleteArgoProjectResp =
+  | FetchResponse<ArgoErrorResponse, 401 | 404>
+  | FetchResponse<Record<string, never>, 200>;
 
 export type ArgoApplication = {
   metadata: Metadata;
