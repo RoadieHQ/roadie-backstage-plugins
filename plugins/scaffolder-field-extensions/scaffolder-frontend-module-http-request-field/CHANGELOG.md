@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.6.9
+
+### Patch Changes
+
+- 8d116b7: Allow unsetting the selected value
+
 ## 1.6.8
 
 ### Patch Changes
