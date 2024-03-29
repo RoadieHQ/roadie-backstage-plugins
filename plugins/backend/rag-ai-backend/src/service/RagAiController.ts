@@ -71,9 +71,6 @@ export class RagAiController {
   }
 
   createEmbeddings = async (req: Request, res: Response) => {
-    const { token } = await this.tokenManager.getToken();
-    req.headers.authorization = `Bearer ${token}`;
-
     const source = req.params.source as EmbeddingsSource;
     const entityFilter = req.body.entityFilter;
 
