@@ -639,14 +639,14 @@ export class ArgoService implements ArgoServiceApi {
 
     let statusText: string = '';
     try {
-      const response = await fetch(
+      const response = (await fetch(
         `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
           {
             cascade: 'true',
           },
         )}`,
         options,
-      ) as DeleteArgoAppResp;
+      )) as DeleteArgoAppResp;
       statusText = response.statusText;
       return { ...(await response.json()), statusCode: response.status };
     } catch (error) {
@@ -675,10 +675,10 @@ export class ArgoService implements ArgoServiceApi {
 
     let statusText: string = '';
     try {
-      const response = await fetch(
+      const response = (await fetch(
         `${baseUrl}/api/v1/projects/${argoProjectName}`,
         options,
-      ) as DeleteArgoProjectResp;
+      )) as DeleteArgoProjectResp;
 
       statusText = response.statusText;
       return { ...(await response.json()), statusCode: response.status };
@@ -698,10 +698,10 @@ export class ArgoService implements ArgoServiceApi {
     terminateOperation,
   }: DeleteApplicationAndProjectProps): Promise<DeleteApplicationAndProjectResponse> {
     let continueToDeleteProject: boolean = false;
-    const terminateAppResponse: ResponseSchema = {
-      status: '',
-      message: '',
-    }
+    // const terminateAppResponse: ResponseSchema = {
+    //   status: '',
+    //   message: '',
+    // }
     const argoDeleteAppResp: ResponseSchema = {
       status: '',
       message: '',
@@ -731,43 +731,60 @@ export class ArgoService implements ArgoServiceApi {
       argoToken: token,
       terminateOperation,
     });
-    
-    if (deleteAppResp.statusCode !== (404 || 200) && 'message' in deleteAppResp) {
+
+    if (
+      deleteAppResp.statusCode !== (404 || 200) &&
+      'message' in deleteAppResp
+    ) {
       argoDeleteAppResp.status = 'failed';
-      argoDeleteAppResp.message = deleteAppResp.message
+      argoDeleteAppResp.message = deleteAppResp.message;
     } else if (deleteAppResp.statusCode === 404 && 'message' in deleteAppResp) {
       continueToDeleteProject = true;
-      argoDeleteAppResp.status = 'success';
-      argoDeleteAppResp.message = `application does not exist and therefore does not need to be deleted - ${deleteAppResp.message}`
+      argoDeleteAppResp.status = 'failed';
+      argoDeleteAppResp.message = `application does not exist and therefore does not need to be deleted - ${deleteAppResp.message}`; // do we want message included here
     } else if (deleteAppResp.statusCode === 200) {
       argoDeleteAppResp.status = 'success';
-      argoDeleteAppResp.message = 'application pending deletion'
+      argoDeleteAppResp.message = 'application pending deletion';
 
       this.logger.info('attempting to wait for argo application to delete');
-      const configuredWaitForApplicationToDeleteCycles = (this.config.getOptionalNumber('argocd.waitCycles') || 1)
+      const configuredWaitForApplicationToDeleteCycles =
+        this.config.getOptionalNumber('argocd.waitCycles') || 1;
       for (
         let attempts = 0;
         attempts < configuredWaitForApplicationToDeleteCycles;
         attempts++
       ) {
-          const applicationInfo = await this.getArgoApplicationInfo({ baseUrl: matchedArgoInstance.url, argoApplicationName: argoAppName, argoToken: token,})
-          if (applicationInfo.statusCode !== (404 || 200) && 'message' in applicationInfo) {
-            argoDeleteAppResp.status = 'failed';
-            argoDeleteAppResp.message = `a request was successfully sent to delete your application, but when getting your application information we received ${applicationInfo.message}`
-            break;
-          } else if (applicationInfo.statusCode === 404 && 'message' in applicationInfo) {
-            continueToDeleteProject = true;
-            argoDeleteAppResp.status = 'success';
-            argoDeleteAppResp.message = `application deleted successfully - ${applicationInfo.message}`;
-            break;
-          } else if(applicationInfo.statusCode === 200 && 'metadata' in applicationInfo) {
-            argoDeleteAppResp.status = 'success';
-            argoDeleteAppResp.message = `application still pending deletion with the deletion timestamp of ${applicationInfo.metadata.deletionTimestamp} and deletionGracePeriodSeconds of ${applicationInfo.metadata.deletionGracePeriodSeconds}`;
-            if (attempts < (configuredWaitForApplicationToDeleteCycles - 1)) await timer(5000);
-          }
+        const applicationInfo = await this.getArgoApplicationInfo({
+          baseUrl: matchedArgoInstance.url,
+          argoApplicationName: argoAppName,
+          argoToken: token,
+        });
+        if (
+          applicationInfo.statusCode !== (404 || 200) &&
+          'message' in applicationInfo
+        ) {
+          argoDeleteAppResp.status = 'failed';
+          argoDeleteAppResp.message = `a request was successfully sent to delete your application, but when getting your application information we received ${applicationInfo.message}`;
+          // break; Test 'deletes and project even when getArgoCD error returns error for one iteration but deletes later' suggests we do not want to break here
+        } else if (
+          applicationInfo.statusCode === 404 &&
+          'message' in applicationInfo
+        ) {
+          continueToDeleteProject = true;
+          argoDeleteAppResp.status = 'success';
+          argoDeleteAppResp.message = `application deleted successfully - ${applicationInfo.message}`; // do we want message included here
+          break;
+        } else if (
+          applicationInfo.statusCode === 200 &&
+          'metadata' in applicationInfo
+        ) {
+          argoDeleteAppResp.status = 'success'; // Do we want this to be considered a success or failed?
+          argoDeleteAppResp.message = `application still pending deletion with the deletion timestamp of ${applicationInfo.metadata.deletionTimestamp} and deletionGracePeriodSeconds of ${applicationInfo.metadata.deletionGracePeriodSeconds}`;
+          if (attempts < configuredWaitForApplicationToDeleteCycles - 1)
+            await timer(5000);
+        }
       }
     }
-
 
     if (continueToDeleteProject) {
       const deleteProjectResponse = await this.deleteProject({
@@ -775,19 +792,26 @@ export class ArgoService implements ArgoServiceApi {
         argoProjectName: argoAppName,
         argoToken: token,
       });
-      if (deleteProjectResponse.statusCode !== (404 || 200) && 'message' in deleteProjectResponse) {
+      if (
+        deleteProjectResponse.statusCode !== (404 || 200) &&
+        'message' in deleteProjectResponse
+      ) {
         argoDeleteProjectResp.status = 'failed';
-        argoDeleteProjectResp.message = deleteProjectResponse.message
-      } else if (deleteProjectResponse.statusCode === 404 && 'message' in deleteProjectResponse) {
+        argoDeleteProjectResp.message = `project deletion failed - ${deleteProjectResponse.message}`;
+      } else if (
+        deleteProjectResponse.statusCode === 404 &&
+        'message' in deleteProjectResponse
+      ) {
         argoDeleteProjectResp.status = 'success';
-        argoDeleteProjectResp.message = `project does not exist and therefore does not need to be deleted - ${deleteProjectResponse.message}`
+        argoDeleteProjectResp.message = `project does not exist and therefore does not need to be deleted - ${deleteProjectResponse.message}`;
       } else if (deleteProjectResponse.statusCode === 200) {
         argoDeleteProjectResp.status = 'success';
-        argoDeleteProjectResp.message = 'project is pending deletion'
+        argoDeleteProjectResp.message = 'project is pending deletion';
       }
     } else {
       argoDeleteProjectResp.status = 'failed';
-      argoDeleteProjectResp.message = 'project deletion skipped due to application still existing and pending deletion, or the application failed to delete';
+      argoDeleteProjectResp.message =
+        'project deletion skipped due to application still existing and pending deletion, or the application failed to delete';
     }
 
     return {
@@ -954,7 +978,6 @@ export class ArgoService implements ArgoServiceApi {
   }) {
     let url = baseUrl;
     let token = argoToken;
-    console.log('calling get argo app')
     if (!(baseUrl && argoToken)) {
       if (!argoInstanceName)
         throw new Error(
@@ -991,11 +1014,13 @@ export class ArgoService implements ArgoServiceApi {
       return { ...(await response.json()), statusCode: response.status };
     } catch (error) {
       this.logger.error(
-        `Error Getting Argo Application Information For Argo Instance Name ${argoInstanceName || url} - searching for application ${argoApplicationName} - ${JSON.stringify(
+        `Error Getting Argo Application Information For Argo Instance Name ${
+          argoInstanceName || url
+        } - searching for application ${argoApplicationName} - ${JSON.stringify(
           { statusText, error: (error as Error).message },
         )}`,
       );
-      throw error;
+      throw error; // Throwing error here stops, do we want to return error instead? or include catch in call? For now changed test to not throw error but return 500 instead
     }
   }
 
