@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 0.2.0
+
+### Minor Changes
+
+- 7fa2871: Fixed rag-ai compatiblity with API requests authentication and service-to-service auth enabled apps
+
 ## 0.1.0
 
 ### Minor Changes
