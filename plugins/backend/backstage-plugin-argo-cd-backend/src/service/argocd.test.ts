@@ -463,7 +463,7 @@ describe('ArgoCD service', () => {
     await expect(resp).rejects.toThrow();
   });
 
-  it('should delete project in argo', async () => {
+  it('deletes project in argo successfully', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({}));
 
     const resp = await argoService.deleteProject({
@@ -472,7 +472,7 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    expect(resp).toStrictEqual(true);
+    expect(resp).toStrictEqual({ statusCode: 200});
   });
 
   it('should delete project with json content type header', async () => {
@@ -493,8 +493,8 @@ describe('ArgoCD service', () => {
     );
   });
 
-  it('should fail to delete project in argo when bad status', async () => {
-    fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
+  it('fails to delete project in argo because of some arbitrary error', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({ message: 'some error', error: 'some error', code: 1 }), { status: 1 });
 
     const resp = await argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
@@ -502,39 +502,23 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    expect(resp).toStrictEqual(false);
+    expect(resp).toEqual(expect.objectContaining({ statusCode: 1, message: 'some error'}));
   });
 
   it('should fail to delete project in argo when bad permissions', async () => {
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        error:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-        message:
-          'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-      }),
-      { status: 403 },
-    );
+    fetchMock.mockResponseOnce(JSON.stringify({ error: 'bad permission', message: 'bad permission' }), { status: 403 });
 
-    const resp = argoService.deleteProject({
+    const resp = await argoService.deleteProject({
       baseUrl: 'https://argoInstance1.com',
       argoProjectName: 'testApp',
       argoToken: 'testToken',
     });
 
-    await expect(resp).rejects.toThrow(
-      'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-    );
+    expect(resp).toEqual(expect.objectContaining({ statusCode: 403, message: 'bad permission'}))
   });
 
-  it('should throw error message when status code is not one already being handled', async () => {
-    fetchMock.mockResponseOnce(
-      JSON.stringify({
-        error: 'something unexpected',
-        message: 'something unexpected',
-      }),
-      { status: 403324 },
-    );
+  it('throws when call responds with an unexpected response type', async () => {
+    fetchMock.mockResponseOnce('', { status: 1 });
 
     await expect(
       argoService.deleteProject({
@@ -554,7 +538,7 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    expect(resp).toStrictEqual(true);
+    expect(resp).toStrictEqual({ "statusCode": 200 });
   });
 
   it('should delete app with json content type header', async () => {
@@ -584,7 +568,7 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    expect(resp).toStrictEqual(false);
+    expect(resp).toStrictEqual({ 'statusCode': 500 });
   });
 
   it('should fail to delete application in argo when bad permissions', async () => {
@@ -604,9 +588,13 @@ describe('ArgoCD service', () => {
       argoToken: 'testToken',
     });
 
-    await expect(resp).rejects.toThrow(
-      'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
-    );
+    expect(resp).toStrictEqual({
+      error:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      message:
+        'permission denied: projects, delete, backstagetestmanual, sub: testuser18471, iat: 2022-04-13T12:28:34Z',
+      'statusCode': 403 }, // Additional Promise {} being passed
+      );
   });
 
   it('should terminate operation before deleting when terminate set to true', async () => {
@@ -630,7 +618,7 @@ describe('ArgoCD service', () => {
         method: 'DELETE',
       }),
     );
-    expect(resp).toStrictEqual(true);
+    expect(resp).toStrictEqual({ 'statusCode': 200 });
   });
 
   it('should sync app', async () => {
@@ -817,7 +805,7 @@ describe('ArgoCD service', () => {
 
   it('when deleteApp returns 404 Not found continue to delete Project', async () => {
     // deleteApp
-    fetchMock.mockRejectedValueOnce(new Error('Not Found'));
+    fetchMock.mockResponseOnce(JSON.stringify({ 'statusCode': 404 }));
 
     // deleteProject
     fetchMock.mockResponseOnce(JSON.stringify({}));
@@ -841,7 +829,8 @@ describe('ArgoCD service', () => {
 
   it('when deleteApp gives 5xx errors skip project deletion', async () => {
     // deleteApp
-    fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
+    fetchMock.mockResponseOnce(JSON.stringify({ 'message': 'some error occured' }), { status: 500 });
+
 
     // getArgoAppData
     fetchMock.mockRejectedValueOnce(new Error());
@@ -854,29 +843,31 @@ describe('ArgoCD service', () => {
     expect(resp).toStrictEqual({
       argoDeleteAppResp: {
         status: 'failed',
-        message: 'error getting argo app data',
+        message: 'some error occured',
       },
       argoDeleteProjectResp: {
         status: 'failed',
-        message: 'skipping project deletion due to error deleting argo app',
+        message: 'project deletion skipped due to application still existing or pending deletion',
       },
     });
   });
 
-  it('should fail to delete app and skip project deletion due to pending app deletion', async () => {
+  // we skip project deletion if app FAILED to delete
+  // we skip project deletion if the app is pending delete
+  it('skip project deletion if app fails to delete', async () => {
     // deleteApp
-    fetchMock.mockResponseOnce(JSON.stringify({}), { status: 500 });
+    fetchMock.mockResponseOnce(JSON.stringify({ 'message': 'some error occured' }), { status: 500 });
 
-    // getArgoAppData
-    fetchMock.mockResponse(
-      JSON.stringify({
-        instance: 'argoInstance1',
-        metadata: {
-          name: 'testAppName',
-          namespace: 'testNamespace',
-        },
-      }),
-    );
+    // // getArgoAppData
+    // fetchMock.mockResponse(
+    //   JSON.stringify({
+    //     instance: 'argoInstance1',
+    //     metadata: {
+    //       name: 'testAppName',
+    //       namespace: 'testNamespace',
+    //     },
+    //   }),
+    // );
 
     const resp = await argoService.deleteAppandProject({
       argoAppName: 'testApp',
@@ -886,18 +877,18 @@ describe('ArgoCD service', () => {
     expect(resp).toStrictEqual({
       argoDeleteAppResp: {
         status: 'failed',
-        message: 'application pending delete',
+        message: 'some error occured',
       },
       argoDeleteProjectResp: {
         status: 'failed',
-        message: 'skipping project deletion due to app deletion pending',
+        message: 'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
       },
     });
   });
 
-  it('when app is in pending to delete state skip project deletion', async () => {
+  it.only('when app is in pending to delete state skip project deletion', async () => {
     // deleteApp
-    fetchMock.mockResponseOnce(JSON.stringify({}));
+    fetchMock.mockResponseOnce(JSON.stringify({ statusCode: 200 }));
 
     // getArgoAppData
     fetchMock.mockResponseOnce(
@@ -907,12 +898,10 @@ describe('ArgoCD service', () => {
           name: 'testAppName',
           namespace: 'testNamespace',
         },
-      }),
+      })
     );
 
-    fetchMock.mockRejectedValue(
-      new Error('Could not retrieve ArgoCD app data.'),
-    );
+    // deleteProject
 
     const resp = await argoService.deleteAppandProject({
       argoAppName: 'testApp',

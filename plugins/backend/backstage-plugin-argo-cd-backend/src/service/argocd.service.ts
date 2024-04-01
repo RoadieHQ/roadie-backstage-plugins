@@ -613,6 +613,7 @@ export class ArgoService implements ArgoServiceApi {
     return respData;
   }
 
+  // @see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_Delete
   async deleteApp({
     baseUrl,
     argoApplicationName,
@@ -626,6 +627,9 @@ export class ArgoService implements ArgoServiceApi {
         'Content-Type': 'application/json',
       },
     };
+
+    // I know that the terminate operation is a proxy, but we should probably handle the responses?
+    // If the terminate operation fails to terminate anything, then should that be forwarded to the user or not? 404, 401, 403.
     if (terminateOperation)
       await this.terminateArgoAppOperation({
         argoAppName: argoApplicationName,
@@ -655,6 +659,7 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
+  // @see https://cd.apps.argoproj.io/swagger-ui#operation/ProjectService_Delete
   async deleteProject({
     baseUrl,
     argoProjectName,
@@ -692,6 +697,11 @@ export class ArgoService implements ArgoServiceApi {
     argoInstanceName,
     terminateOperation,
   }: DeleteApplicationAndProjectProps): Promise<DeleteApplicationAndProjectResponse> {
+    let continueToDeleteProject: boolean = false;
+    const terminateAppResponse: ResponseSchema = {
+      status: '',
+      message: '',
+    }
     const argoDeleteAppResp: ResponseSchema = {
       status: '',
       message: '',
@@ -715,8 +725,6 @@ export class ArgoService implements ArgoServiceApi {
       token = matchedArgoInstance.token;
     }
 
-    let continueToDeleteProject: boolean = false;
-
     const deleteAppResp = await this.deleteApp({
       baseUrl: matchedArgoInstance.url,
       argoApplicationName: argoAppName,
@@ -730,7 +738,7 @@ export class ArgoService implements ArgoServiceApi {
     } else if (deleteAppResp.statusCode === 404 && 'message' in deleteAppResp) {
       continueToDeleteProject = true;
       argoDeleteAppResp.status = 'success';
-      argoDeleteAppResp.message = `application does not exist and therefore does not need to be deleted - ${deleteAppResp.message}` // or deleteAppResp.message
+      argoDeleteAppResp.message = `application does not exist and therefore does not need to be deleted - ${deleteAppResp.message}`
     } else if (deleteAppResp.statusCode === 200) {
       argoDeleteAppResp.status = 'success';
       argoDeleteAppResp.message = 'application pending deletion'
@@ -755,7 +763,6 @@ export class ArgoService implements ArgoServiceApi {
           } else if(applicationInfo.statusCode === 200 && 'metadata' in applicationInfo) {
             argoDeleteAppResp.status = 'success';
             argoDeleteAppResp.message = `application still pending deletion with the deletion timestamp of ${applicationInfo.metadata.deletionTimestamp} and deletionGracePeriodSeconds of ${applicationInfo.metadata.deletionGracePeriodSeconds}`;
-            console.log({attempts, configuredWaitForApplicationToDeleteCycles})
             if (attempts < (configuredWaitForApplicationToDeleteCycles - 1)) await timer(5000);
           }
       }
@@ -780,7 +787,7 @@ export class ArgoService implements ArgoServiceApi {
       }
     } else {
       argoDeleteProjectResp.status = 'failed';
-      argoDeleteProjectResp.message = 'project deletion skipped due to application still existing or pending deletion';
+      argoDeleteProjectResp.message = 'project deletion skipped due to application still existing and pending deletion, or the application failed to delete';
     }
 
     return {
@@ -933,6 +940,7 @@ export class ArgoService implements ArgoServiceApi {
     return true;
   }
 
+  // @see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_List
   async getArgoApplicationInfo({
     argoApplicationName,
     argoInstanceName,
@@ -946,7 +954,7 @@ export class ArgoService implements ArgoServiceApi {
   }) {
     let url = baseUrl;
     let token = argoToken;
-
+    console.log('calling get argo app')
     if (!(baseUrl && argoToken)) {
       if (!argoInstanceName)
         throw new Error(
@@ -991,6 +999,7 @@ export class ArgoService implements ArgoServiceApi {
     }
   }
 
+  // @see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation
   async terminateArgoAppOperation({
     argoAppName,
     argoInstanceName,
