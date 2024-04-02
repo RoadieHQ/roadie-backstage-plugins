@@ -29,6 +29,7 @@ import {
 } from '@material-ui/core';
 import { useStatuses } from '../../../hooks';
 import { SelectorsProps } from '../../../types';
+import { useAnalytics } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -57,11 +58,15 @@ export const Selectors = ({
 }: SelectorsProps) => {
   const classes = useStyles();
   const { statuses, statusesLoading, statusesError } = useStatuses(projectKey);
+  const analytics = useAnalytics();
 
   const handleStatusesChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    setStatusesNames(event.target.value as string[]);
+    const _statusNames = event.target.value as string[];
+    setStatusesNames(_statusNames);
+    if (_statusNames.length > 0)
+      analytics.captureEvent('filter', _statusNames.filter(Boolean).join(', '));
   };
 
   // Show selector only when needed
