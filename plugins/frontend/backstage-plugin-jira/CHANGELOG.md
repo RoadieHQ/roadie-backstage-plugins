@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.5.5
+
+### Patch Changes
+
+- ccf6227: capture analytics events for jira plugin
+
 ## 2.5.4
 
 ### Patch Changes
