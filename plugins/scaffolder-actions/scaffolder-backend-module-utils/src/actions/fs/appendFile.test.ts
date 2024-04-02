@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
 import { createAppendFileAction } from './appendFile';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:fs:append', () => {
   beforeEach(() => {
@@ -28,11 +27,9 @@ describe('roadiehq:utils:fs:append', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
     output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createAppendFileAction();
 

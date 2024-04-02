@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
 import { createYamlJSONataTransformAction } from './yaml';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import YAML from 'yaml';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
 
   beforeEach(() => {
-    mockContext.output.mockReset();
     mock({
       'fake-tmp-dir': {},
     });

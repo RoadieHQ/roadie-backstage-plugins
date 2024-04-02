@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
 import { createJsonJSONataTransformAction } from './json';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:jsonata:json:transform', () => {
   beforeEach(() => {
@@ -27,11 +26,9 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: 'lol',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
     output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createJsonJSONataTransformAction();
 

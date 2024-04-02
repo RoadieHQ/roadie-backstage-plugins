@@ -16,23 +16,27 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
+import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
-import {
-  setupRequestMockHandlers,
-  TestApiRegistry,
-} from '@backstage/test-utils';
+import { MockErrorApi, setupRequestMockHandlers } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 // eslint-disable-next-line
 import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
 import { IAMUserCard } from './IAMUserCard';
 import { UserEntity } from '@backstage/catalog-model';
+import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';
+import { TestApiProvider } from '@backstage/test-utils';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
+import { MockTranslationApi } from '@backstage/test-utils/alpha';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
-const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
-
+const apis: [AnyApiRef, Partial<unknown>][] = [
+  [awsApiRef, new AwsClient({ discoveryApi })],
+  [errorApiRef, new MockErrorApi()],
+  [translationApiRef, MockTranslationApi.create()],
+];
 const entityStub: UserEntity = {
   apiVersion: 'backstage.io/v1beta1',
   spec: {
@@ -57,11 +61,11 @@ describe('IAMUserCard', () => {
   it('should display the card with the correct annotation error', async () => {
     const rendered = render(
       <MemoryRouter>
-        <ApiProvider apis={apis}>
+        <TestApiProvider apis={apis}>
           <EntityProvider entity={entityStub}>
             <IAMUserCard />
           </EntityProvider>
-        </ApiProvider>
+        </TestApiProvider>
       </MemoryRouter>,
     );
 

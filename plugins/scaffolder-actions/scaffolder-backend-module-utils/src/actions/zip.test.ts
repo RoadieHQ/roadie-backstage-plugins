@@ -16,20 +16,17 @@
 
 import { getVoidLogger } from '@backstage/backend-common';
 import { createZipAction } from './zip';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 const mockLogger = getVoidLogger();
 mockLogger.error = jest.fn();
 
 describe('roadiehq:utils:zip', () => {
   const mockContext = {
+    ...createMockActionContext({ output: jest.fn() }),
     workspacePath: 'lol',
-    logger: mockLogger,
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createZipAction();
 
@@ -45,7 +42,6 @@ describe('roadiehq:utils:zip', () => {
   });
   afterEach(() => {
     mock.restore();
-    mockContext.output.mockReset();
   });
   it('should throw error when parameter path is not provided', async () => {
     await expect(

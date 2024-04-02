@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream';
+
 import { createEcrAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { ECRClient } from '@aws-sdk/client-ecr';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 // @ts-ignore
 const ecrClient = mockClient(ECRClient);
@@ -25,215 +25,19 @@ const region = 'us-east-1';
 
 ecrClient.resolves({});
 
-describe('Create ECR repository without tags', () => {
-  const repoName = 'no-tags';
-
+describe('create', () => {
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
-  const action = createEcrAction();
 
-  it('Should call ECR client send without tags', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        region: region,
-        imageMutability: false,
-        scanOnPush: false,
-        tags: [],
-      },
-    });
-    expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [],
-    });
-  });
-});
+  describe('Create ECR repository without tags', () => {
+    const repoName = 'no-tags';
 
-describe('Create ECR repository with tags', () => {
-  const repoName = 'tags';
+    const action = createEcrAction();
 
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('should call ecr client with the given tags', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        imageMutability: false,
-        scanOnPush: false,
-        tags: [{ Key: 'keytest', Value: 'valuetest' }],
-        region: region,
-      },
-    });
-    expect(ecrClient.send.getCall(1).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [{ Key: 'keytest', Value: 'valuetest' }],
-    });
-  });
-});
-
-describe('Create ECR repo with image mutability enabled', () => {
-  const repoName = 'mutable';
-
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('Should call ECR client with the mutability enabled', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        imageMutability: true,
-        scanOnPush: false,
-        tags: [],
-        region: region,
-      },
-    });
-    expect(ecrClient.send.getCall(2).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'MUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [],
-    });
-  });
-});
-
-describe('Create ECR repo with image mutability disabled', () => {
-  const repoName = 'mutable';
-
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('Should call ECR client with the mutability disabled', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        imageMutability: false,
-        scanOnPush: false,
-        tags: [],
-        region: region,
-      },
-    });
-    expect(ecrClient.send.getCall(3).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [],
-    });
-  });
-});
-
-describe('Create ECR repo with image scanning enabled', () => {
-  const repoName = 'scan-enabled';
-
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('Should call ECR client with the scanOnPush enabled', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        imageMutability: false,
-        scanOnPush: true,
-        tags: [],
-        region: region,
-      },
-    });
-    expect(ecrClient.send.getCall(4).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: true },
-      tags: [],
-    });
-  });
-});
-
-describe('Create ECR repo with image scanning disabled', () => {
-  const repoName = 'scan-disabled';
-
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('Should call ECR client with the scanOnPush disabled', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        repoName: repoName,
-        imageMutability: false,
-        scanOnPush: false,
-        tags: [],
-        region: region,
-      },
-    });
-    expect(ecrClient.send.getCall(5).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [],
-    });
-  });
-});
-
-describe('Create ECR repository with error', () => {
-  const repoName = 'no-tags';
-
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createEcrAction();
-
-  it('Should forward ECR client errors', async () => {
-    ecrClient.rejects('aws error');
-
-    await expect(
-      action.handler({
+    it('Should call ECR client send without tags', async () => {
+      await action.handler({
         ...mockContext,
         input: {
           repoName: repoName,
@@ -242,14 +46,168 @@ describe('Create ECR repository with error', () => {
           scanOnPush: false,
           tags: [],
         },
-      }),
-    ).rejects.toThrow('aws error');
+      });
+      expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [],
+      });
+    });
+  });
 
-    expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
-      repositoryName: repoName,
-      imageTagMutability: 'IMMUTABLE',
-      imageScanningConfiguration: { scanOnPush: false },
-      tags: [],
+  describe('Create ECR repository with tags', () => {
+    const repoName = 'tags';
+
+    const action = createEcrAction();
+
+    it('should call ecr client with the given tags', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          imageMutability: false,
+          scanOnPush: false,
+          tags: [{ Key: 'keytest', Value: 'valuetest' }],
+          region: region,
+        },
+      });
+      expect(ecrClient.send.getCall(1).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [{ Key: 'keytest', Value: 'valuetest' }],
+      });
+    });
+  });
+
+  describe('Create ECR repo with image mutability enabled', () => {
+    const repoName = 'mutable';
+
+    const action = createEcrAction();
+
+    it('Should call ECR client with the mutability enabled', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          imageMutability: true,
+          scanOnPush: false,
+          tags: [],
+          region: region,
+        },
+      });
+      expect(ecrClient.send.getCall(2).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'MUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [],
+      });
+    });
+  });
+
+  describe('Create ECR repo with image mutability disabled', () => {
+    const repoName = 'mutable';
+
+    const action = createEcrAction();
+
+    it('Should call ECR client with the mutability disabled', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          imageMutability: false,
+          scanOnPush: false,
+          tags: [],
+          region: region,
+        },
+      });
+      expect(ecrClient.send.getCall(3).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [],
+      });
+    });
+  });
+
+  describe('Create ECR repo with image scanning enabled', () => {
+    const repoName = 'scan-enabled';
+
+    const action = createEcrAction();
+
+    it('Should call ECR client with the scanOnPush enabled', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          imageMutability: false,
+          scanOnPush: true,
+          tags: [],
+          region: region,
+        },
+      });
+      expect(ecrClient.send.getCall(4).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: true },
+        tags: [],
+      });
+    });
+  });
+
+  describe('Create ECR repo with image scanning disabled', () => {
+    const repoName = 'scan-disabled';
+
+    const action = createEcrAction();
+
+    it('Should call ECR client with the scanOnPush disabled', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          repoName: repoName,
+          imageMutability: false,
+          scanOnPush: false,
+          tags: [],
+          region: region,
+        },
+      });
+      expect(ecrClient.send.getCall(5).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [],
+      });
+    });
+  });
+
+  describe('Create ECR repository with error', () => {
+    const repoName = 'no-tags';
+
+    const action = createEcrAction();
+
+    it('Should forward ECR client errors', async () => {
+      ecrClient.rejects('aws error');
+
+      await expect(
+        action.handler({
+          ...mockContext,
+          input: {
+            repoName: repoName,
+            region: region,
+            imageMutability: false,
+            scanOnPush: false,
+            tags: [],
+          },
+        }),
+      ).rejects.toThrow('aws error');
+
+      expect(ecrClient.send.getCall(0).args[0].input).toMatchObject({
+        repositoryName: repoName,
+        imageTagMutability: 'IMMUTABLE',
+        imageScanningConfiguration: { scanOnPush: false },
+        tags: [],
+      });
     });
   });
 });

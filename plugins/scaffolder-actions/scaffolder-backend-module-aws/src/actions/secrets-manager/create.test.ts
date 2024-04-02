@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
-import { PassThrough } from 'stream';
 import { createAwsSecretsManagerCreateAction as createAwsSecretsManagerCreateAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 // @ts-ignore
 const secretsManagerClient = mockClient(SecretsManagerClient);
@@ -28,11 +27,8 @@ describe('Create secret without tags', () => {
   const secretName = 'no-tags';
 
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createAwsSecretsManagerCreateAction();
 
@@ -59,11 +55,8 @@ describe('Create secret without optional properties', () => {
   const secretName = 'no-optional-properties';
 
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createAwsSecretsManagerCreateAction();
 
@@ -89,11 +82,8 @@ describe('Create secret with optional properties', () => {
   const secretName = 'optional-properties';
 
   const mockContext = {
+    ...createMockActionContext(),
     workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
   };
   const action = createAwsSecretsManagerCreateAction();
 
