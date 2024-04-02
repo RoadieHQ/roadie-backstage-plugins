@@ -66,7 +66,7 @@ export const ragAiPlugin = createBackendPlugin({
     env.registerExtensionPoint(augmentationIndexerExtensionPoint, {
       setAugmentationIndexer(indexer) {
         if (augmentationIndexer) {
-          throw new Error('ClusterSupplier may only be set once');
+          throw new Error('AugmentationIndexer may only be set once');
         }
         augmentationIndexer = indexer;
       },
