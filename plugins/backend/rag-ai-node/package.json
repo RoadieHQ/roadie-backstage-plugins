@@ -36,7 +36,7 @@
     "@backstage/backend-plugin-api": "^0.6.13"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.2"
+    "@backstage/cli": "^0.26.2"
   },
   "files": [
     "dist"

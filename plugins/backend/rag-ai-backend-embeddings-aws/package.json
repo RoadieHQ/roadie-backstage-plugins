@@ -34,9 +34,9 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.474.0",
     "@aws-sdk/types": "^3.468.0",
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/catalog-client": "^1.6.0",
-    "@backstage/config": "^1.1.1",
+    "@backstage/backend-common": "^0.21.6",
+    "@backstage/catalog-client": "^1.6.3",
+    "@backstage/config": "^1.2.0",
     "@langchain/community": "^0.0.32",
     "@langchain/core": "^0.1.2",
     "@roadiehq/rag-ai-backend": "^0.2.0",
@@ -46,8 +46,8 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@backstage/backend-test-utils": "^0.3.3",
-    "@backstage/cli": "^0.25.2",
+    "@backstage/backend-test-utils": "^0.3.6",
+    "@backstage/cli": "^0.26.2",
     "esbuild": "^0.19.9",
     "tsx": "^4.6.2"
   },
