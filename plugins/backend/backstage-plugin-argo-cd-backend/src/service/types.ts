@@ -103,6 +103,7 @@ export type DeleteApplicationAndProjectResponse = {
 export type ResponseSchema = {
   status: string;
   message: string;
+  argoResponse?: string;
 };
 
 export interface SyncArgoApplicationProps {

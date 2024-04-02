@@ -26,6 +26,8 @@ const getConfig = (options: {
   clusterResourceWhitelist?: ResourceItem[];
   namespaceResourceBlacklist?: ResourceItem[];
   namespaceResourceWhitelist?: ResourceItem[];
+  waitCycles?: number;
+  waitInterval?: number;
 }): Config => {
   const {
     token,
@@ -33,6 +35,7 @@ const getConfig = (options: {
     clusterResourceWhitelist,
     namespaceResourceBlacklist,
     namespaceResourceWhitelist,
+    waitCycles
   } = options;
   const configObject = {
     context: '',
@@ -58,7 +61,7 @@ const getConfig = (options: {
             ],
           },
         ],
-        waitCycles: 3,
+        waitCycles,
       },
     },
   };

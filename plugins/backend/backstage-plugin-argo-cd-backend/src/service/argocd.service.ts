@@ -702,13 +702,18 @@ export class ArgoService implements ArgoServiceApi {
     //   status: '',
     //   message: '',
     // }
+    const response: DeleteApplicationAndProjectResponse = {
+      
+    }
     const argoDeleteAppResp: ResponseSchema = {
       status: '',
       message: '',
+      argoResponse: '',
     };
     const argoDeleteProjectResp: ResponseSchema = {
       status: '',
       message: '',
+      argoResponse: '',
     };
 
     const matchedArgoInstance = this.instanceConfigs.find(
@@ -740,8 +745,10 @@ export class ArgoService implements ArgoServiceApi {
       argoDeleteAppResp.message = deleteAppResp.message;
     } else if (deleteAppResp.statusCode === 404 && 'message' in deleteAppResp) {
       continueToDeleteProject = true;
-      argoDeleteAppResp.status = 'failed';
-      argoDeleteAppResp.message = `application does not exist and therefore does not need to be deleted - ${deleteAppResp.message}`; // do we want message included here
+      argoDeleteAppResp.status = 'success'; // success or failure?
+      argoDeleteAppResp.message = 'application does not exist and therefore does not need to be deleted'; // do we want message included here
+      // argoDeleteAppResp.argoMessage = deleteAppResp.message
+      // application not found
     } else if (deleteAppResp.statusCode === 200) {
       argoDeleteAppResp.status = 'success';
       argoDeleteAppResp.message = 'application pending deletion';
@@ -749,6 +756,7 @@ export class ArgoService implements ArgoServiceApi {
       this.logger.info('attempting to wait for argo application to delete');
       const configuredWaitForApplicationToDeleteCycles =
         this.config.getOptionalNumber('argocd.waitCycles') || 1;
+      // introduce wait interval time configuration in the app config
       for (
         let attempts = 0;
         attempts < configuredWaitForApplicationToDeleteCycles;
@@ -765,7 +773,8 @@ export class ArgoService implements ArgoServiceApi {
         ) {
           argoDeleteAppResp.status = 'failed';
           argoDeleteAppResp.message = `a request was successfully sent to delete your application, but when getting your application information we received ${applicationInfo.message}`;
-          // break; Test 'deletes and project even when getArgoCD error returns error for one iteration but deletes later' suggests we do not want to break here
+          break;
+          // Test 'deletes and project even when getArgoCD error returns error for one iteration but deletes later' suggests we do not want to break here
         } else if (
           applicationInfo.statusCode === 404 &&
           'message' in applicationInfo
@@ -778,7 +787,7 @@ export class ArgoService implements ArgoServiceApi {
           applicationInfo.statusCode === 200 &&
           'metadata' in applicationInfo
         ) {
-          argoDeleteAppResp.status = 'success'; // Do we want this to be considered a success or failed?
+          argoDeleteAppResp.status = 'success'; // Do we want this to be considered a success or failed? // pending
           argoDeleteAppResp.message = `application still pending deletion with the deletion timestamp of ${applicationInfo.metadata.deletionTimestamp} and deletionGracePeriodSeconds of ${applicationInfo.metadata.deletionGracePeriodSeconds}`;
           if (attempts < configuredWaitForApplicationToDeleteCycles - 1)
             await timer(5000);
@@ -805,7 +814,7 @@ export class ArgoService implements ArgoServiceApi {
         argoDeleteProjectResp.status = 'success';
         argoDeleteProjectResp.message = `project does not exist and therefore does not need to be deleted - ${deleteProjectResponse.message}`;
       } else if (deleteProjectResponse.statusCode === 200) {
-        argoDeleteProjectResp.status = 'success';
+        argoDeleteProjectResp.status = 'success'; // pending
         argoDeleteProjectResp.message = 'project is pending deletion';
       }
     } else {
