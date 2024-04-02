@@ -618,7 +618,6 @@ export class ArgoService implements ArgoServiceApi {
     baseUrl,
     argoApplicationName,
     argoToken,
-    terminateOperation,
   }: DeleteApplicationProps) {
     const options: RequestInit = {
       method: 'DELETE',
@@ -627,16 +626,6 @@ export class ArgoService implements ArgoServiceApi {
         'Content-Type': 'application/json',
       },
     };
-
-    // I know that the terminate operation is a proxy, but we should probably handle the responses?
-    // If the terminate operation fails to terminate anything, then should that be forwarded to the user or not? 404, 401, 403.
-    if (terminateOperation)
-      await this.terminateArgoAppOperation({
-        argoAppName: argoApplicationName,
-        baseUrl: baseUrl,
-        argoToken: argoToken,
-      });
-
     let statusText: string = '';
     try {
       const response = (await fetch(
@@ -698,22 +687,20 @@ export class ArgoService implements ArgoServiceApi {
     terminateOperation,
   }: DeleteApplicationAndProjectProps): Promise<DeleteApplicationAndProjectResponse> {
     let continueToDeleteProject: boolean = false;
-    // const terminateAppResponse: ResponseSchema = {
-    //   status: '',
-    //   message: '',
-    // }
-    const response: DeleteApplicationAndProjectResponse = {
-      
-    }
+    const argoTerminateOperationResp: ResponseSchema = {
+      status: '',
+      message: 'current app operation not terminated before app deletion',
+      argoResponse: {},
+    };
     const argoDeleteAppResp: ResponseSchema = {
       status: '',
       message: '',
-      argoResponse: '',
+      argoResponse: {},
     };
     const argoDeleteProjectResp: ResponseSchema = {
       status: '',
       message: '',
-      argoResponse: '',
+      argoResponse: {},
     };
 
     const matchedArgoInstance = this.instanceConfigs.find(
@@ -730,13 +717,39 @@ export class ArgoService implements ArgoServiceApi {
       token = matchedArgoInstance.token;
     }
 
+    if (terminateOperation) {
+      const terminateOperationResp = await this.terminateArgoAppOperation({
+        baseUrl: matchedArgoInstance.url,
+        argoAppName: argoAppName,
+        argoToken: token,
+      });
+      argoTerminateOperationResp.argoResponse = terminateOperationResp;
+      if (
+        terminateOperationResp.statusCode !== (404 || 200) &&
+        'message' in terminateOperationResp
+      ) {
+        argoTerminateOperationResp.status = 'failed';
+        argoTerminateOperationResp.message = terminateOperationResp.message;
+      } else if (
+        terminateOperationResp.statusCode === 404 &&
+        'message' in terminateOperationResp
+      ) {
+        continueToDeleteProject = true;
+        argoTerminateOperationResp.status = 'failed';
+        argoTerminateOperationResp.message = 'application not found';
+      } else if (terminateOperationResp.statusCode === 200) {
+        argoTerminateOperationResp.status = 'success';
+        argoTerminateOperationResp.message =
+          "application's current operation terminated";
+      }
+    } // If this fails, how do we want to handle it? Continue to Deleting App?
+
     const deleteAppResp = await this.deleteApp({
       baseUrl: matchedArgoInstance.url,
       argoApplicationName: argoAppName,
       argoToken: token,
-      terminateOperation,
     });
-
+    argoDeleteAppResp.argoResponse = deleteAppResp;
     if (
       deleteAppResp.statusCode !== (404 || 200) &&
       'message' in deleteAppResp
@@ -745,18 +758,17 @@ export class ArgoService implements ArgoServiceApi {
       argoDeleteAppResp.message = deleteAppResp.message;
     } else if (deleteAppResp.statusCode === 404 && 'message' in deleteAppResp) {
       continueToDeleteProject = true;
-      argoDeleteAppResp.status = 'success'; // success or failure?
-      argoDeleteAppResp.message = 'application does not exist and therefore does not need to be deleted'; // do we want message included here
-      // argoDeleteAppResp.argoMessage = deleteAppResp.message
-      // application not found
-    } else if (deleteAppResp.statusCode === 200) {
       argoDeleteAppResp.status = 'success';
+      argoDeleteAppResp.message =
+        'application does not exist and therefore does not need to be deleted';
+    } else if (deleteAppResp.statusCode === 200) {
+      argoDeleteAppResp.status = 'pending';
       argoDeleteAppResp.message = 'application pending deletion';
 
       this.logger.info('attempting to wait for argo application to delete');
       const configuredWaitForApplicationToDeleteCycles =
         this.config.getOptionalNumber('argocd.waitCycles') || 1;
-      // introduce wait interval time configuration in the app config
+      // TODO: introduce wait interval time configuration in the app config
       for (
         let attempts = 0;
         attempts < configuredWaitForApplicationToDeleteCycles;
@@ -767,6 +779,7 @@ export class ArgoService implements ArgoServiceApi {
           argoApplicationName: argoAppName,
           argoToken: token,
         });
+        argoDeleteAppResp.argoResponse = applicationInfo;
         if (
           applicationInfo.statusCode !== (404 || 200) &&
           'message' in applicationInfo
@@ -781,7 +794,7 @@ export class ArgoService implements ArgoServiceApi {
         ) {
           continueToDeleteProject = true;
           argoDeleteAppResp.status = 'success';
-          argoDeleteAppResp.message = `application deleted successfully - ${applicationInfo.message}`; // do we want message included here
+          argoDeleteAppResp.message = `application deletion verified (application no longer exists)`;
           break;
         } else if (
           applicationInfo.statusCode === 200 &&
@@ -801,6 +814,7 @@ export class ArgoService implements ArgoServiceApi {
         argoProjectName: argoAppName,
         argoToken: token,
       });
+      argoDeleteProjectResp.argoResponse = deleteProjectResponse;
       if (
         deleteProjectResponse.statusCode !== (404 || 200) &&
         'message' in deleteProjectResponse
@@ -826,6 +840,7 @@ export class ArgoService implements ArgoServiceApi {
     return {
       argoDeleteAppResp: argoDeleteAppResp,
       argoDeleteProjectResp: argoDeleteProjectResp,
+      argoTerminateOperationResp: argoTerminateOperationResp,
     };
   }
 

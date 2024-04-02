@@ -86,7 +86,6 @@ export interface DeleteApplicationProps {
   baseUrl: string;
   argoApplicationName: string;
   argoToken: string;
-  terminateOperation?: boolean;
 }
 
 export interface DeleteApplicationAndProjectProps {
@@ -96,6 +95,7 @@ export interface DeleteApplicationAndProjectProps {
 }
 
 export type DeleteApplicationAndProjectResponse = {
+  argoTerminateOperationResp: ResponseSchema;
   argoDeleteAppResp: ResponseSchema;
   argoDeleteProjectResp: ResponseSchema;
 };
@@ -103,7 +103,7 @@ export type DeleteApplicationAndProjectResponse = {
 export type ResponseSchema = {
   status: string;
   message: string;
-  argoResponse?: string;
+  argoResponse: object;
 };
 
 export interface SyncArgoApplicationProps {
@@ -136,8 +136,16 @@ export interface ArgoServiceApi {
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
-  deleteProject: (props: DeleteProjectProps) => Promise<(ArgoErrorResponse & { statusCode: number }) | { statusCode: number }>;
-  deleteApp: (props: DeleteApplicationProps) => Promise<(ArgoErrorResponse & { statusCode: number }) | { statusCode: number }>;
+  deleteProject: (
+    props: DeleteProjectProps,
+  ) => Promise<
+    (ArgoErrorResponse & { statusCode: number }) | { statusCode: number }
+  >;
+  deleteApp: (
+    props: DeleteApplicationProps,
+  ) => Promise<
+    (ArgoErrorResponse & { statusCode: number }) | { statusCode: number }
+  >;
   deleteAppandProject: (
     props: DeleteApplicationAndProjectProps,
   ) => Promise<DeleteApplicationAndProjectResponse>;
@@ -197,7 +205,11 @@ export type GetArgoProjectResp = {
   };
 };
 
-export type ArgoErrorResponse = { message: string; error: string; code: number }
+export type ArgoErrorResponse = {
+  message: string;
+  error: string;
+  code: number;
+};
 
 export type FetchResponse<T, K> = Omit<Response, 'json'> & {
   status: K;
