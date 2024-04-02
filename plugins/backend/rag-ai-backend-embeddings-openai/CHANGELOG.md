@@ -1,5 +1,16 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.2.0
+
+### Minor Changes
+
+- 7fa2871: Fixed rag-ai compatiblity with API requests authentication and service-to-service auth enabled apps
+
+### Patch Changes
+
+- Updated dependencies [7fa2871]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

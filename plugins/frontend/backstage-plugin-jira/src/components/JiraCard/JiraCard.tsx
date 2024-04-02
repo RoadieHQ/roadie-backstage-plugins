@@ -48,6 +48,7 @@ import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { useAnalytics } from '@backstage/core-plugin-api';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,6 +100,7 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
   const { hideIssueFilter } = props;
   const { entity } = useEntity();
   const classes = useStyles();
+  const analytics = useAnalytics();
   const { projectKey, component, tokenType, label } = useProjectEntity(entity);
   const [statusesNames, setStatusesNames] = useState<Array<string>>([]);
   const {
@@ -296,13 +298,23 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 20]}
               component="div"
-              count={tickets?.length || 0}
+              count={tickets?.length ?? 0}
               rowsPerPage={rowsPerPage}
               page={page}
-              onPageChange={(_event, newPage) => setPage(newPage)}
+              onPageChange={(_event, newPage) => {
+                setPage(newPage);
+                analytics.captureEvent(
+                  'paginate',
+                  `page: ${newPage}, size: ${rowsPerPage}`,
+                );
+              }}
               onRowsPerPageChange={event => {
                 setRowsPerPage(parseInt(event.target.value, 10));
                 setPage(0);
+                analytics.captureEvent(
+                  'paginate',
+                  `page: 0, size: ${parseInt(event.target.value, 10)}`,
+                );
               }}
             />
           </TableContainer>

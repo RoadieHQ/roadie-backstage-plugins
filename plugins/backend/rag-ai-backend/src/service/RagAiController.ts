@@ -85,6 +85,7 @@ export class RagAiController {
         message: 'No retrieval pipeline configured for this AI backend. ',
       });
     }
+
     const source = req.params.source as EmbeddingsSource;
     const query = req.query.query as string;
     const entityFilter = req.body.entityFilter;

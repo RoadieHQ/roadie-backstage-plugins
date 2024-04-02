@@ -173,19 +173,18 @@ See more information from the [module package](/plugins/backend/rag-ai-backend-e
 6. Finally, initialize the AI Backend, 'ragAi', using `initializeRagAiBackend` with the just configured Embeddings module as well as the configured LLM.
 
 ```typescript
-// './plugins/ai'
-
 import { createApiRoutes as initializeRagAiBackend } from '@roadiehq/rag-ai-backend';
 import { PluginEnvironment } from '../types';
-import { initializeBedrockEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-aws';
 import { createRoadiePgVectorStore } from '@roadiehq/rag-ai-storage-pgvector';
-import { createDefaultRetrievalPipeline } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
-import { Bedrock } from '@langchain/community/llms/bedrock/web';
 import { CatalogClient } from '@backstage/catalog-client';
+import { createDefaultRetrievalPipeline } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
+import { initializeBedrockEmbeddings } from '@roadiehq/rag-ai-backend-embeddings-aws';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
+import { Bedrock } from '@langchain/community/llms/bedrock';
 
 export default async function createPlugin({
   logger,
+  tokenManager,
   database,
   discovery,
   config,
@@ -194,31 +193,38 @@ export default async function createPlugin({
     discoveryApi: discovery,
   });
 
-  const vectorStore = await createRoadiePgVectorStore({ logger, database });
+  const vectorStore = await createRoadiePgVectorStore({
+    logger,
+    database,
+    config,
+  });
+
   const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(config);
   const credProvider = await awsCredentialsManager.getCredentialProvider();
-
   const augmentationIndexer = await initializeBedrockEmbeddings({
     logger,
+    tokenManager,
     catalogApi,
     vectorStore,
     discovery,
     config,
     options: {
+      region: 'us-east-1',
       credentials: credProvider.sdkCredentialProvider,
-      region: 'eu-central-1',
     },
   });
 
   const model = new Bedrock({
     maxTokens: 4096,
-    model: 'anthropic.claude-instant-v1', // 'amazon.titan-text-express-v1', 'anthropic.claude-v2', 'mistral-xx'
-    region: 'eu-central-1',
+    // model: 'anthropic.claude-instant-v1', // 'amazon.titan-text-express-v1', 'anthropic.claude-v2', 'mistral-xx'*
+    model: 'amazon.titan-text-express-v1',
+    region: 'us-east-1',
     credentials: credProvider.sdkCredentialProvider,
   });
 
   const ragAi = await initializeRagAiBackend({
     logger,
+    tokenManager,
     augmentationIndexer,
     retrievalPipeline: createDefaultRetrievalPipeline({
       discovery,
@@ -228,7 +234,6 @@ export default async function createPlugin({
     model,
     config,
   });
-
   return ragAi.router;
 }
 ```

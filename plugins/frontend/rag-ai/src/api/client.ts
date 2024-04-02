@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ConfigApi, DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
+import {
+  ConfigApi,
+  DiscoveryApi,
+  FetchApi,
+  IdentityApi,
+} from '@backstage/core-plugin-api';
 import { RagAiApi } from './ragApi';
 import { RoadieLlmResponse } from '../types';
 
@@ -22,19 +27,18 @@ export class RoadieRagAiClient implements RagAiApi {
   private readonly fetchApi: FetchApi;
   private readonly configApi: ConfigApi;
   private baseUrl?: string;
+  private readonly identityApi: IdentityApi;
 
-  constructor({
-    discoveryApi,
-    fetchApi,
-    configApi,
-  }: {
+  constructor(options: {
     discoveryApi: DiscoveryApi;
     fetchApi: FetchApi;
     configApi: ConfigApi;
+    identityApi: IdentityApi;
   }) {
-    this.discoveryApi = discoveryApi;
-    this.fetchApi = fetchApi;
-    this.configApi = configApi;
+    this.discoveryApi = options.discoveryApi;
+    this.fetchApi = options.fetchApi;
+    this.configApi = options.configApi;
+    this.identityApi = options.identityApi;
   }
 
   private async getBaseUrl(): Promise<string> {
@@ -57,12 +61,17 @@ export class RoadieRagAiClient implements RagAiApi {
   }
 
   async ask(question: string): Promise<RoadieLlmResponse> {
+    const { token } = await this.identityApi.getCredentials();
+
     const response = await this.fetch(`query/catalog`, {
       body: JSON.stringify({
         query: question,
       }),
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     });
     return await response;
   }

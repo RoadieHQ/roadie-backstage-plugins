@@ -169,7 +169,15 @@ const SelectFieldFromApiComponent = (
         items={dropDownData}
         placeholder={placeholder}
         label={title}
-        onChange={selected => props.onChange(selected as string)}
+        onChange={selected => {
+          // The Select component adds the placeholder to the items list and gives it a value of []. This is incompatible
+          // with a field of type string so we need to unset the value in this case.
+          props.onChange(
+            Array.isArray(selected) && !selected.length
+              ? undefined
+              : selected.toString(),
+          );
+        }}
       />
       <FormHelperText>{description}</FormHelperText>
     </FormControl>

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TokenManager } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
@@ -25,6 +26,7 @@ export type SplitterOptions = {
 
 export interface RoadieEmbeddingsConfig {
   logger: Logger;
+  tokenManager: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;
