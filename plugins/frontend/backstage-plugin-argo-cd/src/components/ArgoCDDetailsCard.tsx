@@ -226,10 +226,10 @@ const OverviewComponent = ({
       customSort: (a: any, b: any) => {
         return (
           moment(
-            a.status.operationState.finishedAt || '3000-01-01T00:00:00.000Z',
+            a.status.operationState?.finishedAt || '3000-01-01T00:00:00.000Z',
           ).valueOf() -
           moment(
-            b.status.operationState.finishedAt || '3000-01-01T00:00:00.000Z',
+            b.status.operationState?.finishedAt || '3000-01-01T00:00:00.000Z',
           ).valueOf()
         );
       },
