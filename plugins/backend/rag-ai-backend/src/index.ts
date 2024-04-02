@@ -15,3 +15,4 @@
  */
 
 export * from './service';
+export { ragAiPlugin as default } from './plugin';
