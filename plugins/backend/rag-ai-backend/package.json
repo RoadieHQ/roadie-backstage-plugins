@@ -37,7 +37,6 @@
     "@roadiehq/rag-ai-node": "^0.1.0",
     "@types/express": "*",
     "@backstage/backend-plugin-api": "^0.6.16",
-    "@backstage/backend-app-api": "^0.6.2",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "lodash": "^4.17.21",

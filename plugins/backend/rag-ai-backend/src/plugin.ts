@@ -18,38 +18,17 @@ import { loggerToWinstonLogger } from '@backstage/backend-common';
 import {
   createBackendPlugin,
   coreServices,
-  createExtensionPoint,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './service/router';
 
-import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
+import {
+  AugmentationIndexer,
+  RetrievalPipeline,
+  augmentationIndexerExtensionPoint,
+  retrievalPipelineExtensionPoint,
+  modelExtensionPoint,
+} from '@roadiehq/rag-ai-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
-
-export interface AugmentationIndexerExtensionPoint {
-  setAugmentationIndexer(augmentationIndexer: AugmentationIndexer): void;
-}
-
-export const augmentationIndexerExtensionPoint =
-  createExtensionPoint<AugmentationIndexerExtensionPoint>({
-    id: 'rag-ai.augmentation-indexer',
-  });
-
-export interface RetrievalPipelineExtensionPoint {
-  setRetrievalPipeline(retrievalPipeline: RetrievalPipeline): void;
-}
-
-export const retrievalPipelineExtensionPoint =
-  createExtensionPoint<RetrievalPipelineExtensionPoint>({
-    id: 'rag-ai.retrieval-pipeline',
-  });
-
-export interface ModelExtensionPoint {
-  setBaseLLM(baseLLM: BaseLLM): void;
-}
-
-export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
-  id: 'rag-ai.model',
-});
 
 /**
  * Rag AI backend plugin
