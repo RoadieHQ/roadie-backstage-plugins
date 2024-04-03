@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
+import { PassThrough } from 'stream';
 import { createSerializeYamlAction } from './yaml';
 import YAML from 'yaml';
+import { getVoidLogger } from '@backstage/backend-common';
 
 describe('roadiehq:utils:serialize:yaml', () => {
   const mockContext = {
-    ...createMockActionContext(),
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
   };
   const action = createSerializeYamlAction();

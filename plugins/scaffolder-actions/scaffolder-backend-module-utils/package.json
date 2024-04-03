@@ -5,12 +5,21 @@
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin-module"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "repository": {
     "type": "git",
@@ -47,7 +56,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.26.2",
-    "@backstage/plugin-scaffolder-node-test-utils": "^0.1.2",
+    "@backstage/backend-test-utils": "^0.3.6",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",

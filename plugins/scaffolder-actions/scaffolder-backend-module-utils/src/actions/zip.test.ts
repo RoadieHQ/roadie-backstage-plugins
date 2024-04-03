@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
 import { getVoidLogger } from '@backstage/backend-common';
 import { createZipAction } from './zip';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 const mockLogger = getVoidLogger();
 mockLogger.error = jest.fn();
 
 describe('roadiehq:utils:zip', () => {
   const mockContext = {
-    ...createMockActionContext({ output: jest.fn() }),
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
   };
   const action = createZipAction();

@@ -10,7 +10,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin-module"
   },
   "repository": {
     "type": "git",
@@ -35,11 +35,11 @@
     "@backstage/config": "^1.2.0",
     "@backstage/plugin-scaffolder-backend": "^1.22.3",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^2.14.6",
+    "@backstage/backend-test-utils": "^0.3.6",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.2",
-    "@backstage/plugin-scaffolder-node-test-utils": "^0.1.2"
+    "@backstage/cli": "^0.26.2"
   },
   "files": [
     "dist"

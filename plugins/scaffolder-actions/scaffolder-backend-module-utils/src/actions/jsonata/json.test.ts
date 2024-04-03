@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
 import { createJsonJSONataTransformAction } from './json';
 import mock from 'mock-fs';
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
+import { getVoidLogger } from '@backstage/backend-common';
 
 describe('roadiehq:utils:jsonata:json:transform', () => {
   beforeEach(() => {
@@ -26,9 +26,13 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
-    ...createMockActionContext(),
-    workspacePath: 'lol',
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
     output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
   const action = createJsonJSONataTransformAction();
 

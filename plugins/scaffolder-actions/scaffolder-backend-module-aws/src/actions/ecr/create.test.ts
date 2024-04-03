@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
 import { createEcrAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { ECRClient } from '@aws-sdk/client-ecr';
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
+import { getVoidLogger } from '@backstage/backend-common';
 
 // @ts-ignore
 const ecrClient = mockClient(ECRClient);
@@ -27,7 +27,12 @@ ecrClient.resolves({});
 
 describe('create', () => {
   const mockContext = {
-    ...createMockActionContext(),
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: '/fake-tmp-dir',
   };
 

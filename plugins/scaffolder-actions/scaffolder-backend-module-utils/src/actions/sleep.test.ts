@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
+import { getVoidLogger } from '@backstage/backend-common';
 import { createSleepAction } from './sleep';
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 
 describe('roadiehq:utils:sleep', () => {
   const mockContext = {
-    ...createMockActionContext(),
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
   };
   const action = createSleepAction();

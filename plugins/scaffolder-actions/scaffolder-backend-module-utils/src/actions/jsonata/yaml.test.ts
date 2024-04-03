@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
 import { createYamlJSONataTransformAction } from './yaml';
 import mock from 'mock-fs';
 import YAML from 'yaml';
-import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
+import { getVoidLogger } from '@backstage/backend-common';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const mockContext = {
-    ...createMockActionContext(),
+    logger: getVoidLogger(),
+    logStream: new PassThrough(),
+    output: jest.fn(),
+    createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
   };
 
