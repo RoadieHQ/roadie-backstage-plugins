@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { PassThrough } from 'stream';
 import { getVoidLogger } from '@backstage/backend-common';
 import { createZipAction } from './zip';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 
@@ -25,11 +24,13 @@ mockLogger.error = jest.fn();
 
 describe('roadiehq:utils:zip', () => {
   const mockContext = {
-    workspacePath: 'lol',
-    logger: mockLogger,
+    logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
   const action = createZipAction();
 
@@ -45,7 +46,6 @@ describe('roadiehq:utils:zip', () => {
   });
   afterEach(() => {
     mock.restore();
-    mockContext.output.mockReset();
   });
   it('should throw error when parameter path is not provided', async () => {
     await expect(

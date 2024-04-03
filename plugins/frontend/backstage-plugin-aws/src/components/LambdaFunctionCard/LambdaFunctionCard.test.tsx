@@ -19,6 +19,7 @@ import { render } from '@testing-library/react';
 import { ApiProvider, UrlPatternDiscovery } from '@backstage/core-app-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import {
+  MockErrorApi,
   setupRequestMockHandlers,
   TestApiRegistry,
 } from '@backstage/test-utils';
@@ -28,10 +29,17 @@ import { MemoryRouter } from 'react-router-dom';
 import { awsApiRef, AwsClient } from '../../api/';
 import { LambdaFunctionCard } from './LambdaFunctionCard';
 import { ComponentEntity } from '@backstage/catalog-model';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
+import { MockTranslationApi } from '@backstage/test-utils/alpha';
+import { errorApiRef } from '@backstage/core-plugin-api';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
-const apis = TestApiRegistry.from([awsApiRef, new AwsClient({ discoveryApi })]);
+const apis = TestApiRegistry.from(
+  [awsApiRef, new AwsClient({ discoveryApi })],
+  [errorApiRef, new MockErrorApi()],
+  [translationApiRef, MockTranslationApi.create()],
+);
 
 const entityStub: ComponentEntity = {
   apiVersion: 'backstage.io/v1beta1',

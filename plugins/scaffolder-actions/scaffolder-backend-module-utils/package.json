@@ -5,12 +5,21 @@
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.cjs.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin-module"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "repository": {
     "type": "git",
@@ -31,11 +40,11 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.3",
-    "@backstage/config": "^1.1.1",
-    "@backstage/errors": "^1.2.3",
-    "@backstage/plugin-scaffolder-backend": "^1.21.3",
-    "@backstage/plugin-scaffolder-node": "^0.3.3",
+    "@backstage/backend-common": "^0.21.6",
+    "@backstage/config": "^1.2.0",
+    "@backstage/errors": "^1.2.4",
+    "@backstage/plugin-scaffolder-backend": "^1.22.3",
+    "@backstage/plugin-scaffolder-node": "^0.4.2",
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
@@ -46,7 +55,8 @@
     "yaml": "^2.3.4"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.25.2",
+    "@backstage/cli": "^0.26.2",
+    "@backstage/backend-test-utils": "^0.3.6",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",

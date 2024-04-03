@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
-import { createWriteFileAction } from './writeFile';
 import { PassThrough } from 'stream';
+import { createWriteFileAction } from './writeFile';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
+import { getVoidLogger } from '@backstage/backend-common';
 
 describe('roadiehq:utils:fs:write', () => {
   beforeEach(() => {
@@ -27,11 +27,13 @@ describe('roadiehq:utils:fs:write', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
-    workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
   const action = createWriteFileAction();
 

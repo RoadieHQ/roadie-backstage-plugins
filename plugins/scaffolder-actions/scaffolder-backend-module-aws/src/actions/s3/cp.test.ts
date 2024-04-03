@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
-import { createAwsS3CpAction } from './cp';
 import { PassThrough } from 'stream';
+import { createAwsS3CpAction } from './cp';
 import mockFs from 'mock-fs';
+import { getVoidLogger } from '@backstage/backend-common';
 
 const mockS3Client = {
   send: jest.fn().mockReturnThis(),
@@ -38,11 +38,13 @@ jest.mock('fs-extra', () => {
 
 describe('roadiehq:aws:s3:cp', () => {
   const mockContext = {
-    workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: '/fake-tmp-dir',
   };
   const action = createAwsS3CpAction();
   beforeEach(() => {

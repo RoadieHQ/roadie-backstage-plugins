@@ -13,107 +13,96 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream';
 import { createAwsSecretsManagerCreateAction as createAwsSecretsManagerCreateAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import { getVoidLogger } from '@backstage/backend-common';
 
 // @ts-ignore
 const secretsManagerClient = mockClient(SecretsManagerClient);
 const region = 'us-east-1';
 
-describe('Create secret without tags', () => {
-  const secretName = 'no-tags';
-
+describe('create', () => {
   const mockContext = {
-    workspacePath: '/fake-tmp-dir',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: '/fake-tmp-dir',
   };
-  const action = createAwsSecretsManagerCreateAction();
+  describe('Create secret without tags', () => {
+    const secretName = 'no-tags';
 
-  it('Should call Secrets Manager client send', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        name: secretName,
-        description: '',
-        value: '',
-        tags: [],
-        profile: '',
-        region: region,
-      },
-    });
-    expect(secretsManagerClient.send.getCall(0).args[0].input).toMatchObject({
-      Name: secretName,
-      Tags: [],
+    const action = createAwsSecretsManagerCreateAction();
+
+    it('Should call Secrets Manager client send', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          name: secretName,
+          description: '',
+          value: '',
+          tags: [],
+          profile: '',
+          region: region,
+        },
+      });
+      expect(secretsManagerClient.send.getCall(0).args[0].input).toMatchObject({
+        Name: secretName,
+        Tags: [],
+      });
     });
   });
-});
 
-describe('Create secret without optional properties', () => {
-  const secretName = 'no-optional-properties';
+  describe('Create secret without optional properties', () => {
+    const secretName = 'no-optional-properties';
 
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createAwsSecretsManagerCreateAction();
+    const action = createAwsSecretsManagerCreateAction();
 
-  it('Should call Secrets Manager client send', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        name: secretName,
-        description: '',
-        value: '',
-        tags: [],
-        profile: '',
-        region: region,
-      },
-    });
-    expect(secretsManagerClient.send.getCall(1).args[0].input).toMatchObject({
-      Name: secretName,
+    it('Should call Secrets Manager client send', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          name: secretName,
+          description: '',
+          value: '',
+          tags: [],
+          profile: '',
+          region: region,
+        },
+      });
+      expect(secretsManagerClient.send.getCall(1).args[0].input).toMatchObject({
+        Name: secretName,
+      });
     });
   });
-});
 
-describe('Create secret with optional properties', () => {
-  const secretName = 'optional-properties';
+  describe('Create secret with optional properties', () => {
+    const secretName = 'optional-properties';
 
-  const mockContext = {
-    workspacePath: '/fake-tmp-dir',
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-  };
-  const action = createAwsSecretsManagerCreateAction();
+    const action = createAwsSecretsManagerCreateAction();
 
-  it('Should call Secrets Manager client send', async () => {
-    await action.handler({
-      ...mockContext,
-      input: {
-        name: secretName,
-        description: 'description',
-        value: 'value',
-        tags: [{ Key: 'keytest', Value: 'valuetest' }],
-        profile: 'aws-profile',
-        region: region,
-      },
-    });
-    expect(secretsManagerClient.send.getCall(2).args[0].input).toMatchObject({
-      Name: secretName,
-      Description: 'description',
-      SecretString: 'value',
-      Tags: [{ Key: 'keytest', Value: 'valuetest' }],
+    it('Should call Secrets Manager client send', async () => {
+      await action.handler({
+        ...mockContext,
+        input: {
+          name: secretName,
+          description: 'description',
+          value: 'value',
+          tags: [{ Key: 'keytest', Value: 'valuetest' }],
+          profile: 'aws-profile',
+          region: region,
+        },
+      });
+      expect(secretsManagerClient.send.getCall(2).args[0].input).toMatchObject({
+        Name: secretName,
+        Description: 'description',
+        SecretString: 'value',
+        Tags: [{ Key: 'keytest', Value: 'valuetest' }],
+      });
     });
   });
 });

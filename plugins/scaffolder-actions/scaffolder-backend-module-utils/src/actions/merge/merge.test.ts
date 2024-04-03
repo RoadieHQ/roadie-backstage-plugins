@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { PassThrough } from 'stream';
 import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
 import { createMergeAction, createMergeJSONAction } from './merge';
-import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import YAML from 'yaml';
@@ -30,11 +30,13 @@ describe('roadiehq:utils:json:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
-    workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
 
   const action = createMergeJSONAction({});
@@ -282,11 +284,13 @@ describe('roadiehq:utils:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
-    workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
 
   const action = createMergeAction();

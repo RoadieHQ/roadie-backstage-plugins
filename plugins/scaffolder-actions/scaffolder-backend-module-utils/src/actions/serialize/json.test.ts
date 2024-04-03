@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { PassThrough } from 'stream';
 import { getVoidLogger } from '@backstage/backend-common';
 import { createSerializeJsonAction } from './json';
-import { PassThrough } from 'stream';
 
 describe('roadiehq:utils:serialize:json', () => {
   const mockContext = {
-    workspacePath: 'lol',
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    checkpoint: jest.fn(),
+    getInitiatorCredentials: jest.fn(),
+    workspacePath: 'lol',
   };
   const action = createSerializeJsonAction();
 
