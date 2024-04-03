@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.1
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 0.1.0
 
 ### Minor Changes

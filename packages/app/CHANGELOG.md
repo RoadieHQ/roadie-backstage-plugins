@@ -1,5 +1,31 @@
 # app
 
+## 1.1.1
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+- Updated dependencies [7cd4bdf]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.6.10
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.25
+  - @roadiehq/backstage-plugin-security-insights@2.3.16
+  - @roadiehq/backstage-plugin-github-insights@2.3.28
+  - @roadiehq/backstage-plugin-aws-lambda@2.2.8
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.21
+  - @roadiehq/backstage-plugin-prometheus@2.8.7
+  - @roadiehq/backstage-plugin-buildkite@2.1.22
+  - @roadiehq/backstage-plugin-travis-ci@2.1.22
+  - @roadiehq/backstage-plugin-home-markdown@2.5.23
+  - @roadiehq/backstage-plugin-shortcut@1.1.22
+  - @roadiehq/backstage-plugin-argo-cd@2.6.4
+  - @roadiehq/backstage-plugin-bugsnag@2.2.8
+  - @roadiehq/backstage-plugin-datadog@2.2.7
+  - @roadiehq/backstage-plugin-iframe@1.3.16
+  - @roadiehq/backstage-plugin-jira@2.5.6
+  - @roadiehq/backstage-plugin-home-rss@1.3.11
+  - @roadiehq/backstage-plugin-aws@1.1.22
+  - @roadiehq/rag-ai@0.2.1
+
 ## 1.1.0
 
 ### Minor Changes

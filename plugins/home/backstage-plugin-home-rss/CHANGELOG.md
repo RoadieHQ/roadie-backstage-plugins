@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.11
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 1.3.10
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.14.1
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 1.14.0
 
 ### Minor Changes
