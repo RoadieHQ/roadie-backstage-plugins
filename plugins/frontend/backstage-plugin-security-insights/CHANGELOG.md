@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.16
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 2.3.15
 
 ### Patch Changes

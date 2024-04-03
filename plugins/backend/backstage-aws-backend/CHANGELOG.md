@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.22
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 1.1.21
 
 ### Patch Changes

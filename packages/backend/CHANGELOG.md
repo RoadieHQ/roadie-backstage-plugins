@@ -1,5 +1,26 @@
 # backend
 
+## 2.1.1
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+- Updated dependencies [7cd4bdf]
+  - @roadiehq/scaffolder-backend-module-http-request@4.1.10
+  - @roadiehq/scaffolder-backend-module-utils@1.14.1
+  - @roadiehq/scaffolder-backend-module-aws@2.4.23
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.2.1
+  - @roadiehq/backstage-plugin-argo-cd-backend@2.14.7
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.1
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.1
+  - @roadiehq/catalog-backend-module-okta@0.9.10
+  - @roadiehq/catalog-backend-module-aws@2.2.1
+  - @roadiehq/backstage-plugin-aws-auth@0.4.22
+  - @roadiehq/rag-ai-storage-pgvector@0.1.1
+  - @roadiehq/backstage-plugin-aws-backend@1.1.22
+  - @roadiehq/rag-ai-backend@0.2.2
+  - app@1.1.1
+
 ## 2.1.0
 
 ### Minor Changes

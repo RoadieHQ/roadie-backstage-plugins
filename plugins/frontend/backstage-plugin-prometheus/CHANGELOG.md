@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.8.7
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 2.8.6
 
 ### Patch Changes

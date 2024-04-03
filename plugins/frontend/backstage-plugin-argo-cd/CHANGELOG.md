@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.6.4
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 2.6.3
 
 ### Patch Changes

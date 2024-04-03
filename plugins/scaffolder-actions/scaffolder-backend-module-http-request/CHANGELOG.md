@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.1.10
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+
 ## 4.1.9
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.2.1
+
+### Patch Changes
+
+- 7cd4bdf: version upgrade to 1.25.0
+- Updated dependencies [7cd4bdf]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.2.1
+  - @roadiehq/rag-ai-node@0.1.1
+
 ## 0.2.0
 
 ### Minor Changes
