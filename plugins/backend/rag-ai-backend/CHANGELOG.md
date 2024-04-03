@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 0.2.1
+
+### Patch Changes
+
+- 296781e: Add support for backend system.
+
 ## 0.2.0
 
 ### Minor Changes

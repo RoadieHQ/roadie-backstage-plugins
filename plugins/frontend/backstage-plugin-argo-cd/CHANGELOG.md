@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.6.3
+
+### Patch Changes
+
+- 8868363: Fixes an issue where the ArgoCD details card would error if any of the items returned by ArgoCD are missing the status.operationState field
+
 ## 2.6.2
 
 ### Patch Changes
