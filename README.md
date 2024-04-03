@@ -2,6 +2,8 @@ This repo contains the Backstage plugins created and maintained by [Roadie](http
 
 Amongst others, the following plugins can be found within this repo:
 
+- [AI Assistant - RAG AI](https://www.npmjs.com/package/@roadiehq/rag-ai)
+
 - [Github Pull Requests](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-pull-requests)
 
 - [Github Insights](https://www.npmjs.com/package/@roadiehq/backstage-plugin-github-insights)
