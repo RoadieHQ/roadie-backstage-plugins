@@ -95,7 +95,7 @@ export interface DeleteApplicationAndProjectProps {
 }
 
 export type DeleteApplicationAndProjectResponse = {
-  argoTerminateOperationResp: ResponseSchema;
+  argoTerminateOperationResp?: ResponseSchema;
   argoDeleteAppResp: ResponseSchema;
   argoDeleteProjectResp: ResponseSchema;
 };
@@ -211,14 +211,13 @@ export type ArgoErrorResponse = {
   code: number;
 };
 
-export type FetchResponse<T, K> = Omit<Response, 'json'> & {
-  status: K;
+export type FetchResponse<T> = Omit<Response, 'json'> & {
   json: () => Promise<T>;
 };
 
 export type GetArgoApplicationResp =
-  | FetchResponse<ArgoErrorResponse, 401 | 404>
-  | FetchResponse<ArgoApplication, 200>;
+  | FetchResponse<ArgoErrorResponse>
+  | FetchResponse<ArgoApplication>;
 
 export type ArgoProject = {
   metadata: Metadata;
@@ -226,16 +225,16 @@ export type ArgoProject = {
 };
 
 export type TerminateArgoAppOperationResp =
-  | FetchResponse<ArgoErrorResponse, 401 | 404>
-  | FetchResponse<Record<string, never>, 200>;
+  | FetchResponse<ArgoErrorResponse>
+  | FetchResponse<Record<string, never>>;
 
 export type DeleteArgoAppResp =
-  | FetchResponse<ArgoErrorResponse, 401 | 404>
-  | FetchResponse<Record<string, never>, 200>;
+  | FetchResponse<ArgoErrorResponse>
+  | FetchResponse<Record<string, never>>;
 
 export type DeleteArgoProjectResp =
-  | FetchResponse<ArgoErrorResponse, 401 | 404>
-  | FetchResponse<Record<string, never>, 200>;
+  | FetchResponse<ArgoErrorResponse>
+  | FetchResponse<Record<string, never>>;
 
 export type ArgoApplication = {
   metadata: Metadata;
