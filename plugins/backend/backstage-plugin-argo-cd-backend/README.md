@@ -10,7 +10,6 @@ The Argo plugin will fetch the Argo CD instances an app is deployed to and use t
 argocd:
   username: ${ARGOCD_USERNAME}
   password: ${ARGOCD_PASSWORD}
-  waitCycles: 25
   appLocatorMethods:
     - type: 'config'
       instances:
@@ -79,7 +78,7 @@ argocd:
           token: ${ARGOCD_AUTH_TOKEN} # Token to use to instance 1
 ```
 
-### Project Resource Restrictions
+## Project Resource Restrictions
 
 In order to control what kind of resources are allowed or blocked by default on the created argo projects you can configure a black and/or white list at both the cluster and namespace levels.
 
@@ -147,15 +146,34 @@ argocd:
         kind: 'Ingress'
 ```
 
-### Wait Cycles
+## Deleting Argo Application and Project Configuration Options
 
-Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. Between each check there is a 3 second timer. The number of cycles to wait is an optional configuration value as shown above as `waitCycles`. If `waitCycles` is set to 25, the total time the loop can last before erroring out is 75 seconds.
+### Wait Cycles and Wait Interval
 
-### Permissions
+Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. This is because the project will not delete if the application is still existing, and some times the application does not delete immediately. Default implementation is to NOT loop, as this can increase the response time. However, we do allow the option to continue to check if the application has been deleted via looping (configurable through the `waitCycles` field), and allow for wait interval in between each check to be customizable (configurable through the `waitInterval` field). These are optional number fields. The default wait interval is 5 seconds, if you choose to not configure this time. If `waitCycles` is set to 5, the total time the loop can last is 25 seconds, unless you customize the wait time.
 
-Setting permissions for the Argo CD user account can reduce the scope, but also reduce the functionality of the backend. If you choose to scope the permissions for read-only get actions will work such as the catalog plugin but creating, deleting, and resyncing applications will not be available. The error handling has been designed to alert the users when the proper permissions are not in place.
+`waitCycles` \* `waitInterval` = total time in ms.
 
-### Self Signed Certificates
+```yml
+argocd:
+  username: ${ARGOCD_USERNAME}
+  password: ${ARGOCD_PASSWORD}
+  .
+  .
+  .
+  waitCycles: 3 # optional number
+  waitInterval: 1000 # optional number in ms.
+```
+
+### Terminate Operation Query Parameter
+
+The delete argo app and project endpoint has a feature to terminate the current operation on the application. This is a query parameter `terminateOperation` which when set to `true` will terminate the current application operation before proceeding to delete the application. Please see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation for more information.
+
+## Permissions
+
+Setting permissions for the Argo CD user account can reduce the scope, but also reduce the functionality of the backend. If you choose to scope the permissions for read-only get actions will work such as the catalog plugin but creating, deleting, and re-syncing applications will not be available. The error handling has been designed to alert the users when the proper permissions are not in place.
+
+## Self Signed Certificates
 
 By default the Argo CD Server will generate a self signed certificate. For testing purposes you can use the below to allow `http` traffic. **This should not be used for production.** The backend will validate certificates and a self signed certificate will not work properly, which is why for testing enabling `http` might be preferred.
 

@@ -65,7 +65,6 @@ const config = ConfigReader.fromConfigs([
             ],
           },
         ],
-        waitCycles: 5,
       },
     },
   },
