@@ -95,13 +95,9 @@ export interface DeleteApplicationAndProjectProps {
 }
 
 export type DeleteApplicationAndProjectResponse = {
-  terminateOperationDetails?:
-    | ResponseSchema<DeleteResponse>
-    | ResponseSchemaUnknown
-    | undefined;
+  terminateOperationDetails?: ResponseSchema<DeleteResponse> | undefined;
   deleteAppDetails:
     | ResponseSchema<DeleteResponse | ArgoApplication>
-    | ResponseSchemaUnknown
     | undefined;
   deleteProjectDetails:
     | ResponseSchema<DeleteResponse>
