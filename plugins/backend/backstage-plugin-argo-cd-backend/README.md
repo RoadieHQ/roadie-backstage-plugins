@@ -161,8 +161,8 @@ argocd:
   .
   .
   .
-  waitCycles: 3 # optional number
-  waitInterval: 1000 # optional number in ms.
+  waitCycles: 3 # optional number, default is 1
+  waitInterval: 1000 # optional number in ms, default is 5000 ms
 ```
 
 ### Terminate Operation Query Parameter

@@ -836,6 +836,8 @@ describe('ArgoCD service', () => {
       deleteAppMock.mockResolvedValueOnce({
         message: 'application not found',
         statusCode: 404,
+        code: 1,
+        error: 'error',
       });
 
       deleteProjectMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -846,16 +848,18 @@ describe('ArgoCD service', () => {
       });
 
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'success',
           message:
             'application does not exist and therefore does not need to be deleted',
           argoResponse: {
             message: 'application not found',
             statusCode: 404,
+            code: 1,
+            error: 'error',
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'pending',
           message: 'project is pending deletion',
           argoResponse: {
@@ -867,7 +871,9 @@ describe('ArgoCD service', () => {
 
     it('skips project deletion when application deletion fails', async () => {
       deleteAppMock.mockResolvedValueOnce({
-        message: 'some error occured',
+        code: 1,
+        error: 'some error occurred',
+        message: 'some error occurred',
         statusCode: 500,
       });
 
@@ -879,15 +885,17 @@ describe('ArgoCD service', () => {
       expect(getArgoApplicationInfoMock).not.toHaveBeenCalled();
       expect(deleteProjectMock).not.toHaveBeenCalled();
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'failed',
-          message: 'some error occured',
+          message: 'failed to delete application',
           argoResponse: {
-            message: 'some error occured',
+            code: 1,
+            error: 'some error occurred',
+            message: 'some error occurred',
             statusCode: 500,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'failed',
           message:
             'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
@@ -916,7 +924,7 @@ describe('ArgoCD service', () => {
 
       expect(deleteProjectMock).not.toHaveBeenCalled();
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'pending',
           message:
             'application still pending deletion with the deletion timestamp of undefined',
@@ -928,7 +936,7 @@ describe('ArgoCD service', () => {
             statusCode: 200,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'failed',
           message:
             'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
@@ -946,7 +954,7 @@ describe('ArgoCD service', () => {
         message: 'something happened',
         code: 1,
         error: 'something happened',
-        statusCode: 1,
+        statusCode: 500,
       });
 
       const resp = await argoService.deleteAppandProject({
@@ -956,7 +964,7 @@ describe('ArgoCD service', () => {
 
       expect(deleteProjectMock).not.toHaveBeenCalled();
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'failed',
           message:
             'a request was successfully sent to delete your application, but when getting your application information we received an error',
@@ -964,10 +972,10 @@ describe('ArgoCD service', () => {
             code: 1,
             error: 'something happened',
             message: 'something happened',
-            statusCode: 1,
+            statusCode: 500,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'failed',
           message:
             'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
@@ -994,7 +1002,7 @@ describe('ArgoCD service', () => {
       });
 
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'success',
           message:
             'application deletion verified (application no longer exists)',
@@ -1005,7 +1013,7 @@ describe('ArgoCD service', () => {
             statusCode: 404,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'pending',
           message: 'project is pending deletion',
           argoResponse: { statusCode: 200 },
@@ -1025,7 +1033,8 @@ describe('ArgoCD service', () => {
       deleteProjectMock.mockResolvedValueOnce({
         error: 'something unexpected',
         message: 'something unexpected',
-        statusCode: 403324,
+        code: 1,
+        statusCode: 500,
       });
 
       const resp = await argoService.deleteAppandProject({
@@ -1034,7 +1043,7 @@ describe('ArgoCD service', () => {
       });
 
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'success',
           message:
             'application deletion verified (application no longer exists)',
@@ -1045,13 +1054,14 @@ describe('ArgoCD service', () => {
             statusCode: 404,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'failed',
-          message: 'project deletion failed',
+          message: 'failed to delete project',
           argoResponse: {
             error: 'something unexpected',
             message: 'something unexpected',
-            statusCode: 403324,
+            code: 1,
+            statusCode: 500,
           },
         },
       });
@@ -1059,7 +1069,9 @@ describe('ArgoCD service', () => {
     it('communicates when terminate operation is unsuccessful', async () => {
       terminateArgoAppOperationMock.mockResolvedValueOnce({
         message: 'something happened',
-        statusCode: 1,
+        statusCode: 500,
+        code: 1,
+        error: 'error',
       });
 
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -1068,7 +1080,7 @@ describe('ArgoCD service', () => {
         message: 'some error',
         error: 'error',
         code: 1,
-        statusCode: 1,
+        statusCode: 500,
       });
 
       deleteProjectMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -1081,10 +1093,15 @@ describe('ArgoCD service', () => {
 
       expect(resp).toEqual(
         expect.objectContaining({
-          argoTerminateOperationResp: {
+          terminateOperationDetails: {
             status: 'failed',
             message: 'failed to terminate operation',
-            argoResponse: { message: 'something happened', statusCode: 1 },
+            argoResponse: {
+              message: 'something happened',
+              statusCode: 500,
+              code: 1,
+              error: 'error',
+            },
           },
         }),
       );
@@ -1093,6 +1110,8 @@ describe('ArgoCD service', () => {
       terminateArgoAppOperationMock.mockResolvedValueOnce({
         message: 'not found',
         statusCode: 404,
+        error: 'error',
+        code: 1,
       });
 
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -1101,7 +1120,7 @@ describe('ArgoCD service', () => {
         message: 'some error',
         error: 'error',
         code: 1,
-        statusCode: 1,
+        statusCode: 500,
       });
 
       deleteProjectMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -1114,15 +1133,20 @@ describe('ArgoCD service', () => {
 
       expect(resp).toEqual(
         expect.objectContaining({
-          argoTerminateOperationResp: {
+          terminateOperationDetails: {
             status: 'failed',
             message: 'application not found',
-            argoResponse: { message: 'not found', statusCode: 404 },
+            argoResponse: {
+              message: 'not found',
+              statusCode: 404,
+              error: 'error',
+              code: 1,
+            },
           },
         }),
       );
     });
-    it('should pass terminate operation to delete app method when terminate set to true', async () => {
+    it('terminates operation when terminate set to true', async () => {
       terminateArgoAppOperationMock.mockResolvedValueOnce({ statusCode: 200 });
 
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -1144,7 +1168,7 @@ describe('ArgoCD service', () => {
 
       expect(terminateArgoAppOperationMock).toHaveBeenCalled();
       expect(resp).toStrictEqual({
-        argoDeleteAppResp: {
+        deleteAppDetails: {
           status: 'success',
           message:
             'application deletion verified (application no longer exists)',
@@ -1155,12 +1179,12 @@ describe('ArgoCD service', () => {
             statusCode: 404,
           },
         },
-        argoDeleteProjectResp: {
+        deleteProjectDetails: {
           status: 'pending',
           message: 'project is pending deletion',
           argoResponse: { statusCode: 200 },
         },
-        argoTerminateOperationResp: {
+        terminateOperationDetails: {
           status: 'success',
           message: 'application is current operation terminated',
           argoResponse: { statusCode: 200 },
@@ -1179,7 +1203,9 @@ describe('ArgoCD service', () => {
       });
 
       deleteProjectMock.mockResolvedValueOnce({
+        code: 1,
         message: 'not found',
+        error: 'error',
         statusCode: 404,
       });
 
@@ -1190,11 +1216,16 @@ describe('ArgoCD service', () => {
 
       expect(resp).toEqual(
         expect.objectContaining({
-          argoDeleteProjectResp: {
+          deleteProjectDetails: {
             status: 'success',
             message:
               'project does not exist and therefore does not need to be deleted',
-            argoResponse: { message: 'not found', statusCode: 404 },
+            argoResponse: {
+              code: 1,
+              message: 'not found',
+              error: 'error',
+              statusCode: 404,
+            },
           },
         }),
       );

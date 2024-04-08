@@ -177,11 +177,11 @@ describe('router', () => {
 
   it('delete sends back status of app and project deletion', async () => {
     mockDeleteAppandProject.mockResolvedValue({
-      argoDeleteAppResp: {
+      deleteAppDetails: {
         status: 'success',
         message: 'application is deleted successfully',
       },
-      argoDeleteProjectResp: {
+      deleteProjectDetails: {
         status: 'failed',
         message: 'error deleting project',
       },
@@ -191,18 +191,18 @@ describe('router', () => {
       '/argoInstance/argoInstance1/applications/appName',
     );
     expect(response.body).toMatchObject({
-      argoDeleteAppResp: {
+      deleteAppDetails: {
         status: 'success',
         message: 'application is deleted successfully',
       },
-      argoDeleteProjectResp: {
+      deleteProjectDetails: {
         status: 'failed',
         message: 'error deleting project',
       },
     });
   });
 
-  it('calls deleteappandproject with terminat operation when param included', async () => {
+  it('passes terminate operation flag', async () => {
     mockDeleteAppandProject.mockReturnValue({});
 
     await request(app).delete(
