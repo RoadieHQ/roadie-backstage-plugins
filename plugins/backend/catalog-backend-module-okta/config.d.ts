@@ -22,7 +22,23 @@ export interface Config {
       /**
        * Okta configuration
        */
-      okta?: AccountConfig[];
+      okta?: {
+        orgUrl: string;
+        /**
+         * @visibility secret
+         */
+        token?: string;
+        /**
+         * @deepVisibility secret
+         */
+        oauth?: {
+          clientId: string;
+          keyId?: string;
+          privateKey: string;
+        };
+        userFilter?: string;
+        groupFilter?: string;
+      }[];
     };
   };
 }
