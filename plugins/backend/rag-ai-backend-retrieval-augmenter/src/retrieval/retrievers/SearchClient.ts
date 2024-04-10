@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { EmbeddingDoc, EmbeddingsSource } from '@roadiehq/rag-ai-node';
 import { SearchResultSet } from '@backstage/plugin-search-common';
 import { Logger } from 'winston';
@@ -37,20 +40,30 @@ const embeddingsSourceToBackstageSearchType = (source: EmbeddingsSource) => {
 export class SearchClient {
   private readonly discoveryApi: PluginEndpointDiscovery;
   private readonly logger: Logger;
+  private readonly tokenManager: TokenManager;
 
   constructor(options: {
     discoveryApi: PluginEndpointDiscovery;
     logger: Logger;
+    tokenManager: TokenManager;
   }) {
     this.discoveryApi = options.discoveryApi;
     this.logger = options.logger;
+    this.tokenManager = options.tokenManager;
   }
 
   async query(query: SearchClientQuery): Promise<EmbeddingDoc[]> {
     const url = `${await this.discoveryApi.getBaseUrl('search')}/query?term=${
       query.term
     }&types[0]=${embeddingsSourceToBackstageSearchType(query.source)}`;
-    const response = await fetch(url);
+    const { token } = await this.tokenManager.getToken();
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!response.ok) {
       this.logger.warn(
         'Unable to query Backstage search API for embeddable results.',
