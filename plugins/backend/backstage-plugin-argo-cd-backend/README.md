@@ -162,7 +162,7 @@ argocd:
   .
   .
   waitInterval: 1000 # time in ms, optional number, default is 5000ms
-  waitCycles: 2 # number of checks, optional number
+  waitCycles: 2 # number of checks, optional number, default is to check 1 time with no wait time
 ```
 
 ### Terminate Operation Query Parameter
