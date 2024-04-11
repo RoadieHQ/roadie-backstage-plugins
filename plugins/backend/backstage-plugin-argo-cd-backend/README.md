@@ -150,7 +150,7 @@ argocd:
 
 ### Wait Cycles and Wait Interval
 
-Between the Argo CD project delete and application delete there is a loop created to check for the deletion of the application before the deletion of a project can occur. This is because the project will not delete if the application is still existing, and some times the application does not delete immediately. Default implementation is to NOT loop, as this can increase the response time. However, we do allow the option to continue to check if the application has been deleted via looping (configurable through the `waitCycles` field), and allow for wait interval in between each check to be customizable (configurable through the `waitInterval` field). These are optional number fields. The default wait interval is 5 seconds, if you choose to not configure this time. If `waitCycles` is set to 5, the total time the loop can last is 25 seconds, unless you customize the wait time.
+Often deleting the argo application takes time - it is not always immediate. In fact, the request to delete an application is queued in argo. Consequently, an argo project cannot delete if the application is still pending deletion. This may result in abandoned projects because even when you delete an application with cascade set to true, the project does not eventually get deleted. You have an ability to combat this by waiting for the application to delete prior to attempting to delete the project. Currently, our default is to **NOT** check more than once with no wait time. You can configure the wait interval time (in ms) and the amount of checks separately. These are optional number fields. For example, if you set `waitCycles` to 5 (indicating the amount of times you would like to check the application's deletion status), and you choose NOT to customize the wait interval, then the total amount of time waiting for the application to be deleted would be 25 seconds (5 (number of checks) * 5000ms (default wait time) = 25 seconds of waiting for application to delete before attempting to delete the project). The hopes is that doing this will allow for the project to be deleted successfully and not leave any project abandonded. However, there is another option to combat this - please look at the Terminate Operation Section below.
 
 `waitCycles` \* `waitInterval` = total time in ms.
 
@@ -161,13 +161,13 @@ argocd:
   .
   .
   .
-  waitCycles: 3 # optional number, default is 1
-  waitInterval: 1000 # optional number in ms, default is 5000 ms
+  waitInterval: 1000 # time in ms, optional number, default is 5000ms
+  waitCycles: 2 # number of checks, optional number
 ```
 
 ### Terminate Operation Query Parameter
 
-The delete argo app and project endpoint has a feature to terminate the current operation on the application. This is a query parameter `terminateOperation` which when set to `true` will terminate the current application operation before proceeding to delete the application. Please see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation for more information.
+The delete argo app and project endpoint has a feature to terminate the current operation on the application. There is a query parameter `terminateOperation` which when set to `true` will terminate the current application operation before proceeding to delete the application. This is helpful when the application is pending deletion due to a pending operation. Please see https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation for more information.
 
 ## Permissions
 

@@ -16,17 +16,17 @@
   DELETE /argoInstance/:argoInstanceName/applications/:argoAppName?terminateOperation=true
   ```
 
-- **Wait Interval configuration flag**: Often deleting the argo application takes time - it is not always immediate. An argo project cannot be deleted if the application still exists. To combat this, we chose to wait, by default, for 5 cycles for 5 seconds each, totaling for 25 seconds in waiting for the application to be deleted before deleting the project. We **do not** do this anymore. Our default is to not loop, and allow for the wait interval between loops to be configurable. You can now configure the wait interval time (in ms). You can still configure the amount of cycles. Please look at plugin's readme for more information and updates.
+- **Wait Interval configuration flag**: Often deleting the argo application takes time - it is not always immediate. In fact, the request to delete an application is queued in argo. Consequently, an argo project cannot delete if the application is still pending deletion. To combat this, we chose to wait for the deletion of the application to complete, by doing 5 checks and waiting for 5 seconds inbetween each check, totaling for 25 seconds in waiting for the application to be deleted before attempting to delete the project. We **do not** do this anymore. Our default is to **NOT** check more than once, and allow for the wait interval between each check to be configurable. You can now configure the wait interval time (in ms). You can still configure the amount of checks. Please look at plugin's readme for more information and updates.
 
   ```yml
   argocd:
     waitInterval: 1000 # time in ms, optional number, default is 5000ms
-    waitCycles: 2 # number of loops, optional number, default 1
+    waitCycles: 2 # number of checks, optional number.
   ```
 
 #### BREAKING CHANGES 💥
 
-- We are no longer waiting for an application to delete prior to attempting to delete a project due to the wait interval, wait cycle, and terminate operation changes. More details on these added features are in the above section. If you would like the same looping effect as before, you may adjust your `waitCycles` configuration value to be 5 (as this was the previous default loop count). This affects the `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName` route.
+- We are no longer waiting for an application to delete prior to attempting to delete a project due to the wait interval, wait cycle, and terminate operation changes. More details on these added features are in the above section. If you would like the same checking effect as before, you may adjust your `waitCycles` configuration value to be 5 (as this was the previous default check count). This affects the `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName` route.
 
 - Response Change: The route for deleting an argocd application and project response has changed.
 
