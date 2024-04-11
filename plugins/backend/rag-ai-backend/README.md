@@ -143,6 +143,7 @@ const retrievalPipeline = createDefaultRetrievalPipeline({
   discovery,
   logger,
   vectorStore: augmentationIndexer.vectorStore,
+  tokenManager,
 });
 ```
 
@@ -230,6 +231,7 @@ export default async function createPlugin({
       discovery,
       logger,
       vectorStore: augmentationIndexer.vectorStore,
+      tokenManager,
     }),
     model,
     config,
@@ -294,6 +296,7 @@ export default async function createPlugin({
       discovery,
       logger,
       vectorStore: augmentationIndexer.vectorStore,
+      tokenManager,
     }),
     model,
     config,
