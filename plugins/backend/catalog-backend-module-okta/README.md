@@ -19,7 +19,7 @@ catalog:
       token: ${OKTA_TOKEN}
 ```
 
-# Multiple Configs
+### Multiple Configs
 
 You can define multiple config
 
