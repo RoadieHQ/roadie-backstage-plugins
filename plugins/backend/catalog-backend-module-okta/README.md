@@ -15,7 +15,23 @@ You will need to configure your okta credentials in the `app-config.yaml`.
 catalog:
   providers:
     okta:
-      - orgUrl: 'https://tenant.okta.com'
+      orgUrl: 'https://tenant.okta.com'
+      token: ${OKTA_TOKEN}
+```
+
+# Multiple Configs
+
+You can define multiple config
+
+```yaml
+catalog:
+  providers:
+    okta:
+      org-one:
+        orgUrl: 'https://tenant-one.okta.com'
+        token: ${OKTA_TOKEN}
+      org-two:
+        orgUrl: 'https://tenant-two.okta.com'
         token: ${OKTA_TOKEN}
 ```
 
@@ -27,11 +43,11 @@ catalog:
 catalog:
   providers:
     okta:
-      - orgUrl: 'https://tenant.okta.com'
-        oauth:
-          clientId: ${OKTA_OAUTH_CLIENT_ID},
-          keyId: ${OKTA_OAUTH_KEY_ID},
-          privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
+      orgUrl: 'https://tenant.okta.com'
+      oauth:
+        clientId: ${OKTA_OAUTH_CLIENT_ID},
+        keyId: ${OKTA_OAUTH_KEY_ID},
+        privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
 ```
 
 Note: `keyId` is optional but _must_ be passed wen using a PEM as the `privateKey`
@@ -44,10 +60,10 @@ The provider allows configuring Okta search filtering for users and groups. See 
 catalog:
   providers:
     okta:
-      - orgUrl: 'https://tenant.okta.com'
-        token: ${OKTA_TOKEN}
-        userFilter: profile.department eq "engineering"
-        groupFilter: profile.name eq "Everyone"
+      orgUrl: 'https://tenant.okta.com'
+      token: ${OKTA_TOKEN}
+      userFilter: profile.department eq "engineering"
+      groupFilter: profile.name eq "Everyone"
 ```
 
 There are two ways that you can configure the Entity providers. You can either use the `OktaOrgEntityProvider` which loads both users and groups. Or you can load user or groups separately user the `OktaUserEntityProvider` and `OktaGroupEntityProvider` providers.
@@ -98,7 +114,7 @@ export default async function createPlugin(
     logger: env.logger,
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
-  });
+  })[0];
 
   builder.addEntityProvider(orgProvider);
 
@@ -132,7 +148,7 @@ export default async function createPlugin(
       key: 'profile.orgId',
       parentKey: 'profile.parentOrgId',
     },
-  });
+  })[0];
 
   builder.addEntityProvider(orgProvider);
 
@@ -209,7 +225,7 @@ export default async function createPlugin(
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
     groupTransformer: myGroupTransformer,
-  });
+  })[0];
 
   builder.addEntityProvider(orgProvider);
 
@@ -291,7 +307,7 @@ export default async function createPlugin(
     logger: env.logger,
     namingStrategy: 'strip-domain-email',
     userTransformer: myUserTransformer,
-  });
+  })[0];
 
   builder.addEntityProvider(userProvider);
 
