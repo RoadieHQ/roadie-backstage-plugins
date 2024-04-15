@@ -61,7 +61,7 @@ export const oktaOrgEntityProviderTransformExtensionPoint =
  *
  * @alpha
  */
-export const oktaCatalogModule = createBackendModule({
+export const catalogModuleOktaEntityProvider = createBackendModule({
   pluginId: 'catalog',
   moduleId: 'okta',
   register(env) {
