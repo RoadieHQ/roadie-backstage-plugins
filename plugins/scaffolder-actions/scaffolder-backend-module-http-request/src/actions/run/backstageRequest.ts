@@ -79,7 +79,7 @@ export function createHttpBackstageAction(options: {
           body: {
             title: 'Request body',
             description: 'The body you would like to pass to your request',
-            type: ['object', 'string'],
+            type: ['object', 'string', 'array'],
           },
           logRequestPath: {
             title: 'Request path logging',
