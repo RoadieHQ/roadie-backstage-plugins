@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+import { TaskScheduleDefinition } from '@backstage/backend-tasks';
+
 export type AccountConfig = {
+  id: string;
   orgUrl: string;
   token?: string;
   oauth?: {
@@ -24,4 +27,5 @@ export type AccountConfig = {
   };
   userFilter?: string;
   groupFilter?: string;
+  schedule?: TaskScheduleDefinition;
 };

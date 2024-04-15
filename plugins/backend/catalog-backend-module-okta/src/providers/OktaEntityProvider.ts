@@ -30,17 +30,14 @@ import {
 export type OktaScope = 'okta.groups.read' | 'okta.users.read';
 
 export abstract class OktaEntityProvider implements EntityProvider {
-  protected readonly accounts: AccountConfig[];
+  protected readonly account: AccountConfig;
   protected readonly logger: Logger;
   protected connection?: EntityProviderConnection;
 
   public abstract getProviderName(): string;
 
-  protected constructor(
-    accounts: AccountConfig[],
-    options: { logger: Logger },
-  ) {
-    this.accounts = accounts;
+  protected constructor(account: AccountConfig, options: { logger: Logger }) {
+    this.account = account;
     this.logger = options.logger;
   }
 
@@ -48,16 +45,9 @@ export abstract class OktaEntityProvider implements EntityProvider {
     orgUrl: string,
     oauthScopes: OktaScope[] | undefined = undefined,
   ): Client {
-    const account = this.accounts.find(
-      acccountConfig => acccountConfig.orgUrl === orgUrl,
-    );
-    if (!account) {
-      throw new Error(`accountConfig for ${orgUrl} not found`);
-    }
-
-    if (account.oauth && oauthScopes) {
+    if (this.account.oauth && oauthScopes) {
       // use OAuth authentication strategy
-      const { clientId, privateKey, keyId } = account.oauth;
+      const { clientId, privateKey, keyId } = this.account.oauth;
       return new Client({
         orgUrl,
         authorizationMode: 'PrivateKey',
@@ -66,11 +56,11 @@ export abstract class OktaEntityProvider implements EntityProvider {
         privateKey,
         keyId,
       });
-    } else if (account.token) {
+    } else if (this.account.token) {
       // use api token authentication strategy
       return new Client({
         orgUrl,
-        token: account.token,
+        token: this.account.token,
       });
     }
     throw new Error(

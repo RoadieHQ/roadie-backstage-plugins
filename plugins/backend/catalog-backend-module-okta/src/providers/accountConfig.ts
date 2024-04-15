@@ -16,8 +16,11 @@
 
 import { Config } from '@backstage/config';
 import { AccountConfig } from '../types';
+import { readTaskScheduleDefinitionFromConfig } from '@backstage/backend-tasks';
 
-export const getAccountConfig = (config: Config): AccountConfig => {
+export const DEFAULT_PROVIDER_ID = 'default';
+
+export const getAccountConfig = (config: Config, id: string): AccountConfig => {
   const orgUrl = config.getString('orgUrl');
   const token = config.getOptionalString('token');
 
@@ -30,11 +33,32 @@ export const getAccountConfig = (config: Config): AccountConfig => {
   const oauth =
     clientId && privateKey ? { clientId, keyId, privateKey } : undefined;
 
+  const schedule = config.has('schedule')
+    ? readTaskScheduleDefinitionFromConfig(config.getConfig('schedule'))
+    : undefined;
+
   return {
+    id,
     orgUrl,
     token,
     userFilter,
     groupFilter,
     oauth,
+    schedule,
   };
+};
+
+export const getAccountConfigs = (config: Config): AccountConfig[] => {
+  const providersConfig = config.getOptionalConfig('catalog.providers.okta');
+  if (!providersConfig) {
+    return [];
+  }
+  if (providersConfig.has('orgUrl')) {
+    // simple/single config variant
+    return [getAccountConfig(providersConfig, DEFAULT_PROVIDER_ID)];
+  }
+  return providersConfig.keys().map(id => {
+    const providerConfig = providersConfig.getConfig(id);
+    return getAccountConfig(providerConfig, id);
+  });
 };

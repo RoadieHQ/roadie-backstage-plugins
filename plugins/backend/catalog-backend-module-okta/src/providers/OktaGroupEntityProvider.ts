@@ -30,11 +30,14 @@ import {
 } from './userNamingStrategies';
 import { AccountConfig } from '../types';
 import { groupEntityFromOktaGroup as defaultGroupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
-import { getAccountConfig } from './accountConfig';
+import { DEFAULT_PROVIDER_ID, getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { OktaGroupEntityTransformer } from './types';
+import { PluginTaskScheduler, TaskRunner } from '@backstage/backend-tasks';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import * as uuid from 'uuid';
 
 /**
  * Provides entities from Okta Group service.
@@ -47,6 +50,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly orgUrl: string;
   private readonly customAttributesToAnnotationAllowlist: string[];
   private hierarchyConfig: { parentKey: string; key?: string } | undefined;
+  private readonly taskRunner: TaskRunner;
 
   static fromConfig(
     config: Config,
@@ -64,9 +68,19 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         parentKey: string;
         key?: string;
       };
+      schedule?: TaskRunner;
+      scheduler?: PluginTaskScheduler;
     },
   ) {
-    const accountConfig = getAccountConfig(config);
+    if (!options.schedule && !options.scheduler) {
+      throw new Error('Either schedule or scheduler must be provided.');
+    }
+
+    const accountConfig = getAccountConfig(config, DEFAULT_PROVIDER_ID);
+
+    const taskRunner =
+      options.schedule ??
+      options.scheduler!.createScheduledTaskRunner(accountConfig.schedule!);
 
     if (options.parentGroupField && !options.hierarchyConfig?.parentKey) {
       options.hierarchyConfig = {
@@ -74,7 +88,10 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       };
     }
 
-    return new OktaGroupEntityProvider(accountConfig, options);
+    return new OktaGroupEntityProvider(accountConfig, {
+      ...options,
+      taskRunner,
+    });
   }
 
   constructor(
@@ -89,9 +106,10 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         key?: string;
       };
       groupTransformer?: OktaGroupEntityTransformer;
+      taskRunner: TaskRunner;
     },
   ) {
-    super([accountConfig], options);
+    super(accountConfig, options);
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,
@@ -103,10 +121,34 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
     this.hierarchyConfig = options.hierarchyConfig;
+    this.taskRunner = options.taskRunner;
   }
 
   getProviderName(): string {
-    return `okta-group-${this.orgUrl}`;
+    return `provider-okta-group:${this.account.id}`;
+  }
+
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.connection = connection;
+    await this.taskRunner.run({
+      id: `${this.getProviderName()}:refresh`,
+      fn: async () => {
+        const logger = this.logger.child({
+          class: OktaGroupEntityProvider.prototype.constructor.name,
+          taskId: `${this.getProviderName()}:refresh`,
+          taskInstanceId: uuid.v4(),
+        });
+
+        try {
+          await this.run();
+        } catch (error) {
+          logger.error(
+            `${this.getProviderName()} refresh failed, ${error}`,
+            error,
+          );
+        }
+      },
+    });
   }
 
   async run(): Promise<void> {

@@ -50,7 +50,7 @@ export default async function createPlugin(
     ...env,
     groupNamingStrategy: 'kebab-case-name',
     userNamingStrategy: 'strip-domain-email',
-  });
+  })[0];
   builder.addEntityProvider(orgProvider);
   providers.push(orgProvider);
 

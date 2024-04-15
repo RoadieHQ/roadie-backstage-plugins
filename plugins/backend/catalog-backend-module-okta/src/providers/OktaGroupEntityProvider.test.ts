@@ -20,10 +20,24 @@ import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
 import { getVoidLogger } from '@backstage/backend-common';
 import { ProfileFieldGroupNamingStrategy } from './groupNamingStrategies';
+import { TaskInvocationDefinition, TaskRunner } from '@backstage/backend-tasks';
 
 let listGroups: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
 };
+
+class PersistingTaskRunner implements TaskRunner {
+  private tasks: TaskInvocationDefinition[] = [];
+
+  getTasks() {
+    return this.tasks;
+  }
+
+  run(task: TaskInvocationDefinition): Promise<void> {
+    this.tasks.push(task);
+    return Promise.resolve(undefined);
+  }
+}
 
 jest.mock('@okta/okta-sdk-nodejs', () => {
   return {
@@ -38,6 +52,8 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
 const logger = getVoidLogger();
 
 describe('OktaGroupProvider', () => {
+  const schedule = new PersistingTaskRunner();
+
   const config = new ConfigReader({
     orgUrl: 'https://okta',
     token: 'secret',
@@ -53,7 +69,10 @@ describe('OktaGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        schedule,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -103,6 +122,7 @@ describe('OktaGroupProvider', () => {
           'customAttribute1',
           'customAttribute2',
         ],
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -183,7 +203,10 @@ describe('OktaGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = OktaGroupEntityProvider.fromConfig(config, { logger });
+      const provider = OktaGroupEntityProvider.fromConfig(config, {
+        logger,
+        schedule,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -226,6 +249,7 @@ describe('OktaGroupProvider', () => {
         logger,
         namingStrategy: 'kebab-case-name',
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -256,6 +280,7 @@ describe('OktaGroupProvider', () => {
         logger,
         namingStrategy: 'profile-name',
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -287,6 +312,7 @@ describe('OktaGroupProvider', () => {
         namingStrategy: new ProfileFieldGroupNamingStrategy('org_id')
           .nameForGroup,
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -322,6 +348,7 @@ describe('OktaGroupProvider', () => {
           key: 'profile.org_id',
         },
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -368,6 +395,7 @@ describe('OktaGroupProvider', () => {
           key: 'profile.org_id',
         },
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -413,6 +441,7 @@ describe('OktaGroupProvider', () => {
           throw new Error('bork');
         },
         userNamingStrategy: 'strip-domain-email',
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -434,6 +463,7 @@ describe('OktaGroupProvider', () => {
         userNamingStrategy: () => {
           throw new Error('bork');
         },
+        schedule,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
@@ -481,6 +511,7 @@ describe('OktaGroupProvider', () => {
             parent: parentGroup ? namingStrategy(parentGroup) : '',
           },
         }),
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();

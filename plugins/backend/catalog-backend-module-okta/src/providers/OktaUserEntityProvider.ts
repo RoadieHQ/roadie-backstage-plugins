@@ -25,9 +25,12 @@ import {
 } from './userNamingStrategies';
 import { AccountConfig } from '../types';
 import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userEntityFromOktaUser';
-import { getAccountConfig } from './accountConfig';
+import { DEFAULT_PROVIDER_ID, getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { OktaUserEntityTransformer } from './types';
+import { PluginTaskScheduler, TaskRunner } from '@backstage/backend-tasks';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import * as uuid from 'uuid';
 
 /**
  * Provides entities from Okta User service.
@@ -38,6 +41,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
   private readonly userFilter?: string;
   private readonly orgUrl: string;
   private readonly customAttributesToAnnotationAllowlist: string[];
+  private readonly taskRunner: TaskRunner;
 
   static fromConfig(
     config: Config,
@@ -46,11 +50,24 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
+      schedule?: TaskRunner;
+      scheduler?: PluginTaskScheduler;
     },
   ) {
-    const accountConfig = getAccountConfig(config);
+    if (!options.schedule && !options.scheduler) {
+      throw new Error('Either schedule or scheduler must be provided.');
+    }
 
-    return new OktaUserEntityProvider(accountConfig, options);
+    const accountConfig = getAccountConfig(config, DEFAULT_PROVIDER_ID);
+
+    const taskRunner =
+      options.schedule ??
+      options.scheduler!.createScheduledTaskRunner(accountConfig.schedule!);
+
+    return new OktaUserEntityProvider(accountConfig, {
+      ...options,
+      taskRunner,
+    });
   }
 
   constructor(
@@ -60,9 +77,10 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
+      taskRunner: TaskRunner;
     },
   ) {
-    super([accountConfig], options);
+    super(accountConfig, options);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
     this.userEntityFromOktaUser =
       options.userTransformer || defaultUserEntityFromOktaUser;
@@ -70,10 +88,34 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
     this.orgUrl = accountConfig.orgUrl;
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
+    this.taskRunner = options.taskRunner;
   }
 
   getProviderName(): string {
-    return `okta-user-${this.orgUrl}`;
+    return `provider-okta-user:${this.account.id}`;
+  }
+
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.connection = connection;
+    await this.taskRunner.run({
+      id: `${this.getProviderName()}:refresh`,
+      fn: async () => {
+        const logger = this.logger.child({
+          class: OktaUserEntityProvider.prototype.constructor.name,
+          taskId: `${this.getProviderName()}:refresh`,
+          taskInstanceId: uuid.v4(),
+        });
+
+        try {
+          await this.run();
+        } catch (error) {
+          logger.error(
+            `${this.getProviderName()} refresh failed, ${error}`,
+            error,
+          );
+        }
+      },
+    });
   }
 
   async run(): Promise<void> {

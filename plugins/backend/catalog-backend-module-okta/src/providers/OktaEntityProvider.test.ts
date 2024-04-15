@@ -24,7 +24,7 @@ class ConcreteEntityProvider extends OktaEntityProvider {
     throw new Error('Method not implemented.');
   }
   constructor(accountConfig: AccountConfig) {
-    super([accountConfig], {
+    super(accountConfig, {
       logger: getVoidLogger(),
     });
   }
@@ -51,8 +51,15 @@ describe('OktaEntityProvider', () => {
   describe('when an api token is given', () => {
     it('instantiates the okta client with an api token', async () => {
       const provider = new ConcreteEntityProvider({
+        id: 'default',
         orgUrl: 'http://someorg',
         token: 'secret',
+        schedule: {
+          frequency: { cron: 'PT30M' },
+          timeout: {
+            minutes: 3,
+          },
+        },
       });
       provider.getClient('http://someorg', ['okta.users.read']);
 
@@ -66,11 +73,18 @@ describe('OktaEntityProvider', () => {
   describe('when OAauth credentials are given', () => {
     it('instantiates the okta client with all required OAauth parameters', async () => {
       const provider = new ConcreteEntityProvider({
+        id: 'default',
         orgUrl: 'http://someorg',
         oauth: {
           privateKey: 'some string encoded PEM or JWK',
           keyId: 'thekeyid',
           clientId: 'theclientid',
+        },
+        schedule: {
+          frequency: { cron: 'PT30M' },
+          timeout: {
+            minutes: 3,
+          },
         },
       });
       provider.getClient('http://someorg', ['okta.users.read']);

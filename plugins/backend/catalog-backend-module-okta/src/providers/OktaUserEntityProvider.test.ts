@@ -19,6 +19,7 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { MockOktaCollection } from '../test-utls';
 import { getVoidLogger } from '@backstage/backend-common';
+import { TaskRunner, TaskInvocationDefinition } from '@backstage/backend-tasks';
 
 let listUsers: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -35,7 +36,22 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
 
 const logger = getVoidLogger();
 
+class PersistingTaskRunner implements TaskRunner {
+  private tasks: TaskInvocationDefinition[] = [];
+
+  getTasks() {
+    return this.tasks;
+  }
+
+  run(task: TaskInvocationDefinition): Promise<void> {
+    this.tasks.push(task);
+    return Promise.resolve(undefined);
+  }
+}
+
 describe('OktaUserEntityProvider', () => {
+  const schedule = new PersistingTaskRunner();
+
   const config = new ConfigReader({
     orgUrl: 'https://okta',
     token: 'secret',
@@ -51,7 +67,11 @@ describe('OktaUserEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = OktaUserEntityProvider.fromConfig(config, { logger });
+
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        schedule,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -81,7 +101,10 @@ describe('OktaUserEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = OktaUserEntityProvider.fromConfig(config, { logger });
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        schedule,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -107,7 +130,9 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
         namingStrategy: 'kebab-case-email',
+        schedule,
       });
+
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -133,6 +158,7 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
         namingStrategy: 'strip-domain-email',
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -159,6 +185,7 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
         namingStrategy: user => user.id,
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -187,6 +214,7 @@ describe('OktaUserEntityProvider', () => {
         namingStrategy: () => {
           throw new Error('bork');
         },
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -204,6 +232,7 @@ describe('OktaUserEntityProvider', () => {
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
         customAttributesToAnnotationAllowlist: ['customAttribute1'],
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -249,6 +278,7 @@ describe('OktaUserEntityProvider', () => {
             memberOf: [],
           },
         }),
+        schedule,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
