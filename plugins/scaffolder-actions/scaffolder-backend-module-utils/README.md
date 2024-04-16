@@ -93,6 +93,20 @@ return await createRouter({
 });
 ```
 
+### New backend system
+
+```typescript
+import { createBackend } from '@backstage/backend-defaults';
+import { createBackendModule } from '@backstage/backend-plugin-api';
+import { scaffolderBackendModuleUtils } from '@roadiehq/scaffolder-backend-module-http-request';
+
+const backend = createBackend();
+backend.add(import('@backstage/plugin-proxy-backend/alpha'));
+backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+backend.add(scaffolderBackendModuleUtils);
+backend.start();
+```
+
 ## Actions:
 
 ### Zip
