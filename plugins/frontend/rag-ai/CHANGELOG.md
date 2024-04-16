@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 0.2.2
+
+### Patch Changes
+
+- 793c35c: Filter out embeddings without metadata information when displaying additional data
+
 ## 0.2.1
 
 ### Patch Changes

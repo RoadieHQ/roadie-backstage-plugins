@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.11
+
+### Patch Changes
+
+- 69523e2: Do not expose Okta secrets in frontend.
+
 ## 0.9.10
 
 ### Patch Changes
