@@ -199,6 +199,43 @@ describe('http:backstage:request', () => {
       });
     });
 
+    describe('with body defined as application/json and passing an array', () => {
+      it('should create a request and pass body parameter', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: JSON.stringify([
+              {
+                name: 'test',
+              },
+            ]),
+          },
+        });
+        expect(http).toHaveBeenCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'content-type': 'application/json',
+            },
+            body: '[{"name":"test"}]',
+          },
+          logger,
+          false,
+        );
+      });
+    });
+
     describe('with authorization header', () => {
       const BACKSTAGE_TOKEN = 'BACKSTAGE_TOKEN';
       it('should create a request and pass backstage token as authorization header', async () => {
