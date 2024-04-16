@@ -70,6 +70,7 @@ export default async function createPlugin({
       discovery,
       logger,
       vectorStore: augmentationIndexer.vectorStore,
+      tokenManager,
     }),
     model,
     config,
