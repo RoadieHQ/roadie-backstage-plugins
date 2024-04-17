@@ -30,9 +30,11 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.21.6",
+    "@backstage/backend-plugin-api": "^0.6.16",
     "@backstage/core-app-api": "^1.12.3",
     "@backstage/core-plugin-api": "^1.9.1",
     "@backstage/plugin-scaffolder-backend": "^1.22.3",
+    "@backstage/plugin-scaffolder-node": "^0.4.2",
     "cross-fetch": "^4.0.0",
     "winston": "^3.2.1"
   },
