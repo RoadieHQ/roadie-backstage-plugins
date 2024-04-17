@@ -98,7 +98,7 @@ return await createRouter({
 ```typescript
 import { createBackend } from '@backstage/backend-defaults';
 import { createBackendModule } from '@backstage/backend-plugin-api';
-import { scaffolderBackendModuleUtils } from '@roadiehq/scaffolder-backend-module-http-request';
+import { scaffolderBackendModuleUtils } from '@roadiehq/scaffolder-backend-module-http-request/alpha';
 
 const backend = createBackend();
 backend.add(import('@backstage/plugin-proxy-backend/alpha'));
