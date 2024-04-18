@@ -95,6 +95,13 @@ return await createRouter({
 
 ### New backend system
 
+## From your Backstage root directory
+
+```
+cd packages/backend
+yarn add @roadiehq/scaffolder-backend-module-utils/alpha
+```
+
 ```typescript
 // packages/backend/src/index.ts
 import { createBackend } from '@backstage/backend-defaults';
