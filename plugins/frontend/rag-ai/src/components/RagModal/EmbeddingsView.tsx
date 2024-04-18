@@ -53,7 +53,10 @@ export const EmbeddingsView = ({
   }
 
   const entities = uniq(
-    embeddings.map(embedding => embedding.metadata.entityRef),
+    embeddings
+      .filter(it => it.metadata && it.metadata.entityRef)
+      .map(embedding => embedding.metadata.entityRef)
+      .filter(Boolean),
   );
   return (
     <Box>
