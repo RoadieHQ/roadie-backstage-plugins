@@ -96,6 +96,7 @@ return await createRouter({
 ### New backend system
 
 ```typescript
+// packages/backend/src/index.ts
 import { createBackend } from '@backstage/backend-defaults';
 import { createBackendModule } from '@backstage/backend-plugin-api';
 
