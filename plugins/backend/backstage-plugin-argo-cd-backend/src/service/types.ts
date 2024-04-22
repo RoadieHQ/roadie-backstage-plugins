@@ -166,18 +166,12 @@ export interface ArgoServiceApi {
     props: UpdateArgoProjectAndAppProps,
   ) => Promise<boolean>;
   getArgoProject: (props: GetArgoProjectProps) => Promise<GetArgoProjectResp>;
-  getArgoApplicationInfo: (props: {
-    argoApplicationName: string;
-    argoInstanceName?: string;
-    baseUrl?: string;
-    argoToken?: string;
-  }) => Promise<GetArgoApplication>;
-  terminateArgoAppOperation: (props: {
-    argoAppName: string;
-    argoInstanceName?: string;
-    baseUrl?: string;
-    argoToken?: string;
-  }) => Promise<DeleteResponse>;
+  getArgoApplicationInfo: (
+    props: getArgoApplicationInfoProps,
+  ) => Promise<GetArgoApplication>;
+  terminateArgoAppOperation: (
+    props: terminateArgoAppOperationProps,
+  ) => Promise<DeleteResponse>;
 }
 
 export type InstanceConfig = {
@@ -297,3 +291,25 @@ export type ResourceItem = {
   group: string;
   kind: string;
 };
+
+export type getArgoApplicationInfoProps =
+  | {
+      argoApplicationName: string;
+      argoInstanceName: string;
+    }
+  | {
+      argoApplicationName: string;
+      baseUrl: string;
+      argoToken: string;
+    };
+
+export type terminateArgoAppOperationProps =
+  | {
+      argoAppName: string;
+      argoInstanceName: string;
+    }
+  | {
+      argoAppName: string;
+      baseUrl: string;
+      argoToken: string;
+    };

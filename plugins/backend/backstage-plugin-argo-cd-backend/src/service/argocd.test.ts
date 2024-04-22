@@ -851,7 +851,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'success',
           message:
-            'application does not exist and therefore does not need to be deleted',
+            'application testApp does not exist and therefore does not need to be deleted',
           argoResponse: {
             message: 'application not found',
             statusCode: 404,
@@ -861,7 +861,7 @@ describe('ArgoCD service', () => {
         },
         deleteProjectDetails: {
           status: 'pending',
-          message: 'project is pending deletion',
+          message: 'project testApp is pending deletion.',
           argoResponse: {
             statusCode: 200,
           },
@@ -887,7 +887,7 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual({
         deleteAppDetails: {
           status: 'failed',
-          message: 'failed to delete application',
+          message: 'failed to delete application testApp',
           argoResponse: {
             code: 1,
             error: 'some error occurred',
@@ -898,7 +898,7 @@ describe('ArgoCD service', () => {
         deleteProjectDetails: {
           status: 'failed',
           message:
-            'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
+            'project testApp deletion skipped due to application still existing and pending deletion, or the application failed to delete.',
           argoResponse: {},
         },
       });
@@ -927,7 +927,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'pending',
           message:
-            'application still pending deletion with the deletion timestamp of undefined',
+            'application testApp still pending deletion with the deletion timestamp of undefined',
           argoResponse: {
             metadata: {
               name: 'testAppName',
@@ -939,7 +939,7 @@ describe('ArgoCD service', () => {
         deleteProjectDetails: {
           status: 'failed',
           message:
-            'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
+            'project testApp deletion skipped due to application still existing and pending deletion, or the application failed to delete.',
           argoResponse: {},
         },
       });
@@ -967,7 +967,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'failed',
           message:
-            'a request was successfully sent to delete your application, but when getting your application information we received an error',
+            'a request was successfully sent to delete application testApp, but when getting your application information we received an error',
           argoResponse: {
             code: 1,
             error: 'something happened',
@@ -978,7 +978,7 @@ describe('ArgoCD service', () => {
         deleteProjectDetails: {
           status: 'failed',
           message:
-            'project deletion skipped due to application still existing and pending deletion, or the application failed to delete',
+            'project testApp deletion skipped due to application still existing and pending deletion, or the application failed to delete.',
           argoResponse: {},
         },
       });
@@ -1005,7 +1005,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'success',
           message:
-            'application deletion verified (application no longer exists)',
+            'application testApp deletion verified (application no longer exists)',
           argoResponse: {
             code: 1,
             error: 'error',
@@ -1015,7 +1015,7 @@ describe('ArgoCD service', () => {
         },
         deleteProjectDetails: {
           status: 'pending',
-          message: 'project is pending deletion',
+          message: 'project testApp is pending deletion.',
           argoResponse: { statusCode: 200 },
         },
       });
@@ -1046,7 +1046,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'success',
           message:
-            'application deletion verified (application no longer exists)',
+            'application testApp deletion verified (application no longer exists)',
           argoResponse: {
             code: 1,
             error: 'error',
@@ -1056,7 +1056,7 @@ describe('ArgoCD service', () => {
         },
         deleteProjectDetails: {
           status: 'failed',
-          message: 'failed to delete project',
+          message: 'failed to delete project testApp.',
           argoResponse: {
             error: 'something unexpected',
             message: 'something unexpected',
@@ -1095,7 +1095,7 @@ describe('ArgoCD service', () => {
         expect.objectContaining({
           terminateOperationDetails: {
             status: 'failed',
-            message: 'failed to terminate operation',
+            message: `failed to terminate testApp's operation for application`,
             argoResponse: {
               message: 'something happened',
               statusCode: 500,
@@ -1135,7 +1135,7 @@ describe('ArgoCD service', () => {
         expect.objectContaining({
           terminateOperationDetails: {
             status: 'failed',
-            message: 'application not found',
+            message: 'application testApp not found',
             argoResponse: {
               message: 'not found',
               statusCode: 404,
@@ -1171,7 +1171,7 @@ describe('ArgoCD service', () => {
         deleteAppDetails: {
           status: 'success',
           message:
-            'application deletion verified (application no longer exists)',
+            'application testApp deletion verified (application no longer exists)',
           argoResponse: {
             code: 1,
             error: 'error',
@@ -1181,12 +1181,12 @@ describe('ArgoCD service', () => {
         },
         deleteProjectDetails: {
           status: 'pending',
-          message: 'project is pending deletion',
+          message: 'project testApp is pending deletion.',
           argoResponse: { statusCode: 200 },
         },
         terminateOperationDetails: {
           status: 'success',
-          message: 'application is current operation terminated',
+          message: `testApp's current operation terminated`,
           argoResponse: { statusCode: 200 },
         },
       });
@@ -1219,7 +1219,7 @@ describe('ArgoCD service', () => {
           deleteProjectDetails: {
             status: 'success',
             message:
-              'project does not exist and therefore does not need to be deleted',
+              'project testApp does not exist and therefore does not need to be deleted.',
             argoResponse: {
               code: 1,
               message: 'not found',
@@ -1945,6 +1945,7 @@ describe('ArgoCD service', () => {
         argoService.terminateArgoAppOperation({
           argoAppName: 'application',
           argoToken: 'token',
+          baseUrl: '',
         }),
       ).rejects.toThrow(/argo instance must be defined/i);
     });
