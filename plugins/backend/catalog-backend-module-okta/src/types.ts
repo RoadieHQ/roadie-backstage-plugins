@@ -15,13 +15,41 @@
  */
 
 export type AccountConfig = {
+  /*
+   * The URL of the Okta organization.
+   * @visibility frontend
+   */
   orgUrl: string;
+  /*
+   * The API token to use for authentication.
+   * @visibility secret
+   */
   token?: string;
   oauth?: {
+    /*
+     * The client ID.
+     * @visibility secret
+     */
     clientId: string;
+    /*
+     * The client key.
+     * @visibility secret
+     */
     keyId?: string;
+    /*
+     * The private key.
+     * @visibility secret
+     */
     privateKey: string;
   };
+  /*
+   * The user filter to apply when fetching users.
+   * @visibility frontend
+   */
   userFilter?: string;
+  /*
+   * The group filter to apply when fetching groups.
+   * @visibility frontend
+   */
   groupFilter?: string;
 };
