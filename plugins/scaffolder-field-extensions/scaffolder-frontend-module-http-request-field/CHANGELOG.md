@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.0.0
+
+### Major Changes
+
+- 32025b8: Fix validation for array in SelectFieldFromApi component
+
 ## 1.6.10
 
 ### Patch Changes
