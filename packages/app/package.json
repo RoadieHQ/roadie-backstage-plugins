@@ -49,7 +49,7 @@
     "@roadiehq/backstage-plugin-security-insights": "^2.3.16",
     "@roadiehq/backstage-plugin-shortcut": "^1.1.22",
     "@roadiehq/backstage-plugin-travis-ci": "^2.1.22",
-    "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^2.0.0",
+    "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^1.6.11",
     "@roadiehq/rag-ai": "^0.2.1",
     "cross-fetch": "^4.0.0",
     "history": "^5.0.0",
