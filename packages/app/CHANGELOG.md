@@ -5,7 +5,7 @@
 ### Patch Changes
 
 - Updated dependencies [32025b8]
-  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.0.0
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.6.11
 
 ## 1.1.1
 
