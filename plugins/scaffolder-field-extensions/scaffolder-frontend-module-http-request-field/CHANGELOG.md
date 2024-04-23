@@ -2,7 +2,7 @@
 
 ## 2.0.0
 
-### Major Changes
+### Patch Changes
 
 - 32025b8: Fix validation for array in SelectFieldFromApi component
 
