@@ -3,4 +3,4 @@
 '@roadiehq/scaffolder-backend-module-utils': patch
 ---
 
-Update README and entity point for scaffolder utils and http request actions.
+Update README and entry point for scaffolder utils and http request actions.
