@@ -55,7 +55,7 @@ return await createRouter({
 
 ```
 cd packages/backend
-yarn add @roadiehq/scaffolder-backend-module-http-request/alpha
+yarn add @roadiehq/scaffolder-backend-module-http-request/new-backend
 ```
 
 ```typescript
@@ -66,7 +66,7 @@ import { createBackendModule } from '@backstage/backend-plugin-api';
 const backend = createBackend();
 backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
-backend.add(import('@roadiehq/scaffolder-backend-module-http-request/alpha'));
+backend.add(import('@roadiehq/scaffolder-backend-module-http-request/new-backend'));
 backend.start();
 ```
 
