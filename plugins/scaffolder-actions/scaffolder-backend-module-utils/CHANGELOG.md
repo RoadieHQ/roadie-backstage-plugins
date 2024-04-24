@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.15.0
+
+### Minor Changes
+
+- 99a5d90: Update to new backend system
+
 ## 1.14.1
 
 ### Patch Changes
