@@ -110,7 +110,7 @@ import { createBackendModule } from '@backstage/backend-plugin-api';
 const backend = createBackend();
 backend.add(import('@backstage/plugin-proxy-backend/alpha'));
 backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
-backend.add(import('@roadiehq/scaffolder-backend-module-utils/alpha'));
+backend.add(import('@roadiehq/scaffolder-backend-module-utils/new-backend'));
 backend.start();
 ```
 
