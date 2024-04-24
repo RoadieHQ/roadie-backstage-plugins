@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.21.6",
+    "@backstage/backend-plugin-api": "^0.6.16",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
     "@backstage/plugin-scaffolder-backend": "^1.22.3",
