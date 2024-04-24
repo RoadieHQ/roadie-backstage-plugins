@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.3.0
+
+### Minor Changes
+
+- fcabd86: Update to new backend system
+
 ## 4.2.0
 
 ### Minor Changes
