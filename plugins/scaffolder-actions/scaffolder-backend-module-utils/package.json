@@ -12,7 +12,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./new-backend": "./src/new-backend.ts"
   },
   "typesVersions": {
     "*": {

@@ -55,7 +55,7 @@ return await createRouter({
 
 ```
 cd packages/backend
-yarn add @roadiehq/scaffolder-backend-module-http-request/new-backend
+yarn add @roadiehq/scaffolder-backend-module-http-request
 ```
 
 ```typescript
