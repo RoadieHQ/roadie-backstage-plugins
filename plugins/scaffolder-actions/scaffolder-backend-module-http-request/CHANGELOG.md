@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.2.0
+
+### Minor Changes
+
+- a367778: Added array as possible body input type to http:backstage:request action
+
 ## 4.1.10
 
 ### Patch Changes

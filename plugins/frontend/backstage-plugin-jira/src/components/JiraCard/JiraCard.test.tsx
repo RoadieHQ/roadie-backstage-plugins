@@ -15,18 +15,17 @@
  */
 
 import React from 'react';
-import { render } from '@testing-library/react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { rest } from 'msw';
 import {
+  MockFetchApi,
+  renderInTestApp,
   setupRequestMockHandlers,
   TestApiProvider,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
-// eslint-disable-next-line
-import { MemoryRouter } from 'react-router-dom';
 import { JiraAPI, jiraApiRef } from '../../api';
 import { JiraCard } from './JiraCard';
 import {
@@ -37,16 +36,13 @@ import {
   statusesResponseStub,
 } from '../../responseStubs';
 import { ConfigReader } from '@backstage/config';
-import { getIdentityApiStub } from '../../identityStubs';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
+const fetchApi = new MockFetchApi();
 const configApi = new ConfigReader({});
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
-  [
-    jiraApiRef,
-    new JiraAPI({ discoveryApi, configApi, identityApi: getIdentityApiStub }),
-  ],
+  [jiraApiRef, new JiraAPI({ discoveryApi, configApi, fetchApi })],
 ];
 
 describe('JiraCard', () => {
@@ -76,14 +72,12 @@ describe('JiraCard', () => {
       ),
     );
 
-    const rendered = render(
-      <MemoryRouter>
-        <TestApiProvider apis={apis}>
-          <EntityProvider entity={entityStub}>
-            <JiraCard />
-          </EntityProvider>
-        </TestApiProvider>
-      </MemoryRouter>,
+    const rendered = await renderInTestApp(
+      <TestApiProvider apis={apis}>
+        <EntityProvider entity={entityStub}>
+          <JiraCard />
+        </EntityProvider>
+      </TestApiProvider>,
     );
 
     expect(await rendered.findByText(/backstage-test/)).toBeInTheDocument();
@@ -124,14 +118,12 @@ describe('JiraCard', () => {
       ),
     );
 
-    const rendered = render(
-      <MemoryRouter>
-        <TestApiProvider apis={apis}>
-          <EntityProvider entity={entityStub}>
-            <JiraCard hideIssueFilter />
-          </EntityProvider>
-        </TestApiProvider>
-      </MemoryRouter>,
+    const rendered = await renderInTestApp(
+      <TestApiProvider apis={apis}>
+        <EntityProvider entity={entityStub}>
+          <JiraCard hideIssueFilter />
+        </EntityProvider>
+      </TestApiProvider>,
     );
 
     expect(await rendered.findByText(/backstage-test/)).toBeInTheDocument();
@@ -171,14 +163,12 @@ describe('JiraCard', () => {
         res(ctx.status(403)),
       ),
     );
-    const rendered = render(
-      <MemoryRouter>
-        <TestApiProvider apis={apis}>
-          <EntityProvider entity={entityStub}>
-            <JiraCard />
-          </EntityProvider>
-        </TestApiProvider>
-      </MemoryRouter>,
+    const rendered = await renderInTestApp(
+      <TestApiProvider apis={apis}>
+        <EntityProvider entity={entityStub}>
+          <JiraCard />
+        </EntityProvider>
+      </TestApiProvider>,
     );
 
     const text = await rendered.findByText(/status 403: Forbidden/);

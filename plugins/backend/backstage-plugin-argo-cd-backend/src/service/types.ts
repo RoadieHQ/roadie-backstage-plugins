@@ -91,16 +91,32 @@ export interface DeleteApplicationProps {
 export interface DeleteApplicationAndProjectProps {
   argoAppName: string;
   argoInstanceName: string;
+  terminateOperation?: boolean;
 }
 
 export type DeleteApplicationAndProjectResponse = {
-  argoDeleteAppResp: ResponseSchema;
-  argoDeleteProjectResp: ResponseSchema;
+  terminateOperationDetails?: ResponseSchema<DeleteResponse> | undefined;
+  deleteAppDetails:
+    | ResponseSchema<DeleteResponse | ArgoApplication>
+    | undefined;
+  deleteProjectDetails:
+    | ResponseSchema<DeleteResponse>
+    | ResponseSchemaUnknown
+    | undefined;
 };
 
-export type ResponseSchema = {
-  status: string;
+type status = 'pending' | 'success' | 'failed';
+
+export type ResponseSchema<T> = {
+  status: Exclude<status, 'unknown'>;
   message: string;
+  argoResponse: T;
+};
+
+type ResponseSchemaUnknown = {
+  status: Extract<status, 'failed'>;
+  message: string;
+  argoResponse: Record<string, never>;
 };
 
 export interface SyncArgoApplicationProps {
@@ -133,8 +149,8 @@ export interface ArgoServiceApi {
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
-  deleteProject: (props: DeleteProjectProps) => Promise<boolean>;
-  deleteApp: (props: DeleteApplicationProps) => Promise<boolean>;
+  deleteProject: (props: DeleteProjectProps) => Promise<DeleteResponse>;
+  deleteApp: (props: DeleteApplicationProps) => Promise<DeleteResponse>;
   deleteAppandProject: (
     props: DeleteApplicationAndProjectProps,
   ) => Promise<DeleteApplicationAndProjectResponse>;
@@ -150,6 +166,12 @@ export interface ArgoServiceApi {
     props: UpdateArgoProjectAndAppProps,
   ) => Promise<boolean>;
   getArgoProject: (props: GetArgoProjectProps) => Promise<GetArgoProjectResp>;
+  getArgoApplicationInfo: (
+    props: getArgoApplicationInfoProps,
+  ) => Promise<GetArgoApplication>;
+  terminateArgoAppOperation: (
+    props: terminateArgoAppOperationProps,
+  ) => Promise<DeleteResponse>;
 }
 
 export type InstanceConfig = {
@@ -194,14 +216,42 @@ export type GetArgoProjectResp = {
   };
 };
 
-export type FetchResponse<T, K> = Omit<Response, 'json'> & {
-  status: K;
+export type FetchResponse<T, N> = Omit<Response, 'json' | 'status'> & {
+  status: N;
   json: () => Promise<T>;
 };
 
-export type GetArgoApplicationResp =
-  | FetchResponse<{ message: string; error: string; code: number }, 401 | 404>
+type HttpStatusCodes = 200 | 201 | 204 | 400 | 401 | 403 | 404 | 500; // list goes on and on for all possible http status code
+
+export type ArgoErrorResponse = {
+  message: string;
+  error: string;
+  code: number;
+};
+
+export type DeleteResponse =
+  | (ArgoErrorResponse & { statusCode: Exclude<HttpStatusCodes, 200> })
+  | { statusCode: 200 };
+
+type GetArgoApplication =
+  | (ArgoErrorResponse & { statusCode: Exclude<HttpStatusCodes, 200> })
+  | (ArgoApplication & { statusCode: 200 });
+
+export type GetArgoApplicationFetchResponse =
+  | FetchResponse<ArgoErrorResponse, Exclude<HttpStatusCodes, 200>>
   | FetchResponse<ArgoApplication, 200>;
+
+export type TerminateArgoAppOperationFetchResponse =
+  | FetchResponse<ArgoErrorResponse, Exclude<HttpStatusCodes, 200>>
+  | FetchResponse<Record<string, never>, 200>;
+
+export type DeleteArgoAppFetchResponse =
+  | FetchResponse<ArgoErrorResponse, Exclude<HttpStatusCodes, 200>>
+  | FetchResponse<Record<string, never>, 200>;
+
+export type DeleteArgoProjectFetchResponse =
+  | FetchResponse<ArgoErrorResponse, Exclude<HttpStatusCodes, 200>>
+  | FetchResponse<Record<string, never>, 200>;
 
 export type ArgoProject = {
   metadata: Metadata;
@@ -241,3 +291,25 @@ export type ResourceItem = {
   group: string;
   kind: string;
 };
+
+export type getArgoApplicationInfoProps =
+  | {
+      argoApplicationName: string;
+      argoInstanceName: string;
+    }
+  | {
+      argoApplicationName: string;
+      baseUrl: string;
+      argoToken: string;
+    };
+
+export type terminateArgoAppOperationProps =
+  | {
+      argoAppName: string;
+      argoInstanceName: string;
+    }
+  | {
+      argoAppName: string;
+      baseUrl: string;
+      argoToken: string;
+    };
