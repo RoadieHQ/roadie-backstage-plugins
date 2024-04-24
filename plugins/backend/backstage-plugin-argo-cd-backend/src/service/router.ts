@@ -368,11 +368,14 @@ export function createRouter({
     async (request, response) => {
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName: string = request.params.argoAppName;
+      const terminateOperation: boolean =
+        Boolean(request.query.terminateOperation) ?? false;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
 
       const argoDeleteAppandProjectResp = await argoSvc.deleteAppandProject({
         argoAppName,
         argoInstanceName,
+        terminateOperation,
       });
       return response.send(argoDeleteAppandProjectResp);
     },
@@ -392,6 +395,23 @@ export function createRouter({
       return response
         .status(applicationInformation.statusCode)
         .send(applicationInformation);
+    },
+  );
+
+  router.delete(
+    '/argoInstance/:argoInstanceName/applications/:argoAppName/operation',
+    async (request, response) => {
+      const argoInstanceName: string = request.params.argoInstanceName;
+      const argoAppName: string = request.params.argoAppName;
+
+      const terminateArgoAppOperationResp =
+        await argoSvc.terminateArgoAppOperation({
+          argoAppName,
+          argoInstanceName,
+        });
+      return response
+        .status(terminateArgoAppOperationResp.statusCode)
+        .send(terminateArgoAppOperationResp);
     },
   );
 
