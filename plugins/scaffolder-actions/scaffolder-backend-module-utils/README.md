@@ -99,7 +99,7 @@ return await createRouter({
 
 ```
 cd packages/backend
-yarn add @roadiehq/scaffolder-backend-module-utils/new-backend
+yarn add @roadiehq/scaffolder-backend-module-utils
 ```
 
 ```typescript

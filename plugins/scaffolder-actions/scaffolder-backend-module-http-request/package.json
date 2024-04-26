@@ -10,6 +10,11 @@
   "backstage": {
     "role": "backend-plugin-module"
   },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json",
+    "./new-backend": "./src/new-backend.ts"
+  },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
