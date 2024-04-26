@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.3.1
+
+### Patch Changes
+
+- 005f979: Update README and entry point for scaffolder utils and http request actions.
+
 ## 4.3.0
 
 ### Minor Changes
