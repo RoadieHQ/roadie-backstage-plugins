@@ -21,6 +21,7 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -80,16 +81,8 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
               },
-              labels: dbInstance.TagList?.reduce(
-                (acc: Record<string, string>, tag) => {
-                  if (tag.Key && tag.Value) {
-                    acc[tag.Key] = tag.Value;
-                  }
-                  return acc;
-                },
-                {},
-              ),
-              name: instanceId,
+              labels: labelsFromTags(dbInstance.TagList),
+              name: instanceId.substring(0, 62),
               title: instanceId,
               dbInstanceClass: dbInstance.DBInstanceClass,
               dbEngine: dbInstance.Engine,
@@ -106,7 +99,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 dbInstance.PerformanceInsightsEnabled,
             },
             spec: {
-              owner: 'unknown',
+              owner: ownerFromTags(dbInstance.TagList),
               type: 'rds-instance',
             },
           };

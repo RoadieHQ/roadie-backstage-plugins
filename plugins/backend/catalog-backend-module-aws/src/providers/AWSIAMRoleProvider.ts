@@ -22,6 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -29,7 +30,7 @@ import { ARN } from 'link2aws';
 export class AWSIAMRoleProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -84,10 +85,11 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
               },
               name: arnToName(role.Arn),
               title: role.RoleName,
+              labels: labelsFromTags(role.Tags),
             },
             spec: {
               type: 'aws-role',
-              owner: 'unknown',
+              owner: ownerFromTags(role.Tags),
             },
           };
 

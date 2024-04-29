@@ -19,6 +19,7 @@ import { ResourceEntity } from '@backstage/catalog-model';
 import {
   OrganizationsClient,
   paginateListAccounts,
+  paginateListTagsForResource,
 } from '@aws-sdk/client-organizations';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
@@ -28,6 +29,8 @@ import {
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 
 /**
  * Provides entities from AWS Organizations accounts.
@@ -35,7 +38,7 @@ import { arnToName } from '../utils/arnToName';
 export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -85,7 +88,13 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
           };
-          console.log(JSON.stringify(account));
+          const tagsResponse = paginateListTagsForResource(paginatorConfig, {
+            ResourceId: account.Arn,
+          });
+          let tags: Tag[] = [];
+          for await (const listTagsForResourceCommandOutput of tagsResponse) {
+            tags = tags.concat(listTagsForResourceCommandOutput.Tags ?? []);
+          }
           annotations[ANNOTATION_AWS_ACCOUNT_ARN] = account.Arn ?? '';
           annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
 
@@ -99,9 +108,10 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
               joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
               joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
               status: account.Status ?? 'UNKNOWN',
+              labels: labelsFromTags(tags),
             },
             spec: {
-              owner: 'unknown',
+              owner: ownerFromTags(tags),
               type: 'aws-account',
             },
           };

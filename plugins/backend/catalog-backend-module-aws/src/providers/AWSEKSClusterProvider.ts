@@ -24,6 +24,7 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -31,7 +32,7 @@ import { arnToName } from '../utils/arnToName';
 export class AWSEKSClusterProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -94,9 +95,11 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
               annotations,
               name: arnToName(name),
               title: name,
+              labels: labelsFromTags(cluster.cluster?.tags),
             },
+
             spec: {
-              owner: 'unknown',
+              owner: ownerFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };

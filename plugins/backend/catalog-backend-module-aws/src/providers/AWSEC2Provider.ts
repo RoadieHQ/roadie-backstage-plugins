@@ -21,6 +21,7 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
@@ -28,7 +29,7 @@ import { ARN } from 'link2aws';
 export class AWSEC2Provider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -77,16 +78,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
                 [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
               },
-              labels: instance.Tags?.reduce(
-                (acc: Record<string, string>, tag) => {
-                  if (tag.Key && tag.Value) {
-                    const key = tag.Key.replace(':', '_');
-                    acc[key] = tag.Value;
-                  }
-                  return acc;
-                },
-                {},
-              ),
+              labels: labelsFromTags(instance.Tags),
               name:
                 instanceId ??
                 `${reservation.ReservationId}-instance-${instance.InstanceId}`,
@@ -104,7 +96,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
               reservationId: reservation.ReservationId,
             },
             spec: {
-              owner: 'unknown',
+              owner: ownerFromTags(instance.Tags),
               type: 'ec2-instance',
             },
           };
