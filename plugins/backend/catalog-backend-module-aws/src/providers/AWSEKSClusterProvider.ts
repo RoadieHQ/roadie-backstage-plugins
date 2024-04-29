@@ -99,7 +99,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
             },
 
             spec: {
-              owner: ownerFromTags(cluster.cluster?.tags),
+              owner: ownerFromTags(cluster.cluster?.tags, this.getOwnerTag()),
               type: 'eks-cluster',
             },
           };

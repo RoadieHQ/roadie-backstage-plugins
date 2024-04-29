@@ -97,7 +97,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                   labels: labelsFromTags(tags),
                 },
                 spec: {
-                  owner: ownerFromTags(tags),
+                  owner: ownerFromTags(tags, this.getOwnerTag()),
                   type: 'dynamo-db-table',
                 },
               };

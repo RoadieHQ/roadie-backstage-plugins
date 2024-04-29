@@ -99,7 +99,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 dbInstance.PerformanceInsightsEnabled,
             },
             spec: {
-              owner: ownerFromTags(dbInstance.TagList),
+              owner: ownerFromTags(dbInstance.TagList, this.getOwnerTag()),
               type: 'rds-instance',
             },
           };

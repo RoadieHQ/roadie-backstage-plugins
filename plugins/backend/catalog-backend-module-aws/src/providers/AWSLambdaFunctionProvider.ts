@@ -111,7 +111,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
               labels: labelsFromTags(tags),
             },
             spec: {
-              owner: ownerFromTags(tags),
+              owner: ownerFromTags(tags, this.getOwnerTag()),
               type: 'lambda-function',
               dependsOn: [],
             },

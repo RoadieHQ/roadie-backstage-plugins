@@ -89,7 +89,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             },
             spec: {
               type: 'aws-role',
-              owner: ownerFromTags(role.Tags),
+              owner: ownerFromTags(role.Tags, this.getOwnerTag()),
             },
           };
 

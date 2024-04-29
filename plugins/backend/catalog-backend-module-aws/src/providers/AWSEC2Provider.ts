@@ -96,7 +96,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
               reservationId: reservation.ReservationId,
             },
             spec: {
-              owner: ownerFromTags(instance.Tags),
+              owner: ownerFromTags(instance.Tags, this.getOwnerTag()),
               type: 'ec2-instance',
             },
           };
