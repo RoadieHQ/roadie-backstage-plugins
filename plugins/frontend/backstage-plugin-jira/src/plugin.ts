@@ -20,7 +20,7 @@ import {
   createApiFactory,
   discoveryApiRef,
   createComponentExtension,
-  identityApiRef,
+  fetchApiRef,
 } from '@backstage/core-plugin-api';
 
 import { jiraApiRef, JiraAPI } from './api';
@@ -33,13 +33,13 @@ export const jiraPlugin = createPlugin({
       deps: {
         discoveryApi: discoveryApiRef,
         configApi: configApiRef,
-        identityApi: identityApiRef,
+        fetchApi: fetchApiRef,
       },
-      factory: ({ discoveryApi, configApi, identityApi }) => {
+      factory: ({ discoveryApi, configApi, fetchApi }) => {
         return new JiraAPI({
           discoveryApi,
           configApi,
-          identityApi,
+          fetchApi,
         });
       },
     }),
