@@ -1,5 +1,15 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.3.0
+
+### Minor Changes
+
+- 1754d12: Add possibility for AWS Providers to identify resource owners by using tags in AWS.
+
+### Patch Changes
+
+- 85bfaee: Allow fully qualified owner names
+
 ## 2.2.1
 
 ### Patch Changes
