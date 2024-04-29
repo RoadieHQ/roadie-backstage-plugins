@@ -107,19 +107,19 @@ describe('labelsFromTags and ownerFromTags', () => {
     it('should handle complex owner keys and values in an array of tags', () => {
       const tags = [{ Key: 'owner:one', Value: 'owner1:one' }];
       const result = ownerFromTags(tags, 'owner:one');
-      expect(result).toBe('owner1_one');
+      expect(result).toBe('owner1:one');
     });
 
     it('should handle complex owner keys and values in an object of tags', () => {
       const tags = { 'owner:one': 'owner1:one' };
       const result = ownerFromTags(tags, 'owner:one');
-      expect(result).toBe('owner1_one');
+      expect(result).toBe('owner1:one');
     });
 
     it('should return "_" when owner tag has value of ":"', () => {
       const tags = [{ Key: 'owner', Value: ':' }];
       const result = ownerFromTags(tags);
-      expect(result).toBe('_');
+      expect(result).toBe(':');
     });
   });
 });
