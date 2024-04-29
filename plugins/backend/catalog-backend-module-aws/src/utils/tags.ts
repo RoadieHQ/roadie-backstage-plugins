@@ -55,12 +55,9 @@ export const ownerFromTags = (
   if (Array.isArray(tags)) {
     const ownerTag = tags?.find(tag => tag.Key === ownerTagKey);
     if (ownerTag) {
-      return ownerTag.Value ? ownerTag.Value.replace(':', '_') : UNKNOWN_OWNER;
+      return ownerTag.Value ? ownerTag.Value : UNKNOWN_OWNER;
     }
   }
 
-  return (
-    (tags as Record<string, string>)[ownerTagKey]?.replace(':', '_') ??
-    UNKNOWN_OWNER
-  );
+  return (tags as Record<string, string>)[ownerTagKey] ?? UNKNOWN_OWNER;
 };
