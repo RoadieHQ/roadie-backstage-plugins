@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.15.1
+
+### Patch Changes
+
+- 005f979: Update README and entry point for scaffolder utils and http request actions.
+
+## 1.15.0
+
+### Minor Changes
+
+- 99a5d90: Update to new backend system
+
 ## 1.14.1
 
 ### Patch Changes

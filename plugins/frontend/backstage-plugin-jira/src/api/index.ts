@@ -18,7 +18,7 @@ import {
   ConfigApi,
   createApiRef,
   DiscoveryApi,
-  IdentityApi,
+  FetchApi,
 } from '@backstage/core-plugin-api';
 import {
   IssueCountResult,
@@ -29,7 +29,6 @@ import {
   Status,
   Ticket,
 } from '../types';
-import fetch from 'cross-fetch';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
   id: 'plugin.jira.service',
@@ -42,7 +41,7 @@ const DONE_STATUS_CATEGORY = 'Done';
 type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
-  identityApi: IdentityApi;
+  fetchApi: FetchApi;
 };
 
 export class JiraAPI {
@@ -50,7 +49,7 @@ export class JiraAPI {
   private readonly proxyPath: string;
   private readonly apiVersion: string;
   private readonly confluenceActivityFilter: string | undefined;
-  private readonly identityApi: IdentityApi;
+  private readonly fetchApi: FetchApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
@@ -67,7 +66,7 @@ export class JiraAPI {
       'jira.confluenceActivityFilter',
     );
 
-    this.identityApi = options.identityApi;
+    this.fetchApi = options.fetchApi;
   }
 
   private generateProjectUrl = (url: string) =>
@@ -109,12 +108,10 @@ export class JiraAPI {
       startAt,
     };
 
-    const { token } = await this.identityApi.getCredentials();
-    const request = await fetch(`${apiUrl}search`, {
+    const request = await this.fetchApi.fetch(`${apiUrl}search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
@@ -201,12 +198,10 @@ export class JiraAPI {
       jql,
       maxResults: 0,
     };
-    const { token } = await this.identityApi.getCredentials();
-    const request = await fetch(`${apiUrl}search`, {
+    const request = await this.fetchApi.fetch(`${apiUrl}search`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     });
@@ -231,13 +226,14 @@ export class JiraAPI {
   ) {
     const { apiUrl } = await this.getUrls();
 
-    const { token } = await this.identityApi.getCredentials();
-    const request = await fetch(`${apiUrl}project/${projectKey}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const request = await this.fetchApi.fetch(
+      `${apiUrl}project/${projectKey}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     if (!request.ok) {
       throw new Error(
         `failed to fetch data, status ${request.status}: ${request.statusText}`,
@@ -355,16 +351,11 @@ export class JiraAPI {
       // Filter to remove all the changes done in Confluence, otherwise they are also shown as part of the component's activity stream
     }
 
-    const { token } = await this.identityApi.getCredentials();
-    const request = await fetch(
+    const request = await this.fetchApi.fetch(
       isBearerAuth
         ? `${baseUrl}/activity?maxResults=${size}&${filterUrl}`
         : `${baseUrl}/activity?maxResults=${size}&${filterUrl}&os_authType=basic`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+      {},
     );
     if (!request.ok) {
       throw new Error(
@@ -379,13 +370,14 @@ export class JiraAPI {
   async getStatuses(projectKey: string) {
     const { apiUrl } = await this.getUrls();
 
-    const { token } = await this.identityApi.getCredentials();
-    const request = await fetch(`${apiUrl}project/${projectKey}/statuses`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+    const request = await this.fetchApi.fetch(
+      `${apiUrl}project/${projectKey}/statuses`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
     if (!request.ok) {
       throw new Error(
         `failed to fetch data, status ${request.status}: ${request.statusText}`,
