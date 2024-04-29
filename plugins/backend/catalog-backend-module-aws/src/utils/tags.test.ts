@@ -1,0 +1,125 @@
+/*
+ * Copyright 2024 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { ownerFromTags, labelsFromTags } from './tags';
+
+describe('labelsFromTags and ownerFromTags', () => {
+  describe('labelsFromTags', () => {
+    it('should return an empty object if no tags are provided', () => {
+      const result = labelsFromTags();
+      expect(result).toEqual({});
+    });
+
+    it('should correctly process array of tags', () => {
+      const tags = [
+        { Key: 'tag:one', Value: 'value1' },
+        { Key: 'tag:two', Value: 'value2' },
+      ];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one: 'value1', tag_two: 'value2' });
+    });
+
+    it('should correctly process an object of tags', () => {
+      const tags = { 'tag:one': 'value1', 'tag:two': 'value2' };
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one: 'value1', tag_two: 'value2' });
+    });
+    it('should ignore entries without keys or values in an array of tags', () => {
+      const tags = [{ Key: 'tag:one' }, { Value: 'value2' }, {}];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({});
+    });
+
+    it('should handle complex keys and values in an array of tags', () => {
+      const tags = [{ Key: 'tag:one:two', Value: 'value1:value2' }];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'value1:value2' });
+    });
+
+    it('should ignore keys without values in an object of tags', () => {
+      const tags = { 'tag:one': 'value1', 'tag:two': undefined };
+      // @ts-ignore
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one: 'value1' });
+    });
+  });
+
+  describe('ownerFromTags', () => {
+    it('should return "unknown" if no tags are provided', () => {
+      const result = ownerFromTags();
+      expect(result).toBe('unknown');
+    });
+
+    it('should return owner from array of tags', () => {
+      const tags = [
+        { Key: 'owner', Value: 'owner1' },
+        { Key: 'tag:two', Value: 'value2' },
+      ];
+      const result = ownerFromTags(tags);
+      expect(result).toBe('owner1');
+    });
+
+    it('should return "unknown" when no owner tag in array', () => {
+      const tags = [
+        { Key: 'tag:one', Value: 'value1' },
+        { Key: 'tag:two', Value: 'value2' },
+      ];
+      const result = ownerFromTags(tags);
+      expect(result).toBe('unknown');
+    });
+
+    it('should return "unknown" when owner tag has no value in array', () => {
+      const tags = [{ Key: 'owner' }, { Key: 'tag:two', Value: 'value2' }];
+      const result = ownerFromTags(tags);
+      expect(result).toBe('unknown');
+    });
+
+    it('should return owner from an object of tags', () => {
+      const tags = { owner: 'owner1', 'tag:two': 'value2' };
+      const result = ownerFromTags(tags);
+      expect(result).toBe('owner1');
+    });
+
+    it('should return "unknown" when no owner tag in an object of tags', () => {
+      const tags = { 'tag:one': 'value1', 'tag:two': 'value2' };
+      const result = ownerFromTags(tags);
+      expect(result).toBe('unknown');
+    });
+
+    it('should return owner from an object of tags with different ownerTagKey', () => {
+      const tags = { tagOwner: 'owner1', 'tag:two': 'value2' };
+      const result = ownerFromTags(tags, 'tagOwner');
+      expect(result).toBe('owner1');
+    });
+    it('should handle complex owner keys and values in an array of tags', () => {
+      const tags = [{ Key: 'owner:one', Value: 'owner1:one' }];
+      const result = ownerFromTags(tags, 'owner:one');
+      expect(result).toBe('owner1_one');
+    });
+
+    it('should handle complex owner keys and values in an object of tags', () => {
+      const tags = { 'owner:one': 'owner1:one' };
+      const result = ownerFromTags(tags, 'owner:one');
+      expect(result).toBe('owner1_one');
+    });
+
+    it('should return "_" when owner tag has value of ":"', () => {
+      const tags = [{ Key: 'owner', Value: ':' }];
+      const result = ownerFromTags(tags);
+      expect(result).toBe('_');
+    });
+  });
+});

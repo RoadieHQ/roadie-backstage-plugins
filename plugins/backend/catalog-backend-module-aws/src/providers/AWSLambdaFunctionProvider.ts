@@ -25,6 +25,7 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS Lambda Function service.
@@ -32,7 +33,7 @@ import { ARN } from 'link2aws';
 export class AWSLambdaFunctionProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -76,6 +77,15 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       for (const lambdaFunction of functionPage.Functions || []) {
         if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
           const consoleLink = new ARN(lambdaFunction.FunctionArn).consoleLink;
+          let tags: Record<string, string> = {};
+          try {
+            const tagsResponse = await lambda.listTags({
+              Resource: lambdaFunction.FunctionArn,
+            });
+            tags = tagsResponse?.Tags ?? {};
+          } catch (e) {
+            this.logger.warn('Unable to get tags for Lambda functions', e);
+          }
 
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
@@ -98,9 +108,10 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
               ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
               timeout: lambdaFunction.Timeout,
               architectures: lambdaFunction.Architectures,
+              labels: labelsFromTags(tags),
             },
             spec: {
-              owner: 'unknown',
+              owner: ownerFromTags(tags, this.getOwnerTag()),
               type: 'lambda-function',
               dependsOn: [],
             },

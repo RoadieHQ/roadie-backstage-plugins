@@ -22,6 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -29,7 +30,7 @@ import { ARN } from 'link2aws';
 export class AWSS3BucketProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -67,6 +68,8 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
       if (bucket.Name) {
         const bucketArn = `arn:aws:s3:::${bucket.Name}`;
         const consoleLink = new ARN(bucketArn).consoleLink;
+        const tagsResponse = await s3.getBucketTagging({ Bucket: bucket.Name });
+        const tags = tagsResponse?.TagSet ?? [];
         const resource: ResourceEntity = {
           kind: 'Resource',
           apiVersion: 'backstage.io/v1beta1',
@@ -78,9 +81,10 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             },
             name: arnToName(bucketArn),
             title: bucket.Name,
+            labels: labelsFromTags(tags),
           },
           spec: {
-            owner: 'unknown',
+            owner: ownerFromTags(tags, this.getOwnerTag()),
             type: 's3-bucket',
           },
         };
