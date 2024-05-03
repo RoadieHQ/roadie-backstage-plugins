@@ -94,7 +94,7 @@ export function createYamlJSONataTransformAction() {
         data = YAML.parse(fs.readFileSync(sourceFilepath).toString());
       }
       const expression = jsonata(ctx.input.expression);
-      const result = expression.evaluate(data);
+      const result = await expression.evaluate(data);
 
       ctx.output('result', resultHandler(result));
     },
