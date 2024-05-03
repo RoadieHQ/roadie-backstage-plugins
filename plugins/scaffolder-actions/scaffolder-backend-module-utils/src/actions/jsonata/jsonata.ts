@@ -63,7 +63,7 @@ export function createJSONataAction() {
     async handler(ctx) {
       try {
         const expression = jsonata(ctx.input.expression);
-        const result = expression.evaluate(ctx.input.data);
+        const result = await expression.evaluate(ctx.input.data);
 
         ctx.output('result', result);
       } catch (e: any) {
