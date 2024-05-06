@@ -1021,6 +1021,7 @@ export class ArgoService implements ArgoServiceApi {
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       method: 'GET',
     };
@@ -1078,6 +1079,7 @@ export class ArgoService implements ArgoServiceApi {
     const options = {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
       method: 'DELETE',
     };
