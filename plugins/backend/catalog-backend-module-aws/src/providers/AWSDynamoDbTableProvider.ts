@@ -21,6 +21,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
+import { labelsFromTags, ownerFromTags } from '../utils/tags';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -28,7 +29,7 @@ import { arnToName } from '../utils/arnToName';
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -76,6 +77,11 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             const tableDescriptionResult = await ddb.describeTable({
               TableName: tableName,
             });
+
+            const tagsResponse = await ddb.listTagsOfResource({
+              ResourceArn: tableDescriptionResult.Table?.TableArn,
+            });
+            const tags = tagsResponse.Tags ?? [];
             const table = tableDescriptionResult.Table;
             if (table && table.TableName && table.TableArn) {
               const component: ResourceEntity = {
@@ -88,9 +94,10 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                   },
                   name: arnToName(table.TableArn),
                   title: table.TableName,
+                  labels: labelsFromTags(tags),
                 },
                 spec: {
-                  owner: this.accountId,
+                  owner: ownerFromTags(tags, this.getOwnerTag()),
                   type: 'dynamo-db-table',
                 },
               };

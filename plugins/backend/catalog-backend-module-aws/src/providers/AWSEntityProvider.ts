@@ -17,7 +17,7 @@
 import {
   EntityProvider,
   EntityProviderConnection,
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
 import * as winston from 'winston';
 import { AccountConfig } from '../types';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
@@ -36,12 +36,13 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly providerId?: string;
   protected readonly logger: winston.Logger;
   protected connection?: EntityProviderConnection;
+  private readonly ownerTag: string | undefined;
 
   public abstract getProviderName(): string;
 
   protected constructor(
     account: AccountConfig,
-    options: { logger: winston.Logger; providerId?: string },
+    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
   ) {
     this.accountId = account.accountId;
     this.roleArn = account.roleArn;
@@ -49,6 +50,11 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.region = account.region;
     this.logger = options.logger;
     this.providerId = options.providerId;
+    this.ownerTag = options.ownerTag;
+  }
+
+  protected getOwnerTag() {
+    return this.ownerTag ?? 'owner';
   }
 
   protected getCredentials() {
