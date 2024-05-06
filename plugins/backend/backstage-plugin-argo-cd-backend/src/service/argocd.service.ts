@@ -595,6 +595,7 @@ export class ArgoService implements ArgoServiceApi {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${argoToken}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
     };
