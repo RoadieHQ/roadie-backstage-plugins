@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.12
+
+### Patch Changes
+
+- 4bfd622: Hide oauth credendtials and token from config api and log outputs
+
 ## 0.9.11
 
 ### Patch Changes

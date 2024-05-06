@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.0.1
+
+### Patch Changes
+
+- 5afd7f4: fix: invalid media type error for argo instances that expect content type header to be provided, we added content type for each argo call.
+
 ## 3.0.0
 
 ### Major Changes
