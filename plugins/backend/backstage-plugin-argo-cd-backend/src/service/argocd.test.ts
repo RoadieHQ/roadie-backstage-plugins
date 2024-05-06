@@ -1588,7 +1588,12 @@ describe('ArgoCD service', () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(
         'https://argoInstance1.com/api/v1/applications/application',
-        expect.objectContaining({ headers: { Authorization: 'Bearer token' } }),
+        expect.objectContaining({
+          headers: {
+            Authorization: 'Bearer token',
+            'Content-Type': 'application/json',
+          },
+        }),
       );
     });
 
@@ -1851,7 +1856,10 @@ describe('ArgoCD service', () => {
       expect(fetchMock).toHaveBeenCalledWith(
         'https://argoInstance1.com/api/v1/applications/application/operation',
         expect.objectContaining({
-          headers: { Authorization: 'Bearer token' },
+          headers: {
+            Authorization: 'Bearer token',
+            'Content-Type': 'application/json',
+          },
           method: 'DELETE',
         }),
       );
@@ -1870,7 +1878,10 @@ describe('ArgoCD service', () => {
       expect(fetchMock).toHaveBeenCalledWith(
         'https://passedArgoInstance1.com/api/v1/applications/application/operation',
         expect.objectContaining({
-          headers: { Authorization: 'Bearer passedToken' },
+          headers: {
+            Authorization: 'Bearer passedToken',
+            'Content-Type': 'application/json',
+          },
           method: 'DELETE',
         }),
       );
