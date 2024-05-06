@@ -1,5 +1,14 @@
 # backend
 
+## 2.1.4
+
+### Patch Changes
+
+- Updated dependencies [4bfd622]
+- Updated dependencies [5afd7f4]
+  - @roadiehq/catalog-backend-module-okta@0.9.12
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.0.1
+
 ## 2.1.3
 
 ### Patch Changes
