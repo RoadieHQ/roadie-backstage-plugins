@@ -14,15 +14,29 @@
  * limitations under the License.
  */
 
-import { AccountConfig } from './src/types';
-
 export interface Config {
   catalog?: {
     providers?: {
       /**
        * Okta configuration
        */
-      okta?: AccountConfig[];
+      okta?: {
+        orgUrl: string;
+        /**
+         * @visibility secret
+         */
+        token?: string;
+        /**
+         * @deepVisibility secret
+         */
+        oauth?: {
+          clientId: string;
+          keyId?: string;
+          privateKey: string;
+        };
+        userFilter?: string;
+        groupFilter?: string;
+      }[];
     };
   };
 }
