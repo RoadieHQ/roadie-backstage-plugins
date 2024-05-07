@@ -72,6 +72,15 @@ describe('labelsFromTags and ownerFromTags', () => {
       expect(result).toBe('owner1');
     });
 
+    it('should return owner from array of tags with capitalisation', () => {
+      const tags = [
+        { Key: 'Owner', Value: 'owner1' },
+        { Key: 'Another', Value: 'value2' },
+      ];
+      const result = ownerFromTags(tags);
+      expect(result).toBe('owner1');
+    });
+
     it('should return "unknown" when no owner tag in array', () => {
       const tags = [
         { Key: 'tag:one', Value: 'value1' },

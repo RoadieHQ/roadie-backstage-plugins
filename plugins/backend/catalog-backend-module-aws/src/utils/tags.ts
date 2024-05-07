@@ -53,7 +53,9 @@ export const ownerFromTags = (
     return UNKNOWN_OWNER;
   }
   if (Array.isArray(tags)) {
-    const ownerTag = tags?.find(tag => tag.Key === ownerTagKey);
+    const ownerTag = tags?.find(
+      tag => tag.Key?.toLowerCase() === ownerTagKey.toLowerCase(),
+    );
     if (ownerTag) {
       return ownerTag.Value ? ownerTag.Value : UNKNOWN_OWNER;
     }
