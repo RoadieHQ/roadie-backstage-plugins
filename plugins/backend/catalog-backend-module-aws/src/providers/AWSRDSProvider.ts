@@ -22,6 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -29,7 +30,11 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSRDSProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -51,6 +56,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
 
+    const groups = await this.getGroups();
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
@@ -99,7 +105,11 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 dbInstance.PerformanceInsightsEnabled,
             },
             spec: {
-              owner: ownerFromTags(dbInstance.TagList, this.getOwnerTag()),
+              owner: ownerFromTags(
+                dbInstance.TagList,
+                this.getOwnerTag(),
+                groups,
+              ),
               type: 'rds-instance',
             },
           };

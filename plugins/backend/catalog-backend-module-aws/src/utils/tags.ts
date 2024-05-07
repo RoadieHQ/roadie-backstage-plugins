@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
+
 type Tag = {
   Key?: string;
   Value?: string;
@@ -48,16 +50,33 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
 export const ownerFromTags = (
   tags?: Tag[] | Record<string, string>,
   ownerTagKey = 'owner',
+  groups?: Entity[],
 ) => {
   if (!tags) {
     return UNKNOWN_OWNER;
   }
+
+  let ownerString: string | undefined;
   if (Array.isArray(tags)) {
     const ownerTag = tags?.find(tag => tag.Key === ownerTagKey);
     if (ownerTag) {
-      return ownerTag.Value ? ownerTag.Value : UNKNOWN_OWNER;
+      ownerString = ownerTag.Value ? ownerTag.Value : undefined;
+    }
+  }
+  ownerString = (tags as Record<string, string>)[ownerTagKey];
+
+  if (ownerString && groups && groups.length > 0) {
+    const exactMatch = groups.find(
+      g => g.metadata.name.toLowerCase() === ownerString?.toLowerCase(),
+    );
+    if (exactMatch) {
+      return stringifyEntityRef(exactMatch);
     }
   }
 
-  return (tags as Record<string, string>)[ownerTagKey] ?? UNKNOWN_OWNER;
+  if (!groups) {
+    return ownerString;
+  }
+
+  return UNKNOWN_OWNER;
 };
