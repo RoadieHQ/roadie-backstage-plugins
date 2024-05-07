@@ -53,7 +53,6 @@
     "@backstage/plugin-catalog-backend": "^1.21.0",
     "@backstage/plugin-catalog-node": "^1.11.0",
     "@backstage/types": "^1.1.1",
-    "crypto-js": "^4.1.1",
     "link2aws": "^1.0.18",
     "lodash": "^4.17.21",
     "p-limit": "^3.0.2",
@@ -62,7 +61,6 @@
   "devDependencies": {
     "@backstage/cli": "^0.26.2",
     "@testing-library/jest-dom": "^6.4.2",
-    "@types/crypto-js": "^4.1.1",
     "@types/link2aws": "^1.0.0",
     "@types/lodash": "^4.14.151",
     "aws-sdk-client-mock": "^0.6.2",
