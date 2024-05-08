@@ -69,7 +69,7 @@ describe('labelsFromTags and ownerFromTags', () => {
       expect(result).toBe('unknown');
     });
 
-    it('should return owner from array of tags if the owner is found in existing groups', () => {
+    it('should return owner as entity ref from array of tags if the owner is found in existing groups', () => {
       const tags = [
         { Key: 'owner', Value: 'owner1' },
         { Key: 'tag:two', Value: 'value2' },
@@ -78,13 +78,13 @@ describe('labelsFromTags and ownerFromTags', () => {
       expect(result).toBe('group:test/owner1');
     });
 
-    it('should not return owner from array of tags if the owner is not found in existing groups', () => {
+    it('should return owner as value string from array of tags if the owner is not found in existing groups', () => {
       const tags = [
         { Key: 'owner', Value: 'owner3' },
         { Key: 'tag:two', Value: 'value2' },
       ];
       const result = ownerFromTags(tags, undefined, groups);
-      expect(result).toBe('unknown');
+      expect(result).toBe('owner3');
     });
 
     it('should return owner from array of tags if groups is not defined', () => {
@@ -129,13 +129,13 @@ describe('labelsFromTags and ownerFromTags', () => {
       expect(result).toBe('group:test/owner1');
     });
     it('should handle complex owner keys and values in an array of tags', () => {
-      const tags = [{ Key: 'owner:one', Value: 'test/owner1' }];
+      const tags = [{ Key: 'owner:one', Value: 'owner1' }];
       const result = ownerFromTags(tags, 'owner:one', groups);
       expect(result).toBe('group:test/owner1');
     });
 
     it('should handle complex owner keys and values in an object of tags', () => {
-      const tags = { 'owner:one': 'test/owner1' };
+      const tags = { 'owner:one': 'owner1' };
       const result = ownerFromTags(tags, 'owner:one', groups);
       expect(result).toBe('group:test/owner1');
     });

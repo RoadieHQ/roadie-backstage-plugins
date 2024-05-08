@@ -51,19 +51,22 @@ export const ownerFromTags = (
   tags?: Tag[] | Record<string, string>,
   ownerTagKey = 'owner',
   groups?: Entity[],
-) => {
+): string => {
   if (!tags) {
     return UNKNOWN_OWNER;
   }
 
   let ownerString: string | undefined;
   if (Array.isArray(tags)) {
-    const ownerTag = tags?.find(tag => tag.Key === ownerTagKey);
+    const ownerTag = tags?.find(
+      tag => tag.Key?.toLowerCase() === ownerTagKey?.toLowerCase(),
+    );
     if (ownerTag) {
       ownerString = ownerTag.Value ? ownerTag.Value : undefined;
     }
+  } else {
+    ownerString = (tags as Record<string, string>)[ownerTagKey];
   }
-  ownerString = (tags as Record<string, string>)[ownerTagKey];
 
   if (ownerString && groups && groups.length > 0) {
     const exactMatch = groups.find(
@@ -74,9 +77,5 @@ export const ownerFromTags = (
     }
   }
 
-  if (!groups) {
-    return ownerString;
-  }
-
-  return UNKNOWN_OWNER;
+  return ownerString ? ownerString : UNKNOWN_OWNER;
 };
