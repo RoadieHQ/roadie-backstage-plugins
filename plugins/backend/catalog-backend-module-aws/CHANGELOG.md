@@ -1,5 +1,15 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.4.0
+
+### Minor Changes
+
+- b682159: Changes owner tag mapping to be case insensitive
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 2.3.0
 
 ### Minor Changes

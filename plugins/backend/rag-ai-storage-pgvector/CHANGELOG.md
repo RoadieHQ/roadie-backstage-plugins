@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 0.1.2
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+- Updated dependencies [d02d5df]
+  - @roadiehq/rag-ai-node@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

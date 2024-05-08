@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.26
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 2.5.25
 
 ### Patch Changes

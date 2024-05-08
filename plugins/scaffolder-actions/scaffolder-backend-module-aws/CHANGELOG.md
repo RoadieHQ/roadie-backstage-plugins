@@ -1,5 +1,12 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.24
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+- fb299fe: Remove dated `crypto-js` package.
+
 ## 2.4.23
 
 ### Patch Changes

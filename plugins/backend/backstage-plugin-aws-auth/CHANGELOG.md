@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.23
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 0.4.22
 
 ### Patch Changes

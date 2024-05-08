@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.2.8
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 2.2.7
 
 ### Patch Changes
