@@ -27,6 +27,7 @@ import {
   ANNOTATION_LOCATION,
 } from '@backstage/catalog-model';
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
+import { CatalogApi } from '@backstage/catalog-client';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly accountId: string;
@@ -37,12 +38,18 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly logger: winston.Logger;
   protected connection?: EntityProviderConnection;
   private readonly ownerTag: string | undefined;
+  protected readonly catalogApi?: CatalogApi;
 
   public abstract getProviderName(): string;
 
   protected constructor(
     account: AccountConfig,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     this.accountId = account.accountId;
     this.roleArn = account.roleArn;
@@ -51,6 +58,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.logger = options.logger;
     this.providerId = options.providerId;
     this.ownerTag = options.ownerTag;
+    this.catalogApi = options.catalogApi;
   }
 
   protected getOwnerTag() {
@@ -61,6 +69,22 @@ export abstract class AWSEntityProvider implements EntityProvider {
     return fromTemporaryCredentials({
       params: { RoleArn: this.roleArn, ExternalId: this.externalId },
     });
+  }
+
+  protected async getGroups() {
+    let groups = undefined;
+    if (this.catalogApi) {
+      try {
+        const response = await this.catalogApi.getEntities({
+          filter: { kind: 'Group' },
+          fields: ['metadata.name', 'metadata.namespace', 'kind'],
+        });
+        groups = response?.items;
+      } catch (e: any) {
+        this.logger.error(`Failed to fetch groups due to error: ${e.message}`);
+      }
+    }
+    return groups;
   }
 
   public async connect(connection: EntityProviderConnection): Promise<void> {

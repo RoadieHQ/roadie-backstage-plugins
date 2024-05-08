@@ -23,6 +23,7 @@ import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -30,7 +31,12 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSS3BucketProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -51,6 +57,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     this.logger.info(
       `Providing s3 bucket resources from aws: ${this.accountId}`,
@@ -84,7 +91,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             labels: labelsFromTags(tags),
           },
           spec: {
-            owner: ownerFromTags(tags, this.getOwnerTag()),
+            owner: ownerFromTags(tags, this.getOwnerTag(), groups),
             type: 's3-bucket',
           },
         };

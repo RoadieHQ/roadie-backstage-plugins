@@ -22,6 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
@@ -29,7 +30,12 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSEC2Provider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -50,6 +56,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
     const ec2Resources: ResourceEntity[] = [];
@@ -96,7 +103,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
               reservationId: reservation.ReservationId,
             },
             spec: {
-              owner: ownerFromTags(instance.Tags, this.getOwnerTag()),
+              owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
               type: 'ec2-instance',
             },
           };

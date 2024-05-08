@@ -23,6 +23,7 @@ import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -30,7 +31,12 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSIAMRoleProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -51,6 +57,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     this.logger.info(
       `Providing iam role resources from aws: ${this.accountId}`,
@@ -89,7 +96,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             },
             spec: {
               type: 'aws-role',
-              owner: ownerFromTags(role.Tags, this.getOwnerTag()),
+              owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
             },
           };
 
