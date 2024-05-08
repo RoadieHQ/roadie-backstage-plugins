@@ -1,5 +1,14 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.2.3
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+- Updated dependencies [d02d5df]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.1
+  - @roadiehq/rag-ai-node@0.1.2
+
 ## 0.2.2
 
 ### Patch Changes

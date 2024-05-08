@@ -1,5 +1,13 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.1.27
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+- Updated dependencies [d02d5df]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.0.2
+
 ## 1.1.26
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.9.13
+
+### Patch Changes
+
+- 5376bd5: Remove `crypto-js` unused dependency.
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 0.9.12
 
 ### Patch Changes

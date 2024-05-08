@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/roadie-backstage-entity-validator",
-  "version": "2.4.9",
+  "version": "2.4.10",
   "author": "RoadieHQ",
   "description": "Backstage entity validator library",
   "main": "src/index.js",
@@ -44,7 +44,7 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.2",
+    "@backstage/cli": "^0.26.4",
     "@vercel/ncc": "^0.38.0",
     "jest": "^27.0.1"
   },

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.3.17
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 1.3.16
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.10
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 2.4.9
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.24
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 2.5.23
 
 ### Patch Changes
