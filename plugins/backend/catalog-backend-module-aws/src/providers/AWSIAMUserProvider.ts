@@ -23,6 +23,7 @@ import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import { labelsFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS IAM User service.
@@ -30,7 +31,12 @@ import { labelsFromTags } from '../utils/tags';
 export class AWSIAMUserProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');

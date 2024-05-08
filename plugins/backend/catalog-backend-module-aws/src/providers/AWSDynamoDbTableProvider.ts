@@ -22,6 +22,7 @@ import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -29,7 +30,12 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -50,6 +56,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     const credentials = this.getCredentials();
     const ddb = new DynamoDB({ credentials });
@@ -97,7 +104,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                   labels: labelsFromTags(tags),
                 },
                 spec: {
-                  owner: ownerFromTags(tags, this.getOwnerTag()),
+                  owner: ownerFromTags(tags, this.getOwnerTag(), groups),
                   type: 'dynamo-db-table',
                 },
               };

@@ -31,6 +31,7 @@ import {
 import { arnToName } from '../utils/arnToName';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS Organizations accounts.
@@ -38,7 +39,12 @@ import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -61,6 +67,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     this.logger.info(
       `Providing organization account resources from aws: ${this.accountId}`,
@@ -111,7 +118,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
               labels: labelsFromTags(tags),
             },
             spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag()),
+              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
               type: 'aws-account',
             },
           };

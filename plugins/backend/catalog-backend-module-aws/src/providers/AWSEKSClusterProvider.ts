@@ -25,6 +25,7 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import { CatalogApi } from '@backstage/catalog-client';
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -32,7 +33,12 @@ import { labelsFromTags, ownerFromTags } from '../utils/tags';
 export class AWSEKSClusterProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger; providerId?: string; ownerTag?: string },
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+    },
   ) {
     const accountId = config.getString('accountId');
     const roleArn = config.getString('roleArn');
@@ -53,6 +59,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const groups = await this.getGroups();
 
     this.logger.info(
       `Providing eks cluster resources from aws: ${this.accountId}`,
@@ -99,7 +106,11 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
             },
 
             spec: {
-              owner: ownerFromTags(cluster.cluster?.tags, this.getOwnerTag()),
+              owner: ownerFromTags(
+                cluster.cluster?.tags,
+                this.getOwnerTag(),
+                groups,
+              ),
               type: 'eks-cluster',
             },
           };
