@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 0.2.3
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+
 ## 0.2.2
 
 ### Patch Changes

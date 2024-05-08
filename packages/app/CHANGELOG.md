@@ -1,5 +1,31 @@
 # app
 
+## 1.1.3
+
+### Patch Changes
+
+- d02d5df: Upgrade to backstage 1.26.5
+- Updated dependencies [d02d5df]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.6.12
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.26
+  - @roadiehq/backstage-plugin-security-insights@2.3.17
+  - @roadiehq/backstage-plugin-github-insights@2.3.29
+  - @roadiehq/backstage-plugin-aws-lambda@2.2.9
+  - @roadiehq/backstage-plugin-cloudsmith@1.0.22
+  - @roadiehq/backstage-plugin-prometheus@2.8.8
+  - @roadiehq/backstage-plugin-buildkite@2.1.23
+  - @roadiehq/backstage-plugin-travis-ci@2.1.23
+  - @roadiehq/backstage-plugin-home-markdown@2.5.24
+  - @roadiehq/backstage-plugin-shortcut@1.1.23
+  - @roadiehq/backstage-plugin-argo-cd@2.6.5
+  - @roadiehq/backstage-plugin-bugsnag@2.2.9
+  - @roadiehq/backstage-plugin-datadog@2.2.8
+  - @roadiehq/backstage-plugin-iframe@1.3.17
+  - @roadiehq/backstage-plugin-jira@2.5.8
+  - @roadiehq/backstage-plugin-home-rss@1.3.12
+  - @roadiehq/backstage-plugin-aws@1.1.23
+  - @roadiehq/rag-ai@0.2.3
+
 ## 1.1.2
 
 ### Patch Changes
