@@ -507,7 +507,7 @@ export default async function createPlugin(
 
 ```typescript
 import { coreServices } from '@backstage/backend-plugin-api';
-import { oktaCatalogBackendEntityProviderFactoryExtensionPoint } from '@roadiehq/catalog-backend-module-okta';
+import { oktaCatalogBackendEntityProviderFactoryExtensionPoint } from '@roadiehq/catalog-backend-module-okta/new-backend';
 
 export const oktaCatalogBackendModule = createBackendModule({
   pluginId: 'catalog',
