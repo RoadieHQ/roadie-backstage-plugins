@@ -502,3 +502,33 @@ export default async function createPlugin(
   return router;
 }
 ```
+
+## New backend system
+
+```typescript
+import { coreServices } from '@backstage/backend-plugin-api';
+import { oktaCatalogBackendEntityProviderFactoryExtensionPoint } from '@roadiehq/catalog-backend-module-okta/new-backend';
+
+export const oktaCatalogBackendModule = createBackendModule({
+  pluginId: 'catalog',
+  moduleId: 'okta-entity-provider-custom',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaOrgEntityProvider.fromConfig(oktaConfig, {
+            logger: loggerToWinstonLogger(logger),
+            userNamingStrategy: 'strip-domain-email',
+            groupNamingStrategy: 'kebab-case-name',
+          });
+
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
+});
+```
