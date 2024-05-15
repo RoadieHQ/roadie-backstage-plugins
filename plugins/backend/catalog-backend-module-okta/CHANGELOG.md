@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.10.0
+
+### Minor Changes
+
+- adad369: Add alpha export point which exposes the necessary module for the new backend system
+
 ## 0.9.13
 
 ### Patch Changes
