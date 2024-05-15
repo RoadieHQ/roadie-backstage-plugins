@@ -41,11 +41,9 @@ const baseUrl = 'https://api.github.com';
 
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
-  private errorApi: ErrorApi;
 
   constructor(deps: { githubAuthApi: OAuthApi; errorApi: ErrorApi }) {
     this.githubAuthApi = deps.githubAuthApi;
-    this.errorApi = deps.errorApi;
   }
 
   async getContent(props: {
@@ -99,7 +97,10 @@ export class GithubClient implements GithubApi {
             '',
           )}`;
         } catch (e: any) {
-          this.errorApi.post(e);
+          /* eslint no-console: ["error", { allow: ["warn"] }] */
+          console.warn(
+            `There was a problem loading the static resource ${href}: ${e.message}`,
+          );
         }
       }
     }
