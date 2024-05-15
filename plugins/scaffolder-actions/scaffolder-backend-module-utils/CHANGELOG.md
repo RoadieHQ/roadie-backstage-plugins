@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.15.4
+
+### Patch Changes
+
+- a3b1a41: Add dry run support for fs:append action
+
 ## 1.15.3
 
 ### Patch Changes
