@@ -96,7 +96,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
             ...(await defaultAnnotations),
           };
           const tagsResponse = paginateListTagsForResource(paginatorConfig, {
-            ResourceId: account.Arn,
+            ResourceId: account.Id,
           });
           let tags: Tag[] = [];
           for await (const listTagsForResourceCommandOutput of tagsResponse) {
