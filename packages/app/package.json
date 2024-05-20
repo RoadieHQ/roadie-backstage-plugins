@@ -20,13 +20,11 @@
     "@backstage/plugin-catalog-graph": "^0.4.4",
     "@backstage/plugin-catalog-import": "^0.10.10",
     "@backstage/plugin-catalog-react": "^1.11.3",
-    "@backstage/plugin-github-actions": "^0.6.16",
     "@backstage/plugin-home": "^0.7.3",
     "@backstage/plugin-org": "^0.6.24",
     "@backstage/plugin-scaffolder": "^1.19.3",
     "@backstage/plugin-scaffolder-react": "^1.8.4",
     "@backstage/plugin-search": "^1.4.10",
-    "@backstage/plugin-tech-radar": "^0.7.4",
     "@backstage/plugin-techdocs": "^1.10.4",
     "@backstage/plugin-user-settings": "^0.8.5",
     "@backstage/test-utils": "^1.5.4",
@@ -57,7 +55,9 @@
     "react-dom": "^18.0.2",
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
-    "react-use": "^15.3.3"
+    "react-use": "^15.3.3",
+    "@backstage-community/plugin-github-actions": "^0.6.16",
+    "@backstage-community/plugin-tech-radar": "^0.7.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.0.0",
