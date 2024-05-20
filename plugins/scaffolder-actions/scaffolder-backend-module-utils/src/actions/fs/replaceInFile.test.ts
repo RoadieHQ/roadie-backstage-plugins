@@ -103,4 +103,32 @@ describe('roadiehq:utils:fs:replace', () => {
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
     expect(file).toEqual('foo: baz');
   });
+  it('should replace regular expressions and write file to the workspacePath with the given content', async () => {
+    await fileCreationAction.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: 'foo: bar',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        files: [
+          {
+            file: 'fake-file.yaml',
+            find: '(.*): (.*)',
+            matchRegex: true,
+            replaceWith: '$1: baz',
+          },
+        ],
+      } as any,
+    });
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toEqual('foo: baz');
+  });
 });
