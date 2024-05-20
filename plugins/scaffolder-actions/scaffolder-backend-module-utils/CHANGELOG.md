@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.16.0
+
+### Minor Changes
+
+- b24d71c: Support regular expression substitution with roadiehq:utils:fs:replace
+
 ## 1.15.4
 
 ### Patch Changes
