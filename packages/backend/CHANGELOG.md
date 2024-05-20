@@ -1,5 +1,16 @@
 # backend
 
+## 2.1.6
+
+### Patch Changes
+
+- Updated dependencies [adad369]
+- Updated dependencies [a3b1a41]
+- Updated dependencies [b629dcf]
+  - @roadiehq/catalog-backend-module-okta@0.10.0
+  - @roadiehq/scaffolder-backend-module-utils@1.15.4
+  - @roadiehq/catalog-backend-module-aws@2.5.0
+
 ## 2.1.5
 
 ### Patch Changes

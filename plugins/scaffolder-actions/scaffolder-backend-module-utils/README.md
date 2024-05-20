@@ -751,6 +751,10 @@ This action replaces found string in files with content defined in input.
 - files[].find: A text to be replaced
 - files[].replaceWith: A text to be used to replace above
 
+**Optional params:**
+
+- files[].matchRegex: If `true` then treats the `find` parameter as a regular expression.
+
 ```yaml
 ---
 parameters:

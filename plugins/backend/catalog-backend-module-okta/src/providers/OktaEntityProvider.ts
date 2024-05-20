@@ -100,4 +100,6 @@ export abstract class OktaEntityProvider implements EntityProvider {
     }
     return profileAnnotations;
   }
+
+  abstract run(): Promise<void>;
 }

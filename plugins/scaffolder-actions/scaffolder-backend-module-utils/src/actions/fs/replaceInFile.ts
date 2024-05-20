@@ -24,6 +24,7 @@ export function createReplaceInFileAction() {
     files: Array<{
       file: string;
       find: string;
+      matchRegex: boolean;
       replaceWith: string;
     }>;
   }>({
@@ -51,6 +52,10 @@ export function createReplaceInFileAction() {
                 find: {
                   type: 'string',
                   title: 'A string to be replaced',
+                },
+                matchRegex: {
+                  type: 'bool',
+                  title: 'Use regex to match the find string',
                 },
                 replaceWith: {
                   type: 'string',
@@ -83,8 +88,12 @@ export function createReplaceInFileAction() {
         );
         const content: string = fs.readFileSync(sourceFilepath).toString();
 
-        // Not regex
-        const replacedContent = content.replaceAll(file.find, file.replaceWith);
+        let find: string | RegExp = file.find;
+        if (file.matchRegex) {
+          find = new RegExp(file.find, 'g');
+        }
+
+        const replacedContent = content.replaceAll(find, file.replaceWith);
 
         fs.writeFileSync(sourceFilepath, replacedContent);
       }
