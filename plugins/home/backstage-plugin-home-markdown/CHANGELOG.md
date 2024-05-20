@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.25
+
+### Patch Changes
+
+- 439499c: Make the static resource loading errors less noisy.
+
 ## 2.5.24
 
 ### Patch Changes

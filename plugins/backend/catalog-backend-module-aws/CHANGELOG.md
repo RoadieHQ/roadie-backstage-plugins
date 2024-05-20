@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 2.5.0
+
+### Minor Changes
+
+- b629dcf: Enable group entity matching for owner decoration from existing groups
+
 ## 2.4.0
 
 ### Minor Changes
