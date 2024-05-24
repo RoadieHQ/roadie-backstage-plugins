@@ -32,8 +32,8 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/catalog-client": "^1.6.4",
+    "@backstage/backend-common": "^0.22.0",
+    "@backstage/catalog-client": "^1.6.5",
     "@backstage/config": "^1.2.0",
     "@langchain/core": "^0.1.2",
     "@langchain/openai": "^0.0.14",
@@ -43,8 +43,8 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@backstage/backend-test-utils": "^0.3.7",
-    "@backstage/cli": "^0.26.4",
+    "@backstage/backend-test-utils": "^0.3.8",
+    "@backstage/cli": "^0.26.5",
     "esbuild": "^0.19.9",
     "tsx": "^4.6.2"
   },
