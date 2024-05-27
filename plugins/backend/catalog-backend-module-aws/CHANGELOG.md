@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 3.0.0
+
+### Major Changes
+
+- 855af40: fix AWSOrganizationAccountsProvider
+
 ## 2.5.0
 
 ### Minor Changes
