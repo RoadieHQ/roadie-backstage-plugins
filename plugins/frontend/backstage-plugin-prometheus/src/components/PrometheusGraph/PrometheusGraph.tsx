@@ -140,7 +140,7 @@ const AreaGraph = ({ data, keys, metrics }: GraphProps) => {
             dataKey="time"
             domain={['dataMin', 'dataMax']}
             tickFormatter={timeStr =>
-              DateTime.fromSeconds(timeStr).toFormat('HH:MM:ss')
+              DateTime.fromSeconds(timeStr).toFormat('HH:mm:ss')
             }
             tickCount={6}
             type="number"
@@ -190,7 +190,7 @@ export const LineGraph = ({ data, keys, metrics }: GraphProps) => {
             dataKey="time"
             domain={['dataMin', 'dataMax']}
             tickFormatter={timeStr =>
-              DateTime.fromSeconds(timeStr).toFormat('HH:MM:ss')
+              DateTime.fromSeconds(timeStr).toFormat('HH:mm:ss')
             }
             tickCount={6}
             type="number"
