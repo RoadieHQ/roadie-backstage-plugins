@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.18
+
+### Patch Changes
+
+- eaba91f: Dependabot and Security Insights tabs now show open issues by default instead of all issues.
+
 ## 2.3.17
 
 ### Patch Changes
