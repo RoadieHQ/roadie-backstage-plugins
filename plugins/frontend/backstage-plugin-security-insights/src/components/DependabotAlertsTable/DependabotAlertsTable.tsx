@@ -105,7 +105,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const [filteredTableData, setFilteredTableData] = useState<Node[]>(
     repository.vulnerabilityAlerts.nodes,
   );
-  const [stateFilter, setStateFilter] = useState<StateFilter>('ALL');
+  const [stateFilter, setStateFilter] = useState<StateFilter>('OPEN');
 
   const filterAlerts = (newStateFilter: StateFilter) => {
     setStateFilter(newStateFilter);
