@@ -22,7 +22,27 @@ import {
   EntityIFrameContent,
   HomePageIFrameCard,
 } from '../src';
-import { IFrameContentProps, IFrameProps } from '../src/components/types';
+import { IFrameContentProps, IFrameComponentProps, IFrameProps } from '../src/components/types';
+import {Entity} from "@backstage/catalog-model";
+import {EntityProvider} from "@backstage/plugin-catalog-react";
+
+const mockEntity: Entity = {
+    apiVersion: 'backstage.io/v1alpha1',
+    kind: 'Component',
+    metadata: {
+        name: 'backstage',
+        description: 'backstage.io',
+        annotations: {
+            'argocd/app-name': 'guestbook',
+            'roadie.io/example_domain': 'com'
+        },
+    },
+    spec: {
+        lifecycle: 'production',
+        type: 'service',
+        owner: 'user:guest',
+    },
+};
 
 const props: IFrameProps = {
   src: 'https://example.com',
@@ -30,6 +50,11 @@ const props: IFrameProps = {
   width: '400px',
   title: 'Well hello there',
 };
+
+const componentProps: IFrameComponentProps = {
+  srcWithAnnotationReplacements: 'https://example.{{ roadie.io/example_domain }}/',
+  title: 'Another amazing iframe',
+}
 
 const pageProps: IFrameContentProps = {
   iframe: props,
@@ -48,6 +73,11 @@ createDevApp()
     title: 'Iframe page',
     path: 'iframe-page',
   })
+  .addPage({
+    element: <EntityProvider entity={mockEntity}><EntityIFrameCard {...componentProps} /></EntityProvider>,
+    title: 'Iframe Replacement',
+    path: 'iframe-page-replacement',
+   })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,
     title: 'Home Page',
