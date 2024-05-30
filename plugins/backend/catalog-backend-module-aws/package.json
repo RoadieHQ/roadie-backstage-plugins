@@ -53,6 +53,7 @@
     "@backstage/plugin-catalog-backend": "^1.21.1",
     "@backstage/plugin-catalog-node": "^1.11.1",
     "@backstage/types": "^1.1.1",
+    "@aws-sdk/util-arn-parser": "^3.76.0",
     "link2aws": "^1.0.18",
     "lodash": "^4.17.21",
     "p-limit": "^3.0.2",

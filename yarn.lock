@@ -2409,6 +2409,13 @@
   dependencies:
     tslib "^2.5.0"
 
+"@aws-sdk/util-arn-parser@^3.76.0":
+  version "3.568.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/util-arn-parser/-/util-arn-parser-3.568.0.tgz#6a19a8c6bbaa520b6be1c278b2b8c17875b91527"
+  integrity sha512-XUKJWWo+KOB7fbnPP0+g/o5Ulku/X53t7i/h+sPHr5xxYTJJ9CYnbToo95mzxe7xWvkLrsNtJ8L+MnNn9INs2w==
+  dependencies:
+    tslib "^2.6.2"
+
 "@aws-sdk/util-dynamodb@3.521.0":
   version "3.521.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/util-dynamodb/-/util-dynamodb-3.521.0.tgz#31d45c950d521550db3b9a65c8dd0c469a1b1698"
