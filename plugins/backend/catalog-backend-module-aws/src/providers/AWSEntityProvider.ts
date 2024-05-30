@@ -28,6 +28,7 @@ import {
 } from '@backstage/catalog-model';
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 import { CatalogApi } from '@backstage/catalog-client';
+import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly accountId: string;
@@ -66,8 +67,10 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected getCredentials() {
+    const region = parseArn(this.roleArn).region;
     return fromTemporaryCredentials({
       params: { RoleArn: this.roleArn, ExternalId: this.externalId },
+      clientConfig: { region: region },
     });
   }
 
