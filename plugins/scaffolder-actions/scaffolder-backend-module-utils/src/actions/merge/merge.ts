@@ -139,6 +139,7 @@ export function createMergeAction() {
     path: string;
     content: any;
     mergeArrays?: boolean;
+    preserveYamlComments?: boolean;
     options?: stringifyOptions;
   }>({
     id: 'roadiehq:utils:merge',
