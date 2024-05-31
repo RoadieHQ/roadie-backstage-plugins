@@ -519,7 +519,12 @@ scripts:
   it('should preserve YAML comments when merging', async () => {
     mock({
       'fake-tmp-dir': {
-        'fake-file.yaml': '# This is a comment\nscripts:\n  lsltr: ls -ltr\n',
+        'fake-file.yaml': `
+# Top-level comment
+scripts:
+  # Nested comment
+  lsltr: ls -ltr
+`,
       },
     });
 
@@ -539,7 +544,8 @@ scripts:
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(file).toContain('# This is a comment');
+    expect(file).toContain('# Top-level comment');
+    expect(file).toContain('# Nested comment');
     expect(YAML.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
