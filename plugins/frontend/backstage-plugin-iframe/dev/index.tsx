@@ -23,8 +23,8 @@ import {
   HomePageIFrameCard,
 } from '../src';
 import { IFrameContentProps, IFrameComponentProps, IFrameProps } from '../src/components/types';
-import {Entity} from "@backstage/catalog-model";
-import {EntityProvider} from "@backstage/plugin-catalog-react";
+import { Entity } from "@backstage/catalog-model";
+import { EntityProvider } from "@backstage/plugin-catalog-react";
 
 const mockEntity: Entity = {
     apiVersion: 'backstage.io/v1alpha1',
@@ -33,14 +33,12 @@ const mockEntity: Entity = {
         name: 'backstage',
         description: 'backstage.io',
         annotations: {
-            'argocd/app-name': 'guestbook',
             'roadie.io/example_domain': 'com'
         },
     },
     spec: {
         lifecycle: 'production',
         type: 'service',
-        owner: 'user:guest',
     },
 };
 
