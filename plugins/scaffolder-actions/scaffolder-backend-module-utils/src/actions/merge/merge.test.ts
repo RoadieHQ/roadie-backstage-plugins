@@ -515,4 +515,33 @@ scripts:
       '/fake-tmp-dir/fake-file.json',
     );
   });
+
+  it('should preserve YAML comments when merging', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': '# This is a comment\nscripts:\n  lsltr: ls -ltr\n',
+      },
+    });
+  
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain('# This is a comment');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
 });

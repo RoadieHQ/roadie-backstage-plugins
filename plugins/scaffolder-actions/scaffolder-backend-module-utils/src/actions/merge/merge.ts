@@ -167,6 +167,13 @@ export function createMergeAction() {
             description:
               'Where a value is an array the merge function should concatenate the provided array value with the target array',
           },
+          preserveYamlComments: {
+            type: 'boolean',
+            default: false,
+            title: 'Preserve Comments?',
+            description:
+              'Will preserve standalone and inline comments in YAML files',
+          },
           options: {
             ...yamlOptionsSchema,
             description: `${yamlOptionsSchema.description}  (for YAML output only)`,
@@ -221,7 +228,9 @@ export function createMergeAction() {
               : ctx.input.content; // This supports the case where dynamic keys are required
           mergedContent = YAML.stringify(
             mergeWith(
-              YAML.parse(originalContent),
+              ctx.input.preserveYamlComments
+                ? YAML.parseDocument(originalContent)
+                : YAML.parse(originalContent),
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
             ),
