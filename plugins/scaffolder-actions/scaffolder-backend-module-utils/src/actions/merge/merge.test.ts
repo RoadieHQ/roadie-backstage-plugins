@@ -522,7 +522,7 @@ scripts:
         'fake-file.yaml': '# This is a comment\nscripts:\n  lsltr: ls -ltr\n',
       },
     });
-  
+
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
