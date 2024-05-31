@@ -550,4 +550,39 @@ scripts:
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
+
+  it('should not preserve YAML comments when preserveYamlComments is false', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+# Top-level comment
+scripts:
+  # Nested comment
+  lsltr: ls -ltr
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: false,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).not.toContain('# Top-level comment');
+    expect(file).not.toContain('# Nested comment');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
 });
