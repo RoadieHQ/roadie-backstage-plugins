@@ -20,6 +20,7 @@ import fs from 'fs-extra';
 import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import YAML from 'yaml';
+import YAWN from 'yawn-yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
 
@@ -227,16 +228,26 @@ export function createMergeAction() {
             typeof ctx.input.content === 'string'
               ? YAML.parse(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = YAML.stringify(
-            mergeWith(
-              ctx.input.preserveYamlComments
-                ? YAML.parseDocument(originalContent)
-                : YAML.parse(originalContent),
+          if (ctx.input.preserveYamlComments) {
+            const yawn = new YAWN(originalContent);
+            const parsedOriginal = yawn.json;
+            const mergedYamlContent = mergeWith(
+              parsedOriginal,
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
-            ),
-            ctx.input.options,
-          );
+            );
+            yawn.json = mergedYamlContent;
+            mergedContent = yawn.yaml;
+          } else {
+            mergedContent = YAML.stringify(
+              mergeWith(
+                YAML.parse(originalContent),
+                newContent,
+                ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+              ),
+              ctx.input.options,
+            );
+          }
           break;
         }
         default:

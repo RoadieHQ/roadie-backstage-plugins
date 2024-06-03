@@ -520,10 +520,11 @@ scripts:
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': `
-#Top-level comment
-scripts: #Trailing comment
-  #Nested comment
+# Top-level comment
+scripts: # Trailing comment
+  # Nested comment
   lsltr: ls -ltr
+  #Comment without space
 `,
       },
     });
@@ -544,9 +545,10 @@ scripts: #Trailing comment
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(file).toContain('#Top-level comment');
-    expect(file).toContain('#Trailing comment');
-    expect(file).toContain('#Nested comment');
+    expect(file).toContain('# Top-level comment');
+    expect(file).toContain('# Trailing comment');
+    expect(file).toContain('# Nested comment');
+    expect(file).toContain('#Comment without space');
     expect(YAML.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
@@ -556,10 +558,11 @@ scripts: #Trailing comment
     mock({
       'fake-tmp-dir': {
         'fake-file.yaml': `
-#Top-level comment
-scripts: #Trailing comment
-  #Nested comment
+# Top-level comment
+scripts: # Trailing comment
+  # Nested comment
   lsltr: ls -ltr
+  #Comment without space
 `,
       },
     });
@@ -580,9 +583,10 @@ scripts: #Trailing comment
 
     expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
     const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
-    expect(file).not.toContain('#Top-level comment');
-    expect(file).not.toContain('#Trailing comment');
-    expect(file).not.toContain('#Nested comment');
+    expect(file).not.toContain('# Top-level comment');
+    expect(file).not.toContain('# Trailing comment');
+    expect(file).not.toContain('# Nested comment');
+    expect(file).not.toContain('#Comment without space');
     expect(YAML.parse(file)).toEqual({
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
