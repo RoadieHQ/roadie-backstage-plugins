@@ -529,6 +529,20 @@ scripts: # Trailing comment
       },
     });
 
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
     await action.handler({
       ...mockContext,
       workspacePath: 'fake-tmp-dir',
@@ -540,6 +554,7 @@ scripts: # Trailing comment
           },
         },
         preserveYamlComments: true,
+        options: opts,
       },
     });
 

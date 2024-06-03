@@ -231,13 +231,16 @@ export function createMergeAction() {
           if (ctx.input.preserveYamlComments) {
             const yawn = new YAWN(originalContent);
             const parsedOriginal = yawn.json;
-            const mergedYamlContent = mergeWith(
+            const mergedJsonContent = mergeWith(
               parsedOriginal,
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
             );
-            yawn.json = mergedYamlContent;
-            mergedContent = yawn.yaml;
+            yawn.json = mergedJsonContent;
+            mergedContent = YAML.stringify(
+              YAML.parseDocument(yawn.yaml),
+              ctx.input.options,
+            );
           } else {
             mergedContent = YAML.stringify(
               mergeWith(
