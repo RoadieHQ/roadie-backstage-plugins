@@ -38,6 +38,7 @@
     "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
+    "@backstage/catalog-model": "^1.5.0",
     "@backstage/core-app-api": "^1.12.4",
     "@backstage/core-components": "^0.14.6",
     "@backstage/core-plugin-api": "^1.9.2",
@@ -54,7 +55,6 @@
     "rollup-plugin-esbuild": "^5.0.0"
   },
   "devDependencies": {
-    "@backstage/catalog-model": "^1.5.0",
     "@backstage/cli": "^0.26.4",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
