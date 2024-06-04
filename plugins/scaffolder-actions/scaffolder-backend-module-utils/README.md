@@ -12,6 +12,7 @@ This contains a collection of actions to use in scaffolder templates:
 - [Serialise to JSON or YAML](#serialise)
 - [Parse and Transform JSON or YAML](#parse-and-transform-json-or-yaml)
 - [Merge new data into an existing JSON file](#merge-json)
+- [Merge](#merge)
 - [Append content to a file](#append)
 - [Write content to a file](#write-to-file)
 - [Replace in files](#replace-in-files)
@@ -568,6 +569,32 @@ spec:
       input:
         message: 'RemoteURL: ${{ steps["publish-pr"].output.remoteUrl }}'
 ```
+
+### Merge
+
+**Action name**: `roadiehq:utils:merge`
+
+**Required params:**
+
+- path: The file path for the file you want to edit.
+- content: The content you want to merge in, as a string or a YAML object.
+
+**Optional params:**
+
+- mergeArrays: If `true` then where a value is an array the merge function will concatenate the provided array value with the target array.
+- preserveYamlComments: If `true`, it will preserve standalone and inline comments in YAML files.
+- options: YAML stringify options to customize the output format.
+  - indent: (default: 2) - indentation width to use (in spaces).
+  - noArrayIndent: (default: false) - when true, will not add an indentation level to array elements.
+  - skipInvalid: (default: false) - do not throw on invalid types (like function in the safe schema) and skip pairs and single values with such types.
+  - flowLevel: (default: -1) - specifies level of nesting, when to switch from block to flow style for collections. -1 means block style everywhere.
+  - sortKeys: (default: false) - if true, sort keys when dumping YAML. If a function, use the function to sort the keys.
+  - lineWidth: (default: 80) - set max line width. Set -1 for unlimited width.
+  - noRefs: (default: false) - if true, don't convert duplicate objects into references.
+  - noCompatMode: (default: false) - if true, don't try to be compatible with older YAML versions. Currently: don't quote "yes", "no" and so on, as required for YAML 1.1.
+  - condenseFlow: (default: false) - if true, flow sequences will be condensed, omitting the space between a, b. Eg. '[a,b]', and omitting the space between key: value and quoting the key. Eg. '{"a":b}' Can be useful when using YAML for pretty URL query params as spaces are %-encoded.
+  - quotingType: (' or ", default: ') - strings will be quoted using this quoting style. If you specify single quotes, double quotes will still be used for non-printable characters.
+  - forceQuotes: (default: false) - if true, all non-key strings will be quoted even if they normally don't need to.
 
 ### Append
 

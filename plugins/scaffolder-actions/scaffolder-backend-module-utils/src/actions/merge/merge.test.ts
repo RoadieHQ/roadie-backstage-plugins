@@ -515,4 +515,95 @@ scripts:
       '/fake-tmp-dir/fake-file.json',
     );
   });
+
+  it('should preserve YAML comments when merging', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+# Top-level comment
+scripts: # Trailing comment
+  # Nested comment
+  lsltr: ls -ltr
+  #Comment without space
+`,
+      },
+    });
+
+    const opts = {
+      indent: 3,
+      noArrayIndent: true,
+      skipInvalid: true,
+      flowLevel: 23,
+      sortKeys: true,
+      lineWidth: -1,
+      noRefs: true,
+      noCompatMode: true,
+      condenseFlow: true,
+      quotingType: '"' as const,
+      forceQuotes: true,
+    };
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: true,
+        options: opts,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain('# Top-level comment');
+    expect(file).toContain('# Trailing comment');
+    expect(file).toContain('# Nested comment');
+    expect(file).toContain('#Comment without space');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
+  it('should not preserve YAML comments when preserveYamlComments is false', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+# Top-level comment
+scripts: # Trailing comment
+  # Nested comment
+  lsltr: ls -ltr
+  #Comment without space
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: false,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).not.toContain('# Top-level comment');
+    expect(file).not.toContain('# Trailing comment');
+    expect(file).not.toContain('# Nested comment');
+    expect(file).not.toContain('#Comment without space');
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
 });
