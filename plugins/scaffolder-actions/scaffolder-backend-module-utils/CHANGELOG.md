@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.17.0
+
+### Minor Changes
+
+- daed08e: add preserveYamlComments input for roadiehq:utils:merge action
+
 ## 1.16.0
 
 ### Minor Changes
