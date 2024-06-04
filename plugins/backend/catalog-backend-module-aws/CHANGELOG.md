@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 3.0.1
+
+### Patch Changes
+
+- d52a384: Use role region for sts client.
+
 ## 3.0.0
 
 ### Major Changes
