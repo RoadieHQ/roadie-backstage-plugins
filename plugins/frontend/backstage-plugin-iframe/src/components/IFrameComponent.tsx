@@ -81,11 +81,12 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
   );
 };
 
-
-const IFrameFromAnnotationReplacements = (props: IFrameFromAnnotationReplacementsProps) => {
+const IFrameFromAnnotationReplacements = (
+  props: IFrameFromAnnotationReplacementsProps,
+) => {
   const { srcFromAnnotationReplacements, height, width } = props;
   const title =
-      props.title || 'Backstage IFrame (Note you can modify this with the props)';
+    props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const { entity } = useEntity();
@@ -93,15 +94,15 @@ const IFrameFromAnnotationReplacements = (props: IFrameFromAnnotationReplacement
 
   const annotations = entity?.metadata.annotations ?? {};
   const src = srcFromAnnotationReplacements.replace(
-      /{{(.+)}}/g,
-      (m, i) => annotations[i.trim()] ?? m
-  )
+    /{{(.+)}}/g,
+    (m, i) => annotations[i.trim()] ?? m,
+  );
 
   if (!src) {
     return (
-        <ErrorComponent
-            errorMessage={`Failed to get url src from the entity annotation ${src}`}
-        />
+      <ErrorComponent
+        errorMessage={`Failed to get url src from the entity annotation ${src}`}
+      />
     );
   }
 
@@ -112,13 +113,13 @@ const IFrameFromAnnotationReplacements = (props: IFrameFromAnnotationReplacement
   }
 
   return (
-      <IFrameComponentContent
-          classes={props.classes}
-          src={src}
-          title={title}
-          height={height}
-          width={width}
-      />
+    <IFrameComponentContent
+      classes={props.classes}
+      src={src}
+      title={title}
+      height={height}
+      width={width}
+    />
   );
 };
 
@@ -151,7 +152,14 @@ const IFrameFromSrc = (props: IFrameProps) => {
  * @public
  */
 export const IFrameCard = (props: IFrameComponentProps) => {
-  const { src, srcFromAnnotation, srcWithAnnotationReplacements, height, width, title } = props;
+  const {
+    src,
+    srcFromAnnotation,
+    srcWithAnnotationReplacements,
+    height,
+    width,
+    title,
+  } = props;
   if (src) {
     return (
       <IFrameFromSrc
@@ -166,13 +174,13 @@ export const IFrameCard = (props: IFrameComponentProps) => {
 
   if (srcWithAnnotationReplacements) {
     return (
-        <IFrameFromAnnotationReplacements
-            classes={props.classes}
-            srcFromAnnotationReplacements={srcWithAnnotationReplacements}
-            height={height}
-            width={width}
-            title={title}
-        />
+      <IFrameFromAnnotationReplacements
+        classes={props.classes}
+        srcFromAnnotationReplacements={srcWithAnnotationReplacements}
+        height={height}
+        width={width}
+        title={title}
+      />
     );
   }
 

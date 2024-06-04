@@ -22,24 +22,28 @@ import {
   EntityIFrameContent,
   HomePageIFrameCard,
 } from '../src';
-import { IFrameContentProps, IFrameComponentProps, IFrameProps } from '../src/components/types';
-import { Entity } from "@backstage/catalog-model";
-import { EntityProvider } from "@backstage/plugin-catalog-react";
+import {
+  IFrameContentProps,
+  IFrameComponentProps,
+  IFrameProps,
+} from '../src/components/types';
+import { Entity } from '@backstage/catalog-model';
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const mockEntity: Entity = {
-    apiVersion: 'backstage.io/v1alpha1',
-    kind: 'Component',
-    metadata: {
-        name: 'backstage',
-        description: 'backstage.io',
-        annotations: {
-            'roadie.io/example_domain': 'com'
-        },
+  apiVersion: 'backstage.io/v1alpha1',
+  kind: 'Component',
+  metadata: {
+    name: 'backstage',
+    description: 'backstage.io',
+    annotations: {
+      'roadie.io/example_domain': 'com',
     },
-    spec: {
-        lifecycle: 'production',
-        type: 'service',
-    },
+  },
+  spec: {
+    lifecycle: 'production',
+    type: 'service',
+  },
 };
 
 const props: IFrameProps = {
@@ -50,9 +54,10 @@ const props: IFrameProps = {
 };
 
 const componentProps: IFrameComponentProps = {
-  srcWithAnnotationReplacements: 'https://example.{{ roadie.io/example_domain }}/',
+  srcWithAnnotationReplacements:
+    'https://example.{{ roadie.io/example_domain }}/',
   title: 'Another amazing iframe',
-}
+};
 
 const pageProps: IFrameContentProps = {
   iframe: props,
@@ -72,10 +77,14 @@ createDevApp()
     path: 'iframe-page',
   })
   .addPage({
-    element: <EntityProvider entity={mockEntity}><EntityIFrameCard {...componentProps} /></EntityProvider>,
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard {...componentProps} />
+      </EntityProvider>
+    ),
     title: 'Iframe Replacement',
     path: 'iframe-page-replacement',
-   })
+  })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,
     title: 'Home Page',
