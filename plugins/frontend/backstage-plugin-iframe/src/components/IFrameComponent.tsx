@@ -96,14 +96,6 @@ const IframeFromTemplatedSrc = (props: IframeFromTemplatedSrcProps) => {
     (m, i) => annotations[i.trim()] ?? m,
   );
 
-  if (!src) {
-    return (
-      <ErrorComponent
-        errorMessage={`Failed to get url src from the entity annotation ${src}`}
-      />
-    );
-  }
-
   errorMessage = determineError(src, allowList);
 
   if (errorMessage) {
