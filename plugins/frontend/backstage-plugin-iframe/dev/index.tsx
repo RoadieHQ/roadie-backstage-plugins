@@ -54,8 +54,7 @@ const props: IFrameProps = {
 };
 
 const componentProps: IFrameComponentProps = {
-  srcWithAnnotationReplacements:
-    'https://example.{{ roadie.io/example_domain }}/',
+  templatedSrc: 'https://example.{{ roadie.io/example_domain }}/',
   title: 'Another amazing iframe',
 };
 

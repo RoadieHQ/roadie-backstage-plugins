@@ -22,7 +22,7 @@ export type IFrameComponentContentProps = {
 export type IFrameComponentProps = {
   src?: string;
   srcFromAnnotation?: string;
-  srcWithAnnotationReplacements?: string;
+  templatedSrc?: string;
   title?: string;
   height?: string;
   width?: string;

@@ -152,14 +152,7 @@ const IFrameFromSrc = (props: IFrameProps) => {
  * @public
  */
 export const IFrameCard = (props: IFrameComponentProps) => {
-  const {
-    src,
-    srcFromAnnotation,
-    srcWithAnnotationReplacements,
-    height,
-    width,
-    title,
-  } = props;
+  const { src, srcFromAnnotation, templatedSrc, height, width, title } = props;
   if (src) {
     return (
       <IFrameFromSrc
@@ -172,11 +165,11 @@ export const IFrameCard = (props: IFrameComponentProps) => {
     );
   }
 
-  if (srcWithAnnotationReplacements) {
+  if (templatedSrc) {
     return (
       <IFrameFromAnnotationReplacements
         classes={props.classes}
-        srcFromAnnotationReplacements={srcWithAnnotationReplacements}
+        srcFromAnnotationReplacements={templatedSrc}
         height={height}
         width={width}
         title={title}
