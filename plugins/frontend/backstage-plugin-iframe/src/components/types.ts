@@ -37,8 +37,8 @@ export type IFrameFromAnnotationProps = {
   classes?: string;
 };
 
-export type IFrameFromAnnotationReplacementsProps = {
-  srcFromAnnotationReplacements: string;
+export type IframeFromTemplatedSrcProps = {
+  templatedSrc: string;
   title?: string;
   height?: string;
   width?: string;

@@ -21,7 +21,7 @@ import {
   IFrameComponentContentProps,
   IFrameComponentProps,
   IFrameFromAnnotationProps,
-  IFrameFromAnnotationReplacementsProps,
+  IframeFromTemplatedSrcProps,
 } from './types';
 import { Content, ContentHeader } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
@@ -81,10 +81,8 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
   );
 };
 
-const IFrameFromAnnotationReplacements = (
-  props: IFrameFromAnnotationReplacementsProps,
-) => {
-  const { srcFromAnnotationReplacements, height, width } = props;
+const IframeFromTemplatedSrc = (props: IframeFromTemplatedSrcProps) => {
+  const { templatedSrc, height, width } = props;
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
@@ -93,7 +91,7 @@ const IFrameFromAnnotationReplacements = (
   let errorMessage = '';
 
   const annotations = entity?.metadata.annotations ?? {};
-  const src = srcFromAnnotationReplacements.replace(
+  const src = templatedSrc.replace(
     /{{(.+)}}/g,
     (m, i) => annotations[i.trim()] ?? m,
   );
@@ -167,9 +165,9 @@ export const IFrameCard = (props: IFrameComponentProps) => {
 
   if (templatedSrc) {
     return (
-      <IFrameFromAnnotationReplacements
+      <IframeFromTemplatedSrc
         classes={props.classes}
-        srcFromAnnotationReplacements={templatedSrc}
+        templatedSrc={templatedSrc}
         height={height}
         width={width}
         title={title}

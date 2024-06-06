@@ -81,8 +81,8 @@ createDevApp()
         <EntityIFrameCard {...componentProps} />
       </EntityProvider>
     ),
-    title: 'Iframe Replacement',
-    path: 'iframe-page-replacement',
+    title: 'Templated Iframe',
+    path: 'iframe-page-templated',
   })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,
