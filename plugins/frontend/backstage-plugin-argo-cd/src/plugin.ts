@@ -8,7 +8,7 @@ import {
   discoveryApiRef,
   identityApiRef,
 } from '@backstage/core-plugin-api';
-import { ArgoCDApiClient, argoCDApiRef } from './api';
+import { XgenArgoCDApiClient, argoCDApiRef } from './api';
 
 export const entityContentRouteRef = createRouteRef({
   id: 'ArgoCD Entity Content',
@@ -25,7 +25,7 @@ export const argocdPlugin = createPlugin({
         configApi: configApiRef,
       },
       factory: ({ discoveryApi, identityApi, configApi }) =>
-        new ArgoCDApiClient({
+        new XgenArgoCDApiClient({
           discoveryApi,
           identityApi,
           backendBaseUrl: configApi.getString('backend.baseUrl'),
@@ -68,6 +68,18 @@ export const EntityArgoCDHistoryCard = argocdPlugin.provide(
     component: {
       lazy: () =>
         import('./components/ArgoCDHistoryCard').then(m => m.ArgoCDHistoryCard),
+    },
+  }),
+);
+
+export const XgenEntityArgoCDOverviewCard = argocdPlugin.provide(
+  createComponentExtension({
+    name: 'XgenEntityArgoCDOverviewCard',
+    component: {
+      lazy: () =>
+        import('./components/XgenArgoCDDetailsCard').then(
+          m => m.XgenArgoCDDetailsCard,
+        ),
     },
   }),
 );

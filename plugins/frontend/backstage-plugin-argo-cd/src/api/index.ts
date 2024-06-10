@@ -267,3 +267,36 @@ export class ArgoCDApiClient implements ArgoCDApi {
     });
   }
 }
+
+export class XgenArgoCDApiClient extends ArgoCDApiClient {
+  private readonly envs: string[] = ['dev', 'qa'];
+  private readonly infraEnvMap: { [dict_key: string]: string } = {
+    qa: 'dev',
+    staging: 'prod',
+    internal: 'prod',
+    'gov-qa': 'gov-dev',
+  };
+  // private readonly envs: string[] = [ "dev", "qa", "staging", "internal", "prod", "mgmt", "gov-dev", "gov-qa", "gov-prod", "gov-mgmt"];
+
+  getInfraEnv(env: string) {
+    return this.infraEnvMap[env] || env;
+  }
+  async listApps(options: {
+    url: string; // ignored, use pattern: argocd-${env}
+    appSelector?: string;
+    appNamespace?: string; // used as base namespace without suffix "-${env}"
+    projectName?: string;
+  }) {
+    const appDetails: Array<any> = [];
+
+    for (const env of this.envs) {
+      options.url = `argocd-${this.getInfraEnv(env)}`;
+      options.appNamespace = `${options.appNamespace}-${env}`;
+
+      const apps = await super.listApps(options);
+      appDetails.push(apps.items); // merge results from all envs
+    }
+
+    return { items: appDetails };
+  }
+}
