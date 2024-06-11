@@ -39,12 +39,12 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSS3BucketProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -64,8 +64,8 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     );
     const s3Resources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const s3 = new S3({ credentials, region: this.region });
+    const credentials = this.getCredentialsProvider();
+    const s3 = new S3(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
