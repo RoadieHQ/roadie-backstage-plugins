@@ -24,7 +24,7 @@ import { arnToName } from '../utils/arnToName';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -109,7 +109,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-                  ...relationShipsFromTags(tags),
+                  ...relationshipsFromTags(tags),
                   type: 'dynamo-db-table',
                 },
               };

@@ -100,7 +100,7 @@ export const ownerFromTags = (
   return ownerString ? ownerString : UNKNOWN_OWNER;
 };
 
-export const relationShipsFromTags = (
+export const relationshipsFromTags = (
   tags?: Tag[] | Record<string, string>,
 ): Record<string, string | string[]> => {
   if (!tags) {

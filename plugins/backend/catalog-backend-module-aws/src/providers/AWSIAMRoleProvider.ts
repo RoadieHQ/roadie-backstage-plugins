@@ -25,7 +25,7 @@ import { ARN } from 'link2aws';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -101,7 +101,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             spec: {
               type: 'aws-role',
               owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
-              ...relationShipsFromTags(role.Tags),
+              ...relationshipsFromTags(role.Tags),
             },
           };
 

@@ -24,7 +24,7 @@ import { ARN } from 'link2aws';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -114,7 +114,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
-              ...relationShipsFromTags(dbInstance.TagList),
+              ...relationshipsFromTags(dbInstance.TagList),
               type: 'rds-instance',
             },
           };

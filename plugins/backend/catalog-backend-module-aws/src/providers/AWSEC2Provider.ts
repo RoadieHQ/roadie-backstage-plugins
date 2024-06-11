@@ -24,7 +24,7 @@ import { ARN } from 'link2aws';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -108,7 +108,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
-              ...relationShipsFromTags(instance.Tags),
+              ...relationshipsFromTags(instance.Tags),
               type: 'ec2-instance',
             },
           };

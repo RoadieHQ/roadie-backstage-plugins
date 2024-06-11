@@ -28,7 +28,7 @@ import { ARN } from 'link2aws';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -123,7 +123,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationShipsFromTags(tags),
+              ...relationshipsFromTags(tags),
               type: 'lambda-function',
             },
           });

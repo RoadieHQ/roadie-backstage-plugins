@@ -27,7 +27,7 @@ import { arnToName } from '../utils/arnToName';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -115,7 +115,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
-              ...relationShipsFromTags(cluster.cluster?.tags),
+              ...relationshipsFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };

@@ -32,7 +32,7 @@ import { arnToName } from '../utils/arnToName';
 import {
   labelsFromTags,
   ownerFromTags,
-  relationShipsFromTags,
+  relationshipsFromTags,
 } from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 import { CatalogApi } from '@backstage/catalog-client';
@@ -123,7 +123,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationShipsFromTags(tags),
+              ...relationshipsFromTags(tags),
               type: 'aws-account',
             },
           };
