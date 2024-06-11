@@ -58,7 +58,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   static fromConfig(config: Config, options: { logger: winston.Logger }) {
     return new AWSDynamoDbTableDataProvider(
       config.getString('accountId'),
-      config.getString('roleArn'),
+      config.getString('roleName'),
       config.get<DdbTableDataConfigOptions>('dynamodbTableData'),
       options.logger,
     );
