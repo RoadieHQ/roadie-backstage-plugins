@@ -22,7 +22,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationShipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -92,6 +96,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
           },
           spec: {
             owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+            ...relationShipsFromTags(tags),
             type: 's3-bucket',
           },
         };

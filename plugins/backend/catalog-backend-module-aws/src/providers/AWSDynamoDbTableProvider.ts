@@ -21,7 +21,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationShipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -105,6 +109,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                  ...relationShipsFromTags(tags),
                   type: 'dynamo-db-table',
                 },
               };
