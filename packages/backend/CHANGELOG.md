@@ -1,5 +1,12 @@
 # backend
 
+## 2.1.8
+
+### Patch Changes
+
+- Updated dependencies [22c68fe]
+  - @roadiehq/catalog-backend-module-aws@4.0.0
+
 ## 2.1.7
 
 ### Patch Changes
