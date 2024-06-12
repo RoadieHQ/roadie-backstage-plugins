@@ -25,7 +25,11 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -119,8 +123,8 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
               type: 'lambda-function',
-              dependsOn: [],
             },
           });
         }

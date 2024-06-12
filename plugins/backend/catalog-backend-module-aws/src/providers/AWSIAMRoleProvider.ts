@@ -22,7 +22,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -97,6 +101,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             spec: {
               type: 'aws-role',
               owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(role.Tags),
             },
           };
 

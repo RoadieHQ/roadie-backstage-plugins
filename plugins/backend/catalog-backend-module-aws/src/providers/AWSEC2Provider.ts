@@ -21,7 +21,11 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -104,6 +108,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(instance.Tags),
               type: 'ec2-instance',
             },
           };

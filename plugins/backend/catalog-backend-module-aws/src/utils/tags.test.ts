@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ownerFromTags, labelsFromTags } from './tags';
+import { ownerFromTags, labelsFromTags, relationshipsFromTags } from './tags';
 import { Entity } from '@backstage/catalog-model';
 
 describe('labelsFromTags and ownerFromTags', () => {
@@ -148,5 +148,34 @@ describe('labelsFromTags and ownerFromTags', () => {
       const result = ownerFromTags(tags, 'owner:one', groups);
       expect(result).toBe('group:test/owner1');
     });
+  });
+});
+
+describe('relationshipsFromTags', () => {
+  it('should return an empty object if tags is undefined', () => {
+    const output = relationshipsFromTags();
+    expect(output).toEqual({});
+  });
+
+  it('should return an empty object if tags is an empty array', () => {
+    const output = relationshipsFromTags([]);
+    expect(output).toEqual({});
+  });
+
+  it('should return relationships from an array of tags', () => {
+    const tags = [{ Key: 'dependsOn', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependsOn: ['Value1'] });
+  });
+
+  it('should be case-insensitive when matching tag keys', () => {
+    const tags = [{ Key: 'dePeNdsOn', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependsOn: ['Value1'] });
+  });
+  it('should work with dependency of tag', () => {
+    const tags = [{ Key: 'dependencyOf', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependencyOf: ['Value1'] });
   });
 });

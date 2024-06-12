@@ -24,7 +24,11 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -111,6 +115,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
+              ...relationshipsFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };
