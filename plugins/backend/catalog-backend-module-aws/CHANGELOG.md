@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 3.1.0
+
+### Minor Changes
+
+- 3b7cf6c: Add possibility to define entity relationships by using AWS Tags when providing Resource entities directly from AWS. Expose `system`, `domain`, `dependencyOf` and `dependsOn` tag keys to be used.
+
 ## 3.0.1
 
 ### Patch Changes
