@@ -29,7 +29,11 @@ import {
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -116,6 +120,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
               type: 'aws-account',
             },
           };
