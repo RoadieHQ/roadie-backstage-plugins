@@ -41,7 +41,7 @@ const logger = createLogger({
 describe('AWSEKSClusterProvider', () => {
   const config = new ConfigReader({
     accountId: '123456789012',
-    roleArn: 'arn:aws:iam::123456789012:role/role1',
+    roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
 

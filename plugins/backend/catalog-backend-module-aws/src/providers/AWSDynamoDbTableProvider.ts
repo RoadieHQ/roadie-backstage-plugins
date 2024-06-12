@@ -42,12 +42,12 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSDynamoDbTableProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -62,8 +62,8 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     }
     const groups = await this.getGroups();
 
-    const credentials = this.getCredentials();
-    const ddb = new DynamoDB({ credentials });
+    const credentials = this.getCredentialsProvider();
+    const ddb = new DynamoDB(credentials);
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
     this.logger.info(

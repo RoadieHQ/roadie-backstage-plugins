@@ -54,7 +54,7 @@ export default async function createPlugin(
   builder.addEntityProvider(orgProvider);
   providers.push(orgProvider);
 
-  for (const config of env.config.getOptionalConfigArray('integrations.aws') ||
+  for (const config of env.config.getOptionalConfigArray('aws.accounts') ||
     []) {
     const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
     const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
