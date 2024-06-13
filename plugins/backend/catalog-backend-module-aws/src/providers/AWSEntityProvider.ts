@@ -72,9 +72,11 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async getCredentialsProvider() {
-    return await this.credentialsManager.getCredentialProvider({
-      accountId: this.accountId,
-    });
+    const awsCredentialProvider =
+      await this.credentialsManager.getCredentialProvider({
+        accountId: this.accountId,
+      });
+    return awsCredentialProvider.sdkCredentialProvider;
   }
 
   protected async getGroups() {
