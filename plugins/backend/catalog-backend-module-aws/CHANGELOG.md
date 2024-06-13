@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.0.2
+
+### Patch Changes
+
+- 6017323: Export sdk credentials provider from the credentials chain.
+
 ## 4.0.1
 
 ### Patch Changes
