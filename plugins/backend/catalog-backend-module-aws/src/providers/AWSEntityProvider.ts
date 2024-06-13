@@ -56,7 +56,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.catalogApi = options.catalogApi;
     this.account = account;
     this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
-      new ConfigReader(account),
+      new ConfigReader({ aws: { accounts: [account] } }),
     );
   }
 
@@ -72,7 +72,9 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async getCredentialsProvider() {
-    return await this.credentialsManager.getCredentialProvider();
+    return await this.credentialsManager.getCredentialProvider({
+      accountId: this.accountId,
+    });
   }
 
   protected async getGroups() {

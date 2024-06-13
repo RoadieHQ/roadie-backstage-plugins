@@ -70,7 +70,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     );
     const eksResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const eks = new EKS(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();

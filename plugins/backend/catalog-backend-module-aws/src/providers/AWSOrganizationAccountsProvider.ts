@@ -78,7 +78,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     );
     const accountResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const organizationsClient = new OrganizationsClient(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();

@@ -63,7 +63,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     );
     const userResources: UserEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 

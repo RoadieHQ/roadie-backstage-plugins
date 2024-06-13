@@ -64,7 +64,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const rdsClient = new RDS(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();

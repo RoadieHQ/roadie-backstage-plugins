@@ -62,7 +62,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     }
     const groups = await this.getGroups();
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const ddb = new DynamoDB(credentials);
     const defaultAnnotations = await this.buildDefaultAnnotations();
 

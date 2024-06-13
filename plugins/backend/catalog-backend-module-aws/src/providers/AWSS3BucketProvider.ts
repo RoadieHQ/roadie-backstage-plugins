@@ -68,7 +68,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     );
     const s3Resources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const s3 = new S3(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();

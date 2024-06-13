@@ -65,7 +65,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
     const ec2Resources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const ec2 = new EC2(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
