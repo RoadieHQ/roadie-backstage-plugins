@@ -68,7 +68,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     );
     const roleResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 

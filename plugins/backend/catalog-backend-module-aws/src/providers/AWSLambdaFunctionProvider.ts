@@ -72,7 +72,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const credentials = this.getCredentialsProvider();
+    const credentials = await this.getCredentialsProvider();
     const lambda = new Lambda(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
