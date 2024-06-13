@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.0.1
+
+### Patch Changes
+
+- dfeea32: Modify credentials loading to conform to expecting config object shape
+
 ## 4.0.0
 
 ### Major Changes
