@@ -24,7 +24,11 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -41,12 +45,12 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSEKSClusterProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -66,8 +70,8 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     );
     const eksResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const eks = new EKS({ credentials, region: this.region });
+    const credentials = await this.getCredentialsProvider();
+    const eks = new EKS(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -111,6 +115,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
+              ...relationshipsFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };

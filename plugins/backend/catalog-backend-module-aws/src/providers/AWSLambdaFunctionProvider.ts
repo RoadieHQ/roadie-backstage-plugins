@@ -25,7 +25,11 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -42,12 +46,12 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSLambdaFunctionProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -68,8 +72,8 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const lambda = new Lambda({ credentials, region: this.region });
+    const credentials = await this.getCredentialsProvider();
+    const lambda = new Lambda(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -119,8 +123,8 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
               type: 'lambda-function',
-              dependsOn: [],
             },
           });
         }
