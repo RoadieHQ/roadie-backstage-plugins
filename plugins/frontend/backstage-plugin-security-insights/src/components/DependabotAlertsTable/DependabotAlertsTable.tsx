@@ -106,6 +106,7 @@ const getDetailsUrl = (
 const COLUMNS: TableColumn[] = [
   { title: 'Name', field: 'name' },
   { title: 'Created', field: 'createdAt' },
+  { title: 'Due In', field: 'deadline' },
   { title: 'State', field: 'state' },
   { title: 'Severity', field: 'severity' },
   { title: 'Patched Version', field: 'patched_version' },
@@ -134,9 +135,6 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const deadlineConfig = configApi?.getOptionalConfig(
     'dependabotAlertsConfiguration.deadlines',
   );
-  if (deadlineConfig) {
-    COLUMNS.push({ title: 'Due In', field: 'deadline' });
-  }
 
   const filteredTableData = useMemo(() => {
     const issues = repository.vulnerabilityAlerts.nodes;
@@ -160,9 +158,14 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
     });
     if (deadlineDays && isOpen) {
       const deadlineDate = createdAt.plus({ days: deadlineDays }).toJSDate();
-      deadline = `${Math.round(
+      const daysToDeadline = Math.round(
         daysBetween(+currentDate, +deadlineDate),
-      ).toString()} Days`;
+      );
+      if (daysToDeadline <= 0) {
+        deadline = 'DUE';
+      } else {
+        deadline = `${daysToDeadline.toString()} Days`;
+      }
     }
 
     return {
