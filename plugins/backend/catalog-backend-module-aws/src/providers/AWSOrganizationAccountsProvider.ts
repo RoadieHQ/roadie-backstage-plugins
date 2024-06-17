@@ -29,7 +29,11 @@ import {
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 import { CatalogApi } from '@backstage/catalog-client';
 
@@ -47,12 +51,12 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSOrganizationAccountsProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -74,11 +78,8 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     );
     const accountResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const organizationsClient = new OrganizationsClient({
-      credentials,
-      region: this.region,
-    });
+    const credentials = await this.getCredentialsProvider();
+    const organizationsClient = new OrganizationsClient(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -119,6 +120,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
               type: 'aws-account',
             },
           };

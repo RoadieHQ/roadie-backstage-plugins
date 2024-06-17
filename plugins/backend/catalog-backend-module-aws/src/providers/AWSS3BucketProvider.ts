@@ -22,7 +22,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -39,12 +43,12 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSS3BucketProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -64,8 +68,8 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     );
     const s3Resources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const s3 = new S3({ credentials, region: this.region });
+    const credentials = await this.getCredentialsProvider();
+    const s3 = new S3(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -92,6 +96,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
           },
           spec: {
             owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(tags),
             type: 's3-bucket',
           },
         };

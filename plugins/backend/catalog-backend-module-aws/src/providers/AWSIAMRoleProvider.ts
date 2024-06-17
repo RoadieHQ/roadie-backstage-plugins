@@ -22,7 +22,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -39,12 +43,12 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSIAMRoleProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -64,11 +68,11 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     );
     const roleResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
+    const credentials = await this.getCredentialsProvider();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
-    const iam = new IAM({ credentials, region: this.region });
+    const iam = new IAM(credentials);
 
     const paginatorConfig = {
       client: iam,
@@ -97,6 +101,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
             spec: {
               type: 'aws-role',
               owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(role.Tags),
             },
           };
 

@@ -1,5 +1,30 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.0.2
+
+### Patch Changes
+
+- 6017323: Export sdk credentials provider from the credentials chain.
+
+## 4.0.1
+
+### Patch Changes
+
+- dfeea32: Modify credentials loading to conform to expecting config object shape
+
+## 4.0.0
+
+### Major Changes
+
+- 22c68fe: Modify configuration shapes to conform to AWS provided Backstage integration configuration. Start using the official credentials provider for AWS resources.
+  BREAKING: Config shape has been modified to match official integration config. Change `roleArn` to `roleName`.
+
+## 3.1.0
+
+### Minor Changes
+
+- 3b7cf6c: Add possibility to define entity relationships by using AWS Tags when providing Resource entities directly from AWS. Expose `system`, `domain`, `dependencyOf` and `dependsOn` tag keys to be used.
+
 ## 3.0.1
 
 ### Patch Changes

@@ -22,29 +22,49 @@ type Tag = {
 };
 const UNKNOWN_OWNER = 'unknown';
 
+const TAG_DEPENDS_ON = 'dependsOn';
+const TAG_DEPENDENCY_OF = 'dependencyOf';
+const TAG_SYSTEM = 'system';
+const TAG_DOMAIN = 'domain';
+
+const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
+const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
+
 export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
   if (!tags) {
     return {};
   }
   if (Array.isArray(tags)) {
-    return tags?.reduce((acc: Record<string, string>, tag) => {
-      if (tag.Key && tag.Value) {
-        const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
-        acc[key] = tag.Value.replaceAll('/', '-').substring(0, 63);
-      }
-      return acc;
-    }, {});
+    return tags
+      ?.filter(
+        tag =>
+          !tag.Key ||
+          ![...dependencyTags, ...relationshipTags]
+            .map(it => it.toLowerCase())
+            .includes(tag.Key.toLowerCase()),
+      )
+      .reduce((acc: Record<string, string>, tag) => {
+        if (tag.Key && tag.Value) {
+          const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
+          acc[key] = tag.Value.replaceAll('/', '-').substring(0, 63);
+        }
+        return acc;
+      }, {});
   }
-  return Object.entries(tags as Record<string, string>).reduce(
-    (acc: Record<string, string>, [key, value]) => {
+  return Object.entries(tags as Record<string, string>)
+    ?.filter(
+      ([tagKey]) =>
+        ![...dependencyTags, ...relationshipTags]
+          .map(it => it.toLowerCase())
+          .includes(tagKey.toLowerCase()),
+    )
+    .reduce((acc: Record<string, string>, [key, value]) => {
       if (key && value) {
         const k = key.replaceAll(':', '_').replaceAll('/', '-');
         acc[k] = value.replaceAll('/', '-').substring(0, 63);
       }
       return acc;
-    },
-    {},
-  );
+    }, {});
 };
 
 export const ownerFromTags = (
@@ -78,4 +98,35 @@ export const ownerFromTags = (
   }
 
   return ownerString ? ownerString : UNKNOWN_OWNER;
+};
+
+export const relationshipsFromTags = (
+  tags?: Tag[] | Record<string, string>,
+): Record<string, string | string[]> => {
+  if (!tags) {
+    return {};
+  }
+
+  const specPartial: Record<string, string | string[]> = {};
+  if (Array.isArray(tags)) {
+    dependencyTags.forEach(tagKey => {
+      const tagValue = tags?.find(
+        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
+      );
+      if (tagValue && tagValue.Value) {
+        specPartial[tagKey] = [tagValue.Value.split(',')].flat();
+      }
+    });
+
+    relationshipTags.forEach(tagKey => {
+      const tagValue = tags?.find(
+        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
+      );
+      if (tagValue && tagValue.Value) {
+        specPartial[tagKey] = tagValue.Value;
+      }
+    });
+  }
+
+  return specPartial;
 };

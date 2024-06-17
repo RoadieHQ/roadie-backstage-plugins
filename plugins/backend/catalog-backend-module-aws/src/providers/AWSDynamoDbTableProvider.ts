@@ -21,7 +21,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -38,12 +42,12 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSDynamoDbTableProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -58,8 +62,8 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     }
     const groups = await this.getGroups();
 
-    const credentials = this.getCredentials();
-    const ddb = new DynamoDB({ credentials });
+    const credentials = await this.getCredentialsProvider();
+    const ddb = new DynamoDB(credentials);
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
     this.logger.info(
@@ -105,6 +109,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                  ...relationshipsFromTags(tags),
                   type: 'dynamo-db-table',
                 },
               };
