@@ -199,7 +199,7 @@ spec:
       name: sleep
       action: roadiehq:utils:sleep
       input:
-        path: ${{ parameters.amount }}
+        amount: ${{ parameters.amount }}
 ```
 
 ### Deserialise

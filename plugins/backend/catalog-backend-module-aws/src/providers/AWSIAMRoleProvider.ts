@@ -43,12 +43,12 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSIAMRoleProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -68,11 +68,11 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     );
     const roleResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
+    const credentials = await this.getCredentialsProvider();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
-    const iam = new IAM({ credentials, region: this.region });
+    const iam = new IAM(credentials);
 
     const paginatorConfig = {
       client: iam,

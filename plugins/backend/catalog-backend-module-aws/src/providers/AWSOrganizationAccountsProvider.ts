@@ -51,12 +51,12 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSOrganizationAccountsProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -78,11 +78,8 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     );
     const accountResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const organizationsClient = new OrganizationsClient({
-      credentials,
-      region: this.region,
-    });
+    const credentials = await this.getCredentialsProvider();
+    const organizationsClient = new OrganizationsClient(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 

@@ -20,7 +20,6 @@ import {
 } from '@backstage/plugin-catalog-node';
 import * as winston from 'winston';
 import { AccountConfig } from '../types';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { STS } from '@aws-sdk/client-sts';
 import {
   ANNOTATION_ORIGIN_LOCATION,
@@ -28,18 +27,17 @@ import {
 } from '@backstage/catalog-model';
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 import { CatalogApi } from '@backstage/catalog-client';
-import { parse as parseArn } from '@aws-sdk/util-arn-parser';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
+import { ConfigReader } from '@backstage/config';
 
 export abstract class AWSEntityProvider implements EntityProvider {
-  protected readonly accountId: string;
-  protected readonly roleArn: string;
-  private readonly externalId?: string;
-  protected readonly region: string;
   protected readonly providerId?: string;
   protected readonly logger: winston.Logger;
   protected connection?: EntityProviderConnection;
   private readonly ownerTag: string | undefined;
   protected readonly catalogApi?: CatalogApi;
+  private credentialsManager: DefaultAwsCredentialsManager;
+  private account: AccountConfig;
 
   public abstract getProviderName(): string;
 
@@ -52,30 +50,33 @@ export abstract class AWSEntityProvider implements EntityProvider {
       ownerTag?: string;
     },
   ) {
-    this.accountId = account.accountId;
-    this.roleArn = account.roleArn;
-    this.externalId = account.externalId;
-    this.region = account.region;
     this.logger = options.logger;
     this.providerId = options.providerId;
     this.ownerTag = options.ownerTag;
     this.catalogApi = options.catalogApi;
+    this.account = account;
+    this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
+      new ConfigReader({ aws: { accounts: [account] } }),
+    );
+  }
+
+  get accountId() {
+    return this.account.accountId;
+  }
+  get region() {
+    return this.account.region;
   }
 
   protected getOwnerTag() {
     return this.ownerTag ?? 'owner';
   }
 
-  protected getCredentials() {
-    const region = parseArn(this.roleArn).region;
-    return region
-      ? fromTemporaryCredentials({
-          params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-          clientConfig: { region: region },
-        })
-      : fromTemporaryCredentials({
-          params: { RoleArn: this.roleArn, ExternalId: this.externalId },
-        });
+  protected async getCredentialsProvider() {
+    const awsCredentialProvider =
+      await this.credentialsManager.getCredentialProvider({
+        accountId: this.accountId,
+      });
+    return awsCredentialProvider.sdkCredentialProvider;
   }
 
   protected async getGroups() {
@@ -99,13 +100,17 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async buildDefaultAnnotations() {
-    const sts = new STS({ credentials: this.getCredentials() });
+    const sts = new STS(await this.getCredentialsProvider());
 
     const account = await sts.getCallerIdentity({});
 
     const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
+      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${
+        this.account.roleName
+      }`,
+      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${
+        this.account.roleName
+      }`,
     };
 
     if (account.Account) {

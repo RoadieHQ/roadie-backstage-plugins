@@ -41,12 +41,12 @@ export class AWSRDSProvider extends AWSEntityProvider {
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSRDSProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, externalId, region },
       options,
     );
   }
@@ -64,8 +64,8 @@ export class AWSRDSProvider extends AWSEntityProvider {
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const rdsClient = new RDS({ credentials, region: this.region });
+    const credentials = await this.getCredentialsProvider();
+    const rdsClient = new RDS(credentials);
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
