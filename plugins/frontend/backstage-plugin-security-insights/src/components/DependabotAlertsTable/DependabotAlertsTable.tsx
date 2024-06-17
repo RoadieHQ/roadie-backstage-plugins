@@ -17,20 +17,24 @@
 import React, { FC, useMemo, useState } from 'react';
 import { useAsync } from 'react-use';
 import {
-  Typography,
   Box,
-  Paper,
-  ButtonGroup,
   Button,
+  ButtonGroup,
   Grid,
+  Paper,
+  Typography,
 } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 // eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { graphql } from '@octokit/graphql';
-import { useApi, githubAuthApiRef } from '@backstage/core-plugin-api';
-import { Progress, Table, TableColumn, Link } from '@backstage/core-components';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  useApi,
+} from '@backstage/core-plugin-api';
+import { Link, Progress, Table, TableColumn } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectName } from '../useProjectName';
 import { useUrl } from '../useUrl';
@@ -107,10 +111,32 @@ const COLUMNS: TableColumn[] = [
   { title: 'Patched Version', field: 'patched_version' },
 ];
 
+// Convert Date to midnight UTC
+function treatAsUTC(date: number): number {
+  const result = new Date(date);
+  result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+  return +result;
+}
+
+// Calculate number of days between two Dates
+function daysBetween(startDate: number, endDate: number): number {
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+}
+
+// Build table given results of GraphQL query along with other repo metadata
 export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const { entity } = useEntity();
   const projectName = useProjectName(entity);
   const [stateFilter, setStateFilter] = useState<StateFilter>('OPEN');
+
+  const configApi = useApi(configApiRef);
+  const deadlineConfig = configApi?.getOptionalConfig(
+    'dependabotAlertsConfiguration.deadlines',
+  );
+  if (deadlineConfig) {
+    COLUMNS.push({ title: 'Due In', field: 'deadline' });
+  }
 
   const filteredTableData = useMemo(() => {
     const issues = repository.vulnerabilityAlerts.nodes;
@@ -120,9 +146,28 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
     return issues.filter(node => node.state === stateFilter);
   }, [stateFilter, repository]);
 
+  // Extract data from GraphQL query
+  const currentDate = new Date();
   const structuredData = filteredTableData.map(node => {
+    const createdAt = DateTime.fromISO(node.createdAt);
+    const severity = node.securityVulnerability.severity.toLowerCase();
+
+    const deadlineDays = deadlineConfig?.getOptionalNumber(severity);
+    let deadline = '-';
+
+    const isOpen = !node.state.localeCompare('open', undefined, {
+      sensitivity: 'base',
+    });
+    if (deadlineDays && isOpen) {
+      const deadlineDate = createdAt.plus({ days: deadlineDays }).toJSDate();
+      deadline = `${Math.round(
+        daysBetween(+currentDate, +deadlineDate),
+      ).toString()} Days`;
+    }
+
     return {
-      createdAt: DateTime.fromISO(node.createdAt).toLocaleString(),
+      createdAt: createdAt.toLocaleString(),
+      deadline: deadline,
       state: capitalize(node.state),
       name: getDetailsUrl(
         node.securityVulnerability.package.name,
@@ -130,7 +175,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
         node.state,
         node.vulnerableManifestPath,
       ),
-      severity: capitalize(node.securityVulnerability.severity.toLowerCase()),
+      severity: capitalize(severity),
       patched_version:
         node?.securityVulnerability?.firstPatchedVersion?.identifier || '',
     };
@@ -220,6 +265,7 @@ export const DependabotAlertsTable: FC<{}> = () => {
     }
   }`;
 
+  // Run the GraphQL query
   const { value, loading, error } = useAsync(async (): Promise<any> => {
     const token = await auth.getAccessToken(['repo']);
     const gqlEndpoint = graphql.defaults({

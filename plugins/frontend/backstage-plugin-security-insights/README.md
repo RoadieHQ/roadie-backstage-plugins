@@ -127,12 +127,20 @@ const overviewContent = (
 
 ```
 
-4. Per default, all severity level alerts will be included and shown on the widget. However, severity level for dependabot alerts shown in Dependabot alerts widget is configurable via app-config. For example, if you want to show only high and medium severity alerts, you can do it in the following way.
+4. Per default, all severity level alerts will be included and shown on the widget. However, severity level for
+   dependabot alerts shown in Dependabot alerts widget is configurable via app-config. For example, if you want to show
+   only high and medium severity alerts, you can do it in the following way. You may also optionally configure
+   deadlines for each severity level to be displayed in the Dependabot table.
 
 ```yaml
 // app-config.yaml
 dependabotAlertsConfiguration:
   severity: [ high, medium]
+  deadlines:
+    low: 120
+    medium: 90
+    high: 60
+    critical: 30
 ```
 
 ## Links
