@@ -2,4 +2,4 @@
 '@roadiehq/scaffolder-backend-module-utils': patch
 ---
 
-fix readme documentation
+fix roadiehq:utils:fs:parse example on README.md file
