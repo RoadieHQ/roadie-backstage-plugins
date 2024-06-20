@@ -38,21 +38,32 @@ export class AWSRDSProvider extends AWSEntityProvider {
       logger: winston.Logger;
       catalogApi?: CatalogApi;
       providerId?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
     const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSRDSProvider(
-      { accountId, roleName, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-rds-provider-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getRdsClient() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new RDS({ credentials, region: this.region })
+      : new RDS(credentials);
   }
 
   async run(): Promise<void> {
@@ -64,8 +75,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const credentials = await this.getCredentialsProvider();
-    const rdsClient = new RDS(credentials);
+    const rdsClient = await this.getRdsClient();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
