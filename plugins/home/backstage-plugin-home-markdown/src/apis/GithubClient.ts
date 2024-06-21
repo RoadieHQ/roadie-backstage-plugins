@@ -105,12 +105,12 @@ export class GithubClient implements GithubApi {
           const contentResponse = await octokit.request(
             `GET /repos/${imageOwner}/${imageRepo}/contents/${filePath}`,
           );
-          const imageContent = Buffer.from(
-            contentResponse.data.content,
-            'base64',
-          ).toString('base64');
-          const encodedImage = encodeURIComponent(imageContent);
-          media[href] = `data:${mimeType};base64,${encodedImage}`;
+          media[
+            href
+          ] = `data:${mimeType};base64,${contentResponse.data.content.replaceAll(
+            '\n',
+            '',
+          )}`;
         } catch (e: any) {
           /* eslint no-console: ["error", { allow: ["warn"] }] */
           console.warn(
