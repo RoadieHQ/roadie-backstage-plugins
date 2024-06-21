@@ -29,22 +29,16 @@ import {
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
-import { githubApiRef, GithubClient, GithubApi } from '../apis';
+import { GithubClient } from '../apis';
 
 const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
-  let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
-  if (!githubClient) {
-    const auth = apiHolder.get(githubAuthApiRef);
-    if (auth) {
-      githubClient = new GithubClient({ githubAuthApi: auth, errorApi });
-    }
-  }
-  if (!githubClient) {
+  const auth = apiHolder.get(githubAuthApiRef);
+  if (!auth) {
     throw new Error(
       'The MarkdownCard component Failed to get the github client',
     );
   }
-  return githubClient;
+  return new GithubClient({ githubAuthApi: auth, errorApi });
 };
 
 const GithubFileContent = (props: MarkdownContentProps) => {
