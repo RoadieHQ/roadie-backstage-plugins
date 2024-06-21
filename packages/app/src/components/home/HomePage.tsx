@@ -40,12 +40,6 @@ export const HomePage = () => {
             <HomePageYourOpenPullRequestsCard />
           </Grid>
           <Grid item xs={12} md={6}>
-            <HomePageRSS
-              feedURL="http://localhost:7007/api/proxy/aws-news-feed/"
-              title="AWS News"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
             <CloudsmithStatsCard repo="roadie-npm" owner="roadie" />
           </Grid>
           <Grid item md={6} xs={12}>
@@ -56,6 +50,7 @@ export const HomePage = () => {
               feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
               title="Reuters News"
             />
+            s
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageMarkdown
@@ -63,15 +58,6 @@ export const HomePage = () => {
               owner="RoadieHQ"
               repo="roadie-backstage-plugins"
               path=".backstage/home-page.md"
-            />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <HomePageMarkdown
-              title="History"
-              owner="RoadieHQ"
-              repo="roadie-backstage-plugins"
-              path=".backstage/home-page-test.md"
-              branch="test-two-mdown"
             />
           </Grid>
           <Grid item xs={12} md={6}>
