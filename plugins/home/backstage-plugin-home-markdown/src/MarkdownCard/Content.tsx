@@ -16,30 +16,18 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert } from '@material-ui/lab';
-import { Progress, MarkdownContent } from '@backstage/core-components';
+import { MarkdownContent, Progress } from '@backstage/core-components';
 import {
-  useApi,
+  errorApiRef,
   githubAuthApiRef,
   SessionState,
+  useApi,
   useApiHolder,
-  ApiHolder,
-  errorApiRef,
-  ErrorApi,
 } from '@backstage/core-plugin-api';
 import { MarkdownContentProps } from './types';
-import { Button, Grid, Typography, Tooltip } from '@material-ui/core';
+import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
 import { GithubClient } from '../apis';
-
-const getGithubClient = (apiHolder: ApiHolder, errorApi: ErrorApi) => {
-  const auth = apiHolder.get(githubAuthApiRef);
-  if (!auth) {
-    throw new Error(
-      'The MarkdownCard component Failed to get the github client',
-    );
-  }
-  return new GithubClient({ githubAuthApi: auth, errorApi });
-};
 
 const GithubFileContent = (props: MarkdownContentProps) => {
   const { preserveHtmlComments } = props;
@@ -47,7 +35,7 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   const errorApi = useApi(errorApiRef);
 
   const { value, loading, error } = useAsync(async () => {
-    const githubClient = getGithubClient(apiHolder, errorApi);
+    const githubClient = GithubClient.fromConfig(apiHolder, errorApi);
     return githubClient.getContent({ ...props });
   }, [apiHolder]);
 

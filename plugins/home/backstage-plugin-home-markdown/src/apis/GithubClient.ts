@@ -15,7 +15,12 @@
  */
 
 import { GithubApi } from './GithubApi';
-import { ErrorApi, OAuthApi } from '@backstage/core-plugin-api';
+import {
+  ApiHolder,
+  ErrorApi,
+  githubAuthApiRef,
+  OAuthApi,
+} from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 
 const mimeTypeMap: Record<string, string> = {
@@ -44,6 +49,14 @@ export class GithubClient implements GithubApi {
 
   constructor(deps: { githubAuthApi: OAuthApi; errorApi: ErrorApi }) {
     this.githubAuthApi = deps.githubAuthApi;
+  }
+
+  static fromConfig(apiHolder: ApiHolder, errorApi: ErrorApi) {
+    const auth = apiHolder.get(githubAuthApiRef);
+    if (!auth) {
+      throw new Error('Failed to get the github client');
+    }
+    return new GithubClient({ githubAuthApi: auth, errorApi });
   }
 
   async getContent(props: {
