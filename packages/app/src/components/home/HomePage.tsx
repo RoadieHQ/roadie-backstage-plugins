@@ -50,7 +50,6 @@ export const HomePage = () => {
               feedURL="http://localhost:7007/api/proxy/reuters-news-feed/?best-topics=tech&post_type=best"
               title="Reuters News"
             />
-            s
           </Grid>
           <Grid item xs={12} md={6}>
             <HomePageMarkdown
