@@ -97,12 +97,14 @@ export class GithubClient implements GithubApi {
       const url = new URL(href, response.url);
 
       if (mimeType && url.host.includes('github.com')) {
-        const requestPath = url.pathname.replace(
-          new RegExp(`/${owner}/${repo}/blob/(main|master)`),
-          `/repos/${owner}/${repo}/contents`,
-        );
         try {
-          const contentResponse = await octokit.request(`GET ${requestPath}`);
+          const splitUrl = url.pathname.split('/');
+          const filePath = splitUrl.slice(5).join('/');
+          const imageRepo = splitUrl[2];
+          const imageOwner = splitUrl[1];
+          const contentResponse = await octokit.request(
+            `GET /repos/${imageOwner}/${imageRepo}/contents/${filePath}`,
+          );
           media[
             href
           ] = `data:${mimeType};base64,${contentResponse.data.content.replaceAll(
