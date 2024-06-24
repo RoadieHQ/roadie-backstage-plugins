@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { useAsync } from 'react-use';
 import {
   Typography,
@@ -99,38 +99,28 @@ const getDetailsUrl = (
   return <Link to={url.toString()}>{packageName}</Link>;
 };
 
+const COLUMNS: TableColumn[] = [
+  { title: 'Name', field: 'name' },
+  { title: 'Created', field: 'createdAt' },
+  { title: 'State', field: 'state' },
+  { title: 'Severity', field: 'severity' },
+  { title: 'Patched Version', field: 'patched_version' },
+];
+
 export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
   const { entity } = useEntity();
   const projectName = useProjectName(entity);
-  const [filteredTableData, setFilteredTableData] = useState<Node[]>(
-    repository.vulnerabilityAlerts.nodes,
-  );
   const [stateFilter, setStateFilter] = useState<StateFilter>('OPEN');
 
-  const filterAlerts = (newStateFilter: StateFilter) => {
-    setStateFilter(newStateFilter);
-
+  const filteredTableData = useMemo(() => {
     const issues = repository.vulnerabilityAlerts.nodes;
-
-    if (newStateFilter === 'ALL') {
-      setFilteredTableData(issues);
-    } else {
-      setFilteredTableData(
-        issues.filter(node => node.state === newStateFilter),
-      );
+    if (stateFilter === 'ALL') {
+      return issues;
     }
-  };
+    return issues.filter(node => node.state === stateFilter);
+  }, [stateFilter, repository]);
 
-  const columns: TableColumn[] = [
-    { title: 'Name', field: 'name' },
-    { title: 'Created', field: 'createdAt' },
-    { title: 'State', field: 'state' },
-    { title: 'Severity', field: 'severity' },
-    { title: 'Patched Version', field: 'patched_version' },
-  ];
-  const tableData = filteredTableData.length > 0 ? filteredTableData : [];
-
-  const structuredData = tableData.map(node => {
+  const structuredData = filteredTableData.map(node => {
     return {
       createdAt: DateTime.fromISO(node.createdAt).toLocaleString(),
       state: capitalize(node.state),
@@ -162,25 +152,25 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
               >
                 <Button
                   color={stateFilter === 'ALL' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts('ALL')}
+                  onClick={() => setStateFilter('ALL')}
                 >
                   ALL
                 </Button>
                 <Button
                   color={stateFilter === 'OPEN' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts('OPEN')}
+                  onClick={() => setStateFilter('OPEN')}
                 >
                   OPEN
                 </Button>
                 <Button
                   color={stateFilter === 'FIXED' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts('FIXED')}
+                  onClick={() => setStateFilter('FIXED')}
                 >
                   FIXED
                 </Button>
                 <Button
                   color={stateFilter === 'DISMISSED' ? 'primary' : 'default'}
-                  onClick={() => filterAlerts('DISMISSED')}
+                  onClick={() => setStateFilter('DISMISSED')}
                 >
                   DISMISSED
                 </Button>
@@ -190,7 +180,7 @@ export const DenseTable: FC<DenseTableProps> = ({ repository, detailsUrl }) => {
         </>
       }
       options={{ search: true, paging: true, padding: 'dense' }}
-      columns={columns}
+      columns={COLUMNS}
       data={structuredData}
     />
   );

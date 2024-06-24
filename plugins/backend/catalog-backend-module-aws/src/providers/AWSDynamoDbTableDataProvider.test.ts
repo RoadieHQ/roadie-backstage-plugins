@@ -20,7 +20,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 
 const validConfig = {
   accountId: '123456789012',
-  roleArn: 'arn:aws:sts::123456789012:role/tester',
+  roleName: 'arn:aws:sts::123456789012:role/tester',
   region: 'eu-west-1',
   dynamodbTableData: {
     tableName: 'TenantManagerState',
@@ -34,7 +34,7 @@ const validConfig = {
 
 const invalidConfig = {
   accountId: '123456789012',
-  roleArn: 'arn:aws:sts::123456789012:role/tester',
+  roleName: 'arn:aws:sts::123456789012:role/tester',
   region: 'eu-west-1',
 };
 

@@ -20,6 +20,7 @@ import fs from 'fs-extra';
 import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import YAML from 'yaml';
+import YAWN from 'yawn-yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
 
@@ -139,6 +140,7 @@ export function createMergeAction() {
     path: string;
     content: any;
     mergeArrays?: boolean;
+    preserveYamlComments?: boolean;
     options?: stringifyOptions;
   }>({
     id: 'roadiehq:utils:merge',
@@ -166,6 +168,13 @@ export function createMergeAction() {
             title: 'Merge Arrays?',
             description:
               'Where a value is an array the merge function should concatenate the provided array value with the target array',
+          },
+          preserveYamlComments: {
+            type: 'boolean',
+            default: false,
+            title: 'Preserve Comments?',
+            description:
+              'Will preserve standalone and inline comments in YAML files',
           },
           options: {
             ...yamlOptionsSchema,
@@ -219,14 +228,29 @@ export function createMergeAction() {
             typeof ctx.input.content === 'string'
               ? YAML.parse(ctx.input.content)
               : ctx.input.content; // This supports the case where dynamic keys are required
-          mergedContent = YAML.stringify(
-            mergeWith(
-              YAML.parse(originalContent),
+          if (ctx.input.preserveYamlComments) {
+            const yawn = new YAWN(originalContent);
+            const parsedOriginal = yawn.json;
+            const mergedJsonContent = mergeWith(
+              parsedOriginal,
               newContent,
               ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
-            ),
-            ctx.input.options,
-          );
+            );
+            yawn.json = mergedJsonContent;
+            mergedContent = YAML.stringify(
+              YAML.parseDocument(yawn.yaml),
+              ctx.input.options,
+            );
+          } else {
+            mergedContent = YAML.stringify(
+              mergeWith(
+                YAML.parse(originalContent),
+                newContent,
+                ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+              ),
+              ctx.input.options,
+            );
+          }
           break;
         }
         default:

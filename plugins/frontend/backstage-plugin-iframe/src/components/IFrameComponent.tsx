@@ -21,6 +21,7 @@ import {
   IFrameComponentContentProps,
   IFrameComponentProps,
   IFrameFromAnnotationProps,
+  IframeFromTemplatedSrcProps,
 } from './types';
 import { Content, ContentHeader } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
@@ -80,6 +81,38 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
   );
 };
 
+const IframeFromTemplatedSrc = (props: IframeFromTemplatedSrcProps) => {
+  const { templatedSrc, height, width } = props;
+  const title =
+    props.title || 'Backstage IFrame (Note you can modify this with the props)';
+  const configApi = useApi(configApiRef);
+  const allowList = configApi.getOptionalStringArray('iframe.allowList');
+  const { entity } = useEntity();
+  let errorMessage = '';
+
+  const annotations = entity?.metadata.annotations ?? {};
+  const src = templatedSrc.replace(
+    /{{(.+)}}/g,
+    (m, i) => annotations[i.trim()] ?? m,
+  );
+
+  errorMessage = determineError(src, allowList);
+
+  if (errorMessage) {
+    return <ErrorComponent errorMessage={errorMessage} />;
+  }
+
+  return (
+    <IFrameComponentContent
+      classes={props.classes}
+      src={src}
+      title={title}
+      height={height}
+      width={width}
+    />
+  );
+};
+
 const IFrameFromSrc = (props: IFrameProps) => {
   const { src, height, width } = props;
   const title =
@@ -109,12 +142,24 @@ const IFrameFromSrc = (props: IFrameProps) => {
  * @public
  */
 export const IFrameCard = (props: IFrameComponentProps) => {
-  const { src, srcFromAnnotation, height, width, title } = props;
+  const { src, srcFromAnnotation, templatedSrc, height, width, title } = props;
   if (src) {
     return (
       <IFrameFromSrc
         classes={props.classes}
         src={src}
+        height={height}
+        width={width}
+        title={title}
+      />
+    );
+  }
+
+  if (templatedSrc) {
+    return (
+      <IframeFromTemplatedSrc
+        classes={props.classes}
+        templatedSrc={templatedSrc}
         height={height}
         width={width}
         title={title}

@@ -21,7 +21,11 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -35,15 +39,17 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleArn = config.getOptionalString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSDynamoDbTableProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
@@ -52,16 +58,23 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     return `aws-dynamo-db-table-${this.accountId}-${this.providerId ?? 0}`;
   }
 
+  private async getDdb() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new DynamoDB({ credentials })
+      : new DynamoDB(credentials);
+  }
+
   async run(): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
     const groups = await this.getGroups();
 
-    const credentials = this.getCredentials();
-    const ddb = new DynamoDB({ credentials });
     const defaultAnnotations = await this.buildDefaultAnnotations();
-
+    const ddb = await this.getDdb();
     this.logger.info(
       `Retrieving all DynamoDB tables for account ${this.accountId}`,
     );
@@ -105,6 +118,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                  ...relationshipsFromTags(tags),
                   type: 'dynamo-db-table',
                 },
               };

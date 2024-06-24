@@ -21,7 +21,11 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -35,21 +39,32 @@ export class AWSEC2Provider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSEC2Provider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-ec2-provider-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getEc2() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new EC2({ credentials, region: this.region })
+      : new EC2(credentials);
   }
 
   async run(): Promise<void> {
@@ -61,8 +76,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
     const ec2Resources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const ec2 = new EC2({ credentials, region: this.region });
+    const ec2 = await this.getEc2();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -104,6 +118,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
             },
             spec: {
               owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(instance.Tags),
               type: 'ec2-instance',
             },
           };

@@ -21,7 +21,11 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -34,21 +38,32 @@ export class AWSRDSProvider extends AWSEntityProvider {
       logger: winston.Logger;
       catalogApi?: CatalogApi;
       providerId?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSRDSProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-rds-provider-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getRdsClient() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new RDS({ credentials, region: this.region })
+      : new RDS(credentials);
   }
 
   async run(): Promise<void> {
@@ -60,8 +75,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const rdsClient = new RDS({ credentials, region: this.region });
+    const rdsClient = await this.getRdsClient();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -110,6 +124,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
+              ...relationshipsFromTags(dbInstance.TagList),
               type: 'rds-instance',
             },
           };
