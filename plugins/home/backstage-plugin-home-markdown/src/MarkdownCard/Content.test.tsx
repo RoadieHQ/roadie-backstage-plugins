@@ -28,7 +28,10 @@ import {
   GetContentResponse,
   githubApiRef,
   GithubApi,
+  GithubClient,
 } from '../apis';
+
+jest.mock('../apis/GithubClient');
 
 const mockAccessToken = jest
   .fn()
@@ -86,6 +89,12 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 ];
 
 describe('<MarkdownContent>', () => {
+  beforeEach(() => {
+    const mockFromConfig = jest.fn().mockReturnValue(mockGithubApi);
+
+    GithubClient.fromConfig = mockFromConfig;
+  });
+
   it('should render sign in page', async () => {
     const mockGithubUnAuth = {
       getAccessToken: async (_: string[]) => 'test-token',

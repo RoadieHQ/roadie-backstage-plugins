@@ -29,8 +29,11 @@ import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 import { CatalogApi } from '@backstage/catalog-client';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { ConfigReader } from '@backstage/config';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 
 export abstract class AWSEntityProvider implements EntityProvider {
+  protected readonly useTemporaryCredentials: boolean;
   protected readonly providerId?: string;
   protected readonly logger: winston.Logger;
   protected connection?: EntityProviderConnection;
@@ -48,6 +51,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     this.logger = options.logger;
@@ -55,6 +59,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.ownerTag = options.ownerTag;
     this.catalogApi = options.catalogApi;
     this.account = account;
+    this.useTemporaryCredentials = !!options.useTemporaryCredentials;
     this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
       new ConfigReader({ aws: { accounts: [account] } }),
     );
@@ -69,6 +74,19 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   protected getOwnerTag() {
     return this.ownerTag ?? 'owner';
+  }
+
+  protected getCredentials() {
+    const region = parseArn(
+      this.account.roleArn ?? this.account.roleName,
+    ).region;
+    return fromTemporaryCredentials({
+      params: {
+        RoleArn: this.account.roleArn,
+        ExternalId: this.account.externalId,
+      },
+      clientConfig: { region: region },
+    });
   }
 
   protected async getCredentialsProvider() {

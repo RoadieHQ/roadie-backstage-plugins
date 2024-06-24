@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.0
+
+### Minor Changes
+
+- be22bad: Allow explicit temporary credentials construction for AWS entity providers to enable custom role assumption functionality.
+
 ## 4.0.2
 
 ### Patch Changes

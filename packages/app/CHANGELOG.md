@@ -1,5 +1,14 @@
 # app
 
+## 1.1.4
+
+### Patch Changes
+
+- defd115: Fix private image rendering for GitHub
+- Updated dependencies [668bdc7]
+- Updated dependencies [defd115]
+  - @roadiehq/backstage-plugin-home-markdown@2.5.26
+
 ## 1.1.3
 
 ### Patch Changes

@@ -42,21 +42,32 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
     const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSEKSClusterProvider(
-      { accountId, roleName, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-eks-cluster-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getEks() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new EKS({ credentials, region: this.region })
+      : new EKS(credentials);
   }
 
   async run(): Promise<void> {
@@ -70,8 +81,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     );
     const eksResources: ResourceEntity[] = [];
 
-    const credentials = await this.getCredentialsProvider();
-    const eks = new EKS(credentials);
+    const eks = await this.getEks();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
