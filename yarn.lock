@@ -11987,7 +11987,7 @@
 
 "@types/git-url-parse@^9.0.1":
   version "9.0.3"
-  resolved "https://artifactory.ida.avast.com/artifactory/api/npm/registry.npmjs.org-virtual/@types/git-url-parse/-/git-url-parse-9.0.3.tgz#7ee022f8fa06ea74148aa28521cbff85915ac09d"
+  resolved "https://registry.yarnpkg.com/@types/git-url-parse/-/git-url-parse-9.0.3.tgz#7ee022f8fa06ea74148aa28521cbff85915ac09d"
   integrity sha512-Wrb8zeghhpKbYuqAOg203g+9YSNlrZWNZYvwxJuDF4dTmerijqpnGbI79yCuPtHSXHPEwv1pAFUB4zsSqn82Og==
 
 "@types/glob@^7.2.0":
