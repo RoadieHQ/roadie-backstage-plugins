@@ -40,21 +40,32 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
     const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSIAMRoleProvider(
-      { accountId, roleName, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-iam-role-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getIam() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new IAM({ credentials, region: this.region })
+      : new IAM(credentials);
   }
 
   async run(): Promise<void> {
@@ -68,11 +79,9 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     );
     const roleResources: ResourceEntity[] = [];
 
-    const credentials = await this.getCredentialsProvider();
-
     const defaultAnnotations = this.buildDefaultAnnotations();
 
-    const iam = new IAM(credentials);
+    const iam = await this.getIam();
 
     const paginatorConfig = {
       client: iam,

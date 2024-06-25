@@ -1,5 +1,12 @@
 ## 1.1.0
 
+## 2.5.26
+
+### Patch Changes
+
+- 668bdc7: Make sure the plugin uses the right GitHub Client
+- defd115: Fix private image rendering for GitHub
+
 ## 2.5.25
 
 ### Patch Changes

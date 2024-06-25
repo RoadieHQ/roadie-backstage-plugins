@@ -248,7 +248,7 @@ spec:
         path: ${{ parameters.path }}
         parser: ${{ parameters.parser }}
   output:
-    content: ${{ steps.serialize.output.content }}
+    content: ${{ steps.parsefile.output.content }}
 ```
 
 ### Serialise to JSON or YAML

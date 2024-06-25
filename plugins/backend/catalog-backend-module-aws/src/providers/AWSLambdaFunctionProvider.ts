@@ -43,21 +43,32 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
     const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSLambdaFunctionProvider(
-      { accountId, roleName, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-lambda-function-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getLambda() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new Lambda({ credentials, region: this.region })
+      : new Lambda(credentials);
   }
 
   async run(): Promise<void> {
@@ -72,8 +83,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const credentials = await this.getCredentialsProvider();
-    const lambda = new Lambda(credentials);
+    const lambda = await this.getLambda();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
