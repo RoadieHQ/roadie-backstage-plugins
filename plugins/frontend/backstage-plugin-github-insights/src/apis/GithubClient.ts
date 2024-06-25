@@ -83,7 +83,6 @@ export class GithubClient implements GithubApi {
     const mediaLinks = [
       ...content.matchAll(
         /!\[([^\]]*)\]\(([^)]+\.(?:png|jpg|jpeg|gif|webp|svg))\)/gi,
-        // /\[([^\[\]]*)\]\((.*?)(\.png|\.jpg|\.jpeg|\.gif|\.webp|\.svg)(.*)\)/gim,
       ),
     ].map(match => [match[2], match[3]].join(''));
 
