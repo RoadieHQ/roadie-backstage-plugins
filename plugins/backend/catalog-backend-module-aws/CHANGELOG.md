@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.1
+
+### Patch Changes
+
+- 3b56b9c: Label values are sanitized a bit better.
+
 ## 4.1.0
 
 ### Minor Changes
