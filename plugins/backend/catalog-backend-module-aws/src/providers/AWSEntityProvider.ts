@@ -119,9 +119,12 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async buildDefaultAnnotations() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
     const sts = this.useTemporaryCredentials
-      ? new STS({ credentials: this.getCredentials() })
-      : new STS(await this.getCredentialsProvider());
+      ? new STS({ credentials: credentials, region: this.region })
+      : new STS(credentials);
 
     const account = await sts.getCallerIdentity({});
 
