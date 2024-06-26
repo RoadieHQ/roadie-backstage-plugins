@@ -68,6 +68,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   get accountId() {
     return this.account.accountId;
   }
+
   get region() {
     return this.account.region;
   }
@@ -118,7 +119,9 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async buildDefaultAnnotations() {
-    const sts = new STS(await this.getCredentialsProvider());
+    const sts = this.useTemporaryCredentials
+      ? new STS({ credentials: this.getCredentials() })
+      : new STS(await this.getCredentialsProvider());
 
     const account = await sts.getCallerIdentity({});
 
