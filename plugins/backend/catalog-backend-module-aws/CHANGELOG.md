@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.2
+
+### Patch Changes
+
+- cf05e8a: Add temporary credentials option to annotations retrieval also.
+
 ## 4.1.1
 
 ### Patch Changes
