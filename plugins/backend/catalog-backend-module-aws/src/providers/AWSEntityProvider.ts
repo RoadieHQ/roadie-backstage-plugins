@@ -78,15 +78,15 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected getCredentials() {
-    const region = parseArn(
-      this.account.roleArn ?? this.account.roleName,
-    ).region;
+    const arnParse = parseArn(this.account.roleArn ?? this.account.roleName);
+
+    const region = this.region ?? arnParse.region;
     return fromTemporaryCredentials({
       params: {
         RoleArn: this.account.roleArn,
         ExternalId: this.account.externalId,
       },
-      clientConfig: { region: region },
+      clientConfig: region ? { region: region } : undefined,
     });
   }
 
