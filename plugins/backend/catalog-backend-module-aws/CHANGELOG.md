@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.4
+
+### Patch Changes
+
+- 715a847: Use region only when available.
+
 ## 4.1.3
 
 ### Patch Changes
