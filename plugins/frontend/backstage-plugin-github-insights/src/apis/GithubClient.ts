@@ -15,11 +15,7 @@
  */
 
 import { GithubApi } from './GithubApi';
-import {
-  ApiHolder,
-  githubAuthApiRef,
-  OAuthApi,
-} from '@backstage/core-plugin-api';
+import { OAuthApi } from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import parseGitUrl from 'git-url-parse';
 import { MarkdownContentProps } from '../components/Widgets/MarkdownContent/types';
@@ -50,14 +46,6 @@ export class GithubClient implements GithubApi {
 
   constructor(deps: { githubAuthApi: OAuthApi }) {
     this.githubAuthApi = deps.githubAuthApi;
-  }
-
-  static fromConfig(apiHolder: ApiHolder) {
-    const auth = apiHolder.get(githubAuthApiRef);
-    if (!auth) {
-      throw new Error('Failed to get the github client');
-    }
-    return new GithubClient({ githubAuthApi: auth });
   }
 
   async getContent(props: MarkdownContentProps): Promise<{

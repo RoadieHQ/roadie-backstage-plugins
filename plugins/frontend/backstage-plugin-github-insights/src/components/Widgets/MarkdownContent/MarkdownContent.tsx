@@ -21,6 +21,7 @@ import {
   Progress,
 } from '@backstage/core-components';
 import {
+  ApiHolder,
   githubAuthApiRef,
   SessionState,
   useApi,
@@ -29,14 +30,30 @@ import {
 import { MarkdownContentProps } from './types';
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
-import { GithubClient } from '../../../apis';
+import { GithubApi, githubApiRef, GithubClient } from '../../../apis';
+
+const getGithubClient = (apiHolder: ApiHolder) => {
+  let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
+  if (!githubClient) {
+    const auth = apiHolder.get(githubAuthApiRef);
+    if (auth) {
+      githubClient = new GithubClient({ githubAuthApi: auth });
+    }
+  }
+  if (!githubClient) {
+    throw new Error(
+      'The MarkdownCard component Failed to get the github client',
+    );
+  }
+  return githubClient;
+};
 
 const GithubFileContent = (props: MarkdownContentProps) => {
   const { preserveHtmlComments } = props;
   const apiHolder = useApiHolder();
 
   const { value, loading, error } = useAsync(async () => {
-    const githubClient = GithubClient.fromConfig(apiHolder);
+    const githubClient = getGithubClient(apiHolder);
     return githubClient.getContent({ ...props });
   }, [apiHolder]);
 
