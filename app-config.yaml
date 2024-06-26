@@ -34,6 +34,8 @@ integrations:
     # - host: ghe.example.net
     #   apiBaseUrl: https://ghe.example.net/api/v3
     #   token: ${GHE_TOKEN}
+bitbucket:
+  proxyPath: /bitbucket/api
 
 proxy:
   '/test':
@@ -61,6 +63,14 @@ proxy:
       Content-Type: 'application/json'
       X-Atlassian-Token: 'no-check'
       User-Agent: 'Roadie-Backstage'
+
+  '/bitbucket/api':
+    target: https://bitbucket.org
+    changeOrigin: true
+    headers:
+      Authorization: Bearer ${BITBUCKET_TOKEN}
+      Accept: 'application/json'
+      Content-Type: 'application/json'
 
   '/travisci/api':
     target: https://api.travis-ci.com
