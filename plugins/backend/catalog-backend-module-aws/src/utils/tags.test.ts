@@ -15,7 +15,7 @@
  */
 
 import { ownerFromTags, labelsFromTags, relationshipsFromTags } from './tags';
-import { Entity } from '@backstage/catalog-model';
+import { Entity, KubernetesValidatorFunctions } from '@backstage/catalog-model';
 
 describe('labelsFromTags and ownerFromTags', () => {
   describe('labelsFromTags', () => {
@@ -47,7 +47,19 @@ describe('labelsFromTags and ownerFromTags', () => {
     it('should handle complex keys and values in an array of tags', () => {
       const tags = [{ Key: 'tag:one:two', Value: 'value1:value2' }];
       const result = labelsFromTags(tags);
-      expect(result).toEqual({ tag_one_two: 'value1:value2' });
+      expect(result).toEqual({ tag_one_two: 'value1-value2' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
+    });
+
+    it('should handle a url as a value', () => {
+      const tags = [{ Key: 'tag:one:two', Value: 'https://blha.com/blahblah' }];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'https---blha.com-blahblah' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
     });
 
     it('should ignore keys without values in an object of tags', () => {
