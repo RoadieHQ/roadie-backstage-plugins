@@ -46,7 +46,9 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
       .reduce((acc: Record<string, string>, tag) => {
         if (tag.Key && tag.Value) {
           const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
-          acc[key] = tag.Value.replaceAll('/', '-').substring(0, 63);
+          acc[key] = tag.Value.replaceAll('/', '-')
+            .replaceAll(':', '-')
+            .substring(0, 63);
         }
         return acc;
       }, {});
