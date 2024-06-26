@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.3
+
+### Patch Changes
+
+- c3d4096: Add region config to STS client
+
 ## 4.1.2
 
 ### Patch Changes
