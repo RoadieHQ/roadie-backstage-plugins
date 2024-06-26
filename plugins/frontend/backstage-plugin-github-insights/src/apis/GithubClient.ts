@@ -15,9 +15,14 @@
  */
 
 import { GithubApi } from './GithubApi';
-import { ErrorApi, OAuthApi } from '@backstage/core-plugin-api';
+import {
+  ApiHolder,
+  githubAuthApiRef,
+  OAuthApi,
+} from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 import parseGitUrl from 'git-url-parse';
+import { MarkdownContentProps } from '../components/Widgets/MarkdownContent/types';
 
 const mimeTypeMap: Record<string, string> = {
   svg: 'image/svg+xml',
@@ -42,20 +47,20 @@ const defaultBaseUrl = 'https://api.github.com';
 
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
-  private errorApi: ErrorApi;
 
-  constructor(deps: { githubAuthApi: OAuthApi; errorApi: ErrorApi }) {
+  constructor(deps: { githubAuthApi: OAuthApi }) {
     this.githubAuthApi = deps.githubAuthApi;
-    this.errorApi = deps.errorApi;
   }
 
-  async getContent(props: {
-    baseUrl?: string;
-    owner: string;
-    repo: string;
-    branch?: string;
-    path?: string;
-  }): Promise<{
+  static fromConfig(apiHolder: ApiHolder) {
+    const auth = apiHolder.get(githubAuthApiRef);
+    if (!auth) {
+      throw new Error('Failed to get the github client');
+    }
+    return new GithubClient({ githubAuthApi: auth });
+  }
+
+  async getContent(props: MarkdownContentProps): Promise<{
     content: string;
     media: Record<string, string>;
     links: Record<string, string>;
@@ -96,27 +101,28 @@ export class GithubClient implements GithubApi {
         continue;
       }
 
-      const linkLowerCased = mediaLink.toLocaleLowerCase('en-US');
-      const isAbsolute = linkLowerCased.startsWith('http');
+      const getUrl = () => {
+        const linkLowerCased = mediaLink.toLocaleLowerCase('en-US');
+        if (!linkLowerCased.startsWith('http')) {
+          return new URL(mediaLink, response.data.url);
+        }
+        if (linkLowerCased.includes('github')) {
+          const {
+            owner: ownerLink,
+            name: repoLink,
+            ref: refLink,
+            filepath,
+          } = parseGitUrl(mediaLink);
+          if (filepath) {
+            return `/repos/${ownerLink}/${repoLink}/contents/${filepath}${
+              refLink && `?ref=${refLink}`
+            }`;
+          }
+        }
+        return undefined;
+      };
 
-      let url;
-      // 1. Media link is relative to the readme file - eg. './img/myimage.png'
-      if (!isAbsolute) {
-        url = new URL(mediaLink, response.data.url);
-      } else if (linkLowerCased.includes(resource)) {
-        // 2. Media link is not referencing to an external github instance
-        // eg. https://github.com/myorg/myrepo/blob/master/32x32/gcp-logs.png
-        // we need a relative reference to create GitHub API call
-        const {
-          owner: ownerLink,
-          name: repoLink,
-          ref: refLink,
-          filepath,
-        } = parseGitUrl(mediaLink);
-
-        url = `/repos/${ownerLink}/${repoLink}/contents/${filepath}?ref=${refLink}`;
-      }
-
+      const url = getUrl();
       if (url) {
         try {
           const contentResponse = await octokit.request(`GET ${url}`);
@@ -127,7 +133,10 @@ export class GithubClient implements GithubApi {
             '',
           )}`;
         } catch (e: any) {
-          this.errorApi.post(e);
+          /* eslint no-console: ["error", { allow: ["warn"] }] */
+          console.warn(
+            `There was a problem loading the image content at ${url} via the GitHub API due to error: ${e.message}`,
+          );
         }
       }
     }
