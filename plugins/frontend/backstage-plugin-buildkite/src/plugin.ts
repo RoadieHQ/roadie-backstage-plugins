@@ -22,7 +22,7 @@ import {
   createRouteRef,
   createRoutableExtension,
 } from '@backstage/core-plugin-api';
-import { buildKiteApiRef, BuildkiteApi } from './api';
+import { buildkiteApiRef, BuildkiteApi } from './api';
 
 export const rootRouteRef = createRouteRef({
   id: 'buildkite',
@@ -40,7 +40,7 @@ export const buildkitePlugin = createPlugin({
   id: 'buildkite',
   apis: [
     createApiFactory({
-      api: buildKiteApiRef,
+      api: buildkiteApiRef,
       deps: {
         discoveryApi: discoveryApiRef,
         fetchApi: fetchApiRef,

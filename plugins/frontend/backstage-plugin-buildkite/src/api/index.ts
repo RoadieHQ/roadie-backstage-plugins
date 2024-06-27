@@ -20,9 +20,13 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 
-export const buildKiteApiRef = createApiRef<BuildkiteApi>({
+export const buildkiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
 });
+
+// buildKiteApiRef preserves backwards compatibility; the API ref
+// was originally exported as buildKiteApiRef.
+export const buildKiteApiRef = buildkiteApiRef;
 
 const DEFAULT_PROXY_PATH = '/buildkite/api';
 
