@@ -15,13 +15,18 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
+import { BUILDKITE_ANNOTATION, BUILDKITE_BRANCH_ANNOTATION } from '../consts';
 
 export const useProjectEntity = (entity: Entity) => {
   const projectSlug = entity.metadata?.annotations?.[
-    'buildkite.com/project-slug'
+    BUILDKITE_ANNOTATION
+  ] as string;
+  const branch = entity.metadata?.annotations?.[
+    BUILDKITE_BRANCH_ANNOTATION
   ] as string;
   return {
     owner: projectSlug.split('/')[0],
     repo: projectSlug.split('/')[1],
+    branch: branch,
   };
 };

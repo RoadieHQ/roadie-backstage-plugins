@@ -22,6 +22,31 @@ export const entityMock = {
   },
 };
 
+export const entityMockWithBranchAnnotation = {
+  metadata: {
+    namespace: 'default',
+    annotations: {
+      'backstage.io/managed-by-location':
+        'url:https://github.com/mcalus3/sample-service/blob/master/buildkite-config.yaml',
+      'buildkite.com/project-slug': 'rbnetwork/example-pipeline',
+      'buildkite.com/branch': 'main',
+    },
+    name: 'sample-service',
+    description:
+      'A service for testing Backstage functionality. For example, we can trigger errors\non the sample-service, these are sent to Sentry, then we can view them in the \nBackstage plugin for Sentry.\n',
+    uid: '191a6877-8315-429a-bbd3-1051029de374',
+    etag: 'OWRkNmRiMTktZDYyYy00ZDM3LWFmNGItYjBhMWY2YTg4MDNk',
+    generation: 1,
+  },
+  apiVersion: 'backstage.io/v1alpha1',
+  kind: 'Component',
+  spec: {
+    type: 'service',
+    owner: 'david@roadie.io',
+    lifecycle: 'experimental',
+  },
+};
+
 // http://localhost:7007/api/proxy/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds?page=1&per_page=5
 export const buildsResponseMock = [
   {

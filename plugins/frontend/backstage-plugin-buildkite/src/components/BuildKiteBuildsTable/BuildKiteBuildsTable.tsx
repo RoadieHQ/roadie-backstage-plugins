@@ -149,10 +149,11 @@ export const CITableView: FC<TableProps> = ({
 );
 
 const BuildkiteBuildsTable: FC<{ entity: Entity }> = ({ entity }) => {
-  const { owner, repo } = useProjectEntity(entity);
+  const { owner, repo, branch } = useProjectEntity(entity);
   const [tableProps, { setPage, retry, setPageSize }] = useBuilds({
     owner,
     repo,
+    branch,
   });
 
   return (

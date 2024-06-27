@@ -60,6 +60,10 @@ export const cicdContent = (
 metadata:
   annotations:
     buildkite.com/project-slug: [exampleorganization/exampleproject]
+    # Optional; the buildkite.com/branch annotation can be used to configure
+    # the plugin to only display builds of the specified branch name.
+    # If omitted, the plugin displays builds from all branches.
+    buildkite.com/branch: 'main'
 ```
 
 2. Get an api token from buildkite and export it to your shell.
