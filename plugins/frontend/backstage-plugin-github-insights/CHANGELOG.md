@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.3.31
+
+### Patch Changes
+
+- c6e2261: Make images load from private github.com urls and do not use alert api for fetch failures
+
 ## 2.3.30
 
 ### Patch Changes
