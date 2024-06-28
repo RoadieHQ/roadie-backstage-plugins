@@ -41,12 +41,12 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/backend-plugin-api": "^0.6.17",
+    "@backstage/backend-common": "^0.23.2",
+    "@backstage/backend-plugin-api": "^0.6.21",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/plugin-scaffolder-backend": "^1.22.5",
-    "@backstage/plugin-scaffolder-node": "^0.4.3",
+    "@backstage/plugin-scaffolder-backend": "^1.22.11",
+    "@backstage/plugin-scaffolder-node": "^0.4.7",
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
@@ -58,8 +58,8 @@
     "yawn-yaml": "^2.2.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.4",
-    "@backstage/backend-test-utils": "^0.3.7",
+    "@backstage/cli": "^0.26.10",
+    "@backstage/backend-test-utils": "^0.4.3",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
