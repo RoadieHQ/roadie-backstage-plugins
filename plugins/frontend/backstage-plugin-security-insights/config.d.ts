@@ -15,16 +15,23 @@
  */
 
 export interface Config {
-  /** Minimum severity level configurations for the Dependabot Alerts */
+  /**
+   * @deepVisibility frontend
+   */
   dependabotAlertsConfiguration?: {
     /**
-     *
-     * @visibility frontend
+     * Only show alerts with the specified severity levels.
+     * low, medium, high, critical
      */
+    severity?: string[];
     /**
-     *
-     * @items.visibility frontend
+     * Set a deadline (in days) to display for each severity level of alert.
      */
-    severity: string[];
+    deadlines?: {
+      low?: number;
+      medium?: number;
+      high?: number;
+      critical?: number;
+    };
   };
 }
