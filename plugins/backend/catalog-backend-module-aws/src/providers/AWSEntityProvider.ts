@@ -68,6 +68,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   get accountId() {
     return this.account.accountId;
   }
+
   get region() {
     return this.account.region;
   }
@@ -77,15 +78,15 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected getCredentials() {
-    const region = parseArn(
-      this.account.roleArn ?? this.account.roleName,
-    ).region;
+    const arnParse = parseArn(this.account.roleArn ?? this.account.roleName);
+
+    const region = this.region ?? arnParse.region;
     return fromTemporaryCredentials({
       params: {
         RoleArn: this.account.roleArn,
         ExternalId: this.account.externalId,
       },
-      clientConfig: { region: region },
+      clientConfig: region ? { region: region } : undefined,
     });
   }
 
@@ -118,7 +119,12 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected async buildDefaultAnnotations() {
-    const sts = new STS(await this.getCredentialsProvider());
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    const sts = this.useTemporaryCredentials
+      ? new STS({ credentials: credentials, region: this.region })
+      : new STS(credentials);
 
     const account = await sts.getCallerIdentity({});
 

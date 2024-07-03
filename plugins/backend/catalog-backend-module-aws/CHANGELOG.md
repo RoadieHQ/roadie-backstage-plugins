@@ -1,5 +1,29 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.4
+
+### Patch Changes
+
+- 715a847: Use region only when available.
+
+## 4.1.3
+
+### Patch Changes
+
+- c3d4096: Add region config to STS client
+
+## 4.1.2
+
+### Patch Changes
+
+- cf05e8a: Add temporary credentials option to annotations retrieval also.
+
+## 4.1.1
+
+### Patch Changes
+
+- 3b56b9c: Label values are sanitized a bit better.
+
 ## 4.1.0
 
 ### Minor Changes
