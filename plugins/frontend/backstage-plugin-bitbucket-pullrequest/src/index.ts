@@ -13,4 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { bitbucketPlugin, EntityBitbucketPage } from './plugin';
+export { bitbucketPlugin, EntityBitbucketPullRequestsContent } from './plugin';

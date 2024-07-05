@@ -36,9 +36,9 @@ export const bitbucketPlugin = createPlugin({
   },
 });
 
-export const EntityBitbucketPage = bitbucketPlugin.provide(
+export const EntityBitbucketPullRequestsContent = bitbucketPlugin.provide(
   createRoutableExtension({
-    name: 'EntityBitbucketPage',
+    name: 'EntityBitbucketPullRequestsContent',
     component: () => import('./components/Router').then(m => m.Router),
     mountPoint: rootRouteRef,
   }),

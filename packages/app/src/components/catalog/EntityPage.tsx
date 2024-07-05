@@ -56,7 +56,7 @@ import {
   EntityGithubPullRequestsOverviewCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
 
-import { EntityBitbucketPage } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
+import { EntityBitbucketPullRequestsContent } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
 
 import {
   isAWSLambdaAvailable,
@@ -294,7 +294,7 @@ const serviceEntityPage = (
       <EntityGithubPullRequestsContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/bitbucket-pullrequests" title="Bitbucket">
-      <EntityBitbucketPage />
+      <EntityBitbucketPullRequestsContent />
     </EntityLayout.Route>
     <EntityLayout.Route path="/code-insights" title="Code Insights">
       <EntityGithubInsightsContent />

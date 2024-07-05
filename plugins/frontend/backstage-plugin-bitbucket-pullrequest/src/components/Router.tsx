@@ -16,7 +16,7 @@
 import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { Route, Routes } from 'react-router';
-import PullRequestsPage from './PullRequestsPage';
+import PullRequestList from './PullRequestList';
 import { BITBUCKET_PULL_REQUESTS_ANNOTATION } from '../utils/isBITBUCKETSlugSet';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
@@ -32,7 +32,7 @@ export const Router = () => {
     />
   ) : (
     <Routes>
-      <Route path="/" element={<PullRequestsPage />} />
+      <Route path="/" element={<PullRequestList />} />
     </Routes>
   );
 };

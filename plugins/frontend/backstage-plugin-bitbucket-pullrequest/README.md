@@ -22,7 +22,7 @@ yarn add @roadiehq/backstage-plugin-bitbucket-pullrequest
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-import { EntityBitbucketPage } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
+import { EntityBitbucketPullRequestsContent } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
 
 ...
 
@@ -30,7 +30,7 @@ const serviceEntityPage = (
   <EntityLayout>
     ...
         <EntityLayout.Route path="/bitbucket-pullrequests" title="Bitbucket">
-            <EntityBitbucketPage />
+            <EntityBitbucketPullRequestsContent />
         </EntityLayout.Route>
     ...
   </EntityLayout>

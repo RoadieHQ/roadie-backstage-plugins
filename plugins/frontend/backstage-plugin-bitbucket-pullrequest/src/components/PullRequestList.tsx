@@ -20,6 +20,7 @@ import {
   Table,
   ContentHeader,
   MarkdownContent,
+  Link,
 } from '@backstage/core-components';
 import moment from 'moment';
 import { useApi } from '@backstage/core-plugin-api';
@@ -78,9 +79,7 @@ const PullRequestList: React.FC = () => {
       width: '20%',
       render: (row: Partial<PullRequest>) => (
         <Box fontWeight="fontWeightBold">
-          <a href={row.url} target="_blank" rel="noopener noreferrer">
-            #{row.id}
-          </a>
+          <Link to={`${row.url}`}>#{row.id}</Link>
         </Box>
       ),
     },
