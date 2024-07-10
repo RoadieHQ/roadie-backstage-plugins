@@ -19,6 +19,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
+import { mockServices, mockCredentials } from "@backstage/backend-test-utils";
 
 jest.mock('./helpers', () => ({
   ...jest.requireActual('./helpers.ts'),
@@ -27,14 +28,17 @@ jest.mock('./helpers', () => ({
 
 describe('http:backstage:request', () => {
   let action: any;
-  const mockBaseUrl = 'http://backstage.tests';
+  const mockBaseUrl = 'http://backstage.tests/api';
   const logger = getVoidLogger();
   const loggerSpy = jest.spyOn(logger, 'info');
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
+  const auth = mockServices.auth();
+  
 
   beforeEach(() => {
     jest.resetAllMocks();
-    action = createHttpBackstageAction({ discovery });
+    action = createHttpBackstageAction({ discovery, auth });
+
   });
 
   const mockContext = {
@@ -43,6 +47,7 @@ describe('http:backstage:request', () => {
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
+    getInitiatorCredentials: mockCredentials.service,
     isDryRun: false,
   };
 
@@ -57,15 +62,18 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: '/testPlugin/foo',
             method: 'GET',
           },
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'GET',
-            headers: {},
+            headers: {
+              authorization:
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
           },
           logger,
           false,
@@ -83,7 +91,7 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -95,10 +103,12 @@ describe('http:backstage:request', () => {
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '{"name":"test"}',
           },
@@ -118,7 +128,7 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -130,10 +140,12 @@ describe('http:backstage:request', () => {
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '{"name":"test"}',
           },
@@ -153,16 +165,19 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             body: 'test',
           },
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
-            headers: {},
+            headers: {
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
             body: 'test',
           },
           logger,
@@ -181,16 +196,19 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
-            headers: {},
+            headers: {
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
             body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
           logger,
@@ -209,7 +227,7 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -223,10 +241,12 @@ describe('http:backstage:request', () => {
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '[{"name":"test"}]',
           },
@@ -237,39 +257,6 @@ describe('http:backstage:request', () => {
     });
 
     describe('with authorization header', () => {
-      const BACKSTAGE_TOKEN = 'BACKSTAGE_TOKEN';
-      it('should create a request and pass backstage token as authorization header', async () => {
-        (http as jest.Mock).mockReturnValue({
-          code: 200,
-          headers: {},
-          body: {},
-        });
-        await action.handler({
-          ...mockContext,
-          secrets: {
-            backstageToken: BACKSTAGE_TOKEN,
-          },
-          input: {
-            path: '/api/proxy/foo',
-            method: 'POST',
-            body: 'test',
-            headers: {},
-          },
-        });
-        expect(http).toHaveBeenCalledWith(
-          {
-            url: 'http://backstage.tests/api/proxy/foo',
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${BACKSTAGE_TOKEN}`,
-            },
-            body: 'test',
-          },
-          logger,
-          false,
-        );
-      });
-
       it('should create a request and pass custom authorization header from input', async () => {
         const HEADERS = {
           Authorization: '123',
@@ -283,11 +270,8 @@ describe('http:backstage:request', () => {
         });
         await action.handler({
           ...mockContext,
-          secrets: {
-            backstageToken: BACKSTAGE_TOKEN,
-          },
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             body: 'test',
             headers: HEADERS,
@@ -295,7 +279,7 @@ describe('http:backstage:request', () => {
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
             headers: HEADERS,
             body: 'test',
@@ -316,7 +300,7 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
@@ -325,10 +309,12 @@ describe('http:backstage:request', () => {
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+              authorization:
+              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: undefined,
           },
@@ -347,18 +333,18 @@ describe('http:backstage:request', () => {
         });
         await action.handler({
           ...mockContext,
-          secrets: { backstageToken: 'some-token' },
           input: {
-            path: `/api/proxy/foo`,
+            path: `testPlugin/foo`,
             method: 'GET',
           },
         });
         expect(http).toHaveBeenCalledWith(
           {
-            url: `${mockBaseUrl}/api/proxy/foo`,
+            url: `${mockBaseUrl}/testPlugin/foo`,
             method: 'GET',
             headers: {
-              authorization: 'Bearer some-token',
+              authorization:
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
           },
           logger,
@@ -375,21 +361,24 @@ describe('http:backstage:request', () => {
           body: {},
         });
         const expectedLog =
-          'Creating GET request with http:backstage:request scaffolder action against /api/proxy/foo';
+          'Creating GET request with http:backstage:request scaffolder action against testPlugin/foo';
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'GET',
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(2);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'GET',
-            headers: {},
+            headers: {
+              authorization:
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
           },
           logger,
           false,
@@ -409,18 +398,21 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'GET',
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(2);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'GET',
-            headers: {},
+            headers: {
+              authorization:
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
           },
           logger,
           false,
@@ -448,18 +440,21 @@ describe('http:backstage:request', () => {
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'GET',
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
+        expect(loggerSpy).toHaveBeenCalledTimes(2);
         expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
-            url: 'http://backstage.tests/api/proxy/foo',
+            url: 'http://backstage.tests/api/testPlugin/foo',
             method: 'GET',
-            headers: {},
+            headers: {
+              authorization:
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+            },
           },
           logger,
           false,
@@ -473,17 +468,17 @@ describe('http:backstage:request', () => {
           body: {},
         });
         const expectedLog =
-          "Dry run mode. Skipping non dry-run safe method 'POST' request to /api/proxy/foo";
+          "Dry run mode. Skipping non dry-run safe method 'POST' request to testPlugin/foo";
         await action.handler({
           ...mockContext,
           input: {
-            path: '/api/proxy/foo',
+            path: 'testPlugin/foo',
             method: 'POST',
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(2);
-        expect(loggerSpy.mock.calls[1]).toContain(expectedLog);
+        expect(loggerSpy).toHaveBeenCalledTimes(3);
+        expect(loggerSpy.mock.calls[2]).toContain(expectedLog);
         expect(http).not.toHaveBeenCalled();
       });
     });
