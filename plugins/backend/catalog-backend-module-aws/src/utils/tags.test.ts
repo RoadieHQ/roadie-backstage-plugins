@@ -62,6 +62,17 @@ describe('labelsFromTags and ownerFromTags', () => {
       ).toBe(true);
     });
 
+    it('should handle a url with a succeeding slash as a value', () => {
+      const tags = [
+        { Key: 'tag:one:two', Value: 'https://blha.com/blahblah/' },
+      ];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'https---blha.com-blahblah' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
+    });
+
     it('should ignore keys without values in an object of tags', () => {
       const tags = { 'tag:one': 'value1', 'tag:two': undefined };
       // @ts-ignore
