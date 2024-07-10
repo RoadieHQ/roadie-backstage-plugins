@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.5
+
+### Patch Changes
+
+- ace4e5a: Add label value/key sanitization to remove trailing unsupported characters.
+
 ## 4.1.4
 
 ### Patch Changes
