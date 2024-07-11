@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.6
+
+### Patch Changes
+
+- bbe1d67: Add more sanitization to AWS tags to labels functionality
+
 ## 4.1.5
 
 ### Patch Changes
