@@ -30,6 +30,10 @@ const TAG_DOMAIN = 'domain';
 const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
 const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
 
+function stripTrailingChar(str: string, chr: string) {
+  return str.endsWith(chr) ? str.slice(0, -1) : str;
+}
+
 export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
   if (!tags) {
     return {};
@@ -45,10 +49,15 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
       )
       .reduce((acc: Record<string, string>, tag) => {
         if (tag.Key && tag.Value) {
-          const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
-          acc[key] = tag.Value.replaceAll('/', '-')
+          let key = tag.Key.replaceAll(':', '_')
+            .replaceAll('/', '-')
+            .substring(0, 63);
+          key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
+          let val = tag.Value.replaceAll('/', '-')
             .replaceAll(':', '-')
             .substring(0, 63);
+          val = stripTrailingChar(val, '-');
+          acc[key] = val;
         }
         return acc;
       }, {});
