@@ -26,10 +26,15 @@ import {
   MockFetchApi,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
-import { buildsResponseMock, entityMock } from '../../mocks/mocks';
+import {
+  buildsResponseMock,
+  entityMock,
+  entityMockWithBranchAnnotation,
+} from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
 import { BuildkiteApi } from '../../api';
 import { rootRouteRef } from '../../plugin';
+import { BUILDKITE_BRANCH_ANNOTATION } from '../../consts';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 
 const postMock = jest.fn();
@@ -50,10 +55,16 @@ describe('BuildKiteBuildsTable', () => {
   beforeEach(() => jest.resetAllMocks());
 
   it('should display a table with the data from the requests', async () => {
+    let branchParam: string | null;
+
     worker.use(
       rest.get(
         'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
-        (_, res, ctx) => res(ctx.json(buildsResponseMock)),
+        (req, res, ctx) => {
+          branchParam = req.url.searchParams.get('branch');
+
+          return res(ctx.json(buildsResponseMock));
+        },
       ),
     );
     const rendered = render(
@@ -68,6 +79,49 @@ describe('BuildKiteBuildsTable', () => {
         },
       ),
     );
+
+    await waitFor(() => expect(branchParam).toBeUndefined());
+    expect(
+      await rendered.findByText('rbnetwork/example-pipeline'),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('Update catalog-info.yaml'),
+    ).toBeInTheDocument();
+    expect((await rendered.findAllByText('Queued')).length).toEqual(5);
+    expect((await rendered.findAllByText('main')).length).toEqual(5);
+  });
+
+  it('should display a table with the data from the requests, limited only to the specified branch when specified', async () => {
+    let branchParam: string | null;
+    const branch =
+      entityMockWithBranchAnnotation.metadata.annotations?.[
+        BUILDKITE_BRANCH_ANNOTATION
+      ];
+
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (req, res, ctx) => {
+          branchParam = req.url.searchParams.get('branch');
+
+          return res(ctx.json(buildsResponseMock));
+        },
+      ),
+    );
+    const rendered = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <BuildkiteBuildsTable entity={entityMockWithBranchAnnotation} />
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
+      ),
+    );
+
+    await waitFor(() => expect(branchParam).toEqual(branch));
 
     expect(
       await rendered.findByText('rbnetwork/example-pipeline'),
