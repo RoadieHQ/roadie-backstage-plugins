@@ -127,8 +127,8 @@ export class GithubClient implements GithubApi {
 
     const media: Record<string, string> = {};
 
-    const { ref, resource, protocol } = parseGitUrl(response.data.url);
-
+    const { ref, resource: domain, protocol } = parseGitUrl(response.data.url);
+    const domainLowerCased = domain.toLocaleLowerCase('en-US');
     for (const mediaLink of mediaLinks) {
       const mimeType = mimeTypeLookup(mediaLink);
       if (!mimeType) {
@@ -141,7 +141,7 @@ export class GithubClient implements GithubApi {
           return new URL(mediaLink, response.data.url);
         }
 
-        if (linkLowerCased.includes(resource)) {
+        if (linkLowerCased.includes(domainLowerCased)) {
           const {
             owner: ownerLink,
             name: repoLink,
@@ -186,7 +186,7 @@ export class GithubClient implements GithubApi {
       branch || ref || getRepositoryDefaultBranch(response.data.url);
 
     for (const markdownLink of markdownLinks) {
-      const basicLink = `${protocol}://${resource}/${owner}/${repo}/blob/${loadFromBranch}`;
+      const basicLink = `${protocol}://${domain}/${owner}/${repo}/blob/${loadFromBranch}`;
 
       const combinedPath = combinePaths(readmePath, markdownLink);
       links[markdownLink] = `${basicLink}${combinedPath}`;
