@@ -71,8 +71,11 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
     )
     .reduce((acc: Record<string, string>, [key, value]) => {
       if (key && value) {
-        const k = key.replaceAll(':', '_').replaceAll('/', '-');
-        acc[k] = value.replaceAll('/', '-').substring(0, 63);
+        let k = key.replaceAll(':', '_').replaceAll('/', '-');
+        k = stripTrailingChar(stripTrailingChar(k, '-'), '_');
+        let val = value.replaceAll('/', '-').substring(0, 63);
+        val = stripTrailingChar(val, '-');
+        acc[k] = val;
       }
       return acc;
     }, {});

@@ -92,6 +92,7 @@ const StatsCard = (props: Props) => {
       </Tooltip>
     ),
     'average changed files of PR': `${statsData?.avgChangedFilesCount}`,
+    'average coding time of PR': `${statsData?.avgCodingTime}`,
   };
 
   return (
