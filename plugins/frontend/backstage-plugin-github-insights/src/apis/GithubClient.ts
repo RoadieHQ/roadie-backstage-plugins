@@ -127,9 +127,7 @@ export class GithubClient implements GithubApi {
 
     const media: Record<string, string> = {};
 
-    const { ref, resource, protocol, filepath } = parseGitUrl(
-      response.data.url,
-    );
+    const { ref, resource, protocol } = parseGitUrl(response.data.url);
 
     for (const mediaLink of mediaLinks) {
       const mimeType = mimeTypeLookup(mediaLink);
@@ -142,11 +140,13 @@ export class GithubClient implements GithubApi {
         if (!linkLowerCased.startsWith('http')) {
           return new URL(mediaLink, response.data.url);
         }
-        if (linkLowerCased.includes('github')) {
+
+        if (linkLowerCased.includes(resource)) {
           const {
             owner: ownerLink,
             name: repoLink,
             ref: refLink,
+            filepath,
           } = parseGitUrl(mediaLink);
           if (filepath) {
             return `/repos/${ownerLink}/${repoLink}/contents/${filepath}${
