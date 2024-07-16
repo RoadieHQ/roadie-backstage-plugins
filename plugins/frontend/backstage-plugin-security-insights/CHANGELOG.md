@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.19
+
+### Patch Changes
+
+- a4de843: Fix Dependabot Alerts non-open alerts when the table defaults to only show open alerts.
+
+## 2.3.18
+
+### Patch Changes
+
+- eaba91f: Dependabot and Security Insights tabs now show open issues by default instead of all issues.
+
 ## 2.3.17
 
 ### Patch Changes

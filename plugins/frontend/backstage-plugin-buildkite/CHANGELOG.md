@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.2.0
+
+### Minor Changes
+
+- f5e7e5f: Address issue #1459 by supporting the ability to optionally restrict the Buildkite builds table to only display builds of a particular branch, as specified by an optional `buildkite.com/branch` entity annotation.
+
 ## 2.1.23
 
 ### Patch Changes

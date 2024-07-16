@@ -24,7 +24,11 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  labelsFromTags,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 
 /**
@@ -38,21 +42,32 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSEKSClusterProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
     return `aws-eks-cluster-${this.accountId}-${this.providerId ?? 0}`;
+  }
+
+  private async getEks() {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials()
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new EKS({ credentials, region: this.region })
+      : new EKS(credentials);
   }
 
   async run(): Promise<void> {
@@ -66,8 +81,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     );
     const eksResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const eks = new EKS({ credentials, region: this.region });
+    const eks = await this.getEks();
 
     const defaultAnnotations = this.buildDefaultAnnotations();
 
@@ -111,6 +125,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
+              ...relationshipsFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };

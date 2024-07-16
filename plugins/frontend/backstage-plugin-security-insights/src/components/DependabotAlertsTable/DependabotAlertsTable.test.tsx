@@ -83,7 +83,7 @@ describe('Dependabot alerts overview', () => {
       entity = entityStub;
     });
 
-    it('check if mocked data is shown in the dependabot alerts table', async () => {
+    it('should show open alerts only when it first renders', async () => {
       worker.use(
         GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
           res(ctx.data(dependabotAlertsResponseMock));
@@ -97,6 +97,33 @@ describe('Dependabot alerts overview', () => {
           </TestApiProvider>,
         ),
       );
+      expect(
+        await rendered.findByText('serialize-javascript-open'),
+      ).toBeVisible();
+      expect(await rendered.queryByText('serialize-javascript-fixed')).toBe(
+        null,
+      );
+      expect(await rendered.queryByText('serialize-javascript-dismissed')).toBe(
+        null,
+      );
+    });
+
+    it('should show all alerts when selecting the ALL filter', async () => {
+      worker.use(
+        GRAPHQL_GITHUB_API.query('GetDependabotAlerts', (_, res, ctx) => {
+          res(ctx.data(dependabotAlertsResponseMock));
+        }),
+      );
+
+      const rendered = render(
+        wrapInTestApp(
+          <TestApiProvider apis={apis}>
+            <DependabotAlertsTable />
+          </TestApiProvider>,
+        ),
+      );
+      fireEvent.click(await rendered.findByRole('button', { name: 'ALL' }));
+
       expect(
         await rendered.findByText('serialize-javascript-open'),
       ).toBeVisible();

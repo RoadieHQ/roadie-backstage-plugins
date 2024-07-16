@@ -36,7 +36,15 @@ export const transform = (
   });
 };
 
-export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
+export const useBuilds = ({
+  owner,
+  repo,
+  branch,
+}: {
+  owner: string;
+  repo: string;
+  branch?: string;
+}) => {
   const api = useApi(buildKiteApiRef);
   const errorApi = useApi(errorApiRef);
 
@@ -47,7 +55,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
   const { value, loading, retry } = useAsyncRetry(async () => {
     let builds = [];
     try {
-      builds = await api.getBuilds(owner, repo, page + 1, pageSize);
+      builds = await api.getBuilds(owner, repo, page + 1, pageSize, branch);
     } catch (e: any) {
       errorApi.post(e);
     }

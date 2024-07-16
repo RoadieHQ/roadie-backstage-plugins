@@ -38,7 +38,7 @@ const getElapsedTime = (start: string) => {
 
 export const SecurityInsightsTable = () => {
   const [insightsStatusFilter, setInsightsStatusFilter] =
-    useState<SecurityInsightFilterState>(null);
+    useState<SecurityInsightFilterState>('open');
   const [filteredTableData, setFilteredTableData] = useState<SecurityInsight[]>(
     [],
   );
