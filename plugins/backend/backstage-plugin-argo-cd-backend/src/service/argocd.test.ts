@@ -1510,6 +1510,38 @@ describe('ArgoCD service', () => {
       );
     });
 
+    it('should send correct project payload', async () => {
+      fetchMock
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
+        .mockResponseOnce(JSON.stringify(getArgoProjectResp)) // getArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // updateArgoProject
+        .mockResponseOnce(JSON.stringify(getArgoAppDataResp)); // updateArgoApp
+
+      await argoService.updateArgoProjectAndApp(data);
+
+      const fetchBody = JSON.parse(fetchMock.mock.calls[2][1]?.body as string);
+
+      expect(fetchBody).toStrictEqual(
+        expect.objectContaining({
+          project: {
+            metadata: expect.objectContaining({
+              name: 'projectName',
+            }),
+            spec: expect.objectContaining({
+              destinations: [
+                {
+                  name: 'local',
+                  namespace: 'namespace',
+                  server: 'https://kubernetes.default.svc',
+                },
+              ],
+              sourceRepos: ['sourceRepo'],
+            }),
+          },
+        }),
+      );
+    });
+
     it('should return true when app and project update succeeds', async () => {
       fetchMock
         .mockResponseOnce(JSON.stringify(getArgoAppDataResp)) // getArgoAppData
