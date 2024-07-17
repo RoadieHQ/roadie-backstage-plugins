@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.7
+
+### Patch Changes
+
+- 4c9de97: Allow label values to be mapped in a custom way.
+
 ## 4.1.6
 
 ### Patch Changes
