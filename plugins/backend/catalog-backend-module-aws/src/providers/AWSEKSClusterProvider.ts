@@ -25,7 +25,7 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -43,6 +43,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -116,7 +117,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
               annotations,
               name: arnToName(name),
               title: name,
-              labels: labelsFromTags(cluster.cluster?.tags),
+              labels: this.labelsFromTags(cluster.cluster?.tags),
             },
 
             spec: {

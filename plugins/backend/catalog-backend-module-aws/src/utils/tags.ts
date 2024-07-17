@@ -16,10 +16,12 @@
 
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 
-type Tag = {
+export type Tag = {
   Key?: string;
   Value?: string;
 };
+
+export type LabelValueMapper = (value: string) => string;
 const UNKNOWN_OWNER = 'unknown';
 
 const TAG_DEPENDS_ON = 'dependsOn';
@@ -34,7 +36,15 @@ function stripTrailingChar(str: string, chr: string) {
   return str.endsWith(chr) ? str.slice(0, -1) : str;
 }
 
-export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
+const defaultValueCleaner: LabelValueMapper = value => {
+  const val = value.replaceAll('/', '-').replaceAll(':', '-').substring(0, 63);
+  return stripTrailingChar(val, '-');
+};
+
+export const labelsFromTags = (
+  tags?: Tag[] | Record<string, string>,
+  valueMapper: LabelValueMapper = defaultValueCleaner,
+) => {
   if (!tags) {
     return {};
   }
@@ -53,11 +63,7 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
             .replaceAll('/', '-')
             .substring(0, 63);
           key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
-          let val = tag.Value.replaceAll('/', '-')
-            .replaceAll(':', '-')
-            .substring(0, 63);
-          val = stripTrailingChar(val, '-');
-          acc[key] = val;
+          acc[key] = valueMapper(tag.Value);
         }
         return acc;
       }, {});
@@ -73,9 +79,7 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
       if (key && value) {
         let k = key.replaceAll(':', '_').replaceAll('/', '-');
         k = stripTrailingChar(stripTrailingChar(k, '-'), '_');
-        let val = value.replaceAll('/', '-').substring(0, 63);
-        val = stripTrailingChar(val, '-');
-        acc[k] = val;
+        acc[k] = valueMapper(value);
       }
       return acc;
     }, {});

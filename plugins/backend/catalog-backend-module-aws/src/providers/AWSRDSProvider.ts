@@ -22,7 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -39,6 +39,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -101,7 +102,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
                 [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
               },
-              labels: labelsFromTags(dbInstance.TagList),
+              labels: this.labelsFromTags(dbInstance.TagList),
               name: instanceId.substring(0, 62),
               title: instanceId,
               dbInstanceClass: dbInstance.DBInstanceClass,
