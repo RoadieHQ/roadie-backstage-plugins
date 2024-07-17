@@ -62,6 +62,12 @@ describe('labelsFromTags and ownerFromTags', () => {
       ).toBe(true);
     });
 
+    it('I can provide my own value mapper', () => {
+      const tags = [{ Key: 'tag:one:two', Value: 'https://blha.com/blahblah' }];
+      const result = labelsFromTags(tags, value => value);
+      expect(result).toEqual({ tag_one_two: 'https://blha.com/blahblah' });
+    });
+
     it('should handle a url with a succeeding slash as a value', () => {
       const tags = [
         { Key: 'tag:one:two', Value: 'https://blha.com/blahblah/' },
@@ -77,6 +83,13 @@ describe('labelsFromTags and ownerFromTags', () => {
       const tags = { 'tag:one': 'value1', 'tag:two': undefined };
       // @ts-ignore
       const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one: 'value1' });
+    });
+
+    it('should ignore keys without values in an object of tags if I provide my own mapper', () => {
+      const tags = { 'tag:one': 'value1', 'tag:two': undefined };
+      // @ts-ignore
+      const result = labelsFromTags(tags, value => value);
       expect(result).toEqual({ tag_one: 'value1' });
     });
   });

@@ -31,6 +31,7 @@ import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { ConfigReader } from '@backstage/config';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
+import { LabelValueMapper, labelsFromTags, Tag } from '../utils/tags';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly useTemporaryCredentials: boolean;
@@ -41,6 +42,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly catalogApi?: CatalogApi;
   private credentialsManager: DefaultAwsCredentialsManager;
   private account: AccountConfig;
+  protected readonly labelValueMapper: LabelValueMapper | undefined;
 
   public abstract getProviderName(): string;
 
@@ -52,6 +54,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     this.logger = options.logger;
@@ -63,6 +66,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
       new ConfigReader({ aws: { accounts: [account] } }),
     );
+    this.labelValueMapper = options.labelValueMapper;
   }
 
   get accountId() {
@@ -75,6 +79,10 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   protected getOwnerTag() {
     return this.ownerTag ?? 'owner';
+  }
+
+  protected labelsFromTags(tags?: Record<string, string> | Tag[] | undefined) {
+    return labelsFromTags(tags, this.labelValueMapper);
   }
 
   protected getCredentials() {

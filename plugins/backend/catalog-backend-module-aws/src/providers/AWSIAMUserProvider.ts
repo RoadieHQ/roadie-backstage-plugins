@@ -22,8 +22,8 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { LabelValueMapper } from '../utils/tags';
 
 /**
  * Provides entities from AWS IAM User service.
@@ -37,6 +37,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -100,7 +101,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
               },
               name: arnToName(user.Arn),
               title: user.UserName,
-              labels: labelsFromTags(user.Tags),
+              labels: this.labelsFromTags(user.Tags),
             },
             spec: {
               profile: {
