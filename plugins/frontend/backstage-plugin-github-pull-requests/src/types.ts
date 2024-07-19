@@ -65,3 +65,7 @@ export type GithubRepositoryData = {
   deletions: number;
   changedFiles: number;
 };
+
+export type GithubFirstCommitDate = {
+  firstCommitDate: Date;
+};

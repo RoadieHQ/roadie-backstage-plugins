@@ -15,3 +15,4 @@
  */
 
 export const BUILDKITE_ANNOTATION = 'buildkite.com/project-slug';
+export const BUILDKITE_BRANCH_ANNOTATION = 'buildkite.com/branch';

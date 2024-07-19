@@ -60,10 +60,15 @@ export class BuildkiteApi {
     pipelineSlug: string,
     page: number,
     per_page: number,
+    branch?: string,
   ) {
     const ApiUrl = await this.getApiUrl();
+    let query = `?page=${page}&per_page=${per_page}`;
+    if (branch) {
+      query = `${query}&branch=${branch}`;
+    }
     const request = await this.fetchApi.fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`,
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds${query}`,
     );
     if (!request.ok) {
       throw new Error(

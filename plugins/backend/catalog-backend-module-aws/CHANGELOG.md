@@ -1,5 +1,23 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 4.1.7
+
+### Patch Changes
+
+- 4c9de97: Allow label values to be mapped in a custom way.
+
+## 4.1.6
+
+### Patch Changes
+
+- bbe1d67: Add more sanitization to AWS tags to labels functionality
+
+## 4.1.5
+
+### Patch Changes
+
+- ace4e5a: Add label value/key sanitization to remove trailing unsupported characters.
+
 ## 4.1.4
 
 ### Patch Changes

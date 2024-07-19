@@ -30,7 +30,7 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -49,6 +49,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -129,7 +130,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
               joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
               joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
               status: account.Status ?? 'UNKNOWN',
-              labels: labelsFromTags(tags),
+              labels: this.labelsFromTags(tags),
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
