@@ -23,7 +23,7 @@ import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -41,6 +41,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -102,7 +103,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             },
             name: arnToName(bucketArn),
             title: bucket.Name,
-            labels: labelsFromTags(tags),
+            labels: this.labelsFromTags(tags),
           },
           spec: {
             owner: ownerFromTags(tags, this.getOwnerTag(), groups),

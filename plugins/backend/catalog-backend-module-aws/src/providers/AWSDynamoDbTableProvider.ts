@@ -22,7 +22,7 @@ import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -40,6 +40,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -114,7 +115,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                   },
                   name: arnToName(table.TableArn),
                   title: table.TableName,
-                  labels: labelsFromTags(tags),
+                  labels: this.labelsFromTags(tags),
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),

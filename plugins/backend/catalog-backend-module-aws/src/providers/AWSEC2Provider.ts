@@ -22,7 +22,7 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -40,6 +40,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -99,7 +100,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
                 [ANNOTATION_VIEW_URL]: consoleLink,
                 [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
               },
-              labels: labelsFromTags(instance.Tags),
+              labels: this.labelsFromTags(instance.Tags),
               name:
                 instanceId ??
                 `${reservation.ReservationId}-instance-${instance.InstanceId}`,
