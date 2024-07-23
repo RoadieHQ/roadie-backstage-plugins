@@ -56,6 +56,10 @@ export const createDefaultRetrievalPipeline = ({
     vectorEmbeddingsRetriever,
     searchRetriever,
   ]);
+  sourceBasedRetrieverConfig.set('tech-docs', [
+    vectorEmbeddingsRetriever,
+    searchRetriever,
+  ]);
 
   const retrievalRouters = [
     new SourceBasedRetrievalRouter({

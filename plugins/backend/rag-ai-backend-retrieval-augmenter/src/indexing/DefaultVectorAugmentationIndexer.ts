@@ -15,9 +15,9 @@
  */
 
 import { TokenManager } from '@backstage/backend-common';
-import { CatalogApi } from '@backstage/catalog-client';
+import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
-import { SplitterOptions } from './types';
+import { SearchIndex, SplitterOptions } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
@@ -28,12 +28,14 @@ import {
   EntityFilterShape,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
   private readonly logger: Logger;
   private readonly tokenManager: TokenManager;
+  private readonly discovery: DiscoveryService;
 
   private readonly splitterOptions?: SplitterOptions;
 
@@ -43,6 +45,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     logger,
     tokenManager,
     embeddings,
+    discovery,
     splitterOptions,
   }: {
     vectorStore: RoadieVectorStore;
@@ -50,6 +53,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     logger: Logger;
     tokenManager: TokenManager;
     embeddings: Embeddings;
+    discovery: DiscoveryService;
     splitterOptions?: SplitterOptions;
   }) {
     vectorStore.connectEmbeddings(embeddings);
@@ -58,6 +62,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     this.catalogApi = catalogApi;
     this.logger = logger;
     this.tokenManager = tokenManager;
+    this.discovery = discovery;
   }
 
   get vectorStore() {
@@ -104,6 +109,28 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     return docs;
   }
 
+  protected async constructTechDocsEmbeddingDocuments(
+    texts: string[],
+    source: EmbeddingsSource,
+  ): Promise<EmbeddingDoc[]> {
+    const splitter = this.getSplitter();
+    let docs: EmbeddingDoc[] = [];
+    for (const text of texts) {
+      const splits = await splitter.splitText(text);
+      docs = docs.concat(
+        splits.map((content: string, idx: number) => ({
+          content,
+          metadata: {
+            splitId: idx.toString(),
+            source,
+          },
+        })),
+      );
+    }
+
+    return docs;
+  }
+
   protected async getDocuments(
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
@@ -126,6 +153,57 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
           `Constructed ${constructCatalogEmbeddingDocuments.length} embedding documents for ${entitiesResponse.items.length} catalog items.`,
         );
         return constructCatalogEmbeddingDocuments;
+      }
+      case 'tech-docs': {
+        const { token } = await this.tokenManager.getToken();
+
+        const entitiesResponse = await this.catalogApi.getEntities(
+          {
+            filter: {
+              'metadata.annotations.backstage.io/techdocs-ref':
+                CATALOG_FILTER_EXISTS,
+            },
+          },
+          { token },
+        );
+
+        const techDocsBaseUrl = await this.discovery.getBaseUrl('techdocs');
+
+        const textsPromises = entitiesResponse.items.map(async entity => {
+          const { kind } = entity;
+          const { namespace = 'default', name } = entity.metadata;
+
+          const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
+
+          try {
+            const searchIndexResponse = await fetch(searchIndexUrl, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            const searchIndex =
+              (await searchIndexResponse.json()) as SearchIndex;
+
+            return searchIndex.docs.map(doc => doc.text);
+          } catch (e) {
+            this.logger.debug(
+              `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
+              e,
+            );
+            return [];
+          }
+        });
+
+        const texts = (await Promise.all(textsPromises)).flat();
+
+        const constructTechDocsEmbeddingDocuments =
+          await this.constructTechDocsEmbeddingDocuments(texts, source);
+
+        this.logger.info(
+          `Constructed ${constructTechDocsEmbeddingDocuments.length} embedding documents for ${entitiesResponse.items.length} TechDocs.`,
+        );
+        return constructTechDocsEmbeddingDocuments;
       }
       default:
         throw new Error(

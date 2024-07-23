@@ -32,3 +32,18 @@ export interface RoadieEmbeddingsConfig {
   discovery: PluginEndpointDiscovery;
   splitterOptions?: SplitterOptions;
 }
+
+export type SearchIndex = {
+  config: {
+    indexing: string;
+    lang: string[];
+    min_search_length: number;
+    prebuild_index: boolean;
+    separator: string;
+  };
+  docs: {
+    location: string;
+    text: string;
+    title: string;
+  }[];
+};

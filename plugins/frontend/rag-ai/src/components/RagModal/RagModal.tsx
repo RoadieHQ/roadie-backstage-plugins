@@ -74,9 +74,9 @@ export const RagModal = () => {
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
   const ragApi = useApi(ragAiApiRef);
   const askLlm = useCallback(
-    async (question: string) => {
+    async (question: string, source: string) => {
       setThinking(true);
-      const response = await ragApi.ask(question);
+      const response = await ragApi.ask(question, source);
       setQuestionResult(response.response);
       setEmbeddings(response.embeddings);
       setThinking(false);
