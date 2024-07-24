@@ -110,12 +110,12 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   }
 
   protected async constructTechDocsEmbeddingDocuments(
-    texts: string[],
+    documents: { text: string; entity: Entity }[],
     source: EmbeddingsSource,
   ): Promise<EmbeddingDoc[]> {
     const splitter = this.getSplitter();
     let docs: EmbeddingDoc[] = [];
-    for (const text of texts) {
+    for (const { text, entity } of documents) {
       const splits = await splitter.splitText(text);
       docs = docs.concat(
         splits.map((content: string, idx: number) => ({
@@ -123,6 +123,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
           metadata: {
             splitId: idx.toString(),
             source,
+            entityRef: stringifyEntityRef(entity),
+            kind: entity.kind,
           },
         })),
       );
@@ -169,7 +171,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
         const techDocsBaseUrl = await this.discovery.getBaseUrl('techdocs');
 
-        const textsPromises = entitiesResponse.items.map(async entity => {
+        const documentsPromises = entitiesResponse.items.map(async entity => {
           const { kind } = entity;
           const { namespace = 'default', name } = entity.metadata;
 
@@ -185,7 +187,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             const searchIndex =
               (await searchIndexResponse.json()) as SearchIndex;
 
-            return searchIndex.docs.map(doc => doc.text);
+            return searchIndex.docs.map(({ text }) => ({
+              text,
+              entity,
+            }));
           } catch (e) {
             this.logger.debug(
               `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
@@ -195,10 +200,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
           }
         });
 
-        const texts = (await Promise.all(textsPromises)).flat();
+        const documents = (await Promise.all(documentsPromises)).flat();
 
         const constructTechDocsEmbeddingDocuments =
-          await this.constructTechDocsEmbeddingDocuments(texts, source);
+          await this.constructTechDocsEmbeddingDocuments(documents, source);
 
         this.logger.info(
           `Constructed ${constructTechDocsEmbeddingDocuments.length} embedding documents for ${entitiesResponse.items.length} TechDocs.`,
