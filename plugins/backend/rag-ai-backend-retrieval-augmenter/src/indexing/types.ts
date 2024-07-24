@@ -18,6 +18,7 @@ import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
+import { Entity } from '@backstage/catalog-model';
 
 export type SplitterOptions = {
   chunkSize?: number;
@@ -47,3 +48,5 @@ export type SearchIndex = {
     title: string;
   }[];
 };
+
+export type TechDocsDocument = { text: string; entity: Entity };

@@ -17,7 +17,7 @@
 import { TokenManager } from '@backstage/backend-common';
 import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
-import { SearchIndex, SplitterOptions } from './types';
+import { SearchIndex, SplitterOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
@@ -110,7 +110,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   }
 
   protected async constructTechDocsEmbeddingDocuments(
-    documents: { text: string; entity: Entity }[],
+    documents: TechDocsDocument[],
     source: EmbeddingsSource,
   ): Promise<EmbeddingDoc[]> {
     const splitter = this.getSplitter();
@@ -187,10 +187,13 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             const searchIndex =
               (await searchIndexResponse.json()) as SearchIndex;
 
-            return searchIndex.docs.map(({ text }) => ({
-              text,
-              entity,
-            }));
+            return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
+              // only filter sections that contain text
+              if (doc.location.includes('#') && doc.text)
+                acc.push({ text: doc.text, entity });
+
+              return acc;
+            }, []);
           } catch (e) {
             this.logger.debug(
               `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
