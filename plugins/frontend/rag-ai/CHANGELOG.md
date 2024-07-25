@@ -1,5 +1,12 @@
 # @roadiehq/rag-ai
 
+## 0.2.4
+
+### Patch Changes
+
+- bbf7702: Added a dropdown for selecting a source
+- 1e749b8: Added optional property `title` to component `RagModal`
+
 ## 0.2.3
 
 ### Patch Changes
