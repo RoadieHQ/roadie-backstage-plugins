@@ -20,7 +20,7 @@ import { OpenAiConfig, RoadieOpenAiAugmenter } from './RoadieOpenAiAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
-import { SplitterOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
+import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger;
@@ -43,18 +43,18 @@ export async function initializeOpenAiEmbeddings({
   const openAiConfig = config.get<OpenAiConfig>('ai.embeddings.openai');
 
   const embeddingsOptions = config.getOptionalConfig('ai.embeddings');
-  const splitterOptions: SplitterOptions = {};
+  const augmentationOptions: AugmentationOptions = {};
   if (embeddingsOptions) {
-    splitterOptions.chunkSize =
+    augmentationOptions.chunkSize =
       embeddingsOptions.getOptionalNumber('chunkSize');
-    splitterOptions.chunkOverlap =
+    augmentationOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
   }
   return new RoadieOpenAiAugmenter({
     vectorStore,
     catalogApi,
     discovery,
-    splitterOptions,
+    options: augmentationOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),
     tokenManager,
     config: openAiConfig,
