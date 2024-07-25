@@ -1,5 +1,15 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 0.3.3
+
+### Patch Changes
+
+- 9768baa: Added config parameter `ai.embeddings.concurrencyLimit` for limiting concurrency during creating TechDocs embeddings
+- ed73691: Added source `all` for querying all sources simultaneously
+- 9768baa: Renamed type `SplitterOptions` to `AugmentationOptions`
+- Updated dependencies [ed73691]
+  - @roadiehq/rag-ai-node@0.1.3
+
 ## 0.3.2
 
 ### Patch Changes
