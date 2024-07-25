@@ -4,4 +4,4 @@
 '@roadiehq/rag-ai-backend-embeddings-aws': patch
 ---
 
-Rename `SplitterOptions` to `AugmentationOptions`
+Renamed type `SplitterOptions` to `AugmentationOptions`
