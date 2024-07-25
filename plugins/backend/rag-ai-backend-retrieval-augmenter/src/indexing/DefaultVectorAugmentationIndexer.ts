@@ -138,7 +138,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
-    const limit = pLimit(this.augmentationOptions?.parallelismLimit ?? 10);
+    const limit = pLimit(this.augmentationOptions?.concurrencyLimit ?? 10);
 
     switch (source) {
       case 'catalog': {

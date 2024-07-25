@@ -57,7 +57,7 @@ export async function initializeBedrockEmbeddings({
       embeddingsOptions.getOptionalNumber('chunkSize');
     augmentationOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
-    augmentationOptions.parallelismLimit =
+    augmentationOptions.concurrencyLimit =
       embeddingsOptions.getOptionalNumber('concurrencyLimit');
   }
   return new RoadieBedrockAugmenter({

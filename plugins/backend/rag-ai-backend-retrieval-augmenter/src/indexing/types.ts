@@ -23,7 +23,7 @@ import { Entity } from '@backstage/catalog-model';
 export type AugmentationOptions = {
   chunkSize?: number;
   chunkOverlap?: number;
-  parallelismLimit?: number;
+  concurrencyLimit?: number;
 };
 
 export interface RoadieEmbeddingsConfig {

@@ -49,7 +49,7 @@ export async function initializeOpenAiEmbeddings({
       embeddingsOptions.getOptionalNumber('chunkSize');
     augmentationOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
-    augmentationOptions.parallelismLimit =
+    augmentationOptions.concurrencyLimit =
       embeddingsOptions.getOptionalNumber('concurrencyLimit');
   }
   return new RoadieOpenAiAugmenter({
