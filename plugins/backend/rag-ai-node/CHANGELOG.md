@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.3
+
+### Patch Changes
+
+- ed73691: Added source `all` for querying all sources simultaneously
+
 ## 0.1.2
 
 ### Patch Changes
