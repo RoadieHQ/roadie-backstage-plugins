@@ -41,6 +41,7 @@
     "@roadiehq/rag-ai-node": "^0.1.2",
     "langchain": "^0.1.21",
     "node-fetch": "^2.6.7",
+    "p-limit": "^3.0.2",
     "winston": "^3.11.0",
     "yn": "^4.0.0"
   },

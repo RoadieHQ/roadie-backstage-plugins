@@ -17,7 +17,7 @@
 import { TokenManager } from '@backstage/backend-common';
 import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
-import { SearchIndex, SplitterOptions, TechDocsDocument } from './types';
+import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
@@ -29,6 +29,7 @@ import {
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
 import { DiscoveryService } from '@backstage/backend-plugin-api';
+import pLimit from 'p-limit';
 
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
@@ -37,7 +38,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly tokenManager: TokenManager;
   private readonly discovery: DiscoveryService;
 
-  private readonly splitterOptions?: SplitterOptions;
+  private readonly augmentationOptions?: AugmentationOptions;
 
   protected constructor({
     vectorStore,
@@ -46,7 +47,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     tokenManager,
     embeddings,
     discovery,
-    splitterOptions,
+    augmentationOptions,
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
@@ -54,11 +55,11 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     tokenManager: TokenManager;
     embeddings: Embeddings;
     discovery: DiscoveryService;
-    splitterOptions?: SplitterOptions;
+    augmentationOptions?: AugmentationOptions;
   }) {
     vectorStore.connectEmbeddings(embeddings);
     this._vectorStore = vectorStore;
-    this.splitterOptions = splitterOptions;
+    this.augmentationOptions = augmentationOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
     this.tokenManager = tokenManager;
@@ -80,8 +81,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   protected getSplitter() {
     // Defaults to 1000 chars, 200 overlap
     return new RecursiveCharacterTextSplitter({
-      chunkSize: this.splitterOptions?.chunkSize,
-      chunkOverlap: this.splitterOptions?.chunkOverlap,
+      chunkSize: this.augmentationOptions?.chunkSize,
+      chunkOverlap: this.augmentationOptions?.chunkOverlap,
     });
   }
 
@@ -137,6 +138,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
+    const limit = pLimit(this.augmentationOptions?.concurrencyLimit ?? 10);
+
     switch (source) {
       case 'catalog': {
         const { token } = await this.tokenManager.getToken();
@@ -171,37 +174,39 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
         const techDocsBaseUrl = await this.discovery.getBaseUrl('techdocs');
 
-        const documentsPromises = entitiesResponse.items.map(async entity => {
-          const { kind } = entity;
-          const { namespace = 'default', name } = entity.metadata;
+        const documentsPromises = entitiesResponse.items.map(entity =>
+          limit(async () => {
+            const { kind } = entity;
+            const { namespace = 'default', name } = entity.metadata;
 
-          const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
+            const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
 
-          try {
-            const searchIndexResponse = await fetch(searchIndexUrl, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
+            try {
+              const searchIndexResponse = await fetch(searchIndexUrl, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
 
-            const searchIndex =
-              (await searchIndexResponse.json()) as SearchIndex;
+              const searchIndex =
+                (await searchIndexResponse.json()) as SearchIndex;
 
-            return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
-              // only filter sections that contain text
-              if (doc.location.includes('#') && doc.text)
-                acc.push({ text: doc.text, entity });
+              return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
+                // only filter sections that contain text
+                if (doc.location.includes('#') && doc.text)
+                  acc.push({ text: doc.text, entity });
 
-              return acc;
-            }, []);
-          } catch (e) {
-            this.logger.debug(
-              `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
-              e,
-            );
-            return [];
-          }
-        });
+                return acc;
+              }, []);
+            } catch (e) {
+              this.logger.debug(
+                `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
+                e,
+              );
+              return [];
+            }
+          }),
+        );
 
         const documents = (await Promise.all(documentsPromises)).flat();
 
