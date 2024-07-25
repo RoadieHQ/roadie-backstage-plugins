@@ -222,7 +222,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
     const documents = (
       await this.client.raw(queryString, {
         embeddingString,
-        filter: JSON.stringify(filter || {}),
+        filter: JSON.stringify(filter ?? {}),
         amount,
       })
     ).rows;
