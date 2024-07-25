@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
   viewResultsLink: { verticalAlign: '0.5em' },
 }));
 
-export const RagModal = () => {
+export const RagModal = ({ title = 'AI Assistant' }: { title?: string }) => {
   const classes = useStyles();
   const [showAiModal, setShowAiModal] = useState(false);
   const [thinking, setThinking] = useState(false);
@@ -97,7 +97,7 @@ export const RagModal = () => {
       maxWidth="lg"
     >
       <DialogTitle>
-        <Typography variant="h6">AI Assistant</Typography>
+        <Typography variant="h6">{title}</Typography>
         <IconButton
           aria-label="close"
           className={classes.closeButton}
