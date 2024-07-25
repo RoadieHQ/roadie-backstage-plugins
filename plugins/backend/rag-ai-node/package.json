@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@backstage/types": "^1.1.1",
-    "@langchain/core": "^0.1.2",
+    "@langchain/core": "^0.2.18",
     "@backstage/backend-plugin-api": "^0.6.17"
   },
   "devDependencies": {
