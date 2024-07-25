@@ -38,7 +38,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly tokenManager: TokenManager;
   private readonly discovery: DiscoveryService;
 
-  private readonly options?: AugmentationOptions;
+  private readonly augmentationOptions?: AugmentationOptions;
 
   protected constructor({
     vectorStore,
@@ -47,7 +47,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     tokenManager,
     embeddings,
     discovery,
-    options,
+    augmentationOptions,
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
@@ -55,11 +55,11 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     tokenManager: TokenManager;
     embeddings: Embeddings;
     discovery: DiscoveryService;
-    options?: AugmentationOptions;
+    augmentationOptions?: AugmentationOptions;
   }) {
     vectorStore.connectEmbeddings(embeddings);
     this._vectorStore = vectorStore;
-    this.options = options;
+    this.augmentationOptions = augmentationOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
     this.tokenManager = tokenManager;
@@ -81,8 +81,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   protected getSplitter() {
     // Defaults to 1000 chars, 200 overlap
     return new RecursiveCharacterTextSplitter({
-      chunkSize: this.options?.chunkSize,
-      chunkOverlap: this.options?.chunkOverlap,
+      chunkSize: this.augmentationOptions?.chunkSize,
+      chunkOverlap: this.augmentationOptions?.chunkOverlap,
     });
   }
 
@@ -138,7 +138,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
-    const limit = pLimit(this.options?.parallelismLimit ?? 10);
+    const limit = pLimit(this.augmentationOptions?.parallelismLimit ?? 10);
 
     switch (source) {
       case 'catalog': {

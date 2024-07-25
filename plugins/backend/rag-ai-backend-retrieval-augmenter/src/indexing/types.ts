@@ -32,7 +32,7 @@ export interface RoadieEmbeddingsConfig {
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;
-  options?: AugmentationOptions;
+  augmentationOptions?: AugmentationOptions;
 }
 
 export type SearchIndex = {

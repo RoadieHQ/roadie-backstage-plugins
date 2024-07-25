@@ -54,7 +54,7 @@ export async function initializeOpenAiEmbeddings({
     vectorStore,
     catalogApi,
     discovery,
-    options: augmentationOptions,
+    augmentationOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),
     tokenManager,
     config: openAiConfig,
