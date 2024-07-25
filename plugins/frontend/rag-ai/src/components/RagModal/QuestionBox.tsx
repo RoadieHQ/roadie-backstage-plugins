@@ -43,7 +43,7 @@ export const QuestionBox = (props: {
   const { onSubmit = () => {}, fullWidth = true, onClear } = props;
   const [label, setLabel] = useState('Ask the LLM');
   const [value, setValue] = useState<string>('');
-  const [source, setSource] = useState<string>('catalog');
+  const [source, setSource] = useState<string>('all');
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +142,7 @@ export const QuestionBox = (props: {
             label="Source"
             onChange={e => setSource(e.target.value as string)}
           >
+            <MenuItem value="all">All</MenuItem>
             <MenuItem value="catalog">Catalog</MenuItem>
             <MenuItem value="tech-docs">TechDocs</MenuItem>
           </Select>

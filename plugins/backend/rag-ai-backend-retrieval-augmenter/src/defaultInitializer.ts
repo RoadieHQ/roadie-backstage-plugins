@@ -52,7 +52,7 @@ export const createDefaultRetrievalPipeline = ({
   });
 
   const sourceBasedRetrieverConfig = new Map();
-  ['catalog', 'tech-docs'].forEach(source => {
+  ['catalog', 'tech-docs', 'all'].forEach(source => {
     sourceBasedRetrieverConfig.set(source, [
       vectorEmbeddingsRetriever,
       searchRetriever,
