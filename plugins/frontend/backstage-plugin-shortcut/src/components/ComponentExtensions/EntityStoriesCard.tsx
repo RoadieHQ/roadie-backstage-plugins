@@ -61,7 +61,9 @@ export const EntityStoriesCard = (props: {
   } = useAsyncRetry(async () => {
     let query = entity.metadata.annotations?.[SHORTCUT_QUERY_ANNOTATION];
     if (props.additionalQuery) {
-      query = `${query} ${props.additionalQuery}`;
+      query = [query, props.additionalQuery]
+        .filter(queryItem => queryItem !== undefined)
+        .join(' ');
     }
     if (query) {
       return (await shortcutApi.fetchStories({ query })).data;
