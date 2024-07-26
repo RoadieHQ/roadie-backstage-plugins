@@ -33,10 +33,10 @@
   "dependencies": {
     "@backstage/types": "^1.1.1",
     "@langchain/core": "^0.1.2",
-    "@backstage/backend-plugin-api": "^0.6.17"
+    "@backstage/backend-plugin-api": "^0.7.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.4"
+    "@backstage/cli": "^0.26.11"
   },
   "files": [
     "dist"
