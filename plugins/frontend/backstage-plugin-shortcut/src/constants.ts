@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2024 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,33 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export type Story = {
-  id: string;
-  story_type: string;
-  entity_type: string;
-  owner_ids: string[];
-  started: boolean;
-  archived: boolean;
-  completed: boolean;
-  name: string;
-  app_url: string;
-};
-
-export type StoryResponse = {
-  next?: string;
-  total: number;
-  data: Array<Story>;
-};
-
-export type User = {
-  id: string;
-  profile: Profile;
-};
-
-export type Profile = {
-  email_address: string;
-  mention_name: string;
-  name: string;
-  id: string;
-};
+export const SHORTCUT_QUERY_ANNOTATION = 'shortcut.com/story-query';

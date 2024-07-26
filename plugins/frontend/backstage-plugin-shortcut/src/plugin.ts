@@ -17,8 +17,9 @@ import {
   createApiFactory,
   createPlugin,
   discoveryApiRef,
+  createComponentExtension,
 } from '@backstage/core-plugin-api';
-import { createCardExtension } from '@backstage/plugin-home';
+import { createCardExtension } from '@backstage/plugin-home-react';
 import { shortcutApiRef, ShortcutClient } from './api';
 
 import { rootRouteRef } from './routes';
@@ -42,5 +43,17 @@ export const HomepageStoriesCard = backstagePluginShortcutPlugin.provide(
     name: 'HomepageStoriesCard ',
     title: 'Shortcut stories card',
     components: () => import('./components/Home/StoriesCardHomepage'),
+  }),
+);
+
+export const EntityShortcutStoriesCard = backstagePluginShortcutPlugin.provide(
+  createComponentExtension({
+    name: 'EntityStoriesCard ',
+    component: {
+      lazy: () =>
+        import('./components/ComponentExtensions/EntityStoriesCard').then(
+          m => m.EntityStoriesCard,
+        ),
+    },
   }),
 );

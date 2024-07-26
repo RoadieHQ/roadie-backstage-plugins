@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Story, User } from './types';
+import { Story, StoryResponse, User } from './types';
 import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
 
 const DEFAULT_PROXY_PATH = '/shortcut/api';
@@ -42,15 +42,29 @@ export class ShortcutClient {
     return proxyUrl + this.proxyPath;
   }
 
-  async fetchStories({ owner }: { owner?: string }): Promise<Story[]> {
-    const response = await fetch(
-      `${await this.getApiUrl()}/search/stories?page_size=25&query=owner:${owner}`,
-    );
+  async fetch<T>({ path }: { path?: string }): Promise<T> {
+    const response = await fetch(`${await this.getApiUrl()}${path}`);
     const payload = await response.json();
     if (!response.ok) {
+      if (payload.message) {
+        throw new Error(payload.message);
+      }
       throw new Error(payload.errors[0]);
     }
-    return payload.data;
+
+    return payload;
+  }
+
+  async fetchStories({ query }: { query: string }): Promise<StoryResponse> {
+    const encodedQuery = encodeURIComponent(query);
+    return await this.fetch<StoryResponse>({
+      path: `/search/stories?page_size=25&query=${encodedQuery}`,
+    });
+  }
+
+  async fetchOwnedStories({ owner }: { owner?: string }): Promise<Story[]> {
+    const query = `owner:${owner}`;
+    return (await this.fetchStories({ query })).data;
   }
 
   async getUsers(): Promise<User[]> {
