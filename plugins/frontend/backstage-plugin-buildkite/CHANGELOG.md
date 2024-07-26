@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.3.0
+
+### Minor Changes
+
+- b98545b: To be more consistent with the character casing used throughout the rest of the plugin's exports, the API ref is now exported as `buildkiteApiRef` (rather than `buildKiteApiRef`). To preserve backwards compatibility, the original export, `buildKiteApiRef`, is also exported.
+
 ## 2.2.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.2.0
+
+### Minor Changes
+
+- 87f01c5: Add an entity card for the shortcut plugin.
+
 ## 1.1.23
 
 ### Patch Changes
