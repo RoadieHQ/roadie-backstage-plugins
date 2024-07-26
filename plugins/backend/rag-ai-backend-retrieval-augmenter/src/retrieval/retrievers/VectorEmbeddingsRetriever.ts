@@ -48,7 +48,7 @@ export class VectorEmbeddingsRetriever implements AugmentationRetriever {
     _filter?: EntityFilterShape,
   ): Promise<EmbeddingDoc[]> {
     const embeddings = await this.vectorStore.similaritySearch(query, {
-      source,
+      source: source !== 'all' ? source : undefined,
     });
 
     this.logger.info(

@@ -15,9 +15,9 @@
  */
 
 import { TokenManager } from '@backstage/backend-common';
-import { CatalogApi } from '@backstage/catalog-client';
+import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
-import { SplitterOptions } from './types';
+import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
@@ -28,14 +28,17 @@ import {
   EntityFilterShape,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
+import pLimit from 'p-limit';
 
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
   private readonly logger: Logger;
   private readonly tokenManager: TokenManager;
+  private readonly discovery: DiscoveryService;
 
-  private readonly splitterOptions?: SplitterOptions;
+  private readonly augmentationOptions?: AugmentationOptions;
 
   protected constructor({
     vectorStore,
@@ -43,21 +46,24 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     logger,
     tokenManager,
     embeddings,
-    splitterOptions,
+    discovery,
+    augmentationOptions,
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
     logger: Logger;
     tokenManager: TokenManager;
     embeddings: Embeddings;
-    splitterOptions?: SplitterOptions;
+    discovery: DiscoveryService;
+    augmentationOptions?: AugmentationOptions;
   }) {
     vectorStore.connectEmbeddings(embeddings);
     this._vectorStore = vectorStore;
-    this.splitterOptions = splitterOptions;
+    this.augmentationOptions = augmentationOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
     this.tokenManager = tokenManager;
+    this.discovery = discovery;
   }
 
   get vectorStore() {
@@ -75,8 +81,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   protected getSplitter() {
     // Defaults to 1000 chars, 200 overlap
     return new RecursiveCharacterTextSplitter({
-      chunkSize: this.splitterOptions?.chunkSize,
-      chunkOverlap: this.splitterOptions?.chunkOverlap,
+      chunkSize: this.augmentationOptions?.chunkSize,
+      chunkOverlap: this.augmentationOptions?.chunkOverlap,
     });
   }
 
@@ -104,10 +110,36 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     return docs;
   }
 
+  protected async constructTechDocsEmbeddingDocuments(
+    documents: TechDocsDocument[],
+    source: EmbeddingsSource,
+  ): Promise<EmbeddingDoc[]> {
+    const splitter = this.getSplitter();
+    let docs: EmbeddingDoc[] = [];
+    for (const { text, entity } of documents) {
+      const splits = await splitter.splitText(text);
+      docs = docs.concat(
+        splits.map((content: string, idx: number) => ({
+          content,
+          metadata: {
+            splitId: idx.toString(),
+            source,
+            entityRef: stringifyEntityRef(entity),
+            kind: entity.kind,
+          },
+        })),
+      );
+    }
+
+    return docs;
+  }
+
   protected async getDocuments(
     source: EmbeddingsSource,
     filter?: EntityFilterShape,
   ) {
+    const limit = pLimit(this.augmentationOptions?.concurrencyLimit ?? 10);
+
     switch (source) {
       case 'catalog': {
         const { token } = await this.tokenManager.getToken();
@@ -126,6 +158,65 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
           `Constructed ${constructCatalogEmbeddingDocuments.length} embedding documents for ${entitiesResponse.items.length} catalog items.`,
         );
         return constructCatalogEmbeddingDocuments;
+      }
+      case 'tech-docs': {
+        const { token } = await this.tokenManager.getToken();
+
+        const entitiesResponse = await this.catalogApi.getEntities(
+          {
+            filter: {
+              'metadata.annotations.backstage.io/techdocs-ref':
+                CATALOG_FILTER_EXISTS,
+            },
+          },
+          { token },
+        );
+
+        const techDocsBaseUrl = await this.discovery.getBaseUrl('techdocs');
+
+        const documentsPromises = entitiesResponse.items.map(entity =>
+          limit(async () => {
+            const { kind } = entity;
+            const { namespace = 'default', name } = entity.metadata;
+
+            const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
+
+            try {
+              const searchIndexResponse = await fetch(searchIndexUrl, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+
+              const searchIndex =
+                (await searchIndexResponse.json()) as SearchIndex;
+
+              return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
+                // only filter sections that contain text
+                if (doc.location.includes('#') && doc.text)
+                  acc.push({ text: doc.text, entity });
+
+                return acc;
+              }, []);
+            } catch (e) {
+              this.logger.debug(
+                `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
+                e,
+              );
+              return [];
+            }
+          }),
+        );
+
+        const documents = (await Promise.all(documentsPromises)).flat();
+
+        const constructTechDocsEmbeddingDocuments =
+          await this.constructTechDocsEmbeddingDocuments(documents, source);
+
+        this.logger.info(
+          `Constructed ${constructTechDocsEmbeddingDocuments.length} embedding documents for ${entitiesResponse.items.length} TechDocs.`,
+        );
+        return constructTechDocsEmbeddingDocuments;
       }
       default:
         throw new Error(
