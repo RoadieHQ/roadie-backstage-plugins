@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.2.1
+
+### Patch Changes
+
+- c495796: Fix stories query where either parameter or annotation is undefined.
+
 ## 1.2.0
 
 ### Minor Changes
