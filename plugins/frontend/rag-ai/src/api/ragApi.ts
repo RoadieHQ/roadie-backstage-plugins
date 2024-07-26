@@ -17,7 +17,7 @@ import { createApiRef } from '@backstage/core-plugin-api';
 import { RoadieLlmResponse } from '../types';
 
 export interface RagAiApi {
-  ask(question: string): Promise<RoadieLlmResponse>;
+  ask(question: string, source: string): Promise<RoadieLlmResponse>;
 }
 
 export const ragAiApiRef = createApiRef<RagAiApi>({
