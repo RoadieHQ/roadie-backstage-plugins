@@ -42,7 +42,7 @@ export class ShortcutClient {
     return proxyUrl + this.proxyPath;
   }
 
-  async fetch<T>({ path }: { path?: string }): Promise<T> {
+  async fetch<T>({ path }: { path: string }): Promise<T> {
     const response = await fetch(`${await this.getApiUrl()}${path}`);
     const payload = await response.json();
     if (!response.ok) {
