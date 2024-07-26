@@ -1,5 +1,17 @@
 # backend
 
+## 2.1.10
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.4
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.5
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.5
+  - @roadiehq/rag-ai-storage-pgvector@0.1.4
+  - @roadiehq/rag-ai-backend@0.3.3
+
 ## 2.1.9
 
 ### Patch Changes
