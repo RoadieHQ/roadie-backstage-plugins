@@ -19,7 +19,7 @@ import {
   discoveryApiRef,
   createComponentExtension,
 } from '@backstage/core-plugin-api';
-import { createCardExtension } from '@backstage/plugin-home-react';
+import { createCardExtension } from '@backstage/plugin-home';
 import { shortcutApiRef, ShortcutClient } from './api';
 
 import { rootRouteRef } from './routes';
