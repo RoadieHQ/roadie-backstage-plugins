@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.11.0
+
+### Minor Changes
+
+- f4a5909: Allow the title to be set on the prometheus entity card.
+
 ## 2.10.0
 
 ### Minor Changes
