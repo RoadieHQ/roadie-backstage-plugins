@@ -60,19 +60,20 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     return `aws-iam-role-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getIam() {
+  private async getIam(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new IAM({ credentials, region: this.region })
+      ? new IAM({ credentials, region: discoveryRegion })
       : new IAM(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const discoveryRegion = region ?? this.region;
     const groups = await this.getGroups();
 
     this.logger.info(
@@ -80,9 +81,9 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     );
     const roleResources: ResourceEntity[] = [];
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
-    const iam = await this.getIam();
+    const iam = await this.getIam(discoveryRegion);
 
     const paginatorConfig = {
       client: iam,

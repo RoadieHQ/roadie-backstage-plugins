@@ -63,19 +63,20 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
     return `aws-lambda-function-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getLambda() {
+  private async getLambda(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new Lambda({ credentials, region: this.region })
+      ? new Lambda({ credentials, region: discoveryRegion })
       : new Lambda(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const discoveryRegion = region ?? this.region;
     const groups = await this.getGroups();
 
     this.logger.info(
@@ -84,9 +85,9 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const lambda = await this.getLambda();
+    const lambda = await this.getLambda(discoveryRegion);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
     const paginatorConfig = {
       client: lambda,

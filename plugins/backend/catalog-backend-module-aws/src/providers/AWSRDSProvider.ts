@@ -58,27 +58,27 @@ export class AWSRDSProvider extends AWSEntityProvider {
     return `aws-rds-provider-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getRdsClient() {
+  private async getRdsClient(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new RDS({ credentials, region: this.region })
+      ? new RDS({ credentials, region: discoveryRegion })
       : new RDS(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
-
+    const discoveryRegion = region ?? this.region;
     const groups = await this.getGroups();
     this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const rdsClient = await this.getRdsClient();
+    const rdsClient = await this.getRdsClient(discoveryRegion);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
     const paginatorConfig = {
       client: rdsClient,
