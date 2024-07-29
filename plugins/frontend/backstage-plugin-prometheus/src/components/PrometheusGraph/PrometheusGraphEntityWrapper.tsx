@@ -31,12 +31,14 @@ export const PrometheusGraphEntityWrapper = ({
   graphType,
   enableQueryTemplating,
   query,
+  title,
 }: {
   step?: number;
   range?: { hours?: number; minutes?: number };
   graphType?: 'line' | 'area';
   query?: string;
   enableQueryTemplating?: boolean;
+  title?: string;
 }) => {
   const { entity } = useEntity();
 
@@ -72,6 +74,7 @@ export const PrometheusGraphEntityWrapper = ({
         range={range}
         step={step}
         graphType={graphType}
+        title={title}
       />
     );
   }
