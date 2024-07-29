@@ -56,17 +56,41 @@ export default async function createPlugin(
 
   for (const config of env.config.getOptionalConfigArray('aws.accounts') ||
     []) {
-    const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
-    const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
-    const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
-    const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, env);
-    const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
-    const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, env);
-    const ec2Provider = AWSEC2Provider.fromConfig(config, env);
-    const rdsProvider = AWSRDSProvider.fromConfig(config, env);
+    const s3Provider = AWSS3BucketProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const iamUserProvider = AWSIAMUserProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const ec2Provider = AWSEC2Provider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
+    const rdsProvider = AWSRDSProvider.fromConfig(config, {
+      ...env,
+      useTemporaryCredentials: true,
+    });
     const awsAccountsProvider = AWSOrganizationAccountsProvider.fromConfig(
       config,
-      env,
+      { ...env, useTemporaryCredentials: true },
     );
 
     builder.addEntityProvider(s3Provider);

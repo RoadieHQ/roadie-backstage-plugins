@@ -62,19 +62,20 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     return `aws-eks-cluster-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getEks() {
+  private async getEks(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new EKS({ credentials, region: this.region })
+      ? new EKS({ credentials, region: discoveryRegion })
       : new EKS(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const discoveryRegion = region ?? this.region;
     const groups = await this.getGroups();
 
     this.logger.info(
@@ -82,9 +83,9 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     );
     const eksResources: ResourceEntity[] = [];
 
-    const eks = await this.getEks();
+    const eks = await this.getEks(discoveryRegion);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
     const paginatorConfig = {
       client: eks,

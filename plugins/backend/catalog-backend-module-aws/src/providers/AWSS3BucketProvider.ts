@@ -60,19 +60,20 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     return `aws-s3-bucket-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getS3() {
+  private async getS3(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new S3({ credentials, region: this.region })
+      ? new S3({ credentials, region: discoveryRegion })
       : new S3(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const discoveryRegion = region ?? this.region;
     const groups = await this.getGroups();
 
     this.logger.info(
@@ -80,9 +81,9 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     );
     const s3Resources: ResourceEntity[] = [];
 
-    const s3 = await this.getS3();
+    const s3 = await this.getS3(discoveryRegion);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
     const buckets = await s3.listBuckets({});
 

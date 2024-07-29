@@ -74,7 +74,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     }
     const groups = await this.getGroups();
 
-    const defaultAnnotations = await this.buildDefaultAnnotations();
+    const defaultAnnotations = await this.buildDefaultAnnotations(this.region);
     const ddb = await this.getDdb();
     this.logger.info(
       `Retrieving all DynamoDB tables for account ${this.accountId}`,

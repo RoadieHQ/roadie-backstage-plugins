@@ -59,16 +59,17 @@ export class AWSEC2Provider extends AWSEntityProvider {
     return `aws-ec2-provider-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getEc2() {
+  private async getEc2(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new EC2({ credentials, region: this.region })
+      ? new EC2({ credentials, region: discoveryRegion })
       : new EC2(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
+    const discoveryRegion = region ?? this.region;
     if (!this.connection) {
       throw new Error('Not initialized');
     }
@@ -77,9 +78,9 @@ export class AWSEC2Provider extends AWSEntityProvider {
     this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
     const ec2Resources: ResourceEntity[] = [];
 
-    const ec2 = await this.getEc2();
+    const ec2 = await this.getEc2(discoveryRegion);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
     const instances = await ec2.describeInstances({
       Filters: [{ Name: 'instance-state-name', Values: ['running'] }],
@@ -89,7 +90,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
       if (reservation.Instances) {
         for (const instance of reservation.Instances) {
           const instanceId = instance.InstanceId;
-          const arn = `arn:aws:ec2:${this.region}:${this.accountId}:instance/${instanceId}`;
+          const arn = `arn:aws:ec2:${discoveryRegion}:${this.accountId}:instance/${instanceId}`;
           const consoleLink = new ARN(arn).consoleLink;
           const resource: ResourceEntity = {
             kind: 'Resource',

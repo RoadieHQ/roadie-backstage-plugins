@@ -45,6 +45,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly labelValueMapper: LabelValueMapper | undefined;
 
   public abstract getProviderName(): string;
+  public abstract run(region?: string): Promise<void>;
 
   protected constructor(
     account: AccountConfig,
@@ -126,12 +127,12 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.connection = connection;
   }
 
-  protected async buildDefaultAnnotations() {
+  protected async buildDefaultAnnotations(region: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     const sts = this.useTemporaryCredentials
-      ? new STS({ credentials: credentials, region: this.region })
+      ? new STS({ credentials: credentials, region: region })
       : new STS(credentials);
 
     const account = await sts.getCallerIdentity({});

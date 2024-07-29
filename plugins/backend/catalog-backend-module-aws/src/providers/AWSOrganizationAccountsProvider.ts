@@ -95,7 +95,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
 
     const organizationsClient = await this.getOrganizationsClient();
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(this.region);
 
     const paginatorConfig = {
       client: organizationsClient,

@@ -56,28 +56,28 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     return `aws-iam-user-${this.accountId}-${this.providerId ?? 0}`;
   }
 
-  private async getIam() {
+  private async getIam(discoveryRegion: string) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials()
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new IAM({ credentials, region: this.region })
+      ? new IAM({ credentials, region: discoveryRegion })
       : new IAM(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(region?: string): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
-
+    const discoveryRegion = region ?? this.region;
     this.logger.info(
       `Providing iam user resources from aws: ${this.accountId}`,
     );
     const userResources: UserEntity[] = [];
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
 
-    const iam = await this.getIam();
+    const iam = await this.getIam(discoveryRegion);
 
     const paginatorConfig = {
       client: iam,
