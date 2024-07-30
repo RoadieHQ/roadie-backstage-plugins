@@ -19,7 +19,7 @@ import {
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
 import * as winston from 'winston';
-import { AccountConfig } from '../types';
+import { AccountConfig, DynamicAccountConfig } from '../types';
 import { STS } from '@aws-sdk/client-sts';
 import {
   ANNOTATION_ORIGIN_LOCATION,
@@ -45,7 +45,9 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly labelValueMapper: LabelValueMapper | undefined;
 
   public abstract getProviderName(): string;
-  public abstract run(region?: string): Promise<void>;
+  public abstract run(
+    dynamicAccountConfig?: DynamicAccountConfig,
+  ): Promise<void>;
 
   protected constructor(
     account: AccountConfig,
@@ -86,23 +88,40 @@ export abstract class AWSEntityProvider implements EntityProvider {
     return labelsFromTags(tags, this.labelValueMapper);
   }
 
-  protected getCredentials() {
-    const arnParse = parseArn(this.account.roleArn ?? this.account.roleName);
-
-    const region = this.region ?? arnParse.region;
+  protected getCredentials(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { roleArn, externalId, region } =
+      this.getParsedConfig(dynamicAccountConfig);
     return fromTemporaryCredentials({
       params: {
-        RoleArn: this.account.roleArn,
-        ExternalId: this.account.externalId,
+        RoleArn: roleArn,
+        ExternalId: externalId,
       },
       clientConfig: region ? { region: region } : undefined,
     });
   }
 
-  protected async getCredentialsProvider() {
+  protected getParsedConfig(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { roleArn, externalId, region } = dynamicAccountConfig
+      ? dynamicAccountConfig
+      : { roleArn: undefined, externalId: undefined, region: undefined };
+
+    const arn = roleArn ?? this.account.roleArn ?? this.account.roleName;
+    const arnParse = parseArn(arn);
+    return {
+      accountId: arnParse?.accountId,
+      region: region ?? this.region ?? arnParse.region,
+      externalId: externalId ?? this.account.externalId,
+      roleArn: roleArn ?? this.account.roleArn,
+    };
+  }
+
+  protected async getCredentialsProvider(
+    dynamicAccountConfig?: DynamicAccountConfig,
+  ) {
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const awsCredentialProvider =
       await this.credentialsManager.getCredentialProvider({
-        accountId: this.accountId,
+        accountId: accountId,
       });
     return awsCredentialProvider.sdkCredentialProvider;
   }
@@ -127,10 +146,13 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.connection = connection;
   }
 
-  protected async buildDefaultAnnotations(region: string) {
+  protected async buildDefaultAnnotations(
+    dynamicAccountConfig?: DynamicAccountConfig,
+  ) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
-      : await this.getCredentialsProvider();
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider(dynamicAccountConfig);
     const sts = this.useTemporaryCredentials
       ? new STS({ credentials: credentials, region: region })
       : new STS(credentials);

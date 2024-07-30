@@ -31,6 +31,8 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS Lambda Function service.
@@ -60,34 +62,38 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-lambda-function-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-lambda-function-${this.providerId ?? 0}`;
   }
 
-  private async getLambda(discoveryRegion: string) {
+  private async getLambda(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
-      : await this.getCredentialsProvider();
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider(dynamicAccountConfig);
     return this.useTemporaryCredentials
-      ? new Lambda({ credentials, region: discoveryRegion })
+      ? new Lambda({ credentials, region })
       : new Lambda(credentials);
   }
 
-  async run(region?: string): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
-    const discoveryRegion = region ?? this.region;
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
     const groups = await this.getGroups();
 
     this.logger.info(
-      `Providing lambda function resources from aws: ${this.accountId}`,
+      `Providing lambda function resources from AWS: ${accountId}`,
     );
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const lambda = await this.getLambda(discoveryRegion);
+    const lambda = await this.getLambda(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: lambda,
@@ -150,5 +156,10 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${lambdaComponents.length} lambda function resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }
