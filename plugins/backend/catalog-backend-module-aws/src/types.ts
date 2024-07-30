@@ -89,6 +89,6 @@ export type AccountConfig = {
 
 export type DynamicAccountConfig = {
   roleArn: string;
-  externalId: string;
+  externalId?: string;
   region: string;
 };

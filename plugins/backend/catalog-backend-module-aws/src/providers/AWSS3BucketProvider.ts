@@ -66,7 +66,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider(dynamicAccountConfig);
+      : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
       ? new S3({ credentials, region })
       : new S3(credentials);

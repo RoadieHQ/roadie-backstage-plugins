@@ -64,7 +64,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   private async getDdb(dynamicAccountConfig?: DynamicAccountConfig) {
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider(dynamicAccountConfig);
+      : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
       ? new DynamoDB({ credentials })
       : new DynamoDB(credentials);

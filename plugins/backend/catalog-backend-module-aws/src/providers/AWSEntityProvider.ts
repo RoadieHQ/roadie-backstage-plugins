@@ -111,17 +111,14 @@ export abstract class AWSEntityProvider implements EntityProvider {
       accountId: arnParse?.accountId,
       region: region ?? this.region ?? arnParse.region,
       externalId: externalId ?? this.account.externalId,
-      roleArn: roleArn ?? this.account.roleArn,
+      roleArn: arn,
     };
   }
 
-  protected async getCredentialsProvider(
-    dynamicAccountConfig?: DynamicAccountConfig,
-  ) {
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+  protected async getCredentialsProvider() {
     const awsCredentialProvider =
       await this.credentialsManager.getCredentialProvider({
-        accountId: accountId,
+        accountId: this.accountId,
       });
     return awsCredentialProvider.sdkCredentialProvider;
   }
@@ -149,10 +146,10 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected async buildDefaultAnnotations(
     dynamicAccountConfig?: DynamicAccountConfig,
   ) {
-    const { region } = this.getParsedConfig(dynamicAccountConfig);
+    const { region, roleArn } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider(dynamicAccountConfig);
+      : await this.getCredentialsProvider();
     const sts = this.useTemporaryCredentials
       ? new STS({ credentials: credentials, region: region })
       : new STS(credentials);
@@ -160,12 +157,8 @@ export abstract class AWSEntityProvider implements EntityProvider {
     const account = await sts.getCallerIdentity({});
 
     const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${
-        this.account.roleName
-      }`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${
-        this.account.roleName
-      }`,
+      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${roleArn}`,
+      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${roleArn}`,
     };
 
     if (account.Account) {

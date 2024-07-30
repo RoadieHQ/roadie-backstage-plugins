@@ -62,7 +62,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
       ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider(dynamicAccountConfig);
+      : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
       ? new IAM({ credentials, region })
       : new IAM(credentials);
