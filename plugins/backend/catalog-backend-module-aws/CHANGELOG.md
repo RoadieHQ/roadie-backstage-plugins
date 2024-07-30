@@ -1,5 +1,17 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.0
+
+### Major Changes
+
+- 05a7dd4: Modify AWS providers to allow fully runtime customizable dynamic run configuration. Change provider naming convention, remove existing region argument.
+
+## 4.2.0
+
+### Minor Changes
+
+- 47a2893: Add the possibility to define region on runtime when running the provider
+
 ## 4.1.7
 
 ### Patch Changes

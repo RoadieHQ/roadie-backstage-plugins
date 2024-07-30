@@ -1,5 +1,21 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 0.1.4
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-node@0.1.4
+
+## 0.1.3
+
+### Patch Changes
+
+- ed73691: Use `JSON.stringify` for passing the filter to the query
+- Updated dependencies [ed73691]
+  - @roadiehq/rag-ai-node@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes

@@ -1,5 +1,28 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 0.2.5
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.4
+  - @roadiehq/rag-ai-backend@0.3.3
+  - @roadiehq/rag-ai-node@0.1.4
+
+## 0.2.4
+
+### Patch Changes
+
+- 9768baa: Added config parameter `ai.embeddings.concurrencyLimit` for limiting concurrency during creating TechDocs embeddings
+- 9768baa: Renamed type `SplitterOptions` to `AugmentationOptions`
+- Updated dependencies [9768baa]
+- Updated dependencies [ed73691]
+- Updated dependencies [9768baa]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.3
+  - @roadiehq/rag-ai-backend@0.3.2
+  - @roadiehq/rag-ai-node@0.1.3
+
 ## 0.2.3
 
 ### Patch Changes

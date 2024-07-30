@@ -20,9 +20,10 @@ import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { Entity } from '@backstage/catalog-model';
 
-export type SplitterOptions = {
+export type AugmentationOptions = {
   chunkSize?: number;
   chunkOverlap?: number;
+  concurrencyLimit?: number;
 };
 
 export interface RoadieEmbeddingsConfig {
@@ -31,7 +32,7 @@ export interface RoadieEmbeddingsConfig {
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;
-  splitterOptions?: SplitterOptions;
+  augmentationOptions?: AugmentationOptions;
 }
 
 export type SearchIndex = {

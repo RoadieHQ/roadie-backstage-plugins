@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2024 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,8 @@
  * limitations under the License.
  */
 
-export type Story = {
-  id: string;
-  story_type: string;
-  entity_type: string;
-  owner_ids: string[];
-  started: boolean;
-  archived: boolean;
-  completed: boolean;
-  name: string;
-  app_url: string;
-};
-
-export type StoryResponse = {
-  next?: string;
-  total: number;
-  data: Array<Story>;
-};
-
-export type User = {
-  id: string;
-  profile: Profile;
-};
-
-export type Profile = {
-  email_address: string;
-  mention_name: string;
-  name: string;
-  id: string;
-};
+export function duration(startTimestamp: [number, number]): string {
+  const delta = process.hrtime(startTimestamp);
+  const seconds = delta[0] + delta[1] / 1e9;
+  return `${seconds.toFixed(1)}s`;
+}
