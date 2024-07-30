@@ -109,9 +109,9 @@ describe('AWSLambdaFunctionProvider', () => {
                   'amazon.com/lambda-function-arn':
                     'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
                   'backstage.io/managed-by-location':
-                    'aws-lambda-function-123456789012-0:arn:aws:iam::123456789012:role/role1',
+                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
                   'backstage.io/managed-by-origin-location':
-                    'aws-lambda-function-123456789012-0:arn:aws:iam::123456789012:role/role1',
+                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
                   'backstage.io/view-url':
                     'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
                 },
