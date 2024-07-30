@@ -27,6 +27,8 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
@@ -56,31 +58,35 @@ export class AWSEC2Provider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-ec2-provider-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-ec2-provider-${this.providerId ?? 0}`;
   }
 
-  private async getEc2(discoveryRegion: string) {
+  private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new EC2({ credentials, region: discoveryRegion })
+      ? new EC2({ credentials, region: region })
       : new EC2(credentials);
   }
 
-  async run(region?: string): Promise<void> {
-    const discoveryRegion = region ?? this.region;
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+
+    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
-    this.logger.info(`Providing ec2 resources from aws: ${this.accountId}`);
+    this.logger.info(`Providing ec2 resources from aws: ${accountId}`);
     const ec2Resources: ResourceEntity[] = [];
 
-    const ec2 = await this.getEc2(discoveryRegion);
+    const ec2 = await this.getEc2(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const instances = await ec2.describeInstances({
       Filters: [{ Name: 'instance-state-name', Values: ['running'] }],
@@ -90,7 +96,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
       if (reservation.Instances) {
         for (const instance of reservation.Instances) {
           const instanceId = instance.InstanceId;
-          const arn = `arn:aws:ec2:${discoveryRegion}:${this.accountId}:instance/${instanceId}`;
+          const arn = `arn:aws:ec2:${region}:${accountId}:instance/${instanceId}`;
           const consoleLink = new ARN(arn).consoleLink;
           const resource: ResourceEntity = {
             kind: 'Resource',
@@ -137,5 +143,10 @@ export class AWSEC2Provider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${ec2Resources.length} EC2 resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

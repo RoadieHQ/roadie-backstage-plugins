@@ -28,6 +28,8 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -57,33 +59,35 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-iam-role-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-iam-role-${this.providerId ?? 0}`;
   }
 
-  private async getIam(discoveryRegion: string) {
+  private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new IAM({ credentials, region: discoveryRegion })
+      ? new IAM({ credentials, region })
       : new IAM(credentials);
   }
 
-  async run(region?: string): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
-    const discoveryRegion = region ?? this.region;
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
     const groups = await this.getGroups();
 
-    this.logger.info(
-      `Providing iam role resources from aws: ${this.accountId}`,
-    );
+    this.logger.info(`Providing IAM role resources from AWS: ${accountId}`);
     const roleResources: ResourceEntity[] = [];
 
-    const defaultAnnotations = this.buildDefaultAnnotations(discoveryRegion);
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
-    const iam = await this.getIam(discoveryRegion);
+    const iam = await this.getIam(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: iam,
@@ -128,5 +132,10 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${roleResources.length} IAM role resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }
