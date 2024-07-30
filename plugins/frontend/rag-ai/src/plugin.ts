@@ -26,7 +26,17 @@ export const RagModal = ragAiPlugin.provide(
   createComponentExtension({
     name: 'RagModal',
     component: {
-      lazy: () => import('./components/RagModal').then(m => m.RagModal),
+      lazy: () =>
+        import('./components/RagModal').then(m => m.UncontrolledRagModal),
+    },
+  }),
+);
+
+export const SidebarRagModal = ragAiPlugin.provide(
+  createComponentExtension({
+    name: 'SidebarRagModal',
+    component: {
+      lazy: () => import('./components/RagModal').then(m => m.SidebarRagModal),
     },
   }),
 );
