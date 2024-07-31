@@ -28,7 +28,12 @@ export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
   return (
     <Grid container spacing={3}>
       {allDashboardUrls.map((value, index) => (
-        <Grid item md={12}>
+        <Grid
+          item
+          data-testid={`Datadog dashboard ${index}`}
+          // key={`Datadog dashboard ${index}`}
+          md={12}
+        >
           <InfoCard title={`Datadog dashboard ${index}`} variant="gridItem">
             <Resizable
               defaultSize={{

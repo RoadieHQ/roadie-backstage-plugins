@@ -4783,6 +4783,25 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
+"@backstage/core-app-api@^1.14.1":
+  version "1.14.1"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-app-api/-/core-app-api-1.14.1.tgz#d998ba2b9b2fd80db762a933c5e2d9985c14c1ac"
+  integrity sha512-I3Hbc36dTjKNL5yhY16yNamv1nFxfzDxd6Y42apDq+IEAueZrodR/+qCeMq2QtcpZ9GOfowKoJhccA8GMUXpQQ==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/types" "^1.1.1"
+    "@backstage/version-bridge" "^1.0.8"
+    "@types/prop-types" "^15.7.3"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    history "^5.0.0"
+    i18next "^22.4.15"
+    lodash "^4.17.21"
+    prop-types "^15.7.2"
+    react-use "^17.2.4"
+    zen-observable "^0.10.0"
+    zod "^3.22.4"
+
 "@backstage/core-compat-api@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@backstage/core-compat-api/-/core-compat-api-0.2.4.tgz#1f652040d5300cdfb64e32d89b38748495ad2cf4"
@@ -4790,6 +4809,16 @@
   dependencies:
     "@backstage/core-plugin-api" "^1.9.2"
     "@backstage/frontend-plugin-api" "^0.6.4"
+    "@backstage/version-bridge" "^1.0.8"
+    "@types/react" "^16.13.1 || ^17.0.0"
+
+"@backstage/core-compat-api@^0.2.7":
+  version "0.2.7"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-compat-api/-/core-compat-api-0.2.7.tgz#5b58f5984e2d54489dc6389fb48296afc2586149"
+  integrity sha512-At+mkjrIUrvAPK2bLVtdCFhCGY4VK9i2cKvaOeFRyVJuHU8f7WEKaHjDV8afLVddllUjq6j1uDeFRfiMMPtXqw==
+  dependencies:
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/frontend-plugin-api" "^0.6.7"
     "@backstage/version-bridge" "^1.0.8"
     "@types/react" "^16.13.1 || ^17.0.0"
 
@@ -4838,10 +4867,65 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
+"@backstage/core-components@^0.14.9":
+  version "0.14.9"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-components/-/core-components-0.14.9.tgz#bb1f40be18d8241b70538383d324aec233586382"
+  integrity sha512-tcwDUeQBMIKtM+EuLMl6BdwjWdjjTnvvUuQCJISdy5ot+Yp/znQK+d4KIA97wq3Fu/ufy1+tAAwGGaifHMRf1g==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/theme" "^0.5.6"
+    "@backstage/version-bridge" "^1.0.8"
+    "@date-io/core" "^1.3.13"
+    "@material-table/core" "^3.1.0"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@material-ui/lab" "4.0.0-alpha.61"
+    "@react-hookz/web" "^24.0.0"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    "@types/react-sparklines" "^1.7.0"
+    ansi-regex "^6.0.1"
+    classnames "^2.2.6"
+    d3-selection "^3.0.0"
+    d3-shape "^3.0.0"
+    d3-zoom "^3.0.0"
+    dagre "^0.8.5"
+    linkify-react "4.1.3"
+    linkifyjs "4.1.3"
+    lodash "^4.17.21"
+    pluralize "^8.0.0"
+    qs "^6.9.4"
+    rc-progress "3.5.1"
+    react-helmet "6.1.0"
+    react-hook-form "^7.12.2"
+    react-idle-timer "5.7.2"
+    react-markdown "^8.0.0"
+    react-sparklines "^1.7.0"
+    react-syntax-highlighter "^15.4.5"
+    react-use "^17.3.2"
+    react-virtualized-auto-sizer "^1.0.11"
+    react-window "^1.8.6"
+    remark-gfm "^3.0.1"
+    zen-observable "^0.10.0"
+    zod "^3.22.4"
+
 "@backstage/core-plugin-api@^1.9.2":
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-1.9.2.tgz#1a75865e567708829f5a8056ad23ea94233f4b7f"
   integrity sha512-VbMzgbp5c14B+xi5qFDXEd/LMsrM9D9IpU9tLPSaN2fn9FWhxmeHILNaiLHO2mdLd6RxLopKKbKWduBYbqyu5Q==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/types" "^1.1.1"
+    "@backstage/version-bridge" "^1.0.8"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    history "^5.0.0"
+
+"@backstage/core-plugin-api@^1.9.3":
+  version "1.9.3"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-plugin-api/-/core-plugin-api-1.9.3.tgz#66b4b7dc620823c66b123c8a2d6db088e2936027"
+  integrity sha512-MV/RQv8nAPYVkVX926Z+VPW2W4ZzU9VN2s9NhWSWqoYuOzsmA4FgmfNDuwiPEAUKW7AlVCGI4A0deUZ22Orgyw==
   dependencies:
     "@backstage/config" "^1.2.0"
     "@backstage/errors" "^1.2.4"
@@ -4884,6 +4968,25 @@
     "@manypkg/get-packages" "^1.1.3"
     minimatch "^9.0.0"
 
+"@backstage/frontend-app-api@^0.7.4":
+  version "0.7.4"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-app-api/-/frontend-app-api-0.7.4.tgz#ef964a9f1a820a3900dacc1cc39188542b091eb2"
+  integrity sha512-7pn2WLwBLvpBdgib7SUktidFEmHmfos1zUAgUGyzPOL3voKbXUZzjjpgcNdtC1tXap0OQX9jKKqCnkNGJHsN2A==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/core-app-api" "^1.14.1"
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/frontend-plugin-api" "^0.6.7"
+    "@backstage/theme" "^0.5.6"
+    "@backstage/types" "^1.1.1"
+    "@backstage/version-bridge" "^1.0.8"
+    "@material-ui/core" "^4.12.4"
+    "@material-ui/icons" "^4.11.3"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    lodash "^4.17.21"
+
 "@backstage/frontend-plugin-api@^0.6.4":
   version "0.6.4"
   resolved "https://registry.yarnpkg.com/@backstage/frontend-plugin-api/-/frontend-plugin-api-0.6.4.tgz#d9d09c137cbd879cd66b3c92ab8a608be7e48d1b"
@@ -4898,6 +5001,31 @@
     lodash "^4.17.21"
     zod "^3.22.4"
     zod-to-json-schema "^3.21.4"
+
+"@backstage/frontend-plugin-api@^0.6.7":
+  version "0.6.7"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-plugin-api/-/frontend-plugin-api-0.6.7.tgz#73bbc30f6f1b5acc31b9f17fd31d957498f497fb"
+  integrity sha512-hXXRuo4GxA/XSfQuSYJ/X59ShJKPf9KM76sXnVczsGeSFyORX3SRHKy8An0M3qQ/P9C9Z9LOBc38gghOtrUiGA==
+  dependencies:
+    "@backstage/core-components" "^0.14.9"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/types" "^1.1.1"
+    "@backstage/version-bridge" "^1.0.8"
+    "@material-ui/core" "^4.12.4"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    lodash "^4.17.21"
+    zod "^3.22.4"
+    zod-to-json-schema "^3.21.4"
+
+"@backstage/frontend-test-utils@^0.1.10":
+  version "0.1.11"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-test-utils/-/frontend-test-utils-0.1.11.tgz#81276fd7377b68bb8f52c1d7c93cdd1a9333f205"
+  integrity sha512-MyWf7Sou/80BCDiEz4rPwwnqwlM7b3FkU6jWM52mJK+/e49TL/qrx4lU3RjaM04vEYVZM3RmJfbquMsVw/RENA==
+  dependencies:
+    "@backstage/frontend-app-api" "^0.7.4"
+    "@backstage/frontend-plugin-api" "^0.6.7"
+    "@backstage/test-utils" "^1.5.9"
+    "@backstage/types" "^1.1.1"
 
 "@backstage/integration-aws-node@^0.1.12":
   version "0.1.12"
@@ -5534,6 +5662,18 @@
     uuid "^9.0.0"
     zod "^3.22.4"
 
+"@backstage/plugin-permission-common@^0.8.0":
+  version "0.8.0"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/plugin-permission-common/-/plugin-permission-common-0.8.0.tgz#13d29c146c50e9de1da47296c167ace9d1bc86f3"
+  integrity sha512-4c8QfjDKiTJbQfiG3DibUqUsclsi53kRk8GR9CwHl1Is2Xm98AkqXGWyknHGPQOvw4vJR19nqnj7w0XfhLK2Jw==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/errors" "^1.2.4"
+    "@backstage/types" "^1.1.1"
+    cross-fetch "^4.0.0"
+    uuid "^9.0.0"
+    zod "^3.22.4"
+
 "@backstage/plugin-permission-node@^0.7.28":
   version "0.7.28"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-node/-/plugin-permission-node-0.7.28.tgz#1cec06c18748bd2591dc3c4ce99b318b75eb02fd"
@@ -5559,6 +5699,17 @@
     "@backstage/config" "^1.2.0"
     "@backstage/core-plugin-api" "^1.9.2"
     "@backstage/plugin-permission-common" "^0.7.13"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    swr "^2.0.0"
+
+"@backstage/plugin-permission-react@^0.4.24":
+  version "0.4.24"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/plugin-permission-react/-/plugin-permission-react-0.4.24.tgz#a980462553c86e41d75c538b347b4acd9dc50a4e"
+  integrity sha512-UH+KvuvsVMqVCWDxC7Xv2BwHWuezg1fOurp0FgrrxXR5rZ8NQYEBlfmQEzt7mml6EzsUIc+hGeoSKLoSgHFjUA==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-permission-common" "^0.8.0"
     "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
     swr "^2.0.0"
 
@@ -6133,10 +6284,38 @@
     i18next "^22.4.15"
     zen-observable "^0.10.0"
 
+"@backstage/test-utils@^1.5.9":
+  version "1.5.9"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/test-utils/-/test-utils-1.5.9.tgz#397959c30598d2e5cab0b62a3ccfbc2db263d3a5"
+  integrity sha512-m/9dPrseTJRZ0Scu6lKt5K+GWTAI5An/2CtvthCZ7RuN4TVKRLFhL46QY+xjEkObjK4c6XCC3MUFEjHN00KZag==
+  dependencies:
+    "@backstage/config" "^1.2.0"
+    "@backstage/core-app-api" "^1.14.1"
+    "@backstage/core-plugin-api" "^1.9.3"
+    "@backstage/plugin-permission-common" "^0.8.0"
+    "@backstage/plugin-permission-react" "^0.4.24"
+    "@backstage/theme" "^0.5.6"
+    "@backstage/types" "^1.1.1"
+    "@material-ui/core" "^4.12.2"
+    "@material-ui/icons" "^4.9.1"
+    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
+    cross-fetch "^4.0.0"
+    i18next "^22.4.15"
+    zen-observable "^0.10.0"
+
 "@backstage/theme@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@backstage/theme/-/theme-0.5.3.tgz#bc715ad0f2215f1ad9683d15a460240feabbafca"
   integrity sha512-0d9tyLfbrjdIugSQHVA4ww/XT/VR7Kt2SvkhX/ZvQkcud85P4MN2P0aF/9q7BZeog7wpjI00AGHoWzMX4MdDIw==
+  dependencies:
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    "@mui/material" "^5.12.2"
+
+"@backstage/theme@^0.5.6":
+  version "0.5.6"
+  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/theme/-/theme-0.5.6.tgz#18645cbe42fb5667946e0a5dd38f2fb0bb056597"
+  integrity sha512-7/0sZYAS+2p/eEWC8eBINWHNv4jas6R20e0R5f0fc1YvLnVQ8HhnpZ6+d2vDMe7X2A2TBBcyJbSCybHdRAKpAA==
   dependencies:
     "@emotion/react" "^11.10.5"
     "@emotion/styled" "^11.10.5"
@@ -8186,7 +8365,7 @@
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/icons@^4.11.2", "@material-ui/icons@^4.9.1":
+"@material-ui/icons@^4.11.2", "@material-ui/icons@^4.11.3", "@material-ui/icons@^4.9.1":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.11.3.tgz#b0693709f9b161ce9ccde276a770d968484ecff1"
   integrity sha512-IKHlyx6LDh8n19vzwH5RtHIOHl9Tu90aAAxcbWME6kp4dmvODM3UvOHJeMIDzUbd4muuJKHmlNoBN+mDY4XkBA==
@@ -29457,16 +29636,7 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -29540,7 +29710,7 @@ string_decoder@~1.1.1:
   dependencies:
     safe-buffer "~5.1.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -29553,13 +29723,6 @@ strip-ansi@5.2.0:
   integrity sha512-DuRs1gKbBqsMKIZlrffwlug8MHkcnpjs5VPmL1PAh+mA30U0DTotfDZ0d2UUsXpPmPmMMJ6W773MaA3J+lbiWA==
   dependencies:
     ansi-regex "^4.1.0"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
 
 strip-ansi@^7.0.1:
   version "7.1.0"
@@ -31676,7 +31839,7 @@ wordwrap@^1.0.0:
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-1.0.0.tgz#27584810891456a4171c8d0226441ade90cbcaeb"
   integrity sha512-gvVzJFlPycKc5dZN4yPkP8w7Dc37BtP1yczEneOb4uq34pXZcvrtRTmWV8W+Ume+XCxKgbjM+nevkyFPMybd4Q==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
@@ -31689,15 +31852,6 @@ wrap-ansi@^6.0.1, wrap-ansi@^6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-6.2.0.tgz#e9393ba07102e6c91a3b221478f0257cd2856e53"
   integrity sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
   dependencies:
     ansi-styles "^4.0.0"
     string-width "^4.1.0"
