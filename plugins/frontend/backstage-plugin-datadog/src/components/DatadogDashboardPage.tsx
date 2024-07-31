@@ -31,7 +31,7 @@ export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
         <Grid
           item
           data-testid={`Datadog dashboard ${index}`}
-          // key={`Datadog dashboard ${index}`}
+          key={`Datadog dashboard ${index}`}
           md={12}
         >
           <InfoCard title={`Datadog dashboard ${index}`} variant="gridItem">
