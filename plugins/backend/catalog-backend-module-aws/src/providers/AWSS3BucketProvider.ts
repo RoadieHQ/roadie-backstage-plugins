@@ -28,6 +28,8 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -57,32 +59,34 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-s3-bucket-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-s3-bucket-${this.providerId ?? 0}`;
   }
 
-  private async getS3() {
+  private async getS3(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new S3({ credentials, region: this.region })
+      ? new S3({ credentials, region })
       : new S3(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
-    this.logger.info(
-      `Providing s3 bucket resources from aws: ${this.accountId}`,
-    );
+    this.logger.info(`Providing S3 bucket resources from AWS: ${accountId}`);
     const s3Resources: ResourceEntity[] = [];
 
-    const s3 = await this.getS3();
+    const s3 = await this.getS3(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const buckets = await s3.listBuckets({});
 
@@ -123,5 +127,10 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${s3Resources.length} S3 bucket resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

@@ -13,5 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { ragAiPlugin, RagModal, SidebarRagModal } from './plugin';
-export { RoadieRagAiClient, ragAiApiRef } from './api';
+
+export function duration(startTimestamp: [number, number]): string {
+  const delta = process.hrtime(startTimestamp);
+  const seconds = delta[0] + delta[1] / 1e9;
+  return `${seconds.toFixed(1)}s`;
+}
