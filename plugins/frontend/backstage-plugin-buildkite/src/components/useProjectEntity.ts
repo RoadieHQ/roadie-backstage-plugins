@@ -15,18 +15,35 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { BUILDKITE_ANNOTATION, BUILDKITE_BRANCH_ANNOTATION } from '../consts';
+import {
+  BUILDKITE_ANNOTATION,
+  BUILDKITE_BRANCH_ANNOTATION,
+  BUILDKITE_DEFAULT_BRANCH_ONLY_ANNOTATION,
+} from '../consts';
 
 export const useProjectEntity = (entity: Entity) => {
   const projectSlug = entity.metadata?.annotations?.[
     BUILDKITE_ANNOTATION
   ] as string;
-  const branch = entity.metadata?.annotations?.[
+  const branchAnnotation = entity.metadata?.annotations?.[
     BUILDKITE_BRANCH_ANNOTATION
   ] as string;
+  const rawDefaultBranchOnlyAnnotation = entity.metadata?.annotations?.[
+    BUILDKITE_DEFAULT_BRANCH_ONLY_ANNOTATION
+  ] as string;
+
+  let defaultBranchOnlyAnnotation = undefined;
+  if (rawDefaultBranchOnlyAnnotation === 'true') {
+    defaultBranchOnlyAnnotation = true;
+  }
+  if (rawDefaultBranchOnlyAnnotation === 'false') {
+    defaultBranchOnlyAnnotation = false;
+  }
+
   return {
     owner: projectSlug.split('/')[0],
     repo: projectSlug.split('/')[1],
-    branch: branch,
+    branchAnnotation,
+    defaultBranchOnlyAnnotation,
   };
 };

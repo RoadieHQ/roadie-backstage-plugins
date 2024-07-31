@@ -20,22 +20,47 @@ import { Entity } from '@backstage/catalog-model';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 import BuildkiteBuildView from './BuildKiteBuildView';
-import { BUILDKITE_ANNOTATION } from '../consts';
+import {
+  BUILDKITE_ANNOTATION,
+  BUILDKITE_DEFAULT_BRANCH_ONLY_ANNOTATION,
+} from '../consts';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { buildKiteBuildRouteRef } from '../plugin';
 
 export const isBuildkiteAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[BUILDKITE_ANNOTATION]);
 
-export const Router = () => {
+export type RouterProps = {
+  defaultBranchOnly?: boolean;
+};
+
+export const Router = (props: RouterProps) => {
+  let { defaultBranchOnly } = props;
   const { entity } = useEntity();
   if (!isBuildkiteAvailable(entity)) {
     return <MissingAnnotationEmptyState annotation={BUILDKITE_ANNOTATION} />;
   }
 
+  const defaultBranchOnlyAnnotation = Boolean(
+    entity?.metadata.annotations?.[BUILDKITE_DEFAULT_BRANCH_ONLY_ANNOTATION],
+  );
+
+  if (defaultBranchOnlyAnnotation) {
+    defaultBranchOnly = true;
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<BuildkiteBuildsTable entity={entity} />} />
+      <Route
+        path="/"
+        element={
+          <BuildkiteBuildsTable
+            defaultBranchOnly={defaultBranchOnly}
+            entity={entity}
+          />
+        }
+      />
+
       <Route
         path={`/${buildKiteBuildRouteRef.path}`}
         element={<BuildkiteBuildView entity={entity} />}
