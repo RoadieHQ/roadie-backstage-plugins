@@ -109,6 +109,35 @@ export const EmbeddingsView = ({
     <Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Related Entities</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Typography variant="subtitle2">
+                We found the following Entities based on your question. The LLM
+                used these entities as an additional context to attempt to
+                answer your question.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <List>
+                {entities.map(entityRef => (
+                  <ListItem key={entityRef}>
+                    <EntityRefLink
+                      entityRef={entityRef}
+                      defaultKind="Component"
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
+          </Grid>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Related TechDocs</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -141,35 +170,6 @@ export const EmbeddingsView = ({
                     </ListItem>
                   );
                 })}
-              </List>
-            </Grid>
-          </Grid>
-        </AccordionDetails>
-      </Accordion>
-
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Related Entities</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container direction="row">
-            <Grid item xs={12}>
-              <Typography variant="subtitle2">
-                We found the following Entities based on your question. The LLM
-                used these entities as an additional context to attempt to
-                answer your question.
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <List>
-                {entities.map(entityRef => (
-                  <ListItem key={entityRef}>
-                    <EntityRefLink
-                      entityRef={entityRef}
-                      defaultKind="Component"
-                    />
-                  </ListItem>
-                ))}
               </List>
             </Grid>
           </Grid>
