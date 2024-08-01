@@ -194,7 +194,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
               return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
                 // only filter sections that contain text
                 if (doc.location.includes('#') && doc.text)
-                  acc.push({ text: doc.text, entity });
+                  acc.push({
+                    ...doc,
+                    entity,
+                  });
 
                 return acc;
               }, []);
