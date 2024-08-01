@@ -50,4 +50,9 @@ export type SearchIndex = {
   }[];
 };
 
-export type TechDocsDocument = { text: string; entity: Entity };
+export type TechDocsDocument = {
+  text: string;
+  entity: Entity;
+  title: string;
+  location: string;
+};
