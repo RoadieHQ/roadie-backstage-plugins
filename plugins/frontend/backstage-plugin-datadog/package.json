@@ -23,7 +23,11 @@
     }
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "datadog",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-datadog"
+    ]
   },
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
