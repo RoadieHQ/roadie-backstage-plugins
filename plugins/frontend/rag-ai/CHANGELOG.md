@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 0.2.7
+
+### Patch Changes
+
+- c0ae442: Added related TechDocs to the result
+
 ## 0.2.6
 
 ### Patch Changes

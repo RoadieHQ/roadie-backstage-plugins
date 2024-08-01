@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 0.3.5
+
+### Patch Changes
+
+- c0ae442: Add `title` and `location` to metadata of TechDocs embeddings
+
 ## 0.3.4
 
 ### Patch Changes
