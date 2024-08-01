@@ -35,9 +35,6 @@ ai:
   # (Optional) Supported sources to query information from using RAG. This can be used to omit unnecessary sources from being retrievable. Defaults to [catalog]
   supportedSources: ['catalog']
 
-  # (Optional) Path to the TechDocs (frontend) plugin. Used to link to related TechDocs. Defaults to /docs
-  techDocsPath: '/docs'
-
   # (Optional) Texts to inject to the prompts when querying the LLM. Defaults to hardcoded prompts within the codebase.
   prompts:
     # (Optional) Prefix prompt to add to the query. This prompt is always succeeded by a text blob of embeddings retrieved by the RAG engine.
