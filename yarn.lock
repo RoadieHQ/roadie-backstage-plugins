@@ -4783,25 +4783,6 @@
     zen-observable "^0.10.0"
     zod "^3.22.4"
 
-"@backstage/core-app-api@^1.14.1":
-  version "1.14.1"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-app-api/-/core-app-api-1.14.1.tgz#d998ba2b9b2fd80db762a933c5e2d9985c14c1ac"
-  integrity sha512-I3Hbc36dTjKNL5yhY16yNamv1nFxfzDxd6Y42apDq+IEAueZrodR/+qCeMq2QtcpZ9GOfowKoJhccA8GMUXpQQ==
-  dependencies:
-    "@backstage/config" "^1.2.0"
-    "@backstage/core-plugin-api" "^1.9.3"
-    "@backstage/types" "^1.1.1"
-    "@backstage/version-bridge" "^1.0.8"
-    "@types/prop-types" "^15.7.3"
-    "@types/react" "^16.13.1 || ^17.0.0 || ^18.0.0"
-    history "^5.0.0"
-    i18next "^22.4.15"
-    lodash "^4.17.21"
-    prop-types "^15.7.2"
-    react-use "^17.2.4"
-    zen-observable "^0.10.0"
-    zod "^3.22.4"
-
 "@backstage/core-compat-api@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@backstage/core-compat-api/-/core-compat-api-0.2.4.tgz#1f652040d5300cdfb64e32d89b38748495ad2cf4"
@@ -4814,7 +4795,7 @@
 
 "@backstage/core-compat-api@^0.2.7":
   version "0.2.7"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-compat-api/-/core-compat-api-0.2.7.tgz#5b58f5984e2d54489dc6389fb48296afc2586149"
+  resolved "https://registry.yarnpkg.com/@backstage/core-compat-api/-/core-compat-api-0.2.7.tgz#5b58f5984e2d54489dc6389fb48296afc2586149"
   integrity sha512-At+mkjrIUrvAPK2bLVtdCFhCGY4VK9i2cKvaOeFRyVJuHU8f7WEKaHjDV8afLVddllUjq6j1uDeFRfiMMPtXqw==
   dependencies:
     "@backstage/core-plugin-api" "^1.9.3"
@@ -4869,7 +4850,7 @@
 
 "@backstage/core-components@^0.14.9":
   version "0.14.9"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-components/-/core-components-0.14.9.tgz#bb1f40be18d8241b70538383d324aec233586382"
+  resolved "https://registry.yarnpkg.com/@backstage/core-components/-/core-components-0.14.9.tgz#bb1f40be18d8241b70538383d324aec233586382"
   integrity sha512-tcwDUeQBMIKtM+EuLMl6BdwjWdjjTnvvUuQCJISdy5ot+Yp/znQK+d4KIA97wq3Fu/ufy1+tAAwGGaifHMRf1g==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -4924,7 +4905,7 @@
 
 "@backstage/core-plugin-api@^1.9.3":
   version "1.9.3"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/core-plugin-api/-/core-plugin-api-1.9.3.tgz#66b4b7dc620823c66b123c8a2d6db088e2936027"
+  resolved "https://registry.yarnpkg.com/@backstage/core-plugin-api/-/core-plugin-api-1.9.3.tgz#66b4b7dc620823c66b123c8a2d6db088e2936027"
   integrity sha512-MV/RQv8nAPYVkVX926Z+VPW2W4ZzU9VN2s9NhWSWqoYuOzsmA4FgmfNDuwiPEAUKW7AlVCGI4A0deUZ22Orgyw==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -4970,7 +4951,7 @@
 
 "@backstage/frontend-app-api@^0.7.4":
   version "0.7.4"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-app-api/-/frontend-app-api-0.7.4.tgz#ef964a9f1a820a3900dacc1cc39188542b091eb2"
+  resolved "https://registry.yarnpkg.com/@backstage/frontend-app-api/-/frontend-app-api-0.7.4.tgz#ef964a9f1a820a3900dacc1cc39188542b091eb2"
   integrity sha512-7pn2WLwBLvpBdgib7SUktidFEmHmfos1zUAgUGyzPOL3voKbXUZzjjpgcNdtC1tXap0OQX9jKKqCnkNGJHsN2A==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -5004,7 +4985,7 @@
 
 "@backstage/frontend-plugin-api@^0.6.7":
   version "0.6.7"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-plugin-api/-/frontend-plugin-api-0.6.7.tgz#73bbc30f6f1b5acc31b9f17fd31d957498f497fb"
+  resolved "https://registry.yarnpkg.com/@backstage/frontend-plugin-api/-/frontend-plugin-api-0.6.7.tgz#73bbc30f6f1b5acc31b9f17fd31d957498f497fb"
   integrity sha512-hXXRuo4GxA/XSfQuSYJ/X59ShJKPf9KM76sXnVczsGeSFyORX3SRHKy8An0M3qQ/P9C9Z9LOBc38gghOtrUiGA==
   dependencies:
     "@backstage/core-components" "^0.14.9"
@@ -5019,7 +5000,7 @@
 
 "@backstage/frontend-test-utils@^0.1.10":
   version "0.1.11"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/frontend-test-utils/-/frontend-test-utils-0.1.11.tgz#81276fd7377b68bb8f52c1d7c93cdd1a9333f205"
+  resolved "https://registry.yarnpkg.com/@backstage/frontend-test-utils/-/frontend-test-utils-0.1.11.tgz#81276fd7377b68bb8f52c1d7c93cdd1a9333f205"
   integrity sha512-MyWf7Sou/80BCDiEz4rPwwnqwlM7b3FkU6jWM52mJK+/e49TL/qrx4lU3RjaM04vEYVZM3RmJfbquMsVw/RENA==
   dependencies:
     "@backstage/frontend-app-api" "^0.7.4"
@@ -5664,7 +5645,7 @@
 
 "@backstage/plugin-permission-common@^0.8.0":
   version "0.8.0"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/plugin-permission-common/-/plugin-permission-common-0.8.0.tgz#13d29c146c50e9de1da47296c167ace9d1bc86f3"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-common/-/plugin-permission-common-0.8.0.tgz#13d29c146c50e9de1da47296c167ace9d1bc86f3"
   integrity sha512-4c8QfjDKiTJbQfiG3DibUqUsclsi53kRk8GR9CwHl1Is2Xm98AkqXGWyknHGPQOvw4vJR19nqnj7w0XfhLK2Jw==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -5704,7 +5685,7 @@
 
 "@backstage/plugin-permission-react@^0.4.24":
   version "0.4.24"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/plugin-permission-react/-/plugin-permission-react-0.4.24.tgz#a980462553c86e41d75c538b347b4acd9dc50a4e"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-permission-react/-/plugin-permission-react-0.4.24.tgz#a980462553c86e41d75c538b347b4acd9dc50a4e"
   integrity sha512-UH+KvuvsVMqVCWDxC7Xv2BwHWuezg1fOurp0FgrrxXR5rZ8NQYEBlfmQEzt7mml6EzsUIc+hGeoSKLoSgHFjUA==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -6286,7 +6267,7 @@
 
 "@backstage/test-utils@^1.5.9":
   version "1.5.9"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/test-utils/-/test-utils-1.5.9.tgz#397959c30598d2e5cab0b62a3ccfbc2db263d3a5"
+  resolved "https://registry.yarnpkg.com/@backstage/test-utils/-/test-utils-1.5.9.tgz#397959c30598d2e5cab0b62a3ccfbc2db263d3a5"
   integrity sha512-m/9dPrseTJRZ0Scu6lKt5K+GWTAI5An/2CtvthCZ7RuN4TVKRLFhL46QY+xjEkObjK4c6XCC3MUFEjHN00KZag==
   dependencies:
     "@backstage/config" "^1.2.0"
@@ -6314,7 +6295,7 @@
 
 "@backstage/theme@^0.5.6":
   version "0.5.6"
-  resolved "https://artifactory.spotify.net/artifactory/api/npm/virtual-npm/@backstage/theme/-/theme-0.5.6.tgz#18645cbe42fb5667946e0a5dd38f2fb0bb056597"
+  resolved "https://registry.yarnpkg.com/@backstage/theme/-/theme-0.5.6.tgz#18645cbe42fb5667946e0a5dd38f2fb0bb056597"
   integrity sha512-7/0sZYAS+2p/eEWC8eBINWHNv4jas6R20e0R5f0fc1YvLnVQ8HhnpZ6+d2vDMe7X2A2TBBcyJbSCybHdRAKpAA==
   dependencies:
     "@emotion/react" "^11.10.5"
