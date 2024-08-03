@@ -1,5 +1,5 @@
 {
-  "name": "@roadiehq/scaffolder-backend-module-http-request",
+  "name": "@zidevhub/scaffolder-backend-module-http-request",
   "version": "4.3.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "url": "github:davormilutinovic/roadie-backstage-plugins",
     "directory": "plugins/scaffolder-actions/scaffolder-backend-module-http-request"
   },
   "bugs": {
