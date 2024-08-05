@@ -48,7 +48,7 @@
     "@roadiehq/rag-ai-backend": "^0.3.3",
     "@roadiehq/rag-ai-backend-embeddings-aws": "^0.2.5",
     "@roadiehq/rag-ai-backend-embeddings-openai": "^0.2.5",
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.3.4",
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.3.6",
     "@roadiehq/rag-ai-storage-pgvector": "^0.1.4",
     "@roadiehq/scaffolder-backend-module-http-request": "^4.3.2",
     "@roadiehq/scaffolder-backend-module-utils": "^1.15.4",
