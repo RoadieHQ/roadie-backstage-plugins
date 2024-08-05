@@ -41,7 +41,7 @@
     "@langchain/community": "^0.2.20",
     "@langchain/core": "^0.2.18",
     "@roadiehq/rag-ai-backend": "^0.3.3",
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.3.4",
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "^0.3.6",
     "@roadiehq/rag-ai-node": "^0.1.4",
     "langchain": "^0.1.21",
     "winston": "^3.11.0"
