@@ -1,5 +1,14 @@
 # backend
 
+## 2.1.12
+
+### Patch Changes
+
+- 19198fb: Updated @roadiehq/rag-ai-backend-retrieval-augmenter to 0.3.6
+- Updated dependencies [19198fb]
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.6
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.6
+
 ## 2.1.11
 
 ### Patch Changes
