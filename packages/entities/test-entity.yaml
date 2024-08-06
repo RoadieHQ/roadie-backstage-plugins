@@ -95,3 +95,19 @@ spec:
   lifecycle: experimental
   providesApis:
     - sample-service-4
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-5
+  description: |
+    A service for testing the Buildkite plugin with a buildkite.com/default-branch-only annotation
+  annotations:
+    buildkite.com/project-slug: exampleorganization/exampleproject
+    buildkite.com/default-branch-only: foo
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service-5

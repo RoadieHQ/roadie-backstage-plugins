@@ -116,7 +116,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   ): Promise<EmbeddingDoc[]> {
     const splitter = this.getSplitter();
     let docs: EmbeddingDoc[] = [];
-    for (const { text, entity } of documents) {
+    for (const { text, entity, title, location } of documents) {
       const splits = await splitter.splitText(text);
       docs = docs.concat(
         splits.map((content: string, idx: number) => ({
@@ -126,6 +126,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             source,
             entityRef: stringifyEntityRef(entity),
             kind: entity.kind,
+            title,
+            location,
           },
         })),
       );
@@ -194,7 +196,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
               return searchIndex.docs.reduce<TechDocsDocument[]>((acc, doc) => {
                 // only filter sections that contain text
                 if (doc.location.includes('#') && doc.text)
-                  acc.push({ text: doc.text, entity });
+                  acc.push({
+                    ...doc,
+                    entity,
+                  });
 
                 return acc;
               }, []);

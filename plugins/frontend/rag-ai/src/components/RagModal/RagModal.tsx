@@ -34,6 +34,18 @@ import { useApi } from '@backstage/core-plugin-api';
 import { ResponseEmbedding } from '../../types';
 import { Thinking } from './Thinking';
 
+export type RagModalProps = {
+  title?: string;
+  hotkey?: string;
+};
+
+type ControlledRagModalProps = RagModalProps & {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+};
+
+type UncontrolledRagModalProps = RagModalProps;
+
 const useStyles = makeStyles(theme => ({
   dialogTitle: {
     gap: theme.spacing(1),
@@ -66,9 +78,13 @@ const useStyles = makeStyles(theme => ({
   viewResultsLink: { verticalAlign: '0.5em' },
 }));
 
-export const RagModal = ({ title = 'AI Assistant' }: { title?: string }) => {
+export const ControlledRagModal = ({
+  title = 'AI Assistant',
+  hotkey = 'ctrl+comma',
+  open,
+  setOpen,
+}: ControlledRagModalProps) => {
   const classes = useStyles();
-  const [showAiModal, setShowAiModal] = useState(false);
   const [thinking, setThinking] = useState(false);
   const [questionResult, setQuestionResult] = useState('');
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
@@ -83,12 +99,12 @@ export const RagModal = ({ title = 'AI Assistant' }: { title?: string }) => {
     },
     [ragApi],
   );
-  useHotkeys('ctrl+comma', () => setShowAiModal(true), []);
+  useHotkeys(hotkey, () => setOpen(true), []);
   return (
     <Dialog
-      open={Boolean(showAiModal)}
+      open={open}
       onClose={() => {
-        setShowAiModal(false);
+        setOpen(false);
         setThinking(false);
         setQuestionResult('');
         setEmbeddings([]);
@@ -101,7 +117,7 @@ export const RagModal = ({ title = 'AI Assistant' }: { title?: string }) => {
         <IconButton
           aria-label="close"
           className={classes.closeButton}
-          onClick={() => setShowAiModal(false)}
+          onClick={() => setOpen(false)}
         >
           <CloseIcon />
         </IconButton>
@@ -152,4 +168,10 @@ export const RagModal = ({ title = 'AI Assistant' }: { title?: string }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+export const UncontrolledRagModal = (props: UncontrolledRagModalProps) => {
+  const [open, setOpen] = useState(false);
+
+  return <ControlledRagModal open={open} setOpen={setOpen} {...props} />;
 };
