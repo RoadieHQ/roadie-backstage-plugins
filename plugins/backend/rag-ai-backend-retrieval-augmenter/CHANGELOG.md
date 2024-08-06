@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 0.3.6
+
+### Patch Changes
+
+- f040722: Fixed missing metadata from TechDocs embeddings
+
 ## 0.3.5
 
 ### Patch Changes

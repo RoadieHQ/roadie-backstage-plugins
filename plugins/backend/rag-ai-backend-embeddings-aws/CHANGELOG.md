@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 0.2.6
+
+### Patch Changes
+
+- 19198fb: Updated @roadiehq/rag-ai-backend-retrieval-augmenter to 0.3.6
+
 ## 0.2.5
 
 ### Patch Changes
