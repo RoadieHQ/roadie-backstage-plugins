@@ -23,6 +23,7 @@ import { Duration } from 'luxon';
 
 export type PullRequestStats = {
   avgTimeUntilMerge: string;
+  avgCodingTime: string;
   mergedToClosedRatio: string;
   avgChangedLinesCount: number;
   avgAdditions: number;
@@ -32,6 +33,7 @@ export type PullRequestStats = {
 
 export type PullRequestStatsCount = {
   avgTimeUntilMerge: number;
+  avgCodingTime: number;
   closedCount: number;
   mergedCount: number;
   changedLinesCount: number;
@@ -41,6 +43,7 @@ export type PullRequestStatsCount = {
 };
 export type PullRequestStatsData = {
   createdAt: string;
+  firstCommitAt: string;
   closedAt: string | null;
   pullRequest: {
     mergedAt: string | null;
@@ -56,6 +59,9 @@ function calculateStatistics(pullRequestsData: PullRequestStatsData[]) {
         ? new Date(curr.pullRequest.mergedAt).getTime() -
           new Date(curr.createdAt).getTime()
         : 0;
+      acc.avgCodingTime +=
+        new Date(curr.createdAt).getTime() -
+        new Date(curr.firstCommitAt).getTime();
       acc.mergedCount += curr.pullRequest.mergedAt ? 1 : 0;
       acc.closedCount += curr.closedAt ? 1 : 0;
       acc.additions += curr.pullRequest.additions;
@@ -67,6 +73,7 @@ function calculateStatistics(pullRequestsData: PullRequestStatsData[]) {
     },
     {
       avgTimeUntilMerge: 0,
+      avgCodingTime: 0,
       closedCount: 0,
       mergedCount: 0,
       changedLinesCount: 0,
@@ -114,6 +121,7 @@ export function usePullRequestsStatistics({
     if (!repo) {
       return {
         avgTimeUntilMerge: 'Never',
+        avgCodingTime: 'Never',
         mergedToClosedRatio: '0%',
         avgChangedLinesCount: 0,
         avgChangedFilesCount: 0,
@@ -136,24 +144,43 @@ export function usePullRequestsStatistics({
       baseUrl,
     });
 
+    const botUsernames = [
+      'github-actions[bot]',
+      'dependabot[bot]',
+      'roadie-bot',
+    ];
     const transformedData = await Promise.all(
-      pullRequestsData.items.map(async pr => {
-        const repoData = await api.getRepositoryData({
-          url: pr.pull_request.url,
-          baseUrl,
-          token,
-        });
-        return {
-          createdAt: pr.created_at,
-          closedAt: pr.closed_at,
-          pullRequest: {
-            mergedAt: pr.pull_request.merged_at,
-            additions: repoData.additions,
-            deletions: repoData.deletions,
-            changedFiles: repoData.changedFiles,
-          },
-        };
-      }),
+      pullRequestsData.items
+        .filter(obj => {
+          const login = obj.user?.login;
+          return login && !botUsernames.includes(login);
+        })
+        .map(async pr => {
+          const repoData = await api.getRepositoryData({
+            url: pr.pull_request.url,
+            baseUrl,
+            token,
+          });
+          const commitDate = await api.getCommitDetailsData({
+            baseUrl,
+            token,
+            owner,
+            repo,
+            number: pr.number,
+          });
+
+          return {
+            createdAt: pr.created_at,
+            closedAt: pr.closed_at,
+            firstCommitAt: commitDate.firstCommitDate.toString(),
+            pullRequest: {
+              mergedAt: pr.pull_request.merged_at,
+              additions: repoData.additions,
+              deletions: repoData.deletions,
+              changedFiles: repoData.changedFiles,
+            },
+          };
+        }),
     );
 
     const calcResult = calculateStatistics(transformedData);
@@ -162,6 +189,7 @@ export function usePullRequestsStatistics({
       return {
         ...calcResult,
         avgTimeUntilMerge: 'Never',
+        avgCodingTime: 'Never',
         mergedToClosedRatio: '0%',
       };
     const avgTimeUntilMergeDiff =
@@ -170,9 +198,17 @@ export function usePullRequestsStatistics({
     const avgTimeUntilMerge = Duration.fromMillis(avgTimeUntilMergeDiff)
       .shiftTo('months', 'days', 'hour')
       .toHuman({ notation: 'compact' });
+
+    const avgCodingTimeUntilPRRaised =
+      calcResult.avgCodingTime / transformedData.length;
+
+    const avgCodingTime = Duration.fromMillis(avgCodingTimeUntilPRRaised)
+      .shiftTo('months', 'days', 'hour')
+      .toHuman({ notation: 'compact' });
     return {
       ...calcResult,
       avgTimeUntilMerge,
+      avgCodingTime,
       mergedToClosedRatio: `${Math.round(
         (calcResult.mergedCount / calcResult.closedCount) * 100,
       )}%`,

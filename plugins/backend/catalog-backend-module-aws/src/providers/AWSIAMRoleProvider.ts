@@ -23,11 +23,13 @@ import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -41,6 +43,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -56,32 +59,35 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-iam-role-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-iam-role-${this.providerId ?? 0}`;
   }
 
-  private async getIam() {
+  private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new IAM({ credentials, region: this.region })
+      ? new IAM({ credentials, region })
       : new IAM(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
     const groups = await this.getGroups();
 
-    this.logger.info(
-      `Providing iam role resources from aws: ${this.accountId}`,
-    );
+    this.logger.info(`Providing IAM role resources from AWS: ${accountId}`);
     const roleResources: ResourceEntity[] = [];
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
-    const iam = await this.getIam();
+    const iam = await this.getIam(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: iam,
@@ -105,7 +111,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
               },
               name: arnToName(role.Arn),
               title: role.RoleName,
-              labels: labelsFromTags(role.Tags),
+              labels: this.labelsFromTags(role.Tags),
             },
             spec: {
               type: 'aws-role',
@@ -126,5 +132,10 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${roleResources.length} IAM role resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

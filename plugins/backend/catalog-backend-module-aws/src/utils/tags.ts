@@ -16,10 +16,12 @@
 
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 
-type Tag = {
+export type Tag = {
   Key?: string;
   Value?: string;
 };
+
+export type LabelValueMapper = (value: string) => string;
 const UNKNOWN_OWNER = 'unknown';
 
 const TAG_DEPENDS_ON = 'dependsOn';
@@ -30,7 +32,19 @@ const TAG_DOMAIN = 'domain';
 const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
 const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
 
-export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
+function stripTrailingChar(str: string, chr: string) {
+  return str.endsWith(chr) ? str.slice(0, -1) : str;
+}
+
+const defaultValueCleaner: LabelValueMapper = value => {
+  const val = value.replaceAll('/', '-').replaceAll(':', '-').substring(0, 63);
+  return stripTrailingChar(val, '-');
+};
+
+export const labelsFromTags = (
+  tags?: Tag[] | Record<string, string>,
+  valueMapper: LabelValueMapper = defaultValueCleaner,
+) => {
   if (!tags) {
     return {};
   }
@@ -45,10 +59,11 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
       )
       .reduce((acc: Record<string, string>, tag) => {
         if (tag.Key && tag.Value) {
-          const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
-          acc[key] = tag.Value.replaceAll('/', '-')
-            .replaceAll(':', '-')
+          let key = tag.Key.replaceAll(':', '_')
+            .replaceAll('/', '-')
             .substring(0, 63);
+          key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
+          acc[key] = valueMapper(tag.Value);
         }
         return acc;
       }, {});
@@ -62,8 +77,9 @@ export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
     )
     .reduce((acc: Record<string, string>, [key, value]) => {
       if (key && value) {
-        const k = key.replaceAll(':', '_').replaceAll('/', '-');
-        acc[k] = value.replaceAll('/', '-').substring(0, 63);
+        let k = key.replaceAll(':', '_').replaceAll('/', '-');
+        k = stripTrailingChar(stripTrailingChar(k, '-'), '_');
+        acc[k] = valueMapper(value);
       }
       return acc;
     }, {});

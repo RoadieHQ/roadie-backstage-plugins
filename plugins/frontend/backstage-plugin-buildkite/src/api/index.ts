@@ -20,9 +20,13 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 
-export const buildKiteApiRef = createApiRef<BuildkiteApi>({
+export const buildkiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
 });
+
+// buildKiteApiRef preserves backwards compatibility; the API ref
+// was originally exported as buildKiteApiRef.
+export const buildKiteApiRef = buildkiteApiRef;
 
 const DEFAULT_PROXY_PATH = '/buildkite/api';
 
@@ -51,15 +55,33 @@ export class BuildkiteApi {
     return `${proxyUrl}${this.proxyPath}`;
   }
 
+  async getPipeline(orgSlug: string, pipelineSlug: string) {
+    const ApiUrl = await this.getApiUrl();
+    const request = await this.fetchApi.fetch(
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}`,
+    );
+    if (!request.ok) {
+      throw new Error(
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
+      );
+    }
+    return request.json();
+  }
+
   async getBuilds(
     orgSlug: string,
     pipelineSlug: string,
     page: number,
     per_page: number,
+    branch?: string,
   ) {
     const ApiUrl = await this.getApiUrl();
+    let query = `?page=${page}&per_page=${per_page}`;
+    if (branch) {
+      query = `${query}&branch=${branch}`;
+    }
     const request = await this.fetchApi.fetch(
-      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds?page=${page}&per_page=${per_page}`,
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}/builds${query}`,
     );
     if (!request.ok) {
       throw new Error(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { TokenManager } from '@backstage/backend-common';
-import { BedrockEmbeddings } from '@langchain/community/embeddings/bedrock';
+import { BedrockEmbeddings } from '@langchain/aws';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
   DefaultVectorAugmentationIndexer,

@@ -57,6 +57,9 @@ ai:
     # (Optional) The overlap between adjacent chunks of embeddings. The bigger the number, the more overlap. Defaults to 200
     chunkOverlap: 200
 
+    # (Optional) The maximum number of concurrent requests when creating embeddings. Defaults to 10
+    concurrencyLimit: 10
+
     # AWS Bedrock Embeddings configuration
     awsBedrock:
       # (Required) Name of the Bedrock model to use to create Embeddings.

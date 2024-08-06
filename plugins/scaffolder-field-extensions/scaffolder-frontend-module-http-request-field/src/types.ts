@@ -21,7 +21,10 @@ export type OAuthConfig = {
 };
 
 export const selectFieldFromApiConfigSchema = z.object({
-  params: z.record(z.string(), z.string()).optional(),
+  params: z
+    .record(z.string(), z.string())
+    .optional()
+    .or(z.array(z.record(z.string(), z.string())).optional()),
   path: z.string(),
   arraySelector: z.string().or(z.array(z.string())).optional(),
   valueSelector: z.string().or(z.array(z.string())).optional(),

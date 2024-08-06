@@ -45,7 +45,7 @@ export class SourceBasedRetrievalRouter implements RetrievalRouter {
     }
 
     this.logger.warn(
-      'Attempted to determine augmentation retriever for a source not implemented yet: ${source} ',
+      `Attempted to determine augmentation retriever for a source not implemented yet: ${source}`,
     );
     throw new Error(
       `Attempting to determine augmentation retriever for a source not implemented yet: ${source}`,

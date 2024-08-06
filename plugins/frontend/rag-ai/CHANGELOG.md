@@ -1,5 +1,32 @@
 # @roadiehq/rag-ai
 
+## 0.2.7
+
+### Patch Changes
+
+- c0ae442: Added related TechDocs to the result
+
+## 0.2.6
+
+### Patch Changes
+
+- fda2f1a: Refactored `RagModal` into `ControlledRagModal` and `UncontrolledRagModal`
+- fda2f1a: Added property `hotkey` to `RagModal` to make hotkey customizable
+- fda2f1a: Added `SidebarRagModal`
+
+## 0.2.5
+
+### Patch Changes
+
+- ed73691: Added source `all` for querying all sources simultaneously
+
+## 0.2.4
+
+### Patch Changes
+
+- bbf7702: Added a dropdown for selecting a source
+- 1e749b8: Added optional property `title` to component `RagModal`
+
 ## 0.2.3
 
 ### Patch Changes

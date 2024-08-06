@@ -60,10 +60,10 @@ export class RoadieRagAiClient implements RagAiApi {
     throw new Error(`Failed to retrieved data from path ${path}`);
   }
 
-  async ask(question: string): Promise<RoadieLlmResponse> {
+  async ask(question: string, source: string): Promise<RoadieLlmResponse> {
     const { token } = await this.identityApi.getCredentials();
 
-    const response = await this.fetch(`query/catalog`, {
+    const response = await this.fetch(`query/${source}`, {
       body: JSON.stringify({
         query: question,
       }),

@@ -374,13 +374,15 @@ export class ArgoService implements ArgoServiceApi {
     resourceVersion,
     destinationServer,
   }: UpdateArgoProjectProps): Promise<object> {
-    const data = this.buildArgoProjectPayload({
-      projectName,
-      namespace,
-      sourceRepo,
-      resourceVersion,
-      destinationServer,
-    });
+    const data = {
+      project: this.buildArgoProjectPayload({
+        projectName,
+        namespace,
+        sourceRepo,
+        resourceVersion,
+        destinationServer,
+      }),
+    };
 
     const options: RequestInit = {
       method: 'PUT',

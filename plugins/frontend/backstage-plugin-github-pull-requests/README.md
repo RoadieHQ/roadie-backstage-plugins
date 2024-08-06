@@ -10,6 +10,7 @@
   - Merged to closed ratio
   - Average size of PR (the average lines of changes in the PR)
   - Average amount of file changed in a PR
+  - Average coding time of PR (The difference between the PR creation and first commit)
 - It has two homepage plugin componenets
   - Review requests
   - Open pull requests

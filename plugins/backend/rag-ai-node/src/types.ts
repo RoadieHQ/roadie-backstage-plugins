@@ -15,12 +15,12 @@
  */
 import { Embeddings } from '@langchain/core/embeddings';
 
-export type EmbeddingsSource = 'catalog' | 'tech-docs';
+export type EmbeddingsSource = 'catalog' | 'tech-docs' | 'all';
 
-export type EmbeddingDocMetadata = {
+export type EmbeddingDocMetadata = Partial<{
   source: EmbeddingsSource;
   [key: string]: string;
-};
+}>;
 
 export type EntityFilterShape =
   | Record<string, string | symbol | (string | symbol)[]>[]

@@ -148,11 +148,22 @@ export const CITableView: FC<TableProps> = ({
   />
 );
 
-const BuildkiteBuildsTable: FC<{ entity: Entity }> = ({ entity }) => {
-  const { owner, repo } = useProjectEntity(entity);
+export type BuildkiteBuildsTableProps = {
+  defaultBranchOnly?: boolean;
+  entity: Entity;
+};
+
+const BuildkiteBuildsTable = (props: BuildkiteBuildsTableProps) => {
+  const { entity, defaultBranchOnly } = props;
+  const { owner, repo, branchAnnotation, defaultBranchOnlyAnnotation } =
+    useProjectEntity(entity);
+
   const [tableProps, { setPage, retry, setPageSize }] = useBuilds({
     owner,
     repo,
+    defaultBranchOnly: Boolean(defaultBranchOnly),
+    defaultBranchOnlyAnnotation,
+    branchAnnotation,
   });
 
   return (

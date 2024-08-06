@@ -15,4 +15,4 @@
  */
 
 export { DefaultVectorAugmentationIndexer } from './DefaultVectorAugmentationIndexer';
-export type { RoadieEmbeddingsConfig, SplitterOptions } from './types';
+export type { RoadieEmbeddingsConfig, AugmentationOptions } from './types';

@@ -30,12 +30,14 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
-  labelsFromTags,
+  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS Organizations accounts.
@@ -49,6 +51,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -64,37 +67,44 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-organization-accounts-${this.accountId}-${
-      this.providerId ?? 0
-    }`;
+    return `aws-organization-accounts-${this.providerId ?? 0}`;
   }
 
-  private async getOrganizationsClient() {
+  private async getOrganizationsClient(
+    dynamicAccountConfig?: DynamicAccountConfig,
+  ) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
       ? new OrganizationsClient({
           credentials,
-          region: this.region,
+          region,
         })
       : new OrganizationsClient(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
     const groups = await this.getGroups();
 
     this.logger.info(
-      `Providing organization account resources from aws: ${this.accountId}`,
+      `Providing Organization account resources from AWS: ${accountId}`,
     );
     const accountResources: ResourceEntity[] = [];
 
-    const organizationsClient = await this.getOrganizationsClient();
+    const organizationsClient = await this.getOrganizationsClient(
+      dynamicAccountConfig,
+    );
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: organizationsClient,
@@ -129,7 +139,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
               joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
               joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
               status: account.Status ?? 'UNKNOWN',
-              labels: labelsFromTags(tags),
+              labels: this.labelsFromTags(tags),
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
@@ -150,5 +160,10 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${accountResources.length} Organization account resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

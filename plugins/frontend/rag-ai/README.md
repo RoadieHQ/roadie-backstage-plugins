@@ -87,3 +87,22 @@ const App = () => (
   </AppProvider>
 );
 ```
+
+You can also choose to use the `SidebarRagModal` component instead. In addition to using a hotkey, this will allow you to open the modal from the sidebar as well.
+
+```tsx
+// packages/app/src/components/Root/Root.tsx
+import { SidebarRagModal } from '@roadiehq/rag-ai';
+...
+export const Root = ({ children }: PropsWithChildren<{}>) => (
+  <SidebarPage>
+    <Sidebar>
+      <SidebarLogo />
+      <SidebarSearch />
+      <SidebarRagModal />
+      ...
+    </Sidebar>
+    {children}
+  </SidebarPage>
+);
+```

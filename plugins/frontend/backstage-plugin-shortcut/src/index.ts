@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-export { backstagePluginShortcutPlugin, HomepageStoriesCard } from './plugin';
+export {
+  backstagePluginShortcutPlugin,
+  HomepageStoriesCard,
+  EntityShortcutStoriesCard,
+} from './plugin';
 export * from './api';
 export * from './components/Home';
+export * from './constants';
+export * from './isShortcutAvailable';

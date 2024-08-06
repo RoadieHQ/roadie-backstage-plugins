@@ -36,18 +36,84 @@ export const transform = (
   });
 };
 
-export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
+const showDefaultBranchOnly = ({
+  defaultBranchOnly,
+  defaultBranchOnlyAnnotation,
+  branchAnnotation,
+}: {
+  defaultBranchOnly: boolean;
+  defaultBranchOnlyAnnotation: boolean | null | undefined;
+  branchAnnotation: string;
+}) => {
+  if (branchAnnotation) {
+    return false;
+  }
+
+  if (defaultBranchOnlyAnnotation === false) {
+    return false;
+  }
+
+  if (defaultBranchOnlyAnnotation === true) {
+    return true;
+  }
+
+  return defaultBranchOnly;
+};
+
+export const useBuilds = ({
+  owner,
+  repo,
+  defaultBranchOnly,
+  defaultBranchOnlyAnnotation,
+  branchAnnotation,
+}: {
+  owner: string;
+  repo: string;
+  defaultBranchOnly: boolean;
+  defaultBranchOnlyAnnotation: boolean | null | undefined;
+  branchAnnotation: string;
+}) => {
   const api = useApi(buildKiteApiRef);
   const errorApi = useApi(errorApiRef);
 
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
+  const [branch, setBranch] = useState('');
 
   const { value, loading, retry } = useAsyncRetry(async () => {
+    let branchParam = undefined;
+    if (branchAnnotation) {
+      branchParam = branchAnnotation;
+      setBranch(branchAnnotation);
+    }
+
+    const defaultBranch = showDefaultBranchOnly({
+      defaultBranchOnly,
+      defaultBranchOnlyAnnotation,
+      branchAnnotation,
+    });
+
+    if (defaultBranch) {
+      try {
+        const pipeline = await api.getPipeline(owner, repo);
+        setBranch(pipeline.default_branch);
+        branchParam = pipeline.default_branch;
+      } catch (e: any) {
+        errorApi.post(e);
+        return Promise.reject(e);
+      }
+    }
+
     let builds = [];
     try {
-      builds = await api.getBuilds(owner, repo, page + 1, pageSize);
+      builds = await api.getBuilds(
+        owner,
+        repo,
+        page + 1,
+        pageSize,
+        branchParam,
+      );
     } catch (e: any) {
       errorApi.post(e);
     }
@@ -55,7 +121,7 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
     // eslint-disable-next-line
     const response = transform(builds ?? [], restartBuild) as any;
     return response;
-  }, [page, pageSize]);
+  }, [page, pageSize, branch]);
 
   const restartBuild = async (requestUrl: string) => {
     try {
@@ -68,7 +134,10 @@ export const useBuilds = ({ owner, repo }: { owner: string; repo: string }) => {
     }
   };
 
-  const projectName = `${owner}/${repo}`;
+  let projectName = `${owner}/${repo}`;
+  if (branch) {
+    projectName = `${projectName} (${branch})`;
+  }
 
   return [
     {

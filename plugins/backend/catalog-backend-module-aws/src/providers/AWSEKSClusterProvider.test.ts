@@ -62,7 +62,7 @@ describe('AWSEKSClusterProvider', () => {
         refresh: jest.fn(),
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
+      await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
@@ -81,6 +81,9 @@ describe('AWSEKSClusterProvider', () => {
           name: 'cluster1',
           roleArn: 'arn:aws:iam::123456789012:role/cluster1',
           arn: 'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
+          tags: {
+            some_url: 'https://asdfhwef.com/hello-world',
+          },
         },
       });
     });
@@ -91,7 +94,7 @@ describe('AWSEKSClusterProvider', () => {
         refresh: jest.fn(),
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
+      await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
@@ -100,6 +103,62 @@ describe('AWSEKSClusterProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               metadata: expect.objectContaining({
+                labels: {
+                  some_url: 'https---asdfhwef.com-hello-world',
+                },
+                title: 'cluster1',
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
+                    'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
+                  [ANNOTATION_AWS_IAM_ROLE_ARN]:
+                    'arn:aws:iam::123456789012:role/cluster1',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+  });
+
+  describe('where there are is a cluster and I have a value mapper', () => {
+    beforeEach(() => {
+      eks.on(ListClustersCommand).resolves({
+        clusters: ['cluster1'],
+      });
+      eks.on(DescribeClusterCommand).resolves({
+        cluster: {
+          name: 'cluster1',
+          roleArn: 'arn:aws:iam::123456789012:role/cluster1',
+          arn: 'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
+          tags: {
+            some_url: 'https://asdfhwef.com/hello-world',
+          },
+        },
+      });
+    });
+
+    it('creates eks cluster with the tags as is', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = AWSEKSClusterProvider.fromConfig(config, {
+        logger,
+        labelValueMapper: value => value,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                labels: {
+                  some_url: 'https://asdfhwef.com/hello-world',
+                },
                 title: 'cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:

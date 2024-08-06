@@ -37,6 +37,8 @@ import { Box, Button, FormHelperText, Typography } from '@material-ui/core';
 import { useOauthSignIn } from '../../hooks/useOauthSignIn';
 import { renderString } from 'nunjucks';
 import fromPairs from 'lodash/fromPairs';
+import isObject from 'lodash/isObject';
+import toPairs from 'lodash/toPairs';
 
 const renderOption = (input: any, context: object): any => {
   if (!input) {
@@ -73,7 +75,6 @@ const SelectFieldFromApiComponent = (
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
     uiSchema['ui:options'],
   );
-
   const { error } = useAsync(async () => {
     if (!optionsParsingState.success) {
       throw optionsParsingState.error;
@@ -85,12 +86,22 @@ const SelectFieldFromApiComponent = (
     if (props.token) {
       headers.Authorization = `Bearer ${props.token}`;
     }
-    const params = new URLSearchParams(
-      renderOption(options.params, {
-        parameters: formContext.formData,
-        identity,
-      }),
-    );
+    let init = renderOption(options.params, {
+      parameters: formContext.formData,
+      identity,
+    });
+
+    if (Array.isArray(init)) {
+      init = init.reduce((acc, val) => {
+        if (isObject(val)) {
+          acc.push(toPairs(val).flat());
+        } else {
+          acc.push(val);
+        }
+        return acc;
+      }, []);
+    }
+    const params = new URLSearchParams(init);
     const response = await fetchApi.fetch(
       `${baseUrl}${renderOption(options.path, {
         parameters: formContext.formData,

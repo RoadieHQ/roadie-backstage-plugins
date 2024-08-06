@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.27
+
+### Patch Changes
+
+- dbbc2bf: I updated the frontend plugin for GitHub pull request statistics in the @roadie repository to reflect the Average Coding Time of PRs. Additionally, I excluded bot users from the calculations, as their inclusion was skewing the results.
+
 ## 2.5.26
 
 ### Patch Changes

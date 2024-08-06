@@ -224,7 +224,7 @@ const StoriesCardContent = () => {
       user => user.profile.email_address === profile.email,
     )?.profile.mention_name;
 
-    const stories = await api.fetchStories({
+    const stories = await api.fetchOwnedStories({
       owner: loggedUser ? loggedUser : undefined,
     });
 

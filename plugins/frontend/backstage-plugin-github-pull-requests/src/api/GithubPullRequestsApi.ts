@@ -15,7 +15,11 @@
  */
 
 import { createApiRef } from '@backstage/core-plugin-api';
-import { SearchPullRequestsResponseData, GithubRepositoryData } from '../types';
+import {
+  SearchPullRequestsResponseData,
+  GithubRepositoryData,
+  GithubFirstCommitDate,
+} from '../types';
 
 export const githubPullRequestsApiRef = createApiRef<GithubPullRequestsApi>({
   id: 'plugin.githubpullrequests.service',
@@ -53,4 +57,18 @@ export type GithubPullRequestsApi = {
     token: string;
     url: string;
   }) => Promise<GithubRepositoryData>;
+
+  getCommitDetailsData({
+    baseUrl,
+    token,
+    owner,
+    repo,
+    number,
+  }: {
+    baseUrl: string | undefined;
+    token: string;
+    owner: string;
+    repo: string;
+    number: number;
+  }): Promise<GithubFirstCommitDate>;
 };

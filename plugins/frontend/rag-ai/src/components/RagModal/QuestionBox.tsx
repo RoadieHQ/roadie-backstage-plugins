@@ -24,21 +24,26 @@ import React, {
 } from 'react';
 import {
   Button,
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from '@material-ui/core';
 import LooksIcon from '@material-ui/icons/Looks';
 
 export const QuestionBox = (props: {
-  onSubmit: (query: string) => {};
+  onSubmit: (query: string, source: string) => {};
   onClear: () => void;
   fullWidth: boolean;
 }) => {
   const { onSubmit = () => {}, fullWidth = true, onClear } = props;
   const [label, setLabel] = useState('Ask the LLM');
   const [value, setValue] = useState<string>('');
+  const [source, setSource] = useState<string>('all');
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,10 +58,10 @@ export const QuestionBox = (props: {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (e.ctrlKey && e.key === 'Enter') {
-        onSubmit(value);
+        onSubmit(value, source);
       }
     },
-    [onSubmit, value],
+    [onSubmit, value, source],
   );
 
   const handleClear = useCallback(() => {
@@ -123,10 +128,25 @@ export const QuestionBox = (props: {
           variant="outlined"
           size="large"
           fullWidth
-          onClick={() => onSubmit(value)}
+          onClick={() => onSubmit(value, source)}
         >
           Ask
         </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <FormControl variant="outlined" fullWidth margin="dense">
+          <InputLabel id="question-box-source">Source</InputLabel>
+          <Select
+            labelId="question-box-source"
+            value={source}
+            label="Source"
+            onChange={e => setSource(e.target.value as string)}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="catalog">Catalog</MenuItem>
+            <MenuItem value="tech-docs">TechDocs</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
     </Grid>
   );

@@ -44,7 +44,7 @@ const sourceValidator =
   (supportedSources: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
     const source = req.params.source;
-    if (!supportedSources.includes(source)) {
+    if (!supportedSources.includes(source) && source !== 'all') {
       return res.status(422).json({
         message: `Only ${supportedSources.join(
           ', ',
