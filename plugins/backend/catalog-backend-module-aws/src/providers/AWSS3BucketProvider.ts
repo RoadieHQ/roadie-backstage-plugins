@@ -101,7 +101,9 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
           });
           tags = tagsResponse?.TagSet ?? [];
         } catch (e) {
-          this.logger.debug('No tags found for bucket');
+          this.logger.debug('No tags found for bucket', {
+            bucket: bucket.Name,
+          });
         }
         const resource: ResourceEntity = {
           kind: 'Resource',
