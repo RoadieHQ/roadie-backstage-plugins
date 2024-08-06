@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.1
+
+### Patch Changes
+
+- 0d76d15: Handle cases where S3 buckets don't have a tag set.
+
 ## 5.0.0
 
 ### Major Changes
