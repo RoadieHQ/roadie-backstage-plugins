@@ -127,6 +127,7 @@ export interface SyncArgoApplicationProps {
 
 export interface ResyncProps {
   appSelector: string;
+  terminateOperation?: boolean;
 }
 
 export interface ArgoServiceApi {
