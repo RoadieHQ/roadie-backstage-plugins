@@ -116,7 +116,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   ): Promise<EmbeddingDoc[]> {
     const splitter = this.getSplitter();
     let docs: EmbeddingDoc[] = [];
-    for (const { text, entity } of documents) {
+    for (const { text, entity, title, location } of documents) {
       const splits = await splitter.splitText(text);
       docs = docs.concat(
         splits.map((content: string, idx: number) => ({
@@ -126,6 +126,8 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             source,
             entityRef: stringifyEntityRef(entity),
             kind: entity.kind,
+            title,
+            location,
           },
         })),
       );
