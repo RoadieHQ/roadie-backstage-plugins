@@ -15,7 +15,7 @@
  */
 
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
-import { S3 } from '@aws-sdk/client-s3';
+import { S3, Tag } from '@aws-sdk/client-s3';
 import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
@@ -94,8 +94,15 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
       if (bucket.Name) {
         const bucketArn = `arn:aws:s3:::${bucket.Name}`;
         const consoleLink = new ARN(bucketArn).consoleLink;
-        const tagsResponse = await s3.getBucketTagging({ Bucket: bucket.Name });
-        const tags = tagsResponse?.TagSet ?? [];
+        let tags: Tag[] = [];
+        try {
+          const tagsResponse = await s3.getBucketTagging({
+            Bucket: bucket.Name,
+          });
+          tags = tagsResponse?.TagSet ?? [];
+        } catch (e) {
+          this.logger.debug('No tags found for bucket');
+        }
         const resource: ResourceEntity = {
           kind: 'Resource',
           apiVersion: 'backstage.io/v1beta1',
