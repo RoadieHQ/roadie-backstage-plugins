@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.4.0
+
+### Minor Changes
+
+- 8e3bc52: Allow constructing iframe src from a string with multiple replacements
+
 ## 1.3.17
 
 ### Patch Changes

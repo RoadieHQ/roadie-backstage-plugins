@@ -15,7 +15,12 @@
  */
 
 import { GithubApi } from './GithubApi';
-import { ErrorApi, OAuthApi } from '@backstage/core-plugin-api';
+import {
+  ApiHolder,
+  ErrorApi,
+  githubAuthApiRef,
+  OAuthApi,
+} from '@backstage/core-plugin-api';
 import { Octokit } from '@octokit/rest';
 
 const mimeTypeMap: Record<string, string> = {
@@ -44,6 +49,14 @@ export class GithubClient implements GithubApi {
 
   constructor(deps: { githubAuthApi: OAuthApi; errorApi: ErrorApi }) {
     this.githubAuthApi = deps.githubAuthApi;
+  }
+
+  static fromConfig(apiHolder: ApiHolder, errorApi: ErrorApi) {
+    const auth = apiHolder.get(githubAuthApiRef);
+    if (!auth) {
+      throw new Error('Failed to get the github client');
+    }
+    return new GithubClient({ githubAuthApi: auth, errorApi });
   }
 
   async getContent(props: {
@@ -84,12 +97,14 @@ export class GithubClient implements GithubApi {
       const url = new URL(href, response.url);
 
       if (mimeType && url.host.includes('github.com')) {
-        const requestPath = url.pathname.replace(
-          new RegExp(`/${owner}/${repo}/blob/(main|master)`),
-          `/repos/${owner}/${repo}/contents`,
-        );
         try {
-          const contentResponse = await octokit.request(`GET ${requestPath}`);
+          const splitUrl = url.pathname.split('/');
+          const filePath = splitUrl.slice(5).join('/');
+          const imageRepo = splitUrl[2];
+          const imageOwner = splitUrl[1];
+          const contentResponse = await octokit.request(
+            `GET /repos/${imageOwner}/${imageRepo}/contents/${filePath}`,
+          );
           media[
             href
           ] = `data:${mimeType};base64,${contentResponse.data.content.replaceAll(

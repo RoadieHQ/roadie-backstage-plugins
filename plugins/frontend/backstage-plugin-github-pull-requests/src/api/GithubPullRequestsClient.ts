@@ -16,7 +16,11 @@
 
 import { GithubPullRequestsApi } from './GithubPullRequestsApi';
 import { Octokit } from '@octokit/rest';
-import { SearchPullRequestsResponseData, GithubRepositoryData } from '../types';
+import {
+  SearchPullRequestsResponseData,
+  GithubRepositoryData,
+  GithubFirstCommitDate,
+} from '../types';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   async listPullRequests({
@@ -71,6 +75,29 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
       additions: response.data.additions,
       deletions: response.data.deletions,
       changedFiles: response.data.changed_files,
+    };
+  }
+
+  async getCommitDetailsData({
+    baseUrl,
+    token,
+    owner,
+    repo,
+    number,
+  }: {
+    baseUrl: string | undefined;
+    token: string;
+    owner: string;
+    repo: string;
+    number: number;
+  }): Promise<GithubFirstCommitDate> {
+    const { data: commits } = await new Octokit({
+      auth: token,
+      ...(baseUrl && { baseUrl }),
+    }).pulls.listCommits({ owner: owner, repo: repo, pull_number: number });
+    const firstCommit = commits[0];
+    return {
+      firstCommitDate: new Date(firstCommit.commit.author!.date!),
     };
   }
 }

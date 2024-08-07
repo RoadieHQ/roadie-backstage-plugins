@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { ownerFromTags, labelsFromTags } from './tags';
-import { Entity } from '@backstage/catalog-model';
+import { ownerFromTags, labelsFromTags, relationshipsFromTags } from './tags';
+import { Entity, KubernetesValidatorFunctions } from '@backstage/catalog-model';
 
 describe('labelsFromTags and ownerFromTags', () => {
   describe('labelsFromTags', () => {
@@ -47,13 +47,49 @@ describe('labelsFromTags and ownerFromTags', () => {
     it('should handle complex keys and values in an array of tags', () => {
       const tags = [{ Key: 'tag:one:two', Value: 'value1:value2' }];
       const result = labelsFromTags(tags);
-      expect(result).toEqual({ tag_one_two: 'value1:value2' });
+      expect(result).toEqual({ tag_one_two: 'value1-value2' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
+    });
+
+    it('should handle a url as a value', () => {
+      const tags = [{ Key: 'tag:one:two', Value: 'https://blha.com/blahblah' }];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'https---blha.com-blahblah' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
+    });
+
+    it('I can provide my own value mapper', () => {
+      const tags = [{ Key: 'tag:one:two', Value: 'https://blha.com/blahblah' }];
+      const result = labelsFromTags(tags, value => value);
+      expect(result).toEqual({ tag_one_two: 'https://blha.com/blahblah' });
+    });
+
+    it('should handle a url with a succeeding slash as a value', () => {
+      const tags = [
+        { Key: 'tag:one:two', Value: 'https://blha.com/blahblah/' },
+      ];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'https---blha.com-blahblah' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
     });
 
     it('should ignore keys without values in an object of tags', () => {
       const tags = { 'tag:one': 'value1', 'tag:two': undefined };
       // @ts-ignore
       const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one: 'value1' });
+    });
+
+    it('should ignore keys without values in an object of tags if I provide my own mapper', () => {
+      const tags = { 'tag:one': 'value1', 'tag:two': undefined };
+      // @ts-ignore
+      const result = labelsFromTags(tags, value => value);
       expect(result).toEqual({ tag_one: 'value1' });
     });
   });
@@ -148,5 +184,34 @@ describe('labelsFromTags and ownerFromTags', () => {
       const result = ownerFromTags(tags, 'owner:one', groups);
       expect(result).toBe('group:test/owner1');
     });
+  });
+});
+
+describe('relationshipsFromTags', () => {
+  it('should return an empty object if tags is undefined', () => {
+    const output = relationshipsFromTags();
+    expect(output).toEqual({});
+  });
+
+  it('should return an empty object if tags is an empty array', () => {
+    const output = relationshipsFromTags([]);
+    expect(output).toEqual({});
+  });
+
+  it('should return relationships from an array of tags', () => {
+    const tags = [{ Key: 'dependsOn', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependsOn: ['Value1'] });
+  });
+
+  it('should be case-insensitive when matching tag keys', () => {
+    const tags = [{ Key: 'dePeNdsOn', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependsOn: ['Value1'] });
+  });
+  it('should work with dependency of tag', () => {
+    const tags = [{ Key: 'dependencyOf', Value: 'Value1' }];
+    const output = relationshipsFromTags(tags);
+    expect(output).toEqual({ dependencyOf: ['Value1'] });
   });
 });

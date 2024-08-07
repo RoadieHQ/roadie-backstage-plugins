@@ -1,5 +1,54 @@
 # backend
 
+## 2.1.12
+
+### Patch Changes
+
+- 19198fb: Updated @roadiehq/rag-ai-backend-retrieval-augmenter to 0.3.6
+- Updated dependencies [19198fb]
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.6
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.6
+
+## 2.1.11
+
+### Patch Changes
+
+- Updated dependencies [05a7dd4]
+  - @roadiehq/catalog-backend-module-aws@5.0.0
+
+## 2.1.10
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.4
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.5
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.5
+  - @roadiehq/rag-ai-storage-pgvector@0.1.4
+  - @roadiehq/rag-ai-backend@0.3.3
+
+## 2.1.9
+
+### Patch Changes
+
+- Updated dependencies [5b85b8d]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.0.3
+
+## 2.1.8
+
+### Patch Changes
+
+- Updated dependencies [22c68fe]
+  - @roadiehq/catalog-backend-module-aws@4.0.0
+
+## 2.1.7
+
+### Patch Changes
+
+- Updated dependencies [855af40]
+  - @roadiehq/catalog-backend-module-aws@3.0.0
+
 ## 2.1.6
 
 ### Patch Changes

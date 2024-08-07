@@ -1,5 +1,108 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.1
+
+### Patch Changes
+
+- 0d76d15: Handle cases where S3 buckets don't have a tag set.
+
+## 5.0.0
+
+### Major Changes
+
+- 05a7dd4: Modify AWS providers to allow fully runtime customizable dynamic run configuration. Change provider naming convention, remove existing region argument.
+
+## 4.2.0
+
+### Minor Changes
+
+- 47a2893: Add the possibility to define region on runtime when running the provider
+
+## 4.1.7
+
+### Patch Changes
+
+- 4c9de97: Allow label values to be mapped in a custom way.
+
+## 4.1.6
+
+### Patch Changes
+
+- bbe1d67: Add more sanitization to AWS tags to labels functionality
+
+## 4.1.5
+
+### Patch Changes
+
+- ace4e5a: Add label value/key sanitization to remove trailing unsupported characters.
+
+## 4.1.4
+
+### Patch Changes
+
+- 715a847: Use region only when available.
+
+## 4.1.3
+
+### Patch Changes
+
+- c3d4096: Add region config to STS client
+
+## 4.1.2
+
+### Patch Changes
+
+- cf05e8a: Add temporary credentials option to annotations retrieval also.
+
+## 4.1.1
+
+### Patch Changes
+
+- 3b56b9c: Label values are sanitized a bit better.
+
+## 4.1.0
+
+### Minor Changes
+
+- be22bad: Allow explicit temporary credentials construction for AWS entity providers to enable custom role assumption functionality.
+
+## 4.0.2
+
+### Patch Changes
+
+- 6017323: Export sdk credentials provider from the credentials chain.
+
+## 4.0.1
+
+### Patch Changes
+
+- dfeea32: Modify credentials loading to conform to expecting config object shape
+
+## 4.0.0
+
+### Major Changes
+
+- 22c68fe: Modify configuration shapes to conform to AWS provided Backstage integration configuration. Start using the official credentials provider for AWS resources.
+  BREAKING: Config shape has been modified to match official integration config. Change `roleArn` to `roleName`.
+
+## 3.1.0
+
+### Minor Changes
+
+- 3b7cf6c: Add possibility to define entity relationships by using AWS Tags when providing Resource entities directly from AWS. Expose `system`, `domain`, `dependencyOf` and `dependsOn` tag keys to be used.
+
+## 3.0.1
+
+### Patch Changes
+
+- d52a384: Use role region for sts client.
+
+## 3.0.0
+
+### Major Changes
+
+- 855af40: fix AWSOrganizationAccountsProvider
+
 ## 2.5.0
 
 ### Minor Changes

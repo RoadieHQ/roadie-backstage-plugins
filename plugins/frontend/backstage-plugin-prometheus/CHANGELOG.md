@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.11.0
+
+### Minor Changes
+
+- f4a5909: Allow the title to be set on the prometheus entity card.
+
+## 2.10.0
+
+### Minor Changes
+
+- 6546676: Allow setting the query on the card.
+
+## 2.9.0
+
+### Minor Changes
+
+- 690f23f: Fixes the tick date format issue described here: https://github.com/RoadieHQ/roadie-backstage-plugins/issues/1306
+
 ## 2.8.8
 
 ### Patch Changes

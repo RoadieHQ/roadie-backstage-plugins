@@ -22,8 +22,10 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { LabelValueMapper } from '../utils/tags';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS IAM User service.
@@ -36,38 +38,50 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSIAMUserProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-iam-user-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-iam-user-${this.providerId ?? 0}`;
   }
 
-  async run(): Promise<void> {
+  private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new IAM({ credentials, region })
+      : new IAM(credentials);
+  }
+
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
 
-    this.logger.info(
-      `Providing iam user resources from aws: ${this.accountId}`,
-    );
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    this.logger.info(`Providing IAM user resources from AWS: ${accountId}`);
     const userResources: UserEntity[] = [];
 
-    const credentials = this.getCredentials();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
-
-    const iam = new IAM({ credentials, region: this.region });
+    const iam = await this.getIam(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: iam,
@@ -91,7 +105,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
               },
               name: arnToName(user.Arn),
               title: user.UserName,
-              labels: labelsFromTags(user.Tags),
+              labels: this.labelsFromTags(user.Tags),
             },
             spec: {
               profile: {
@@ -114,5 +128,12 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing IAM user resources from AWS: ${accountId}`,
+      {
+        run_duration: duration(startTimestamp),
+      },
+    );
   }
 }

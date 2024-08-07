@@ -21,8 +21,14 @@ import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  LabelValueMapper,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -35,36 +41,48 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleArn = config.getOptionalString('roleArn');
+    const roleName = config.getString('roleName');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSDynamoDbTableProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-dynamo-db-table-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-dynamo-db-table-${this.providerId ?? 0}`;
   }
 
-  async run(): Promise<void> {
+  private async getDdb(dynamicAccountConfig?: DynamicAccountConfig) {
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new DynamoDB({ credentials })
+      : new DynamoDB(credentials);
+  }
+
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
-    const credentials = this.getCredentials();
-    const ddb = new DynamoDB({ credentials });
-    const defaultAnnotations = await this.buildDefaultAnnotations();
-
-    this.logger.info(
-      `Retrieving all DynamoDB tables for account ${this.accountId}`,
+    const defaultAnnotations = await this.buildDefaultAnnotations(
+      dynamicAccountConfig,
     );
+    const ddb = await this.getDdb(dynamicAccountConfig);
+    this.logger.info(`Retrieving all DynamoDB tables for account ${accountId}`);
 
     const paginatorConfig = {
       client: ddb,
@@ -101,10 +119,11 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
                   },
                   name: arnToName(table.TableArn),
                   title: table.TableName,
-                  labels: labelsFromTags(tags),
+                  labels: this.labelsFromTags(tags),
                 },
                 spec: {
                   owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                  ...relationshipsFromTags(tags),
                   type: 'dynamo-db-table',
                 },
               };
@@ -126,5 +145,10 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${ddbComponents.length} DynamoDB tables for account ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

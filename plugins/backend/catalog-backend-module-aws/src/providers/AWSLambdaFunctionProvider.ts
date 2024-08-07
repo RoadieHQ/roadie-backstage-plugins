@@ -25,8 +25,14 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  LabelValueMapper,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS Lambda Function service.
@@ -39,39 +45,55 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSLambdaFunctionProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-lambda-function-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-lambda-function-${this.providerId ?? 0}`;
   }
 
-  async run(): Promise<void> {
+  private async getLambda(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new Lambda({ credentials, region })
+      : new Lambda(credentials);
+  }
+
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
     const groups = await this.getGroups();
 
     this.logger.info(
-      `Providing lambda function resources from aws: ${this.accountId}`,
+      `Providing lambda function resources from AWS: ${accountId}`,
     );
 
     const lambdaComponents: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const lambda = new Lambda({ credentials, region: this.region });
+    const lambda = await this.getLambda(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: lambda,
@@ -115,12 +137,12 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
               ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
               timeout: lambdaFunction.Timeout,
               architectures: lambdaFunction.Architectures,
-              labels: labelsFromTags(tags),
+              labels: this.labelsFromTags(tags),
             },
             spec: {
               owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
               type: 'lambda-function',
-              dependsOn: [],
             },
           });
         }
@@ -134,5 +156,10 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${lambdaComponents.length} lambda function resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

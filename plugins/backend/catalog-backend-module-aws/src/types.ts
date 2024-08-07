@@ -59,7 +59,11 @@ export interface AWSAccountProviderConfig {
   /**
    * Role to assume for this account ID
    */
-  roleArn: string;
+  roleName: string;
+  /**
+   * Role ARN to assume for this account ID
+   */
+  roleArn?: string;
   /**
    * Region to use for this account ID
    */
@@ -77,6 +81,13 @@ export interface AWSAccountProviderConfig {
 
 export type AccountConfig = {
   accountId: string;
+  roleName: string;
+  roleArn?: string;
+  externalId?: string;
+  region: string;
+};
+
+export type DynamicAccountConfig = {
   roleArn: string;
   externalId?: string;
   region: string;

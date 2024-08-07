@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 1.17.1
+
+### Patch Changes
+
+- 9ab0cc1: fix roadiehq:utils:fs:parse example on README.md file
+
+## 1.17.0
+
+### Minor Changes
+
+- daed08e: add preserveYamlComments input for roadiehq:utils:merge action
+
 ## 1.16.0
 
 ### Minor Changes

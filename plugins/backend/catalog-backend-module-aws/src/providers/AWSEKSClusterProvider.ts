@@ -24,8 +24,14 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import { labelsFromTags, ownerFromTags } from '../utils/tags';
+import {
+  LabelValueMapper,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -38,38 +44,52 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
+      useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
-    const roleArn = config.getString('roleArn');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
     return new AWSEKSClusterProvider(
-      { accountId, roleArn, externalId, region },
+      { accountId, roleName, roleArn, externalId, region },
       options,
     );
   }
 
   getProviderName(): string {
-    return `aws-eks-cluster-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-eks-cluster-${this.providerId ?? 0}`;
   }
 
-  async run(): Promise<void> {
+  private async getEks(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
+    const credentials = this.useTemporaryCredentials
+      ? this.getCredentials(dynamicAccountConfig)
+      : await this.getCredentialsProvider();
+    return this.useTemporaryCredentials
+      ? new EKS({ credentials, region })
+      : new EKS(credentials);
+  }
+
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
-    this.logger.info(
-      `Providing eks cluster resources from aws: ${this.accountId}`,
-    );
+    this.logger.info(`Providing EKS cluster resources from AWS: ${accountId}`);
     const eksResources: ResourceEntity[] = [];
 
-    const credentials = this.getCredentials();
-    const eks = new EKS({ credentials, region: this.region });
+    const eks = await this.getEks(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: eks,
@@ -102,7 +122,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
               annotations,
               name: arnToName(name),
               title: name,
-              labels: labelsFromTags(cluster.cluster?.tags),
+              labels: this.labelsFromTags(cluster.cluster?.tags),
             },
 
             spec: {
@@ -111,6 +131,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 this.getOwnerTag(),
                 groups,
               ),
+              ...relationshipsFromTags(cluster.cluster?.tags),
               type: 'eks-cluster',
             },
           };
@@ -127,5 +148,10 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing ${eksResources.length} EKS cluster resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

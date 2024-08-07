@@ -16,35 +16,73 @@
 
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 
-type Tag = {
+export type Tag = {
   Key?: string;
   Value?: string;
 };
+
+export type LabelValueMapper = (value: string) => string;
 const UNKNOWN_OWNER = 'unknown';
 
-export const labelsFromTags = (tags?: Tag[] | Record<string, string>) => {
+const TAG_DEPENDS_ON = 'dependsOn';
+const TAG_DEPENDENCY_OF = 'dependencyOf';
+const TAG_SYSTEM = 'system';
+const TAG_DOMAIN = 'domain';
+
+const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
+const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
+
+function stripTrailingChar(str: string, chr: string) {
+  return str.endsWith(chr) ? str.slice(0, -1) : str;
+}
+
+const defaultValueCleaner: LabelValueMapper = value => {
+  const val = value.replaceAll('/', '-').replaceAll(':', '-').substring(0, 63);
+  return stripTrailingChar(val, '-');
+};
+
+export const labelsFromTags = (
+  tags?: Tag[] | Record<string, string>,
+  valueMapper: LabelValueMapper = defaultValueCleaner,
+) => {
   if (!tags) {
     return {};
   }
   if (Array.isArray(tags)) {
-    return tags?.reduce((acc: Record<string, string>, tag) => {
-      if (tag.Key && tag.Value) {
-        const key = tag.Key.replaceAll(':', '_').replaceAll('/', '-');
-        acc[key] = tag.Value.replaceAll('/', '-').substring(0, 63);
+    return tags
+      ?.filter(
+        tag =>
+          !tag.Key ||
+          ![...dependencyTags, ...relationshipTags]
+            .map(it => it.toLowerCase())
+            .includes(tag.Key.toLowerCase()),
+      )
+      .reduce((acc: Record<string, string>, tag) => {
+        if (tag.Key && tag.Value) {
+          let key = tag.Key.replaceAll(':', '_')
+            .replaceAll('/', '-')
+            .substring(0, 63);
+          key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
+          acc[key] = valueMapper(tag.Value);
+        }
+        return acc;
+      }, {});
+  }
+  return Object.entries(tags as Record<string, string>)
+    ?.filter(
+      ([tagKey]) =>
+        ![...dependencyTags, ...relationshipTags]
+          .map(it => it.toLowerCase())
+          .includes(tagKey.toLowerCase()),
+    )
+    .reduce((acc: Record<string, string>, [key, value]) => {
+      if (key && value) {
+        let k = key.replaceAll(':', '_').replaceAll('/', '-');
+        k = stripTrailingChar(stripTrailingChar(k, '-'), '_');
+        acc[k] = valueMapper(value);
       }
       return acc;
     }, {});
-  }
-  return Object.entries(tags as Record<string, string>).reduce(
-    (acc: Record<string, string>, [key, value]) => {
-      if (key && value) {
-        const k = key.replaceAll(':', '_').replaceAll('/', '-');
-        acc[k] = value.replaceAll('/', '-').substring(0, 63);
-      }
-      return acc;
-    },
-    {},
-  );
 };
 
 export const ownerFromTags = (
@@ -78,4 +116,35 @@ export const ownerFromTags = (
   }
 
   return ownerString ? ownerString : UNKNOWN_OWNER;
+};
+
+export const relationshipsFromTags = (
+  tags?: Tag[] | Record<string, string>,
+): Record<string, string | string[]> => {
+  if (!tags) {
+    return {};
+  }
+
+  const specPartial: Record<string, string | string[]> = {};
+  if (Array.isArray(tags)) {
+    dependencyTags.forEach(tagKey => {
+      const tagValue = tags?.find(
+        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
+      );
+      if (tagValue && tagValue.Value) {
+        specPartial[tagKey] = [tagValue.Value.split(',')].flat();
+      }
+    });
+
+    relationshipTags.forEach(tagKey => {
+      const tagValue = tags?.find(
+        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
+      );
+      if (tagValue && tagValue.Value) {
+        specPartial[tagKey] = tagValue.Value;
+      }
+    });
+  }
+
+  return specPartial;
 };
