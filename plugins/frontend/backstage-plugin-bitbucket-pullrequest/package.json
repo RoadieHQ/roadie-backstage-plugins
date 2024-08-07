@@ -36,8 +36,8 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "react-use": "^17.2.4",
-    "@backstage/plugin-catalog-react": "^1.10.0",
-    "@backstage/catalog-model": "^1.4.4",
+    "@backstage/plugin-catalog-react": "^1.11.3",
+    "@backstage/catalog-model": "^1.4.5",
     "moment": "^2.29.1",
     "msw": "^1.0.1",
     "cross-fetch": "4.0.0"
