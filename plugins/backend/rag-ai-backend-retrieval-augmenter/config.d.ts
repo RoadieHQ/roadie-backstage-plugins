@@ -29,6 +29,10 @@ export interface Config {
        * The overlap between adjacent chunks of embeddings. The bigger the number, the more overlap..
        */
       chunkOverlap?: number;
+      /**
+       * The maximum number of concurrent requests when creating embeddings.
+       */
+      concurrencyLimit?: number;
     };
   };
 }

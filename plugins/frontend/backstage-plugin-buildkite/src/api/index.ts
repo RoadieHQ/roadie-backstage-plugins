@@ -20,9 +20,13 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 
-export const buildKiteApiRef = createApiRef<BuildkiteApi>({
+export const buildkiteApiRef = createApiRef<BuildkiteApi>({
   id: 'plugin.buildkite.service',
 });
+
+// buildKiteApiRef preserves backwards compatibility; the API ref
+// was originally exported as buildKiteApiRef.
+export const buildKiteApiRef = buildkiteApiRef;
 
 const DEFAULT_PROXY_PATH = '/buildkite/api';
 
@@ -49,6 +53,19 @@ export class BuildkiteApi {
   private async getApiUrl() {
     const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
     return `${proxyUrl}${this.proxyPath}`;
+  }
+
+  async getPipeline(orgSlug: string, pipelineSlug: string) {
+    const ApiUrl = await this.getApiUrl();
+    const request = await this.fetchApi.fetch(
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}`,
+    );
+    if (!request.ok) {
+      throw new Error(
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
+      );
+    }
+    return request.json();
   }
 
   async getBuilds(

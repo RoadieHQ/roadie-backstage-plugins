@@ -1,8 +1,9 @@
-import { createApiRef, DiscoveryApi } from '@backstage/core-plugin-api';
+import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { ApiRef, createApiRef } from '@backstage/frontend-plugin-api';
 
 export interface DatadogApi {}
 
-export const datadogApiRef = createApiRef<DatadogApi>({
+export const datadogApiRef: ApiRef<DatadogApi> = createApiRef<DatadogApi>({
   id: 'plugin.datadog.service',
 });
 
