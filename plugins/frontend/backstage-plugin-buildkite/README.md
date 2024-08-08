@@ -41,11 +41,27 @@ import {
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
-
 export const cicdContent = (
   <EntitySwitch>
     <EntitySwitch.Case if={isBuildkiteAvailable}>
       <EntityBuildkiteContent />
+    </EntitySwitch.Case>
+    ...
+  </EntitySwitch>
+);
+```
+
+Alternatively, the plugin can be configured to only display default branch
+builds (However, this may be overwritten on a per-entity basis via a
+`buildkite.com/branch` or `buildkite.com/default-branch-only: false` entity
+annotations, as explained below):
+
+```ts
+// packages/app/src/components/catalog/EntityPage.tsx
+export const cicdContent = (
+  <EntitySwitch>
+    <EntitySwitch.Case if={isBuildkiteAvailable}>
+      <EntityBuildkiteContent defaultBranchOnly />
     </EntitySwitch.Case>
     ...
   </EntitySwitch>
@@ -60,6 +76,24 @@ export const cicdContent = (
 metadata:
   annotations:
     buildkite.com/project-slug: [exampleorganization/exampleproject]
+    # Optional; the buildkite.com/branch annotation can be used to configure
+    # the plugin to only display builds of the specified branch name.
+    #
+    # If omitted, the plugin displays builds from all branches.
+    #
+    # Note that 'buildkite.com/branch' takes precedence over a
+    # globally-configured <EntityBuildkiteContent defaultBranchOnly />.
+    buildkite.com/branch: 'main'
+    # Optional; the buildkite.com/default-branch-only annotation can be used to
+    # configure the plugin to only display builds of the default branch name,
+    # the value of which is dynamically determined via the Buildkite API.
+    #
+    # Note that...
+    # A 'buildkite.com/branch' annotation takes precedence over 'buildkite.com/default-branch-only'.
+    # A 'buildkite.com/default-branch-only: false' takes precedence over a
+    # globally-configured <EntityBuildkiteContent defaultBranchOnly />.
+    # "true" and "false" are the only supported values.
+    buildkite.com/default-branch-only: 'true'
 ```
 
 2. Get an api token from buildkite and export it to your shell.

@@ -1,5 +1,52 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.3.1
+
+### Patch Changes
+
+- 743486b: Address issue #1490 to support the ability to only display default branch builds.
+
+  A `defaultBranchOnly` property can be set on the component, configuring the
+  component to dynamically detect the entity's default branch and only display
+  builds of that branch:
+
+  ```ts
+  // packages/app/src/components/catalog/EntityPage.tsx
+  export const cicdContent = (
+    <EntitySwitch>
+      <EntitySwitch.Case if={isBuildkiteAvailable}>
+        <EntityBuildkiteContent defaultBranchOnly />
+      </EntitySwitch.Case>
+      ...
+    </EntitySwitch>
+  );
+  ```
+
+  Alternatively, the configuration can be also be set on a per-entity basis via
+  a `buildkite.com/default-branch-only` annotation whose value can be `true` or `false`:
+
+  ```yaml
+  metadata:
+    annotations:
+      'buildkite.com/default-branch-only': 'true'
+  ```
+
+  A `buildkite.com/branch` annotation takes precedence over both
+  `<EntityBuildkiteContent defaultBranchOnly />` and per-entity
+  `buildkite.com/default-branch-only` annotations.
+
+## 2.3.0
+
+### Minor Changes
+
+- b98545b: To be more consistent with the character casing used throughout the rest of the plugin's exports, the API ref is now exported as `buildkiteApiRef` (rather than `buildKiteApiRef`). To preserve backwards compatibility, the original export, `buildKiteApiRef`, is also exported.
+
+## 2.2.0
+
+### Minor Changes
+
+- f5e7e5f: Address issue #1459 by supporting the ability to optionally restrict the Buildkite builds table to only display builds of a particular branch, as specified by an optional `buildkite.com/branch` entity annotation.
+
 ## 2.1.23
 
 ### Patch Changes

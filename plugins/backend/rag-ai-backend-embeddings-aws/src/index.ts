@@ -24,7 +24,7 @@ import { CatalogApi } from '@backstage/catalog-client';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
-import { SplitterOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
+import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger;
@@ -51,12 +51,14 @@ export async function initializeBedrockEmbeddings({
   logger.info('Initializing Roadie AWS Bedrock Embeddings');
   const bedrockConfig = config.get<BedrockConfig>('ai.embeddings.bedrock');
   const embeddingsOptions = config.getOptionalConfig('ai.embeddings');
-  const splitterOptions: SplitterOptions = {};
+  const augmentationOptions: AugmentationOptions = {};
   if (embeddingsOptions) {
-    splitterOptions.chunkSize =
+    augmentationOptions.chunkSize =
       embeddingsOptions.getOptionalNumber('chunkSize');
-    splitterOptions.chunkOverlap =
+    augmentationOptions.chunkOverlap =
       embeddingsOptions.getOptionalNumber('chunkOverlap');
+    augmentationOptions.concurrencyLimit =
+      embeddingsOptions.getOptionalNumber('concurrencyLimit');
   }
   return new RoadieBedrockAugmenter({
     vectorStore,
@@ -66,6 +68,6 @@ export async function initializeBedrockEmbeddings({
     tokenManager,
     options,
     bedrockConfig,
-    splitterOptions,
+    augmentationOptions,
   });
 }

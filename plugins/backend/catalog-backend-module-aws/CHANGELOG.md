@@ -1,5 +1,41 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.1
+
+### Patch Changes
+
+- 0d76d15: Handle cases where S3 buckets don't have a tag set.
+
+## 5.0.0
+
+### Major Changes
+
+- 05a7dd4: Modify AWS providers to allow fully runtime customizable dynamic run configuration. Change provider naming convention, remove existing region argument.
+
+## 4.2.0
+
+### Minor Changes
+
+- 47a2893: Add the possibility to define region on runtime when running the provider
+
+## 4.1.7
+
+### Patch Changes
+
+- 4c9de97: Allow label values to be mapped in a custom way.
+
+## 4.1.6
+
+### Patch Changes
+
+- bbe1d67: Add more sanitization to AWS tags to labels functionality
+
+## 4.1.5
+
+### Patch Changes
+
+- ace4e5a: Add label value/key sanitization to remove trailing unsupported characters.
+
 ## 4.1.4
 
 ### Patch Changes

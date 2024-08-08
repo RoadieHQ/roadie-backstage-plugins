@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.3.0
+
+### Minor Changes
+
+- 2d2ca02: Adds support for Backstage's new frontend system, available via the `/alpha` sub-path export.
+
 ## 2.2.8
 
 ### Patch Changes

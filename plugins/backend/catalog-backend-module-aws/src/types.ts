@@ -86,3 +86,9 @@ export type AccountConfig = {
   externalId?: string;
   region: string;
 };
+
+export type DynamicAccountConfig = {
+  roleArn: string;
+  externalId?: string;
+  region: string;
+};

@@ -19,23 +19,33 @@ import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import { PrometheusGraph } from './PrometheusGraph';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
-  isPrometheusGraphAvailable,
   PROMETHEUS_RULE_ANNOTATION,
   PROMETHEUS_PLUGIN_DOCUMENTATION,
 } from '../util';
+import { renderString } from 'nunjucks';
+import { stringifyEntityRef } from '@backstage/catalog-model';
 
 export const PrometheusGraphEntityWrapper = ({
   step = 14,
   range = { hours: 1 },
   graphType,
+  enableQueryTemplating,
+  query,
+  title,
 }: {
   step?: number;
   range?: { hours?: number; minutes?: number };
   graphType?: 'line' | 'area';
+  query?: string;
+  enableQueryTemplating?: boolean;
+  title?: string;
 }) => {
   const { entity } = useEntity();
-  const graphContent = isPrometheusGraphAvailable(entity);
-  if (!graphContent) {
+
+  let fullQuery =
+    entity.metadata.annotations?.[PROMETHEUS_RULE_ANNOTATION] || query;
+
+  if (!fullQuery) {
     return (
       <MissingAnnotationEmptyState
         annotation={PROMETHEUS_RULE_ANNOTATION}
@@ -43,20 +53,28 @@ export const PrometheusGraphEntityWrapper = ({
       />
     );
   }
-  const ruleTuples = graphContent
-    ? entity.metadata
-        .annotations!![PROMETHEUS_RULE_ANNOTATION].split(',')
-        .map(it => it.split('|'))
+
+  if (enableQueryTemplating) {
+    fullQuery = renderString(fullQuery, {
+      ...entity,
+      entityRef: stringifyEntityRef(entity),
+    });
+  }
+
+  const ruleTuples = fullQuery
+    ? fullQuery.split(',').map(it => it.split('|'))
     : [];
+
   if (ruleTuples.length > 0) {
-    const [query, dimension] = ruleTuples[0];
+    const [ultimateQuery, dimension] = ruleTuples[0];
     return (
       <PrometheusGraph
         dimension={dimension}
-        query={query}
+        query={ultimateQuery}
         range={range}
         step={step}
         graphType={graphType}
+        title={title}
       />
     );
   }

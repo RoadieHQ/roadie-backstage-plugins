@@ -26,6 +26,12 @@ export type Story = {
   app_url: string;
 };
 
+export type StoryResponse = {
+  next?: string;
+  total: number;
+  data: Array<Story>;
+};
+
 export type User = {
   id: string;
   profile: Profile;

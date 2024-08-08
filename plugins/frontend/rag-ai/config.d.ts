@@ -22,5 +22,11 @@ export interface Config {
      * @visibility frontend
      */
     endpointPath?: string;
+
+    /**
+     * The path to the TechDocs (frontend) plugin. Defaults to '/docs'.
+     * @visibility frontend
+     */
+    techDocsPath?: string;
   };
 }

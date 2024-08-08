@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.0.3
+
+### Patch Changes
+
+- 5b85b8d: fix: update argo project payload to match spec for update argo project
+
 ## 3.0.2
 
 ### Patch Changes
