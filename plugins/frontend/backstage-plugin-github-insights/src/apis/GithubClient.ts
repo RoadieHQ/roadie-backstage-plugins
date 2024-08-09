@@ -41,6 +41,43 @@ const getRepositoryDefaultBranch = (url: string) => {
 
 const defaultBaseUrl = 'https://api.github.com';
 
+/**
+ * Combines a given path to a README file with a relative path, resulting in a new path
+ * that resolves the relative path against the directory of the README file.
+ * This function is particularly useful for scenarios where navigation relative
+ * to a known file location is needed, such as linking to another file in a Git repository.
+ *
+ * @param readmePath The absolute path to a README file. This path should be in the form of
+ *                   an absolute path starting from the root directory (e.g., /path/to/repo/README.md).
+ * @param relativePath The relative path to resolve against the directory containing the README file.
+ *                     This path can include various combinations of ./ and ../ to navigate
+ *                     up and down the directory tree (e.g., ../../../other/file.txt).
+ * @return The resulting path after combining and resolving the relative path against the
+ *         directory of the README file. The returned path is formatted as an absolute path
+ *         starting from the root directory, without any protocol prefixes.
+ *
+ * Example:
+ * const readmePath = '/path/to/repo/README.md';
+ * const relativePath = '../../../other/file.txt';
+ * const resultPath = combinePaths(readmePath, relativePath);
+ * console.log(resultPath); // Outputs: '/path/other/file.txt'
+ */
+const combinePaths = (readmePath: string, relativePath: string): string => {
+  // Ensure readmePath is a full path
+  // Create a new URL object with the readmePath
+  const readmeUrl = new URL(`file://${readmePath}`);
+
+  // Get the directory path by navigating to the parent directory
+  const dirUrl = new URL('.', readmeUrl);
+
+  // Create a new URL object with the relative path and the directory path as base
+  const combinedUrl = new URL(relativePath, dirUrl);
+
+  return combinedUrl.pathname.startsWith('/')
+    ? combinedUrl.pathname
+    : `/${combinedUrl.pathname}`;
+};
+
 export class GithubClient implements GithubApi {
   private githubAuthApi: OAuthApi;
 
@@ -53,14 +90,23 @@ export class GithubClient implements GithubApi {
     media: Record<string, string>;
     links: Record<string, string>;
   }> {
-    const { path, repo, owner, branch, baseUrl = defaultBaseUrl } = props;
+    const {
+      path: customReadmePath,
+      repo,
+      owner,
+      branch,
+      baseUrl = defaultBaseUrl,
+    } = props;
     const token = await this.githubAuthApi.getAccessToken();
     const octokit = new Octokit({ auth: token, baseUrl });
 
     let query = 'readme';
-    if (path) {
-      query = `contents/${path}`;
+    if (customReadmePath) {
+      query = `contents/${customReadmePath}`;
     }
+
+    const readmePath = query;
+
     const response = await octokit.request(
       `GET /repos/{owner}/{repo}/${query}`,
       {
@@ -81,8 +127,8 @@ export class GithubClient implements GithubApi {
 
     const media: Record<string, string> = {};
 
-    const { ref, resource, protocol } = parseGitUrl(response.data.url);
-
+    const { ref, resource: domain, protocol } = parseGitUrl(response.data.url);
+    const domainLowerCased = domain.toLocaleLowerCase('en-US');
     for (const mediaLink of mediaLinks) {
       const mimeType = mimeTypeLookup(mediaLink);
       if (!mimeType) {
@@ -94,7 +140,8 @@ export class GithubClient implements GithubApi {
         if (!linkLowerCased.startsWith('http')) {
           return new URL(mediaLink, response.data.url);
         }
-        if (linkLowerCased.includes('github')) {
+
+        if (linkLowerCased.includes(domainLowerCased)) {
           const {
             owner: ownerLink,
             name: repoLink,
@@ -139,9 +186,10 @@ export class GithubClient implements GithubApi {
       branch || ref || getRepositoryDefaultBranch(response.data.url);
 
     for (const markdownLink of markdownLinks) {
-      links[
-        markdownLink
-      ] = `${protocol}://${resource}/${owner}/${repo}/blob/${loadFromBranch}/${markdownLink}`;
+      const basicLink = `${protocol}://${domain}/${owner}/${repo}/blob/${loadFromBranch}`;
+
+      const combinedPath = combinePaths(readmePath, markdownLink);
+      links[markdownLink] = `${basicLink}${combinedPath}`;
     }
     return { content, media, links };
   }
