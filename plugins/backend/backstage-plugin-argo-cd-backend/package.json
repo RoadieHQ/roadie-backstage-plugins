@@ -10,12 +10,32 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "argocd",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-argo-cd",
+      "@roadiehq/backstage-plugin-argo-cd-backend"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
     "directory": "plugins/backend/backstage-plugin-argo-cd-backend"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "alpha": [
+        "src/alpha.ts"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "scripts": {
     "start": "backstage-cli package start",
@@ -28,6 +48,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.21.7",
+    "@backstage/backend-plugin-api": "^0.7.0",
     "@backstage/catalog-client": "^1.6.4",
     "@backstage/config": "^1.2.0",
     "@types/express": "^4.17.6",
@@ -39,9 +60,9 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.26.4",
-    "jest-mock": "^29.0.0",
     "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",
+    "jest-mock": "^29.0.0",
     "supertest": "^4.0.2",
     "ts-jest": "^29.0.0"
   },
