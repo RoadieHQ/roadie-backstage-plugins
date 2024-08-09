@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
-import {
-  generateBackstageUrl,
-  http,
-  getObjFieldCaseInsensitively,
-} from './helpers';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import { generateBackstageUrl, http } from './helpers';
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { AuthService } from '@backstage/backend-plugin-api';
 
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
+  auth?: AuthService;
 }) {
-  const { discovery } = options;
+  const { discovery, auth } = options;
   return createTemplateAction<{
     path: string;
     method: Methods;
@@ -117,7 +115,10 @@ export function createHttpBackstageAction(options: {
 
     async handler(ctx) {
       const { input } = ctx;
-      const token = ctx.secrets?.backstageToken;
+      const { token } = (await auth?.getPluginRequestToken({
+        onBehalfOf: await ctx.getInitiatorCredentials(),
+        targetPluginId: 'proxy',
+      })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
       const continueOnBadResponse = input.continueOnBadResponse || false;
@@ -158,12 +159,7 @@ export function createHttpBackstageAction(options: {
         body: inputBody,
       };
 
-      const authToken = getObjFieldCaseInsensitively(
-        input.headers,
-        'authorization',
-      );
-
-      if (token && !authToken) {
+      if (token) {
         ctx.logger.info(`Token is defined. Setting authorization header.`);
         httpOptions.headers.authorization = `Bearer ${token}`;
       }

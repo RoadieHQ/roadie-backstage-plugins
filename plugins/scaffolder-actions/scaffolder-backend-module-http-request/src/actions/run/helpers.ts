@@ -86,12 +86,3 @@ export const http = async (
   }
   return { code: res.status, headers, body };
 };
-
-export const getObjFieldCaseInsensitively = (obj = {}, fieldName: string) => {
-  const [, value = ''] =
-    Object.entries<string>(obj).find(
-      ([key]) => key.toLowerCase() === fieldName.toLowerCase(),
-    ) || [];
-
-  return value;
-};
