@@ -17,6 +17,7 @@ import {
   generateBackstageUrl,
   http,
   getObjFieldCaseInsensitively,
+  getPluginId,
 } from './helpers';
 import { HttpOptions } from './types';
 import { getRootLogger } from '@backstage/backend-common';
@@ -89,6 +90,16 @@ describe('http', () => {
           expect(await generateBackstageUrl(discovery, proxyPath)).toEqual(
             `${mockCustomBaseUrl}/proxy/foo`,
           );
+        });
+      });
+    });
+  });
+
+  describe("#getPluginId", () => {
+    describe("with happy path proxy configuration", () => {
+      describe("with valid path", () => {
+        it("returns the plugin Id as passed in", async () => {
+          expect(getPluginId(proxyPath)).toEqual(`proxy`);
         });
       });
     });
