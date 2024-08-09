@@ -19,7 +19,7 @@ import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
 import { createMergeAction, createMergeJSONAction } from './merge';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
-import YAML from 'yaml';
+import YAML, { Scalar } from 'yaml';
 import detectIndent from 'detect-indent';
 
 describe('roadiehq:utils:json:merge', () => {
@@ -460,17 +460,23 @@ scripts:
     });
 
     const opts = {
-      indent: 3,
-      noArrayIndent: true,
-      skipInvalid: true,
-      flowLevel: 23,
-      sortKeys: true,
+      blockQuote: true,
+      collectionStyle: 'block' as 'any' | 'block' | 'flow',
+      defaultKeyType: 'PLAIN' as Scalar.Type,
+      defaultStringType: 'BLOCK_LITERAL' as Scalar.Type,
+      directives: false,
+      doubleQuotedAsJSON: false,
+      doubleQuotedMinMultiLineLength: 40,
+      falseStr: 'false',
+      flowCollectionPadding: false,
+      indent: 4,
+      indentSeq: false,
       lineWidth: -1,
-      noRefs: true,
-      noCompatMode: true,
-      condenseFlow: true,
-      quotingType: '"' as const,
-      forceQuotes: true,
+      minContentWidth: 20,
+      nullStr: 'null',
+      simpleKeys: false,
+      singleQuote: false,
+      trueStr: 'true',
     };
 
     await action.handler({
