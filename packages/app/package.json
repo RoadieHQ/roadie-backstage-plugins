@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "private": true,
   "backstage": {
     "role": "frontend"
@@ -48,7 +48,7 @@
     "@roadiehq/backstage-plugin-shortcut": "^1.1.23",
     "@roadiehq/backstage-plugin-travis-ci": "^2.1.23",
     "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^1.6.12",
-    "@roadiehq/rag-ai": "^0.2.3",
+    "@roadiehq/rag-ai": "^1.0.0",
     "cross-fetch": "^4.0.0",
     "history": "^5.0.0",
     "react": "^18.0.2",
