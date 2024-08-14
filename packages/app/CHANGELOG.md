@@ -1,5 +1,12 @@
 # app
 
+## 1.1.6
+
+### Patch Changes
+
+- Updated dependencies [f688119]
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.0.0
+
 ## 1.1.5
 
 ### Patch Changes
