@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "RepositoryEntityV1",
+  "description": "A repository represents an SCM repository and its related entities.",
+  "examples": [
+    {
+      "apiVersion": "roadie.io/v1",
+      "kind": "Repository",
+      "metadata": {
+        "name": "authx",
+        "description": "An authentication library for verifying the identity of a caller",
+        "scmOwner": "RoadieHQ",
+        "defaultBranch": "main",
+        "visibility": "private",
+        "language": "TypeScript",
+        "securityAndAnalysis": {
+          "secretScanning": "disabled",
+          "secretScanningPushProtection": "disabled",
+          "secretScanningValidityChecks": "disabled",
+          "dependabotSecurityUpdates": "enabled"
+        },
+        "lastPush": "2024-01-04",
+        "createdAt": "2022-01-21",
+        "potentialOwners": ["user:default/punkle", "user:default/sblausten"],
+        "isFork": "false",
+        "commits": {
+          "lastWeek": 0,
+          "lastMonth": 12,
+          "lastThreeMonths": 12,
+          "lastSixMonths": 14,
+          "lastYear": 23
+        }
+      },
+      "spec": {
+        "owner": "user:default/punkle",
+        "hasPart": ["component:default/authx"]
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "$ref": "Entity"
+    },
+    {
+      "type": "object",
+      "required": ["spec"],
+      "properties": {
+        "apiVersion": {
+          "enum": ["roadie.io/v1"]
+        },
+        "kind": {
+          "enum": ["Repository"]
+        },
+        "spec": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "owner": {
+              "type": "string",
+              "description": "An entity reference to the owner of the repository.",
+              "examples": ["artist-relations-team", "user:john.johnson"],
+              "minLength": 1
+            },
+            "hasPart": {
+              "type": "array",
+              "description": "An array of references to other entities that the repository houses.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "system": {
+              "type": "string",
+              "description": "An entity reference to the system that the repository belongs to.",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}
