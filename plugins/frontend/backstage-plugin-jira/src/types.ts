@@ -118,7 +118,7 @@ export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
 };
 
-export type IssueCountSearchParams = {
+export type IssuesResponse = {
   startAt: number;
   maxResults: number;
   total: number;
@@ -151,7 +151,7 @@ export type Ticket = {
   };
 };
 
-export type IssueCountResult = {
+export type IssuesResult = {
   next: number | undefined;
   issues: Ticket[];
 };

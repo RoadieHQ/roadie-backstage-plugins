@@ -21,8 +21,8 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 import {
-  IssueCountResult,
-  IssueCountSearchParams,
+  IssuesResult,
+  IssuesResponse,
   IssuesCounter,
   IssueType,
   Project,
@@ -87,11 +87,11 @@ export class JiraAPI {
       .map(i => `'${i}'`)
       .join(',');
 
-  private async pagedIssueCountRequest(
+  private async pagedIssuesRequest(
     apiUrl: string,
     jql: string,
     startAt: number,
-  ): Promise<IssueCountResult> {
+  ): Promise<IssuesResult> {
     const data = {
       jql,
       maxResults: -1,
@@ -120,7 +120,7 @@ export class JiraAPI {
         `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
-    const response: IssueCountSearchParams = await request.json();
+    const response: IssuesResponse = await request.json();
     const lastElement = response.startAt + response.maxResults;
 
     return {
@@ -129,7 +129,7 @@ export class JiraAPI {
     };
   }
 
-  private async getIssueCountPaged({
+  private async getIssuesPaged({
     apiUrl,
     projectKey,
     component,
@@ -155,7 +155,7 @@ export class JiraAPI {
     const issues: Ticket[] = [];
 
     while (startAt !== undefined) {
-      const res: IssueCountResult = await this.pagedIssueCountRequest(
+      const res: IssuesResult = await this.pagedIssuesRequest(
         apiUrl,
         jql,
         startAt,
@@ -165,57 +165,6 @@ export class JiraAPI {
     }
 
     return issues;
-  }
-
-  private async getIssuesCountByType({
-    apiUrl,
-    projectKey,
-    component,
-    statusesNames,
-    issueType,
-    issueIcon,
-    label,
-  }: {
-    apiUrl: string;
-    projectKey: string;
-    component: string;
-    statusesNames: Array<string>;
-    issueType: string;
-    issueIcon: string;
-    label: string;
-  }) {
-    const statusesString = this.convertToString(statusesNames);
-
-    const jql = `project = "${projectKey}"
-      AND issuetype = "${issueType}"
-      ${statusesString ? `AND status in (${statusesString})` : ''}
-      ${component ? `AND component = "${component}"` : ''}
-      AND statuscategory not in ("Done") ${
-        label ? `AND labels in ("${label}")` : ''
-      }
-    `;
-    const data = {
-      jql,
-      maxResults: 0,
-    };
-    const request = await this.fetchApi.fetch(`${apiUrl}search`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!request.ok) {
-      throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`,
-      );
-    }
-    const response = await request.json();
-    return {
-      total: response.total,
-      name: issueType,
-      iconUrl: issueIcon,
-    } as IssuesCounter;
   }
 
   async getProjectDetails(
@@ -241,66 +190,29 @@ export class JiraAPI {
     }
     const project = (await request.json()) as Project;
 
-    // If component not defined, execute the same code. Otherwise use paged request
-    // to fetch also the issue-keys of all the tasks for that component.
-    let issuesCounter: IssuesCounter[] = [];
-    let ticketIds: string[] = [];
-    let tickets: Ticket[] = [];
-    const foundIssues = await this.getIssueCountPaged({
+    const foundIssues = await this.getIssuesPaged({
       apiUrl,
       projectKey,
       component,
       label,
       statusesNames,
     });
-    if (!component && !label) {
-      // Generate counters for each issue type
-      const issuesTypes = project.issueTypes.map((status: IssueType) => ({
-        name: status.name,
-        iconUrl: status.iconUrl,
-      }));
 
-      const filteredIssues = issuesTypes.filter(el => el.name !== 'Sub-task');
-
-      issuesCounter = await Promise.all(
-        filteredIssues.map(issue => {
-          const issueType = issue.name;
-          const issueIcon = issue.iconUrl;
-          return this.getIssuesCountByType({
-            apiUrl,
-            projectKey,
-            component,
-            statusesNames,
-            issueType,
-            issueIcon,
-            label,
-          });
+    const issuesCounter: IssuesCounter[] = project.issueTypes
+      .filter(issueType => issueType.name !== 'Sub-task')
+      .map(
+        (issueType: IssueType): IssuesCounter => ({
+          name: issueType.name,
+          iconUrl: issueType.iconUrl,
+          total: foundIssues.filter(
+            issue => issue.fields?.issuetype.name === issueType.name,
+          ).length,
         }),
       );
-    } else {
-      // Get all issues, count them using reduce and generate a ticketIds array,
-      // used to filter in the activity stream
-      const issuesTypes = project.issueTypes.map(
-        (status: IssueType): IssuesCounter => ({
-          name: status.name,
-          iconUrl: status.iconUrl,
-          total: 0,
-        }),
-      );
-      issuesCounter = foundIssues
-        .reduce((prev, curr) => {
-          const name = curr.fields?.issuetype.name;
-          const idx = issuesTypes.findIndex(i => i.name === name);
-          if (idx !== -1) {
-            issuesTypes[idx].total++;
-          }
-          return prev;
-        }, issuesTypes)
-        .filter(el => el.name !== 'Sub-task');
 
-      ticketIds = foundIssues.map(i => i.key);
-    }
-    tickets = foundIssues.map(index => {
+    const ticketIds: string[] = foundIssues.map(issue => issue.key);
+
+    const tickets = foundIssues.map(index => {
       return {
         key: index.key,
         summary: index?.fields?.summary,
@@ -321,13 +233,8 @@ export class JiraAPI {
         type: project.projectTypeKey,
         url: this.generateProjectUrl(project.self),
       },
-      issues:
-        issuesCounter && issuesCounter.length
-          ? issuesCounter.map(status => ({
-              ...status,
-            }))
-          : [],
-      ticketIds: ticketIds,
+      issues: issuesCounter,
+      ticketIds,
       tickets,
     };
   }
@@ -392,11 +299,7 @@ export class JiraAPI {
           .filter(
             status => status.statusCategory?.name !== DONE_STATUS_CATEGORY,
           )
-          .map(it => it.name)
-          .reduce((acc, val) => {
-            acc.push(val);
-            return acc;
-          }, [] as string[]),
+          .map(it => it.name),
       ),
     ];
   }

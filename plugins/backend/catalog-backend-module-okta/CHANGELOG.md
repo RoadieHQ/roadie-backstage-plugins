@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.10.1
+
+### Patch Changes
+
+- 370905e: Improved logging of the orgEntityProvider
+
 ## 0.10.0
 
 ### Minor Changes

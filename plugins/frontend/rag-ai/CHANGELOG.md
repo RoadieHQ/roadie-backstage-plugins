@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.0.0
+
+### Major Changes
+
+- 01f842c: Add support for react 18, and release version 1.
+
 ## 0.2.7
 
 ### Patch Changes
