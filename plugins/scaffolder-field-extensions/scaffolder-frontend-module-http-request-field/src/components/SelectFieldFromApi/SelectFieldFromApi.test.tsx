@@ -63,7 +63,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldProps<string | string[]>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -89,7 +89,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldProps<string | string[]>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -120,7 +120,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldProps<string | string[]>;
 
     await renderWithEffects(
       wrapInTestApp(
