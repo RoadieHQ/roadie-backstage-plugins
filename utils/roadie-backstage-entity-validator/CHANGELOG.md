@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.11
+
+### Patch Changes
+
+- a351eea: Add new Roadie Kinds to entity validator
+
 ## 2.4.10
 
 ### Patch Changes
