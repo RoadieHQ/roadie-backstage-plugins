@@ -23,59 +23,89 @@ export const yamlOptionsSchema = {
   description: 'YAML stringify options',
   type: 'object',
   properties: {
+    blockQuote: {
+      description:
+        '(default: true) - use block quote styles for scalar values where applicable',
+      type: "boolean | 'folded' | 'literal'",
+    },
+    collectionStyle: {
+      description:
+        "(default: 'any') - enforce 'block' or 'flow' style on maps and sequences. By default, allows each collection to set its own flow: boolean property",
+      type: "'any' | 'block' | 'flow'",
+    },
+    defaultKeyType: {
+      description:
+        '(default: null) - if not null, overrides defaultStringType for implicit key values',
+      type: "'BLOCK_FOLDED' ⎮ 'BLOCK_LITERAL' ⎮ 'QUOTE_DOUBLE' ⎮ 'QUOTE_SINGLE' ⎮ 'PLAIN' ⎮ null",
+    },
+    defaultStringType: {
+      description:
+        "(default: 'PLAIN') - the default type of string literal used to stringify values",
+      type: "'BLOCK_FOLDED' ⎮ 'BLOCK_LITERAL' ⎮ 'QUOTE_DOUBLE' ⎮ 'QUOTE_SINGLE' ⎮ 'PLAIN'",
+    },
+    directives: {
+      description:
+        '(default: null) - include directives in the output. If true, at least the document-start marker --- is always included. If false, no directives or marker is ever included. If null, directives and marker may be included if required',
+      type: 'boolean | null',
+    },
+    doubleQuotedAsJSON: {
+      description:
+        '(default: false) - if true, restrict double-quoted strings to use JSON-compatible syntax',
+      type: 'boolean',
+    },
+    doubleQuotedMinMultiLineLength: {
+      description:
+        '(default: 40) - minimum length for double-quoted strings to use multiple lines to represent the value instead of escaping newlines',
+      type: 'number',
+    },
+    falseStr: {
+      description:
+        "(default: 'false') - string representation for false boolean values",
+      type: 'string',
+    },
+    flowCollectionPadding: {
+      description:
+        '(default: true) - if true, a single space of padding will be added inside the delimiters of non-empty single-line flow collections',
+      type: 'boolean',
+    },
     indent: {
-      description: '(default: 2) - indentation width to use (in spaces)',
+      description:
+        '(default: 2) - the number of spaces to use when indenting code. Should be a strictly positive integer',
       type: 'number',
     },
-    noArrayIndent: {
+    indentSeq: {
       description:
-        '(default: false) - when true, will not add an indentation level to array elements',
-      type: 'boolean',
-    },
-    skipInvalid: {
-      description:
-        '(default: false) - do not throw on invalid types (like function in the safe schema) and skip pairs and single values with such types',
-      type: 'boolean',
-    },
-    flowLevel: {
-      description:
-        '(default: -1) - specifies level of nesting, when to switch from block to flow style for collections. -1 means block style everwhere',
-      type: 'number',
-    },
-    sortKeys: {
-      description:
-        '(default: false) - if true, sort keys when dumping YAML. If a function, use the function to sort the keys',
+        '(default: true) - if true, block sequences should be indented',
       type: 'boolean',
     },
     lineWidth: {
       description:
-        '(default: 80) - set max line width. Set -1 for unlimited width',
+        '(default: 80) -maximum line width (set to 0 to disable folding). This is a soft limit, as only double-quoted semantics allow for inserting a line break in the middle of a word ',
       type: 'number',
     },
-    noRefs: {
+    minContentWidth: {
       description:
-        "(default: false) - if true, don't convert duplicate objects into references",
+        '(default: 20) - minimum line width for highly-indented content (set to 0 to disable)',
+      type: 'number',
+    },
+    nullStr: {
+      description: "(default: 'null') - string representation for null values",
+      type: 'number',
+    },
+    simpleKeys: {
+      description:
+        '(default: false) - if true, require keys to be scalars and always use implicit rather than explicit notation',
       type: 'boolean',
     },
-    noCompatMode: {
+    singleQuote: {
       description:
-        '(default: false) - if true don\'t try to be compatible with older yaml versions. Currently: don\'t quote "yes", "no" and so on, as required for YAML 1.1',
-      type: 'boolean',
+        '(default: null) - Use single quote rather than double quote where applicable. Set to false to disable single quotes completely',
+      type: 'boolean | null',
     },
-    condenseFlow: {
+    trueStr: {
       description:
-        "(default: false) - if true flow sequences will be condensed, omitting the space between a, b. Eg. '[a,b]', and omitting the space between key: value and quoting the key. Eg. '{\"a\":b}' Can be useful when using yaml for pretty URL query params as spaces are %-encoded.",
-      type: 'boolean',
-    },
-    quotingType: {
-      description:
-        "(' or \", default: ') - strings will be quoted using this quoting style. If you specify single quotes, double quotes will still be used for non-printable characters.",
+        "(default: 'true') - string representation for true boolean values",
       type: 'string',
-    },
-    forceQuotes: {
-      description:
-        "(default: false) - if true, all non-key strings will be quoted even if they normally don't need to.",
-      type: 'boolean',
     },
   },
 };
