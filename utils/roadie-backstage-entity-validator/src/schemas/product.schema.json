@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "ProductEntityV1",
+  "description": "Represents a product and its related entities.",
+  "examples": [
+    {
+      "apiVersion": "roadie.io/v1",
+      "kind": "Product",
+      "metadata": {
+        "name": "Roadie",
+        "description": "A developer portal"
+      },
+      "spec": {
+        "type": "internal",
+        "owner": "group:default/dev-ex",
+        "hasPart": ["component:default/authx"],
+        "consumesApi": ["api:default/backstage-catalog"]
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "$ref": "Entity"
+    },
+    {
+      "type": "object",
+      "required": ["spec"],
+      "properties": {
+        "apiVersion": {
+          "enum": ["roadie.io/v1", "backstage.io/v1alpha1"]
+        },
+        "kind": {
+          "enum": ["Product"]
+        },
+        "spec": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of product category",
+              "examples": ["internal"],
+              "minLength": 1
+            },
+            "owner": {
+              "type": "string",
+              "description": "An entity reference to the owner of the entity.",
+              "examples": ["artist-relations-team", "user:john.johnson"],
+              "minLength": 1
+            },
+            "system": {
+              "type": "string",
+              "description": "An entity reference to the system that the product belongs to.",
+              "minLength": 1
+            },
+            "domain": {
+              "type": "string",
+              "description": "An entity reference to the domain that the product belongs to.",
+              "minLength": 1
+            },
+            "hasPart": {
+              "type": "array",
+              "description": "An array of references to other entities that are part of this product.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "partOf": {
+              "type": "array",
+              "description": "An array of references to other entities.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "childOf": {
+              "type": "array",
+              "description": "An array of references to other entities.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "parentOf": {
+              "type": "array",
+              "description": "An array of references to other entities.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "dependencyOf": {
+              "type": "array",
+              "description": "An array of references to other entities.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "dependsOn": {
+              "type": "array",
+              "description": "An array of references to other entities.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "consumesApi": {
+              "type": "array",
+              "description": "An array of references to api entities that are used by this product.",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

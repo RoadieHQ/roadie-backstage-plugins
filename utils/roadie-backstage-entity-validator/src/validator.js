@@ -14,15 +14,26 @@ import {
   systemEntityV1alpha1Validator,
   domainEntityV1alpha1Validator,
   resourceEntityV1alpha1Validator,
+  entityKindSchemaValidator,
 } from '@backstage/catalog-model';
 import { templateEntityV1beta3Validator } from '@backstage/plugin-scaffolder-common';
 import annotationSchema from './schemas/annotations.schema.json';
+import repositorySchema from './schemas/repository.schema.json';
+import productSchema from './schemas/product.schema.json';
 import Ajv from 'ajv';
 import ajvFormats from 'ajv-formats';
 import { relativeSpaceValidation } from './relativeSpaceValidation';
 
 const ajv = new Ajv({ verbose: true });
 ajvFormats(ajv);
+
+function ajvCompiledJsonSchemaValidator(schema) {
+  return {
+    async check(data) {
+      return entityKindSchemaValidator(schema)(data) === data;
+    },
+  };
+}
 
 const VALIDATORS = {
   api: apiEntityV1alpha1Validator,
@@ -34,6 +45,8 @@ const VALIDATORS = {
   system: systemEntityV1alpha1Validator,
   domain: domainEntityV1alpha1Validator,
   resource: resourceEntityV1alpha1Validator,
+  repository: ajvCompiledJsonSchemaValidator(repositorySchema),
+  product: ajvCompiledJsonSchemaValidator(productSchema),
 };
 
 function modifyPlaceholders(obj) {
