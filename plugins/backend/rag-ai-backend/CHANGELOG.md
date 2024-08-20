@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 0.3.4
+
+### Patch Changes
+
+- 35d5410: Added support for chat completion models
+
 ## 0.3.3
 
 ### Patch Changes

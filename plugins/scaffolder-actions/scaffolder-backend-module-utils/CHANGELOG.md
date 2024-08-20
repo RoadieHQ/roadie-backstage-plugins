@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 2.0.0
+
+### Major Changes
+
+- ca608a7: Update yaml options schema for 'yaml' package
+
 ## 1.17.1
 
 ### Patch Changes
