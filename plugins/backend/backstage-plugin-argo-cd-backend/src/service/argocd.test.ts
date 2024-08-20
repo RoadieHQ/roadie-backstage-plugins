@@ -805,6 +805,123 @@ describe('ArgoCD service', () => {
         ],
       ]);
     });
+
+    it('should sync all apps with terminateOperation flag on', async () => {
+      // findArgoApp
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          items: [
+            {
+              metadata: {
+                name: 'testAppName',
+                namespace: 'testNamespace',
+              },
+            },
+          ],
+        }),
+      );
+      // token
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          token: 'testToken',
+        }),
+      );
+      // terminateOperation
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 200 });
+      // sync
+      fetchMock.mockResponseOnce('{}');
+      const resp = await argoService.resyncAppOnAllArgos({
+        appSelector: 'testApp',
+        terminateOperation: true,
+      });
+
+      expect(resp).toStrictEqual([
+        [
+          {
+            message: 'Re-synced testAppName on argoInstance1',
+            status: 'Success',
+          },
+        ],
+      ]);
+    });
+
+    it('should fail to sync all apps when terminateOperation fails', async () => {
+      // findArgoApp
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          items: [
+            {
+              metadata: {
+                name: 'testAppName',
+                namespace: 'testNamespace',
+              },
+            },
+          ],
+        }),
+      );
+      // token
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          token: 'testToken',
+        }),
+      );
+      // terminateOperation
+      fetchMock.mockResponseOnce(JSON.stringify({ status: 400 }));
+      // sync
+      fetchMock.mockResponseOnce(JSON.stringify({}), { status: 400 });
+
+      const resp = await argoService.resyncAppOnAllArgos({
+        appSelector: 'testApp',
+        terminateOperation: true,
+      });
+
+      expect(resp).toStrictEqual([
+        [
+          {
+            message: 'Failed to resync testAppName on argoInstance1',
+            status: 'Failure',
+          },
+        ],
+      ]);
+    });
+
+    it('should not sync all apps when terminateOperation errors', async () => {
+      // findArgoApp
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          items: [
+            {
+              metadata: {
+                name: 'testAppName',
+                namespace: 'testNamespace',
+              },
+            },
+          ],
+        }),
+      );
+      // token
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          token: 'testToken',
+        }),
+      );
+      // terminateOperation
+      fetchMock.mockRejectOnce(new Error('Failed on terminateOperation step'));
+
+      const resp = await argoService.resyncAppOnAllArgos({
+        appSelector: 'testApp',
+        terminateOperation: true,
+      });
+
+      expect(resp).toStrictEqual([
+        [
+          {
+            message: 'Failed on terminateOperation step',
+            status: 'Failure',
+          },
+        ],
+      ]);
+    });
   });
 
   describe('deleteAppandProject', () => {

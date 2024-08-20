@@ -496,6 +496,7 @@ export class ArgoService implements ArgoServiceApi {
 
   async resyncAppOnAllArgos({
     appSelector,
+    terminateOperation,
   }: ResyncProps): Promise<SyncResponse[][]> {
     const argoAppResp: findArgoAppResp[] = await this.findArgoApp({
       selector: appSelector,
@@ -506,6 +507,19 @@ export class ArgoService implements ArgoServiceApi {
           try {
             const token = await this.getArgoToken(argoInstance);
             try {
+              if (terminateOperation) {
+                const terminateResp = argoInstance.appName.map(
+                  (argoApp: any): Promise<any> => {
+                    return this.terminateArgoAppOperation({
+                      baseUrl: argoInstance.url,
+                      argoAppName: argoApp,
+                      argoToken: token,
+                    });
+                  },
+                );
+                await Promise.all(terminateResp);
+              }
+
               const resp = argoInstance.appName.map(
                 (argoApp: any): Promise<SyncResponse> => {
                   return this.syncArgoApp({
@@ -524,7 +538,6 @@ export class ArgoService implements ArgoServiceApi {
           }
         },
       );
-
       return await Promise.all(parallelSyncCalls);
     }
     return [];
