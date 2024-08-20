@@ -19,6 +19,7 @@ import Router from 'express-promise-router';
 import { Logger } from 'winston';
 import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { LlmService } from './LlmService';
 import { RagAiController } from './RagAiController';
 import { isEmpty } from 'lodash';
@@ -36,7 +37,7 @@ export interface RouterOptions {
   logger: Logger;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
-  model: BaseLLM;
+  model: BaseLLM | BaseChatModel;
   config: Config;
 }
 
