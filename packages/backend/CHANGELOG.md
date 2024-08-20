@@ -1,5 +1,14 @@
 # backend
 
+## 2.1.13
+
+### Patch Changes
+
+- Updated dependencies [35d5410]
+- Updated dependencies [ca608a7]
+  - @roadiehq/rag-ai-backend@0.3.4
+  - @roadiehq/scaffolder-backend-module-utils@2.0.0
+
 ## 2.1.12
 
 ### Patch Changes
