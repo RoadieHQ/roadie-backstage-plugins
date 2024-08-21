@@ -27,7 +27,7 @@ import { AuthService } from "@backstage/backend-plugin-api";
 
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
-  auth: AuthService;
+  auth?: AuthService;
 }) {
   const { discovery, auth } = options;
   return createTemplateAction<{
