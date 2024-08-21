@@ -114,7 +114,8 @@ export class RagAiController {
     const entityFilter = req.body.entityFilter;
 
     res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
+      // TODO: investigate why this results in buffered responses in the frontend
+      // 'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache',
     });

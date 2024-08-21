@@ -20,8 +20,3 @@ export type ResponseEmbedding = {
     [key: string]: string;
   };
 };
-
-export type RoadieLlmResponse = {
-  response: string;
-  embeddings: ResponseEmbedding[];
-};

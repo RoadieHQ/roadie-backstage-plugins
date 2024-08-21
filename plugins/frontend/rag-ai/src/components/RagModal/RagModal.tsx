@@ -32,7 +32,6 @@ import Dialog from '@material-ui/core/Dialog';
 import { ragAiApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
 import { ResponseEmbedding } from '../../types';
-import { Thinking } from './Thinking';
 
 export type RagModalProps = {
   title?: string;
@@ -85,17 +84,28 @@ export const ControlledRagModal = ({
   setOpen,
 }: ControlledRagModalProps) => {
   const classes = useStyles();
-  const [thinking, setThinking] = useState(false);
   const [questionResult, setQuestionResult] = useState('');
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
   const ragApi = useApi(ragAiApiRef);
   const askLlm = useCallback(
     async (question: string, source: string) => {
-      setThinking(true);
-      const response = await ragApi.ask(question, source);
-      setQuestionResult(response.response);
-      setEmbeddings(response.embeddings);
-      setThinking(false);
+      setQuestionResult('');
+      setEmbeddings([]);
+
+      for await (const chunk of ragApi.ask(question, source)) {
+        switch (chunk.event) {
+          case 'response': {
+            setQuestionResult(value => value + chunk.data);
+            break;
+          }
+          case 'embeddings': {
+            setEmbeddings(JSON.parse(chunk.data));
+            break;
+          }
+          default:
+            throw new Error(`Unknown event type: ${chunk.event}`);
+        }
+      }
     },
     [ragApi],
   );
@@ -105,7 +115,6 @@ export const ControlledRagModal = ({
       open={open}
       onClose={() => {
         setOpen(false);
-        setThinking(false);
         setQuestionResult('');
         setEmbeddings([]);
       }}
@@ -133,38 +142,30 @@ export const ControlledRagModal = ({
             }}
           />
         </Box>
-        {thinking ? (
-          <Box p={6} display="flex" justifyContent="center" alignItems="center">
-            <Thinking />
-          </Box>
-        ) : (
-          <>
-            <Box py={3}>
-              <Grid container>
-                {questionResult && (
-                  <Grid item xs={12}>
-                    <Typography variant="h6">Response</Typography>
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  <ResultRenderer result={questionResult} />
-                </Grid>
+        <Box py={3}>
+          <Grid container>
+            {questionResult && (
+              <Grid item xs={12}>
+                <Typography variant="h6">Response</Typography>
               </Grid>
-            </Box>
-            <Box py={3}>
-              <Grid container>
-                {embeddings && embeddings.length > 0 && (
-                  <Grid item xs={12}>
-                    <Typography variant="h6">Additional Information</Typography>
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  <EmbeddingsView embeddings={embeddings} />
-                </Grid>
+            )}
+            <Grid item xs={12}>
+              <ResultRenderer result={questionResult} />
+            </Grid>
+          </Grid>
+        </Box>
+        <Box py={3}>
+          <Grid container>
+            {embeddings && embeddings.length > 0 && (
+              <Grid item xs={12}>
+                <Typography variant="h6">Additional Information</Typography>
               </Grid>
-            </Box>
-          </>
-        )}
+            )}
+            <Grid item xs={12}>
+              <EmbeddingsView embeddings={embeddings} />
+            </Grid>
+          </Grid>
+        </Box>
       </DialogContent>
     </Dialog>
   );
