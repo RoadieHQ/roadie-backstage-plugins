@@ -52,7 +52,6 @@ export class LlmService {
     const prompt = `Human:\n${this.prompts.prefixPrompt(
       promptEmbeddings,
     )}\n ---\n${this.prompts.suffixPrompt(query)}\nAssistant:`;
-    const response = await this.model.invoke(prompt);
-    return typeof response === 'string' ? response : response.content;
+    return this.model.stream(prompt);
   }
 }
