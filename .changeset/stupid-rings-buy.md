@@ -1,5 +1,5 @@
 ---
-'@roadiehq/rag-ai-backend': minor
+'@roadiehq/rag-ai-backend': major
 '@roadiehq/rag-ai': minor
 ---
 
