@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from "@backstage/plugin-scaffolder-node";
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import {
   generateBackstageUrl,
   http,
@@ -23,7 +23,7 @@ import {
 } from './helpers';
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { AuthService } from "@backstage/backend-plugin-api";
+import { AuthService } from '@backstage/backend-plugin-api';
 
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;

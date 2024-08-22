@@ -22,8 +22,8 @@ class HttpError extends Error {}
 const DEFAULT_TIMEOUT = 60_000;
 
 export const getPluginId = (path: string): string => {
-  const pluginId = (path.startsWith("/") ? path.substring(1) : path).split(
-    "/",
+  const pluginId = (path.startsWith('/') ? path.substring(1) : path).split(
+    '/',
   )[0];
   return pluginId;
 };

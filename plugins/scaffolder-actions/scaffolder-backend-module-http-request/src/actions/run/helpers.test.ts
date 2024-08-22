@@ -95,10 +95,10 @@ describe('http', () => {
     });
   });
 
-  describe("#getPluginId", () => {
-    describe("with happy path proxy configuration", () => {
-      describe("with valid path", () => {
-        it("returns the plugin Id as passed in", async () => {
+  describe('#getPluginId', () => {
+    describe('with happy path proxy configuration', () => {
+      describe('with valid path', () => {
+        it('returns the plugin Id as passed in', async () => {
           expect(getPluginId(proxyPath)).toEqual(`proxy`);
         });
       });

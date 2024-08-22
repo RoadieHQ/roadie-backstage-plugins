@@ -19,7 +19,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
-import { mockServices, mockCredentials } from "@backstage/backend-test-utils";
+import { mockServices, mockCredentials } from '@backstage/backend-test-utils';
 
 jest.mock('./helpers', () => ({
   ...jest.requireActual('./helpers.ts'),
@@ -33,12 +33,10 @@ describe('http:backstage:request', () => {
   const loggerSpy = jest.spyOn(logger, 'info');
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
   const auth = mockServices.auth();
-  
 
   beforeEach(() => {
     jest.resetAllMocks();
     action = createHttpBackstageAction({ discovery, auth });
-
   });
 
   const mockContext = {
@@ -108,7 +106,7 @@ describe('http:backstage:request', () => {
             headers: {
               'content-type': 'application/json',
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '{"name":"test"}',
           },
@@ -145,7 +143,7 @@ describe('http:backstage:request', () => {
             headers: {
               'content-type': 'application/json',
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '{"name":"test"}',
           },
@@ -176,7 +174,7 @@ describe('http:backstage:request', () => {
             method: 'POST',
             headers: {
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: 'test',
           },
@@ -207,7 +205,7 @@ describe('http:backstage:request', () => {
             method: 'POST',
             headers: {
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '<?xml version="1.0" encoding="UTF-8"><node>asdf</node>',
           },
@@ -246,7 +244,7 @@ describe('http:backstage:request', () => {
             headers: {
               'content-type': 'application/json',
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: '[{"name":"test"}]',
           },
@@ -314,7 +312,7 @@ describe('http:backstage:request', () => {
             headers: {
               'content-type': 'application/json',
               authorization:
-              'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
+                'Bearer mock-service-token:{"sub":"external:test-service","target":"testPlugin"}',
             },
             body: undefined,
           },
