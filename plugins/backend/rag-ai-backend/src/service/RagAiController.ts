@@ -113,6 +113,13 @@ export class RagAiController {
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
 
+    res.writeHead(200, {
+      // TODO: investigate why this results in buffered responses in the frontend
+      // 'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
     const embeddingDocs = this.retrievalPipeline
       ? await this.retrievalPipeline.retrieveAugmentationContext(
           query,
@@ -120,9 +127,20 @@ export class RagAiController {
           entityFilter,
         )
       : [];
-    const llmResponse = await this.llmService.query(embeddingDocs, query);
-    return res
-      .status(200)
-      .send({ response: llmResponse, embeddings: embeddingDocs });
+
+    const embeddingsEvent = `event: embeddings\n`;
+    const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
+    res.write(embeddingsEvent + embeddingsData);
+
+    const stream = await this.llmService.query(embeddingDocs, query);
+
+    for await (const chunk of stream) {
+      const text = typeof chunk === 'string' ? chunk : chunk.content;
+      const event = `event: response\n`;
+      const data = `data: ${text}\n\n`;
+      res.write(event + data);
+    }
+
+    res.end();
   };
 }

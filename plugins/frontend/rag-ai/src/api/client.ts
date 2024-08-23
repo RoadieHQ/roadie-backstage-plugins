@@ -20,7 +20,10 @@ import {
   IdentityApi,
 } from '@backstage/core-plugin-api';
 import { RagAiApi } from './ragApi';
-import { RoadieLlmResponse } from '../types';
+import {
+  EventSourceParserStream,
+  ParsedEvent,
+} from 'eventsource-parser/stream';
 
 export class RoadieRagAiClient implements RagAiApi {
   private readonly discoveryApi: DiscoveryApi;
@@ -54,16 +57,17 @@ export class RoadieRagAiClient implements RagAiApi {
   private async fetch(path: string, options: {} = {}) {
     const baseUrl = await this.getBaseUrl();
     const response = await this.fetchApi.fetch(`${baseUrl}/${path}`, options);
-    if (response.ok) {
-      return await response.json();
-    }
-    throw new Error(`Failed to retrieved data from path ${path}`);
+
+    if (!response.ok)
+      throw new Error(`Failed to retrieved data from path ${path}`);
+
+    return response.body!;
   }
 
-  async ask(question: string, source: string): Promise<RoadieLlmResponse> {
+  async *ask(question: string, source: string): AsyncGenerator<ParsedEvent> {
     const { token } = await this.identityApi.getCredentials();
 
-    const response = await this.fetch(`query/${source}`, {
+    const stream = await this.fetch(`query/${source}`, {
       body: JSON.stringify({
         query: question,
       }),
@@ -73,6 +77,16 @@ export class RoadieRagAiClient implements RagAiApi {
         Authorization: `Bearer ${token}`,
       },
     });
-    return await response;
+
+    const reader = stream
+      .pipeThrough(new TextDecoderStream())
+      .pipeThrough(new EventSourceParserStream())
+      .getReader();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      yield value;
+    }
   }
 }

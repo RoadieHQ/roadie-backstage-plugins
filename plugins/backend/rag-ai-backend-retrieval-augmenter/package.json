@@ -37,7 +37,7 @@
     "@backstage/catalog-model": "^1.4.5",
     "@backstage/config": "^1.2.0",
     "@backstage/plugin-search-common": "^1.2.11",
-    "@langchain/core": "^0.2.18",
+    "@langchain/core": "^0.2.27",
     "@roadiehq/rag-ai-node": "^0.1.4",
     "langchain": "^0.1.21",
     "node-fetch": "^2.6.7",

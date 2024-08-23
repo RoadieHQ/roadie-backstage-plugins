@@ -33,7 +33,7 @@
   "dependencies": {
     "@backstage/backend-common": "^0.21.7",
     "@backstage/config": "^1.2.0",
-    "@langchain/core": "^0.2.18",
+    "@langchain/core": "^0.2.27",
     "@roadiehq/rag-ai-node": "^0.1.4",
     "knex": "^3.0.0",
     "winston": "^3.2.1"
