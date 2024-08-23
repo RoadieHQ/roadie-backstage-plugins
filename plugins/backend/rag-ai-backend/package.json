@@ -32,11 +32,11 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.21.7",
+    "@backstage/backend-plugin-api": "^0.6.17",
     "@backstage/config": "^1.2.0",
     "@langchain/core": "^0.2.27",
     "@roadiehq/rag-ai-node": "^0.1.4",
     "@types/express": "*",
-    "@backstage/backend-plugin-api": "^0.6.17",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "lodash": "^4.17.21",
@@ -46,6 +46,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "^0.26.4",
+    "@types/compression": "^1.7.5",
     "@types/supertest": "^2.0.8",
     "msw": "^1.0.0",
     "supertest": "^6.1.3"
