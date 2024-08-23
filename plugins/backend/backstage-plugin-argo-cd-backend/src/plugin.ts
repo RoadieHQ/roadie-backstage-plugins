@@ -2,7 +2,8 @@ import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
-import { ArgoCDBuilder } from './service/ArgoCdBuilder';
+import { createRouter } from './service/router';
+import { Logger } from 'winston';
 
 export const ArgoCDPlugin = createBackendPlugin({
   pluginId: 'argocd',
@@ -15,12 +16,12 @@ export const ArgoCDPlugin = createBackendPlugin({
       },
       async init({ http, logger, config }) {
         logger.info('ArgoCD plugin is initializing');
-        const builder: ArgoCDBuilder = ArgoCDBuilder.createBuilder({
-          logger,
-          config,
-        });
-        const { router } = await builder.build();
-        http.use(router);
+        http.use(
+          await createRouter({
+            logger: logger as Logger,
+            config,
+          }),
+        );
       },
     });
   },
