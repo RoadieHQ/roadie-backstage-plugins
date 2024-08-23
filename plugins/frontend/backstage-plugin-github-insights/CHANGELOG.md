@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.4.0
+
+### Minor Changes
+
+- 8d9257d: Fix generating paths for relative markdown links from README files
+
 ## 2.3.31
 
 ### Patch Changes
