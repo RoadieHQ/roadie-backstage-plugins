@@ -13,6 +13,7 @@ export const entityDatadogContent = createEntityContentExtension({
   defaultPath: '/datadog',
   defaultTitle: 'Datadog',
   name: 'entity',
+  filter: 'kind:component,resource',
   routeRef: convertLegacyRouteRef(entityContentRouteRef),
   loader: () => import('../Router').then(m => compatWrapper(<m.Router />)),
 });
