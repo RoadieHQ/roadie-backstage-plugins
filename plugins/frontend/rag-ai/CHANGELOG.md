@@ -1,5 +1,25 @@
 # @roadiehq/rag-ai
 
+## 1.0.0
+
+### Major Changes
+
+- 01f842c: Add support for react 18, and release version 1.
+
+## 0.2.7
+
+### Patch Changes
+
+- c0ae442: Added related TechDocs to the result
+
+## 0.2.6
+
+### Patch Changes
+
+- fda2f1a: Refactored `RagModal` into `ControlledRagModal` and `UncontrolledRagModal`
+- fda2f1a: Added property `hotkey` to `RagModal` to make hotkey customizable
+- fda2f1a: Added `SidebarRagModal`
+
 ## 0.2.5
 
 ### Patch Changes

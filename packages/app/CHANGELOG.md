@@ -1,5 +1,19 @@
 # app
 
+## 1.1.6
+
+### Patch Changes
+
+- Updated dependencies [f688119]
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.0.0
+
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies [01f842c]
+  - @roadiehq/rag-ai@1.0.0
+
 ## 1.1.4
 
 ### Patch Changes

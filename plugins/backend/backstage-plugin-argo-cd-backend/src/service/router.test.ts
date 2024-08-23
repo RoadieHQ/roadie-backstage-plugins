@@ -18,6 +18,7 @@ const mockGetArgoInstanceArray = jest.fn();
 const mockUpdateArgoProjectAndApp = jest.fn();
 const mockGetArgoApplicationInfo = jest.fn();
 const mockTerminateArgoAppOperation = jest.fn();
+const mockResyncAppOnAllArgos = jest.fn();
 jest.mock('./argocd.service', () => {
   return {
     ArgoService: jest.fn().mockImplementation(() => {
@@ -33,6 +34,7 @@ jest.mock('./argocd.service', () => {
         updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
         getArgoApplicationInfo: mockGetArgoApplicationInfo,
         terminateArgoAppOperation: mockTerminateArgoAppOperation,
+        resyncAppOnAllArgos: mockResyncAppOnAllArgos,
       };
     }),
   };
@@ -344,6 +346,72 @@ describe('router', () => {
         expect.objectContaining({ error: 'error', message: 'message' }),
       );
       expect(resp.status).toBe(404);
+    });
+  });
+
+  describe('POST /sync', () => {
+    it('succeeds in syncing argo application', async () => {
+      const mockedResponseObj = {
+        status: 'Success',
+        message: 'Re-synced application on argoInstance',
+      };
+      mockResyncAppOnAllArgos.mockResolvedValueOnce(mockedResponseObj);
+
+      const resp = await request(app).post('/sync').send({
+        appSelector: 'backstage-name:application',
+        terminateOperation: true,
+      });
+
+      expect(resp.body).toEqual(
+        expect.objectContaining({
+          status: 'Success',
+          message: 'Re-synced application on argoInstance',
+        }),
+      );
+      expect(resp.status).toBe(200);
+    });
+
+    it('fails to sync because of some error', async () => {
+      const mockedResponseObj = {
+        message: 'Failed to sync your app, backstage-name:application.',
+        status: 500,
+      };
+      mockResyncAppOnAllArgos.mockRejectedValueOnce(new Error());
+
+      const resp = await request(app).post('/sync').send({
+        appSelector: 'backstage-name:application',
+      });
+
+      expect(resp.body).toEqual(mockedResponseObj);
+    });
+
+    it('succeeds in syncing multiple argo applications', async () => {
+      const mockedResponseObj = {
+        status: 'Success',
+        message: 'Re-synced application on argoInstance',
+      };
+      mockResyncAppOnAllArgos.mockResolvedValueOnce([
+        mockedResponseObj,
+        mockedResponseObj,
+      ]);
+
+      const resp = await request(app).post('/sync').send({
+        appSelector: 'backstage-name:application',
+      });
+
+      expect(resp.body).toEqual(
+        expect.objectContaining([
+          {
+            status: 'Success',
+            message: 'Re-synced application on argoInstance',
+          },
+          {
+            status: 'Success',
+            message: 'Re-synced application on argoInstance',
+          },
+        ]),
+      );
+      expect(resp.status).toBe(200);
     });
   });
 

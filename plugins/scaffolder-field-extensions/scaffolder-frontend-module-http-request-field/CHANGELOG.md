@@ -1,5 +1,13 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.7.0
+
+### Minor Changes
+
+- 030b57f: Update SelectFieldFromApi to support multiple select
+
+  If the field has type "array" then use multiple select.
+
 ## 1.6.13
 
 ### Patch Changes

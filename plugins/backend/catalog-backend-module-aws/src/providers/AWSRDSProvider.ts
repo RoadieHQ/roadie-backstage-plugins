@@ -27,6 +27,8 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -55,30 +57,34 @@ export class AWSRDSProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-rds-provider-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-rds-provider-${this.providerId ?? 0}`;
   }
 
-  private async getRdsClient() {
+  private async getRdsClient(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new RDS({ credentials, region: this.region })
+      ? new RDS({ credentials, region })
       : new RDS(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
 
     const groups = await this.getGroups();
-    this.logger.info(`Providing RDS resources from aws: ${this.accountId}`);
+    this.logger.info(`Providing RDS resources from AWS: ${accountId}`);
     const rdsResources: ResourceEntity[] = [];
 
-    const rdsClient = await this.getRdsClient();
+    const rdsClient = await this.getRdsClient(dynamicAccountConfig);
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: rdsClient,
@@ -142,5 +148,10 @@ export class AWSRDSProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing RDS resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
+    );
   }
 }

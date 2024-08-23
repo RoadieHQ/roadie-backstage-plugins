@@ -15,8 +15,10 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { useEntity } from '@backstage/plugin-catalog-react';
-import { MissingAnnotationEmptyState } from '@backstage/core-components';
+import {
+  MissingAnnotationEmptyState,
+  useEntity,
+} from '@backstage/plugin-catalog-react';
 import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
 import React from 'react';
 import { isDatadogGraphAvailable } from '../plugin';

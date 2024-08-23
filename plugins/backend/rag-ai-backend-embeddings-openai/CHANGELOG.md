@@ -1,5 +1,20 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.2.6
+
+### Patch Changes
+
+- 19198fb: Updated @roadiehq/rag-ai-backend-retrieval-augmenter to 0.3.6
+
+## 0.2.5
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.4
+  - @roadiehq/rag-ai-node@0.1.4
+
 ## 0.2.4
 
 ### Patch Changes

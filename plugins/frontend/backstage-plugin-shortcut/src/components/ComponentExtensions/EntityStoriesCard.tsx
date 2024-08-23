@@ -15,7 +15,12 @@
  */
 
 import React from 'react';
-import { ErrorPanel, Table, TableColumn } from '@backstage/core-components';
+import {
+  ErrorPanel,
+  Table,
+  TableColumn,
+  Link,
+} from '@backstage/core-components';
 import SyncIcon from '@material-ui/icons/Sync';
 import { shortcutApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
@@ -29,7 +34,7 @@ const columnsBuilder: (users?: User[]) => TableColumn<Story>[] = (
 ) => [
   {
     title: 'Name',
-    field: 'name',
+    render: story => <Link to={story.app_url}>{story.name}</Link>,
   },
   {
     title: 'Status',
@@ -61,7 +66,9 @@ export const EntityStoriesCard = (props: {
   } = useAsyncRetry(async () => {
     let query = entity.metadata.annotations?.[SHORTCUT_QUERY_ANNOTATION];
     if (props.additionalQuery) {
-      query = `${query} ${props.additionalQuery}`;
+      query = [query, props.additionalQuery]
+        .filter(queryItem => queryItem !== undefined)
+        .join(' ');
     }
     if (query) {
       return (await shortcutApi.fetchStories({ query })).data;

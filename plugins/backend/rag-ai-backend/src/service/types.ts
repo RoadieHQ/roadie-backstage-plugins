@@ -17,6 +17,7 @@ import { TokenManager } from '@backstage/backend-common';
 import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
 import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { Config } from '@backstage/config';
 
 export interface RagAiConfig {
@@ -24,6 +25,6 @@ export interface RagAiConfig {
   tokenManager: TokenManager;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
-  model: BaseLLM;
+  model: BaseLLM | BaseChatModel;
   config: Config;
 }

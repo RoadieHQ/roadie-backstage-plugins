@@ -1,5 +1,19 @@
 # @roadiehq/rag-ai-backend
 
+## 0.3.4
+
+### Patch Changes
+
+- 35d5410: Added support for chat completion models
+
+## 0.3.3
+
+### Patch Changes
+
+- f5bab23: Upgraded the langchain dependencies of the rag-ai plugins
+- Updated dependencies [f5bab23]
+  - @roadiehq/rag-ai-node@0.1.4
+
 ## 0.3.2
 
 ### Patch Changes

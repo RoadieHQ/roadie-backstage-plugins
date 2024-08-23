@@ -28,13 +28,15 @@ import {
 import { setupServer } from 'msw/node';
 import {
   buildsResponseMock,
+  pipelineResponseMock,
   entityMock,
   entityMockWithBranchAnnotation,
+  entityMockWithDefaultBranchOnlyAnnotation,
+  entityMockWithDefaultBranchOnlyAnnotationFalse,
 } from '../../mocks/mocks';
 import { buildKiteApiRef } from '../..';
 import { BuildkiteApi } from '../../api';
 import { rootRouteRef } from '../../plugin';
-import { BUILDKITE_BRANCH_ANNOTATION } from '../../consts';
 import BuildkiteBuildsTable from './BuildKiteBuildsTable';
 
 const postMock = jest.fn();
@@ -91,19 +93,11 @@ describe('BuildKiteBuildsTable', () => {
     expect((await rendered.findAllByText('main')).length).toEqual(5);
   });
 
-  it('should display a table with the data from the requests, limited only to the specified branch when specified', async () => {
-    let branchParam: string | null;
-    const branch =
-      entityMockWithBranchAnnotation.metadata.annotations?.[
-        BUILDKITE_BRANCH_ANNOTATION
-      ];
-
+  it('should display a table of builds limited only to the specified branch when a "buildkite.com/branch" entity annotation is present', async () => {
     worker.use(
       rest.get(
         'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
-        (req, res, ctx) => {
-          branchParam = req.url.searchParams.get('branch');
-
+        (_, res, ctx) => {
           return res(ctx.json(buildsResponseMock));
         },
       ),
@@ -121,10 +115,156 @@ describe('BuildKiteBuildsTable', () => {
       ),
     );
 
-    await waitFor(() => expect(branchParam).toEqual(branch));
+    expect(
+      await rendered.findByText('rbnetwork/example-pipeline (some-branch)'),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('Update catalog-info.yaml'),
+    ).toBeInTheDocument();
+    expect((await rendered.findAllByText('Queued')).length).toEqual(5);
+    expect((await rendered.findAllByText('main')).length).toEqual(5);
+  });
+
+  it('should display a table of builds limited to the default branch when the component is configured to only display default branch builds', async () => {
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline',
+        (_, res, ctx) => {
+          return res(ctx.json(pipelineResponseMock));
+        },
+      ),
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => {
+          return res(ctx.json(buildsResponseMock));
+        },
+      ),
+    );
+    const rendered = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <BuildkiteBuildsTable entity={entityMock} defaultBranchOnly />
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
+      ),
+    );
+
+    expect(
+      await rendered.findByText('rbnetwork/example-pipeline (main)'),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('Update catalog-info.yaml'),
+    ).toBeInTheDocument();
+    expect((await rendered.findAllByText('Queued')).length).toEqual(5);
+    expect((await rendered.findAllByText('main')).length).toEqual(5);
+  });
+
+  it('should display a table of bilds limited only to the default branch when a "buildkite.com/default-branch-only: true" entity annotation is present', async () => {
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline',
+        (_, res, ctx) => {
+          return res(ctx.json(pipelineResponseMock));
+        },
+      ),
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => {
+          return res(ctx.json(buildsResponseMock));
+        },
+      ),
+    );
+    const rendered = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <BuildkiteBuildsTable
+            entity={entityMockWithDefaultBranchOnlyAnnotation}
+          />
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
+      ),
+    );
+
+    expect(
+      await rendered.findByText('rbnetwork/example-pipeline (main)'),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('Update catalog-info.yaml'),
+    ).toBeInTheDocument();
+    expect((await rendered.findAllByText('Queued')).length).toEqual(5);
+    expect((await rendered.findAllByText('main')).length).toEqual(5);
+  });
+
+  it('should display a table of all branch builds when the component is configured to only display default branch builds but a "buildk.com/default-only-branch: false" entity annotation overrides that configuration', async () => {
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => {
+          return res(ctx.json(buildsResponseMock));
+        },
+      ),
+    );
+    const rendered = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <BuildkiteBuildsTable
+            entity={entityMockWithDefaultBranchOnlyAnnotationFalse}
+            defaultBranchOnly
+          />
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
+      ),
+    );
 
     expect(
       await rendered.findByText('rbnetwork/example-pipeline'),
+    ).toBeInTheDocument();
+    expect(
+      await rendered.findByText('Update catalog-info.yaml'),
+    ).toBeInTheDocument();
+    expect((await rendered.findAllByText('Queued')).length).toEqual(5);
+    expect((await rendered.findAllByText('main')).length).toEqual(5);
+  });
+
+  it('should display a table builds limited to the branch specified in the annotation if the component is configured to only show default branch builds but a "buildkite.com/branch" entity annotation overrides that configuration', async () => {
+    worker.use(
+      rest.get(
+        'http://exampleapi.com/buildkite/api/organizations/rbnetwork/pipelines/example-pipeline/builds',
+        (_, res, ctx) => {
+          return res(ctx.json(buildsResponseMock));
+        },
+      ),
+    );
+    const rendered = render(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <BuildkiteBuildsTable
+            entity={entityMockWithBranchAnnotation}
+            defaultBranchOnly
+          />
+        </TestApiProvider>,
+        {
+          mountedRoutes: {
+            '/': rootRouteRef,
+          },
+        },
+      ),
+    );
+
+    expect(
+      await rendered.findByText('rbnetwork/example-pipeline (some-branch)'),
     ).toBeInTheDocument();
     expect(
       await rendered.findByText('Update catalog-info.yaml'),

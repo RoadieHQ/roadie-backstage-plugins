@@ -24,6 +24,8 @@ import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import { CatalogApi } from '@backstage/catalog-client';
 import { LabelValueMapper } from '../utils/tags';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS IAM User service.
@@ -53,31 +55,33 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
   }
 
   getProviderName(): string {
-    return `aws-iam-user-${this.accountId}-${this.providerId ?? 0}`;
+    return `aws-iam-user-${this.providerId ?? 0}`;
   }
 
-  private async getIam() {
+  private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
+    const { region } = this.getParsedConfig(dynamicAccountConfig);
     const credentials = this.useTemporaryCredentials
-      ? this.getCredentials()
+      ? this.getCredentials(dynamicAccountConfig)
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
-      ? new IAM({ credentials, region: this.region })
+      ? new IAM({ credentials, region })
       : new IAM(credentials);
   }
 
-  async run(): Promise<void> {
+  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
     }
+    const startTimestamp = process.hrtime();
 
-    this.logger.info(
-      `Providing iam user resources from aws: ${this.accountId}`,
-    );
+    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    this.logger.info(`Providing IAM user resources from AWS: ${accountId}`);
     const userResources: UserEntity[] = [];
 
-    const defaultAnnotations = this.buildDefaultAnnotations();
+    const defaultAnnotations =
+      this.buildDefaultAnnotations(dynamicAccountConfig);
 
-    const iam = await this.getIam();
+    const iam = await this.getIam(dynamicAccountConfig);
 
     const paginatorConfig = {
       client: iam,
@@ -124,5 +128,12 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
         locationKey: this.getProviderName(),
       })),
     });
+
+    this.logger.info(
+      `Finished providing IAM user resources from AWS: ${accountId}`,
+      {
+        run_duration: duration(startTimestamp),
+      },
+    );
   }
 }

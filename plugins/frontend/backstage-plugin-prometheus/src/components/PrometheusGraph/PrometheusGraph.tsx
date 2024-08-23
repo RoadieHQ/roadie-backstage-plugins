@@ -224,6 +224,7 @@ export const PrometheusGraph = ({
   step = 14,
   dimension,
   graphType = 'line',
+  title,
 }: {
   query: string;
   range?: {
@@ -233,6 +234,7 @@ export const PrometheusGraph = ({
   step?: number;
   dimension?: string;
   graphType?: 'line' | 'area';
+  title?: string;
 }) => {
   const { fetchGraph, value, loading, error } = useMetrics({
     query,
@@ -251,9 +253,9 @@ export const PrometheusGraph = ({
     return <Alert severity="error">{error.message}</Alert>;
   }
 
-  const title = (
+  const titleComponent = (
     <Grid container justifyContent="space-between" alignItems="center">
-      <Grid item>{query}</Grid>
+      <Grid item>{title || query}</Grid>
       {value?.uiUrl && (
         <Grid item>
           <Typography variant="subtitle1">
@@ -270,11 +272,11 @@ export const PrometheusGraph = ({
 
   const { data, keys, metrics } = value ?? { data: [], keys: [], metrics: {} };
   return graphType === 'line' ? (
-    <InfoCard title={title}>
+    <InfoCard title={titleComponent}>
       <LineGraph data={data} keys={keys} metrics={metrics} />
     </InfoCard>
   ) : (
-    <InfoCard title={title}>
+    <InfoCard title={titleComponent}>
       {' '}
       <AreaGraph data={data} keys={keys} metrics={metrics} />
     </InfoCard>

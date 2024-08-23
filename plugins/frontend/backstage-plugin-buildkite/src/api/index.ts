@@ -55,6 +55,19 @@ export class BuildkiteApi {
     return `${proxyUrl}${this.proxyPath}`;
   }
 
+  async getPipeline(orgSlug: string, pipelineSlug: string) {
+    const ApiUrl = await this.getApiUrl();
+    const request = await this.fetchApi.fetch(
+      `${ApiUrl}/organizations/${orgSlug}/pipelines/${pipelineSlug}`,
+    );
+    if (!request.ok) {
+      throw new Error(
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
+      );
+    }
+    return request.json();
+  }
+
   async getBuilds(
     orgSlug: string,
     pipelineSlug: string,

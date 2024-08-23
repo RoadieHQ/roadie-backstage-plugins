@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { EmbeddingDoc } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
 import { createPromptTemplates } from './prompts';
 
 export class LlmService {
   private readonly logger: Logger;
-  private readonly model: BaseLLM;
+  private readonly model: BaseLLM | BaseChatModel;
   private readonly prompts: {
     prefixPrompt: (embedding: string) => string;
     suffixPrompt: (input: string) => string;
@@ -32,7 +33,7 @@ export class LlmService {
     configuredPrompts,
   }: {
     logger: Logger;
-    model: BaseLLM;
+    model: BaseLLM | BaseChatModel;
     configuredPrompts?: {
       prefix?: string;
       suffix?: string;
@@ -51,6 +52,7 @@ export class LlmService {
     const prompt = `Human:\n${this.prompts.prefixPrompt(
       promptEmbeddings,
     )}\n ---\n${this.prompts.suffixPrompt(query)}\nAssistant:`;
-    return await this.model.invoke(prompt);
+    const response = await this.model.invoke(prompt);
+    return typeof response === 'string' ? response : response.content;
   }
 }
