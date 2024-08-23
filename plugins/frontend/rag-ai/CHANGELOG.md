@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.0
+
+### Minor Changes
+
+- b7c834e: **BREAKING** Added support for streaming responses
+
 ## 1.0.0
 
 ### Major Changes
