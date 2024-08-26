@@ -10,12 +10,10 @@ The `@roadiehq/catalog-backend-module-gravatar` package provides a custom Backst
 
 ## How to use
 
-You can edit the `index.ts` of the backstage backend and add the following:
+You can edit the `src/plugins/catalog.ts` of the backstage backend and add the following:
 
 ```
-import {
-  GravatarProcessor,
-} from '@roadiehq/catalog-backend-module-gravatar';
+import { GravatarProcessor } from '@roadiehq/catalog-backend-module-gravatar';
 
 export default async function createPlugin(
   env: PluginEnvironment,
