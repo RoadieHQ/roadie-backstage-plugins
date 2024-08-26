@@ -35,6 +35,7 @@ import {
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
+import { GravatarProcessor } from '@roadiehq/catalog-backend-module-gravatar';
 
 export default async function createPlugin(
   env: PluginEnvironment,
@@ -99,6 +100,7 @@ export default async function createPlugin(
     }
   }
 
+  builder.addProcessor(new GravatarProcessor());
   builder.addProcessor(new ScaffolderEntitiesProcessor());
 
   const { processingEngine, router } = await builder.build();
