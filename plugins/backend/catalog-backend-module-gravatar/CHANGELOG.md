@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.0.2
+
+### Patch Changes
+
+- 858b092: Prod gravatar version to hopefully cause a release.
+
 ## 1.0.1
 
 ### Patch Changes
