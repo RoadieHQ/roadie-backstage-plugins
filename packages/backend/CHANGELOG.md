@@ -1,5 +1,19 @@
 # backend
 
+## 2.1.14
+
+### Patch Changes
+
+- b7c834e: Updated @langchain dependencies
+- Updated dependencies [b7c834e]
+- Updated dependencies [caa7d57]
+- Updated dependencies [b7c834e]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.7
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.7
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.7
+  - @roadiehq/rag-ai-storage-pgvector@0.1.5
+  - @roadiehq/rag-ai-backend@1.0.0
+
 ## 2.1.13
 
 ### Patch Changes

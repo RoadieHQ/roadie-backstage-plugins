@@ -13,10 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export type ResponseEmbedding = {
-  content: string;
-  metadata: {
-    source: string;
-    [key: string]: string;
-  };
-};
+export { GravatarProcessor } from './GravatarProcessor';

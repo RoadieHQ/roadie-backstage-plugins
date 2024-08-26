@@ -92,9 +92,24 @@ export const ControlledRagModal = ({
   const askLlm = useCallback(
     async (question: string, source: string) => {
       setThinking(true);
-      const response = await ragApi.ask(question, source);
-      setQuestionResult(response.response);
-      setEmbeddings(response.embeddings);
+      setQuestionResult('');
+      setEmbeddings([]);
+
+      for await (const chunk of ragApi.ask(question, source)) {
+        switch (chunk.event) {
+          case 'response': {
+            setQuestionResult(value => value + chunk.data);
+            break;
+          }
+          case 'embeddings': {
+            setEmbeddings(JSON.parse(chunk.data));
+            break;
+          }
+          default:
+            throw new Error(`Unknown event type: ${chunk.event}`);
+        }
+      }
+
       setThinking(false);
     },
     [ragApi],
@@ -133,7 +148,7 @@ export const ControlledRagModal = ({
             }}
           />
         </Box>
-        {thinking ? (
+        {thinking && !questionResult ? (
           <Box p={6} display="flex" justifyContent="center" alignItems="center">
             <Thinking />
           </Box>
