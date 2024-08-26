@@ -3,7 +3,7 @@ import {
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './service/router';
-import { Logger } from 'winston';
+import { loggerToWinstonLogger } from '@backstage/backend-common';
 
 export const ArgoCDPlugin = createBackendPlugin({
   pluginId: 'argocd',
@@ -18,7 +18,7 @@ export const ArgoCDPlugin = createBackendPlugin({
         logger.info('ArgoCD plugin is initializing');
         http.use(
           await createRouter({
-            logger: logger as Logger,
+            logger: loggerToWinstonLogger(logger),
             config,
           }),
         );
