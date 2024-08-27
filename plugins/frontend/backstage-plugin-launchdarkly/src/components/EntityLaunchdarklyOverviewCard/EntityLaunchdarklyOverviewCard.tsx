@@ -24,14 +24,13 @@ import {
   LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
 } from '../../constants';
 import difference from 'lodash/difference';
-import { useAsync } from 'react-use';
-import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import {
   ErrorPanel,
   Progress,
   Table,
   TableColumn,
 } from '@backstage/core-components';
+import { useLaunchdarklyFlags } from '../../hooks/useLaunchdarklyFlags';
 
 type EntityLaunchdarklyOverviewCardProps = {};
 
@@ -50,7 +49,6 @@ export const EntityLaunchdarklyOverviewCard = (
   _: EntityLaunchdarklyOverviewCardProps,
 ) => {
   const { entity } = useEntity();
-  const discovery = useApi(discoveryApiRef);
   const unsetAnnotations = difference(
     [
       LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
@@ -60,37 +58,7 @@ export const EntityLaunchdarklyOverviewCard = (
     Object.keys(entity.metadata?.annotations || {}),
   );
 
-  const { value, error, loading } = useAsync(async () => {
-    const projectKey =
-      entity.metadata.annotations?.[LAUNCHDARKLY_PROJECT_KEY_ANNOTATION];
-    const environmentKey =
-      entity.metadata.annotations?.[LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION];
-    const cntxt =
-      entity.metadata.annotations?.[LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION];
-
-    if (projectKey && environmentKey && cntxt) {
-      const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
-      const response = await fetch(
-        `${url}/v2/projects/${projectKey}/environments/${environmentKey}/flags/evaluate`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: cntxt,
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to retrieve launchdarkly environment ${environmentKey}: ${response.statusText}`,
-        );
-      }
-
-      return (await response.json()).items;
-    }
-    return undefined;
-  });
+  const { value, error, loading } = useLaunchdarklyFlags(entity);
 
   if (unsetAnnotations.length > 0) {
     return (
