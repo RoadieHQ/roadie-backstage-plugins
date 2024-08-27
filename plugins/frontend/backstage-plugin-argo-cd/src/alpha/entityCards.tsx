@@ -7,6 +7,7 @@ import React from 'react';
  */
 export const entityArgoCDOverviewCard: any = createEntityCardExtension({
   name: 'overviewCard',
+  filter: 'kind:component',
   loader: () =>
     import('../components/ArgoCDDetailsCard').then(m =>
       compatWrapper(<m.ArgoCDDetailsCard />),
@@ -18,6 +19,7 @@ export const entityArgoCDOverviewCard: any = createEntityCardExtension({
  */
 export const entityArgoCDHistoryCard: any = createEntityCardExtension({
   name: 'historyCard',
+  filter: 'kind:component',
   loader: () =>
     import('../components/ArgoCDHistoryCard').then(m =>
       compatWrapper(<m.ArgoCDHistoryCard />),
