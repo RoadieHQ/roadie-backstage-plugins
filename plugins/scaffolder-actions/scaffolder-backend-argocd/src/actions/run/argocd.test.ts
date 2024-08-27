@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { PassThrough } from 'stream';
-import { getVoidLogger } from '@backstage/backend-common';
-import { TemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+import { createMockActionContext } from '@backstage/plugin-scaffolder-node-test-utils';
 import { ConfigReader } from '@backstage/config';
 import { createArgoCdResources } from './argocd';
 
@@ -56,13 +55,7 @@ describe('argocd:create-resources', () => {
   ]);
 
   let action: TemplateAction<any>;
-  const mockContext = {
-    logger: getVoidLogger(),
-    logStream: new PassThrough(),
-    output: jest.fn(),
-    createTemporaryDirectory: jest.fn(),
-    checkpoint: jest.fn(),
-    getInitiatorCredentials: jest.fn(),
+  const mockContext = createMockActionContext({
     input: {
       argoInstance: 'argoInstance1',
       namespace: 'testNamespace',
@@ -73,10 +66,10 @@ describe('argocd:create-resources', () => {
       labelValue: 'backstage-name=testId',
     },
     workspacePath: 'lol',
-  };
+  });
 
   beforeEach(() => {
-    action = createArgoCdResources(config, getVoidLogger());
+    action = createArgoCdResources(config);
   });
 
   it('should create argocd application', async () => {

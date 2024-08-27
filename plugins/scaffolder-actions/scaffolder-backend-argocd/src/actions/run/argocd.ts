@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ArgoService } from '@roadiehq/backstage-plugin-argo-cd-backend';
-import { Logger } from 'winston';
 
-export const createArgoCdResources = (config: Config, logger: Logger) => {
+export const createArgoCdResources = (config: Config) => {
   return createTemplateAction<{
     argoInstance: string;
     namespace: string;
@@ -87,7 +86,7 @@ export const createArgoCdResources = (config: Config, logger: Logger) => {
         argoUserName,
         argoPassword,
         config,
-        logger,
+        ctx.logger,
       );
 
       await argoSvc.createArgoResources({
@@ -102,7 +101,7 @@ export const createArgoCdResources = (config: Config, logger: Logger) => {
         labelValue: ctx.input.labelValue
           ? ctx.input.labelValue
           : ctx.input.appName,
-        logger,
+        logger: ctx.logger,
       });
     },
   });
