@@ -29,7 +29,6 @@ import {
   notFoundHandler,
   DatabaseManager,
   SingleHostDiscovery,
-  UrlReaders,
   useHotMemoize,
   ServerTokenManager,
 } from '@backstage/backend-common';
@@ -45,6 +44,7 @@ import aws from './plugins/aws';
 import argocd from './plugins/argocd';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
+import { UrlReaders } from '@backstage/backend-defaults/urlReader';
 
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
