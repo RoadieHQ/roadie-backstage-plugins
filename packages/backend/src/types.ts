@@ -20,17 +20,17 @@ import {
   PluginDatabaseManager,
   PluginEndpointDiscovery,
   TokenManager,
-  UrlReader,
 } from '@backstage/backend-common';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { PluginTaskScheduler } from '@backstage/backend-tasks';
+import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 export type PluginEnvironment = {
   logger: Logger;
   cache: PluginCacheManager;
   database: PluginDatabaseManager;
   config: Config;
-  reader: UrlReader;
+  reader: UrlReaderService;
   discovery: PluginEndpointDiscovery;
   tokenManager: TokenManager;
   permissions: ServerPermissionClient;
