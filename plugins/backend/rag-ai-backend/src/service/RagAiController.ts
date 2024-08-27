@@ -135,12 +135,24 @@ export class RagAiController {
     const stream = await this.llmService.query(embeddingDocs, query);
 
     for await (const chunk of stream) {
-      const text = typeof chunk === 'string' ? chunk : chunk.content;
+      const text =
+        typeof chunk === 'string' ? chunk : (chunk.content as string);
       const event = `event: response\n`;
-      const data = `data: ${text}\n\n`;
+      const data = this.parseSseText(text);
       res.write(event + data);
     }
 
     res.end();
+  };
+
+  private parseSseText = (text: string): string => {
+    const lines = text.split('\n');
+
+    const output = lines.reduce((result, line) => {
+      const data = `data: ${line}\n`;
+      return result + data;
+    }, '');
+
+    return `${output}\n`;
   };
 }
