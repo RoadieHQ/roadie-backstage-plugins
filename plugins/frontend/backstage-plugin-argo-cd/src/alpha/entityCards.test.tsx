@@ -1,39 +1,45 @@
 import { screen, waitFor } from '@testing-library/react';
-import { createExtensionTester } from '@backstage/frontend-test-utils';
+import {
+  createExtensionTester,
+  TestApiProvider,
+  renderInTestApp,
+} from '@backstage/frontend-test-utils';
 import {
   entityArgoCDOverviewCard,
   entityArgoCDHistoryCard,
 } from './entityCards';
-import {
-  createApiExtension,
-  createApiFactory,
-} from '@backstage/frontend-plugin-api';
 import { ArgoCDApiClient, argoCDApiRef } from '../api';
 import { getEntityStub } from '../mocks/mocks';
-
-jest.mock('@backstage/plugin-catalog-react', () => ({
-  ...jest.requireActual('@backstage/plugin-catalog-react'),
-  useEntity: () => ({ entity: getEntityStub }),
-}));
+import React from 'react';
+import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 describe('Entity cards extensions', () => {
-  const mockArgocdApi = createApiExtension({
-    factory: createApiFactory({
-      api: argoCDApiRef,
-      deps: {},
-      factory: () => ({} as unknown as ArgoCDApiClient),
-    }),
-  });
+  const mockArgocdApi = {} as unknown as ArgoCDApiClient;
+  const mockedEntity = getEntityStub;
 
   it('should render the overview card on an entity', async () => {
-    createExtensionTester(entityArgoCDOverviewCard).add(mockArgocdApi).render();
+    renderInTestApp(
+      <TestApiProvider apis={[[argoCDApiRef, mockArgocdApi]]}>
+        <EntityProvider entity={mockedEntity}>
+          {createExtensionTester(entityArgoCDOverviewCard).reactElement()}
+        </EntityProvider>
+      </TestApiProvider>,
+    );
+
     await waitFor(() => {
       expect(screen.getByText('ArgoCD overview')).toBeInTheDocument();
     });
   });
 
   it('should render the history card on an entity', async () => {
-    createExtensionTester(entityArgoCDHistoryCard).add(mockArgocdApi).render();
+    renderInTestApp(
+      <TestApiProvider apis={[[argoCDApiRef, mockArgocdApi]]}>
+        <EntityProvider entity={mockedEntity}>
+          {createExtensionTester(entityArgoCDHistoryCard).reactElement()}
+        </EntityProvider>
+      </TestApiProvider>,
+    );
+
     await waitFor(() => {
       expect(screen.getByText('ArgoCD history')).toBeInTheDocument();
     });

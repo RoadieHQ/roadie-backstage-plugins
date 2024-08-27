@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { FieldProps, UiSchema } from '@rjsf/utils';
 import FormControl from '@material-ui/core/FormControl';
 import {
   BackstageUserIdentity,
@@ -39,6 +38,10 @@ import { renderString } from 'nunjucks';
 import fromPairs from 'lodash/fromPairs';
 import isObject from 'lodash/isObject';
 import toPairs from 'lodash/toPairs';
+import {
+  FieldExtensionComponentProps,
+  FieldExtensionUiSchema,
+} from '@backstage/plugin-scaffolder-react';
 
 const renderOption = (input: any, context: object): any => {
   if (!input) {
@@ -62,8 +65,10 @@ const renderOption = (input: any, context: object): any => {
 };
 
 const SelectFieldFromApiComponent = (
-  props: FieldProps<string | string[]> & { token?: string } & {
-    uiSchema: UiSchema<string | string[]>;
+  props: FieldExtensionComponentProps<string | string[]> & {
+    token?: string;
+  } & {
+    uiSchema: FieldExtensionUiSchema<string | string[], unknown>;
     identity?: BackstageUserIdentity;
   },
 ) => {
@@ -200,7 +205,7 @@ const SelectFieldFromApiComponent = (
 const SelectFieldFromApiOauthWrapper = ({
   oauthConfig,
   ...props
-}: FieldProps<string | string[]> & {
+}: FieldExtensionComponentProps<string | string[]> & {
   oauthConfig: OAuthConfig;
   identity?: BackstageUserIdentity;
 }) => {
@@ -255,7 +260,9 @@ const SelectFieldFromApiOauthWrapper = ({
   );
 };
 
-export const SelectFieldFromApi = (props: FieldProps<string | string[]>) => {
+export const SelectFieldFromApi = (
+  props: FieldExtensionComponentProps<string | string[]>,
+) => {
   const identityApi = useApi(identityApiRef);
   const { loading, value: identity } = useAsync(async () => {
     return await identityApi.getBackstageIdentity();
@@ -268,7 +275,7 @@ export const SelectFieldFromApi = (props: FieldProps<string | string[]>) => {
   );
 
   if (loading) {
-    return null;
+    return <></>;
   }
 
   if (result.success && result.data.oauth) {

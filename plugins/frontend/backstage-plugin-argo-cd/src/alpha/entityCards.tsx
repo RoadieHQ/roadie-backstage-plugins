@@ -1,27 +1,30 @@
-import { compatWrapper } from '@backstage/core-compat-api';
-import { createEntityCardExtension } from '@backstage/plugin-catalog-react/alpha';
 import React from 'react';
+import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
 
 /**
  * @alpha
  */
-export const entityArgoCDOverviewCard: any = createEntityCardExtension({
+export const entityArgoCDOverviewCard = EntityCardBlueprint.make({
   name: 'overviewCard',
-  filter: 'kind:component',
-  loader: () =>
-    import('../components/ArgoCDDetailsCard').then(m =>
-      compatWrapper(<m.ArgoCDDetailsCard />),
-    ),
+  params: {
+    filter: 'kind:component',
+    loader: () =>
+      import('../components/ArgoCDDetailsCard').then(m => (
+        <m.ArgoCDDetailsCard />
+      )),
+  },
 });
 
 /**
  * @alpha
  */
-export const entityArgoCDHistoryCard: any = createEntityCardExtension({
+export const entityArgoCDHistoryCard: any = EntityCardBlueprint.make({
   name: 'historyCard',
-  filter: 'kind:component',
-  loader: () =>
-    import('../components/ArgoCDHistoryCard').then(m =>
-      compatWrapper(<m.ArgoCDHistoryCard />),
-    ),
+  params: {
+    filter: 'kind:component',
+    loader: () =>
+      import('../components/ArgoCDHistoryCard').then(m => (
+        <m.ArgoCDHistoryCard />
+      )),
+  },
 });
