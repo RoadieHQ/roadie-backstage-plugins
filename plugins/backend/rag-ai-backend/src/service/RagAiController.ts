@@ -21,6 +21,8 @@ import {
   EmbeddingsSource,
   RetrievalPipeline,
 } from '@roadiehq/rag-ai-node';
+// @ts-ignore
+import type compression from 'compression';
 
 export class RagAiController {
   private static instance: RagAiController;
@@ -114,8 +116,7 @@ export class RagAiController {
     const entityFilter = req.body.entityFilter;
 
     res.writeHead(200, {
-      // TODO: investigate why this results in buffered responses in the frontend
-      // 'Content-Type': 'text/event-stream',
+      'Content-Type': 'text/event-stream',
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache',
     });
@@ -140,6 +141,7 @@ export class RagAiController {
       const event = `event: response\n`;
       const data = this.parseSseText(text);
       res.write(event + data);
+      res.flush?.();
     }
 
     res.end();

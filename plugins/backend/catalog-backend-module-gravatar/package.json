@@ -1,14 +1,13 @@
 {
-  "name": "@roadiehq/catalog-backend-module-okta",
-  "description": "A set of Backstage catalog providers for Okta",
-  "version": "0.10.1",
+  "name": "@roadiehq/catalog-backend-module-gravatar",
+  "description": "A set of Backstage catalog providers for gravatar",
+  "version": "1.0.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
   "exports": {
     ".": "./src/index.ts",
-    "./package.json": "./package.json",
-    "./new-backend": "./src/new-backend.ts"
+    "./package.json": "./package.json"
   },
   "backstage": {
     "role": "backend-plugin-module"
@@ -17,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins",
-    "directory": "plugins/catalog-backend-module-okta"
+    "directory": "plugins/catalog-backend-module-gravatar"
   },
   "keywords": [
     "backstage"
@@ -42,9 +41,6 @@
     "@backstage/plugin-catalog-backend": "^1.25.0",
     "@backstage/plugin-catalog-node": "^1.12.5",
     "@backstage/types": "^1.1.1",
-    "@okta/okta-sdk-nodejs": "^6.6.0",
-    "lodash": "^4.17.21",
-    "p-limit": "^3.0.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {

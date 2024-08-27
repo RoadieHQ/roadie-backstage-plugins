@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 0.3.7
+
+### Patch Changes
+
+- b7c834e: Updated @langchain dependencies
+- Updated dependencies [b7c834e]
+  - @roadiehq/rag-ai-node@0.1.5
+
 ## 0.3.6
 
 ### Patch Changes

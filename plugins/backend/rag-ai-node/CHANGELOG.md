@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.5
+
+### Patch Changes
+
+- b7c834e: Updated @langchain dependencies
+
 ## 0.1.4
 
 ### Patch Changes
