@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-aws-backend",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "backstage-plugin-aws-backend",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-aws-backend"
+    ]
   },
   "repository": {
     "type": "git",

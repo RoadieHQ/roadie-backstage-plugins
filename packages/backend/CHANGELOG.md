@@ -1,5 +1,25 @@
 # backend
 
+## 2.1.15
+
+### Patch Changes
+
+- Updated dependencies [d6ae6e9]
+  - @roadiehq/scaffolder-backend-module-http-request@4.3.3
+  - @roadiehq/scaffolder-backend-module-utils@2.0.1
+  - @roadiehq/scaffolder-backend-module-aws@2.4.25
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.8
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.0.4
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.8
+  - @roadiehq/catalog-backend-module-gravatar@1.0.3
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.8
+  - @roadiehq/catalog-backend-module-okta@0.10.2
+  - @roadiehq/catalog-backend-module-aws@5.0.2
+  - @roadiehq/backstage-plugin-aws-auth@0.4.24
+  - @roadiehq/rag-ai-storage-pgvector@0.1.6
+  - @roadiehq/backstage-plugin-aws-backend@1.1.24
+  - @roadiehq/rag-ai-backend@1.0.2
+
 ## 2.1.14
 
 ### Patch Changes

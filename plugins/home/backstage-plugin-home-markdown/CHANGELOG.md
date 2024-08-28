@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.27
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.5.26
 
 ### Patch Changes

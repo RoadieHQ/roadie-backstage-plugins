@@ -1,8 +1,8 @@
-# launchdarkly
+# LaunchDarkly
 
-Welcome to the launchdarkly plugin!
+Welcome to the LaunchDarkly plugin! It allows you to view feature flags on an entity page in Backstage.
 
-_This plugin was created through the Backstage CLI_
+<img src="card-screenshot.png" alt="drawing" width="200"/>
 
 ## Getting started
 
