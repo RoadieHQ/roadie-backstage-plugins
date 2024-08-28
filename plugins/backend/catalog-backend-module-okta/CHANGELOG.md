@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 0.10.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 0.10.1
 
 ### Patch Changes

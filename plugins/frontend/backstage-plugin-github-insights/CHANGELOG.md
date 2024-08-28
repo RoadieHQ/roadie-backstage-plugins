@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.4.1
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.4.0
 
 ### Minor Changes

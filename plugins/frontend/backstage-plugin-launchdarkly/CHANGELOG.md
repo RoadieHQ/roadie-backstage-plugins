@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.4
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 0.0.3
 
 ### Patch Changes
