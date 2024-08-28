@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.0.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.0.1
 
 ### Patch Changes

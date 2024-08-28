@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-cloudsmith",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -21,8 +21,13 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "backstage-plugin-cloudsmith",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-cloudsmith"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "start": "backstage-cli package start",
     "build": "backstage-cli package build",
