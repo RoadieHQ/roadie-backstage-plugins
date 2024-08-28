@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 1.0.1
+
+### Patch Changes
+
+- 5fd75a3: Fixed missing newlines
+
 ## 1.0.0
 
 ### Major Changes
