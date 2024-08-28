@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.0.3
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 1.0.2
 
 ### Patch Changes

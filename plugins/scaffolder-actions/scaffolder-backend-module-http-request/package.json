@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/scaffolder-backend-module-http-request",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -8,12 +8,24 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "scaffolder-backend-module-http-request",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json",
     "./new-backend": "./src/new-backend.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ],
+      "new-backend": [
+        "src/new-backend.ts"
+      ]
+    }
   },
   "repository": {
     "type": "git",

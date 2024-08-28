@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 0.1.6
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+- Updated dependencies [d6ae6e9]
+  - @roadiehq/rag-ai-node@0.1.6
+
 ## 0.1.5
 
 ### Patch Changes

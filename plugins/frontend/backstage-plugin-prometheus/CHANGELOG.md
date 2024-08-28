@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.11.1
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.11.0
 
 ### Minor Changes

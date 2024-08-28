@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.4.1
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 1.4.0
 
 ### Minor Changes

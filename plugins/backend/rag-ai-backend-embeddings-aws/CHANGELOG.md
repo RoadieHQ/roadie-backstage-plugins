@@ -1,5 +1,15 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 0.2.8
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+- Updated dependencies [d6ae6e9]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@0.3.8
+  - @roadiehq/rag-ai-backend@1.0.2
+  - @roadiehq/rag-ai-node@0.1.6
+
 ## 0.2.7
 
 ### Patch Changes

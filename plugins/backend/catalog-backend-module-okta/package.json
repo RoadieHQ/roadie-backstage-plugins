@@ -1,7 +1,7 @@
 {
   "name": "@roadiehq/catalog-backend-module-okta",
   "description": "A set of Backstage catalog providers for Okta",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,8 +10,20 @@
     "./package.json": "./package.json",
     "./new-backend": "./src/new-backend.ts"
   },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ],
+      "new-backend": [
+        "src/new-backend.ts"
+      ]
+    }
+  },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "catalog-backend-module-okta",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "homepage": "https://roadie.io",
   "repository": {
