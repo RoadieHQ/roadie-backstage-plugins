@@ -10,7 +10,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "backstage-plugin-argo-cd-backend",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-argo-cd-backend"
+    ]
   },
   "repository": {
     "type": "git",

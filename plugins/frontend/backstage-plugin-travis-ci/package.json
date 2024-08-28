@@ -20,8 +20,13 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "backstage-plugin-travis-ci",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-travis-ci"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "start": "backstage-cli package start",

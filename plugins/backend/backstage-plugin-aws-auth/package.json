@@ -20,7 +20,11 @@
     "clean": "backstage-cli clean"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "backstage-plugin-aws-auth",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-aws-auth"
+    ]
   },
   "repository": {
     "type": "git",

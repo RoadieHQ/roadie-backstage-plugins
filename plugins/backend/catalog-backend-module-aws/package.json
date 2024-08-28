@@ -12,7 +12,9 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "catalog-backend-module-aws",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "homepage": "https://roadie.io",
   "repository": {

@@ -11,7 +11,10 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "pluginId": "launchdarkly"
+    "pluginId": "launchdarkly",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-launchdarkly"
+    ]
   },
   "sideEffects": false,
   "scripts": {

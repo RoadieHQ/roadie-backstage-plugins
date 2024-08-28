@@ -10,7 +10,9 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin-module",
+    "pluginId": "rag-ai-storage-pgvector",
+    "pluginPackage": "@roadiehq/rag-ai-backend"
   },
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",

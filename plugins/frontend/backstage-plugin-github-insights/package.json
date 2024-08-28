@@ -20,8 +20,13 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "backstage-plugin-github-insights",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-github-insights"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "tsc": "tsc",

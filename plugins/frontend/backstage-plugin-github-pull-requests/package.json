@@ -21,8 +21,13 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "backstage-plugin-github-pull-requests",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-github-pull-requests"
+    ]
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "start": "backstage-cli package start",
