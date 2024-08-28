@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.4.12
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.4.11
 
 ### Patch Changes

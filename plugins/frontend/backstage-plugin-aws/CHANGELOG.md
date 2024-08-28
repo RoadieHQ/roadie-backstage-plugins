@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws
 
+## 1.1.24
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 1.1.23
 
 ### Patch Changes
