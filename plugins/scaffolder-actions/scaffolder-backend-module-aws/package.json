@@ -8,7 +8,9 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "scaffolder-backend-module-aws",
+    "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "repository": {
     "type": "git",

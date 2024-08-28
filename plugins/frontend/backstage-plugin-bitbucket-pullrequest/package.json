@@ -15,7 +15,11 @@
     "directory": "plugins/frontend/backstage-plugin-bitbucket-pullrequest"
   },
   "backstage": {
-    "role": "frontend-plugin"
+    "role": "frontend-plugin",
+    "pluginId": "backstage-plugin-bitbucket-pullrequest",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-bitbucket-pullrequest"
+    ]
   },
   "sideEffects": false,
   "scripts": {

@@ -38,6 +38,7 @@
     "url": "github:RoadieHQ/roadie-backstage-plugins",
     "directory": "plugins/frontend/backstage-plugin-datadog"
   },
+  "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
     "start": "backstage-cli package start",
