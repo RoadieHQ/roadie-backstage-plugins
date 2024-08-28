@@ -32,7 +32,10 @@ import {
 } from '@backstage/core-components';
 import { useLaunchdarklyFlags } from '../../hooks/useLaunchdarklyFlags';
 
-type EntityLaunchdarklyOverviewCardProps = {};
+export type EntityLaunchdarklyOverviewCardProps = {
+  title?: string;
+  enableSearch?: boolean;
+};
 
 const columns: Array<TableColumn> = [
   {
@@ -46,8 +49,9 @@ const columns: Array<TableColumn> = [
 ];
 
 export const EntityLaunchdarklyOverviewCard = (
-  _: EntityLaunchdarklyOverviewCardProps,
+  props: EntityLaunchdarklyOverviewCardProps,
 ) => {
+  const { title, enableSearch = false } = props;
   const { entity } = useEntity();
   const unsetAnnotations = difference(
     [
@@ -79,12 +83,12 @@ export const EntityLaunchdarklyOverviewCard = (
 
   return (
     <Table
-      title="Feature flags from LaunchDarkly"
+      title={title || 'Feature flags from LaunchDarkly'}
       columns={columns}
       data={value}
       options={{
         paging: true,
-        search: false,
+        search: enableSearch,
         draggable: false,
         padding: 'dense',
       }}
