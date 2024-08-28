@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.5
+
+### Patch Changes
+
+- 09bad0c: Add title and seach options to feature flags card.
+
 ## 0.0.4
 
 ### Patch Changes
