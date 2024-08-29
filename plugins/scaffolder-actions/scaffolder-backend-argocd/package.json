@@ -34,12 +34,12 @@
   },
   "dependencies": {
     "@backstage/config": "^1.2.0",
-    "@backstage/plugin-scaffolder-node": "^0.4.10",
+    "@backstage/plugin-scaffolder-node": "0.4.9",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^3.0.4"
   },
   "devDependencies": {
     "@backstage/cli": "^0.27.0",
-    "@backstage/plugin-scaffolder-node-test-utils": "^0.1.11"
+    "@backstage/plugin-scaffolder-node-test-utils": "0.1.10"
   },
   "files": [
     "dist"
