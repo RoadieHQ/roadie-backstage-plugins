@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-argo-cd-backend",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "backstage-plugin-argo-cd-backend",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-argo-cd-backend"
+    ]
   },
   "repository": {
     "type": "git",

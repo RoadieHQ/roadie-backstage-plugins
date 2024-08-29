@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.3.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.3.1
 
 ### Patch Changes

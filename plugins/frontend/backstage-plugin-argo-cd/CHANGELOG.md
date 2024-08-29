@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.7.0
+
+### Minor Changes
+
+- 971f076: Adds support for Backstage's new frontend system, available via the `/alpha` sub-path export.
+
+## 2.6.7
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 2.6.6
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @roadiehq/rag-ai-backend
 
+## 1.0.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+- Updated dependencies [d6ae6e9]
+  - @roadiehq/rag-ai-node@0.1.6
+
+## 1.0.1
+
+### Patch Changes
+
+- 5fd75a3: Fixed missing newlines
+
 ## 1.0.0
 
 ### Major Changes

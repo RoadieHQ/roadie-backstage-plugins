@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.3.3
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 4.3.2
 
 ### Patch Changes

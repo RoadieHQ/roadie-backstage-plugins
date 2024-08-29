@@ -32,7 +32,6 @@ import {
 import {
   ErrorBoundary,
   InfoCard,
-  MissingAnnotationEmptyState,
   Table,
   TableColumn,
 } from '@backstage/core-components';
@@ -41,7 +40,10 @@ import { isArgocdAvailable } from '../conditions';
 import { ArgoCDAppDetails, ArgoCDAppList } from '../types';
 import { useAppDetails } from './useAppDetails';
 import SyncIcon from '@material-ui/icons/Sync';
-import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  MissingAnnotationEmptyState,
+  useEntity,
+} from '@backstage/plugin-catalog-react';
 import { DetailsDrawerComponent as detailsDrawerComponent } from './DetailsDrawer';
 
 interface Condition {

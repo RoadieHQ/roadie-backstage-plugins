@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.2.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 1.2.1
 
 ### Patch Changes
