@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.1.0
+
+### Minor Changes
+
+- e1c21c8: Adds support for Backstage's new backend system, available via the `/alpha` sub-path export.
+
 ## 3.0.4
 
 ### Patch Changes

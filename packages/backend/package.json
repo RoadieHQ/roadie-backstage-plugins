@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.1.15",
+  "version": "2.1.16",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -42,7 +42,7 @@
     "@langchain/core": "^0.2.27",
     "@langchain/openai": "^0.2.7",
     "@octokit/rest": "^19.0.3",
-    "@roadiehq/backstage-plugin-argo-cd-backend": "3.0.4",
+    "@roadiehq/backstage-plugin-argo-cd-backend": "3.1.0",
     "@roadiehq/backstage-plugin-aws-auth": "^0.4.24",
     "@roadiehq/backstage-plugin-aws-backend": "^1.1.24",
     "@roadiehq/catalog-backend-module-aws": "^5.0.2",
