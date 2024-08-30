@@ -1,7 +1,7 @@
 {
   "name": "@roadiehq/catalog-backend-module-okta",
   "description": "A set of Backstage catalog providers for Okta",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,8 +10,20 @@
     "./package.json": "./package.json",
     "./new-backend": "./src/new-backend.ts"
   },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ],
+      "new-backend": [
+        "src/new-backend.ts"
+      ]
+    }
+  },
   "backstage": {
-    "role": "backend-plugin-module"
+    "role": "backend-plugin-module",
+    "pluginId": "catalog-backend-module-okta",
+    "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "homepage": "https://roadie.io",
   "repository": {
@@ -32,15 +44,15 @@
     "start": "backstage-cli package start"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/catalog-client": "^1.6.4",
-    "@backstage/backend-plugin-api": "^0.6.17",
-    "@backstage/backend-tasks": "^0.5.22",
-    "@backstage/catalog-model": "^1.4.5",
+    "@backstage/backend-common": "^0.24.0",
+    "@backstage/catalog-client": "^1.6.6",
+    "@backstage/backend-plugin-api": "^0.8.0",
+    "@backstage/backend-tasks": "^0.6.0",
+    "@backstage/catalog-model": "^1.6.0",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/plugin-catalog-backend": "^1.21.1",
-    "@backstage/plugin-catalog-node": "^1.11.1",
+    "@backstage/plugin-catalog-backend": "^1.25.0",
+    "@backstage/plugin-catalog-node": "^1.12.5",
     "@backstage/types": "^1.1.1",
     "@okta/okta-sdk-nodejs": "^6.6.0",
     "lodash": "^4.17.21",
@@ -48,7 +60,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.4",
+    "@backstage/cli": "^0.27.0",
     "@types/lodash": "^4.14.151",
     "yaml": "^2.2.2"
   },

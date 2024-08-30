@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-aws-backend",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,7 +10,11 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin"
+    "role": "backend-plugin",
+    "pluginId": "backstage-plugin-aws-backend",
+    "pluginPackages": [
+      "@roadiehq/backstage-plugin-aws-backend"
+    ]
   },
   "repository": {
     "type": "git",
@@ -27,8 +31,8 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.21.7",
-    "@backstage/catalog-client": "^1.6.4",
+    "@backstage/backend-common": "^0.24.0",
+    "@backstage/catalog-client": "^1.6.6",
     "@backstage/config": "^1.2.0",
     "@types/express": "^4.17.6",
     "@aws-sdk/client-cloudcontrol": "^3.76.0",
@@ -39,7 +43,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.26.4",
+    "@backstage/cli": "^0.27.0",
     "@types/supertest": "^2.0.8",
     "supertest": "^4.0.2",
     "aws-sdk-client-mock": "^3.0.1"

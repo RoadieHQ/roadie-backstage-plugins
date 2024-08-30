@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.23
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 1.0.22
 
 ### Patch Changes

@@ -1,5 +1,38 @@
 # @roadiehq/rag-ai-backend
 
+## 1.0.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+- Updated dependencies [d6ae6e9]
+  - @roadiehq/rag-ai-node@0.1.6
+
+## 1.0.1
+
+### Patch Changes
+
+- 5fd75a3: Fixed missing newlines
+
+## 1.0.0
+
+### Major Changes
+
+- b7c834e: **BREAKING** Added support for streaming responses
+
+### Patch Changes
+
+- b7c834e: Updated @langchain dependencies
+- caa7d57: Added Content-Type header to query responses
+- Updated dependencies [b7c834e]
+  - @roadiehq/rag-ai-node@0.1.5
+
+## 0.3.4
+
+### Patch Changes
+
+- 35d5410: Added support for chat completion models
+
 ## 0.3.3
 
 ### Patch Changes

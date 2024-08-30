@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.2
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
 ## 5.0.1
 
 ### Patch Changes

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import React, { useState } from 'react';
-import { FieldProps, UiSchema } from '@rjsf/utils';
 import FormControl from '@material-ui/core/FormControl';
 import {
   BackstageUserIdentity,
@@ -39,6 +38,10 @@ import { renderString } from 'nunjucks';
 import fromPairs from 'lodash/fromPairs';
 import isObject from 'lodash/isObject';
 import toPairs from 'lodash/toPairs';
+import {
+  FieldExtensionComponentProps,
+  FieldExtensionUiSchema,
+} from '@backstage/plugin-scaffolder-react';
 
 const renderOption = (input: any, context: object): any => {
   if (!input) {
@@ -62,8 +65,10 @@ const renderOption = (input: any, context: object): any => {
 };
 
 const SelectFieldFromApiComponent = (
-  props: FieldProps<string> & { token?: string } & {
-    uiSchema: UiSchema<string>;
+  props: FieldExtensionComponentProps<string | string[]> & {
+    token?: string;
+  } & {
+    uiSchema: FieldExtensionUiSchema<string | string[], unknown>;
     identity?: BackstageUserIdentity;
   },
 ) => {
@@ -71,6 +76,7 @@ const SelectFieldFromApiComponent = (
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
   const { formContext, uiSchema, identity } = props;
+  const isArrayField = props?.schema?.type === 'array';
 
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
     uiSchema['ui:options'],
@@ -180,13 +186,14 @@ const SelectFieldFromApiComponent = (
         items={dropDownData}
         placeholder={placeholder}
         label={title}
+        multiple={isArrayField}
         onChange={selected => {
           // The Select component adds the placeholder to the items list and gives it a value of []. This is incompatible
           // with a field of type string, so we need to unset the value in this case.
           props.onChange(
-            Array.isArray(selected) && !selected.length
+            Array.isArray(selected) && !isArrayField
               ? undefined
-              : (selected as string),
+              : (selected as string | string[]),
           );
         }}
       />
@@ -198,7 +205,7 @@ const SelectFieldFromApiComponent = (
 const SelectFieldFromApiOauthWrapper = ({
   oauthConfig,
   ...props
-}: FieldProps<string> & {
+}: FieldExtensionComponentProps<string | string[]> & {
   oauthConfig: OAuthConfig;
   identity?: BackstageUserIdentity;
 }) => {
@@ -253,7 +260,9 @@ const SelectFieldFromApiOauthWrapper = ({
   );
 };
 
-export const SelectFieldFromApi = (props: FieldProps<string>) => {
+export const SelectFieldFromApi = (
+  props: FieldExtensionComponentProps<string | string[]>,
+) => {
   const identityApi = useApi(identityApiRef);
   const { loading, value: identity } = useAsync(async () => {
     return await identityApi.getBackstageIdentity();
@@ -266,7 +275,7 @@ export const SelectFieldFromApi = (props: FieldProps<string>) => {
   );
 
   if (loading) {
-    return null;
+    return <></>;
   }
 
   if (result.success && result.data.oauth) {

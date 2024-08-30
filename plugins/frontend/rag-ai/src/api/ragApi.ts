@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { createApiRef } from '@backstage/core-plugin-api';
-import { RoadieLlmResponse } from '../types';
+import { ParsedEvent } from 'eventsource-parser/stream';
 
 export interface RagAiApi {
-  ask(question: string, source: string): Promise<RoadieLlmResponse>;
+  ask(question: string, source: string): AsyncGenerator<ParsedEvent>;
 }
 
 export const ragAiApiRef = createApiRef<RagAiApi>({

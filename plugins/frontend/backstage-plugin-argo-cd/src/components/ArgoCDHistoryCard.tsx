@@ -15,13 +15,12 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import {
-  ErrorBoundary,
-  InfoCard,
-  MissingAnnotationEmptyState,
-} from '@backstage/core-components';
+import { ErrorBoundary, InfoCard } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  MissingAnnotationEmptyState,
+  useEntity,
+} from '@backstage/plugin-catalog-react';
 import { LinearProgress } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { isArgocdAvailable } from '../conditions';

@@ -21,6 +21,8 @@ import {
   EmbeddingsSource,
   RetrievalPipeline,
 } from '@roadiehq/rag-ai-node';
+// @ts-ignore
+import type compression from 'compression';
 
 export class RagAiController {
   private static instance: RagAiController;
@@ -113,6 +115,12 @@ export class RagAiController {
     const query = req.body.query;
     const entityFilter = req.body.entityFilter;
 
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      Connection: 'keep-alive',
+      'Cache-Control': 'no-cache',
+    });
+
     const embeddingDocs = this.retrievalPipeline
       ? await this.retrievalPipeline.retrieveAugmentationContext(
           query,
@@ -120,9 +128,33 @@ export class RagAiController {
           entityFilter,
         )
       : [];
-    const llmResponse = await this.llmService.query(embeddingDocs, query);
-    return res
-      .status(200)
-      .send({ response: llmResponse, embeddings: embeddingDocs });
+
+    const embeddingsEvent = `event: embeddings\n`;
+    const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
+    res.write(embeddingsEvent + embeddingsData);
+
+    const stream = await this.llmService.query(embeddingDocs, query);
+
+    for await (const chunk of stream) {
+      const text =
+        typeof chunk === 'string' ? chunk : (chunk.content as string);
+      const event = `event: response\n`;
+      const data = this.parseSseText(text);
+      res.write(event + data);
+      res.flush?.();
+    }
+
+    res.end();
+  };
+
+  private parseSseText = (text: string): string => {
+    const lines = text.split('\n');
+
+    const output = lines.reduce((result, line) => {
+      const data = `data: ${line}\n`;
+      return result + data;
+    }, '');
+
+    return `${output}\n`;
   };
 }

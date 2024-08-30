@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.5.10
+
+### Patch Changes
+
+- d6ae6e9: Release all packages to rollout new metadata
+
+## 2.5.9
+
+### Patch Changes
+
+- 1cc8367: Changeset to release jira plugin with the latest patch. (jira plugin no longer makes unnecessary separate api calls to get counts for each issue type)
+
 ## 2.5.8
 
 ### Patch Changes

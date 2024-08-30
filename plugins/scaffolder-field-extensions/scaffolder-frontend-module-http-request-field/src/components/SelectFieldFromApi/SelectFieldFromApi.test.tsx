@@ -29,7 +29,7 @@ import {
   githubAuthApiRef,
   OAuthApi,
 } from '@backstage/core-plugin-api';
-import { FieldProps } from '@rjsf/utils';
+import { FieldExtensionComponentProps } from '@backstage/plugin-scaffolder-react';
 import Mocked = jest.Mocked;
 
 describe('SelectFieldFromApi', () => {
@@ -63,7 +63,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -89,7 +89,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
     const { getByTestId, getByText } = await renderWithEffects(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
@@ -120,7 +120,7 @@ describe('SelectFieldFromApi', () => {
     const props = {
       uiSchema,
       formContext: { formData: {} },
-    } as unknown as FieldProps<string>;
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
 
     await renderWithEffects(
       wrapInTestApp(

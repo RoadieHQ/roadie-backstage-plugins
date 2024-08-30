@@ -353,8 +353,13 @@ export function createRouter({
   });
   router.post('/sync', async (request, response) => {
     const appSelector = request.body.appSelector;
+    const terminateOperation: boolean =
+      Boolean(request.body.terminateOperation) ?? false;
     try {
-      const argoSyncResp = await argoSvc.resyncAppOnAllArgos({ appSelector });
+      const argoSyncResp = await argoSvc.resyncAppOnAllArgos({
+        appSelector,
+        terminateOperation,
+      });
       return response.send(argoSyncResp);
     } catch (e: any) {
       return response.status(e.status || 500).send({
