@@ -36,7 +36,7 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.24.0",
+    "@backstage/backend-common": "^0.24.1",
     "@backstage/config": "^1.2.0",
     "@backstage/plugin-home-react": "^0.1.16",
     "@backstage/core-components": "^0.14.10",
