@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.0.24
+
+### Patch Changes
+
+- 2c6f9d6: Fix cloudsmith logos
+
 ## 1.0.23
 
 ### Patch Changes
