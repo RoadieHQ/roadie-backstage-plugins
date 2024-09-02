@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.6
+
+### Patch Changes
+
+- 1320959: Add LaunchDarkly content tab for project level flag information. Also renamed the cards that show the context information.
+
 ## 0.0.5
 
 ### Patch Changes
