@@ -7,7 +7,7 @@ import {
 } from '../constants';
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 
-export const useLaunchdarklyFlags = (entity: Entity) => {
+export const useLaunchdarklyContextFlags = (entity: Entity) => {
   const discovery = useApi(discoveryApiRef);
 
   return useAsync(async () => {
