@@ -42,7 +42,7 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
       const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
       const response = await fetch(
         `${url}/v2/projects/${projectKey}/environments/${environmentKey}/flags/evaluate${
-          filters.length > 0 ? `?${filterQueryParam}` : ''
+          filters.length > 0 ? `?filter=${filterQueryParam}` : ''
         }`,
         {
           method: 'POST',
