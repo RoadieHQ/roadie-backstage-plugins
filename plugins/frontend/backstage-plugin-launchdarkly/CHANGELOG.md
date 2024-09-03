@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.8
+
+### Patch Changes
+
+- 9dd1fd4: Added filters to the annnotations and api requests when evaluating flags
+
 ## 0.0.6
 
 ### Patch Changes
