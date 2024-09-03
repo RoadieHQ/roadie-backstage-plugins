@@ -51,6 +51,7 @@ metadata:
   annotations:
     launchdarkly.com/project-key: default
     launchdarkly.com/environment-key: test
+    launchdarkly.com/context: '{ "kind": "tenant", "key": "blah", "name": "blah" }'
 spec:
   type: service
   lifecycle: unknown
@@ -70,6 +71,7 @@ metadata:
   annotations:
     launchdarkly.com/project-key: default
     launchdarkly.com/environment-key: test
+    launchdarkly.com/context: '{ "kind": "tenant", "key": "blah", "name": "blah" }'
     launchdarkly.com/filter-tags: '["tagged-flag"]'
     launchdarkly.com/filter-query: 'dark-mode'
 spec:
