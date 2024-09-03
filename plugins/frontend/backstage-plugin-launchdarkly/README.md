@@ -57,3 +57,25 @@ spec:
   lifecycle: unknown
   owner: 'group:engineering'
 ```
+
+### Filtering flags
+
+Add the additional annotations in order to filter flags by tags and/or query
+
+```yaml
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: launchdarklytest
+  annotations:
+    launchdarkly.com/project-key: default
+    launchdarkly.com/environment-key: test
+    launchdarkly.com/context: '{ "kind": "tenant", "key": "blah", "name": "blah" }'
+    launchdarkly.com/filter-tags: '["tagged-flag"]'
+    launchdarkly.com/filter-query: 'dark-mode'
+spec:
+  type: service
+  lifecycle: unknown
+  owner: 'group:engineering'
+```
