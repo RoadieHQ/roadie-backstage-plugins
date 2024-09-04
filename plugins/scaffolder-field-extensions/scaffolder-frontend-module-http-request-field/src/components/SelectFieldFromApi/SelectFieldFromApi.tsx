@@ -24,6 +24,7 @@ import {
 } from '@backstage/core-plugin-api';
 import {
   ErrorPanel,
+  MarkdownContent,
   Progress,
   Select,
   SelectItem,
@@ -32,7 +33,7 @@ import { useAsync } from 'react-use';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import { OAuthConfig, selectFieldFromApiConfigSchema } from '../../types';
-import { Box, Button, FormHelperText, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import { useOauthSignIn } from '../../hooks/useOauthSignIn';
 import { renderString } from 'nunjucks';
 import fromPairs from 'lodash/fromPairs';
@@ -197,7 +198,7 @@ const SelectFieldFromApiComponent = (
           );
         }}
       />
-      <FormHelperText>{description}</FormHelperText>
+      <MarkdownContent content={description} linkTarget="_blank" />
     </FormControl>
   );
 };
