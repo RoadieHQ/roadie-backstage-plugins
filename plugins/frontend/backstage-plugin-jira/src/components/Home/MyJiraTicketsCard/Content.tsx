@@ -4,7 +4,7 @@ import {useUserInfo} from '../../../hooks';
 import Skeleton from '@material-ui/lab/Skeleton';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import DraggableCard from './DraggableCard';
+import DraggableCard from '../../DraggableCard';
 import {makeStyles} from "@material-ui/core/styles";
 import {Ticket, UserSummary} from "../../../types";
 
