@@ -28,6 +28,8 @@ import {
   Project,
   Status,
   Ticket,
+  UserSummary,
+  User,
 } from '../types';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
@@ -327,10 +329,6 @@ export class JiraAPI {
     }
     const user = (await request.json()) as User;
 
-    // If component not defined, execute the same code. Otherwise, use paged request
-    // to fetch also the issue-keys of all the tasks for that component.
-    let issuesCounter: IssuesCounter[] = [];
-    let ticketIds: string[] = [];
     let tickets: Ticket[] = [];
 
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
@@ -348,7 +346,6 @@ export class JiraAPI {
       foundIssues.push(...res.issues);
     }
 
-    ticketIds = foundIssues.map(i => i.key);
     tickets = foundIssues.map(index => {
       return {
         key: index.key,
@@ -372,14 +369,7 @@ export class JiraAPI {
         name: user.displayName,
         avatarUrl: user.avatarUrls['48x48'],
         url: this.getDomainFromApiUrl(user.self),
-      },
-      issues:
-          issuesCounter && issuesCounter.length
-              ? issuesCounter.map(status => ({
-                ...status,
-              }))
-              : [],
-      ticketIds: ticketIds,
+      } as UserSummary,
       tickets,
     }
   }

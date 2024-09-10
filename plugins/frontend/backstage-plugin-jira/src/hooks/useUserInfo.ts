@@ -24,16 +24,11 @@ export const useUserInfo = (userId: string) => {
     fetchUserInfo();
   }, [userId, fetchUserInfo]);
 
-  useEffect(() => {
-    console.log('User:', state.value);
-  }, [state.value]);
-
   return {
-    userLoading: state.loading,
-    userError: state.error,
+    loading: state.loading,
+    error: state.error,
     user: state?.value?.user,
     tickets: state?.value?.tickets,
-    ticketIds: state?.value?.ticketIds,
     fetchUserInfo,
   };
 };
