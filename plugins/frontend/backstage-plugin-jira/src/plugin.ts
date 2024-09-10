@@ -58,8 +58,8 @@ export const EntityJiraOverviewCard = jiraPlugin.provide(
 
 export const HomePageMyJiraTicketsCard = jiraPlugin.provide(
   createCardExtension<{ userId: string }>({
-      name: "My Jira Tickets Card",
-      title: "My Jira Tickets Card",
+      name: "My Jira Tickets",
+      title: "My Jira Tickets",
       components: () => import('./components/Home/MyJiraTicketsCard'),
       description: "My Jira tickets Card",
   }),
