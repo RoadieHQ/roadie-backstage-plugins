@@ -30,7 +30,7 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { useLaunchdarklyFlags } from '../../hooks/useLaunchdarklyFlags';
+import { useLaunchdarklyContextFlags } from '../../hooks/useLaunchdarklyContextFlags';
 
 export type EntityLaunchdarklyOverviewCardProps = {
   title?: string;
@@ -48,7 +48,7 @@ const columns: Array<TableColumn> = [
   },
 ];
 
-export const EntityLaunchdarklyOverviewCard = (
+export const EntityLaunchdarklyContextOverviewCard = (
   props: EntityLaunchdarklyOverviewCardProps,
 ) => {
   const { title, enableSearch = false } = props;
@@ -62,7 +62,7 @@ export const EntityLaunchdarklyOverviewCard = (
     Object.keys(entity.metadata?.annotations || {}),
   );
 
-  const { value, error, loading } = useLaunchdarklyFlags(entity);
+  const { value, error, loading } = useLaunchdarklyContextFlags(entity);
 
   if (unsetAnnotations.length > 0) {
     return (

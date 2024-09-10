@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.8
+
+### Patch Changes
+
+- 9dd1fd4: Added filters to the annnotations and api requests when evaluating flags
+
+## 0.0.6
+
+### Patch Changes
+
+- 1320959: Add LaunchDarkly content tab for project level flag information. Also renamed the cards that show the context information.
+
 ## 0.0.5
 
 ### Patch Changes

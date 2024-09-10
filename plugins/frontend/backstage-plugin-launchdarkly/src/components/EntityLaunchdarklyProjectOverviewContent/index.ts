@@ -13,13 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export const LAUNCHDARKLY_PROJECT_KEY_ANNOTATION =
-  'launchdarkly.com/project-key';
-export const LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION =
-  'launchdarkly.com/environment-key';
-export const LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION =
-  'launchdarkly.com/context';
-export const LAUNCHDARKLY_FILTER_TAGS_ANNOTATION =
-  'launchdarkly.com/filter-tags';
-export const LAUNCHDARKLY_FILTER_QUERY_ANNOTATION =
-  'launchdarkly.com/filter-query';
+export { EntityLaunchdarklyProjectOverviewContent } from './EntityLaunchdarklyProjectOverviewContent';
