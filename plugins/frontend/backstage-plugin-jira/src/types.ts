@@ -154,7 +154,24 @@ export type Ticket = {
   };
 };
 
+export type User = {
+  key: string;
+  name: string;
+  self: string;
+  displayName: string;
+  emailAddress: string;
+  avatarUrls: {
+    [key: string]: string;
+  };
+};
+
 export type IssuesResult = {
   next: number | undefined;
   issues: Ticket[];
+};
+
+export type UserSummary = {
+  name: string;
+  avatarUrl: string;
+  url: string;
 };
