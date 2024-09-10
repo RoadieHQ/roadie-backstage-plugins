@@ -27,6 +27,7 @@ import {
 import { Content, PageWithHeader } from '@backstage/core-components';
 import { HomepageStoriesCard } from '@roadiehq/backstage-plugin-shortcut';
 import { HomePageIFrameCard } from '@roadiehq/backstage-plugin-iframe';
+import { HomePageMyJiraTicketsCard } from '@roadiehq/backstage-plugin-jira';
 
 export const HomePage = () => {
   return (
@@ -75,6 +76,9 @@ export const HomePage = () => {
               title="Super cool title"
               src="https://example.com"
             />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <HomePageMyJiraTicketsCard userId={"roadie"} />
           </Grid>
         </Grid>
       </Content>
