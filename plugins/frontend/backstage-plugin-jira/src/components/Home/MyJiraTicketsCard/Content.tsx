@@ -170,14 +170,12 @@ const JiraTicketCard = ({
           </Grid>
           <Grid item xs={12}>
             <Grid container direction="row" alignItems="center">
-              <Avatar
-                src={
-                  ticket.assignee
-                    ? ticket.assignee.avatarUrl
-                    : 'images\\defaultpic.jpg'
-                }
-                style={{ width: '30px', height: '30px' }}
-              />
+              {ticket.assignee && (
+                <Avatar
+                  src={ticket.assignee.avatarUrl}
+                  style={{ width: '30px', height: '30px' }}
+                />
+              )}
               <Typography
                 variant="body2"
                 style={{ marginLeft: '8px' }}
