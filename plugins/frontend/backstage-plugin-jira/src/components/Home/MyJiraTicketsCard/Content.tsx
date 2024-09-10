@@ -56,40 +56,49 @@ const JiraTicketSkeleton = () => {
 const JiraTicketsSkeletonView = () => {
     return (
         <div>
-            {Array.from({ length: 5 }).map(() => (
-                <JiraTicketSkeleton />
+            {Array.from({length: 5}).map(() => (
+                <JiraTicketSkeleton/>
             ))}
         </div>
     );
 }
 
-const JiraTicketCard = ({ user, ticket, index, moveCard }: JiraTicketCardProps) => {
+const JiraTicketCard = ({user, ticket, index, moveCard}: JiraTicketCardProps) => {
     const classes = useStyles();
 
     return (
         <DraggableCard key={ticket.key} id={ticket.key} index={index} moveCard={moveCard}>
-        <Card style={{marginBottom: '1em', padding: '1em'}}>
-            <Grid container spacing={2}>
-                <Grid container direction="row" alignItems="center" justifyContent="space-between">
-                    <Grid item>
-                        <Typography variant="body2" className={classes.title}>
-                            <img
-                                src={ticket?.issuetype?.iconUrl}
-                                alt={ticket?.issuetype?.name}
-                                title={ticket?.issuetype?.name}
-                                width="15px"
-                                style={{marginRight: '5px', marginBottom: '-3px'}}
-                            />
-                            {ticket.parent ? (
-                                <>
-                                    <Link href={`${user?.url}/browse/${ticket?.parent}`}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          underline="none"
-                                          className={`${classes.secondaryText} ${classes.link}`}>
-                                        {ticket.parent}
-                                    </Link>
-                                    {' / '}
+            <Card style={{marginBottom: '1em', padding: '1em'}}>
+                <Grid container spacing={2}>
+                    <Grid container direction="row" alignItems="center" justifyContent="space-between">
+                        <Grid item>
+                            <Typography variant="body2" className={classes.title}>
+                                <img
+                                    src={ticket?.issuetype?.iconUrl}
+                                    alt={ticket?.issuetype?.name}
+                                    title={ticket?.issuetype?.name}
+                                    width="15px"
+                                    style={{marginRight: '5px', marginBottom: '-3px'}}
+                                />
+                                {ticket.parent ? (
+                                    <>
+                                        <Link href={`${user?.url}/browse/${ticket?.parent}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              underline="none"
+                                              className={`${classes.secondaryText} ${classes.link}`}>
+                                            {ticket.parent}
+                                        </Link>
+                                        {' / '}
+                                        <Link href={`${user?.url}/browse/${ticket?.key}`}
+                                              target="_blank"
+                                              rel="noopener noreferrer"
+                                              underline="none"
+                                              className={`${classes.secondaryText} ${classes.link}`}>
+                                            {ticket.key}
+                                        </Link>
+                                    </>
+                                ) : (
                                     <Link href={`${user?.url}/browse/${ticket?.key}`}
                                           target="_blank"
                                           rel="noopener noreferrer"
@@ -97,17 +106,8 @@ const JiraTicketCard = ({ user, ticket, index, moveCard }: JiraTicketCardProps) 
                                           className={`${classes.secondaryText} ${classes.link}`}>
                                         {ticket.key}
                                     </Link>
-                                </>
-                            ) : (
-                                <Link href={`${user?.url}/browse/${ticket?.key}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      underline="none"
-                                      className={`${classes.secondaryText} ${classes.link}`}>
-                                    {ticket.key}
-                                </Link>
-                            )}
-                            <span style={{display: 'inline-flex', alignItems: 'center', marginLeft: '5px'}}>
+                                )}
+                                <span style={{display: 'inline-flex', alignItems: 'center', marginLeft: '5px'}}>
                                     <img
                                         src={ticket?.priority?.iconUrl}
                                         alt={ticket?.priority?.name}
@@ -119,42 +119,42 @@ const JiraTicketCard = ({ user, ticket, index, moveCard }: JiraTicketCardProps) 
                                         {ticket?.priority?.name}
                                     </Typography>
                                   </span>
-                        </Typography>
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="body2" color="textSecondary">
+                                <img
+                                    src={ticket?.status?.iconUrl}
+                                    alt={ticket?.status?.name}
+                                    title={ticket?.status?.name}
+                                    width="15px"
+                                    style={{marginRight: '5px'}}
+                                />
+                                {ticket?.status?.name}
+                            </Typography>
+                        </Grid>
                     </Grid>
-                    <Grid item>
-                        <Typography variant="body2" color="textSecondary">
-                            <img
-                                src={ticket?.status?.iconUrl}
-                                alt={ticket?.status?.name}
-                                title={ticket?.status?.name}
-                                width="15px"
-                                style={{marginRight: '5px'}}
+                    <Grid item xs={12}>
+                        <Typography variant="body2">{ticket.summary}</Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Grid container direction="row" alignItems="center">
+                            <Avatar
+                                src={ticket.assignee ? ticket.assignee.avatarUrl : 'images\\defaultpic.jpg'}
+                                style={{width: '30px', height: '30px'}}
                             />
-                            {ticket?.status?.name}
-                        </Typography>
+                            <Typography variant="body2" style={{marginLeft: '8px'}} className={classes.secondaryText}>
+                                {ticket.assignee ? ticket.assignee.displayName : 'Unassigned'}
+                            </Typography>
+                        </Grid>
                     </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                    <Typography variant="body2">{ticket.summary}</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                    <Grid container direction="row" alignItems="center">
-                        <Avatar
-                            src={ticket.assignee ? ticket.assignee.avatarUrl : 'images\\defaultpic.jpg'}
-                            style={{width: '30px', height: '30px'}}
-                        />
-                        <Typography variant="body2" style={{marginLeft: '8px'}} className={classes.secondaryText}>
-                            {ticket.assignee ? ticket.assignee.displayName : 'Unassigned'}
-                        </Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </Card>
-    </DraggableCard>
+            </Card>
+        </DraggableCard>
     )
 }
 
-const JiraTicketsListView = ({ user, tickets }: JiraTicketsListViewProps) => {
+const JiraTicketsListView = ({user, tickets}: JiraTicketsListViewProps) => {
     const [cards, setCards] = useState(tickets || []);
 
     useEffect(() => {
@@ -172,7 +172,7 @@ const JiraTicketsListView = ({ user, tickets }: JiraTicketsListViewProps) => {
     return (
         <DndProvider backend={HTML5Backend}>
             {cards.map((ticket, index) => (
-                <JiraTicketCard user={user} ticket={ticket} index={index} moveCard={moveCard} />
+                <JiraTicketCard user={user} ticket={ticket} index={index} moveCard={moveCard}/>
             ))}
         </DndProvider>
     );
@@ -182,7 +182,7 @@ export const Content = (props: MyJiraTicketsCardProps) => {
     const {userId} = props;
     const {user, loading, error, tickets} = useUserInfo(userId);
 
-    if (loading) return <JiraTicketsSkeletonView />
+    if (loading) return <JiraTicketsSkeletonView/>
 
     if (error) {
         return <Typography>Error loading tickets: {error.message}</Typography>;
@@ -196,5 +196,5 @@ export const Content = (props: MyJiraTicketsCardProps) => {
         return <Typography>No tickets to show</Typography>;
     }
 
-    return <JiraTicketsListView user={user} tickets={tickets} />;
+    return <JiraTicketsListView user={user} tickets={tickets}/>;
 };
