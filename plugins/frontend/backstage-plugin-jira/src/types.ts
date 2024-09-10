@@ -132,6 +132,9 @@ export type Ticket = {
       iconUrl: string;
       name: string;
     };
+    parent?: {
+      key: string;
+    }
     summary: string;
     assignee: {
       displayName: string;
