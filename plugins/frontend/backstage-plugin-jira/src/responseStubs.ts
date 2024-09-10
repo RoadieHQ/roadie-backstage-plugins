@@ -168,6 +168,17 @@ export const searchResponseStub = {
   ],
 };
 
+export const userResponseStub = {
+  self: 'https://backstage-test.atlassian.net/self',
+  key: 'user1',
+  name: 'user1',
+  displayName: 'User 1',
+  avatarUrls: {
+    '48x48':
+        'https://backstage-test.atlassian.net/useravatar?avatarId=1',
+  }
+};
+
 export const statusesResponseStub = [
   {
     self: 'https://backstage-test.atlassian.net/rest/api/latest/issuetype/10002',
