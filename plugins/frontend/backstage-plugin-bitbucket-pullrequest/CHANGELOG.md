@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.0.3
+
+### Patch Changes
+
+- 843a49d: Update plugin to only call the bitbucket API when a change to the filters has been made
+
 ## 2.0.2
 
 ### Patch Changes
