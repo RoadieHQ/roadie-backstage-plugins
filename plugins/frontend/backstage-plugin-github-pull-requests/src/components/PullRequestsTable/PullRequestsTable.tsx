@@ -24,6 +24,7 @@ import {
   Box,
   ButtonGroup,
   Button,
+  Tooltip,
 } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -118,6 +119,7 @@ type Props = {
   prData?: PullRequest[];
   onChangePage: (page: number) => void;
   total: number;
+  totalResults: number;
   pageSize: number;
   onChangePageSize: (pageSize: number) => void;
   StateFilterComponent?: FC<{}>;
@@ -133,6 +135,7 @@ export const PullRequestsTableView: FC<Props> = ({
   onChangePage,
   onChangePageSize,
   total,
+  totalResults,
   StateFilterComponent,
   SearchComponent,
 }) => {
@@ -165,10 +168,32 @@ export const PullRequestsTableView: FC<Props> = ({
             alignItems="center"
           >
             <GitHubIcon />
-            <Box mr={1} />
-            <Typography variant="h6" noWrap>
-              {projectName}
-            </Typography>
+            <Box
+              ml={1}
+              display="flex"
+              flexDirection="row"
+              alignItems="baseline"
+            >
+              <Typography variant="h6" noWrap>
+                {projectName}
+              </Typography>
+              {totalResults > 1000 && (
+                <Tooltip
+                  title={`Search results are limited to a maximum of ${(1000).toLocaleString()} 
+                          items. To refine your results, consider adjusting the search query.`}
+                  arrow
+                >
+                  <Typography
+                    variant="body1"
+                    noWrap
+                    color="primary"
+                    style={{ marginLeft: 10, cursor: 'pointer' }}
+                  >
+                    Total {totalResults.toLocaleString()}
+                  </Typography>
+                </Tooltip>
+              )}
+            </Box>
           </Box>
           <Box
             position="absolute"
