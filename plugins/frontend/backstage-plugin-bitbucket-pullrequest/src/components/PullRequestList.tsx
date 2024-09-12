@@ -42,8 +42,8 @@ const PullRequestList: React.FC = () => {
   const bitbucketApi = useApi(bitbucketApiRef);
   const projectName = PROJECT.split('/')[0];
   const repoName = PROJECT.split('/')[1];
-  const fetchpullreq = async () => {
-    await bitbucketApi
+  useEffect(() => {
+    bitbucketApi
       .fetchPullRequestList(
         projectName,
         repoName,
@@ -51,10 +51,7 @@ const PullRequestList: React.FC = () => {
       )
       .then(data => setPullRequests(data))
       .catch(error => error);
-  };
-  useEffect(() => {
-    fetchpullreq();
-  });
+  }, [stateFilter, projectName, repoName, bitbucketApi]);
 
   const GetElapsedTime = ({ start }: { start: string }) =>
     moment(start).fromNow();
