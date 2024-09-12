@@ -79,6 +79,37 @@ const overviewContent = (
 );
 ```
 
+## Integrating with `EntityPage` (New Frontend System)
+
+Follow this section if you are using Backstage's [new frontend system](https://backstage.io/docs/frontend-system/).
+
+1. Import `argocdPlugin` in your `App.tsx` and add it to your app's `features` array:
+
+```typescript
+import argocdPlugin from '@roadiehq/backstage-plugin-argo-cd/alpha';
+
+// ...
+
+export const app = createApp({
+  features: [
+    // ...
+    argocdPlugin,
+    // ...
+  ],
+});
+```
+
+Now, the extensions in the plugin appears on your entity page as cards.
+By default, the cards will only appear on entities that are Components. You can override that behavior by providing a config block to the extension, like so:
+
+```yaml
+app:
+  extensions:
+    - entity-card:argocd/overviewCard:
+        config:
+          filter: kind:component,api,resource,system
+```
+
 ## How to use Argo-cd plugin in Backstage
 
 The Argo CD plugin is a part of the Backstage sample app. To start using it for your component, you have to:
