@@ -47,8 +47,8 @@ export const ArgoCDHistoryTable = ({
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
   const baseUrl = (row: any) =>
-    supportsMultipleArgoInstances && row.frontendUrl
-      ? row.frontendUrl
+    supportsMultipleArgoInstances && row.metadata?.instance?.frontendUrl
+      ? row.metadata?.instance?.frontendUrl
       : configApi.getOptionalString('argocd.baseUrl');
 
   const columns: TableColumn[] = [
