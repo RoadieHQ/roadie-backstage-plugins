@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.29
+
+### Patch Changes
+
+- 2b7f83f: Limit paging to max 1000 results due to GitHub search API restrictions.
+
 ## 2.5.28
 
 ### Patch Changes
