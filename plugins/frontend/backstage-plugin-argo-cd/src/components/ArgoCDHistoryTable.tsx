@@ -29,6 +29,7 @@ export type ArgoCDHistoryTableRow = ArgoCDAppHistoryDetails & {
   app: string;
   appNamespace: string;
   instance?: string;
+  frontendUrl?: string;
   revisionDetails?: ArgoCDAppDeployRevisionDetails;
 };
 
@@ -40,12 +41,15 @@ export const ArgoCDHistoryTable = ({
   retry: () => void;
 }) => {
   const configApi = useApi(configApiRef);
-  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
   const namespaced =
     configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
+  const baseUrl = (row: any) =>
+    supportsMultipleArgoInstances && row.frontendUrl
+      ? row.frontendUrl
+      : configApi.getOptionalString('argocd.baseUrl');
 
   const columns: TableColumn[] = [
     {
