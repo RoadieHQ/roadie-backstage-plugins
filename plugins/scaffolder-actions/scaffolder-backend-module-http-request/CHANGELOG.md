@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 4.3.4
+
+### Patch Changes
+
+- 6a24c55: Fix authentication issue to be compatible to the latest backstage
+
 ## 4.3.3
 
 ### Patch Changes
