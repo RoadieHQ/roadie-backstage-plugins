@@ -35,12 +35,12 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/backend-common": "^0.24.0",
+    "@backstage/backend-common": "^0.24.1",
     "@backstage/config": "^1.2.0",
     "@langchain/core": "^0.2.27",
     "@roadiehq/rag-ai-node": "^0.1.6",
     "@types/express": "*",
-    "@backstage/backend-plugin-api": "^0.8.0",
+    "@backstage/backend-plugin-api": "^0.8.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "lodash": "^4.17.21",
