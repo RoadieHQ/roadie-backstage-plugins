@@ -46,7 +46,7 @@ export const ArgoCDHistoryTable = ({
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
-  const baseUrl = (row: any) =>
+  const linkUrl = (row: any) =>
     supportsMultipleArgoInstances && row.metadata?.instance?.frontendUrl
       ? row.metadata?.instance?.frontendUrl
       : configApi.getOptionalString('argocd.baseUrl');
@@ -56,9 +56,9 @@ export const ArgoCDHistoryTable = ({
       title: 'Name',
       field: 'name',
       render: (row: any): React.ReactNode =>
-        baseUrl ? (
+        linkUrl ? (
           <Link
-            href={`${baseUrl}/applications/${
+            href={`${linkUrl}/applications/${
               namespaced ? `${row.appNamespace}/${row.app}` : row.app
             }`}
             target="_blank"
