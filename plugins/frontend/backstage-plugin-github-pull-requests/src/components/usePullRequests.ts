@@ -52,10 +52,16 @@ export function usePullRequests({
   const auth = useApi(githubAuthApiRef);
   const baseUrl = useBaseUrl();
   const [total, setTotal] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const getElapsedTime = (start: string): string | null => {
     return DateTime.fromISO(start).toRelative();
+  };
+
+  const handleTotal = (total_count: number) => {
+    setTotal(total_count > 1000 ? 1000 : total_count);
+    setTotalResults(total_count);
   };
 
   const {
@@ -88,7 +94,7 @@ export function usePullRequests({
             pullRequestsData: SearchPullRequestsResponseData;
           }) => {
             if (total_count >= 0) {
-              setTotal(total_count);
+              handleTotal(total_count);
             }
             return items.map(
               ({
@@ -135,6 +141,7 @@ export function usePullRequests({
       prData,
       projectName: `${owner}/${repo}`,
       total,
+      totalResults,
       error,
     },
     {
