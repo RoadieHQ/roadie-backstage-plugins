@@ -5,9 +5,13 @@
 
 ## Features
 
+Entity Page components:
 - Show project details and tasks
 - View JIRA issues of the Project
 - Activity Stream
+  
+Home Page components:
+- Show my assigned JIRA tickets
 
 ## How to add Jira project dependency to Backstage app
 
@@ -129,7 +133,27 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
 
    3. Save the environmental variable `JIRA_TOKEN` with `Basic ` prefix, eg: `JIRA_TOKEN='Basic amlyYS1tYWlsQGV4YW1wbGUuY29tOmhUQmdxVmNyY3hSWXBUNVRDelRBOUMwRg=='`
 
-## Links
+## Add Homepage components to your home page
+The `HomePageMyJiraTicketsCard` component displays the Open and In Progress JIRA tickets that are assigned to the provided `userId`.
+![HomePageMyJiraTicketsCard](./docs/my-jira-tickets-card.png).
 
+To add the component to your Homepage:
+```ts
+//packages/app/src/components/home/HomePage.tsx
+
+import { HomePageMyJiraTicketsCard } from '@roadiehq/backstage-plugin-jira';
+
+export const HomePage = () => {
+  return (
+    ...
+      <Grid item md={6} xs={12}>
+        <HomePageMyJiraTicketsCard userId={"roadie"} />
+      </Grid>
+    ...
+  );
+};
+```
+
+## Links
 - [Backstage](https://backstage.io)
 - Get hosted, managed Backstage for your company: https://roadie.io
