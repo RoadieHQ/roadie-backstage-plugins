@@ -21,7 +21,7 @@
   },
   "backstage": {
     "role": "frontend-plugin",
-    "pluginId": "backstage-plugin-argo-cd",
+    "pluginId": "argocd",
     "pluginPackages": [
       "@roadiehq/backstage-plugin-argo-cd",
       "@roadiehq/backstage-plugin-argo-cd-backend"
