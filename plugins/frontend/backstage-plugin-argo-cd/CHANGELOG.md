@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.0
+
+### Minor Changes
+
+- dc9664d: Allow setting up a separate frontend URL on multiple Ar instances for linking purposes.
+
 ## 2.7.0
 
 ### Minor Changes
