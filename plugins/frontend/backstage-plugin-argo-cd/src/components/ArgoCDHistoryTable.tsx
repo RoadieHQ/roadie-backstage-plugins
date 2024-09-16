@@ -29,6 +29,7 @@ export type ArgoCDHistoryTableRow = ArgoCDAppHistoryDetails & {
   app: string;
   appNamespace: string;
   instance?: string;
+  frontendUrl?: string;
   revisionDetails?: ArgoCDAppDeployRevisionDetails;
 };
 
@@ -40,21 +41,24 @@ export const ArgoCDHistoryTable = ({
   retry: () => void;
 }) => {
   const configApi = useApi(configApiRef);
-  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
   const namespaced =
     configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
+  const linkUrl = (row: any) =>
+    supportsMultipleArgoInstances && row.metadata?.instance?.frontendUrl
+      ? row.metadata?.instance?.frontendUrl
+      : configApi.getOptionalString('argocd.baseUrl');
 
   const columns: TableColumn[] = [
     {
       title: 'Name',
       field: 'name',
       render: (row: any): React.ReactNode =>
-        baseUrl ? (
+        linkUrl ? (
           <Link
-            href={`${baseUrl}/applications/${
+            href={`${linkUrl}/applications/${
               namespaced ? `${row.appNamespace}/${row.app}` : row.app
             }`}
             target="_blank"
