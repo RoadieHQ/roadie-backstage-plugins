@@ -78,7 +78,7 @@ export const HomePage = () => {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <HomePageMyJiraTicketsCard userId={"roadie"} />
+            <HomePageMyJiraTicketsCard userId="roadie" />
           </Grid>
         </Grid>
       </Content>
