@@ -1,11 +1,14 @@
 import React from 'react';
-import { createEntityCardExtension } from '@backstage/plugin-catalog-react/alpha';
+import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
 
 /**
  * @alpha
  */
-export const entityDatadogGraphCard = createEntityCardExtension({
+export const entityDatadogGraphCard = EntityCardBlueprint.make({
   name: 'datadog-graph',
-  loader: () =>
-    import('../components/GraphWidget').then(m => <m.GraphWidget />),
+  params: {
+    filter: 'kind:component,resource',
+    loader: () =>
+      import('../components/GraphWidget').then(m => <m.GraphWidget />),
+  },
 });

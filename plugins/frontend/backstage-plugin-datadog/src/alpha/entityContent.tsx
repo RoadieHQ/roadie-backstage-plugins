@@ -2,17 +2,20 @@ import {
   compatWrapper,
   convertLegacyRouteRef,
 } from '@backstage/core-compat-api';
-import { createEntityContentExtension } from '@backstage/plugin-catalog-react/alpha';
+import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha';
 import { entityContentRouteRef } from '../plugin';
 import React from 'react';
 
 /**
  * @alpha
  */
-export const entityDatadogContent = createEntityContentExtension({
-  defaultPath: '/datadog',
-  defaultTitle: 'Datadog',
+export const entityDatadogContent = EntityContentBlueprint.make({
   name: 'entity',
-  routeRef: convertLegacyRouteRef(entityContentRouteRef),
-  loader: () => import('../Router').then(m => compatWrapper(<m.Router />)),
+  params: {
+    defaultPath: '/datadog',
+    defaultTitle: 'Datadog',
+    filter: 'kind:component,resource',
+    routeRef: convertLegacyRouteRef(entityContentRouteRef),
+    loader: () => import('../Router').then(m => compatWrapper(<m.Router />)),
+  },
 });
