@@ -6,7 +6,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import DraggableCard from '../../DraggableCard';
 import { makeStyles } from '@material-ui/core/styles';
-import { Ticket, UserSummary } from '../../../types';
+import { TicketSummary, UserSummary } from '../../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -38,14 +38,14 @@ type MyJiraTicketsCardProps = {
 
 type JiraTicketCardProps = {
   user: UserSummary;
-  ticket: Ticket;
+  ticket: TicketSummary;
   index: number;
   moveCard: any;
 };
 
 type JiraTicketsListViewProps = {
   user: UserSummary;
-  tickets: Ticket[];
+  tickets: TicketSummary[];
 };
 
 const JiraTicketSkeleton = () => {

@@ -30,6 +30,7 @@ import {
   Ticket,
   UserSummary,
   User,
+  TicketSummary,
 } from '../types';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
@@ -109,6 +110,7 @@ export class JiraAPI {
         'status',
         'assignee',
         'priority',
+        'parent',
         'created',
         'updated',
       ],
@@ -329,7 +331,7 @@ export class JiraAPI {
     }
     const user = (await request.json()) as User;
 
-    let tickets: Ticket[] = [];
+    let tickets: TicketSummary[] = [];
 
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
 

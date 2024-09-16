@@ -143,6 +143,7 @@ export type Ticket = {
       };
     };
     status: {
+      iconUrl: string;
       name: string;
     };
     updated: Date;
@@ -152,6 +153,30 @@ export type Ticket = {
       name: string;
     };
   };
+};
+
+export type TicketSummary = {
+  key: string;
+  parent?: string;
+  summary?: string;
+  assignee?: {
+    displayName?: string;
+    avatarUrl?: string;
+  };
+  status?: {
+    iconUrl: string;
+    name: string;
+  };
+  issuetype?: {
+    iconUrl: string;
+    name: string;
+  };
+  priority?: {
+    iconUrl: string;
+    name: string;
+  };
+  created?: Date;
+  updated?: Date;
 };
 
 export type User = {

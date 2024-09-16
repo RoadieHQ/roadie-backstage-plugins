@@ -9,7 +9,7 @@ import {
 } from '@backstage/test-utils';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { userResponseStub, searchResponseStub } from '../../../responseStubs';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
 import { JiraAPI, jiraApiRef } from '../../../api';
@@ -39,7 +39,7 @@ describe('MyJiraTicketsCard', () => {
       ),
       rest.get(
         'http://exampleapi.com/jira/api/rest/api/latest/user',
-        (req, res, ctx) => {
+        (_, res, ctx) => {
           return res(ctx.status(404));
         },
       ),
@@ -48,7 +48,7 @@ describe('MyJiraTicketsCard', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <Content />
+          <Content userId='' />
         </TestApiProvider>,
       ),
       {},
@@ -136,10 +136,10 @@ describe('MyJiraTicketsCard', () => {
       {},
     );
 
-    const linkElement = await screen.findByText((content, element) => {
+    const linkElement = await screen.findByText((_, element) => {
       return (
-        element.tagName.toLowerCase() === 'a' &&
-        element.href === 'https://backstage-test.atlassian.net/browse/10003'
+        element?.tagName.toLowerCase() === 'a' &&
+        (element as HTMLAnchorElement).href === 'https://backstage-test.atlassian.net/browse/10003'
       );
     });
 
