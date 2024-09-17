@@ -21,7 +21,7 @@ export {
   jiraPlugin as plugin,
   jiraPlugin,
   EntityJiraOverviewCard,
-  HomePageMyJiraTicketsCard
+  HomePageMyJiraTicketsCard,
 } from './plugin';
 export {
   /**

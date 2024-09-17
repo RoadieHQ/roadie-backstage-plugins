@@ -317,16 +317,16 @@ export class JiraAPI {
     const { apiUrl } = await this.getUrls();
 
     const request = await this.fetchApi.fetch(
-        `${apiUrl}user?username=${userId}`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      `${apiUrl}user?username=${userId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
         },
+      },
     );
     if (!request.ok) {
       throw new Error(
-          `failed to fetch data, status ${request.status}: ${request.statusText}`,
+        `failed to fetch data, status ${request.status}: ${request.statusText}`,
       );
     }
     const user = (await request.json()) as User;
@@ -340,9 +340,9 @@ export class JiraAPI {
 
     while (startAt !== undefined) {
       const res: IssuesResult = await this.pagedIssuesRequest(
-          apiUrl,
-          jql,
-          startAt,
+        apiUrl,
+        jql,
+        startAt,
       );
       startAt = res.next;
       foundIssues.push(...res.issues);
@@ -365,7 +365,6 @@ export class JiraAPI {
       };
     });
 
-
     return {
       user: {
         name: user.displayName,
@@ -373,6 +372,6 @@ export class JiraAPI {
         url: this.getDomainFromApiUrl(user.self),
       } as UserSummary,
       tickets,
-    }
+    };
   }
 }

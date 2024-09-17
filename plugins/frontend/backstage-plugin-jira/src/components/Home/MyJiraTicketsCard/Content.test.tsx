@@ -48,7 +48,7 @@ describe('MyJiraTicketsCard', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <Content userId='' />
+          <Content userId="" />
         </TestApiProvider>,
       ),
       {},
@@ -139,7 +139,8 @@ describe('MyJiraTicketsCard', () => {
     const linkElement = await screen.findByText((_, element) => {
       return (
         element?.tagName.toLowerCase() === 'a' &&
-        (element as HTMLAnchorElement).href === 'https://backstage-test.atlassian.net/browse/10003'
+        (element as HTMLAnchorElement).href ===
+          'https://backstage-test.atlassian.net/browse/10003'
       );
     });
 

@@ -15,10 +15,7 @@ export const useUserInfo = (userId: string) => {
     }
   }, [api, userId]);
 
-  const [state, fetchUserInfo] = useAsyncFn(
-    () => getUserDetails(),
-    [userId],
-  );
+  const [state, fetchUserInfo] = useAsyncFn(() => getUserDetails(), [userId]);
 
   useEffect(() => {
     fetchUserInfo();

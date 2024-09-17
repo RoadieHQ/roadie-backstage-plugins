@@ -174,9 +174,8 @@ export const userResponseStub = {
   name: 'user1',
   displayName: 'User 1',
   avatarUrls: {
-    '48x48':
-        'https://backstage-test.atlassian.net/useravatar?avatarId=1',
-  }
+    '48x48': 'https://backstage-test.atlassian.net/useravatar?avatarId=1',
+  },
 };
 
 export const statusesResponseStub = [

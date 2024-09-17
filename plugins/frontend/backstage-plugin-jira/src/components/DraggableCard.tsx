@@ -15,7 +15,12 @@ interface DragItem {
   index: number;
 }
 
-const DraggableCard = ({ id, index, moveCard, children }: DraggableCardProps) => {
+const DraggableCard = ({
+  id,
+  index,
+  moveCard,
+  children,
+}: DraggableCardProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const [, drop] = useDrop<DragItem>({
@@ -32,7 +37,8 @@ const DraggableCard = ({ id, index, moveCard, children }: DraggableCardProps) =>
       }
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 

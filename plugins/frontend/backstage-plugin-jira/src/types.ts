@@ -134,7 +134,7 @@ export type Ticket = {
     };
     parent?: {
       key: string;
-    }
+    };
     summary: string;
     assignee: {
       displayName: string;
