@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.3.2
+
+### Patch Changes
+
+- cb3300c: Filter entity cards and content to components and resources by default, add documentation on how to override if needed
+
 ## 2.3.1
 
 ### Patch Changes
