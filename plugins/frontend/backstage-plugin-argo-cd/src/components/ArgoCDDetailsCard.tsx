@@ -173,15 +173,18 @@ const OverviewComponent = ({
 
   const getBaseUrl = (row: any): string | undefined => {
     if (supportsMultipleArgoInstances && !baseUrl) {
-      return configApi
+      const instanceConfig = configApi
         .getConfigArray('argocd.appLocatorMethods')
         .find(value => value.getOptionalString('type') === 'config')
         ?.getOptionalConfigArray('instances')
         ?.find(
           value =>
             value.getOptionalString('name') === row.metadata?.instance?.name,
-        )
-        ?.getOptionalString('url');
+        );
+      return (
+        instanceConfig?.getOptionalString('frontendUrl') ??
+        instanceConfig?.getOptionalString('url')
+      );
     }
     return baseUrl;
   };
