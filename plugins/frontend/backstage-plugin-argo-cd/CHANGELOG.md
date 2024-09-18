@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.1
+
+### Patch Changes
+
+- 1e83f94: Modify linking functionality construction to construct the link
+
 ## 2.8.0
 
 ### Minor Changes
