@@ -52,6 +52,27 @@ return await createRouter({
 });
 ```
 
+### New backend system
+
+## From your Backstage root directory
+
+```
+cd packages/backend
+yarn add @roadiehq/scaffolder-backend-argocd
+```
+
+```typescript
+// packages/backend/src/index.ts
+import { createBackend } from '@backstage/backend-defaults';
+import { createBackendModule } from '@backstage/backend-plugin-api';
+
+const backend = createBackend();
+backend.add(import('@backstage/plugin-scaffolder-backend/alpha'));
+backend.add(
+  import('@roadiehq/scaffolder-backend-argocd/new-backend'),
+);
+backend.start();
+
 ### From your software template yaml file
 
 Under `spec.steps[]` insert the below. In the below we reference items in the `spec.paramters[]` section.
