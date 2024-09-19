@@ -21,10 +21,10 @@ import {
   EntityFilterShape,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
-import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export class VectorEmbeddingsRetriever implements AugmentationRetriever {
-  private readonly logger: Logger;
+  private readonly logger: LoggerService;
   private readonly vectorStore: RoadieVectorStore;
 
   constructor({
@@ -32,7 +32,7 @@ export class VectorEmbeddingsRetriever implements AugmentationRetriever {
     logger,
   }: {
     vectorStore: RoadieVectorStore;
-    logger: Logger;
+    logger: LoggerService;
   }) {
     this.vectorStore = vectorStore;
     this.logger = logger;

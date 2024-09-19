@@ -21,23 +21,25 @@ import {
   VectorEmbeddingsRetriever,
 } from './retrieval';
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
-import { Logger } from 'winston';
 import {
   PluginEndpointDiscovery,
   TokenManager,
 } from '@backstage/backend-common';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 
 export type DefaultRetrievalPipelineOptions = {
   vectorStore: RoadieVectorStore;
-  logger: Logger;
+  logger: LoggerService;
   discovery: PluginEndpointDiscovery;
-  tokenManager: TokenManager;
+  auth?: AuthService;
+  tokenManager?: TokenManager;
 };
 
 export const createDefaultRetrievalPipeline = ({
   vectorStore,
   discovery,
   logger,
+  auth,
   tokenManager,
 }: DefaultRetrievalPipelineOptions) => {
   const vectorEmbeddingsRetriever = new VectorEmbeddingsRetriever({
@@ -48,6 +50,7 @@ export const createDefaultRetrievalPipeline = ({
   const searchRetriever = new SearchRetriever({
     discovery,
     logger,
+    auth,
     tokenManager,
   });
 
