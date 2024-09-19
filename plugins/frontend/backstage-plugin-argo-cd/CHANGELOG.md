@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.2
+
+### Patch Changes
+
+- 741af3b: fix: Align pluginId metadata to id set during plugin initialization
+
 ## 2.8.1
 
 ### Patch Changes

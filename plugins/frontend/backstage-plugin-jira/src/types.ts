@@ -132,6 +132,9 @@ export type Ticket = {
       iconUrl: string;
       name: string;
     };
+    parent?: {
+      key: string;
+    };
     summary: string;
     assignee: {
       displayName: string;
@@ -140,6 +143,7 @@ export type Ticket = {
       };
     };
     status: {
+      iconUrl: string;
       name: string;
     };
     updated: Date;
@@ -151,7 +155,48 @@ export type Ticket = {
   };
 };
 
+export type TicketSummary = {
+  key: string;
+  parent?: string;
+  summary?: string;
+  assignee?: {
+    displayName?: string;
+    avatarUrl?: string;
+  };
+  status?: {
+    iconUrl: string;
+    name: string;
+  };
+  issuetype?: {
+    iconUrl: string;
+    name: string;
+  };
+  priority?: {
+    iconUrl: string;
+    name: string;
+  };
+  created?: Date;
+  updated?: Date;
+};
+
+export type User = {
+  key: string;
+  name: string;
+  self: string;
+  displayName: string;
+  emailAddress: string;
+  avatarUrls: {
+    [key: string]: string;
+  };
+};
+
 export type IssuesResult = {
   next: number | undefined;
   issues: Ticket[];
+};
+
+export type UserSummary = {
+  name: string;
+  avatarUrl: string;
+  url: string;
 };
