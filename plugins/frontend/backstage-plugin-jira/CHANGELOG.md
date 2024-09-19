@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.6.0
+
+### Minor Changes
+
+- fd1df1a: Add My Jira Tickets Home Page component
+
 ## 2.5.10
 
 ### Patch Changes
