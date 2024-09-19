@@ -58,7 +58,7 @@ export const ArgoCDHistoryTable = ({
       render: (row: any): React.ReactNode =>
         linkUrl ? (
           <Link
-            href={`${linkUrl}/applications/${
+            href={`${linkUrl(row)}/applications/${
               namespaced ? `${row.appNamespace}/${row.app}` : row.app
             }`}
             target="_blank"
