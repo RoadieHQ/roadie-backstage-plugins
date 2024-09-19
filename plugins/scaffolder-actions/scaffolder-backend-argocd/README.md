@@ -78,6 +78,7 @@ backend.start();
 Under `spec.steps[]` insert the below. In the below we reference items in the `spec.paramters[]` section.
 
 ```
+
     - id: create-argocd-resources
       name: Create ArgoCD Resources
       action: argocd:create-resources
@@ -88,8 +89,10 @@ Under `spec.steps[]` insert the below. In the below we reference items in the `s
         repoUrl: ${{ steps.publish.output.remoteUrl }}
         labelValue: ${{ parameters.name }}
         path: "kubernetes/nonprod"
+
 ```
 
 > If needed there is an optional parameter of `projectName` as well.
 
 ## Contributed By American Airlines
+```

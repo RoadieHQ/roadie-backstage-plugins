@@ -37,7 +37,10 @@ export const scaffolderBackendArgoCD = createBackendModule({
       },
       async init({ scaffolder, config, logger }) {
         scaffolder.addActions(
-          backendModuleUtils.createArgoCdResources(config, loggerToWinstonLogger(logger)),
+          backendModuleUtils.createArgoCdResources(
+            config,
+            loggerToWinstonLogger(logger),
+          ),
         );
       },
     });
