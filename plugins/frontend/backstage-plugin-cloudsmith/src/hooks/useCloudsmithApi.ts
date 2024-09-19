@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useApi } from '@backstage/core-plugin-api';
+import { cloudsmithApiRef } from '../api';
 
-export { cloudsmithApiRef } from './CloudsmithApi';
-export type {
-  CloudsmithApi,
-  RepoStats,
-  PackagesList,
-  Package,
-} from './CloudsmithApi';
-export { CloudsmithClient } from './CloudsmithClient';
+export const useCloudsmithApi = () => useApi(cloudsmithApiRef);

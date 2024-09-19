@@ -14,11 +14,4 @@
  * limitations under the License.
  */
 
-export { cloudsmithApiRef } from './CloudsmithApi';
-export type {
-  CloudsmithApi,
-  RepoStats,
-  PackagesList,
-  Package,
-} from './CloudsmithApi';
-export { CloudsmithClient } from './CloudsmithClient';
+export { Content } from './Content';
