@@ -22,6 +22,7 @@ import {
   createComponentExtension,
   fetchApiRef,
 } from '@backstage/core-plugin-api';
+import { createCardExtension } from '@backstage/plugin-home-react';
 
 import { jiraApiRef, JiraAPI } from './api';
 
@@ -52,5 +53,14 @@ export const EntityJiraOverviewCard = jiraPlugin.provide(
     component: {
       lazy: () => import('./components/JiraCard').then(m => m.JiraCard),
     },
+  }),
+);
+
+export const HomePageMyJiraTicketsCard = jiraPlugin.provide(
+  createCardExtension<{ userId: string }>({
+    name: 'My Jira Tickets',
+    title: 'My Jira Tickets',
+    components: () => import('./components/Home/MyJiraTicketsCard'),
+    description: 'My Jira tickets Card',
   }),
 );
