@@ -23,12 +23,9 @@ import {
   AnyApiFactory,
   configApiRef,
   createApiFactory,
-  discoveryApiRef,
   fetchApiRef,
-  identityApiRef,
 } from '@backstage/core-plugin-api';
 import fetch from 'cross-fetch';
-import { ragAiApiRef, RoadieRagAiClient } from '@roadiehq/rag-ai';
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -42,23 +39,6 @@ export const apis: AnyApiFactory[] = [
     deps: {},
     factory: () => {
       return { fetch: fetch.bind(window) };
-    },
-  }),
-  createApiFactory({
-    api: ragAiApiRef,
-    deps: {
-      configApi: configApiRef,
-      discoveryApi: discoveryApiRef,
-      fetchApi: fetchApiRef,
-      identityApi: identityApiRef,
-    },
-    factory: ({ discoveryApi, fetchApi, configApi, identityApi }) => {
-      return new RoadieRagAiClient({
-        discoveryApi,
-        fetchApi,
-        configApi,
-        identityApi,
-      });
     },
   }),
 ];
