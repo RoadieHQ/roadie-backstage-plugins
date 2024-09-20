@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Logger } from 'winston';
 import { PluginDatabaseManager } from '@backstage/backend-common';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { applyDatabaseMigrations } from '../database/migrations';
 
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
@@ -22,7 +22,7 @@ import { RoadiePgVectorStore } from './RoadiePgVectorStore';
 import { Config } from '@backstage/config';
 
 export interface PgVectorStoreInitConfig {
-  logger: Logger;
+  logger: LoggerService;
   database: PluginDatabaseManager;
   config: Config;
 }
