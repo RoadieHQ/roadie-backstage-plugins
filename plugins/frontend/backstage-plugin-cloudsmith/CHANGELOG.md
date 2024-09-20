@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.1.0
+
+### Minor Changes
+
+- 494c5c3: - Added Package List component to allow viewing of packages for configured repo
+  - Update Audit logs component
+  - Updated Security scan component
+  - Updated Stats component
+  - Updated example image
+
 ## 1.0.24
 
 ### Patch Changes
