@@ -97,3 +97,84 @@ export const quotaResponse = {
     },
   },
 };
+
+export const packageVulnerabilityDetailsResponse = [
+  {
+    created_at: '2024-09-18T19:47:19.337Z',
+    has_vulnerabilities: true,
+    identifier: 'sample-identifier',
+    max_severity: 'High',
+    num_vulnerabilities: 3,
+    package: {
+      identifier: 'package-identifier',
+      name: 'sample-package',
+      url: 'https://api.cloudsmith.io/v1/packages/owner/repo/package-identifier/',
+      version: '1.0.0',
+    },
+    scan_id: 123,
+  },
+];
+
+export const packageScanResultsResponse = {
+  created_at: '2024-09-18T21:36:00.207Z',
+  has_vulnerabilities: true,
+  identifier: 'sample-identifier',
+  max_severity: 'High',
+  num_vulnerabilities: 2,
+  package: {
+    identifier: 'package-identifier',
+    name: 'sample-package',
+    url: 'https://api.cloudsmith.io/v1/packages/owner/repo/package-identifier/',
+    version: '1.0.0',
+  },
+  scan: {
+    results: [
+      {
+        affected_version: {
+          major: 1,
+          minor: 0,
+          operator: '>=',
+          patch: 0,
+          raw_version: '1.0.0',
+          version: '1.0.0',
+        },
+        description: 'Sample vulnerability description',
+        fixed_version: {
+          major: 1,
+          minor: 1,
+          operator: '>=',
+          patch: 0,
+          raw_version: '1.1.0',
+          version: '1.1.0',
+        },
+        package_name: 'sample-package',
+        references: ['https://example.com/cve-2024-12345'],
+        severity: 'High',
+        severity_source: 'NVD',
+        title: 'Sample Vulnerability',
+        vulnerability_id: 'CVE-2024-12345',
+      },
+    ],
+    target: 'sample-target',
+    type: 'sample-type',
+  },
+  scan_id: 123,
+};
+
+export const packagesListResponse = {
+  packages: Array.from({ length: 20 }, (_, index) => ({
+    name: `package${index + 1}`,
+    version: '1.0.0',
+    format: 'npm',
+    created_at: '2023-05-01T12:00:00Z',
+    url: `https://cloudsmith.io/~owner/repos/repo/packages/package${
+      index + 1
+    }/`,
+  })),
+  pagination: {
+    count: 100,
+    page: 1,
+    pageSize: 20,
+    pageTotal: 5,
+  },
+};

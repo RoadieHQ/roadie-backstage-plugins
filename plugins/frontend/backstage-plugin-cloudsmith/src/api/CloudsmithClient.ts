@@ -20,6 +20,9 @@ import {
   RepoAuditLog,
   RepoVulnerability,
   CloudsmithUsage,
+  PackagesList,
+  Package,
+  PackageScanResults,
 } from './CloudsmithApi';
 import { FetchApi, DiscoveryApi } from '@backstage/core-plugin-api';
 
@@ -37,18 +40,30 @@ export class CloudsmithClient implements CloudsmithApi {
     this.discoveryApi = options.discoveryApi;
   }
 
-  // create async getApiUrl function to cache the Cloudsmith API URL and create a cache object
   private async getApiUrl(): Promise<string> {
-    const cache = new Map();
-    if (cache.has('apiUrl')) {
-      return cache.get('apiUrl');
-    }
-    const apiUrl = `${await this.discoveryApi.getBaseUrl('proxy')}/cloudsmith`;
-    cache.set('apiUrl', apiUrl);
-    return apiUrl;
+    return `${await this.discoveryApi.getBaseUrl('proxy')}/cloudsmith`;
   }
 
-  // get data from Cloudsmith metrics endpoint (https://help.cloudsmith.io/reference/metrics_packages_list)
+  private async fetchCloudsmithApi<T>(
+    path: string,
+  ): Promise<{ data: T; headers: Headers }> {
+    const apiUrl = await this.getApiUrl();
+    const response = await this.fetchApi.fetch(`${apiUrl}${path}`, {
+      headers: {
+        Accept: 'application/json',
+        // Add the X-Api-Key header if needed
+        // 'X-Api-Key': 'YOUR_API_KEY_HERE',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Cloudsmith API request failed: ${response.statusText}`);
+    }
+
+    const data = (await response.json()) as T;
+    return { data, headers: response.headers };
+  }
+
   async getRepoMetrics({
     owner,
     repo,
@@ -56,54 +71,48 @@ export class CloudsmithClient implements CloudsmithApi {
     owner: string;
     repo: string;
   }): Promise<RepoStats> {
-    const cloudsmithApiUrl = await this.getApiUrl();
-    const response = await this.fetchApi.fetch(
-      `${cloudsmithApiUrl}/metrics/packages/${owner}/${repo}/`,
+    const { data } = await this.fetchCloudsmithApi<RepoStats>(
+      `/metrics/packages/${owner}/${repo}/`,
     );
-    if (!response.ok) {
-      throw new Error(
-        `Failed to retrieve package metrics: ${response.statusText}`,
-      );
-    }
-    return await response.json();
+    return data;
   }
 
-  // get data from Cloudsmith quota endpoint (https://help.cloudsmith.io/reference/quota_read)
   async getQuota({ owner }: { owner: string }): Promise<CloudsmithUsage> {
-    const cloudsmithApiUrl = await this.getApiUrl();
-    const response = await this.fetchApi.fetch(
-      `${cloudsmithApiUrl}/quota/${owner}/`,
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to retrieve quota: ${response.statusText}`);
-    } else {
-      if (response.status === 402) {
+    try {
+      const { data } = await this.fetchCloudsmithApi<CloudsmithUsage>(
+        `/quota/${owner}/`,
+      );
+      return data;
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('402')) {
         window.location.href = 'https://cloudsmith.com/product/pricing/';
-        throw new Error(`Payment Required: ${response.statusText}`);
+        throw new Error('Payment Required');
       }
+      throw error;
     }
-    return await response.json();
   }
 
-  // get repository audit logs from Cloudsmith audit repo logs endpoint (https://help.cloudsmith.io/reference/audit_log_repo_list) and support pagniation
   async getRepoAuditLogs({
     owner,
     repo,
+    query,
   }: {
     owner: string;
     repo: string;
+    query?: string;
   }): Promise<RepoAuditLog> {
-    const cloudsmithApiUrl = await this.getApiUrl();
-    const response = await this.fetchApi.fetch(
-      `${cloudsmithApiUrl}/audit-log/${owner}/${repo}/?page_size=100`,
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to retrieve audit logs: ${response.statusText}`);
+    const params = new URLSearchParams({
+      page_size: '100',
+    });
+    if (query) {
+      params.append('query', query);
     }
-    return await response.json();
+    const { data } = await this.fetchCloudsmithApi<RepoAuditLog>(
+      `/audit-log/${owner}/${repo}/?${params}`,
+    );
+    return data;
   }
 
-  // get repository security scan logs for a Cloudsmith repository endpoint (https://help.cloudsmith.io/reference/vulnerabilities_repo_list)
   async getRepoSecurityScanLogs({
     owner,
     repo,
@@ -111,15 +120,96 @@ export class CloudsmithClient implements CloudsmithApi {
     owner: string;
     repo: string;
   }): Promise<RepoVulnerability> {
-    const cloudsmithApiUrl = await this.getApiUrl();
-    const response = await this.fetchApi.fetch(
-      `${cloudsmithApiUrl}/vulnerabilities/${owner}/${repo}/?page_size=100`,
+    const { data } = await this.fetchCloudsmithApi<RepoVulnerability>(
+      `/vulnerabilities/${owner}/${repo}/?page_size=100`,
     );
-    if (!response.ok) {
-      throw new Error(
-        `Failed to retrieve security scan logs: ${response.statusText}`,
-      );
+    return data;
+  }
+
+  async getPackageVulnerabilities({
+    owner,
+    repo,
+    packageIdentifier,
+  }: {
+    owner: string;
+    repo: string;
+    packageIdentifier: string;
+  }): Promise<RepoVulnerability> {
+    const { data } = await this.fetchCloudsmithApi<RepoVulnerability>(
+      `/vulnerabilities/${owner}/${repo}/${packageIdentifier}/`,
+    );
+    return data;
+  }
+
+  async getPackageVulnerabilityDetails({
+    owner,
+    repo,
+    identifier,
+  }: {
+    owner: string;
+    repo: string;
+    identifier: string;
+  }): Promise<RepoVulnerability> {
+    const { data } = await this.fetchCloudsmithApi<RepoVulnerability>(
+      `/vulnerabilities/${owner}/${repo}/${identifier}/`,
+    );
+    return data;
+  }
+
+  async getPackageScanResults({
+    owner,
+    repo,
+    packageIdentifier,
+    scanResultIdentifier,
+  }: {
+    owner: string;
+    repo: string;
+    packageIdentifier: string;
+    scanResultIdentifier: string;
+  }): Promise<PackageScanResults> {
+    const { data } = await this.fetchCloudsmithApi<PackageScanResults>(
+      `/vulnerabilities/${owner}/${repo}/${packageIdentifier}/${scanResultIdentifier}/`,
+    );
+    return data;
+  }
+
+  async getPackagesList({
+    owner,
+    repo,
+    query,
+    sort,
+  }: {
+    owner: string;
+    repo: string;
+    query?: string;
+    sort?: string;
+    page: number;
+    pageSize: number;
+  }): Promise<PackagesList> {
+    const params = new URLSearchParams({
+      page: '1',
+      page_size: '500',
+    });
+    if (query) {
+      params.append('query', query);
     }
-    return await response.json();
+    if (sort) {
+      params.append('sort', sort);
+    }
+
+    const { data } = await this.fetchCloudsmithApi<Package[]>(
+      `/packages/${owner}/${repo}/?${params}`,
+    );
+
+    return {
+      packages: data,
+      pagination: {
+        count: data.length,
+      },
+    };
+  }
+
+  async getAuditLog(owner: string, repository: string): Promise<RepoAuditLog> {
+    return this.getRepoAuditLogs({ owner, repo: repository });
   }
 }

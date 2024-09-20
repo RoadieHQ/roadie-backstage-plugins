@@ -15,3 +15,4 @@
  */
 
 export * from './plugin';
+export { cloudsmithPlugin } from './plugin';

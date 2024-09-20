@@ -23,14 +23,16 @@ import {
   useApi,
 } from '@backstage/core-plugin-api';
 import useAsync from 'react-use/lib/useAsync';
-import { ErrorPanel, Progress, Gauge } from '@backstage/core-components';
-import { Card, CardHeader, Avatar, Grid, Typography } from '@material-ui/core';
+import { ErrorPanel, Progress } from '@backstage/core-components';
+import { Card, CardHeader, Avatar, Grid } from '@material-ui/core';
+import { UsageGauge } from './UsageGauge';
 
 /**
- * A component to render the stats about a cloudsmith usage quota.
+ * A component to render audit log data for a Cloudsmith repository.
  *
  * @public
  */
+
 export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
   const fetchApi = useApi(fetchApiRef);
   const discoveryApi = useApi(discoveryApiRef);
@@ -57,9 +59,7 @@ export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
     );
   }
 
-  function calculatePercentage(used: number, limit: number) {
-    return (used / limit) * 100;
-  }
+  const { bandwidth, storage } = quotaStats.usage.raw;
 
   return (
     <Card variant="outlined">
@@ -73,23 +73,21 @@ export const Content = ({ owner }: CloudsmithQuotaCardContentProps) => {
         title="Cloudsmith Quota"
         subheader={owner}
       />
-      <Grid container>
-        <Grid item>
-          <Typography>Bandwidth</Typography>
-          <Gauge
-            value={calculatePercentage(
-              quotaStats.usage.raw.bandwidth.used,
-              quotaStats.usage.raw.bandwidth.configured,
-            )}
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <UsageGauge
+            title="Package Delivery"
+            used={bandwidth.used}
+            configured={bandwidth.configured}
+            planLimit={bandwidth.plan_limit}
           />
         </Grid>
-        <Grid item>
-          <Typography>Storage</Typography>
-          <Gauge
-            value={calculatePercentage(
-              quotaStats.usage.raw.storage.used,
-              quotaStats.usage.raw.storage.configured,
-            )}
+        <Grid item xs={6}>
+          <UsageGauge
+            title="Artifact Data"
+            used={storage.used}
+            configured={storage.configured}
+            planLimit={storage.plan_limit}
           />
         </Grid>
       </Grid>

@@ -66,14 +66,14 @@ describe('Content', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
 
-  it('should display an ovreview card with the data from the requests', async () => {
+  it('should display an overview card with the data from the requests', async () => {
     const rendered = render(
       <TestApiProvider apis={apis}>
         <Content owner="name" repo="repo-name" />
       </TestApiProvider>,
     );
     expect(
-      await rendered.findByText('Vulnerabilities found in'),
+      await rendered.findByText('Vulnerabilities found in repo-name'),
     ).toBeInTheDocument();
   });
 });
