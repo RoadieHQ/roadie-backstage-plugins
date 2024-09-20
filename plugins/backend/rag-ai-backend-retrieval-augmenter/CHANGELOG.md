@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.0.0
+
+### Major Changes
+
+- 8d209f4: Support new auth system and replace winston with `LoggerService`
+
 ## 0.3.8
 
 ### Patch Changes
