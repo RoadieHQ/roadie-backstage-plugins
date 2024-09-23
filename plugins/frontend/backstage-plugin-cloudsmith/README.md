@@ -22,6 +22,7 @@ import {
   CloudsmithQuotaCard,
   CloudsmithRepositoryAuditLogCard,
   CloudsmithRepositorySecurityCard,
+  CloudsmithPackageListCard,
 } from '@roadiehq/backstage-plugin-cloudsmith';
 ```
 
@@ -43,6 +44,10 @@ Then add the component to the homepage content component, wherever you prefer.
 
 <Grid  item  xs={12}  md={6}>
    <CloudsmithRepositorySecurityCard  owner='org-name'  repo='repo-name'/>
+</Grid>
+
+<Grid item xs={12}>
+   <CloudsmithPackageListCard owner='org-name' repo='repo-name'/>
 </Grid>
 
 ```

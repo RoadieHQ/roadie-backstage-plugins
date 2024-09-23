@@ -24,46 +24,6 @@ To configure the frontend plugin, you need to do two things:
 - Create an API client for the frontend plugin
 - Add the exposed UI element into the application
 
-### Creating an API client
-
-The RAG AI plugin exposes an API client which needs to be configured for your Backstage application frontend to be able to use the RAG AI functionality. You can do that by adding a new API factory into your `apis.ts` file. See configuration example below:
-
-```ts
-// packages/app/src/apis.ts
-
-import {
-  AnyApiFactory,
-  configApiRef,
-  createApiFactory,
-  discoveryApiRef,
-  fetchApiRef,
-  identityApiRef,
-} from '@backstage/core-plugin-api';
-import fetch from 'cross-fetch';
-import { ragAiApiRef, RoadieRagAiClient } from '@roadiehq/rag-ai';
-
-export const apis: AnyApiFactory[] = [
-  // ... Other APIs
-  createApiFactory({
-    api: ragAiApiRef,
-    deps: {
-      configApi: configApiRef,
-      discoveryApi: discoveryApiRef,
-      fetchApi: fetchApiRef,
-      identityApi: identityApiRef,
-    },
-    factory: ({ discoveryApi, fetchApi, configApi, identityApi }) => {
-      return new RoadieRagAiClient({
-        discoveryApi,
-        fetchApi,
-        configApi,
-        identityApi,
-      });
-    },
-  }),
-];
-```
-
 ### Adding the UI components into the application
 
 The plugin exposes a single UI component which is used to communicate with the application Backend. You can register this

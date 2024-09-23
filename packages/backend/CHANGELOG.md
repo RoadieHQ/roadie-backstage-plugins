@@ -1,5 +1,37 @@
 # backend
 
+## 2.1.19
+
+### Patch Changes
+
+- Updated dependencies [643d210]
+- Updated dependencies [8d209f4]
+  - @roadiehq/rag-ai-storage-pgvector@1.0.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.9
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.9
+
+## 2.1.18
+
+### Patch Changes
+
+- Updated dependencies [741af3b]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.2.1
+
+## 2.1.17
+
+### Patch Changes
+
+- Updated dependencies [dc9664d]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.2.0
+
+## 2.1.16
+
+### Patch Changes
+
+- Updated dependencies [e1c21c8]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.1.0
+
 ## 2.1.15
 
 ### Patch Changes

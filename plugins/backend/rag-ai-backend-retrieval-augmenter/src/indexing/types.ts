@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import { TokenManager } from '@backstage/backend-common';
-import { Logger } from 'winston';
 import { CatalogApi } from '@backstage/catalog-client';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { Entity } from '@backstage/catalog-model';
@@ -27,7 +27,7 @@ export type AugmentationOptions = {
 };
 
 export interface RoadieEmbeddingsConfig {
-  logger: Logger;
+  logger: LoggerService;
   tokenManager: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;

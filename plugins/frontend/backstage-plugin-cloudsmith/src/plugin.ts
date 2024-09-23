@@ -48,6 +48,14 @@ export const cloudsmithPlugin = createPlugin({
   ],
 });
 
+export const CloudsmithPackageListCard = cloudsmithPlugin.provide(
+  createCardExtension<{ owner: string; repo: string }>({
+    name: 'CloudsmithPackageListCard',
+    title: '',
+    components: () => import('./components/CloudsmithPackageListCard'),
+  }),
+);
+
 export const CloudsmithStatsCard = cloudsmithPlugin.provide(
   createCardExtension<{ owner: string; repo: string }>({
     name: 'CloudsmithStatsCard',

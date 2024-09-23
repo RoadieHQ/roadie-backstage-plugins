@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import {
   generateBackstageUrl,
   http,
   getObjFieldCaseInsensitively,
+  getPluginId,
 } from './helpers';
 import { HttpOptions, Headers, Params, Methods, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { AuthService } from '@backstage/backend-plugin-api';
 
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
+  auth?: AuthService;
 }) {
-  const { discovery } = options;
+  const { discovery, auth } = options;
   return createTemplateAction<{
     path: string;
     method: Methods;
@@ -117,12 +120,15 @@ export function createHttpBackstageAction(options: {
 
     async handler(ctx) {
       const { input } = ctx;
-      const token = ctx.secrets?.backstageToken;
+      const pluginId = getPluginId(input.path);
+      const { token } = (await auth?.getPluginRequestToken({
+        onBehalfOf: await ctx.getInitiatorCredentials(),
+        targetPluginId: pluginId,
+      })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
       const continueOnBadResponse = input.continueOnBadResponse || false;
       const url = await generateBackstageUrl(discovery, input.path);
-
       if (logRequestPath) {
         ctx.logger.info(
           `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,

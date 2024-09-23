@@ -19,3 +19,7 @@ export const LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION =
   'launchdarkly.com/environment-key';
 export const LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION =
   'launchdarkly.com/context';
+export const LAUNCHDARKLY_FILTER_TAGS_ANNOTATION =
+  'launchdarkly.com/filter-tags';
+export const LAUNCHDARKLY_FILTER_QUERY_ANNOTATION =
+  'launchdarkly.com/filter-query';

@@ -19,17 +19,17 @@ import {
   EmbeddingsSource,
   RetrievalRouter,
 } from '@roadiehq/rag-ai-node';
-import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export class SourceBasedRetrievalRouter implements RetrievalRouter {
-  private readonly logger: Logger;
+  private readonly logger: LoggerService;
   private readonly retrievers: Map<EmbeddingsSource, AugmentationRetriever[]>;
 
   constructor({
     logger,
     retrievers,
   }: {
-    logger: Logger;
+    logger: LoggerService;
     retrievers: Map<EmbeddingsSource, AugmentationRetriever[]>;
   }) {
     this.retrievers = retrievers;

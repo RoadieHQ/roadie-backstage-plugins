@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   EmbeddingDocMetadata,
   EmbeddingDoc,
@@ -20,10 +21,9 @@ import {
 } from '@roadiehq/rag-ai-node';
 import { Embeddings } from '@langchain/core/embeddings';
 import { Knex } from 'knex';
-import { Logger } from 'winston';
 
 export interface RoadiePgVectorStoreConfig {
-  logger: Logger;
+  logger: LoggerService;
   db: Knex;
   /**
    * The amount of documents to chunk by when
@@ -47,7 +47,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
   private readonly chunkSize;
   private readonly amount;
   private embeddings?: Embeddings;
-  private readonly logger: Logger;
+  private readonly logger: LoggerService;
 
   /**
    * Initializes the RoadiePgVectorStore.
@@ -132,7 +132,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
 
       await this.client.batchInsert(this.tableName, rows, this.chunkSize);
     } catch (e) {
-      this.logger.error(e);
+      this.logger.error((e as Error).message);
       throw new Error(`Error inserting: ${(e as Error).message}`);
     }
   }

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 import {
+  createLegacyAuthAdapters,
   PluginEndpointDiscovery,
   TokenManager,
 } from '@backstage/backend-common';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+import { ResponseError } from '@backstage/errors';
 import { EmbeddingDoc, EmbeddingsSource } from '@roadiehq/rag-ai-node';
 import { SearchResultSet } from '@backstage/plugin-search-common';
-import { Logger } from 'winston';
 
 export type SearchClientQuery = {
   term: string;
@@ -39,24 +41,31 @@ const embeddingsSourceToBackstageSearchType = (source: EmbeddingsSource) => {
 
 export class SearchClient {
   private readonly discoveryApi: PluginEndpointDiscovery;
-  private readonly logger: Logger;
-  private readonly tokenManager: TokenManager;
+  private readonly logger: LoggerService;
+  private readonly auth: AuthService;
 
   constructor(options: {
     discoveryApi: PluginEndpointDiscovery;
-    logger: Logger;
-    tokenManager: TokenManager;
+    logger: LoggerService;
+    auth?: AuthService;
+    tokenManager?: TokenManager;
   }) {
     this.discoveryApi = options.discoveryApi;
     this.logger = options.logger;
-    this.tokenManager = options.tokenManager;
+    this.auth = createLegacyAuthAdapters({
+      ...options,
+      discovery: options.discoveryApi,
+    }).auth;
   }
 
   async query(query: SearchClientQuery): Promise<EmbeddingDoc[]> {
     const url = `${await this.discoveryApi.getBaseUrl('search')}/query?term=${
       query.term
     }&types[0]=${embeddingsSourceToBackstageSearchType(query.source)}`;
-    const { token } = await this.tokenManager.getToken();
+    const { token } = await this.auth.getPluginRequestToken({
+      onBehalfOf: await this.auth.getOwnServiceCredentials(),
+      targetPluginId: 'search',
+    });
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -67,7 +76,7 @@ export class SearchClient {
     if (!response.ok) {
       this.logger.warn(
         'Unable to query Backstage search API for embeddable results.',
-        await response.text(),
+        await ResponseError.fromResponse(response),
       );
       return [];
     }

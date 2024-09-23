@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-import { TokenManager } from '@backstage/backend-common';
+import {
+  createLegacyAuthAdapters,
+  TokenManager,
+} from '@backstage/backend-common';
 import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
-import { Logger } from 'winston';
 import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
@@ -28,14 +30,18 @@ import {
   EntityFilterShape,
   RoadieVectorStore,
 } from '@roadiehq/rag-ai-node';
-import { DiscoveryService } from '@backstage/backend-plugin-api';
+import {
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 import pLimit from 'p-limit';
 
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
-  private readonly logger: Logger;
-  private readonly tokenManager: TokenManager;
+  private readonly logger: LoggerService;
+  private readonly auth: AuthService;
   private readonly discovery: DiscoveryService;
 
   private readonly augmentationOptions?: AugmentationOptions;
@@ -44,6 +50,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     vectorStore,
     catalogApi,
     logger,
+    auth,
     tokenManager,
     embeddings,
     discovery,
@@ -51,8 +58,9 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
-    logger: Logger;
-    tokenManager: TokenManager;
+    logger: LoggerService;
+    auth?: AuthService;
+    tokenManager?: TokenManager;
     embeddings: Embeddings;
     discovery: DiscoveryService;
     augmentationOptions?: AugmentationOptions;
@@ -62,7 +70,11 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     this.augmentationOptions = augmentationOptions;
     this.catalogApi = catalogApi;
     this.logger = logger;
-    this.tokenManager = tokenManager;
+    this.auth = createLegacyAuthAdapters({
+      auth,
+      discovery,
+      tokenManager,
+    }).auth;
     this.discovery = discovery;
   }
 
@@ -144,7 +156,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
     switch (source) {
       case 'catalog': {
-        const { token } = await this.tokenManager.getToken();
+        const { token } = await this.auth.getPluginRequestToken({
+          onBehalfOf: await this.auth.getOwnServiceCredentials(),
+          targetPluginId: 'catalog',
+        });
 
         const entitiesResponse = await this.catalogApi.getEntities(
           { filter },
@@ -162,7 +177,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
         return constructCatalogEmbeddingDocuments;
       }
       case 'tech-docs': {
-        const { token } = await this.tokenManager.getToken();
+        const { token } = await this.auth.getPluginRequestToken({
+          onBehalfOf: await this.auth.getOwnServiceCredentials(),
+          targetPluginId: 'catalog',
+        });
 
         const entitiesResponse = await this.catalogApi.getEntities(
           {
@@ -184,9 +202,15 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
 
             try {
+              const { token: techDocsToken } =
+                await this.auth.getPluginRequestToken({
+                  onBehalfOf: await this.auth.getOwnServiceCredentials(),
+                  targetPluginId: 'techdocs',
+                });
+
               const searchIndexResponse = await fetch(searchIndexUrl, {
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${techDocsToken}`,
                 },
               });
 
@@ -206,7 +230,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             } catch (e) {
               this.logger.debug(
                 `Failed to retrieve tech docs search index for entity ${namespace}/${kind}/${name}`,
-                e,
+                e as Error,
               );
               return [];
             }
@@ -244,7 +268,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     source: EmbeddingsSource,
     filter: EntityFilterShape,
   ): Promise<void> {
-    const { token } = await this.tokenManager.getToken();
+    const { token } = await this.auth.getPluginRequestToken({
+      onBehalfOf: await this.auth.getOwnServiceCredentials(),
+      targetPluginId: 'catalog',
+    });
 
     const entities = (
       await this.catalogApi.getEntities({ filter }, { token })

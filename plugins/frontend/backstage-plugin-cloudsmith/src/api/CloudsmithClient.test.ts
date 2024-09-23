@@ -21,126 +21,152 @@ import {
   repoMetricResponse,
   repoVulnerabilityResponse,
   quotaResponse,
+  packagesListResponse,
+  packageVulnerabilityDetailsResponse as packageVulnerabilityResponse,
+  packageScanResultsResponse,
 } from './mocks/mocks';
-
-// Create tests to test the CloudsmithClient.ts file
 
 describe('CloudsmithClient', () => {
   let client: CloudsmithClient;
+  const mockFetch = jest.fn();
+
   beforeEach(() => {
+    jest.resetAllMocks();
     client = new CloudsmithClient({
       discoveryApi: {
-        getBaseUrl: pluginId =>
-          Promise.resolve(`https://backstage/api/${pluginId}`),
+        getBaseUrl: jest.fn().mockResolvedValue('https://backstage/api/proxy'),
       },
       fetchApi: {
-        fetch: async (url: string) => {
-          if (
-            new URL(url).pathname ===
-            '/api/proxy/cloudsmith/metrics/packages/name/repo-name/'
-          ) {
-            return {
-              ok: true,
-              json: async () => repoMetricResponse,
-            };
-          }
-          if (
-            new URL(url).pathname ===
-            '/api/proxy/cloudsmith/audit-log/name/repo-name/'
-          ) {
-            return {
-              ok: true,
-              json: async () => repoAuditLogsResponse,
-            };
-          }
-          if (
-            new URL(url).pathname ===
-            '/api/proxy/cloudsmith/vulnerabilities/name/repo-name/'
-          ) {
-            return {
-              ok: true,
-              json: async () => repoVulnerabilityResponse,
-            };
-          }
-          if (url === 'https://backstage/api/proxy/cloudsmith/quota/name/') {
-            return {
-              ok: true,
-              json: async () => quotaResponse,
-            };
-          }
-          return {
-            ok: false,
-            statusText: 'Not Found',
-          };
-        },
-      } as any as FetchApi,
+        fetch: mockFetch,
+      } as unknown as FetchApi,
     });
   });
 
   it('is an instance', () => {
-    expect(client).not.toEqual(undefined);
+    expect(client).toBeInstanceOf(CloudsmithClient);
   });
 
-  describe('#getRepoMetrics', () => {
-    it('returns the repo metrics', async () => {
-      expect(
-        await client.getRepoMetrics({ owner: 'name', repo: 'repo-name' }),
-      ).toEqual(repoMetricResponse);
-    });
+  const testCases = [
+    {
+      method: 'getRepoMetrics',
+      path: '/cloudsmith/metrics/packages/name/repo-name/',
+      params: { owner: 'name', repo: 'repo-name' },
+      response: repoMetricResponse,
+    },
+    {
+      method: 'getRepoAuditLogs',
+      path: '/cloudsmith/audit-log/name/repo-name/?page_size=100',
+      params: { owner: 'name', repo: 'repo-name' },
+      response: repoAuditLogsResponse,
+    },
+    {
+      method: 'getRepoSecurityScanLogs',
+      path: '/cloudsmith/vulnerabilities/name/repo-name/?page_size=100',
+      params: { owner: 'name', repo: 'repo-name' },
+      response: repoVulnerabilityResponse,
+    },
+    {
+      method: 'getQuota',
+      path: '/cloudsmith/quota/name/',
+      params: { owner: 'name' },
+      response: quotaResponse,
+    },
+    {
+      method: 'getPackagesList',
+      path: '/cloudsmith/packages/name/repo-name/?page=1&page_size=500',
+      params: { owner: 'name', repo: 'repo-name', page: 1, pageSize: 500 },
+      response: packagesListResponse.packages,
+    },
+    {
+      method: 'getPackageVulnerabilities',
+      path: '/cloudsmith/vulnerabilities/name/repo-name/package-id/',
+      params: {
+        owner: 'name',
+        repo: 'repo-name',
+        packageIdentifier: 'package-id',
+      },
+      response: packageVulnerabilityResponse,
+    },
+    {
+      method: 'getPackageScanResults',
+      path: '/cloudsmith/vulnerabilities/name/repo-name/package-id/scan-id/',
+      params: {
+        owner: 'name',
+        repo: 'repo-name',
+        packageIdentifier: 'package-id',
+        scanResultIdentifier: 'scan-id',
+      },
+      response: packageScanResultsResponse,
+    },
+  ];
 
-    it('throws error if the metrics are not found', async () => {
-      await expect(
-        client.getRepoMetrics({ owner: 'name', repo: 'not-a-repo-name' }),
-      ).rejects.toEqual(
-        new Error('Failed to retrieve package metrics: Not Found'),
-      );
-    });
-  });
+  testCases.forEach(({ method, path, params, response }) => {
+    describe(`#${method}`, () => {
+      it(`returns the ${method.replace('get', '').toLowerCase()}`, async () => {
+        mockFetch.mockResolvedValueOnce({
+          ok: true,
+          json: async () => response,
+          headers: new Headers(),
+        });
 
-  describe('#getRepoAuditLogs', () => {
-    it('returns the repo audit logs', async () => {
-      expect(
-        await client.getRepoAuditLogs({ owner: 'name', repo: 'repo-name' }),
-      ).toEqual(repoAuditLogsResponse);
-    });
+        // @ts-ignore
+        const result = await client[method](params);
+        expect(mockFetch).toHaveBeenCalledWith(
+          `https://backstage/api/proxy${path}`,
+          expect.any(Object),
+        );
+        expect(result).toEqual(
+          method === 'getPackagesList'
+            ? {
+                packages: response,
+                pagination: {
+                  count: Array.isArray(response) ? response.length : 0,
+                },
+              }
+            : response,
+        );
+      });
 
-    it('throws error if the audit logs are not found', async () => {
-      await expect(
-        client.getRepoAuditLogs({ owner: 'name', repo: 'not-a-repo-name' }),
-      ).rejects.toEqual(new Error('Failed to retrieve audit logs: Not Found'));
-    });
-  });
+      it(`throws error if the ${method
+        .replace('get', '')
+        .toLowerCase()} are not found`, async () => {
+        mockFetch.mockResolvedValueOnce({
+          ok: false,
+          statusText: 'Not Found',
+        });
 
-  describe('#getRepoVulnerabilities', () => {
-    it('returns the repo vulnerabilities', async () => {
-      expect(
-        await client.getRepoSecurityScanLogs({
-          owner: 'name',
-          repo: 'repo-name',
-        }),
-      ).toEqual(repoVulnerabilityResponse);
-    });
-
-    it('throws error if the vulnerabilities are not found', async () => {
-      await expect(
-        client.getRepoSecurityScanLogs({
-          owner: 'name',
-          repo: 'not-a-repo-name',
-        }),
-      ).rejects.toEqual(
-        new Error('Failed to retrieve security scan logs: Not Found'),
-      );
+        // @ts-ignore
+        await expect(client[method](params)).rejects.toThrow(
+          `Cloudsmith API request failed: Not Found`,
+        );
+      });
     });
   });
 
   describe('#getQuota', () => {
     it('returns the quota', async () => {
-      expect(await client.getQuota({ owner: 'name' })).toEqual(quotaResponse);
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => quotaResponse,
+        headers: new Headers(),
+      });
+
+      const result = await client.getQuota({ owner: 'name' });
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://backstage/api/proxy/cloudsmith/quota/name/',
+        expect.any(Object),
+      );
+      expect(result).toEqual(quotaResponse);
     });
 
     it('throws error if the quota is not found', async () => {
-      await expect(client.getQuota({ owner: 'not-a-name' })).rejects.toEqual(
-        new Error('Failed to retrieve quota: Not Found'),
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        statusText: 'Not Found',
+      });
+
+      await expect(client.getQuota({ owner: 'name' })).rejects.toThrow(
+        'Cloudsmith API request failed: Not Found',
       );
     });
   });

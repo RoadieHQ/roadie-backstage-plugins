@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.2.1
+
+### Patch Changes
+
+- 741af3b: fix: Align pluginId metadata to id set during plugin initialization
+
+## 3.2.0
+
+### Minor Changes
+
+- dc9664d: Allow setting up a separate frontend URL on multiple Ar instances for linking purposes.
+
+## 3.1.0
+
+### Minor Changes
+
+- e1c21c8: Adds support for Backstage's new backend system, available via the `/alpha` sub-path export.
+
 ## 3.0.4
 
 ### Patch Changes
