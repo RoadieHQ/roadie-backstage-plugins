@@ -179,7 +179,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
       case 'tech-docs': {
         const { token } = await this.auth.getPluginRequestToken({
           onBehalfOf: await this.auth.getOwnServiceCredentials(),
-          targetPluginId: 'techdocs',
+          targetPluginId: 'catalog',
         });
 
         const entitiesResponse = await this.catalogApi.getEntities(
@@ -202,9 +202,15 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
             const searchIndexUrl = `${techDocsBaseUrl}/static/docs/${namespace}/${kind}/${name}/search/search_index.json`;
 
             try {
+              const { token: techDocsToken } =
+                await this.auth.getPluginRequestToken({
+                  onBehalfOf: await this.auth.getOwnServiceCredentials(),
+                  targetPluginId: 'techdocs',
+                });
+
               const searchIndexResponse = await fetch(searchIndexUrl, {
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${techDocsToken}`,
                 },
               });
 
