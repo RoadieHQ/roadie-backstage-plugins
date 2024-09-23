@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 1.0.0
+
+### Major Changes
+
+- 643d210: Switch from winston to `LoggerService` interface to support new backend system
+
 ## 0.1.6
 
 ### Patch Changes

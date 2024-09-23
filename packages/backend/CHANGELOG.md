@@ -1,5 +1,16 @@
 # backend
 
+## 2.1.19
+
+### Patch Changes
+
+- Updated dependencies [643d210]
+- Updated dependencies [8d209f4]
+  - @roadiehq/rag-ai-storage-pgvector@1.0.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.9
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.9
+
 ## 2.1.18
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-import '@testing-library/jest-dom';
-
-Object.defineProperty(global, 'TransformStream', {
-  value: require('node:stream/web').TransformStream,
-  writable: true,
-});
+export type CloudsmithPackageListContentProps = {
+  owner: string;
+  repo: string;
+};

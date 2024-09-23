@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.2
+
+### Patch Changes
+
+- 75fb301: Provide a default implementation of the RAG AI API client
+
 ## 1.1.1
 
 ### Patch Changes

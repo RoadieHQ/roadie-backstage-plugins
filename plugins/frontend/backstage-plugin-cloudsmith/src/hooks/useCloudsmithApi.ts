@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2022 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { useApi } from '@backstage/core-plugin-api';
+import { cloudsmithApiRef } from '../api';
 
-import '@testing-library/jest-dom';
-
-Object.defineProperty(global, 'TransformStream', {
-  value: require('node:stream/web').TransformStream,
-  writable: true,
-});
+export const useCloudsmithApi = () => useApi(cloudsmithApiRef);

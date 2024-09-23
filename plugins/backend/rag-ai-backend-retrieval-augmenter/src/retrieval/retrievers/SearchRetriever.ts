@@ -19,33 +19,36 @@ import {
   EmbeddingDoc,
   EmbeddingsSource,
 } from '@roadiehq/rag-ai-node';
-import { Logger } from 'winston';
 import { SearchClient } from './SearchClient';
 import {
   PluginEndpointDiscovery,
   TokenManager,
 } from '@backstage/backend-common';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 
 export class SearchRetriever implements AugmentationRetriever {
   private readonly searchClient: SearchClient;
-  private readonly logger: Logger;
+  private readonly logger: LoggerService;
 
   constructor({
     discovery,
     logger,
     searchClient,
+    auth,
     tokenManager,
   }: {
     discovery: PluginEndpointDiscovery;
-    logger: Logger;
+    logger: LoggerService;
     searchClient?: SearchClient;
-    tokenManager: TokenManager;
+    auth?: AuthService;
+    tokenManager?: TokenManager;
   }) {
     this.searchClient =
       searchClient ??
       new SearchClient({
         discoveryApi: discovery,
         logger: logger.child({ label: 'rag-ai-searchclient' }),
+        auth,
         tokenManager,
       });
     this.logger = logger;
