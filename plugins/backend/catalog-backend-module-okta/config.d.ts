@@ -38,7 +38,7 @@ export interface Config {
         };
         userFilter?: string;
         groupFilter?: string;
-        schedule?: SchedulerServiceTaskScheduleDefinitionConfig;
+        schedule: SchedulerServiceTaskScheduleDefinitionConfig;
       }[];
     };
   };

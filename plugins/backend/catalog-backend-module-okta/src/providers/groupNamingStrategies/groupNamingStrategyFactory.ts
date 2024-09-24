@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import {
-  idGroupNamingStrategy,
-  kebabCaseGroupNamingStrategy,
-  profileNameGroupNamingStrategy,
-} from './index';
 import { GroupNamingStrategies, GroupNamingStrategy } from './types';
+import { idGroupNamingStrategy } from './idGroupNamingStrategy';
+import { kebabCaseGroupNamingStrategy } from './kebabCaseGroupNamingStrategy';
+import { profileNameGroupNamingStrategy } from './profileNameGroupNamingStrategy';
 
 export const groupNamingStrategyFactory = (
   strategy: GroupNamingStrategies | GroupNamingStrategy = 'id',
