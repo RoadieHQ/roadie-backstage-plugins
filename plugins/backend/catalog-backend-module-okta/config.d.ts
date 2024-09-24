@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { SchedulerServiceTaskScheduleDefinitionConfig } from '@backstage/backend-plugin-api';
+
 export interface Config {
   catalog?: {
     providers?: {
@@ -36,6 +38,7 @@ export interface Config {
         };
         userFilter?: string;
         groupFilter?: string;
+        schedule?: SchedulerServiceTaskScheduleDefinitionConfig;
       }[];
     };
   };

@@ -70,17 +70,9 @@ const logger = getVoidLogger();
 
 describe('OktaOrgEntityProvider', () => {
   const config = new ConfigReader({
-    catalog: {
-      providers: {
-        okta: [
-          {
-            orgUrl: 'https://okta',
-            token: 'secret',
-            userFilter: 'profile.organization eq "engineering"',
-          },
-        ],
-      },
-    },
+    orgUrl: 'https://okta',
+    token: 'secret',
+    userFilter: 'profile.organization eq "engineering"',
   });
 
   describe('where there is no groups', () => {
