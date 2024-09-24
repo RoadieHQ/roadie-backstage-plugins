@@ -18,7 +18,6 @@ import {
   createBackendModule,
 } from '@backstage/backend-plugin-api';
 import { catalogProcessingExtensionPoint } from '@backstage/plugin-catalog-node/alpha';
-import { readTaskScheduleDefinitionFromConfig } from '@backstage/backend-tasks';
 import {
   EntityProviderFactory,
   oktaCatalogBackendEntityProviderFactoryExtensionPoint,
@@ -26,6 +25,7 @@ import {
 } from './extensions';
 import { OktaUserEntityTransformer } from './providers/types';
 import { userEntityFromOktaUser } from './providers/userEntityFromOktaUser';
+import { readSchedulerServiceTaskScheduleDefinitionFromConfig } from '@backstage/backend-plugin-api';
 
 export const oktaCatalogBackendModule = createBackendModule({
   pluginId: 'catalog',
@@ -74,10 +74,9 @@ export const oktaCatalogBackendModule = createBackendModule({
         for (const oktaConfig of oktaConfigs) {
           const provider = entityFactory(oktaConfig);
           catalog.addEntityProvider(provider);
-
-          // Workaround inspired by https://github.com/RoadieHQ/roadie-backstage-plugins/issues/1310#issuecomment-2037783918
-          // Can be reworked when the support for the old backend system is dropped
-          const schedule = readTaskScheduleDefinitionFromConfig(oktaConfig);
+          const schedule = readSchedulerServiceTaskScheduleDefinitionFromConfig(
+            oktaConfig.getConfig('schedule'),
+          );
           await scheduler.scheduleTask({
             id: `okta-entity-provider-${provider.getProviderName()}`,
             fn: async () => {

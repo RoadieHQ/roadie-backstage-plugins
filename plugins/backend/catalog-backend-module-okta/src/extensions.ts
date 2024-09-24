@@ -18,7 +18,7 @@ import { OktaEntityProvider } from './providers/OktaEntityProvider';
 import { OktaUserEntityTransformer } from './providers/types';
 import { Config } from '@backstage/config';
 
-export type EntityProviderFactory = (oktaConfig: Config) => OktaEntityProvider;
+export type EntityProviderFactory = (oktaConfigs: Config) => OktaEntityProvider;
 
 export interface OktaCatalogBackendEntityProviderFactoryExtensionPoint {
   setEntityProviderFactory(factory: EntityProviderFactory): void;

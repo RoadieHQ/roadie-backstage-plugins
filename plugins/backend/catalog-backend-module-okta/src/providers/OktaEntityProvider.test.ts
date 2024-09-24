@@ -24,7 +24,7 @@ class ConcreteEntityProvider extends OktaEntityProvider {
     throw new Error('Method not implemented.');
   }
   constructor(accountConfig: AccountConfig) {
-    super([accountConfig], {
+    super(accountConfig, {
       logger: getVoidLogger(),
     });
   }

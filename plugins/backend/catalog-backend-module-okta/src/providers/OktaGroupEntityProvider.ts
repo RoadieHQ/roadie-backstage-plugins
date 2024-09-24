@@ -15,7 +15,6 @@
  */
 
 import { GroupEntity } from '@backstage/catalog-model';
-import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
 import {
@@ -35,6 +34,7 @@ import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { OktaGroupEntityTransformer } from './types';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 /**
  * Provides entities from Okta Group service.
@@ -51,7 +51,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
       groupTransformer?: OktaGroupEntityTransformer;
@@ -80,7 +80,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
   constructor(
     accountConfig: AccountConfig,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
       namingStrategy?: GroupNamingStrategies | GroupNamingStrategy;
       userNamingStrategy?: UserNamingStrategies | UserNamingStrategy;
       customAttributesToAnnotationAllowlist?: string[];
@@ -91,7 +91,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       groupTransformer?: OktaGroupEntityTransformer;
     },
   ) {
-    super([accountConfig], options);
+    super(accountConfig, options);
     this.namingStrategy = groupNamingStrategyFactory(options.namingStrategy);
     this.userNamingStrategy = userNamingStrategyFactory(
       options.userNamingStrategy,

@@ -15,7 +15,6 @@
  */
 
 import { UserEntity } from '@backstage/catalog-model';
-import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
 import {
@@ -28,6 +27,7 @@ import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userE
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { OktaUserEntityTransformer } from './types';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 /**
  * Provides entities from Okta User service.
@@ -42,7 +42,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
@@ -56,13 +56,13 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
   constructor(
     accountConfig: AccountConfig,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
     },
   ) {
-    super([accountConfig], options);
+    super(accountConfig, options);
     this.namingStrategy = userNamingStrategyFactory(options.namingStrategy);
     this.userEntityFromOktaUser =
       options.userTransformer || defaultUserEntityFromOktaUser;
