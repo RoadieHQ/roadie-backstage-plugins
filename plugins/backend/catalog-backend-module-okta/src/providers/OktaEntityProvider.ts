@@ -18,7 +18,6 @@ import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
-import { Logger } from 'winston';
 import { AccountConfig } from '../types';
 import { Client, User, Group } from '@okta/okta-sdk-nodejs';
 
@@ -26,21 +25,22 @@ import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export type OktaScope = 'okta.groups.read' | 'okta.users.read';
 
 export abstract class OktaEntityProvider implements EntityProvider {
-  protected readonly accounts: AccountConfig[];
-  protected readonly logger: Logger;
+  protected readonly account: AccountConfig;
+  protected readonly logger: LoggerService;
   protected connection?: EntityProviderConnection;
 
   public abstract getProviderName(): string;
 
   protected constructor(
-    accounts: AccountConfig[],
-    options: { logger: Logger },
+    account: AccountConfig,
+    options: { logger: LoggerService },
   ) {
-    this.accounts = accounts;
+    this.account = account;
     this.logger = options.logger;
   }
 
@@ -48,12 +48,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
     orgUrl: string,
     oauthScopes: OktaScope[] | undefined = undefined,
   ): Client {
-    const account = this.accounts.find(
-      acccountConfig => acccountConfig.orgUrl === orgUrl,
-    );
-    if (!account) {
-      throw new Error(`accountConfig for ${orgUrl} not found`);
-    }
+    const account = this.account;
 
     if (account.oauth && oauthScopes) {
       // use OAuth authentication strategy
