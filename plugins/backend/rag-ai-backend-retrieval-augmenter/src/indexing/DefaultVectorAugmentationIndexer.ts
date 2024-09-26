@@ -37,6 +37,10 @@ import {
 } from '@backstage/backend-plugin-api';
 import pLimit from 'p-limit';
 
+const TECHDOCS_ENTITY_FILTER = {
+  'metadata.annotations.backstage.io/techdocs-ref': CATALOG_FILTER_EXISTS,
+};
+
 export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
   private readonly _vectorStore: RoadieVectorStore;
   private readonly catalogApi: CatalogApi;
@@ -184,10 +188,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
         const entitiesResponse = await this.catalogApi.getEntities(
           {
-            filter: {
-              'metadata.annotations.backstage.io/techdocs-ref':
-                CATALOG_FILTER_EXISTS,
-            },
+            filter: TECHDOCS_ENTITY_FILTER,
           },
           { token },
         );
@@ -273,8 +274,10 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
       targetPluginId: 'catalog',
     });
 
+    const entityFilter =
+      source === 'tech-docs' ? TECHDOCS_ENTITY_FILTER : filter;
     const entities = (
-      await this.catalogApi.getEntities({ filter }, { token })
+      await this.catalogApi.getEntities({ filter: entityFilter }, { token })
     ).items.map(stringifyEntityRef);
 
     for (const entityRef of entities) {
