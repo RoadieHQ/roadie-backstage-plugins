@@ -1,5 +1,7 @@
 This repo contains the Backstage plugins created and maintained by [Roadie](https://roadie.io). Roadie is a SaaS Backstage solution.
 
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/?referringPathname=roadie-backstage-plugins-repo)
+
 Amongst others, the following plugins can be found within this repo:
 
 - [AI Assistant - RAG AI](https://www.npmjs.com/package/@roadiehq/rag-ai)
