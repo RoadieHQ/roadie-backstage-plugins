@@ -1,5 +1,13 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.1.29
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+- Updated dependencies [2718d81]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.2.2
+
 ## 1.1.28
 
 ### Patch Changes

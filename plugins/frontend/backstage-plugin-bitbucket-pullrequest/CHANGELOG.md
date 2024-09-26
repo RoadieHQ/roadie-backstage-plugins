@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.0.4
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.0.3
 
 ### Patch Changes

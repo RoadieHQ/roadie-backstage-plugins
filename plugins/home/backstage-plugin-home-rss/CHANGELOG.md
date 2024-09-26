@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.14
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.3.13
 
 ### Patch Changes

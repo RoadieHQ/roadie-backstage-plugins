@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.0.1
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.0.0
 
 ### Major Changes

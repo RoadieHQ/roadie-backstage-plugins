@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.28
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.5.27
 
 ### Patch Changes

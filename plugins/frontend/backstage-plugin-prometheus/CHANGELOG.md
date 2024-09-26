@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.11.2
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.11.1
 
 ### Patch Changes
