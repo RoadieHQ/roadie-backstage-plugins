@@ -1,6 +1,6 @@
 This repo contains the Backstage plugins created and maintained by [Roadie](https://roadie.io). Roadie is a SaaS Backstage solution.
 
-Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
 
 Amongst others, the following plugins can be found within this repo:
 

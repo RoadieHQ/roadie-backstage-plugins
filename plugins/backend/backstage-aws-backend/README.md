@@ -52,4 +52,4 @@ $ curl http://localhost:7007/api/aws/9999999999/AWS::S3::Bucket/bucket1
 
 ---
 
-Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
