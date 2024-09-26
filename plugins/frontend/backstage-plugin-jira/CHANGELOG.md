@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.6.1
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.6.0
 
 ### Minor Changes

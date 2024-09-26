@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.2.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.2.2
 
 ### Patch Changes

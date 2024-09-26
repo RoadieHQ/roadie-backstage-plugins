@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.4.2
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.4.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.7.2
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.7.1
 
 ### Patch Changes
