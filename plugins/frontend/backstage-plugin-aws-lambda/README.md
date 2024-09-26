@@ -77,3 +77,7 @@ Make sure you have AWS auth backend plugin installed in your backstage backend (
 
 - [Backstage](https://backstage.io)
 - Get hosted, managed Backstage for your company: https://roadie.io
+
+---
+
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)

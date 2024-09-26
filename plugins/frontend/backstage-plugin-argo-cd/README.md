@@ -190,3 +190,7 @@ To run the integration tests locally `yarn workspace app cy:dev` (assuming you h
 - [Argo CD Backend Plugin](https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-backend)
 - [Backstage](https://backstage.io)
 - Get hosted, managed Backstage for your company: https://roadie.io
+
+---
+
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)

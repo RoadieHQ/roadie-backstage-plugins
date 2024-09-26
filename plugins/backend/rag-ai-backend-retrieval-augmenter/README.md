@@ -24,3 +24,7 @@ const retrievalPipeline = createDefaultRetrievalPipeline({
 ```
 
 > You are able to get the vector store implementation from your constructed augmentation indexer. See embeddings submodules or `@roadiehq/rag-ai-backend` README for more information
+
+---
+
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)

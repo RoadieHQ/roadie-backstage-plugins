@@ -273,3 +273,7 @@ const callbackFunction = (arg: Alerts) => {
 - [Prometheus](https://prometheus.io/docs/introduction/overview/)
 - [Prometheus Recording Rules](https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/)
 - Get hosted, managed Backstage for your company: https://roadie.io
+
+---
+
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)

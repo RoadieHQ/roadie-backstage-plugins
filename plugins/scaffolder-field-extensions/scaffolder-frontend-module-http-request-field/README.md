@@ -84,3 +84,7 @@ The example template would result in the following dropdown:
 ![Alt text](images/dropdown_sample_opened.png?raw=true 'Example of the custom scaffolder field')
 
 You also have the running user frontend context available for you in case there is a need to template the URL string based on the user. The underlying functionality uses nunjucks to handle templating and supports _some_ filters that are available within the library. You can find the current user information from context using the template `{{ identity }}`. The items available within the identity object can be found from the [Backstage GitHub repository](https://github.com/backstage/backstage/blob/master/packages/core-plugin-api/src/apis/definitions/auth.ts#L199).
+
+---
+
+Roadie is the best way to do Backstage. [Book a demo today.](https://roadie.io/request-demo/)
