@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.0.2
+
+### Patch Changes
+
+- 890743e: Fix issue with cleaning up old TechDocs vectors
+
 ## 1.0.1
 
 ### Patch Changes
