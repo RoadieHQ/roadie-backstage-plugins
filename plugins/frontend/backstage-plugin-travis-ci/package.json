@@ -7,7 +7,9 @@
   "keywords": [
     "backstage",
     "plugin",
-    "travis-ci"
+    "travis-ci",
+    "travis",
+    "ci-cd"
   ],
   "homepage": "https://roadie.io/backstage/plugins/travis-ci/",
   "bugs": {
