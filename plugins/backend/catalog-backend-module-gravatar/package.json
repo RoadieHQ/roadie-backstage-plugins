@@ -28,7 +28,12 @@
     "directory": "plugins/catalog-backend-module-gravatar"
   },
   "keywords": [
-    "backstage"
+    "backstage",
+    "gravatar",
+    "catalog",
+    "plugin",
+    "backend",
+    "module"
   ],
   "scripts": {
     "build": "backstage-cli package build",

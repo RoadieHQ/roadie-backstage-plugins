@@ -36,7 +36,11 @@
     "directory": "plugins/catalog-backend-module-okta"
   },
   "keywords": [
-    "backstage"
+    "backstage",
+    "okta",
+    "catalog",
+    "plugin",
+    "backend"
   ],
   "scripts": {
     "build": "backstage-cli package build",
