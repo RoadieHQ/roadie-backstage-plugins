@@ -7,7 +7,9 @@
   "keywords": [
     "backstage",
     "plugin",
-    "rag-ai"
+    "rag-ai",
+    "llm",
+    "ai"
   ],
   "publishConfig": {
     "access": "public",
