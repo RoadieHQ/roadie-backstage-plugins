@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.3.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.3.2
 
 ### Patch Changes

@@ -141,3 +141,7 @@ import { EntityGithubInsightsEnvironmentsCard } from '@roadiehq/backstage-plugin
 
 - [Backstage](https://backstage.io)
 - Get hosted, managed Backstage for your company: https://roadie.io
+
+---
+
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).

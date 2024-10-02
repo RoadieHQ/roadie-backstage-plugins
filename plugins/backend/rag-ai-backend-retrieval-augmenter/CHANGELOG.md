@@ -1,5 +1,19 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.0.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+- Updated dependencies [2718d81]
+  - @roadiehq/rag-ai-node@0.1.7
+
+## 1.0.2
+
+### Patch Changes
+
+- 890743e: Fix issue with cleaning up old TechDocs vectors
+
 ## 1.0.1
 
 ### Patch Changes

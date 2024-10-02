@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 2.0.2
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.0.1
 
 ### Patch Changes

@@ -28,3 +28,7 @@ const vectorStore = await createRoadiePgVectorStore({
   options: { chunkSize, tableName },
 });
 ```
+
+---
+
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).

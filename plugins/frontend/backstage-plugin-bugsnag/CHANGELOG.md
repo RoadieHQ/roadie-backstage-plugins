@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.2.11
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.2.10
 
 ### Patch Changes

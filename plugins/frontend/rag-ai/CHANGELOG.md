@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.1.2
 
 ### Patch Changes
