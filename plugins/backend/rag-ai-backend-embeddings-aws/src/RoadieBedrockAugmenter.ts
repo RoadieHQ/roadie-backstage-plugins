@@ -37,20 +37,15 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
       tokenManager: TokenManager;
     },
   ) {
-    if (config.bedrockConfig.modelName.includes('cohere')) {
-      const embeddings = new BedrockCohereEmbeddings({
-        region: config.options.region,
-        credentials: config.options.credentials,
-        model: config.bedrockConfig.modelName,
-      });
-      super({ ...config, embeddings });
-    } else {
-      const embeddings = new BedrockEmbeddings({
-        region: config.options.region,
-        credentials: config.options.credentials,
-        model: config.bedrockConfig.modelName,
-      });
-      super({ ...config, embeddings });
-    }
+    const embeddingsConfig = {
+      region: config.options.region,
+      credentials: config.options.credentials,
+      model: config.bedrockConfig.modelName,
+    };
+    const embeddings = config.bedrockConfig.modelName.includes('cohere')
+      ? new BedrockCohereEmbeddings(embeddingsConfig)
+      : new BedrockEmbeddings(embeddingsConfig);
+
+    super({ ...config, embeddings });
   }
 }
