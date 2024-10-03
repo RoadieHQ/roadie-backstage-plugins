@@ -160,10 +160,25 @@ export class RagAiController {
       res.flush?.();
     }
 
-    this.logger.info(
-      `Produced response with token usage: ${JSON.stringify(usage)}`,
-    );
-    res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
+    if (Object.values(usage).some(it => it !== 0)) {
+      this.logger.info(
+        `Produced response with token usage: ${JSON.stringify(usage)}`,
+      );
+      res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
+    } else {
+      this.logger.info(
+        `Unable to retrieve token usage information from this model invocation.`,
+      );
+      res.write(
+        `event: usage\n` +
+          `data: ${JSON.stringify({
+            input_tokens: -1,
+            output_tokens: -1,
+            total_tokens: -1,
+          })}\n\n`,
+      );
+    }
+
     res.end();
   };
 
