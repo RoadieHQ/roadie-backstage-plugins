@@ -24,6 +24,12 @@ import {
 // @ts-ignore
 import type compression from 'compression';
 
+type UsageMetadata = {
+  total_tokens: number;
+  output_tokens: number;
+  input_tokens: number;
+};
+
 export class RagAiController {
   private static instance: RagAiController;
   private readonly llmService: LlmService;
@@ -134,8 +140,18 @@ export class RagAiController {
     res.write(embeddingsEvent + embeddingsData);
 
     const stream = await this.llmService.query(embeddingDocs, query);
+    const usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
 
     for await (const chunk of stream) {
+      if (typeof chunk !== 'string' && 'usage_metadata' in chunk) {
+        usage.input_tokens +=
+          (chunk.usage_metadata as UsageMetadata)?.input_tokens ?? 0;
+        usage.output_tokens +=
+          (chunk.usage_metadata as UsageMetadata)?.output_tokens ?? 0;
+        usage.total_tokens +=
+          (chunk.usage_metadata as UsageMetadata)?.total_tokens ?? 0;
+      }
+
       const text =
         typeof chunk === 'string' ? chunk : (chunk.content as string);
       const event = `event: response\n`;
@@ -144,6 +160,10 @@ export class RagAiController {
       res.flush?.();
     }
 
+    this.logger.info(
+      `Produced response with token usage: ${JSON.stringify(usage)}`,
+    );
+    res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
     res.end();
   };
 

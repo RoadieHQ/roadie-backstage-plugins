@@ -34,7 +34,7 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.474.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.602.0",
     "@aws-sdk/types": "^3.468.0",
     "@backstage/backend-common": "^0.24.0",
     "@backstage/catalog-client": "^1.6.6",
