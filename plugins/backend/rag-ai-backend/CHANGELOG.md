@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend
 
+## 1.1.0
+
+### Minor Changes
+
+- d2b38ac: Add additional possibility to use Cohere embeddings for AWS Bedrock embeddings module. Release version 1.x
+
+  Add more information about token usage to the backend controller.
+
 ## 1.0.4
 
 ### Patch Changes
