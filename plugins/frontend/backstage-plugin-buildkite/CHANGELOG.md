@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.3.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.3.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.12
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.2.11
 
 ### Patch Changes

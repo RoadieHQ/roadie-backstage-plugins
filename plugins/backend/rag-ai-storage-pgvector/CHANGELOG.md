@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 1.0.2
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+- Updated dependencies [6847280]
+  - @roadiehq/rag-ai-node@0.1.8
+
 ## 1.0.1
 
 ### Patch Changes

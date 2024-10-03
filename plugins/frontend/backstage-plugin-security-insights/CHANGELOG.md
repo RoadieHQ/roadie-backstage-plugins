@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.22
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.3.21
 
 ### Patch Changes
