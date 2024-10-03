@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.1.22",
+  "version": "2.1.23",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -47,8 +47,8 @@
     "@roadiehq/backstage-plugin-aws-backend": "^1.1.26",
     "@roadiehq/catalog-backend-module-aws": "^5.0.4",
     "@roadiehq/catalog-backend-module-okta": "^1.0.2",
-    "@roadiehq/rag-ai-backend": "^1.0.4",
-    "@roadiehq/rag-ai-backend-embeddings-aws": "^0.2.11",
+    "@roadiehq/rag-ai-backend": "^1.1.0",
+    "@roadiehq/rag-ai-backend-embeddings-aws": "^1.0.0",
     "@roadiehq/rag-ai-backend-embeddings-openai": "^0.2.11",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^1.0.4",
     "@roadiehq/rag-ai-storage-pgvector": "^1.0.2",
