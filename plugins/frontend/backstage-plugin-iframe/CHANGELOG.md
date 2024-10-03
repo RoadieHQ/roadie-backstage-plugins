@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.4.3
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.4.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.10
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 0.0.9
 
 ### Patch Changes

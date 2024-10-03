@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.0.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 5.0.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.1.26
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.1.25
 
 ### Patch Changes
