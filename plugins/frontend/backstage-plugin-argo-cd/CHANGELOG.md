@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.8.3
 
 ### Patch Changes

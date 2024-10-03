@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.26
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 0.4.25
 
 ### Patch Changes

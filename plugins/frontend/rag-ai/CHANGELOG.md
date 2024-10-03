@@ -1,5 +1,12 @@
 # @roadiehq/rag-ai
 
+## 1.1.4
+
+### Patch Changes
+
+- 74c738f: Add some error handling for better messages on RAG AI modal.
+- 6847280: added keywords to all plugins
+
 ## 1.1.3
 
 ### Patch Changes

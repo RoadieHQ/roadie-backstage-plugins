@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.0.2
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.0.1
 
 ### Patch Changes

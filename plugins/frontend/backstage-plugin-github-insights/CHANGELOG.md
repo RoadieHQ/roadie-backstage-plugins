@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.4.3
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.4.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.6.2
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 2.6.1
 
 ### Patch Changes

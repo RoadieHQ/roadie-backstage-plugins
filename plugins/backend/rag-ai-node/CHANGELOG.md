@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.8
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 0.1.7
 
 ### Patch Changes
