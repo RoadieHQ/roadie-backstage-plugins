@@ -22,9 +22,6 @@
     "*": {
       "package.json": [
         "package.json"
-      ],
-      "new-backend": [
-        "src/new-backend.ts"
       ]
     }
   },
