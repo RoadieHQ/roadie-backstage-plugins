@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 export * from './actions';
-export * from './new-backend';
+export { scaffolderBackendArgoCD as default } from './module';
