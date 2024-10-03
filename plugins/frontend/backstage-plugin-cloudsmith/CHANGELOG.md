@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.1.2
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.1.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 0.2.11
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+- Updated dependencies [6847280]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.4
+  - @roadiehq/rag-ai-backend@1.0.4
+  - @roadiehq/rag-ai-node@0.1.8
+
 ## 0.2.10
 
 ### Patch Changes

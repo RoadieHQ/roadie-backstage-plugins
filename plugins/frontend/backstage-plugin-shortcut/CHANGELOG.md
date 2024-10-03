@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.2.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.2.3
 
 ### Patch Changes

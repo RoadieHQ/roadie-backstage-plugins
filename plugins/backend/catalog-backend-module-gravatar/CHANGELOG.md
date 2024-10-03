@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.0.5
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
 ## 1.0.4
 
 ### Patch Changes
