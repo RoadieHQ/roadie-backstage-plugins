@@ -112,6 +112,11 @@ export const ControlledRagModal = ({
             setWarning(chunk.data);
             break;
           }
+          case 'usage': {
+            // eslint-disable-next-line
+            console.debug(chunk.data);
+            break;
+          }
           default:
             throw new Error(`Unknown event type: ${chunk.event}`);
         }
