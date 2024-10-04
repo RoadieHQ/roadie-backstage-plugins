@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.5
+
+### Patch Changes
+
+- 629d2b1: Add event handler for usage event type. Logs usage information to the console on debug level.
+
 ## 1.1.4
 
 ### Patch Changes
