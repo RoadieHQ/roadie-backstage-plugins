@@ -19,7 +19,13 @@ import {
   MissingAnnotationEmptyState,
   useEntity,
 } from '@backstage/plugin-catalog-react';
-import { Card, CardContent, CardHeader, Typography } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+} from '@material-ui/core';
 import React from 'react';
 import { isDatadogGraphAvailable } from '../plugin';
 import ErrorBoundary from './ErrorBoundary';
@@ -45,19 +51,35 @@ const mapGraphSizeToDimensions = (graphSize: GraphSize) => {
 };
 
 const DatadogGraph = ({ entity }: { entity: Entity }) => {
-  const { graphToken, graphSize, site } = useDatadogAppData({ entity });
+  const {
+    graphToken: graphTokensString,
+    graphSize,
+    site,
+  } = useDatadogAppData({ entity });
   const { width, height } = mapGraphSizeToDimensions(graphSize);
+  const graphTokens = graphTokensString.split(',');
   return (
     <Card>
       <CardHeader title={<Typography variant="h5">Datadog Graph</Typography>} />
       <CardContent>
-        <iframe
-          title="graph"
-          src={`https://app.${site}/graph/embed?token=${graphToken}&height=${height}&width=${width}&legend=true`}
-          width={width}
-          height={height}
-          frameBorder="0"
-        />
+        <Grid container spacing={3}>
+          {graphTokens.map((graphToken, index) => (
+            <Grid
+              item
+              data-testid={`Datadog graph ${index}`}
+              key={`Datadog graph ${index}`}
+              md={12}
+            >
+              <iframe
+                title="graph"
+                src={`https://app.${site}/graph/embed?token=${graphToken}&height=${height}&width=${width}&legend=true`}
+                width={width}
+                height={height}
+                frameBorder="0"
+              />
+            </Grid>
+          ))}
+        </Grid>
       </CardContent>
     </Card>
   );
