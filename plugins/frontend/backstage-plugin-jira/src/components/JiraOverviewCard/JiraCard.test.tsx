@@ -27,7 +27,7 @@ import {
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { JiraAPI, jiraApiRef } from '../../api';
-import { JiraCard } from './JiraCard';
+import { JiraOverviewCard } from './JiraOverviewCard';
 import {
   activityResponseStub,
   entityStub,
@@ -75,7 +75,7 @@ describe('JiraCard', () => {
     const rendered = await renderInTestApp(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityStub}>
-          <JiraCard />
+          <JiraOverviewCard />
         </EntityProvider>
       </TestApiProvider>,
     );
@@ -121,7 +121,7 @@ describe('JiraCard', () => {
     const rendered = await renderInTestApp(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityStub}>
-          <JiraCard hideIssueFilter />
+          <JiraOverviewCard hideIssueFilter />
         </EntityProvider>
       </TestApiProvider>,
     );
@@ -166,7 +166,7 @@ describe('JiraCard', () => {
     const rendered = await renderInTestApp(
       <TestApiProvider apis={apis}>
         <EntityProvider entity={entityStub}>
-          <JiraCard />
+          <JiraOverviewCard />
         </EntityProvider>
       </TestApiProvider>,
     );

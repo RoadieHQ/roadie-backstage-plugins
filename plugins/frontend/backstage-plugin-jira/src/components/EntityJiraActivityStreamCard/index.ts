@@ -1,0 +1,1 @@
+export { EntityJiraActivityStreamCard } from './EntityJiraActivityStreamCard';

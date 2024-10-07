@@ -22,13 +22,14 @@ export {
   jiraPlugin,
   EntityJiraOverviewCard,
   HomePageMyJiraTicketsCard,
+  EntityJiraActivityStreamCard,
 } from './plugin';
 export {
   /**
    * @deprecated since v0.3.0 you should use new composability API
    */
-  JiraCard,
-} from './components/JiraCard';
+  JiraOverviewCard,
+} from './components/JiraOverviewCard';
 export {
   /**
    * @deprecated since v0.3.0 you should use new name 'isJiraAvailable'

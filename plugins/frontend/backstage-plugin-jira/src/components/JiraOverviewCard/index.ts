@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-export { JiraCard } from './JiraCard';
+export { JiraOverviewCard } from './JiraOverviewCard';
