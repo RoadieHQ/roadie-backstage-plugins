@@ -27,18 +27,17 @@ yarn add @roadiehq/backstage-plugin-jira
 2. Add proxy config:
 
 ```yaml
-// app-config.yaml
+# app-config.yaml
 proxy:
   '/jira/api':
     target: <JIRA_URL>
     headers:
-      Authorization:
-        $env: JIRA_TOKEN
+      Authorization: ${JIRA_TOKEN}
       Accept: 'application/json'
       Content-Type: 'application/json'
       X-Atlassian-Token: 'no-check'
       # This is a workaround since Jira APIs reject browser origin requests. Any dummy string without whitespace works.
-      User-Agent: "AnyRandomString"
+      User-Agent: 'AnyRandomString'
 
 jira:
   # Defaults to /jira/api and can be omitted if proxy is configured for that url
@@ -52,7 +51,7 @@ jira:
 3. Set img-src in Content Security Policy
 
 ```yaml
-// app-config.yaml
+# app-config.yaml
 backend:
   # ...
   csp:
@@ -62,12 +61,11 @@ backend:
       - 'data:'
       # Allow your Jira instance for @roadiehq/backstage-plugin-jira
       - 'JIRA_URL'
-
 ```
 
 4. Add plugin component to your Backstage instance:
 
-```ts
+```jsx
 // packages/app/src/components/catalog/EntityPage.tsx
 import {
   EntityJiraOverviewCard,
@@ -118,7 +116,7 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
    1. Obtain your personal token from Jira: https://id.atlassian.com/manage-profile/security/api-tokens
    2. Create a base64-encoded string by converting "your-atlassian-account-mail:your-jira-token",
 
-      ```js
+      ```
       // node
       new Buffer('jira-mail@example.com:hTBgqVcrcxRYpT5TCzTA9C0F').toString(
         'base64',
@@ -142,18 +140,18 @@ The `HomePageMyJiraTicketsCard` component displays the Open and In Progress JIRA
 
 To add the component to your Homepage:
 
-```ts
+```jsx
 //packages/app/src/components/home/HomePage.tsx
 
 import { HomePageMyJiraTicketsCard } from '@roadiehq/backstage-plugin-jira';
 
 export const HomePage = () => {
   return (
-    ...
-      <Grid item md={6} xs={12}>
-        <HomePageMyJiraTicketsCard userId="roadie" />
-      </Grid>
-    ...
+    // ...
+    <Grid item md={6} xs={12}>
+      <HomePageMyJiraTicketsCard userId="roadie" />
+    </Grid>
+    // ...
   );
 };
 ```

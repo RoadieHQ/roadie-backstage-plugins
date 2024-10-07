@@ -43,7 +43,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { useProjectInfo, useProjectEntity } from '../../hooks';
 import { EntityProps, ProjectDetailsProps } from '../../types';
 import { Status } from './components/Status';
-import { ActivityStream } from './components/ActivityStream';
+import { ActivityStream } from '../EntityJiraActivityStreamCard/ActivityStream';
 import { Selectors } from './components/Selectors';
 import { useEmptyIssueTypeFilter } from '../../hooks/useEmptyIssueTypeFilter';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -96,7 +96,9 @@ type JiraCardOptionalProps = {
   hideIssueFilter?: boolean;
 };
 
-export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
+export const JiraOverviewCard = (
+  props: EntityProps & JiraCardOptionalProps,
+) => {
   const { hideIssueFilter } = props;
   const { entity } = useEntity();
   const classes = useStyles();
@@ -318,13 +320,16 @@ export const JiraCard = (props: EntityProps & JiraCardOptionalProps) => {
               }}
             />
           </TableContainer>
-          <ActivityStream
-            projectKey={projectKey}
-            tokenType={tokenType}
-            componentName={component}
-            label={label}
-            ticketIds={ticketIds}
-          />
+          <>
+            <Typography variant="subtitle1">Activity Stream</Typography>
+            <ActivityStream
+              projectKey={projectKey}
+              tokenType={tokenType}
+              componentName={component}
+              label={label}
+              ticketIds={ticketIds}
+            />
+          </>
         </div>
       ) : null}
     </InfoCard>
