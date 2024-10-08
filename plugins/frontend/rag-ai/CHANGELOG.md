@@ -1,5 +1,24 @@
 # @roadiehq/rag-ai
 
+## 1.1.5
+
+### Patch Changes
+
+- 629d2b1: Add event handler for usage event type. Logs usage information to the console on debug level.
+
+## 1.1.4
+
+### Patch Changes
+
+- 74c738f: Add some error handling for better messages on RAG AI modal.
+- 6847280: added keywords to all plugins
+
+## 1.1.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 1.1.2
 
 ### Patch Changes

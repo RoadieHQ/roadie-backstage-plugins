@@ -33,6 +33,7 @@ import { ragAiApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
 import { ResponseEmbedding } from '../../types';
 import { Thinking } from './Thinking';
+import { WarningPanel } from '@backstage/core-components';
 
 export type RagModalProps = {
   title?: string;
@@ -88,11 +89,13 @@ export const ControlledRagModal = ({
   const [thinking, setThinking] = useState(false);
   const [questionResult, setQuestionResult] = useState('');
   const [embeddings, setEmbeddings] = useState<ResponseEmbedding[]>([]);
+  const [warning, setWarning] = useState<string | undefined>();
   const ragApi = useApi(ragAiApiRef);
   const askLlm = useCallback(
     async (question: string, source: string) => {
       setThinking(true);
       setQuestionResult('');
+      setWarning(undefined);
       setEmbeddings([]);
 
       for await (const chunk of ragApi.ask(question, source)) {
@@ -103,6 +106,15 @@ export const ControlledRagModal = ({
           }
           case 'embeddings': {
             setEmbeddings(JSON.parse(chunk.data));
+            break;
+          }
+          case 'error': {
+            setWarning(chunk.data);
+            break;
+          }
+          case 'usage': {
+            // eslint-disable-next-line
+            console.debug(chunk.data);
             break;
           }
           default:
@@ -148,7 +160,8 @@ export const ControlledRagModal = ({
             }}
           />
         </Box>
-        {thinking && !questionResult ? (
+        {warning && <WarningPanel severity="warning" message={warning} />}
+        {thinking && !questionResult && !warning ? (
           <Box p={6} display="flex" justifyContent="center" alignItems="center">
             <Thinking />
           </Box>

@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.5.31
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.5.30
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.5.29
 
 ### Patch Changes

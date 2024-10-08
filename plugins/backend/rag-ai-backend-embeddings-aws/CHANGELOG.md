@@ -1,5 +1,38 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.0.0
+
+### Major Changes
+
+- d2b38ac: Add additional possibility to use Cohere embeddings for AWS Bedrock embeddings module. Release version 1.x
+
+  Add more information about token usage to the backend controller.
+
+### Patch Changes
+
+- Updated dependencies [d2b38ac]
+  - @roadiehq/rag-ai-backend@1.1.0
+
+## 0.2.11
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+- Updated dependencies [6847280]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.4
+  - @roadiehq/rag-ai-backend@1.0.4
+  - @roadiehq/rag-ai-node@0.1.8
+
+## 0.2.10
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+- Updated dependencies [2718d81]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.3
+  - @roadiehq/rag-ai-backend@1.0.3
+  - @roadiehq/rag-ai-node@0.1.7
+
 ## 0.2.9
 
 ### Patch Changes

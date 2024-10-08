@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 2.11.3
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.11.2
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.11.1
 
 ### Patch Changes

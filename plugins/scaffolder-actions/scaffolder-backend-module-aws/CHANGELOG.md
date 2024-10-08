@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.4.26
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.4.25
 
 ### Patch Changes

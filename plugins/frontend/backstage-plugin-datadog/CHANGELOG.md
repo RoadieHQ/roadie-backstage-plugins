@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.4.0
+
+### Minor Changes
+
+- 85c480f: Allow use of multiple Datadog graphs for a single entity.
+
+## 2.3.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.3.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.3.2
 
 ### Patch Changes

@@ -67,26 +67,43 @@ export class RoadieRagAiClient implements RagAiApi {
   async *ask(question: string, source: string): AsyncGenerator<ParsedEvent> {
     const { token } = await this.identityApi.getCredentials();
 
-    const stream = await this.fetch(`query/${source}`, {
-      body: JSON.stringify({
-        query: question,
-      }),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const stream = await this.fetch(`query/${source}`, {
+        body: JSON.stringify({
+          query: question,
+        }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (stream) {
+        const reader = stream
+          .pipeThrough(new TextDecoderStream())
+          .pipeThrough(new EventSourceParserStream())
+          .getReader();
 
-    const reader = stream
-      .pipeThrough(new TextDecoderStream())
-      .pipeThrough(new EventSourceParserStream())
-      .getReader();
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      yield value;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          yield value;
+        }
+      } else {
+        yield {
+          data: 'No response received from the LLM',
+          event: 'message',
+          type: 'event',
+        };
+      }
+    } catch (e: any) {
+      // eslint-disable-next-line
+      console.error(e.message);
+      yield {
+        data: `Failed to receive response from the backend endpoint.`,
+        event: 'error',
+        type: 'event',
+      };
     }
   }
 }

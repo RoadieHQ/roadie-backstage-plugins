@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.1.26
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.1.25
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.1.24
 
 ### Patch Changes

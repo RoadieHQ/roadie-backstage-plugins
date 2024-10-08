@@ -47,13 +47,18 @@ export default async function createPlugin(
   const providers: RunnableProvider[] = [];
   builder.addProcessor(AWSIAMRoleProcessor.fromConfig(env.config, env));
 
-  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
-    ...env,
-    groupNamingStrategy: 'kebab-case-name',
-    userNamingStrategy: 'strip-domain-email',
-  });
-  builder.addEntityProvider(orgProvider);
-  providers.push(orgProvider);
+  if (env.config.has('catalog.providers.okta')) {
+    const orgConfigs = env.config.getConfigArray('catalog.providers.okta');
+    for (const orgConfig of orgConfigs) {
+      const orgProvider = OktaOrgEntityProvider.fromConfig(orgConfig, {
+        ...env,
+        groupNamingStrategy: 'kebab-case-name',
+        userNamingStrategy: 'strip-domain-email',
+      });
+      builder.addEntityProvider(orgProvider);
+      providers.push(orgProvider);
+    }
+  }
 
   for (const config of env.config.getOptionalConfigArray('aws.accounts') ||
     []) {

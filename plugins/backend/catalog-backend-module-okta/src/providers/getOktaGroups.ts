@@ -16,15 +16,15 @@
 import get from 'lodash/get';
 import { isError } from '@backstage/errors';
 import { Group, Client } from '@okta/okta-sdk-nodejs';
-import { Logger } from 'winston';
 import { GroupNamingStrategy } from './groupNamingStrategies';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 type GetOktaGroupsOptions = {
   client: Client;
   groupFilter: string | undefined;
   key: string | undefined;
   groupNamingStrategy: GroupNamingStrategy;
-  logger: Logger;
+  logger: LoggerService;
 };
 
 export const getOktaGroups = async (opts: GetOktaGroupsOptions) => {

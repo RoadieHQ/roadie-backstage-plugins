@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.12
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.2.11
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.2.10
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.10
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 0.0.9
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 0.0.8
 
 ### Patch Changes

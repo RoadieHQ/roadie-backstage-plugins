@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.3.22
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.3.21
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.3.20
 
 ### Patch Changes

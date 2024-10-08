@@ -1,5 +1,17 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.8
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 0.1.7
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 0.1.6
 
 ### Patch Changes

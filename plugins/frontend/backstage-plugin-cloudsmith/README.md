@@ -66,3 +66,7 @@ proxy:
 ```
 
 When you run the backstage backend, you will need to set the `CLOUDSMITH_API_KEY` environment variable.
+
+---
+
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).

@@ -1,5 +1,32 @@
 # app
 
+## 1.1.7
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+- Updated dependencies [2718d81]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@1.7.2
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.0.4
+  - @roadiehq/backstage-plugin-github-pull-requests@2.5.30
+  - @roadiehq/backstage-plugin-security-insights@2.3.21
+  - @roadiehq/backstage-plugin-github-insights@2.4.2
+  - @roadiehq/backstage-plugin-aws-lambda@2.2.11
+  - @roadiehq/backstage-plugin-cloudsmith@1.1.1
+  - @roadiehq/backstage-plugin-prometheus@2.11.2
+  - @roadiehq/backstage-plugin-buildkite@2.3.3
+  - @roadiehq/backstage-plugin-travis-ci@2.1.25
+  - @roadiehq/backstage-plugin-home-markdown@2.5.28
+  - @roadiehq/backstage-plugin-shortcut@1.2.3
+  - @roadiehq/backstage-plugin-argo-cd@2.8.3
+  - @roadiehq/backstage-plugin-bugsnag@2.2.11
+  - @roadiehq/backstage-plugin-datadog@2.3.3
+  - @roadiehq/backstage-plugin-iframe@1.4.2
+  - @roadiehq/backstage-plugin-jira@2.6.1
+  - @roadiehq/backstage-plugin-home-rss@1.3.14
+  - @roadiehq/backstage-plugin-aws@1.1.25
+  - @roadiehq/rag-ai@1.1.3
+
 ## 1.1.6
 
 ### Patch Changes

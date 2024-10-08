@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.4.26
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 0.4.25
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 0.4.24
 
 ### Patch Changes

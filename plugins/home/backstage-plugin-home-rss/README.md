@@ -50,3 +50,7 @@ export const HomePage = () => {
 ## Customization
 
 It's also possible to customize each row in the RSS Feed table. You have to use the property `rowRenderer`. Check the [default renderer](./src/RSSCard/Content.tsx#L65-L93) as an example.
+
+---
+
+Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).

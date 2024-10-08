@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.4
+
+### Patch Changes
+
+- 6847280: added keywords to all plugins
+
+## 2.8.3
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+
 ## 2.8.2
 
 ### Patch Changes

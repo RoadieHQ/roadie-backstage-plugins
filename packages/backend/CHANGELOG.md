@@ -1,5 +1,59 @@
 # backend
 
+## 2.1.23
+
+### Patch Changes
+
+- Updated dependencies [d2b38ac]
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.0.0
+  - @roadiehq/rag-ai-backend@1.1.0
+
+## 2.1.22
+
+### Patch Changes
+
+- Updated dependencies [6847280]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.4
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.2.3
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.11
+  - @roadiehq/catalog-backend-module-gravatar@1.0.5
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.11
+  - @roadiehq/catalog-backend-module-okta@1.0.2
+  - @roadiehq/catalog-backend-module-aws@5.0.4
+  - @roadiehq/backstage-plugin-aws-auth@0.4.26
+  - @roadiehq/rag-ai-storage-pgvector@1.0.2
+  - @roadiehq/backstage-plugin-aws-backend@1.1.26
+  - @roadiehq/rag-ai-backend@1.0.4
+
+## 2.1.21
+
+### Patch Changes
+
+- 2718d81: Add link to Roadie in README
+- Updated dependencies [2718d81]
+  - @roadiehq/scaffolder-backend-module-http-request@4.3.5
+  - @roadiehq/scaffolder-backend-module-utils@2.0.2
+  - @roadiehq/scaffolder-backend-module-aws@2.4.26
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.0.3
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.2.2
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.2.10
+  - @roadiehq/catalog-backend-module-gravatar@1.0.4
+  - @roadiehq/rag-ai-backend-embeddings-aws@0.2.10
+  - @roadiehq/catalog-backend-module-okta@1.0.1
+  - @roadiehq/catalog-backend-module-aws@5.0.3
+  - @roadiehq/backstage-plugin-aws-auth@0.4.25
+  - @roadiehq/rag-ai-storage-pgvector@1.0.1
+  - @roadiehq/backstage-plugin-aws-backend@1.1.25
+  - @roadiehq/rag-ai-backend@1.0.3
+  - app@1.1.7
+
+## 2.1.20
+
+### Patch Changes
+
+- Updated dependencies [46b3142]
+  - @roadiehq/catalog-backend-module-okta@1.0.0
+
 ## 2.1.19
 
 ### Patch Changes
