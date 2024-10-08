@@ -13,4 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { ExampleComponent } from './ExampleComponent';
+export { IssuesChart } from './IssuesChart';
+export { LineChart } from './LineChart';
+export { EntityIssuesChart } from './EntityIssuesChart';

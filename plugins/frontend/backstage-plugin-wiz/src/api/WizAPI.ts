@@ -13,7 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createDevApp } from '@backstage/dev-utils';
-import { backstagePluginWizPlugin } from '../src/plugin';
 
-createDevApp().registerPlugin(backstagePluginWizPlugin).render();
+import { createApiRef } from '@backstage/core-plugin-api';
+
+export const wizApiRef = createApiRef<WizAPI>({
+  id: 'plugin.wiz.service',
+});
+
+export interface WizAPI {
+  fetchProjects(): Promise<any[]>;
+  fetchIssues(): Promise<any[]>;
+  fetchIssuesForProject(projectId: string): Promise<any>;
+}

@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createDevApp } from '@backstage/dev-utils';
-import { backstagePluginWizPlugin } from '../src/plugin';
 
-createDevApp().registerPlugin(backstagePluginWizPlugin).render();
+import React from 'react';
+import { Entity } from '@backstage/catalog-model';
+import {
+  MissingAnnotationEmptyState,
+  useEntity,
+} from '@backstage/plugin-catalog-react';
+import { IssuesChart } from './IssuesChart';
+
+export const WIZ_ANNOTATIONS = 'wiz/project-id';
+
+export const isWizAvailable = (entity: Entity) => {
+  return Boolean(entity?.metadata.annotations?.[WIZ_ANNOTATIONS]);
+};
+export const EntityIssuesChart = () => {
+  const { entity } = useEntity();
+  return !isWizAvailable(entity) ? (
+    <MissingAnnotationEmptyState annotation={WIZ_ANNOTATIONS} />
+  ) : (
+    <IssuesChart />
+  );
+};

@@ -109,6 +109,13 @@ proxy:
     target: https://api.app.shortcut.com/api/v3
     headers:
       Shortcut-Token: '${SHORTCUT_API_TOKEN}'
+  
+  '/wiz/api':
+    target: https://api.${TENANT_DATA_CENTER}.app.wiz.io/graphql
+    headers:
+      Accept: 'application/json'
+      Content-Type : 'application/json'
+      Authorization: 'Bearer ${WIZ_API_TOKEN}'
 
 # Reference documentation http://backstage.io/docs/features/techdocs/configuration
 # Note: After experimenting with basic setup, use CI/CD to generate docs

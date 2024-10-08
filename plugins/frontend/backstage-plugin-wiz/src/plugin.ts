@@ -14,24 +14,65 @@
  * limitations under the License.
  */
 import {
+  createApiFactory,
+  createComponentExtension,
   createPlugin,
   createRoutableExtension,
+  discoveryApiRef,
 } from '@backstage/core-plugin-api';
-
 import { rootRouteRef } from './routes';
+import { wizApiRef, WizClient } from './api';
 
 export const backstagePluginWizPlugin = createPlugin({
-  id: 'backstage-plugin-wiz',
+  id: 'wiz',
   routes: {
     root: rootRouteRef,
   },
+  apis: [
+    createApiFactory({
+      api: wizApiRef,
+      deps: { discoveryApi: discoveryApiRef },
+      factory: ({ discoveryApi }) => new WizClient({ discoveryApi }),
+    }),
+  ],
 });
 
-export const BackstagePluginWizPage = backstagePluginWizPlugin.provide(
+export const EntityWizIssues = backstagePluginWizPlugin.provide(
   createRoutableExtension({
-    name: 'BackstagePluginWizPage',
-    component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
+    name: 'EntityWizIssues',
+    component: () => import('./components/Router').then(m => m.Router),
     mountPoint: rootRouteRef,
+  }),
+);
+
+export const EntityIssuesWidget = backstagePluginWizPlugin.provide(
+  createComponentExtension({
+    name: 'EntityIssuesWidget',
+    component: {
+      lazy: () =>
+        import('./components/IssuesWidget').then(m => m.EntityIssuesWidget),
+    },
+  }),
+);
+
+export const EntityIssuesChart = backstagePluginWizPlugin.provide(
+  createComponentExtension({
+    name: 'EntityIssuesChart',
+    component: {
+      lazy: () =>
+        import('./components/EntityIssuesChart').then(m => m.EntityIssuesChart),
+    },
+  }),
+);
+
+export const EntitySeverityChart = backstagePluginWizPlugin.provide(
+  createComponentExtension({
+    name: 'EntitySeverityChart',
+    component: {
+      lazy: () =>
+        import('./components/EntitySeverityChart').then(
+          m => m.EntitySeverityChart,
+        ),
+    },
   }),
 );

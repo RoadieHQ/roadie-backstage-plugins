@@ -13,4 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export { backstagePluginWizPlugin, BackstagePluginWizPage } from './plugin';
+export {
+  backstagePluginWizPlugin,
+  EntityWizIssues,
+  EntityIssuesWidget,
+  EntityIssuesChart,
+  EntitySeverityChart,
+} from './plugin';
+export * from './plugin';
+export * from './api';
+export { Router, isWizAvailable, WIZ_ANNOTATIONS } from './components/Router';

@@ -13,7 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createDevApp } from '@backstage/dev-utils';
-import { backstagePluginWizPlugin } from '../src/plugin';
-
-createDevApp().registerPlugin(backstagePluginWizPlugin).render();
+export interface Config {
+  wiz?: {
+    /**
+     *
+     * @visibility frontend
+     */
+    dashboardLink?: string;
+  };
+}

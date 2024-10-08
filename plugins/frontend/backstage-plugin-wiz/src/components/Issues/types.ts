@@ -13,7 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createDevApp } from '@backstage/dev-utils';
-import { backstagePluginWizPlugin } from '../src/plugin';
-
-createDevApp().registerPlugin(backstagePluginWizPlugin).render();
+export type WizIssue = {
+  id: string;
+  status: string;
+  severity: string;
+  sourceRule: {
+    id: string;
+    name: string;
+  };
+  projects: [
+    {
+      name: string;
+    },
+  ];
+  resolvedAt: string;
+  createdAt: string;
+  entitySnapshot: {
+    id: string;
+    type: string;
+    name: string;
+  };
+  type: string;
+};

@@ -119,6 +119,13 @@ import {
   isIamRoleAvailable,
   isLambdaFunctionAvailable,
 } from '@roadiehq/backstage-plugin-aws';
+import {
+  EntityWizIssues,
+  isWizAvailable,
+  EntityIssuesWidget,
+  EntityIssuesChart,
+  EntitySeverityChart,
+} from '@roadiehq/backstage-plugin-wiz';
 
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
@@ -160,6 +167,31 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isWizAvailable}>
+        <Grid item md={6}>
+          <EntityIssuesWidget />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isWizAvailable}>
+        <Grid item md={6}>
+          <EntityIssuesChart />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
+    <EntitySwitch>
+      <EntitySwitch.Case if={isWizAvailable}>
+        <Grid item md={6}>
+          <EntitySeverityChart />
+        </Grid>
+      </EntitySwitch.Case>
+    </EntitySwitch>
+
     <EntitySwitch>
       <EntitySwitch.Case if={isLambdaFunctionAvailable}>
         <Grid item md={6}>
@@ -329,6 +361,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/argocd" title="Argo CD">
       <EntityArgoCDContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/wiz" title="WIZ">
+      <EntityWizIssues />
     </EntityLayout.Route>
   </EntityLayout>
 );

@@ -23,6 +23,7 @@
     "lint": "backstage-cli repo lint --since origin/main",
     "lint:all": "lerna run lint --",
     "create-plugin": "backstage-cli create-plugin --scope roadiehq --no-private",
+    "new": "backstage-cli new --scope roadiehq --no-private",
     "remove-plugin": "backstage-cli remove-plugin",
     "release": "changeset version && yarn prettier --write '{packages,plugins}/*/{package.json,CHANGELOG.md}' && yarn install",
     "prepare": "husky install"
@@ -55,6 +56,7 @@
   },
   "prettier": "@spotify/prettier-config",
   "dependencies": {
-    "@changesets/cli": "^2.18.0"
+    "@changesets/cli": "^2.18.0",
+    "sqlite3": "^5.1.7"
   }
 }

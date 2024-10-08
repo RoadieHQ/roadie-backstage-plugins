@@ -45,7 +45,6 @@ import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-fronten
 import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
 import { RagModal } from '@roadiehq/rag-ai';
-import { BackstagePluginWizPage } from '@roadiehq/backstage-plugin-backstage-plugin-wiz';
 
 const app = createApp({
   apis,
@@ -105,7 +104,6 @@ const routes = (
     <Route path="/catalog-import" element={<CatalogImportPage />} />
     <Route path="/search" element={<SearchPage />} />
     <Route path="/settings" element={<UserSettingsPage />} />
-    <Route path="/backstage-plugin-wiz" element={<BackstagePluginWizPage />} />
   </FlatRoutes>
 );
 
