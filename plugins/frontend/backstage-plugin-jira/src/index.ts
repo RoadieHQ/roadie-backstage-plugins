@@ -23,6 +23,7 @@ export {
   EntityJiraOverviewCard,
   HomePageMyJiraTicketsCard,
   EntityJiraActivityStreamCard,
+  EntityJiraQueryCard,
 } from './plugin';
 export {
   /**
