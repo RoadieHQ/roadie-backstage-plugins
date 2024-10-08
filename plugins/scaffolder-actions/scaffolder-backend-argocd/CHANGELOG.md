@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.2.0
+
+### Minor Changes
+
+- 20a5883: Update to new backend system
+
 ## 1.1.29
 
 ### Patch Changes
