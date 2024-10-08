@@ -72,6 +72,7 @@ import {
 import {
   EntityJiraActivityStreamCard,
   EntityJiraOverviewCard,
+  EntityJiraQueryCard,
   isJiraAvailable,
 } from '@roadiehq/backstage-plugin-jira';
 import {
@@ -333,6 +334,9 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/jira" title="Jira">
       <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={12}>
+          <EntityJiraQueryCard />
+        </Grid>
         <Grid item md={6}>
           <EntityJiraOverviewCard />
         </Grid>

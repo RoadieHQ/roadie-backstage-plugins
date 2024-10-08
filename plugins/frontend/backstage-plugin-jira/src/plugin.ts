@@ -69,6 +69,18 @@ export const EntityJiraActivityStreamCard = jiraPlugin.provide(
   }),
 );
 
+export const EntityJiraQueryCard = jiraPlugin.provide(
+  createComponentExtension({
+    name: 'EntityJiraQueryCard',
+    component: {
+      lazy: () =>
+        import('./components/EntityJiraQueryCard').then(
+          m => m.EntityJiraQueryCard,
+        ),
+    },
+  }),
+);
+
 export const HomePageMyJiraTicketsCard = jiraPlugin.provide(
   createCardExtension<{ userId: string }>({
     name: 'My Jira Tickets',
