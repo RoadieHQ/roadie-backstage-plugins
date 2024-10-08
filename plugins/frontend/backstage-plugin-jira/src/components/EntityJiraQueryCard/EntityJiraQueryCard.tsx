@@ -5,10 +5,11 @@ import {
 } from '@backstage/plugin-catalog-react';
 import { ErrorPanel, WarningPanel } from '@backstage/core-components';
 import { useAsync } from 'react-use';
-import { useApi } from '@backstage/core-plugin-api';
+import { identityApiRef, useApi } from '@backstage/core-plugin-api';
 import { jiraApiRef } from '../../api';
 import { LinearProgress } from '@material-ui/core';
 import { IssuesTable, IssuesTableProps } from '../IssuesTable';
+import { useTemplateParser } from '../../hooks/useTemplateParser';
 
 export type EntityJiraQueryCardProps = {
   jqlQueryFromAnnotation?: string;
@@ -24,6 +25,8 @@ export const EntityJiraQueryCard = ({
 }: EntityJiraQueryCardProps) => {
   const { entity } = useEntity();
   const api = useApi(jiraApiRef);
+  const identityApi = useApi(identityApiRef);
+  const templateParser = useTemplateParser();
   const jql = jqlQuery ?? entity.metadata.annotations?.[jqlQueryFromAnnotation];
   const {
     value: issues,
@@ -31,7 +34,14 @@ export const EntityJiraQueryCard = ({
     error,
   } = useAsync(async () => {
     if (jql) {
-      return await api.jqlQuery(jql, maxResults);
+      const profile = await identityApi.getProfileInfo();
+      return await api.jqlQuery(
+        templateParser(jql, {
+          userEmail: profile.email ?? '',
+          userDisplayName: profile.displayName ?? '',
+        }),
+        maxResults,
+      );
     }
     return undefined;
   }, [jql, api]);
