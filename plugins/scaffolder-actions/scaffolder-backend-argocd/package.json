@@ -14,6 +14,17 @@
     "pluginId": "scaffolder-backend-argocd",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ]
+    }
+  },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
@@ -34,8 +45,10 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.24.0",
+    "@backstage/backend-plugin-api": "^0.8.0",
     "@backstage/config": "^1.2.0",
     "@backstage/plugin-scaffolder-backend": "^1.24.0",
+    "@backstage/plugin-scaffolder-node": "^0.4.9",
     "@roadiehq/backstage-plugin-argo-cd-backend": "^3.2.2",
     "@backstage/backend-test-utils": "^0.5.0",
     "winston": "^3.2.1"
