@@ -31,6 +31,9 @@ export {
    */
   JiraOverviewCard,
 } from './components/JiraOverviewCard';
+export * from './components/JiraQueryCard';
+export * from './components/IssuesTable';
+export { ActivityStream } from './components/EntityJiraActivityStreamCard';
 export {
   /**
    * @deprecated since v0.3.0 you should use new name 'isJiraAvailable'
