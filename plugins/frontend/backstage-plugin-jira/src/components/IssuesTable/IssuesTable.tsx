@@ -19,6 +19,7 @@ export type IssuesTableProps = {
     | 'priority'
     | 'created'
     | 'updated'
+    | 'project'
   )[];
 };
 
@@ -139,6 +140,26 @@ const availableColumns: TableColumn<Ticket>[] = [
         ? new Date(data.fields?.updated).toLocaleDateString()
         : '?';
     },
+  },
+  {
+    title: 'Project',
+    field: 'fields.project.name',
+    width: 'auto',
+    id: 'project',
+    render: data => (
+      <Link
+        to={
+          new URL(
+            `/browse/${data?.fields?.project?.key}`,
+            data?.fields?.project?.self,
+          ).href
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {data?.fields?.project?.name}
+      </Link>
+    ),
   },
 ];
 

@@ -114,6 +114,7 @@ export class JiraAPI {
         'parent',
         'created',
         'updated',
+        'project',
       ],
       startAt,
     };

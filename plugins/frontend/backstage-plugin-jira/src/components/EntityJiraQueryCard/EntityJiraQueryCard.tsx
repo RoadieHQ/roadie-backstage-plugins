@@ -15,12 +15,14 @@ export type EntityJiraQueryCardProps = {
   jqlQueryFromAnnotation?: string;
   jqlQuery?: string;
   maxResults?: number;
+  hideOnMissingAnnotation?: boolean;
 } & Omit<IssuesTableProps, 'issues'>;
 
 export const EntityJiraQueryCard = ({
   jqlQueryFromAnnotation = 'jira/all-issues-jql',
   jqlQuery,
   maxResults,
+  hideOnMissingAnnotation = false,
   ...tableProps
 }: EntityJiraQueryCardProps) => {
   const { entity } = useEntity();
@@ -48,7 +50,9 @@ export const EntityJiraQueryCard = ({
   if (jqlQuery === '') {
     return <WarningPanel message="jqlQuery prop cannot be empty" />;
   } else if (!jql) {
-    return <MissingAnnotationEmptyState annotation={jqlQueryFromAnnotation} />;
+    return hideOnMissingAnnotation ? null : (
+      <MissingAnnotationEmptyState annotation={jqlQueryFromAnnotation} />
+    );
   }
 
   if (loading) {
