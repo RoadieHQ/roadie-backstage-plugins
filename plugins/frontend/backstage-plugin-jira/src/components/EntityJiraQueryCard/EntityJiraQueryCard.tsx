@@ -3,13 +3,9 @@ import {
   MissingAnnotationEmptyState,
   useEntity,
 } from '@backstage/plugin-catalog-react';
-import { ErrorPanel, WarningPanel } from '@backstage/core-components';
-import { useAsync } from 'react-use';
-import { identityApiRef, useApi } from '@backstage/core-plugin-api';
-import { jiraApiRef } from '../../api';
-import { LinearProgress } from '@material-ui/core';
-import { IssuesTable, IssuesTableProps } from '../IssuesTable';
-import { useTemplateParser } from '../../hooks/useTemplateParser';
+import { WarningPanel } from '@backstage/core-components';
+import { IssuesTableProps } from '../IssuesTable';
+import { JiraQueryCard } from '../JiraQueryCard';
 
 export type EntityJiraQueryCardProps = {
   jqlQueryFromAnnotation?: string;
@@ -26,27 +22,8 @@ export const EntityJiraQueryCard = ({
   ...tableProps
 }: EntityJiraQueryCardProps) => {
   const { entity } = useEntity();
-  const api = useApi(jiraApiRef);
-  const identityApi = useApi(identityApiRef);
-  const templateParser = useTemplateParser();
-  const jql = jqlQuery ?? entity.metadata.annotations?.[jqlQueryFromAnnotation];
-  const {
-    value: issues,
-    loading,
-    error,
-  } = useAsync(async () => {
-    if (jql) {
-      const profile = await identityApi.getProfileInfo();
-      return await api.jqlQuery(
-        templateParser(jql, {
-          userEmail: profile.email ?? '',
-          userDisplayName: profile.displayName ?? '',
-        }),
-        maxResults,
-      );
-    }
-    return undefined;
-  }, [jql, api]);
+  const jql = entity.metadata.annotations?.[jqlQueryFromAnnotation] ?? jqlQuery;
+
   if (jqlQuery === '') {
     return <WarningPanel message="jqlQuery prop cannot be empty" />;
   } else if (!jql) {
@@ -55,11 +32,7 @@ export const EntityJiraQueryCard = ({
     );
   }
 
-  if (loading) {
-    return <LinearProgress />;
-  }
-  if (error) {
-    return <ErrorPanel error={error} />;
-  }
-  return <IssuesTable issues={issues ?? []} {...tableProps} />;
+  return (
+    <JiraQueryCard jqlQuery={jql} {...tableProps} maxResults={maxResults} />
+  );
 };
