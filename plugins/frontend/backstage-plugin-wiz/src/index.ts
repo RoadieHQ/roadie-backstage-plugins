@@ -22,4 +22,5 @@ export {
 } from './plugin';
 export * from './plugin';
 export * from './api';
-export { Router, isWizAvailable, WIZ_ANNOTATIONS } from './components/Router';
+export { Router, isWizAvailable } from './components/Router';
+export { WIZ_PROJECT_ANNOTATION } from './components/constants';

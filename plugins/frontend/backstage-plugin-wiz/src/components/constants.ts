@@ -13,25 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import React from 'react';
-import { Entity } from '@backstage/catalog-model';
-import {
-  MissingAnnotationEmptyState,
-  useEntity,
-} from '@backstage/plugin-catalog-react';
-import { SeverityChart } from './SeverityChart';
-
 export const WIZ_PROJECT_ANNOTATION = 'wiz/project-id';
-
-export const isWizAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);
-};
-export const EntitySeverityChart = () => {
-  const { entity } = useEntity();
-  return !isWizAvailable(entity) ? (
-    <MissingAnnotationEmptyState annotation={WIZ_PROJECT_ANNOTATION} />
-  ) : (
-    <SeverityChart />
-  );
-};

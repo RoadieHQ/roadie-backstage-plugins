@@ -22,16 +22,15 @@ import {
 } from '@backstage/plugin-catalog-react';
 import { Route, Routes } from 'react-router-dom';
 import { Issues } from './Issues';
-
-export const WIZ_ANNOTATIONS = 'wiz/project-id';
+import { WIZ_PROJECT_ANNOTATION } from './constants';
 
 export const isWizAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[WIZ_ANNOTATIONS]);
+  return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);
 };
 export const Router = () => {
   const { entity } = useEntity();
   return !isWizAvailable(entity) ? (
-    <MissingAnnotationEmptyState annotation={WIZ_ANNOTATIONS} />
+    <MissingAnnotationEmptyState annotation={WIZ_PROJECT_ANNOTATION} />
   ) : (
     <Routes>
       <Route path="/" element={<Issues />} />

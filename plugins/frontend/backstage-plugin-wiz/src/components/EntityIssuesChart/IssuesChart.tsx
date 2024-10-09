@@ -25,12 +25,13 @@ import {
   ResponseErrorPanel,
 } from '@backstage/core-components';
 import { LineChart } from './LineChart';
-import { WIZ_ANNOTATIONS } from '../Router';
+import { WIZ_PROJECT_ANNOTATION } from '../constants';
 
 export const IssuesChart = () => {
   const api = useApi(wizApiRef);
   const { entity } = useEntity();
-  const wizAnnotation = entity?.metadata.annotations?.[WIZ_ANNOTATIONS] ?? '';
+  const wizAnnotation =
+    entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
 
   const { value, loading, error } = useAsync(async () => {
     return await api.fetchIssuesForProject(wizAnnotation);

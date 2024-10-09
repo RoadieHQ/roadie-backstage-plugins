@@ -15,18 +15,14 @@
  */
 
 import React, { useMemo } from 'react';
-
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
   Chip,
-  createTheme,
   InputAdornment,
   Theme,
-  ThemeOptions,
-  ThemeProvider,
   Typography,
   useTheme,
 } from '@material-ui/core';
@@ -46,7 +42,8 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { WizIssue } from './types';
 import MaterialReactTable, { MRT_ColumnDef } from 'material-react-table';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import { WIZ_ANNOTATIONS } from '../Router';
+import { createTheme, ThemeProvider, ThemeOptions } from '@mui/material/styles';
+import { WIZ_PROJECT_ANNOTATION } from '../constants';
 
 const getCorrectChip = (theme: Theme, severity: string) => {
   switch (severity) {
@@ -114,7 +111,8 @@ export const Issues = () => {
   const theme = useTheme();
   const api = useApi(wizApiRef);
   const { entity } = useEntity();
-  const wizAnnotation = entity?.metadata.annotations?.[WIZ_ANNOTATIONS] ?? '';
+  const wizAnnotation =
+    entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
   const { value, loading, error } = useAsync(async () => {
     return await api.fetchIssuesForProject(wizAnnotation);
   }, []);
@@ -373,7 +371,7 @@ export const Issues = () => {
                 >
                   <ThemeProvider theme={createTheme(theme as ThemeOptions)}>
                     <MaterialReactTable
-                      data-testid="hierarchy-table"
+                      data-testid="issues-table"
                       columns={[...columns] as MRT_ColumnDef[]}
                       data={groupedIssues[ruleId]}
                       enableGlobalFilter

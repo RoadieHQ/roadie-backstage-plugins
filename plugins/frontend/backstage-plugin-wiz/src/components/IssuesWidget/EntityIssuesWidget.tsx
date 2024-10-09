@@ -22,15 +22,15 @@ import {
 } from '@backstage/plugin-catalog-react';
 import { IssuesWidget } from './IssuesWidget';
 
-export const WIZ_ANNOTATIONS = 'wiz/project-id';
+export const WIZ_PROJECT_ANNOTATION = 'wiz/project-id';
 
 export const isWizAvailable = (entity: Entity) => {
-  return Boolean(entity?.metadata.annotations?.[WIZ_ANNOTATIONS]);
+  return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);
 };
 export const EntityIssuesWidget = () => {
   const { entity } = useEntity();
   return !isWizAvailable(entity) ? (
-    <MissingAnnotationEmptyState annotation={WIZ_ANNOTATIONS} />
+    <MissingAnnotationEmptyState annotation={WIZ_PROJECT_ANNOTATION} />
   ) : (
     <IssuesWidget />
   );

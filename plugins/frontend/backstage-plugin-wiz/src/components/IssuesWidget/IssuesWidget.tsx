@@ -25,7 +25,7 @@ import {
   ResponseErrorPanel,
 } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { WIZ_ANNOTATIONS } from '../Router';
+import { WIZ_PROJECT_ANNOTATION } from '../constants';
 
 const SeverityIndicator = ({
   theme,
@@ -72,7 +72,8 @@ export const IssuesWidget = () => {
 
   const dashboardLink = configApi.getOptionalString('wiz.dashboardLink') ?? '';
 
-  const wizAnnotation = entity?.metadata.annotations?.[WIZ_ANNOTATIONS] ?? '';
+  const wizAnnotation =
+    entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
 
   const { value, loading, error } = useAsync(async () => {
     return await api.fetchIssuesForProject(wizAnnotation);

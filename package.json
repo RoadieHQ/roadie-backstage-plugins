@@ -56,7 +56,6 @@
   },
   "prettier": "@spotify/prettier-config",
   "dependencies": {
-    "@changesets/cli": "^2.18.0",
-    "sqlite3": "^5.1.7"
+    "@changesets/cli": "^2.18.0"
   }
 }
