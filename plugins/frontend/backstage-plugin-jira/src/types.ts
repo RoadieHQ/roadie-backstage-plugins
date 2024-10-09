@@ -153,6 +153,7 @@ export type Ticket = {
       iconUrl: string;
       name: string;
     };
+    project?: { name: string; self: string; key: string };
   };
 };
 
