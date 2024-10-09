@@ -6,6 +6,15 @@ import {
 import { WarningPanel } from '@backstage/core-components';
 import { IssuesTableProps } from '../IssuesTable';
 import { JiraQueryCard } from '../JiraQueryCard';
+import { useTemplateParser } from '../../hooks/useTemplateParser';
+import { Entity } from '@backstage/catalog-model';
+import {
+  JIRA_COMPONENT_ANNOTATION,
+  JIRA_LABEL_ANNOTATION,
+  JIRA_PROJECT_KEY_ANNOTATION,
+  JIRA_TEAM_ANNOTATION,
+} from '../../constants';
+import camelCase from 'lodash/camelCase';
 
 export type EntityJiraQueryCardProps = {
   jqlQueryFromAnnotation?: string;
@@ -13,6 +22,22 @@ export type EntityJiraQueryCardProps = {
   maxResults?: number;
   hideOnMissingAnnotation?: boolean;
 } & Omit<IssuesTableProps, 'issues'>;
+
+const buildTemplateParserEntityContext = (entity: Entity) => {
+  const context: Record<string, string> = {};
+  [
+    JIRA_COMPONENT_ANNOTATION,
+    JIRA_PROJECT_KEY_ANNOTATION,
+    JIRA_LABEL_ANNOTATION,
+    JIRA_TEAM_ANNOTATION,
+  ].forEach(annotation => {
+    if (entity.metadata.annotations?.[annotation]) {
+      context[camelCase(annotation.split('/')[1])] =
+        entity.metadata.annotations?.[annotation];
+    }
+  });
+  return context;
+};
 
 export const EntityJiraQueryCard = ({
   jqlQueryFromAnnotation = 'jira/all-issues-jql',
@@ -22,6 +47,7 @@ export const EntityJiraQueryCard = ({
   ...tableProps
 }: EntityJiraQueryCardProps) => {
   const { entity } = useEntity();
+  const templateParser = useTemplateParser();
   const jql = entity.metadata.annotations?.[jqlQueryFromAnnotation] ?? jqlQuery;
 
   if (jqlQuery === '') {
@@ -33,6 +59,10 @@ export const EntityJiraQueryCard = ({
   }
 
   return (
-    <JiraQueryCard jqlQuery={jql} {...tableProps} maxResults={maxResults} />
+    <JiraQueryCard
+      jqlQuery={templateParser(jql, buildTemplateParserEntityContext(entity))}
+      {...tableProps}
+      maxResults={maxResults}
+    />
   );
 };

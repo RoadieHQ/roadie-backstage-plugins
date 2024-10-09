@@ -15,7 +15,7 @@
  */
 
 import { Entity } from '@backstage/catalog-model';
-import { JIRA_PROJECT_KEY_ANNOTATION } from '../hooks';
+import { JIRA_PROJECT_KEY_ANNOTATION } from '../constants';
 
 export const isJiraAvailable = (entity: Entity) =>
   Boolean(entity?.metadata.annotations?.[JIRA_PROJECT_KEY_ANNOTATION]);

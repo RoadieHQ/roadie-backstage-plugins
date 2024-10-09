@@ -157,7 +157,7 @@ export class JiraAPI {
     const jql = `project = "${projectKey}"
       ${statusesString ? `AND status in (${statusesString})` : ''}
       ${component ? `AND component = "${component}"` : ''}
-      ${label ? `AND labels in ("${label}")` : ''}
+      ${label ? `AND labels in (${label})` : ''}
       AND statuscategory not in ("Done") 
     `;
 
