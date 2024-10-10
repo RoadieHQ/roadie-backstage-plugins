@@ -1,5 +1,7 @@
 # Wiz Plugin for Backstage
 
+This plugin is the frontend for WIZ Backend Backstage plugin. You can see the corresponding backend plugin in [here](/plugins/backend/wiz-backend/README.md).
+
 ![a Wiz plugin for Backstage](./docs/wiz-issues.png).
 ![a Wiz issues expanded](./docs/wiz-expanded-issues.png)
 ![a Wiz plugin Issues View](./docs/issues-widget.png).
@@ -18,48 +20,17 @@ Issues widget Component:
 
 Issues chart Component:
 
-- Shows graph with number of resolved and open issues over time
+- Shows graph with number of resolved and open issues for last 6 months
 
 Severity chart Component:
 
-- Shows graph of issues grouped by severity, over time
-
-## Prerequisites
-
-To begin using Wiz plugin, you will need the following parameters:
-
-- API endpoint URL
-- OAuth token
-
-In order to retrieve those, you can read official documentation (https://win.wiz.io/reference/prerequisites) where it is described how to obtain them.
+- Shows graph of issues grouped by severity, over time of last 6 months
 
 ## Getting started
 
-1. Add proxy configuration for WIZ:
+Make sure you have installed [WIZ backend plugin](/plugins/backend/wiz-backend/README.md). This will generate access token needed for retriving and displaying issues in components.
 
-```yaml
-// app-config.yaml
-proxy:
-  '/wiz/api':
-  target: https://api.<TENANT_DATA_CENTER>.app.wiz.io/graphql
-  headers:
-    Accept: 'application/json'
-    Content-Type : 'application/json'
-    Authorization: 'Bearer ${WIZ_API_TOKEN}'
-```
-
-The Wiz GraphQL API has a single endpoint
-https://api.<TENANT_DATA_CENTER>.app.wiz.io/graphql, where <TENANT_DATA_CENTER> is the Wiz regional data center your tenant resides, e.g., us1, us2, eu1 or eu2.
-
-Your OAuth token is generated following these steps (https://win.wiz.io/reference/quickstart)
-
-After generating and obtaining your OAuth token, export it to your shell.
-
-```bash
-export WIZ_API_TOKEN=xxx-xxx-xxx
-```
-
-3. Add plugin component to your Backstage instance:
+### Add plugin component to your Backstage instance:
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx

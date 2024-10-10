@@ -40,23 +40,27 @@ export const BarChart = ({ issues }: { issues: WizIssue[] }) => {
       { CRITICAL: number; HIGH: number; MEDIUM: number; LOW: number }
     > = {};
 
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
     issues.forEach(issue => {
-      const createdAtMonth = new Date(issue.createdAt).toLocaleString(
-        'default',
-        {
+      const createdAtDate = new Date(issue.createdAt);
+
+      if (createdAtDate >= sixMonthsAgo) {
+        const createdAtMonth = createdAtDate.toLocaleString('default', {
           month: 'short',
           year: 'numeric',
-        },
-      );
+        });
 
-      if (!monthMap[createdAtMonth]) {
-        monthMap[createdAtMonth] = { ...severityMap };
-      }
+        if (!monthMap[createdAtMonth]) {
+          monthMap[createdAtMonth] = { ...severityMap };
+        }
 
-      if (issue.severity) {
-        monthMap[createdAtMonth][
-          issue.severity as keyof typeof severityMap
-        ] += 1;
+        if (issue.severity) {
+          monthMap[createdAtMonth][
+            issue.severity as keyof typeof severityMap
+          ] += 1;
+        }
       }
     });
 

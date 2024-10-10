@@ -24,28 +24,39 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
   const transformIssuesForChart = () => {
     const monthMap: Record<string, { open: number; resolved: number }> = {};
 
-    issues.forEach(
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    issues?.forEach(
       (issue: {
         createdAt: string | number | Date;
         resolvedAt: string | number | Date;
       }) => {
-        const createdAtMonth = new Date(issue.createdAt).toLocaleString(
-          'default',
-          { month: 'short', year: 'numeric' },
-        );
-        const resolvedAtMonth = issue.resolvedAt
-          ? new Date(issue.resolvedAt).toLocaleString('default', {
-              month: 'short',
-              year: 'numeric',
-            })
+        const createdAtDate = new Date(issue.createdAt);
+        const resolvedAtDate = issue.resolvedAt
+          ? new Date(issue.resolvedAt)
           : null;
 
-        if (!monthMap[createdAtMonth]) {
-          monthMap[createdAtMonth] = { open: 0, resolved: 0 };
-        }
-        monthMap[createdAtMonth].open += 1;
+        // Filter based on createdAt
+        if (createdAtDate >= sixMonthsAgo) {
+          const createdAtMonth = createdAtDate.toLocaleString('default', {
+            month: 'short',
+            year: 'numeric',
+          });
 
-        if (resolvedAtMonth) {
+          if (!monthMap[createdAtMonth]) {
+            monthMap[createdAtMonth] = { open: 0, resolved: 0 };
+          }
+          monthMap[createdAtMonth].open += 1;
+        }
+
+        // Filter based on resolvedAt
+        if (resolvedAtDate && resolvedAtDate >= sixMonthsAgo) {
+          const resolvedAtMonth = resolvedAtDate.toLocaleString('default', {
+            month: 'short',
+            year: 'numeric',
+          });
+
           if (!monthMap[resolvedAtMonth]) {
             monthMap[resolvedAtMonth] = { open: 0, resolved: 0 };
           }
@@ -55,7 +66,7 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
     );
 
     return Object.keys(monthMap)
-      .sort()
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
       .map(month => ({
         date: month,
         open: monthMap[month].open,
@@ -65,35 +76,22 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
 
   const chartData = transformIssuesForChart();
 
-  const sortDataByDate = (data: any[]) => {
-    return data.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-      if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-        return 0;
-      }
-      return dateA.getTime() - dateB.getTime();
-    });
-  };
-
   const data = [
     {
       id: 'Open',
-      data: sortDataByDate(chartData).map(d => ({ x: d.date, y: d.open })),
+      data: chartData.map(d => ({ x: d.date, y: d.open })),
     },
     {
       id: 'Resolved',
-      data: sortDataByDate(chartData).map(d => ({ x: d.date, y: d.resolved })),
+      data: chartData.map(d => ({ x: d.date, y: d.resolved })),
     },
   ];
-
-  const sortedData = sortDataByDate(data);
 
   return (
     <>
       <div style={{ height: 400, width: '40vw' }}>
         <ResponsiveLine
-          data={sortedData}
+          data={data}
           useMesh
           axisTop={null}
           axisRight={null}
