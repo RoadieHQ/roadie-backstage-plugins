@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createBackend } from '@backstage/backend-defaults';
 
-import { createApiRef } from '@backstage/core-plugin-api';
+const backend = createBackend();
 
-export const wizApiRef = createApiRef<WizAPI>({
-  id: 'plugin.wiz.service',
-});
+backend.add(import('@backstage/plugin-auth-backend'));
+backend.add(import('../src'));
 
-export interface WizAPI {
-  fetchIssuesForProject(projectId: string): Promise<any>;
-}
+backend.start();

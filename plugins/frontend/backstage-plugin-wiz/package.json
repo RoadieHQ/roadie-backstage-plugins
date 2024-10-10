@@ -27,7 +27,6 @@
     "@backstage/core-plugin-api": "^1.9.3",
     "@backstage/plugin-catalog-react": "^1.12.3",
     "@backstage/catalog-model": "^1.6.0",
-    "@backstage/theme": "^0.5.3",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/core": "^4.12.2",
     "@material-ui/styles": "^4.11.4",

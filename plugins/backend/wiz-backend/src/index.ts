@@ -13,13 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { createApiRef } from '@backstage/core-plugin-api';
-
-export const wizApiRef = createApiRef<WizAPI>({
-  id: 'plugin.wiz.service',
-});
-
-export interface WizAPI {
-  fetchIssuesForProject(projectId: string): Promise<any>;
-}
+export * from './service/router';
+export { wizBackendPlugin as default } from './plugin';

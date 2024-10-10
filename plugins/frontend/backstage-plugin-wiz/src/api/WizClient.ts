@@ -14,88 +14,27 @@
  * limitations under the License.
  */
 import { WizAPI } from './WizAPI';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
-
-const DEFAULT_PROXY_PATH = '/wiz/api';
+import { DiscoveryApi, FetchApi } from '@backstage/core-plugin-api';
 
 export type Options = {
   discoveryApi: DiscoveryApi;
-  proxyPath?: string;
+  fetchApi: FetchApi;
 };
 
 export class WizClient implements WizAPI {
   private readonly discoveryApi: DiscoveryApi;
-  private readonly proxyPath: string;
+  private fetchApi: FetchApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
-    this.proxyPath = options.proxyPath ?? DEFAULT_PROXY_PATH;
-  }
-
-  private async getApiUrl() {
-    const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');
-    return proxyUrl + this.proxyPath;
-  }
-
-  async fetchProjects(): Promise<any[]> {
-    const query =
-      'query ProjectsTable($filterBy: ProjectFilters $first: Int, $after: String $orderBy: ProjectOrder) {   projects(filterBy: $filterBy first: $first, after: $after, orderBy: $orderBy) {     nodes {       id       name       isFolder       archived       businessUnit       description     }}}';
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        query,
-        variables: { first: 5, filterBy: { includeArchived: false } },
-      }),
-    };
-    const response = await fetch(`${await this.getApiUrl()}`, options);
-
-    const payload = await response.json();
-    if (!response.ok) {
-      throw new Error(payload.errors[0]);
-    }
-
-    return payload;
-  }
-
-  async fetchIssues(): Promise<any[]> {
-    const query =
-      'query IssuesTable($filterBy: IssueFilters, $first: Int, $after: String, $orderBy: IssueOrder) { issues:issuesV2(filterBy: $filterBy, first: $first, after: $after, orderBy: $orderBy) { nodes { id sourceRule{ __typename ... on Control { id name controlDescription: description resolutionRecommendation securitySubCategories { title category { name framework { name } } } risks } ... on CloudEventRule{ id name cloudEventRuleDescription: description sourceType type risks } ... on CloudConfigurationRule{ id name cloudConfigurationRuleDescription: description remediationInstructions serviceType risks } } createdAt updatedAt dueAt type resolvedAt statusChangedAt projects { id name slug businessUnit riskProfile { businessImpact } } status severity entitySnapshot { id type nativeType name status cloudPlatform cloudProviderURL providerId region resourceGroupExternalId subscriptionExternalId subscriptionName subscriptionTags tags createdAt externalId } serviceTickets { externalId name url } notes { createdAt updatedAt text user { name email } serviceAccount { name } } } pageInfo { hasNextPage endCursor } } }';
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        query,
-        variables: { first: 50 },
-      }),
-    };
-    const response = await fetch(`${await this.getApiUrl()}`, options);
-    const payload = await response.json();
-
-    if (!response.ok) {
-      throw new Error('There was an error');
-    }
-    return payload.data.issues.nodes;
+    this.fetchApi = options.fetchApi;
   }
 
   async fetchIssuesForProject(projectId: string): Promise<any> {
-    const query =
-      'query IssuesTable($filterBy: IssueFilters, $first: Int, $after: String, $orderBy: IssueOrder) { issues:issuesV2(filterBy: $filterBy, first: $first, after: $after, orderBy: $orderBy) { nodes { id sourceRule{ __typename ... on Control { id name controlDescription: description resolutionRecommendation securitySubCategories { title category { name framework { name } } } risks } ... on CloudEventRule{ id name cloudEventRuleDescription: description sourceType type risks } ... on CloudConfigurationRule{ id name cloudConfigurationRuleDescription: description remediationInstructions serviceType risks } } createdAt updatedAt dueAt type resolvedAt statusChangedAt projects { id name slug businessUnit riskProfile { businessImpact } } status severity entitySnapshot { id type nativeType name status cloudPlatform cloudProviderURL providerId region resourceGroupExternalId subscriptionExternalId subscriptionName subscriptionTags tags createdAt externalId } serviceTickets { externalId name url } notes { createdAt updatedAt text user { name email } serviceAccount { name } } } pageInfo { hasNextPage endCursor } } }';
-
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        query,
-        variables: {
-          first: 100,
-          filterBy: {
-            project: [`${projectId}`],
-          },
-          orderBy: { direction: 'DESC', field: 'SEVERITY' },
-        },
-      }),
-    };
-    const response = await fetch(`${await this.getApiUrl()}`, options);
+    const baseUrl = await this.discoveryApi.getBaseUrl('wiz-backend');
+    const response = await this.fetchApi.fetch(
+      `${baseUrl}/wiz-issues/${projectId}`,
+    );
     const payload = await response.json();
 
     if (!response.ok) {

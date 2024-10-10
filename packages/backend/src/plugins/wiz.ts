@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { createRouter } from '@roadiehq/plugin-wiz-backend';
+import type { PluginEnvironment } from '../types';
 
-import { createApiRef } from '@backstage/core-plugin-api';
-
-export const wizApiRef = createApiRef<WizAPI>({
-  id: 'plugin.wiz.service',
-});
-
-export interface WizAPI {
-  fetchIssuesForProject(projectId: string): Promise<any>;
+export default async function createPlugin({
+  logger,
+  config,
+}: PluginEnvironment) {
+  return await createRouter({ logger, config });
 }
