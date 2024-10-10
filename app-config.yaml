@@ -233,10 +233,3 @@ bugsnag:
 
 iframe:
   allowList: ['example.com']
-
-wiz:
-  dashboardLink: ${WIZ_DASHBOARD_LINK}
-  clientSecret: client_secret
-  clientId: client_id
-  tokenUrl: https://www.test.com
-  wizAPIUrl: https://www.test.com
