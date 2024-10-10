@@ -236,7 +236,7 @@ iframe:
 
 wiz:
   dashboardLink: ${WIZ_DASHBOARD_LINK}
-  clientSecret: ${WIZ_SECRET}
-  clientId: ${WIZ_ID}
-  tokenUrl: ${WIZ_TOKEN_URL}
-  wizAPIUrl: ${WIZ_API_URL}
+  clientSecret: client_secret
+  clientId: client_id
+  tokenUrl: https://www.test.com
+  wizAPIUrl: https://www.test.com
