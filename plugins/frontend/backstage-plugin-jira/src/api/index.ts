@@ -383,7 +383,6 @@ export class JiraAPI {
 
     let startAt: number | undefined = 0;
     while (startAt !== undefined) {
-      // TODO the current logic pages through the whole result set without limit ; we should probably have a default limit
       const res: IssuesResult = await this.pagedIssuesRequest(
         apiUrl,
         query,

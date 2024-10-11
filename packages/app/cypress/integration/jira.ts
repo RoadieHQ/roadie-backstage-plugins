@@ -51,7 +51,7 @@ describe('Jira plugin', () => {
 
   describe('Navigating to Jira Overview', () => {
     it('should show Jira in Overview tab', () => {
-      cy.contains('Activity stream');
+      cy.contains('Activity stream', { matchCase: false });
 
       cy.contains('John Doe added');
 
