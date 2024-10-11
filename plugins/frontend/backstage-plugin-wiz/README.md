@@ -73,6 +73,18 @@ In the `packages/app/src/components/catalog/EntityPage.tsx` under `overviewConte
 </EntitySwitch>
 ```
 
+In order to add correct url which will lead to WIZ dashboard for your organisation, for EntityIssuesWidget, add dashboard link in your app-config.yaml under wiz.
+
+```yaml
+wiz:
+  enabled: true
+  dashboardLink: <your-wiz-url>
+  clientId: <Client ID>
+  clientSecret: <Client Secret>
+  tokenUrl: <Wiz token URL>
+  wizAPIUrl: <API Endpoint URL>
+```
+
 ### EntityWizIssues
 
 In the `packages/app/src/components/catalog/EntityPage.tsx` under `serviceEntityPage` add the following:
