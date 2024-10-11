@@ -43,8 +43,8 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
       model: config.bedrockConfig.modelName,
     };
     const embeddings = config.bedrockConfig.modelName.includes('cohere')
-      ? new BedrockCohereEmbeddings(embeddingsConfig)
-      : new BedrockEmbeddings(embeddingsConfig);
+      ? new BedrockCohereEmbeddings({ ...embeddingsConfig, maxRetries: 3 })
+      : new BedrockEmbeddings({ ...embeddingsConfig, maxRetries: 3 });
 
     super({ ...config, embeddings });
   }
