@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.0.1
+
+### Patch Changes
+
+- 3e4965f: Add max retries to embeddings to prevent forever loop in case of errors.
+
 ## 1.0.0
 
 ### Major Changes
