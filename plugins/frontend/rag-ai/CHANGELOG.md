@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.6
+
+### Patch Changes
+
+- 3e4965f: Add max retries to embeddings to prevent forever loop in case of errors.
+
 ## 1.1.5
 
 ### Patch Changes
