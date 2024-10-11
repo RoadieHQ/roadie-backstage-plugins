@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.4.0
+
+### Minor Changes
+
+- 85c480f: Allow use of multiple Datadog graphs for a single entity.
+
 ## 2.3.4
 
 ### Patch Changes

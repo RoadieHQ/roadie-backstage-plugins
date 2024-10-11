@@ -24,7 +24,7 @@ import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 
 export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
   const { dashboardUrl } = useDatadogAppData({ entity });
-  const allDashboardUrls: string[] = dashboardUrl.split(',');
+  const allDashboardUrls = dashboardUrl.split(',');
   return (
     <Grid container spacing={3}>
       {allDashboardUrls.map((value, index) => (
