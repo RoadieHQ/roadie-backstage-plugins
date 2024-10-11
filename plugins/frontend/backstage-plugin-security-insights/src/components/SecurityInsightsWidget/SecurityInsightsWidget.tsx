@@ -35,6 +35,7 @@ import {
   SecurityInsightFilterState,
 } from '../../types';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { GithubNotAuthorized, useGithubLoggedIn } from '../useGithubLoggedIn';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -71,7 +72,7 @@ const IssuesCounter: FC<IssuesCounterProps> = ({
   );
 };
 
-export const SecurityInsightsWidget = () => {
+const SecurityInsightsWidgetContent = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const classes = useStyles();
@@ -135,6 +136,19 @@ export const SecurityInsightsWidget = () => {
           </>
         )}
       </Box>
+    </InfoCard>
+  );
+};
+
+export const SecurityInsightsWidget = () => {
+  const classes = useStyles();
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? (
+    <SecurityInsightsWidgetContent />
+  ) : (
+    <InfoCard title="Security Insights" className={classes.infoCard}>
+      <GithubNotAuthorized />
     </InfoCard>
   );
 };
