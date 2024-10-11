@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.7.0
+
+### Minor Changes
+
+- 687a59a: Add JQL Query Card
+
 ## 2.6.2
 
 ### Patch Changes
