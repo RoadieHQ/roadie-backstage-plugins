@@ -70,7 +70,9 @@ import {
   isGithubInsightsAvailable,
 } from '@roadiehq/backstage-plugin-github-insights';
 import {
+  EntityJiraActivityStreamCard,
   EntityJiraOverviewCard,
+  EntityJiraQueryCard,
   isJiraAvailable,
 } from '@roadiehq/backstage-plugin-jira';
 import {
@@ -329,6 +331,19 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/argocd" title="Argo CD">
       <EntityArgoCDContent />
+    </EntityLayout.Route>
+    <EntityLayout.Route path="/jira" title="Jira">
+      <Grid container spacing={3} alignItems="stretch">
+        <Grid item md={12}>
+          <EntityJiraQueryCard />
+        </Grid>
+        <Grid item md={6}>
+          <EntityJiraOverviewCard />
+        </Grid>
+        <Grid item md={6}>
+          <EntityJiraActivityStreamCard />
+        </Grid>
+      </Grid>
     </EntityLayout.Route>
   </EntityLayout>
 );

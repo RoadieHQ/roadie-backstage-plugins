@@ -57,8 +57,7 @@ proxy:
   '/jira/api':
     target: 'https://roadie-dev.atlassian.net'
     headers:
-      Authorization:
-        $env: JIRA_TOKEN
+      Authorization: ${JIRA_TOKEN}
       Accept: 'application/json'
       Content-Type: 'application/json'
       X-Atlassian-Token: 'no-check'
