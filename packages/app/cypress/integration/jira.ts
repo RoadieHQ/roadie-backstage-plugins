@@ -59,4 +59,19 @@ describe('Jira plugin', () => {
       cy.get('[data-value="Selected for Development"]');
     });
   });
+  describe('EntityJiraQueryCard', () => {
+    beforeEach(() => {
+      cy.visit('/catalog/default/component/sample-service/jira');
+      cy.intercept(
+        'POST',
+        'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',
+        { fixture: 'jira/jqlQueryResult.json' },
+      ).as('queryResult');
+      cy.wait('@queryResult');
+    });
+
+    it('should show the JQL response', () => {
+      cy.contains('[Sample] Unable to log into VPN');
+    });
+  });
 });
