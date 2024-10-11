@@ -7,13 +7,33 @@
 
 Entity Page components:
 
-- Show project details and tasks
-- View JIRA issues of the Project
-- Activity Stream
+- EntityJiraOverviewCard
+  - Show project details and tasks
+  - View JIRA issues of the Project
+  - Activity Stream
+- EntityJiraActivityStreamCard
+  - Activity Stream only
+- EntityJiraQueryCard
+  - Show results of a JQL query provided by annotation or props
 
 Home Page components:
 
-- Show my assigned JIRA tickets
+- HomePageMyJiraTicketsCard
+  - Show my assigned JIRA tickets
+
+## Annotations
+
+- jira/component: A jira component name
+  - Used by EntityJiraOverviewCard to filter by a single component
+  - Can be used in JQL expressions used by EntityJiraQueryCard e.g. "component IN ({{ component }})"
+- jira/project-key: a jira project key
+  - Used by EntityJiraOverviewCard to get issues related to a single project
+  - Can be used in JQL expressions used by EntityJiraQueryCard e.g. "project = ({{ project }})"
+- jira/label: One or more jira labels
+  - Used by EntityJiraOverviewCard to filter by labels. Use CSV to specify multiple labels.
+  - Can be used in JQL expressions used by EntityJiraQueryCard e.g. "label IN ({{ label }})"
+- jira/team: the ID of a Jira team
+  - Can be used in JQL expressions used by EntityJiraQueryCard e.g. "'Team[Team]' = '{{ team }}'"
 
 ## How to add Jira project dependency to Backstage app
 
