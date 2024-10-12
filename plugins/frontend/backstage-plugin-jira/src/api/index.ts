@@ -99,10 +99,11 @@ export class JiraAPI {
     apiUrl: string,
     jql: string,
     startAt: number,
+    maxResults?: number,
   ): Promise<IssuesResult> {
     const data = {
       jql,
-      maxResults: -1,
+      maxResults: maxResults ?? -1,
       fields: [
         'key',
         'issuetype',
@@ -113,10 +114,10 @@ export class JiraAPI {
         'parent',
         'created',
         'updated',
+        'project',
       ],
       startAt,
     };
-
     const request = await this.fetchApi.fetch(`${apiUrl}search`, {
       method: 'POST',
       headers: {
@@ -156,7 +157,7 @@ export class JiraAPI {
     const jql = `project = "${projectKey}"
       ${statusesString ? `AND status in (${statusesString})` : ''}
       ${component ? `AND component = "${component}"` : ''}
-      ${label ? `AND labels in ("${label}")` : ''}
+      ${label ? `AND labels in (${label})` : ''}
       AND statuscategory not in ("Done") 
     `;
 
@@ -373,5 +374,24 @@ export class JiraAPI {
       } as UserSummary,
       tickets,
     };
+  }
+
+  async jqlQuery(query: string, maxResults?: number) {
+    const { apiUrl } = await this.getUrls();
+
+    const issues = [];
+
+    let startAt: number | undefined = 0;
+    while (startAt !== undefined) {
+      const res: IssuesResult = await this.pagedIssuesRequest(
+        apiUrl,
+        query,
+        startAt,
+        maxResults,
+      );
+      startAt = res.next;
+      issues.push(...res.issues);
+    }
+    return issues;
   }
 }

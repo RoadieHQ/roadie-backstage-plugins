@@ -135,3 +135,5 @@ site
 *-credentials.yaml
 
 .npmrc
+/packages/app/cypress/videos/
+/packages/app/cypress/screenshots/

@@ -127,6 +127,7 @@ export type IssuesResponse = {
 
 export type Ticket = {
   key: string;
+  self: string;
   fields?: {
     issuetype: {
       iconUrl: string;
@@ -146,12 +147,13 @@ export type Ticket = {
       iconUrl: string;
       name: string;
     };
-    updated: Date;
-    created: Date;
+    updated: string;
+    created: string;
     priority: {
       iconUrl: string;
       name: string;
     };
+    project?: { name: string; self: string; key: string };
   };
 };
 
@@ -175,8 +177,8 @@ export type TicketSummary = {
     iconUrl: string;
     name: string;
   };
-  created?: Date;
-  updated?: Date;
+  created?: string;
+  updated?: string;
 };
 
 export type User = {
