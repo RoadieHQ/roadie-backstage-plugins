@@ -57,6 +57,12 @@ const GRAPHQL_GITHUB_API = graphql.link('https://api.github.com/graphql');
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
 };
 
 const config = {
@@ -86,10 +92,6 @@ const apisLowSeverity: [AnyApiRef, Partial<unknown>][] = [
 describe('Dependabot alerts overview', () => {
   const worker = setupServer();
   setupRequestMockHandlers(worker);
-
-  beforeEach(() => {
-    jest.resetAllMocks();
-  });
 
   describe('GithubDependabotAlertsTable', () => {
     beforeEach(() => {
