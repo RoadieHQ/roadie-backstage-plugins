@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.2
+
+### Patch Changes
+
+- 7afd136: Publish backend plugin and add repository in order to display images
+
 ## 1.0.1
 
 ### Patch Changes
