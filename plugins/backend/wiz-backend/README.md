@@ -52,11 +52,18 @@ import wiz from './plugins/wiz';
 async function main() {
   // ...
   const wizEnv = useHotMemoize(module, () => createEnv('wiz'));
-  const wizEnabled = config.getBoolean('wiz.enabled');
+
+  const wizConfig = {
+  enabled: config.getOptionalBoolean('wiz.enabled'),
+  clientId: config.getOptionalString('wiz.clientId'),
+  clientSecret: config.getOptionalString('wiz.clientSecret'),
+  tokenUrl: config.getOptionalString('wiz.tokenUrl'),
+  apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
+};
 
   const apiRouter = Router();
-    if (wizEnabled) {
-    apiRouter.use('/wiz-backend', await wiz(wizEnv));
+    if (wizConfig.enabled && wizConfig.clientId && wizConfig.clientSecret && wizConfig.tokenUrl && wizConfig.apiUrl) {
+    router.use('/wiz-backend', await wiz(wizEnv));
   } await wiz(wizEnv));
   // ...
 }

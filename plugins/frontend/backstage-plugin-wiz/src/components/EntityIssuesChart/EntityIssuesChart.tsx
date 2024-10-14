@@ -22,7 +22,7 @@ import {
 } from '@backstage/plugin-catalog-react';
 import { IssuesChart } from './IssuesChart';
 
-export const WIZ_PROJECT_ANNOTATION = 'wiz/project-id';
+export const WIZ_PROJECT_ANNOTATION = 'wiz.io/project-id';
 
 export const isWizAvailable = (entity: Entity) => {
   return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);

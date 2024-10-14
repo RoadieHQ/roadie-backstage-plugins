@@ -172,7 +172,7 @@ export class WizClient {
         variables: {
           first: 100,
           filterBy: {
-            project: [`${projectId}`],
+            project: [projectId],
           },
           orderBy: { direction: 'DESC', field: 'SEVERITY' },
         },

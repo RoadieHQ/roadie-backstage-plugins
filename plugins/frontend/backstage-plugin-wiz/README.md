@@ -104,5 +104,5 @@ This will add a new tab with all the issues for the project id you have specifie
 ```yaml
 metadata:
   annotations:
-    wiz/project-id: <your-project-id>
+    wiz.io/project-id: <your-project-id>
 ```

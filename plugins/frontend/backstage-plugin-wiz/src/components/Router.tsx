@@ -27,6 +27,7 @@ import { WIZ_PROJECT_ANNOTATION } from './constants';
 export const isWizAvailable = (entity: Entity) => {
   return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);
 };
+
 export const Router = () => {
   const { entity } = useEntity();
   return !isWizAvailable(entity) ? (

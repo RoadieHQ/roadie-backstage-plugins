@@ -43,7 +43,7 @@
     "@langchain/openai": "^0.2.7",
     "@octokit/rest": "^19.0.3",
     "@roadiehq/backstage-plugin-argo-cd-backend": "3.2.3",
-    "@roadiehq/plugin-wiz-backend": "^1.0.0",
+    "@roadiehq/plugin-wiz-backend": "^0.0.1",
     "@roadiehq/backstage-plugin-aws-auth": "^0.4.26",
     "@roadiehq/backstage-plugin-aws-backend": "^1.1.26",
     "@roadiehq/catalog-backend-module-aws": "^5.0.4",

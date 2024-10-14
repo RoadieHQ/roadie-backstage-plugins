@@ -55,9 +55,7 @@ import {
   EntityGithubPullRequestsContent,
   EntityGithubPullRequestsOverviewCard,
 } from '@roadiehq/backstage-plugin-github-pull-requests';
-
 import { EntityBitbucketPullRequestsContent } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
-
 import {
   isAWSLambdaAvailable,
   EntityAWSLambdaOverviewCard,
