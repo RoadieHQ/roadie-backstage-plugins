@@ -16,6 +16,11 @@
       "@roadiehq/backstage-plugin-wiz"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "plugins/frontend/backstage-plugin-wiz"
+  },
   "sideEffects": false,
   "scripts": {
     "start": "backstage-cli package start",
