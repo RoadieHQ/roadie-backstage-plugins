@@ -42,6 +42,7 @@ import proxy from './plugins/proxy';
 import techdocs from './plugins/techdocs';
 import aws from './plugins/aws';
 import argocd from './plugins/argocd';
+import wiz from './plugins/wiz';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 import { UrlReaders } from '@backstage/backend-defaults/urlReader';
@@ -96,6 +97,15 @@ async function main() {
   const appEnv = useHotMemoize(module, () => createEnv('app'));
   const awsEnv = useHotMemoize(module, () => createEnv('aws'));
   const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
+  const wizEnv = useHotMemoize(module, () => createEnv('wiz'));
+
+  const wizConfig = {
+    enabled: config.getOptionalBoolean('wiz.enabled'),
+    clientId: config.getOptionalString('wiz.clientId'),
+    clientSecret: config.getOptionalString('wiz.clientSecret'),
+    tokenUrl: config.getOptionalString('wiz.tokenUrl'),
+    apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
+  };
 
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
@@ -105,6 +115,17 @@ async function main() {
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/aws', await aws(awsEnv));
   apiRouter.use('/argocd', await argocd(argocdEnv));
+
+  if (
+    wizConfig.enabled &&
+    wizConfig.clientId &&
+    wizConfig.clientSecret &&
+    wizConfig.tokenUrl &&
+    wizConfig.apiUrl
+  ) {
+    apiRouter.use('/wiz-backend', await wiz(wizEnv));
+  }
+
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)

@@ -7,9 +7,10 @@
   },
   "bundled": true,
   "dependencies": {
+    "@backstage-community/plugin-github-actions": "^0.6.16",
+    "@backstage-community/plugin-tech-radar": "^0.7.4",
     "@backstage/app-defaults": "^1.5.10",
     "@backstage/catalog-model": "^1.6.0",
-    "@roadiehq/backstage-plugin-cloudsmith": "^1.1.1",
     "@backstage/cli": "^0.27.0",
     "@backstage/core-app-api": "^1.14.2",
     "@backstage/core-components": "^0.14.10",
@@ -34,8 +35,10 @@
     "@roadiehq/backstage-plugin-argo-cd": "^2.8.3",
     "@roadiehq/backstage-plugin-aws": "^1.1.25",
     "@roadiehq/backstage-plugin-aws-lambda": "^2.2.11",
+    "@roadiehq/backstage-plugin-bitbucket-pullrequest": "^2.0.4",
     "@roadiehq/backstage-plugin-bugsnag": "^2.2.11",
     "@roadiehq/backstage-plugin-buildkite": "^2.3.3",
+    "@roadiehq/backstage-plugin-cloudsmith": "^1.1.1",
     "@roadiehq/backstage-plugin-datadog": "^2.3.3",
     "@roadiehq/backstage-plugin-github-insights": "^2.4.2",
     "@roadiehq/backstage-plugin-github-pull-requests": "^2.5.30",
@@ -47,6 +50,7 @@
     "@roadiehq/backstage-plugin-security-insights": "^2.3.21",
     "@roadiehq/backstage-plugin-shortcut": "^1.2.3",
     "@roadiehq/backstage-plugin-travis-ci": "^2.1.25",
+    "@roadiehq/backstage-plugin-wiz": "^0.0.1",
     "@roadiehq/plugin-scaffolder-frontend-module-http-request-field": "^1.7.2",
     "@roadiehq/rag-ai": "^1.1.3",
     "cross-fetch": "^4.0.0",
@@ -55,10 +59,7 @@
     "react-dom": "^18.0.2",
     "react-router": "^6.26.1",
     "react-router-dom": "^6.26.1",
-    "react-use": "^15.3.3",
-    "@backstage-community/plugin-github-actions": "^0.6.16",
-    "@backstage-community/plugin-tech-radar": "^0.7.4",
-    "@roadiehq/backstage-plugin-bitbucket-pullrequest": "^2.0.4"
+    "react-use": "^15.3.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.0.0",

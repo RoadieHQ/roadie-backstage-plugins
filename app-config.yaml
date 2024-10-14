@@ -232,3 +232,6 @@ bugsnag:
 
 iframe:
   allowList: ['example.com']
+
+wiz:
+  enabled: false
