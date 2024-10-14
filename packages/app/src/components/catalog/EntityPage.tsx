@@ -366,6 +366,7 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     <EntityLayout.Route path="/wiz" title="WIZ">
       <EntityWizIssues />
+    </EntityLayout.Route>
     <EntityLayout.Route path="/jira" title="Jira">
       <Grid container spacing={3} alignItems="stretch">
         <Grid item md={12}>
