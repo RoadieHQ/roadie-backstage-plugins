@@ -113,8 +113,7 @@ export const ControlledRagModal = ({
             break;
           }
           case 'usage': {
-            // eslint-disable-next-line
-            console.debug(chunk.data);
+            // Do nothing
             break;
           }
           default:
