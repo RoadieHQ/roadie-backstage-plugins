@@ -31,6 +31,10 @@ import {
   GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import {
+  GithubNotAuthorized,
+  useGithubLoggedIn,
+} from '../../../hooks/useGithubLoggedIn';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -48,9 +52,18 @@ const ContributorsCard = () => {
   const { hostname } = useEntityGithubScmIntegration(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
   const { owner, repo } = useProjectEntity(entity);
+  const isLoggedIn = useGithubLoggedIn();
   if (!projectAlert) {
     return (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
+    );
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <InfoCard title="Contributors" className={classes.infoCard}>
+        <GithubNotAuthorized />
+      </InfoCard>
     );
   }
 

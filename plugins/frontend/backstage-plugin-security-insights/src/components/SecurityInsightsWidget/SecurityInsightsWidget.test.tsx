@@ -35,6 +35,12 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 const mockGithubAuth = {
   getAccessToken: async (_: string[]) => 'test-token',
+  sessionState$: jest.fn(() => ({
+    subscribe: (fn: (a: string) => void) => {
+      fn('SignedIn');
+      return { unsubscribe: jest.fn() };
+    },
+  })),
 };
 
 const config = {

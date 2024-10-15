@@ -27,6 +27,10 @@ import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
+  GithubNotAuthorized,
+  useGithubLoggedIn,
+} from '../../../hooks/useGithubLoggedIn';
+import {
   isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION,
 } from '../../utils/isGithubInsightsAvailable';
@@ -66,7 +70,7 @@ type Language = {
   [key: string]: number;
 };
 
-const LanguagesCard = () => {
+const LanguagesCardContent = () => {
   const { entity } = useEntity();
   let barWidth = 0;
   const classes = useStyles();
@@ -151,6 +155,19 @@ const LanguagesCard = () => {
     </InfoCard>
   ) : (
     <></>
+  );
+};
+
+const LanguagesCard = () => {
+  const classes = useStyles();
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? (
+    <LanguagesCardContent />
+  ) : (
+    <InfoCard title="Languages" className={classes.infoCard}>
+      <GithubNotAuthorized />
+    </InfoCard>
   );
 };
 

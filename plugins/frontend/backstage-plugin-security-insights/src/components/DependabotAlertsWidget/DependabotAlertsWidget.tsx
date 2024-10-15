@@ -29,6 +29,7 @@ import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { InfoCard, Progress } from '@backstage/core-components';
+import { GithubNotAuthorized, useGithubLoggedIn } from '../useGithubLoggedIn';
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
@@ -207,7 +208,7 @@ export const DependabotAlertInformations: FC<DependabotAlertsProps> = ({
   );
 };
 
-export const DependabotAlertsWidget = () => {
+const DependabotAlertsWidgetContent = () => {
   const { entity } = useEntity();
   const { owner, repo } = useProjectEntity(entity);
   const auth = useApi(githubAuthApiRef);
@@ -282,4 +283,17 @@ export const DependabotAlertsWidget = () => {
   return value && value.vulnerabilityAlerts ? (
     <DependabotAlertInformations repository={value} detailsUrl={detailsUrl} />
   ) : null;
+};
+
+export const DependabotAlertsWidget = () => {
+  const classes = useStyles();
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? (
+    <DependabotAlertsWidgetContent />
+  ) : (
+    <InfoCard title="Dependabot Alerts" className={classes.infoCard}>
+      <GithubNotAuthorized />
+    </InfoCard>
+  );
 };
