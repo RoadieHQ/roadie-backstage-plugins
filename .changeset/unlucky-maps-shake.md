@@ -1,5 +1,5 @@
 ---
-'@roadiehq/plugin-wiz-backend': minor
+'@roadiehq/plugin-wiz-backend': patch
 ---
 
 Remove uneeded dependency from backend plugin
