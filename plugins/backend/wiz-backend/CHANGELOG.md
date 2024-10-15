@@ -1,5 +1,11 @@
 # @roadiehq/plugin-wiz-backend
 
+## 1.0.3
+
+### Patch Changes
+
+- 724803d: Modify package.json
+
 ## 1.0.2
 
 ### Patch Changes
