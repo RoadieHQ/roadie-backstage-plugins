@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 2.6.0
+
+### Minor Changes
+
+- 729a349: Add SignIn button to all Github related cards from entity overwiew page.
+
 ## 2.5.31
 
 ### Patch Changes
