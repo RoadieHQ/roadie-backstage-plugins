@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.1.0
+
+### Minor Changes
+
+- ad1565e: Make Tech Docs embeddings creation filterable based on additional passed in entity filter values.
+
 ## 1.0.4
 
 ### Patch Changes

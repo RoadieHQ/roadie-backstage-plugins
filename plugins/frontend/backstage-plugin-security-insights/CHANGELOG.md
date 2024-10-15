@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.4.0
+
+### Minor Changes
+
+- 729a349: Add SignIn button to all Github related cards from entity overwiew page.
+
 ## 2.3.22
 
 ### Patch Changes
