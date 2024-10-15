@@ -1,5 +1,11 @@
 # @roadiehq/plugin-wiz-backend
 
+## 1.0.4
+
+### Patch Changes
+
+- da6e417: Remove uneeded dependency from backend plugin
+
 ## 1.0.3
 
 ### Patch Changes
