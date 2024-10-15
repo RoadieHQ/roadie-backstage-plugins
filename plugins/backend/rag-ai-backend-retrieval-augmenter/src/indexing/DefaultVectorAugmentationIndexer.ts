@@ -188,7 +188,7 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
 
         const entitiesResponse = await this.catalogApi.getEntities(
           {
-            filter: TECHDOCS_ENTITY_FILTER,
+            filter: { ...TECHDOCS_ENTITY_FILTER, ...filter },
           },
           { token },
         );
@@ -275,7 +275,9 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     });
 
     const entityFilter =
-      source === 'tech-docs' ? TECHDOCS_ENTITY_FILTER : filter;
+      source === 'tech-docs'
+        ? { ...TECHDOCS_ENTITY_FILTER, ...filter }
+        : filter;
     const entities = (
       await this.catalogApi.getEntities({ filter: entityFilter }, { token })
     ).items.map(stringifyEntityRef);
