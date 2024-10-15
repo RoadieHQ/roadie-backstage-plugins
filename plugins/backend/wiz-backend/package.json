@@ -12,7 +12,15 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "plugin-wiz-backend"
+    "pluginId": "plugin-wiz-backend",
+    "pluginPackages": [
+      "@roadiehq/plugin-wiz-backend"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "plugins/backend/wiz-backend"
   },
   "scripts": {
     "start": "backstage-cli package start",
