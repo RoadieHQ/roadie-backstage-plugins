@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.0.2
+
+### Patch Changes
+
+- 05d5d94: Update retrieval augmenter dependency
+
 ## 1.0.1
 
 ### Patch Changes
