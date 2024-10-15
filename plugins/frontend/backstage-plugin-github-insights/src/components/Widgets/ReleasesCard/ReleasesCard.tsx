@@ -32,6 +32,10 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
+import {
+  GithubNotAuthorized,
+  useGithubLoggedIn,
+} from '../../../hooks/useGithubLoggedIn';
 
 type Release = {
   id: number;
@@ -41,7 +45,7 @@ type Release = {
   name: string;
 };
 
-const ReleasesCard = () => {
+const ReleasesCardContent = () => {
   const classes = useStyles();
   const { entity } = useEntity();
 
@@ -105,6 +109,19 @@ const ReleasesCard = () => {
     </InfoCard>
   ) : (
     <></>
+  );
+};
+
+const ReleasesCard = () => {
+  const classes = useStyles();
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? (
+    <ReleasesCardContent />
+  ) : (
+    <InfoCard title="Releases" className={classes.infoCard}>
+      <GithubNotAuthorized />
+    </InfoCard>
   );
 };
 
