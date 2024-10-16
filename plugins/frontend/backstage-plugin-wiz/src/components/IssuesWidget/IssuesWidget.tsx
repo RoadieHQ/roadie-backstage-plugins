@@ -26,6 +26,7 @@ import {
 } from '@backstage/core-components';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
+import { useStyles } from '../../style';
 
 const SeverityIndicator = ({
   theme,
@@ -69,6 +70,7 @@ export const IssuesWidget = () => {
   const api = useApi(wizApiRef);
   const { entity } = useEntity();
   const configApi = useApi(configApiRef);
+  const classes = useStyles();
 
   const dashboardLink = configApi.getOptionalString('wiz.dashboardLink') ?? '';
 
@@ -86,6 +88,16 @@ export const IssuesWidget = () => {
     (item: { status: string }) => item.status === 'RESOLVED',
   );
 
+  const WizIcon = () => {
+    return (
+      <img
+        src={require('../../../docs/wiz-logo.png')}
+        alt="WIZ Logo"
+        className={classes.logo}
+      />
+    );
+  };
+
   if (loading) {
     return <Progress />;
   } else if (error) {
@@ -95,6 +107,12 @@ export const IssuesWidget = () => {
   return (
     <InfoCard
       title="Issues"
+      headerProps={{
+        action: <WizIcon />,
+        classes: {
+          root: classes.card,
+        },
+      }}
       deepLink={{
         link: `https://${dashboardLink}`,
         title: 'Go to WIZ',
@@ -104,117 +122,122 @@ export const IssuesWidget = () => {
         },
       }}
     >
-      <Box display="flex">
-        <Box display="flex" flexDirection="column">
-          <Typography variant="subtitle1">Open</Typography>
+      {' '}
+      {value.length > 0 ? (
+        <Box display="flex">
+          <Box display="flex" flexDirection="column">
+            <Typography variant="subtitle1">Open</Typography>
 
-          <Box
-            display="flex"
-            mt={2}
-            flexDirection="column"
-            width="12vw"
-            style={{
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <SeverityIndicator
-              theme={theme}
-              count={
-                openIssues.filter(
-                  (it: { severity: string }) => it.severity === 'CRITICAL',
-                ).length
-              }
-              severity="high"
-              content="Critical severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                openIssues.filter(
-                  (it: { severity: string }) => it.severity === 'HIGH',
-                ).length
-              }
-              severity="high"
-              content="High severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                openIssues.filter(
-                  (it: { severity: string }) => it.severity === 'MEDIUM',
-                ).length
-              }
-              severity="medium"
-              content="Medium severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                openIssues.filter(
-                  (it: { severity: string }) => it.severity === 'LOW',
-                ).length
-              }
-              severity="low"
-              content="Low severity"
-            />
+            <Box
+              display="flex"
+              mt={2}
+              flexDirection="column"
+              width="12vw"
+              style={{
+                backgroundColor: theme.palette.background.default,
+              }}
+            >
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  openIssues.filter(
+                    (it: { severity: string }) => it.severity === 'CRITICAL',
+                  ).length
+                }
+                severity="high"
+                content="Critical severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  openIssues.filter(
+                    (it: { severity: string }) => it.severity === 'HIGH',
+                  ).length
+                }
+                severity="high"
+                content="High severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  openIssues.filter(
+                    (it: { severity: string }) => it.severity === 'MEDIUM',
+                  ).length
+                }
+                severity="medium"
+                content="Medium severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  openIssues.filter(
+                    (it: { severity: string }) => it.severity === 'LOW',
+                  ).length
+                }
+                severity="low"
+                content="Low severity"
+              />
+            </Box>
+          </Box>
+
+          <Box display="flex" flexDirection="column" ml={2}>
+            <Typography variant="subtitle1">Resolved</Typography>
+
+            <Box
+              display="flex"
+              mt={2}
+              flexDirection="column"
+              width="12vw"
+              style={{
+                backgroundColor: theme.palette.background.default,
+              }}
+            >
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  resolvedIssues.filter(
+                    (it: { severity: string }) => it.severity === 'CRITICAL',
+                  ).length
+                }
+                severity="high"
+                content="Critical severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  resolvedIssues.filter(
+                    (it: { severity: string }) => it.severity === 'HIGH',
+                  ).length
+                }
+                severity="high"
+                content="High severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  resolvedIssues.filter(
+                    (it: { severity: string }) => it.severity === 'MEDIUM',
+                  ).length
+                }
+                severity="medium"
+                content="Medium severity"
+              />
+              <SeverityIndicator
+                theme={theme}
+                count={
+                  resolvedIssues.filter(
+                    (it: { severity: string }) => it.severity === 'LOW',
+                  ).length
+                }
+                severity="low"
+                content="Low severity"
+              />
+            </Box>
           </Box>
         </Box>
-
-        <Box display="flex" flexDirection="column" ml={2}>
-          <Typography variant="subtitle1">Resolved</Typography>
-
-          <Box
-            display="flex"
-            mt={2}
-            flexDirection="column"
-            width="12vw"
-            style={{
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
-            <SeverityIndicator
-              theme={theme}
-              count={
-                resolvedIssues.filter(
-                  (it: { severity: string }) => it.severity === 'CRITICAL',
-                ).length
-              }
-              severity="high"
-              content="Critical severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                resolvedIssues.filter(
-                  (it: { severity: string }) => it.severity === 'HIGH',
-                ).length
-              }
-              severity="high"
-              content="High severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                resolvedIssues.filter(
-                  (it: { severity: string }) => it.severity === 'MEDIUM',
-                ).length
-              }
-              severity="medium"
-              content="Medium severity"
-            />
-            <SeverityIndicator
-              theme={theme}
-              count={
-                resolvedIssues.filter(
-                  (it: { severity: string }) => it.severity === 'LOW',
-                ).length
-              }
-              severity="low"
-              content="Low severity"
-            />
-          </Box>
-        </Box>
-      </Box>
+      ) : (
+        <Typography>There are no issues for this project</Typography>
+      )}
     </InfoCard>
   );
 };

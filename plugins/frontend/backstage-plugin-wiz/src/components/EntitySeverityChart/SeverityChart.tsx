@@ -26,12 +26,25 @@ import {
 } from '@backstage/core-components';
 import { BarChart } from '.';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
+import { useStyles } from '../../style';
+import { Typography } from '@material-ui/core';
 
 export const SeverityChart = () => {
   const api = useApi(wizApiRef);
+  const classes = useStyles();
   const { entity } = useEntity();
   const wizAnnotation =
     entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
+
+  const WizIcon = () => {
+    return (
+      <img
+        src={require('../../../docs/wiz-logo.png')}
+        alt="WIZ Logo"
+        className={classes.logo}
+      />
+    );
+  };
 
   const { value, loading, error } = useAsync(async () => {
     return await api.fetchIssuesForProject(wizAnnotation);
@@ -44,8 +57,20 @@ export const SeverityChart = () => {
   }
 
   return (
-    <InfoCard title="Severity graph">
-      <BarChart issues={value} />
+    <InfoCard
+      title="Severity graph"
+      headerProps={{
+        action: <WizIcon />,
+        classes: {
+          root: classes.card,
+        },
+      }}
+    >
+      {value.length > 0 ? (
+        <BarChart issues={value} />
+      ) : (
+        <Typography>There are no issues for this project</Typography>
+      )}
     </InfoCard>
   );
 };

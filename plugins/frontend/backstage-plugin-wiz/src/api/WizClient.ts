@@ -32,16 +32,25 @@ export class WizClient implements WizAPI {
 
   async fetchIssuesForProject(projectId: string): Promise<any> {
     const baseUrl = await this.discoveryApi.getBaseUrl('wiz-backend');
-    const response = await this.fetchApi.fetch(
-      `${baseUrl}/wiz-issues/${projectId}`,
-    );
-    const payload = await response.json();
 
-    if (!response.ok) {
-      throw new Error(
-        'There was an error retrieving issues for specific project',
+    try {
+      const response = await this.fetchApi.fetch(
+        `${baseUrl}/wiz-issues/${projectId}`,
       );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`${errorData.error}`);
+      }
+
+      const payload = await response.json();
+
+      if (payload.error) {
+        throw new Error(`${payload.error}`);
+      }
+      return payload.data.issues.nodes;
+    } catch (error: any) {
+      throw new Error(`${error.message}`);
     }
-    return payload.data.issues.nodes;
   }
 }
