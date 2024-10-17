@@ -21,8 +21,15 @@ import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
+  ANNOTATION_AWS_EKS_CLUSTER_VERSION,
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
+import {
+  ANNOTATION_KUBERNETES_API_SERVER,
+  ANNOTATION_KUBERNETES_API_SERVER_CA,
+  ANNOTATION_KUBERNETES_AUTH_PROVIDER,
+  ANNOTATION_KUBERNETES_AWS_CLUSTER_ID,
+} from '@backstage/plugin-kubernetes-common';
 import { arnToName } from '../utils/arnToName';
 import {
   LabelValueMapper,
@@ -30,13 +37,15 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
-import { DynamicAccountConfig } from '../types';
+import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
 /**
  * Provides entities from AWS EKS Cluster service.
  */
 export class AWSEKSClusterProvider extends AWSEntityProvider {
+  private readonly clusterTypeValue: string;
+
   static fromConfig(
     config: Config,
     options: {
@@ -46,6 +55,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
       labelValueMapper?: LabelValueMapper;
+      clusterTypeValue?: string;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -58,6 +68,22 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       { accountId, roleName, roleArn, externalId, region },
       options,
     );
+  }
+
+  constructor(
+    account: AccountConfig,
+    options: {
+      logger: winston.Logger;
+      catalogApi?: CatalogApi;
+      providerId?: string;
+      ownerTag?: string;
+      useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
+      clusterTypeValue?: string;
+    },
+  ) {
+    super(account, options);
+    this.clusterTypeValue = options.clusterTypeValue ?? 'eks-cluster';
   }
 
   getProviderName(): string {
@@ -102,26 +128,50 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       for (const name of clusterPage.clusters || []) {
         if (name) {
           const cluster = await eks.describeCluster({ name });
-
+          const clusterName =
+            cluster.cluster?.name
+              ?.trim()
+              ?.toLocaleLowerCase('en-US')
+              ?.replace(/[^a-zA-Z0-9\-]/g, '-') ?? name;
           const annotations: { [name: string]: string } = {
             ...(await defaultAnnotations),
           };
 
+          if (cluster.cluster?.version) {
+            annotations[ANNOTATION_AWS_EKS_CLUSTER_VERSION] =
+              cluster.cluster.version;
+          }
+
           if (cluster.cluster?.arn) {
-            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster?.arn;
+            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster.arn;
           }
 
           if (cluster.cluster?.roleArn) {
-            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster?.roleArn;
+            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster.roleArn;
           }
 
+          if (cluster.cluster?.endpoint) {
+            annotations[ANNOTATION_KUBERNETES_API_SERVER] =
+              cluster.cluster.endpoint;
+          }
+
+          if (cluster.cluster?.certificateAuthority?.data) {
+            annotations[ANNOTATION_KUBERNETES_API_SERVER_CA] =
+              cluster.cluster.certificateAuthority.data;
+          }
+
+          if (cluster.cluster?.name) {
+            annotations[ANNOTATION_KUBERNETES_AWS_CLUSTER_ID] = clusterName;
+          }
+
+          annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations,
               name: arnToName(name),
-              title: name,
+              title: `${accountId}:${this.region}:${clusterName}`,
               labels: this.labelsFromTags(cluster.cluster?.tags),
             },
 
@@ -132,7 +182,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
                 groups,
               ),
               ...relationshipsFromTags(cluster.cluster?.tags),
-              type: 'eks-cluster',
+              type: this.clusterTypeValue,
             },
           };
 

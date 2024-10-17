@@ -23,6 +23,8 @@ export const ANNOTATION_AWS_EC2_INSTANCE_ID = 'amazon.com/ec2-instance-id';
 export const ANNOTATION_AWS_RDS_INSTANCE_ARN = 'amazon.com/rds-instance-arn';
 export const ANNOTATION_AWS_DDB_TABLE_ARN = 'amazon.com/dynamo-db-table-arn';
 export const ANNOTATION_AWS_EKS_CLUSTER_ARN = 'amazon.com/eks-cluster-arn';
+export const ANNOTATION_AWS_EKS_CLUSTER_VERSION =
+  'amazon.com/eks-cluster-version';
 
 // Accounts
 export const ANNOTATION_ACCOUNT_ID = 'amazon.com/account-id';
