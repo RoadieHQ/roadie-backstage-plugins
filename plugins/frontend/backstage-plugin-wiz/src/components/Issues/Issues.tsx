@@ -246,7 +246,7 @@ export const Issues = () => {
     return (
       <Box pr={1}>
         <img
-          src={require('../../../docs/wiz-logo.png')}
+          src={require('../../assets/wiz-logo.png')}
           alt="WIZ Logo"
           className={classes.contentLogo}
         />

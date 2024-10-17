@@ -39,7 +39,7 @@ export const IssuesChart = () => {
   const WizIcon = () => {
     return (
       <img
-        src={require('../../../docs/wiz-logo.png')}
+        src={require('../../assets/wiz-logo.png')}
         alt="WIZ Logo"
         className={classes.logo}
       />
