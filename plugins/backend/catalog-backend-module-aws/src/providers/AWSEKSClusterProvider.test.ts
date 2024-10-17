@@ -106,12 +106,15 @@ describe('AWSEKSClusterProvider', () => {
                 labels: {
                   some_url: 'https---asdfhwef.com-hello-world',
                 },
-                title: 'cluster1',
+                name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
+                title: '123456789012:eu-west-1:cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
                     'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
                   [ANNOTATION_AWS_IAM_ROLE_ARN]:
                     'arn:aws:iam::123456789012:role/cluster1',
+                  'kubernetes.io/auth-provider': 'aws',
+                  'kubernetes.io/x-k8s-aws-id': 'cluster1',
                 }),
               }),
             }),
@@ -159,12 +162,15 @@ describe('AWSEKSClusterProvider', () => {
                 labels: {
                   some_url: 'https://asdfhwef.com/hello-world',
                 },
-                title: 'cluster1',
+                name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
+                title: '123456789012:eu-west-1:cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
                     'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
                   [ANNOTATION_AWS_IAM_ROLE_ARN]:
                     'arn:aws:iam::123456789012:role/cluster1',
+                  'kubernetes.io/auth-provider': 'aws',
+                  'kubernetes.io/x-k8s-aws-id': 'cluster1',
                 }),
               }),
             }),
