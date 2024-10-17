@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.1.0
+
+### Minor Changes
+
+- 31e16dd: Add additional annotations. Add ingerators to decide resource type def
+
 ## 5.0.4
 
 ### Patch Changes
