@@ -1,6 +1,6 @@
 # Wiz Plugin for Backstage
 
-This plugin is the frontend for WIZ Backend Backstage plugin. You can see the corresponding backend plugin in [here](/plugins/backend/wiz-backend/README.md).
+This plugin is the frontend for WIZ Backend Backstage plugin. You can see the corresponding backend plugin in [here](../../backend/wiz-backend/README.md).
 
 ![a Wiz plugin for Backstage](./docs/wiz-issues.png).
 ![a Wiz issues expanded](./docs/wiz-expanded-issues.png)
@@ -28,7 +28,7 @@ Severity chart Component:
 
 ## Getting started
 
-Make sure you have installed [WIZ backend plugin](/plugins/backend/wiz-backend/README.md). This will generate access token needed for retriving and displaying issues in components.
+Make sure you have installed [WIZ backend plugin](../../backend/wiz-backend/README.md). This will generate access token needed for retriving and displaying issues in components.
 
 ### Add plugin component to your Backstage instance:
 

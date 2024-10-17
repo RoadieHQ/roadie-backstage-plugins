@@ -48,7 +48,7 @@ export class WizClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch access token: ${response.statusText}`);
+      throw new Error(`${response.status}:${response.statusText}`);
     }
 
     const data = await response.json();
@@ -97,9 +97,10 @@ export class WizClient {
   }
 
   async getIssuesForProject(projectId: string) {
-    await this.ensureValidToken();
+    try {
+      await this.ensureValidToken();
 
-    const query = `
+      const query = `
     query IssuesTable($filterBy: IssueFilters, $first: Int, $after: String, $orderBy: IssueOrder) {
       issues: issuesV2(filterBy: $filterBy, first: $first, after: $after, orderBy: $orderBy) {
         nodes {
@@ -110,7 +111,6 @@ export class WizClient {
               id
               name
               controlDescription: description
-              resolutionRecommendation
               securitySubCategories {
                 title
                 category {
@@ -127,15 +127,6 @@ export class WizClient {
           updatedAt
           type
           resolvedAt
-          projects {
-            id
-            name
-            slug
-            businessUnit
-            riskProfile {
-              businessImpact
-            }
-          }
           status
           severity
           entitySnapshot {
@@ -144,12 +135,6 @@ export class WizClient {
             name
             status
             createdAt
-            externalId
-          }
-          serviceTickets {
-            externalId
-            name
-            url
           }
         }
         pageInfo {
@@ -160,32 +145,42 @@ export class WizClient {
     }
   `;
 
-    const options = {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query,
-        variables: {
-          first: 100,
-          filterBy: {
-            project: [projectId],
-          },
-          orderBy: { direction: 'DESC', field: 'SEVERITY' },
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      }),
-    };
+        body: JSON.stringify({
+          query,
+          variables: {
+            first: 100,
+            filterBy: {
+              project: [projectId],
+            },
+            orderBy: { direction: 'DESC', field: 'SEVERITY' },
+          },
+        }),
+      };
 
-    const response = await fetch(this.wizAPIUrl, options);
+      const response = await fetch(this.wizAPIUrl, options);
 
-    if (!response.ok) {
+      if (!response.ok) {
+        const errorMessage = `${response.status} ${response.statusText}`;
+        const errorBody = await response.json().catch(() => null);
+
+        throw new Error(
+          errorBody?.errors[0].message
+            ? `${errorBody.errors[0].message}`
+            : errorMessage,
+        );
+      }
+      return response.json();
+    } catch (error: any) {
       throw new Error(
-        `Request to retrieve wiz issues failed: ${response.statusText}`,
+        error.message || 'An error occurred while fetching project issues.',
       );
     }
-    return response.json();
   }
 }

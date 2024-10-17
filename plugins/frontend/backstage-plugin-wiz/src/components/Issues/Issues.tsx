@@ -44,6 +44,7 @@ import MaterialReactTable, { MRT_ColumnDef } from 'material-react-table';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { createTheme, ThemeProvider, ThemeOptions } from '@mui/material/styles';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
+import { useStyles } from '../../style';
 
 const getCorrectChip = (theme: Theme, severity: string) => {
   switch (severity) {
@@ -111,6 +112,7 @@ export const Issues = () => {
   const theme = useTheme();
   const api = useApi(wizApiRef);
   const { entity } = useEntity();
+  const classes = useStyles();
   const wizAnnotation =
     entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
   const { value, loading, error } = useAsync(async () => {
@@ -240,172 +242,194 @@ export const Issues = () => {
     return <ResponseErrorPanel error={error} />;
   }
 
+  const WizIcon = () => {
+    return (
+      <Box pr={1}>
+        <img
+          src={require('../../assets/wiz-logo.png')}
+          alt="WIZ Logo"
+          className={classes.contentLogo}
+        />
+      </Box>
+    );
+  };
+
+  const title = (
+    <Box display="flex">
+      <WizIcon />
+      <Typography variant="h4">Overview of WIZ issues </Typography>
+    </Box>
+  );
+
   return (
     <Page themeId="service">
       <Content>
-        <ContentHeader title="Overview of WIZ Issues" />
-
-        {Object.keys(groupedIssues).map(ruleId => (
-          <Box pb={2}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Box
-                  display="flex"
-                  sx={{
-                    width: '100%',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Box display="flex" flexDirection="column">
-                    <Typography
-                      variant="body2"
-                      style={{
-                        color: theme.palette.text.secondary,
-                        fontSize: 'smaller',
-                      }}
-                    >
-                      Issue type (Control)
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      style={{
-                        color: theme.palette.text.primary,
-                      }}
-                    >
-                      {groupedIssues[ruleId][0]?.sourceRule?.name}
-                    </Typography>
+        <ContentHeader titleComponent={title} />
+        {value.length > 0 ? (
+          Object.keys(groupedIssues).map(ruleId => (
+            <Box pb={2} key={ruleId}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Box
+                    display="flex"
+                    sx={{
+                      width: '100%',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box display="flex" flexDirection="column">
+                      <Typography
+                        variant="body2"
+                        style={{
+                          color: theme.palette.text.secondary,
+                          fontSize: 'smaller',
+                        }}
+                      >
+                        Issue type (Control)
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        style={{
+                          color: theme.palette.text.primary,
+                        }}
+                      >
+                        {groupedIssues[ruleId][0]?.sourceRule?.name}
+                      </Typography>
+                    </Box>
+                    <Box display="flex">
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        mr={1}
+                      >
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.text.secondary,
+                            fontSize: 'smaller',
+                          }}
+                        >
+                          Open
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.warningBackground,
+                          }}
+                        >
+                          {
+                            groupedIssues[ruleId].filter(
+                              issue => issue.status === 'OPEN',
+                            ).length
+                          }
+                        </Typography>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        mr={1}
+                      >
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.text.secondary,
+                            fontSize: 'smaller',
+                          }}
+                        >
+                          Resolved
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.status.ok,
+                          }}
+                        >
+                          {
+                            groupedIssues[ruleId].filter(
+                              issue => issue.status === 'RESOLVED',
+                            ).length
+                          }
+                        </Typography>
+                      </Box>
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        mr={1}
+                      >
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.text.secondary,
+                            fontSize: 'smaller',
+                          }}
+                        >
+                          Total
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          style={{
+                            color: theme.palette.primary.main,
+                          }}
+                        >
+                          {groupedIssues[ruleId].length}
+                        </Typography>
+                      </Box>
+                    </Box>
                   </Box>
-                  <Box display="flex">
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      alignItems="center"
-                      mr={1}
-                    >
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.text.secondary,
-                          fontSize: 'smaller',
-                        }}
-                      >
-                        Open
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.warningBackground,
-                        }}
-                      >
-                        {
-                          groupedIssues[ruleId].filter(
-                            issue => issue.status === 'OPEN',
-                          ).length
-                        }
-                      </Typography>
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      alignItems="center"
-                      mr={1}
-                    >
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.text.secondary,
-                          fontSize: 'smaller',
-                        }}
-                      >
-                        Resolved
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.status.ok,
-                        }}
-                      >
-                        {
-                          groupedIssues[ruleId].filter(
-                            issue => issue.status === 'RESOLVED',
-                          ).length
-                        }
-                      </Typography>
-                    </Box>
-                    <Box
-                      display="flex"
-                      flexDirection="column"
-                      alignItems="center"
-                      mr={1}
-                    >
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.text.secondary,
-                          fontSize: 'smaller',
-                        }}
-                      >
-                        Total
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        style={{
-                          color: theme.palette.primary.main,
-                        }}
-                      >
-                        {groupedIssues[ruleId].length}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              </AccordionSummary>
+                </AccordionSummary>
 
-              <AccordionDetails>
-                <Box
-                  display="flex"
-                  sx={{
-                    width: '100%',
-                  }}
-                  flexDirection="column"
-                >
-                  <ThemeProvider theme={createTheme(theme as ThemeOptions)}>
-                    <MaterialReactTable
-                      data-testid="issues-table"
-                      columns={[...columns] as MRT_ColumnDef[]}
-                      data={groupedIssues[ruleId]}
-                      enableGlobalFilter
-                      enableFilterMatchHighlighting
-                      muiSearchTextFieldProps={{
-                        placeholder: 'Filter',
-                        size: 'medium',
-                        margin: 'normal',
-                        InputProps: {
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <FilterAltOutlinedIcon />
-                            </InputAdornment>
-                          ),
-                        },
-                      }}
-                      muiTableBodyCellProps={{
-                        sx: () => ({
-                          whiteSpace: 'nowrap',
-                        }),
-                      }}
-                      defaultColumn={{
-                        minSize: 10,
-                      }}
-                      state={{
-                        isLoading: loading,
-                      }}
-                    />
-                  </ThemeProvider>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-          </Box>
-        ))}
+                <AccordionDetails>
+                  <Box
+                    display="flex"
+                    sx={{
+                      width: '100%',
+                    }}
+                    flexDirection="column"
+                  >
+                    <ThemeProvider theme={createTheme(theme as ThemeOptions)}>
+                      <MaterialReactTable
+                        data-testid="issues-table"
+                        columns={[...columns] as MRT_ColumnDef[]}
+                        data={groupedIssues[ruleId]}
+                        enableGlobalFilter
+                        enableFilterMatchHighlighting
+                        muiSearchTextFieldProps={{
+                          placeholder: 'Filter',
+                          size: 'medium',
+                          margin: 'normal',
+                          InputProps: {
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <FilterAltOutlinedIcon />
+                              </InputAdornment>
+                            ),
+                          },
+                        }}
+                        muiTableBodyCellProps={{
+                          sx: () => ({
+                            whiteSpace: 'nowrap',
+                          }),
+                        }}
+                        defaultColumn={{
+                          minSize: 10,
+                        }}
+                        state={{
+                          isLoading: loading,
+                        }}
+                      />
+                    </ThemeProvider>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          ))
+        ) : (
+          <Typography>There are no issues for this project</Typography>
+        )}
       </Content>
     </Page>
   );

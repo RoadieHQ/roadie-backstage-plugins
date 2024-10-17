@@ -41,9 +41,21 @@ export async function createRouter(
       const data = await wizAuthClient.getIssuesForProject(
         req.params.projectId,
       );
-      return res.send(data);
+      if (!data || data.errors) {
+        return res.status(200).send({
+          error: data.errors[0].message,
+        });
+      }
+      return res.status(200).json(data);
     } catch (error: any) {
-      return res.status(500).send({ error: error.message });
+      if (error.message.includes('401')) {
+        return res.status(401).send({
+          error: error.message,
+        });
+      }
+      return res.status(500).send({
+        error: 'Failed to fetch issues for project',
+      });
     }
   });
 

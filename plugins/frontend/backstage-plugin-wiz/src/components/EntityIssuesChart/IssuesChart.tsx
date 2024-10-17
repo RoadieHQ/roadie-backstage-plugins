@@ -26,12 +26,25 @@ import {
 } from '@backstage/core-components';
 import { LineChart } from './LineChart';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
+import { useStyles } from '../../style';
+import { Typography } from '@material-ui/core';
 
 export const IssuesChart = () => {
   const api = useApi(wizApiRef);
   const { entity } = useEntity();
+  const classes = useStyles();
   const wizAnnotation =
     entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
+
+  const WizIcon = () => {
+    return (
+      <img
+        src={require('../../assets/wiz-logo.png')}
+        alt="WIZ Logo"
+        className={classes.logo}
+      />
+    );
+  };
 
   const { value, loading, error } = useAsync(async () => {
     return await api.fetchIssuesForProject(wizAnnotation);
@@ -44,8 +57,20 @@ export const IssuesChart = () => {
   }
 
   return (
-    <InfoCard title="Issues status graph">
-      <LineChart issues={value} />
+    <InfoCard
+      title="Issues status graph"
+      headerProps={{
+        action: <WizIcon />,
+        classes: {
+          root: classes.card,
+        },
+      }}
+    >
+      {value.length > 0 ? (
+        <LineChart issues={value} />
+      ) : (
+        <Typography>There are no issues for this project</Typography>
+      )}
     </InfoCard>
   );
 };

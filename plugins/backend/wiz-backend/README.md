@@ -1,6 +1,6 @@
 # Roadie WIZ Backend plugin for Backstage
 
-This plugin is the backend for WIZ Backstage plugin. You can see the corresponding frontend plugin in [here](/plugins/frontend/backstage-plugin-wiz/README.md).
+This plugin is the backend for WIZ Backstage plugin. You can see the corresponding frontend plugin in [here](../../frontend/backstage-plugin-wiz/README.md).
 
 This plugin provides functionality to retrieve corresponding access token, needed for API calls and retriving data, based on clientId, clientSecret and tokenURL.
 
