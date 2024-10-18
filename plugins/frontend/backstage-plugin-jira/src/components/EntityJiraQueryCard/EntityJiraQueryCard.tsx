@@ -9,6 +9,7 @@ import { JiraQueryCard } from '../JiraQueryCard';
 import { useTemplateParser } from '../../hooks/useTemplateParser';
 import { Entity } from '@backstage/catalog-model';
 import {
+  DEFAULT_JIRA_QUERY_ANNOTATION,
   JIRA_COMPONENT_ANNOTATION,
   JIRA_LABEL_ANNOTATION,
   JIRA_PROJECT_KEY_ANNOTATION,
@@ -40,7 +41,7 @@ const buildTemplateParserEntityContext = (entity: Entity) => {
 };
 
 export const EntityJiraQueryCard = ({
-  jqlQueryFromAnnotation = 'jira/all-issues-jql',
+  jqlQueryFromAnnotation = DEFAULT_JIRA_QUERY_ANNOTATION,
   jqlQuery,
   maxResults,
   hideOnMissingAnnotation = false,

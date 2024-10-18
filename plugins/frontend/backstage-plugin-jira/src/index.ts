@@ -40,4 +40,5 @@ export {
    */
   isJiraAvailable as isPluginApplicableToEntity,
   isJiraAvailable,
+  hasJiraQuery,
 } from './components/Router';
