@@ -28,7 +28,7 @@ import { determineError } from './utils/helpers';
 
 type HomeProps = Omit<IFrameProps, 'title'>;
 export const Content = (props: HomeProps) => {
-  const { src, height, width } = props;
+  const { src, height, width, referrerPolicy } = props;
   const configApi = useApi(configApiRef);
   const allowList = configApi.getOptionalStringArray('iframe.allowList');
   const errorMessage = determineError(src, allowList);
@@ -43,6 +43,7 @@ export const Content = (props: HomeProps) => {
       height={height || '100%'}
       width={width || '100%'}
       title="iframe homepage card"
+      referrerPolicy={referrerPolicy}
     />
   );
 };
