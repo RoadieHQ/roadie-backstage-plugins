@@ -9,6 +9,7 @@ export type IFrameProps = {
   height?: string;
   width?: string;
   classes?: string;
+  referrerPolicy?: string;
 };
 
 export type IFrameComponentContentProps = {
