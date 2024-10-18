@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.8.0
+
+### Minor Changes
+
+- 184aedc: Export entity matcher for query card
+
 ## 2.7.0
 
 ### Minor Changes
