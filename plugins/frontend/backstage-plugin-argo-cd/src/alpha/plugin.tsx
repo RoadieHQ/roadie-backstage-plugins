@@ -1,5 +1,8 @@
 import { convertLegacyRouteRefs } from '@backstage/core-compat-api';
-import { createPlugin, BackstagePlugin } from '@backstage/frontend-plugin-api';
+import {
+  createFrontendPlugin,
+  FrontendPlugin,
+} from '@backstage/frontend-plugin-api';
 import {
   entityArgoCDOverviewCard,
   entityArgoCDHistoryCard,
@@ -12,7 +15,7 @@ import { argoCdPage } from './pages';
 /**
  * @alpha
  */
-const plugin: BackstagePlugin = createPlugin({
+const plugin: FrontendPlugin = createFrontendPlugin({
   id: 'argocd',
   extensions: [
     argoCdPage,
