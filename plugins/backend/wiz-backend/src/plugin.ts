@@ -25,7 +25,7 @@ import { createRouter } from './service/router';
  * @public
  */
 export const wizBackendPlugin = createBackendPlugin({
-  pluginId: 'wiz-backend',
+  pluginId: 'plugin-wiz-backend',
   register(env) {
     env.registerInit({
       deps: {

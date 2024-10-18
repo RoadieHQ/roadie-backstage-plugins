@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.3
+
+### Patch Changes
+
+- 85b43f7: Added WIZ logo to components, improved error response
+
 ## 1.0.2
 
 ### Patch Changes

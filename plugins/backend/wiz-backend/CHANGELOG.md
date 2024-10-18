@@ -1,5 +1,17 @@
 # @roadiehq/plugin-wiz-backend
 
+## 1.0.5
+
+### Patch Changes
+
+- 85b43f7: Added WIZ logo to components, improved error response
+
+## 1.0.4
+
+### Patch Changes
+
+- da6e417: Remove uneeded dependency from backend plugin
+
 ## 1.0.3
 
 ### Patch Changes

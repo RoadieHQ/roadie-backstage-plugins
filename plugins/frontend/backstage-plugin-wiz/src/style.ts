@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createBackend } from '@backstage/backend-defaults';
 
-const backend = createBackend();
+import { makeStyles } from '@material-ui/core';
 
-backend.add(import('@backstage/plugin-auth-backend'));
-backend.add(import('../src'));
-
-backend.start();
+export const useStyles = makeStyles(() => ({
+  commonLogo: {
+    height: 'auto',
+  },
+  logo: {
+    extend: 'commonLogo',
+    width: '2rem',
+  },
+  contentLogo: {
+    extend: 'commonLogo',
+    width: '3rem',
+  },
+  card: {
+    display: 'flex',
+  },
+}));
