@@ -45,25 +45,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ContributorsCard = () => {
+const ContributorsCardContent = () => {
   const { entity } = useEntity();
   const classes = useStyles();
   const { value, loading, error } = useRequest(entity, 'contributors', 10);
   const { hostname } = useEntityGithubScmIntegration(entity);
   const projectAlert = isGithubInsightsAvailable(entity);
   const { owner, repo } = useProjectEntity(entity);
-  const isLoggedIn = useGithubLoggedIn();
   if (!projectAlert) {
     return (
       <MissingAnnotationEmptyState annotation={GITHUB_INSIGHTS_ANNOTATION} />
-    );
-  }
-
-  if (!isLoggedIn) {
-    return (
-      <InfoCard title="Contributors" className={classes.infoCard}>
-        <GithubNotAuthorized />
-      </InfoCard>
     );
   }
 
@@ -93,6 +84,19 @@ const ContributorsCard = () => {
       className={classes.infoCard}
     >
       <ContributorsList contributors={value || []} />
+    </InfoCard>
+  );
+};
+
+const ContributorsCard = () => {
+  const classes = useStyles();
+  const isLoggedIn = useGithubLoggedIn();
+
+  return isLoggedIn ? (
+    <ContributorsCardContent />
+  ) : (
+    <InfoCard title="Contributors" className={classes.infoCard}>
+      <GithubNotAuthorized />
     </InfoCard>
   );
 };

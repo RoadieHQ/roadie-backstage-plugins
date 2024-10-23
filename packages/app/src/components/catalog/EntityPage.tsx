@@ -62,6 +62,7 @@ import {
 } from '@roadiehq/backstage-plugin-aws-lambda';
 import {
   EntityGithubInsightsContent,
+  EntityGithubInsightsContributorsCard,
   EntityGithubInsightsLanguagesCard,
   EntityGithubInsightsReadmeCard,
   EntityGithubInsightsReleasesCard,
@@ -239,6 +240,9 @@ const overviewContent = (
     </EntitySwitch>
     <EntitySwitch>
       <EntitySwitch.Case if={e => Boolean(isGithubInsightsAvailable(e))}>
+        <Grid item md={3}>
+          <EntityGithubInsightsContributorsCard />
+        </Grid>
         <Grid item md={6}>
           <EntityGithubInsightsLanguagesCard />
           <EntityGithubInsightsReleasesCard />
