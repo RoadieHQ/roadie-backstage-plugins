@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 2.5.1
+
+### Patch Changes
+
+- 0d9c26c: Fix to not trigger LoginRequired screen for ContributorsCard in EntityPage
+
 ## 2.5.0
 
 ### Minor Changes

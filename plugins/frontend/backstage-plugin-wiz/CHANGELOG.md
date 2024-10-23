@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.4
+
+### Patch Changes
+
+- 5f87295: Add assets folder to dist
+
 ## 1.0.3
 
 ### Patch Changes
