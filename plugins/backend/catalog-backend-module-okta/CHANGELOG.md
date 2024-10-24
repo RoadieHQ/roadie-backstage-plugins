@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.0.3
+
+### Patch Changes
+
+- d6c256f: Update README.md
+
 ## 1.0.2
 
 ### Patch Changes
