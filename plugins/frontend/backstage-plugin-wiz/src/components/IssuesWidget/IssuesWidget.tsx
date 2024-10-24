@@ -27,6 +27,7 @@ import {
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
 import { useStyles } from '../../style';
+import wizLogo from '../../assets/wiz-logo.png';
 
 const SeverityIndicator = ({
   theme,
@@ -89,13 +90,7 @@ export const IssuesWidget = () => {
   );
 
   const WizIcon = () => {
-    return (
-      <img
-        src={require('../../assets/wiz-logo.png')}
-        alt="WIZ Logo"
-        className={classes.logo}
-      />
-    );
+    return <img src={wizLogo} alt="WIZ Logo" className={classes.logo} />;
   };
 
   if (loading) {
