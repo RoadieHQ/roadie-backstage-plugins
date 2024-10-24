@@ -6,11 +6,13 @@ entity providers to read Okta Group and User objects as Backstage Entities.
 To setup the Okta providers you will need an [Okta API Token](https://developer.okta.com/docs/guides/create-an-api-token/main/)
 
 ## Installation
+
 To install the plugin dependency in your Backstage app, from the root of your project run:
 
 ```bash
 yarn --cwd packages/backend add @roadiehq/catalog-backend-module-okta
 ```
+
 ## App Config
 
 You will need to configure your okta credentials in the `app-config.yaml`.
@@ -78,20 +80,24 @@ catalog:
 ```
 
 ## Adding the provider
+
 First, add the required okta-entity-provider dependency to your backend in the `packages/backend/src/index.ts` file:
+
 ```typescript
 backend.add(
-    import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'),
+  import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'),
 );
 ```
 
 Now, you need to add a provider factory that will define the strategy used to load users and groups. We provide three default
 factory that you can use out of the box, or your can create your own custom one, let's explore both options.
 
-### Default entity providers 
+### Default entity providers
+
 The Okta catalog module provides default implementations of 3 entity providers that can be used with the Backstage backend system.
 
 To integrate these into your application, add them after the okta-entity-provider, like this:
+
 ```typescript
 backend.add(
   import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'), // The required entity provider
@@ -108,8 +114,6 @@ The options are:
 - `user-provider-factory` - Loads only users
 - `group-provider-factory` - Loads only groups
 
-
-
 ## Custom entity provider(s)
 
 Instead of using the default entity providers, you can create your own custom entity provider(s) by implementing the `EntityProvider` interface.
@@ -117,46 +121,47 @@ Instead of using the default entity providers, you can create your own custom en
 You can also tailor the entity providers to handle different configurations if there is a need to add specific logic for example naming strategies for your entities.
 
 > ⚠️ **Note:** You use either the custom entity provider\(s\) or the default ones, not both.
+
 ### Load Users and Groups Together - OktaOrgEntityProvider
 
 You can construct your own configuration of OktaOrgEntityProvider factory and register it into the backend:
 
 In a separated file of your choice, to avoid cluttering the `packages/backend/src/index.ts` file,
- you can create a new module that will contain the custom entity provider registration logic.
+you can create a new module that will contain the custom entity provider registration logic.
 
 ```typescript
 import {
- createBackendModule,
- coreServices,
+  createBackendModule,
+  coreServices,
 } from '@backstage/backend-plugin-api';
 import {
- oktaCatalogBackendEntityProviderFactoryExtensionPoint,
- EntityProviderFactory,
- OktaOrgEntityProvider,
+  oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+  EntityProviderFactory,
+  OktaOrgEntityProvider,
 } from '@roadiehq/catalog-backend-module-okta/new-backend';
 import { Config } from '@backstage/config';
 
 export const oktaOrgEntityProviderModule = createBackendModule({
- pluginId: 'catalog',
- moduleId: 'default-okta-org-entity-provider',
- register(env) {
-  env.registerInit({
-   deps: {
-    provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-    logger: coreServices.logger,
-   },
-   async init({ provider, logger }) {
-    const factory: EntityProviderFactory = (oktaConfig: Config) =>
-            OktaOrgEntityProvider.fromConfig(oktaConfig, {
-             logger: logger,
-             userNamingStrategy: 'strip-domain-email',
-             groupNamingStrategy: 'kebab-case-name',
-            });
+  pluginId: 'catalog',
+  moduleId: 'default-okta-org-entity-provider',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaOrgEntityProvider.fromConfig(oktaConfig, {
+            logger: logger,
+            userNamingStrategy: 'strip-domain-email',
+            groupNamingStrategy: 'kebab-case-name',
+          });
 
-    provider.setEntityProviderFactory(factory);
-   },
-  });
- },
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
 });
 ```
 
@@ -167,7 +172,6 @@ This is your custom entity provider module. You can now add it to the backend in
 // backend.add(import('@roadiehq/catalog-backend-module-okta/org-provider-factory'));
 backend.add(oktaOrgEntityProviderModule);
 ```
-
 
 You can configure the provider with different naming strategies. The configured strategy will be used to generate the discovered entity's `metadata.name` field. The currently supported strategies are the following:
 
