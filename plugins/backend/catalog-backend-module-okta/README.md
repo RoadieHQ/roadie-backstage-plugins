@@ -89,7 +89,7 @@ First, add the required okta-entity-provider dependency to your backend in the `
 
 ```typescript
 backend.add(
-    import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'),
+  import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'),
 );
 ```
 
@@ -106,10 +106,10 @@ To integrate these into your application, add them after the okta-entity-provide
 
 ```typescript
 backend.add(
-    import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'), // The required entity provider
+  import('@roadiehq/catalog-backend-module-okta/okta-entity-provider'), // The required entity provider
 );
 backend.add(
-    import('@roadiehq/catalog-backend-module-okta/org-provider-factory'), // Optional - Load both users and groups
+  import('@roadiehq/catalog-backend-module-okta/org-provider-factory'), // Optional - Load both users and groups
 );
 ```
 
@@ -139,37 +139,37 @@ you can create a new module that will contain the custom entity provider registr
 
 ```typescript
 import {
-    createBackendModule,
-    coreServices,
+  createBackendModule,
+  coreServices,
 } from '@backstage/backend-plugin-api';
 import {
-    oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-    EntityProviderFactory,
-    OktaOrgEntityProvider,
+  oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+  EntityProviderFactory,
+  OktaOrgEntityProvider,
 } from '@roadiehq/catalog-backend-module-okta/new-backend';
-import {Config} from '@backstage/config';
+import { Config } from '@backstage/config';
 
 export const oktaOrgEntityProviderModule = createBackendModule({
-    pluginId: 'catalog',
-    moduleId: 'default-okta-org-entity-provider',
-    register(env) {
-        env.registerInit({
-            deps: {
-                provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-                logger: coreServices.logger,
-            },
-            async init({provider, logger}) {
-                const factory: EntityProviderFactory = (oktaConfig: Config) =>
-                    OktaOrgEntityProvider.fromConfig(oktaConfig, {
-                        logger: logger,
-                        userNamingStrategy: 'strip-domain-email',
-                        groupNamingStrategy: 'kebab-case-name',
-                    });
+  pluginId: 'catalog',
+  moduleId: 'default-okta-org-entity-provider',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaOrgEntityProvider.fromConfig(oktaConfig, {
+            logger: logger,
+            userNamingStrategy: 'strip-domain-email',
+            groupNamingStrategy: 'kebab-case-name',
+          });
 
-                provider.setEntityProviderFactory(factory);
-            },
-        });
-    },
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
 });
 ```
 
@@ -195,7 +195,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-    user.profile.customField;
+  user.profile.customField;
 ```
 
 #### Group naming strategies
@@ -210,7 +210,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customGroupNamingStrategy: GroupNamingStrategy = group =>
-    group.profile.customField;
+  group.profile.customField;
 ```
 
 #### Hierarchy config
@@ -219,15 +219,15 @@ You can optionally provide the ability to create a hierarchy of groups by provid
 
 ```typescript
 const factory: EntityProviderFactory = (oktaConfig: Config) =>
-    OktaOrgEntityProvider.fromConfig(oktaConfig, {
-        logger: logger,
-        userNamingStrategy: 'strip-domain-email',
-        groupNamingStrategy: 'kebab-case-name',
-        hierarchyConfig: {
-            key: 'profile.orgId',
-            parentKey: 'profile.parentOrgId',
-        },
-    });
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    hierarchyConfig: {
+      key: 'profile.orgId',
+      parentKey: 'profile.parentOrgId',
+    },
+  });
 ```
 
 #### Custom Transformers
@@ -240,43 +240,43 @@ by providing `userTransformer` and `groupTransformer`.
 1. Create a transformer:
 
 ```typescript
-import {GroupNamingStrategy} from '@roadiehq/catalog-backend-module-okta';
-import {GroupEntity} from '@backstage/catalog-model';
-import {Group} from '@okta/okta-sdk-nodejs';
+import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { GroupEntity } from '@backstage/catalog-model';
+import { Group } from '@okta/okta-sdk-nodejs';
 
 function myGroupTransformer(
-    group: Group,
-    namingStrategy: GroupNamingStrategy,
-    parentGroup: Group | undefined,
-    options: {
-        annotations: Record<string, string>;
-        members: string[];
-    },
+  group: Group,
+  namingStrategy: GroupNamingStrategy,
+  parentGroup: Group | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
 ): GroupEntity {
-    // Enrich it with your logic
-    const groupEntity: GroupEntity = {
-        kind: 'Group',
-        apiVersion: 'backstage.io/v1alpha1',
-        metadata: {
-            annotations: {
-                ...options.annotations,
-            },
-            name: namingStrategy(group),
-            title: group.profile.name,
-            title: group.profile.description || group.profile.name,
-            description: group.profile.description || '',
-        },
-        spec: {
-            members: options.members,
-            type: 'group',
-            children: [],
-        },
-    };
+  // Enrich it with your logic
+  const groupEntity: GroupEntity = {
+    kind: 'Group',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: {
+        ...options.annotations,
+      },
+      name: namingStrategy(group),
+      title: group.profile.name,
+      title: group.profile.description || group.profile.name,
+      description: group.profile.description || '',
+    },
+    spec: {
+      members: options.members,
+      type: 'group',
+      children: [],
+    },
+  };
 
-    if (parentGroup) {
-        groupEntity.spec.parent = namingStrategy(parentGroup);
-    }
-    return groupEntity;
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
+  }
+  return groupEntity;
 }
 ```
 
@@ -284,12 +284,12 @@ function myGroupTransformer(
 
 ```typescript
 const factory: EntityProviderFactory = (oktaConfig: Config) =>
-    OktaOrgEntityProvider.fromConfig(oktaConfig, {
-        logger: logger,
-        userNamingStrategy: 'strip-domain-email',
-        groupNamingStrategy: 'kebab-case-name',
-        groupTransformer: myGroupTransformer,
-    });
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    groupTransformer: myGroupTransformer,
+  });
 ```
 
 #### Legacy backend
@@ -299,30 +299,30 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
 <summary>Expand for example legacy configuration</summary>
 
 ```typescript
-import {OktaOrgEntityProvider} from '@roadiehq/catalog-backend-module-okta';
+import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 
 export default async function createPlugin(
-    env: PluginEnvironment,
+  env: PluginEnvironment,
 ): Promise<Router> {
-    const builder = await CatalogBuilder.create(env);
+  const builder = await CatalogBuilder.create(env);
 
-    const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
-        logger: env.logger,
-        userNamingStrategy: 'strip-domain-email',
-        groupNamingStrategy: 'kebab-case-name',
-    });
+  const orgProvider = OktaOrgEntityProvider.fromConfig(env.config, {
+    logger: env.logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+  });
 
-    builder.addEntityProvider(orgProvider);
+  builder.addEntityProvider(orgProvider);
 
-    const {processingEngine, router} = await builder.build();
+  const { processingEngine, router } = await builder.build();
 
-    orgProvider.run();
+  orgProvider.run();
 
-    await processingEngine.start();
+  await processingEngine.start();
 
-    // ...snip...
+  // ...snip...
 
-    return router;
+  return router;
 }
 ```
 
@@ -334,25 +334,25 @@ You can construct your own configuration of OktaUserEntityProvider factory and r
 
 ```typescript
 export const oktaUserEntityProviderModule = createBackendModule({
-    pluginId: 'catalog',
-    moduleId: 'default-okta-user-entity-provider',
-    register(env) {
-        env.registerInit({
-            deps: {
-                provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-                logger: coreServices.logger,
-            },
-            async init({provider, logger}) {
-                const factory: EntityProviderFactory = (oktaConfig: Config) =>
-                    OktaUserEntityProvider.fromConfig(oktaConfig, {
-                        logger: logger,
-                        namingStrategy: 'strip-domain-email',
-                    });
+  pluginId: 'catalog',
+  moduleId: 'default-okta-user-entity-provider',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaUserEntityProvider.fromConfig(oktaConfig, {
+            logger: logger,
+            namingStrategy: 'strip-domain-email',
+          });
 
-                provider.setEntityProviderFactory(factory);
-            },
-        });
-    },
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
 });
 
 // ...snip...
@@ -371,7 +371,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-    user.profile.customField;
+  user.profile.customField;
 ```
 
 In case you want to customize the emitted entities, the provider allows to pass custom transformer by providing
@@ -380,32 +380,32 @@ In case you want to customize the emitted entities, the provider allows to pass 
 1. Create a transformer:
 
 ```typescript
-import {UserEntity} from '@backstage/catalog-model';
-import {User} from '@okta/okta-sdk-nodejs';
-import {UserNamingStrategy} from '@roadiehq/catalog-backend-module-okta';
+import { UserEntity } from '@backstage/catalog-model';
+import { User } from '@okta/okta-sdk-nodejs';
+import { UserNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
 
 function myUserTransformer(
-    user: User,
-    namingStrategy: UserNamingStrategy,
-    options: { annotations: Record<string, string> },
+  user: User,
+  namingStrategy: UserNamingStrategy,
+  options: { annotations: Record<string, string> },
 ): UserEntity {
-    // Enrich it with your logic
-    return {
-        kind: 'User',
-        apiVersion: 'backstage.io/v1alpha1',
-        metadata: {
-            annotations: {...options.annotations},
-            name: namingStrategy(user),
-            title: user.profile.email,
-        },
-        spec: {
-            profile: {
-                displayName: user.profile.displayName,
-                email: user.profile.email,
-            },
-            memberOf: [],
-        },
-    };
+  // Enrich it with your logic
+  return {
+    kind: 'User',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: { ...options.annotations },
+      name: namingStrategy(user),
+      title: user.profile.email,
+    },
+    spec: {
+      profile: {
+        displayName: user.profile.displayName,
+        email: user.profile.email,
+      },
+      memberOf: [],
+    },
+  };
 }
 ```
 
@@ -428,26 +428,26 @@ You can manually construct your own configuration of OktaGroupEntityProvider fac
 
 ```typescript
 export const oktaGroupEntityProviderModule = createBackendModule({
-    pluginId: 'catalog',
-    moduleId: 'default-okta-group-entity-provider',
-    register(env) {
-        env.registerInit({
-            deps: {
-                provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-                logger: coreServices.logger,
-            },
-            async init({provider, logger}) {
-                const factory: EntityProviderFactory = (oktaConfig: Config) =>
-                    OktaGroupEntityProvider.fromConfig(oktaConfig, {
-                        logger: logger,
-                        userNamingStrategy: 'strip-domain-email',
-                        namingStrategy: 'kebab-case-name',
-                    });
+  pluginId: 'catalog',
+  moduleId: 'default-okta-group-entity-provider',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaGroupEntityProvider.fromConfig(oktaConfig, {
+            logger: logger,
+            userNamingStrategy: 'strip-domain-email',
+            namingStrategy: 'kebab-case-name',
+          });
 
-                provider.setEntityProviderFactory(factory);
-            },
-        });
-    },
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
 });
 ```
 
@@ -464,7 +464,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-    user.profile.customField;
+  user.profile.customField;
 ```
 
 Group naming strategies:
@@ -479,7 +479,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customGroupNamingStrategy: GroupNamingStrategy = group =>
-    group.profile.customField;
+  group.profile.customField;
 ```
 
 Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroupEntityProvider's user naming strategy.
@@ -493,43 +493,43 @@ In case you want to customize the emitted entities, the provider allows to pass 
 1. Create a transformer:
 
 ```typescript
-import {GroupNamingStrategy} from '@roadiehq/catalog-backend-module-okta';
-import {GroupEntity} from '@backstage/catalog-model';
-import {Group} from '@okta/okta-sdk-nodejs';
+import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { GroupEntity } from '@backstage/catalog-model';
+import { Group } from '@okta/okta-sdk-nodejs';
 
 function myGroupTransformer(
-    group: Group,
-    namingStrategy: GroupNamingStrategy,
-    parentGroup: Group | undefined,
-    options: {
-        annotations: Record<string, string>;
-        members: string[];
-    },
+  group: Group,
+  namingStrategy: GroupNamingStrategy,
+  parentGroup: Group | undefined,
+  options: {
+    annotations: Record<string, string>;
+    members: string[];
+  },
 ): GroupEntity {
-    // Enrich it with your logic
-    const groupEntity: GroupEntity = {
-        kind: 'Group',
-        apiVersion: 'backstage.io/v1alpha1',
-        metadata: {
-            annotations: {
-                ...options.annotations,
-            },
-            name: namingStrategy(group),
-            title: group.profile.name,
-            title: group.profile.description || group.profile.name,
-            description: group.profile.description || '',
-        },
-        spec: {
-            members: options.members,
-            type: 'group',
-            children: [],
-        },
-    };
+  // Enrich it with your logic
+  const groupEntity: GroupEntity = {
+    kind: 'Group',
+    apiVersion: 'backstage.io/v1alpha1',
+    metadata: {
+      annotations: {
+        ...options.annotations,
+      },
+      name: namingStrategy(group),
+      title: group.profile.name,
+      title: group.profile.description || group.profile.name,
+      description: group.profile.description || '',
+    },
+    spec: {
+      members: options.members,
+      type: 'group',
+      children: [],
+    },
+  };
 
-    if (parentGroup) {
-        groupEntity.spec.parent = namingStrategy(parentGroup);
-    }
-    return groupEntity;
+  if (parentGroup) {
+    groupEntity.spec.parent = namingStrategy(parentGroup);
+  }
+  return groupEntity;
 }
 ```
 
@@ -537,27 +537,27 @@ function myGroupTransformer(
 
 ```typescript
 export const oktaGroupEntityProviderModule = createBackendModule({
-    pluginId: 'catalog',
-    moduleId: 'default-okta-group-entity-provider',
-    register(env) {
-        env.registerInit({
-            deps: {
-                provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
-                logger: coreServices.logger,
-            },
-            async init({provider, logger}) {
-                const factory: EntityProviderFactory = (oktaConfig: Config) =>
-                    OktaGroupEntityProvider.fromConfig(oktaConfig, {
-                        logger: logger,
-                        userNamingStrategy: 'strip-domain-email',
-                        namingStrategy: 'kebab-case-name',
-                        groupTransformer: myGroupTransformer,
-                    });
+  pluginId: 'catalog',
+  moduleId: 'default-okta-group-entity-provider',
+  register(env) {
+    env.registerInit({
+      deps: {
+        provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+        logger: coreServices.logger,
+      },
+      async init({ provider, logger }) {
+        const factory: EntityProviderFactory = (oktaConfig: Config) =>
+          OktaGroupEntityProvider.fromConfig(oktaConfig, {
+            logger: logger,
+            userNamingStrategy: 'strip-domain-email',
+            namingStrategy: 'kebab-case-name',
+            groupTransformer: myGroupTransformer,
+          });
 
-                provider.setEntityProviderFactory(factory);
-            },
-        });
-    },
+        provider.setEntityProviderFactory(factory);
+      },
+    });
+  },
 });
 ```
 
