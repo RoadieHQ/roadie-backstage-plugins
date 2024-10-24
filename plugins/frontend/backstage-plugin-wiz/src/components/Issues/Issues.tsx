@@ -45,6 +45,7 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import { createTheme, ThemeProvider, ThemeOptions } from '@mui/material/styles';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
 import { useStyles } from '../../style';
+import wizLogo from '../../assets/wiz-logo.png';
 
 const getCorrectChip = (theme: Theme, severity: string) => {
   switch (severity) {
@@ -245,11 +246,7 @@ export const Issues = () => {
   const WizIcon = () => {
     return (
       <Box pr={1}>
-        <img
-          src={require('../../assets/wiz-logo.png')}
-          alt="WIZ Logo"
-          className={classes.contentLogo}
-        />
+        <img src={wizLogo} alt="WIZ Logo" className={classes.contentLogo} />
       </Box>
     );
   };
