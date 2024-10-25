@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.25.0",
-    "@backstage/backend-defaults": "^0.5.1",
+    "@backstage/backend-defaults": "^0.5.2",
     "@backstage/backend-plugin-api": "^1.0.1",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
@@ -40,8 +40,8 @@
     "@backstage/config": "^1.2.0"
   },
   "devDependencies": {
-    "@backstage/backend-test-utils": "^1.0.1",
-    "@backstage/cli": "^0.28.0",
+    "@backstage/backend-test-utils": "^1.0.2",
+    "@backstage/cli": "^0.28.1",
     "@backstage/plugin-auth-backend": "^0.23.1",
     "@backstage/plugin-auth-backend-module-guest-provider": "^0.2.1",
     "@types/express": "*",
