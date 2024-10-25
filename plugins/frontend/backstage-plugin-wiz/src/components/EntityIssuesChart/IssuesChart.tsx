@@ -28,6 +28,7 @@ import { LineChart } from './LineChart';
 import { WIZ_PROJECT_ANNOTATION } from '../constants';
 import { useStyles } from '../../style';
 import { Typography } from '@material-ui/core';
+import wizLogo from '../../assets/wiz-logo.png';
 
 export const IssuesChart = () => {
   const api = useApi(wizApiRef);
@@ -37,13 +38,7 @@ export const IssuesChart = () => {
     entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
 
   const WizIcon = () => {
-    return (
-      <img
-        src={require('../../assets/wiz-logo.png')}
-        alt="WIZ Logo"
-        className={classes.logo}
-      />
-    );
+    return <img src={wizLogo} alt="WIZ Logo" className={classes.logo} />;
   };
 
   const { value, loading, error } = useAsync(async () => {
