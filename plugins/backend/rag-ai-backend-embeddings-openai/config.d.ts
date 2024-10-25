@@ -25,7 +25,12 @@ export interface Config {
         /**
          * The API key for accessing OpenAI services. Defaults to process.env.OPENAI_API_KEY
          */
-        openAIApiKey?: string;
+        openAiApiKey?: string;
+
+        /**
+         * Specify URL of self-hosted OpenAI compliant endpoint. Defaults to OpenAI's public API https://api.openai.com
+         */
+        openAiBaseUrl?: string;
 
         /**
          * Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-small
