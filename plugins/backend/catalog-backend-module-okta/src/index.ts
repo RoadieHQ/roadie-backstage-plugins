@@ -15,3 +15,4 @@
  */
 
 export * from './providers';
+export * from './extensions';
