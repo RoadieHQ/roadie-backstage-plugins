@@ -99,6 +99,18 @@ You can also tailor the entity providers to handle different configurations if t
 You can construct your own configuration of OktaOrgEntityProvider factory and register it into the backend:
 
 ```typescript
+import {
+    coreServices,
+    createBackendModule,
+} from "@backstage/backend-plugin-api";
+import { Config } from "@backstage/config";
+
+// Okta Catalog imports
+import {
+    OktaOrgEntityProvider,
+    oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+} from "@roadiehq/catalog-backend-module-okta";
+
 export const oktaOrgEntityProviderModule = createBackendModule({
   pluginId: 'catalog',
   moduleId: 'default-okta-org-entity-provider',
