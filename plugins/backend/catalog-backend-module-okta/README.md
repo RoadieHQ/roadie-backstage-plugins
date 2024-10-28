@@ -47,9 +47,9 @@ catalog:
     okta:
       - orgUrl: 'https://tenant.okta.com'
         oauth:
-          clientId: ${OKTA_OAUTH_CLIENT_ID},
-          keyId: ${OKTA_OAUTH_KEY_ID},
-          privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
+          clientId: ${OKTA_OAUTH_CLIENT_ID}
+          keyId: ${OKTA_OAUTH_KEY_ID}
+          privateKey: ${OKTA_OAUTH_PRIVATE_KEY}
         schedule:
           frequency:
             minutes: 5
