@@ -500,11 +500,11 @@ import { Group } from '@okta/okta-sdk-nodejs';
 function myGroupTransformer(
   group: Group,
   namingStrategy: GroupNamingStrategy,
-  parentGroup: Group | undefined,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
+  parentGroup: Group | undefined,
 ): GroupEntity {
   // Enrich it with your logic
   const groupEntity: GroupEntity = {
