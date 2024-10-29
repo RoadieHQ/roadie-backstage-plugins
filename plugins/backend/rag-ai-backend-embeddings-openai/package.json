@@ -45,7 +45,7 @@
     "@backstage/catalog-client": "^1.7.1",
     "@backstage/config": "^1.2.0",
     "@langchain/core": "^0.2.27",
-    "@langchain/community": "^0.2.28",
+    "@langchain/community": "^0.3.3",
     "@langchain/openai": "^0.2.7",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^1.1.0",
     "@roadiehq/rag-ai-node": "^0.1.8",
