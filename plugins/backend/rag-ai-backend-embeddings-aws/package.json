@@ -52,7 +52,7 @@
     "@roadiehq/rag-ai-backend": "^1.1.0",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^1.1.0",
     "@roadiehq/rag-ai-node": "^0.1.8",
-    "langchain": "^0.1.21",
+    "langchain": "^0.2.19",
     "winston": "^3.11.0"
   },
   "devDependencies": {
