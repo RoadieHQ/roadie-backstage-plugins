@@ -30,7 +30,10 @@ ai:
     # OpenAI Embeddings configuration
     openai:
       # (Optional) The API key for accessing OpenAI services. Defaults to process.env.OPENAI_API_KEY
-      openAIApiKey: 'sk-123...'
+      openAiApiKey: 'sk-123...'
+
+      # (Optional) Specify URL of self-hosted OpenAI compliant endpoint. Defaults to OpenAI's public API https://api.openai.com
+      openAiBaseUrl: ''
 
       # (Optional) Name of the OpenAI model to use to create Embeddings. Defaults to text-embedding-3-large
       modelName: 'text-embedding-3-large'
