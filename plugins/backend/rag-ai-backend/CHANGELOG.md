@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 1.2.0
+
+### Minor Changes
+
+- 6da7661: Add support for specifying a custom OpenAI baseURL via config
+
 ## 1.1.0
 
 ### Minor Changes
