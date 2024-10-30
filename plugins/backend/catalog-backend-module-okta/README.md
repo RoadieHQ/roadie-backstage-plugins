@@ -47,9 +47,9 @@ catalog:
     okta:
       - orgUrl: 'https://tenant.okta.com'
         oauth:
-          clientId: ${OKTA_OAUTH_CLIENT_ID},
-          keyId: ${OKTA_OAUTH_KEY_ID},
-          privateKey: ${OKTA_OAUTH_PRIVATE_KEY},
+          clientId: ${OKTA_OAUTH_CLIENT_ID}
+          keyId: ${OKTA_OAUTH_KEY_ID}
+          privateKey: ${OKTA_OAUTH_PRIVATE_KEY}
         schedule:
           frequency:
             minutes: 5
@@ -500,11 +500,11 @@ import { Group } from '@okta/okta-sdk-nodejs';
 function myGroupTransformer(
   group: Group,
   namingStrategy: GroupNamingStrategy,
-  parentGroup: Group | undefined,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
+  parentGroup: Group | undefined,
 ): GroupEntity {
   // Enrich it with your logic
   const groupEntity: GroupEntity = {
