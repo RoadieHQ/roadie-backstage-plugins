@@ -65,6 +65,11 @@ export const SecurityInsightsTable = () => {
     );
     const data = response.data as SecurityInsight[];
     setTableData(data);
+    if (insightsStatusFilter) {
+      setFilteredTableData(
+        data.filter(entry => entry.state === insightsStatusFilter),
+      );
+    }
     return data;
   }, []);
 
