@@ -1,5 +1,15 @@
 # backend
 
+## 2.1.25
+
+### Patch Changes
+
+- Updated dependencies [d6c256f]
+- Updated dependencies [6da7661]
+  - @roadiehq/catalog-backend-module-okta@1.0.3
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.3.0
+  - @roadiehq/rag-ai-backend@1.2.0
+
 ## 2.1.24
 
 ### Patch Changes

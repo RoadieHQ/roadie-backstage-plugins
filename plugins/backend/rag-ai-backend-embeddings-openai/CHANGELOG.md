@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.3.0
+
+### Minor Changes
+
+- 6da7661: Add support for specifying a custom OpenAI baseURL via config
+
 ## 0.2.12
 
 ### Patch Changes
