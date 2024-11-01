@@ -49,6 +49,8 @@ export type AWSRDSProviderOptions = {
  * Provides entities from AWS Relational Database Service.
  */
 export class AWSRDSProvider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
+
   /** [1] */
   static fromConfig(
     config: Config,
@@ -89,7 +91,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'amazon-rds-entity-provider',
       fn: this.run,

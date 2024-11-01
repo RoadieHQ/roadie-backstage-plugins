@@ -88,7 +88,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'aws-iam-user-entity-provider',
       fn: this.run,

@@ -60,6 +60,7 @@ export type AWSEKSClusterProviderOptions = {
  * Provides entities from AWS EKS Cluster service.
  */
 export class AWSEKSClusterProvider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
   private readonly clusterTypeValue: string;
 
   //* * [1] */
@@ -119,7 +120,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'amazon-eks-cluster-entity-provider',
       fn: this.run,

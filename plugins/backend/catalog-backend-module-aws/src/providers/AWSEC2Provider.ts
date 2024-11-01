@@ -49,6 +49,8 @@ export type AWSEC2ProviderOptions = {
  * Provides entities from AWS Elastic Compute Cloud.
  */
 export class AWSEC2Provider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
+
   /** [1] */
   static fromConfig(
     config: Config,
@@ -89,7 +91,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'amazon-ec2-entity-provider',
       fn: this.run,

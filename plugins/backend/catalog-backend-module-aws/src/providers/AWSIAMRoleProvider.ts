@@ -92,7 +92,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'aws-iam-role-entity-provider',
       fn: this.run,

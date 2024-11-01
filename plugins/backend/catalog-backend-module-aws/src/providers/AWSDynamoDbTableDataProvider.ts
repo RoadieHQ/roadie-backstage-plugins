@@ -118,7 +118,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'sync-mta-catalog',
       fn: this.run,

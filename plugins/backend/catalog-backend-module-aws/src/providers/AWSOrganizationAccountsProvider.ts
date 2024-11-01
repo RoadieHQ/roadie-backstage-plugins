@@ -57,6 +57,8 @@ export type AWSOrganizationAccountsProviderOptions = {
  * Provides entities from AWS Organizations accounts.
  */
 export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
+
   /** [1] */
   static fromConfig(
     config: Config,
@@ -97,7 +99,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'aws-organization-accounts-entity-provider',
       fn: this.run,

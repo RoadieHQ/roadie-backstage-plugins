@@ -49,6 +49,8 @@ export type AWSDynamoDbTableProviderOptions = {
  * Provides entities from AWS DynamoDB service.
  */
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
+
   /** [1] */
   static fromConfig(
     config: Config,
@@ -89,7 +91,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     this.logger.info('connecting');
     this.connection = connection;
     this.scheduler.scheduleTask({
-      frequency: { seconds: 5 },
+      frequency: { minutes: 5 },
       timeout: { seconds: 30 },
       id: 'amazon-s3-bucket-entity-provider',
       fn: this.run,
