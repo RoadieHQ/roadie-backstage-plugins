@@ -81,10 +81,14 @@ export interface AWSAccountProviderConfig {
 
 export type AccountConfig = {
   accountId: string;
-  roleName: string;
+  accessKeyId?: string;
+  secretAccessKey?: string;
+  profile?: string;
+  roleName?: string;
   roleArn?: string;
+  partition?: string;
+  region?: string;
   externalId?: string;
-  region: string;
 };
 
 export type DynamicAccountConfig = {

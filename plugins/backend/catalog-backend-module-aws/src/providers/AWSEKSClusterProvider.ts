@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import {
+  LoggerService,
+  SchedulerService,
+  readSchedulerServiceTaskScheduleDefinitionFromConfig,
+} from '@backstage/backend-plugin-api';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
-import * as winston from 'winston';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
@@ -37,8 +43,18 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+export type AWSEKSClusterProviderOptions = {
+  logger: LoggerService;
+  scheduler: SchedulerService;
+  catalogApi?: CatalogApi;
+  providerId?: string;
+  ownerTag?: string;
+  useTemporaryCredentials?: boolean;
+  labelValueMapper?: LabelValueMapper;
+  clusterTypeValue?: string;
+};
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -46,34 +62,41 @@ import { duration } from '../utils/timer';
 export class AWSEKSClusterProvider extends AWSEntityProvider {
   private readonly clusterTypeValue: string;
 
+  //* * [1] */
   static fromConfig(
     config: Config,
-    options: {
-      logger: winston.Logger;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-      clusterTypeValue?: string;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
+    options: AWSEKSClusterProviderOptions,
+  ): AWSEKSClusterProvider {
+    const p = new AWSEKSClusterProvider(config, options);
 
-    return new AWSEKSClusterProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+    const defaultSchedule = {
+      frequency: { minutes: 120 },
+      timeout: { minutes: 60 },
+      initialDelay: { seconds: 30 },
+    };
+
+    const schedule = config.has('schedule')
+      ? readSchedulerServiceTaskScheduleDefinitionFromConfig(
+          config.getConfig('schedule'),
+        )
+      : defaultSchedule;
+
+    options.scheduler.scheduleTask({
+      frequency: schedule.frequency,
+      timeout: schedule.timeout,
+      initialDelay: schedule.initialDelay,
+      id: 'amazon-eks-cluster-entity-provider',
+      fn: p.run,
+    });
+
+    return p;
   }
 
   constructor(
-    account: AccountConfig,
+    config: Config,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
+      scheduler: SchedulerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -82,40 +105,65 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       clusterTypeValue?: string;
     },
   ) {
-    super(account, options);
+    super(config, options);
     this.clusterTypeValue = options.clusterTypeValue ?? 'eks-cluster';
   }
 
+  /** [2] */
   getProviderName(): string {
-    return `aws-eks-cluster-${this.providerId ?? 0}`;
+    return `amazon-eks-cluster-${this.providerId ?? 0}`;
   }
 
-  private async getEks(dynamicAccountConfig?: DynamicAccountConfig) {
-    const { region } = this.getParsedConfig(dynamicAccountConfig);
-    const credentials = this.useTemporaryCredentials
-      ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider();
-    return this.useTemporaryCredentials
-      ? new EKS({ credentials, region })
-      : new EKS(credentials);
+  /** [3] */
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
+    this.connection = connection;
+    this.scheduler.scheduleTask({
+      frequency: { seconds: 5 },
+      timeout: { seconds: 30 },
+      id: 'amazon-eks-cluster-entity-provider',
+      fn: this.run,
+    });
+    await this.run();
   }
 
-  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
+  private async getEks() {
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
+    const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(
+      this.config,
+    );
+    const awsCredentialProvider =
+      await awsCredentialsManager.getCredentialProvider({ accountId });
+    return new EKS({
+      region,
+      credentialDefaultProvider: () =>
+        awsCredentialProvider.sdkCredentialProvider,
+    });
+  }
+
+  /** [4] */
+  async run(): Promise<void> {
     if (!this.connection) {
+      this.logger.info('Not initialized');
       throw new Error('Not initialized');
     }
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
     this.logger.info(`Providing EKS cluster resources from AWS: ${accountId}`);
     const eksResources: ResourceEntity[] = [];
 
-    const eks = await this.getEks(dynamicAccountConfig);
+    const eks = await this.getEks();
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const defaultAnnotations = this.buildDefaultAnnotations(
+      this.config,
+      accountId,
+      region,
+    );
 
     const paginatorConfig = {
       client: eks,
@@ -143,11 +191,11 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
           }
 
           if (cluster.cluster?.arn) {
-            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster.arn;
+            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster?.arn;
           }
 
           if (cluster.cluster?.roleArn) {
-            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster.roleArn;
+            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster?.roleArn;
           }
 
           if (cluster.cluster?.endpoint) {
@@ -165,6 +213,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
           }
 
           annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
+
           const resource: ResourceEntity = {
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',

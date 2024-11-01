@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
-  ANNOTATION_LOCATION,
-  ANNOTATION_ORIGIN_LOCATION,
-} from '@backstage/catalog-model';
+  LoggerService,
+  SchedulerService,
+  readSchedulerServiceTaskScheduleDefinitionFromConfig,
+} from '@backstage/backend-plugin-api';
 import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
+import {
+  ANNOTATION_LOCATION,
+  ANNOTATION_ORIGIN_LOCATION,
+} from '@backstage/catalog-model';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { STS } from '@aws-sdk/client-sts';
 import { Config } from '@backstage/config';
-
 import { DynamoDB, DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
-import * as winston from 'winston';
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
@@ -48,42 +50,83 @@ type DdbTableDataConfigOptions = {
  * Provides entities from AWS DynamoDB service.
  */
 export class AWSDynamoDbTableDataProvider implements EntityProvider {
+  private readonly logger: LoggerService;
+  private readonly scheduler: SchedulerService;
   private readonly accountId: string;
-  private readonly roleArn: string;
-  private readonly tableDataConfig: DdbTableDataConfigOptions;
-  private readonly logger: winston.Logger;
+  private readonly roleArn?: string;
+  private readonly tableDataConfig?: DdbTableDataConfigOptions;
 
   private connection?: EntityProviderConnection;
 
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
-    return new AWSDynamoDbTableDataProvider(
-      config.getString('accountId'),
-      config.getString('roleName'),
-      config.get<DdbTableDataConfigOptions>('dynamodbTableData'),
+  static fromConfig(
+    config: Config,
+    options: { logger: LoggerService; scheduler: SchedulerService },
+  ) {
+    const p = new AWSDynamoDbTableDataProvider(
       options.logger,
+      options.scheduler,
+      config.getString('accountId'),
+      config.getOptionalString('roleName'),
+      config.getOptional<DdbTableDataConfigOptions>('dynamodbTableData'),
     );
+
+    const defaultSchedule = {
+      frequency: { minutes: 120 },
+      timeout: { minutes: 60 },
+      initialDelay: { seconds: 30 },
+    };
+
+    const schedule = config.has('schedule')
+      ? readSchedulerServiceTaskScheduleDefinitionFromConfig(
+          config.getConfig('schedule'),
+        )
+      : defaultSchedule;
+
+    options.scheduler.scheduleTask({
+      frequency: schedule.frequency,
+      timeout: schedule.timeout,
+      initialDelay: schedule.initialDelay,
+      id: 'amazon-dynamodb-table-data-entity-provider',
+      fn: p.run,
+    });
+
+    return p;
   }
 
+  /** [1] */
   constructor(
+    logger: LoggerService,
+    scheduler: SchedulerService,
     accountId: string,
-    roleArn: string,
-    options: DdbTableDataConfigOptions,
-    logger: winston.Logger,
+    roleArn?: string,
+    options?: DdbTableDataConfigOptions,
   ) {
+    this.logger = logger;
+    this.scheduler = scheduler;
     this.accountId = accountId;
     this.roleArn = roleArn;
     this.tableDataConfig = options;
-    this.logger = logger;
   }
 
+  /** [2] */
   getProviderName(): string {
-    return `aws-dynamo-db-table-${this.accountId}-${this.tableDataConfig.tableName}`;
+    return `aws-dynamo-db-table-${this.accountId}-${this.tableDataConfig?.tableName}`;
   }
 
+  /** [3] */
   async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
     this.connection = connection;
+    this.scheduler.scheduleTask({
+      frequency: { seconds: 5 },
+      timeout: { seconds: 30 },
+      id: 'sync-mta-catalog',
+      fn: this.run,
+    });
+    await this.run();
   }
 
+  /** [4] */
   async run(): Promise<void> {
     if (!this.connection) {
       throw new Error('Not initialized');
@@ -105,24 +148,25 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     const defaultAnnotations: { [name: string]: string } = {
       [ANNOTATION_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
       [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${this.roleArn}`,
-      'amazon.com/dynamodb-table-name': this.tableDataConfig.tableName,
+      'amazon.com/dynamodb-table-name': this.tableDataConfig
+        ?.tableName as string,
     };
 
     if (account.Account) {
       defaultAnnotations[ANNOTATION_ACCOUNT_ID] = account.Account;
     }
 
-    this.logger.info(`Querying table ${this.tableDataConfig.tableName}`);
+    this.logger.info(`Querying table ${this.tableDataConfig?.tableName}`);
 
     try {
       const tableRows = await ddb.scan({
-        TableName: this.tableDataConfig.tableName,
+        TableName: this.tableDataConfig?.tableName,
       });
       const tableDescription = await dynamoDBClient.describeTable({
-        TableName: this.tableDataConfig.tableName,
+        TableName: this.tableDataConfig?.tableName,
       });
       const idColumn =
-        this.tableDataConfig.identifierColumn ||
+        this.tableDataConfig?.identifierColumn ||
         tableDescription.Table?.KeySchema?.[0].AttributeName;
       if (!idColumn) {
         throw new Error(
@@ -133,7 +177,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
       const entities =
         tableRows.Items?.map(row => {
           const o = {
-            kind: this.tableDataConfig.entityKind ?? 'Component',
+            kind: this.tableDataConfig?.entityKind ?? 'Component',
             apiVersion: 'backstage.io/v1beta1',
             metadata: {
               annotations: {
@@ -151,9 +195,9 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
               lifecycle: 'production',
             },
           };
-          const mappedColumns = this.tableDataConfig.columnValueMapping
+          const mappedColumns = this.tableDataConfig?.columnValueMapping
             ? mapColumnsToEntityValues(
-                this.tableDataConfig.columnValueMapping,
+                this.tableDataConfig?.columnValueMapping,
                 row,
               )
             : {};
@@ -167,8 +211,8 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
           locationKey: this.getProviderName(),
         })),
       });
-    } catch (e) {
-      this.logger.error(e);
+    } catch (err) {
+      this.logger.error(`{e}`);
     }
   }
 }

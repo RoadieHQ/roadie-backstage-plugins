@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
+import { mockServices } from '@backstage/backend-test-utils';
 import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
 import { ConfigReader } from '@backstage/config';
-import { getVoidLogger } from '@backstage/backend-common';
 
 const validConfig = {
   accountId: '123456789012',
@@ -48,7 +48,8 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: getVoidLogger(),
+        logger: mockServices.logger.mock(),
+        scheduler: mockServices.scheduler.mock(),
       });
     };
     expect(testWrapper).toThrow(
@@ -64,7 +65,8 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: getVoidLogger(),
+        logger: mockServices.logger.mock(),
+        scheduler: mockServices.scheduler.mock(),
       });
     };
     expect(testWrapper).not.toThrow();

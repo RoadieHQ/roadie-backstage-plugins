@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import {
+  LoggerService,
+  SchedulerService,
+  readSchedulerServiceTaskScheduleDefinitionFromConfig,
+} from '@backstage/backend-plugin-api';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
 import { Config } from '@backstage/config';
-import * as winston from 'winston';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
@@ -27,62 +33,106 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
-import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+export type AWSDynamoDbTableProviderOptions = {
+  logger: LoggerService;
+  scheduler: SchedulerService;
+  catalogApi?: CatalogApi;
+  providerId?: string;
+  ownerTag?: string;
+  useTemporaryCredentials?: boolean;
+  labelValueMapper?: LabelValueMapper;
+};
 
 /**
  * Provides entities from AWS DynamoDB service.
  */
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
+  /** [1] */
   static fromConfig(
     config: Config,
-    options: {
-      logger: winston.Logger;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleArn = config.getOptionalString('roleArn');
-    const roleName = config.getString('roleName');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
+    options: AWSDynamoDbTableProviderOptions,
+  ): AWSDynamoDbTableProvider {
+    const p = new AWSDynamoDbTableProvider(config, options);
 
-    return new AWSDynamoDbTableProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+    const defaultSchedule = {
+      frequency: { minutes: 120 },
+      timeout: { minutes: 60 },
+      initialDelay: { seconds: 30 },
+    };
+
+    const schedule = config.has('schedule')
+      ? readSchedulerServiceTaskScheduleDefinitionFromConfig(
+          config.getConfig('schedule'),
+        )
+      : defaultSchedule;
+
+    options.scheduler.scheduleTask({
+      frequency: schedule.frequency,
+      timeout: schedule.timeout,
+      initialDelay: schedule.initialDelay,
+      id: 'amazon-s3-bucket-entity-provider',
+      fn: p.run,
+    });
+
+    return p;
   }
 
+  /** [2] */
   getProviderName(): string {
     return `aws-dynamo-db-table-${this.providerId ?? 0}`;
   }
 
-  private async getDdb(dynamicAccountConfig?: DynamicAccountConfig) {
-    const credentials = this.useTemporaryCredentials
-      ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider();
-    return this.useTemporaryCredentials
-      ? new DynamoDB({ credentials })
-      : new DynamoDB(credentials);
+  /** [3] */
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
+    this.connection = connection;
+    this.scheduler.scheduleTask({
+      frequency: { seconds: 5 },
+      timeout: { seconds: 30 },
+      id: 'amazon-s3-bucket-entity-provider',
+      fn: this.run,
+    });
+    await this.run();
   }
 
-  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
+  private async getDdb() {
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
+    const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(
+      this.config,
+    );
+    const awsCredentialProvider =
+      await awsCredentialsManager.getCredentialProvider({ accountId });
+    return new DynamoDB({
+      region,
+      credentialDefaultProvider: () =>
+        awsCredentialProvider.sdkCredentialProvider,
+    });
+  }
+
+  /** [4] */
+  async run(): Promise<void> {
     if (!this.connection) {
+      this.logger.info('Not initialized');
       throw new Error('Not initialized');
     }
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
+
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     const groups = await this.getGroups();
 
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
-    const ddb = await this.getDdb(dynamicAccountConfig);
     this.logger.info(`Retrieving all DynamoDB tables for account ${accountId}`);
+
+    const ddb = await this.getDdb();
+
+    const defaultAnnotations = await this.buildDefaultAnnotations(
+      this.config,
+      accountId,
+      region,
+    );
 
     const paginatorConfig = {
       client: ddb,

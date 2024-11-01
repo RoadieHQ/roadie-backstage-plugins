@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
+import { mockServices } from '@backstage/backend-test-utils';
 import { S3, ListBucketsCommand } from '@aws-sdk/client-s3';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSS3BucketProvider } from './AWSS3BucketProvider';
 
 const s3 = mockClient(S3);
 const sts = mockClient(STS);
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = mockServices.logger.mock();
+const scheduler = mockServices.scheduler.mock();
 
 describe('AWSS3BucketProvider', () => {
   const config = new ConfigReader({
@@ -53,7 +52,10 @@ describe('AWSS3BucketProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSS3BucketProvider.fromConfig(config, { logger });
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -80,7 +82,10 @@ describe('AWSS3BucketProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSS3BucketProvider.fromConfig(config, { logger });
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({

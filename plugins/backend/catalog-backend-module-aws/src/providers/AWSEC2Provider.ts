@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import {
+  LoggerService,
+  SchedulerService,
+  readSchedulerServiceTaskScheduleDefinitionFromConfig,
+} from '@backstage/backend-plugin-api';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { EC2 } from '@aws-sdk/client-ec2';
-import * as winston from 'winston';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
@@ -27,66 +33,107 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
-import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+export type AWSEC2ProviderOptions = {
+  logger: LoggerService;
+  scheduler: SchedulerService;
+  catalogApi?: CatalogApi;
+  providerId?: string;
+  ownerTag?: string;
+  useTemporaryCredentials?: boolean;
+  labelValueMapper?: LabelValueMapper;
+};
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
  */
 export class AWSEC2Provider extends AWSEntityProvider {
+  /** [1] */
   static fromConfig(
     config: Config,
-    options: {
-      logger: winston.Logger;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
+    options: AWSEC2ProviderOptions,
+  ): AWSEC2Provider {
+    const p = new AWSEC2Provider(config, options);
 
-    return new AWSEC2Provider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+    const defaultSchedule = {
+      frequency: { minutes: 120 },
+      timeout: { minutes: 60 },
+      initialDelay: { seconds: 30 },
+    };
+
+    const schedule = config.has('schedule')
+      ? readSchedulerServiceTaskScheduleDefinitionFromConfig(
+          config.getConfig('schedule'),
+        )
+      : defaultSchedule;
+
+    options.scheduler.scheduleTask({
+      frequency: schedule.frequency,
+      timeout: schedule.timeout,
+      initialDelay: schedule.initialDelay,
+      id: 'amazon-ec2-entity-provider',
+      fn: p.run,
+    });
+
+    return p;
   }
 
+  /** [2] */
   getProviderName(): string {
-    return `aws-ec2-provider-${this.providerId ?? 0}`;
+    return `amazon-ec2-provider-${this.providerId ?? 0}`;
   }
 
-  private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
-    const { region } = this.getParsedConfig(dynamicAccountConfig);
-    const credentials = this.useTemporaryCredentials
-      ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider();
-    return this.useTemporaryCredentials
-      ? new EC2({ credentials, region: region })
-      : new EC2(credentials);
+  /** [3] */
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
+    this.connection = connection;
+    this.scheduler.scheduleTask({
+      frequency: { seconds: 5 },
+      timeout: { seconds: 30 },
+      id: 'amazon-ec2-entity-provider',
+      fn: this.run,
+    });
+    await this.run();
   }
 
-  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
+  private async getEc2() {
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
+    const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(
+      this.config,
+    );
+    const awsCredentialProvider =
+      await awsCredentialsManager.getCredentialProvider({ accountId });
+    return new EC2({
+      region,
+      credentialDefaultProvider: () =>
+        awsCredentialProvider.sdkCredentialProvider,
+    });
+  }
+
+  /** [4] */
+  async run(): Promise<void> {
     if (!this.connection) {
+      this.logger.info('Not initialized');
       throw new Error('Not initialized');
     }
-    const startTimestamp = process.hrtime();
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
 
-    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const startTimestamp = process.hrtime();
     const groups = await this.getGroups();
 
     this.logger.info(`Providing ec2 resources from aws: ${accountId}`);
     const ec2Resources: ResourceEntity[] = [];
 
-    const ec2 = await this.getEc2(dynamicAccountConfig);
+    const ec2 = await this.getEc2();
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const defaultAnnotations = this.buildDefaultAnnotations(
+      this.config,
+      accountId,
+      region,
+    );
 
     const instances = await ec2.describeInstances({
       Filters: [{ Name: 'instance-state-name', Values: ['running'] }],

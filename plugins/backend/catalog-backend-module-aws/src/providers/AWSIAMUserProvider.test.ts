@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
+import { mockServices } from '@backstage/backend-test-utils';
 import { IAM, ListUsersCommand, User } from '@aws-sdk/client-iam';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
 import { AWSIAMUserProvider } from './AWSIAMUserProvider';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = mockServices.logger.mock();
+const scheduler = mockServices.scheduler.mock();
 
 describe('AWSIAMUserProvider', () => {
   const config = new ConfigReader({
@@ -53,7 +52,10 @@ describe('AWSIAMUserProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSIAMUserProvider.fromConfig(config, { logger });
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -81,7 +83,10 @@ describe('AWSIAMUserProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSIAMUserProvider.fromConfig(config, { logger });
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({

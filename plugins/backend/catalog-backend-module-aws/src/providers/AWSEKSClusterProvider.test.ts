@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { mockServices } from '@backstage/backend-test-utils';
 import {
   EKS,
   ListClustersCommand,
@@ -22,9 +23,8 @@ import {
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
@@ -34,9 +34,8 @@ import {
 const eks = mockClient(EKS);
 const sts = mockClient(STS);
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = mockServices.logger.mock();
+const scheduler = mockServices.scheduler.mock();
 
 describe('AWSEKSClusterProvider', () => {
   const config = new ConfigReader({
@@ -61,7 +60,10 @@ describe('AWSEKSClusterProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
+      const provider = AWSEKSClusterProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -93,7 +95,10 @@ describe('AWSEKSClusterProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
+      const provider = AWSEKSClusterProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -106,15 +111,12 @@ describe('AWSEKSClusterProvider', () => {
                 labels: {
                   some_url: 'https---asdfhwef.com-hello-world',
                 },
-                name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
-                title: '123456789012:eu-west-1:cluster1',
+                title: 'cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
                     'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
                   [ANNOTATION_AWS_IAM_ROLE_ARN]:
                     'arn:aws:iam::123456789012:role/cluster1',
-                  'kubernetes.io/auth-provider': 'aws',
-                  'kubernetes.io/x-k8s-aws-id': 'cluster1',
                 }),
               }),
             }),
@@ -148,6 +150,7 @@ describe('AWSEKSClusterProvider', () => {
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, {
         logger,
+        scheduler,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
@@ -162,15 +165,12 @@ describe('AWSEKSClusterProvider', () => {
                 labels: {
                   some_url: 'https://asdfhwef.com/hello-world',
                 },
-                name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
-                title: '123456789012:eu-west-1:cluster1',
+                title: 'cluster1',
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
                     'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
                   [ANNOTATION_AWS_IAM_ROLE_ARN]:
                     'arn:aws:iam::123456789012:role/cluster1',
-                  'kubernetes.io/auth-provider': 'aws',
-                  'kubernetes.io/x-k8s-aws-id': 'cluster1',
                 }),
               }),
             }),

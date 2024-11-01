@@ -13,13 +13,84 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { AWSAccountProviderConfig } from './src/types';
+
+import { SchedulerServiceTaskScheduleDefinitionConfig } from '@backstage/backend-plugin-api';
 
 export interface Config {
-  integrations?: {
+  catalog?: {
+    processors?: {
+      /**
+       * AwsOrganizationCloudAccountProcessor and AWSOrganizationAccountsProvider configuration
+       */
+      awsOrganization?: {
+        provider: {
+          /**
+           * The role to be assumed by this processor
+           * @deprecated Use `accountId` instead.
+           */
+          roleArn?: string;
+
+          /**
+           * The AWS account ID to query for organizational data
+           */
+          accountId?: string;
+        };
+      };
+    };
+  };
+  /** Configuration for access to AWS accounts */
+  aws?: {
     /**
-     * AWS configuration
+     * Configuration for retrieving AWS accounts credentials
      */
-    aws?: AWSAccountProviderConfig[];
+    accounts?: Array<{
+      /**
+       * The account ID of the target account that this matches on, e.g. "123456789012"
+       */
+      accountId: string;
+
+      /**
+       * The access key ID for a set of static AWS credentials
+       * @visibility secret
+       */
+      accessKeyId?: string;
+
+      /**
+       * The secret access key for a set of static AWS credentials
+       * @visibility secret
+       */
+      secretAccessKey?: string;
+
+      /**
+       * The configuration profile from a credentials file at ~/.aws/credentials and
+       * a configuration file at ~/.aws/config.
+       */
+      profile?: string;
+
+      /**
+       * The IAM role to assume to retrieve temporary AWS credentials
+       */
+      roleName?: string;
+
+      /**
+       * The AWS partition of the IAM role, e.g. "aws", "aws-cn"
+       */
+      partition?: string;
+
+      /**
+       * The STS regional endpoint to use when retrieving temporary AWS credentials, e.g. "ap-northeast-1"
+       */
+      region?: string;
+
+      /**
+       * The unique identifier needed to assume the role to retrieve temporary AWS credentials
+       * @visibility secret
+       */
+      externalId?: string;
+      /**
+       * (Optional) TaskScheduleDefinition for the refresh.
+       */
+      schedule?: SchedulerServiceTaskScheduleDefinitionConfig;
+    }>;
   };
 }

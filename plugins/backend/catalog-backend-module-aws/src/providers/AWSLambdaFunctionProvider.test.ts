@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
+import { mockServices } from '@backstage/backend-test-utils';
 import { Lambda, ListFunctionsCommand } from '@aws-sdk/client-lambda';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
 
 const lambda = mockClient(Lambda);
 const sts = mockClient(STS);
 
-const logger = createLogger({
-  transports: [new transports.Console({ silent: true })],
-});
+const logger = mockServices.logger.mock();
+const scheduler = mockServices.scheduler.mock();
 
 describe('AWSLambdaFunctionProvider', () => {
   const config = new ConfigReader({
@@ -53,7 +52,10 @@ describe('AWSLambdaFunctionProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -93,7 +95,10 @@ describe('AWSLambdaFunctionProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
+        logger,
+        scheduler,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
@@ -112,54 +117,6 @@ describe('AWSLambdaFunctionProvider', () => {
                     'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
                   'backstage.io/managed-by-origin-location':
                     'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
-                },
-                title: 'my-function',
-                architectures: ['x86_64'],
-                description: '',
-                ephemeralStorage: 512,
-                memorySize: 1024,
-                name: 'bc6fa48d05a0a464c5e2a5214985bd957578cd50314fc6076cef1845fadb3c8',
-                runtime: 'nodejs14.x',
-                timeout: 30,
-              }),
-            }),
-          }),
-        ],
-      });
-    });
-
-    it('is able to use dynamic config', async () => {
-      const entityProviderConnection: EntityProviderConnection = {
-        applyMutation: jest.fn(),
-        refresh: jest.fn(),
-      };
-      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
-        logger,
-        useTemporaryCredentials: true,
-      });
-      await provider.connect(entityProviderConnection);
-      await provider.run({
-        roleArn: 'arn:aws:iam::999999999999:role/dynamic-role',
-        region: 'us-east-1',
-      });
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                annotations: {
-                  'amazon.com/iam-role-arn':
-                    'arn:aws:iam::123456789012:role/lambdaRole',
-                  'amazon.com/lambda-function-arn':
-                    'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
-                  'backstage.io/managed-by-location':
-                    'aws-lambda-function-0:arn:aws:iam::999999999999:role/dynamic-role',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-lambda-function-0:arn:aws:iam::999999999999:role/dynamic-role',
                   'backstage.io/view-url':
                     'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
                 },

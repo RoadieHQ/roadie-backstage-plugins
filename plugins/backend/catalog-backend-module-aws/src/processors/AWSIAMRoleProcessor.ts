@@ -24,20 +24,22 @@ import {
 } from '@backstage/catalog-model';
 import {
   CatalogProcessorEmit,
-  LocationSpec,
   processingResult,
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
+
+import { LocationSpec } from '@backstage/plugin-catalog-common';
+
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { Config } from '@backstage/config';
-import * as winston from 'winston';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import { LoggerService } from '@backstage/backend-plugin-api';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
 import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
 import { arnToName } from '../utils/arnToName';
 
 export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
   static fromConfig(
     _config: Config,
-    options: { logger: winston.Logger; discovery: PluginEndpointDiscovery },
+    options: { logger: LoggerService; discovery: DiscoveryService },
   ) {
     const catalogApi: CatalogApi = new CatalogClient({
       discoveryApi: options.discovery,

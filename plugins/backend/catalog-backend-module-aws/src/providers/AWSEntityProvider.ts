@@ -18,8 +18,7 @@ import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
-import * as winston from 'winston';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+import { LoggerService, SchedulerService } from '@backstage/backend-plugin-api';
 import { STS } from '@aws-sdk/client-sts';
 import {
   ANNOTATION_ORIGIN_LOCATION,
@@ -27,57 +26,59 @@ import {
 } from '@backstage/catalog-model';
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 import { CatalogApi } from '@backstage/catalog-client';
+import { Config } from '@backstage/config';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
-import { ConfigReader } from '@backstage/config';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { LabelValueMapper, labelsFromTags, Tag } from '../utils/tags';
 
 export abstract class AWSEntityProvider implements EntityProvider {
-  protected readonly useTemporaryCredentials: boolean;
+  protected readonly config: Config;
+  protected readonly logger: LoggerService;
+  protected readonly scheduler: SchedulerService;
   protected readonly providerId?: string;
-  protected readonly logger: winston.Logger;
+
   protected connection?: EntityProviderConnection;
   private readonly ownerTag: string | undefined;
   protected readonly catalogApi?: CatalogApi;
-  private credentialsManager: DefaultAwsCredentialsManager;
-  private account: AccountConfig;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
 
   public abstract getProviderName(): string;
   public abstract run(
-    dynamicAccountConfig?: DynamicAccountConfig,
+    config: Config,
+    accountId: string,
+    region: string,
   ): Promise<void>;
 
   protected constructor(
-    account: AccountConfig,
+    config: Config,
     options: {
-      logger: winston.Logger;
+      logger: LoggerService;
+      scheduler: SchedulerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
-      useTemporaryCredentials?: boolean;
       labelValueMapper?: LabelValueMapper;
     },
   ) {
+    this.config = config;
     this.logger = options.logger;
+    this.scheduler = options.scheduler;
     this.providerId = options.providerId;
     this.ownerTag = options.ownerTag;
     this.catalogApi = options.catalogApi;
-    this.account = account;
-    this.useTemporaryCredentials = !!options.useTemporaryCredentials;
-    this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
-      new ConfigReader({ aws: { accounts: [account] } }),
-    );
     this.labelValueMapper = options.labelValueMapper;
   }
 
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
+    this.connection = connection;
+  }
+
   get accountId() {
-    return this.account.accountId;
+    return this.config.getOptionalString('accountId');
   }
 
   get region() {
-    return this.account.region;
+    return this.config.getOptionalString('region') ?? 'us-east-1';
   }
 
   protected getOwnerTag() {
@@ -86,41 +87,6 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   protected labelsFromTags(tags?: Record<string, string> | Tag[] | undefined) {
     return labelsFromTags(tags, this.labelValueMapper);
-  }
-
-  protected getCredentials(dynamicAccountConfig?: DynamicAccountConfig) {
-    const { roleArn, externalId, region } =
-      this.getParsedConfig(dynamicAccountConfig);
-    return fromTemporaryCredentials({
-      params: {
-        RoleArn: roleArn,
-        ExternalId: externalId,
-      },
-      clientConfig: region ? { region: region } : undefined,
-    });
-  }
-
-  protected getParsedConfig(dynamicAccountConfig?: DynamicAccountConfig) {
-    const { roleArn, externalId, region } = dynamicAccountConfig
-      ? dynamicAccountConfig
-      : { roleArn: undefined, externalId: undefined, region: undefined };
-
-    const arn = roleArn ?? this.account.roleArn ?? this.account.roleName;
-    const arnParse = parseArn(arn);
-    return {
-      accountId: arnParse?.accountId,
-      region: region ?? this.region ?? arnParse.region,
-      externalId: externalId ?? this.account.externalId,
-      roleArn: arn,
-    };
-  }
-
-  protected async getCredentialsProvider() {
-    const awsCredentialProvider =
-      await this.credentialsManager.getCredentialProvider({
-        accountId: this.accountId,
-      });
-    return awsCredentialProvider.sdkCredentialProvider;
   }
 
   protected async getGroups() {
@@ -139,26 +105,26 @@ export abstract class AWSEntityProvider implements EntityProvider {
     return groups;
   }
 
-  public async connect(connection: EntityProviderConnection): Promise<void> {
-    this.connection = connection;
-  }
-
   protected async buildDefaultAnnotations(
-    dynamicAccountConfig?: DynamicAccountConfig,
+    config: Config,
+    accountId: string,
+    region: string,
   ) {
-    const { region, roleArn } = this.getParsedConfig(dynamicAccountConfig);
-    const credentials = this.useTemporaryCredentials
-      ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider();
-    const sts = this.useTemporaryCredentials
-      ? new STS({ credentials: credentials, region: region })
-      : new STS(credentials);
+    const awsCredentialsManager =
+      DefaultAwsCredentialsManager.fromConfig(config);
+    const awsCredentialProvider =
+      await awsCredentialsManager.getCredentialProvider({ accountId });
+    const sts = new STS({
+      region,
+      credentialDefaultProvider: () =>
+        awsCredentialProvider.sdkCredentialProvider,
+    });
 
     const account = await sts.getCallerIdentity({});
 
     const defaultAnnotations: { [name: string]: string } = {
-      [ANNOTATION_LOCATION]: `${this.getProviderName()}:${roleArn}`,
-      [ANNOTATION_ORIGIN_LOCATION]: `${this.getProviderName()}:${roleArn}`,
+      [ANNOTATION_LOCATION]: account.Arn as string,
+      [ANNOTATION_ORIGIN_LOCATION]: account.Arn as string,
     };
 
     if (account.Account) {

@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+import {
+  LoggerService,
+  SchedulerService,
+  readSchedulerServiceTaskScheduleDefinitionFromConfig,
+} from '@backstage/backend-plugin-api';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { IAM, paginateListRoles } from '@aws-sdk/client-iam';
-import * as winston from 'winston';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
@@ -28,66 +34,108 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
-import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+export type AWSIAMRoleProviderOptions = {
+  logger: LoggerService;
+  scheduler: SchedulerService;
+  catalogApi?: CatalogApi;
+  providerId?: string;
+  ownerTag?: string;
+  useTemporaryCredentials?: boolean;
+  labelValueMapper?: LabelValueMapper;
+};
 
 /**
  * Provides entities from AWS IAM Role service.
  */
 export class AWSIAMRoleProvider extends AWSEntityProvider {
+  declare connection?: EntityProviderConnection;
+
+  /** [1] */
   static fromConfig(
     config: Config,
-    options: {
-      logger: winston.Logger;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
+    options: AWSIAMRoleProviderOptions,
+  ): AWSIAMRoleProvider {
+    const p = new AWSIAMRoleProvider(config, options);
 
-    return new AWSIAMRoleProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+    const defaultSchedule = {
+      frequency: { minutes: 120 },
+      timeout: { minutes: 60 },
+      initialDelay: { seconds: 30 },
+    };
+
+    const schedule = config.has('schedule')
+      ? readSchedulerServiceTaskScheduleDefinitionFromConfig(
+          config.getConfig('schedule'),
+        )
+      : defaultSchedule;
+
+    options.scheduler.scheduleTask({
+      frequency: schedule.frequency,
+      timeout: schedule.timeout,
+      initialDelay: schedule.initialDelay,
+      id: 'aws-iam-role-entity-provider',
+      fn: p.run,
+    });
+
+    return p;
   }
 
+  /** [2] */
   getProviderName(): string {
     return `aws-iam-role-${this.providerId ?? 0}`;
   }
 
-  private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
-    const { region } = this.getParsedConfig(dynamicAccountConfig);
-    const credentials = this.useTemporaryCredentials
-      ? this.getCredentials(dynamicAccountConfig)
-      : await this.getCredentialsProvider();
-    return this.useTemporaryCredentials
-      ? new IAM({ credentials, region })
-      : new IAM(credentials);
+  /** [3] */
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.logger.info('connecting');
+    this.connection = connection;
+    this.scheduler.scheduleTask({
+      frequency: { seconds: 5 },
+      timeout: { seconds: 30 },
+      id: 'aws-iam-role-entity-provider',
+      fn: this.run,
+    });
+    await this.run();
   }
 
-  async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
+  private async getIam() {
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
+    const awsCredentialsManager = DefaultAwsCredentialsManager.fromConfig(
+      this.config,
+    );
+    const awsCredentialProvider =
+      await awsCredentialsManager.getCredentialProvider({ accountId });
+    return new IAM({
+      region,
+      credentialDefaultProvider: () =>
+        awsCredentialProvider.sdkCredentialProvider,
+    });
+  }
+
+  async run(): Promise<void> {
     if (!this.connection) {
+      this.logger.info('Not initialized');
       throw new Error('Not initialized');
     }
-    const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const accountId = this.config.getString('accountId');
+    const region = this.config.getOptionalString('region') || 'us-east-1';
 
+    const startTimestamp = process.hrtime();
     const groups = await this.getGroups();
 
     this.logger.info(`Providing IAM role resources from AWS: ${accountId}`);
     const roleResources: ResourceEntity[] = [];
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const iam = await this.getIam();
 
-    const iam = await this.getIam(dynamicAccountConfig);
+    const defaultAnnotations = this.buildDefaultAnnotations(
+      this.config,
+      accountId,
+      region,
+    );
 
     const paginatorConfig = {
       client: iam,
