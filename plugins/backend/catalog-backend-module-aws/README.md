@@ -37,7 +37,7 @@ import {
   AWSS3BucketProvider,
   AWSIAMUserProvider,
   AWSEC2Provider,
-} from '@internal/catalog-backend-module-aws';
+} from '@roadihq/catalog-backend-module-aws';
 
 export default async function createPlugin(
   env: PluginEnvironment,
