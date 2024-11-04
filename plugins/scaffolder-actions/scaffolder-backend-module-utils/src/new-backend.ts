@@ -13,5 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * @deprecated Please import from the root path instead.
+ */
 export * from './module';
 export { scaffolderBackendModuleUtils as default } from './module';
