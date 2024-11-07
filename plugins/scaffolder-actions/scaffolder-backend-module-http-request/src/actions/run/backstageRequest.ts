@@ -139,52 +139,52 @@ export function createHttpBackstageAction(options: {
         );
       }
 
-      const queryParams: string = params
-        ? new URLSearchParams(params).toString()
-        : '';
-
-      let inputBody: Body = undefined;
-
-      if (
-        input.body &&
-        typeof input.body !== 'string' &&
-        input.headers &&
-        input.headers['content-type'] &&
-        input.headers['content-type'].includes('application/json')
-      ) {
-        inputBody = JSON.stringify(input.body);
-      } else {
-        inputBody = input.body;
-      }
-
-      const httpOptions: HttpOptions = {
-        method: input.method,
-        url: queryParams !== '' ? `${url}?${queryParams}` : url,
-        headers: input.headers ? (input.headers as Headers) : {},
-        body: inputBody,
-      };
-
-      const authToken = getObjFieldCaseInsensitively(
-        input.headers,
-        'authorization',
-      );
-
-      if (token && !authToken) {
-        ctx.logger.info(`Token is defined. Setting authorization header.`);
-        httpOptions.headers.authorization = `Bearer ${token}`;
-      }
-
-      const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
-      if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
-        ctx.logger.info(
-          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
-            queryParams !== '' ? `${input.path}?${queryParams}` : input.path
-          }`,
-        );
-        return;
-      }
-
       try {
+        const queryParams: string = params
+          ? new URLSearchParams(params).toString()
+          : '';
+
+        let inputBody: Body = undefined;
+
+        if (
+          input.body &&
+          typeof input.body !== 'string' &&
+          input.headers &&
+          input.headers['content-type'] &&
+          input.headers['content-type'].includes('application/json')
+        ) {
+          inputBody = JSON.stringify(input.body);
+        } else {
+          inputBody = input.body;
+        }
+
+        const httpOptions: HttpOptions = {
+          method: input.method,
+          url: queryParams !== '' ? `${url}?${queryParams}` : url,
+          headers: input.headers ? (input.headers as Headers) : {},
+          body: inputBody,
+        };
+
+        const authToken = getObjFieldCaseInsensitively(
+          input.headers,
+          'authorization',
+        );
+
+        if (token && !authToken) {
+          ctx.logger.info(`Token is defined. Setting authorization header.`);
+          httpOptions.headers.authorization = `Bearer ${token}`;
+        }
+
+        const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
+        if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
+          ctx.logger.info(
+            `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
+              queryParams !== '' ? `${input.path}?${queryParams}` : input.path
+            }`,
+          );
+          return;
+        }
+
         const { code, headers, body } = await http(
           httpOptions,
           ctx.logger,
