@@ -184,15 +184,25 @@ export function createHttpBackstageAction(options: {
         return;
       }
 
-      const { code, headers, body } = await http(
-        httpOptions,
-        ctx.logger,
-        continueOnBadResponse,
-      );
-
-      ctx.output('code', code);
-      ctx.output('headers', headers);
-      ctx.output('body', body);
+      try {
+        const { code, headers, body } = await http(
+          httpOptions,
+          ctx.logger,
+          continueOnBadResponse,
+        );
+        ctx.output('code', code);
+        ctx.output('headers', headers);
+        ctx.output('body', body);
+      } catch (e: any) {
+        ctx.logger.error(`Action failed due to unhandled error: ${e?.message}`);
+        if (continueOnBadResponse) {
+          ctx.output('code', 500);
+          ctx.output('headers', {});
+          ctx.output('body', { error: e?.message });
+        } else {
+          throw e;
+        }
+      }
     },
   });
 }
