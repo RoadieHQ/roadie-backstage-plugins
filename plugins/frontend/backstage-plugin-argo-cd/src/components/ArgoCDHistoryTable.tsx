@@ -43,13 +43,25 @@ export const ArgoCDHistoryTable = ({
   const configApi = useApi(configApiRef);
   const namespaced =
     configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
+  const baseUrl = configApi.getOptionalString('argocd.baseUrl');
   const supportsMultipleArgoInstances: boolean = Boolean(
     configApi.getOptionalConfigArray('argocd.appLocatorMethods')?.length,
   );
-  const linkUrl = (row: any) =>
-    supportsMultipleArgoInstances && row.metadata?.instance?.frontendUrl
-      ? row.metadata?.instance?.frontendUrl
-      : configApi.getOptionalString('argocd.baseUrl');
+
+  const linkUrl = (row: any): string | undefined => {
+    if (supportsMultipleArgoInstances && !baseUrl) {
+      const instanceConfig = configApi
+        .getConfigArray('argocd.appLocatorMethods')
+        .find(value => value.getOptionalString('type') === 'config')
+        ?.getOptionalConfigArray('instances')
+        ?.find(value => value.getOptionalString('name') === row?.instance);
+      return (
+        instanceConfig?.getOptionalString('frontendUrl') ??
+        instanceConfig?.getOptionalString('url')
+      );
+    }
+    return baseUrl;
+  };
 
   const columns: TableColumn[] = [
     {
