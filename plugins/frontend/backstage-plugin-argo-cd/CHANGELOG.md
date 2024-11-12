@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.5
+
+### Patch Changes
+
+- 7520be9: update linkUrl logic in ArgoCDHistory component for multi-instance support
+
 ## 2.8.4
 
 ### Patch Changes
