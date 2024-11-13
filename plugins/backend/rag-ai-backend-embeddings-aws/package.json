@@ -44,6 +44,7 @@
     "@aws-sdk/client-bedrock-runtime": "^3.602.0",
     "@aws-sdk/types": "^3.468.0",
     "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/catalog-client": "^1.7.1",
     "@backstage/config": "^1.2.0",
     "@langchain/aws": "^0.0.10",

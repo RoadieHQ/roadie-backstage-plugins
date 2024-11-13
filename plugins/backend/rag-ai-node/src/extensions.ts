@@ -16,6 +16,7 @@
 
 import { AugmentationIndexer, RetrievalPipeline } from './types';
 import { createExtensionPoint } from '@backstage/backend-plugin-api';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 
 export interface AugmentationIndexerExtensionPoint {
@@ -37,7 +38,7 @@ export const retrievalPipelineExtensionPoint =
   });
 
 export interface ModelExtensionPoint {
-  setBaseLLM(baseLLM: BaseLLM): void;
+  setBaseLLM(baseLLM: BaseLLM | BaseChatModel): void;
 }
 
 export const modelExtensionPoint = createExtensionPoint<ModelExtensionPoint>({
