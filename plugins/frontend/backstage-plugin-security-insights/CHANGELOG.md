@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 2.4.1
+
+### Patch Changes
+
+- dc29b55: fix bug where security insights tab was empty on initial render until clicking one of the filter buttons
+
 ## 2.4.0
 
 ### Minor Changes
