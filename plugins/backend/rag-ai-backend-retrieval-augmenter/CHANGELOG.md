@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.1.1
+
+### Patch Changes
+
+- 1cca13c: Improve support for new backend system
+- Updated dependencies [1cca13c]
+  - @roadiehq/rag-ai-node@0.1.9
+
 ## 1.1.0
 
 ### Minor Changes

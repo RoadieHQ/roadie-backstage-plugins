@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.9
+
+### Patch Changes
+
+- 1cca13c: Improve support for new backend system
+
 ## 0.1.8
 
 ### Patch Changes
