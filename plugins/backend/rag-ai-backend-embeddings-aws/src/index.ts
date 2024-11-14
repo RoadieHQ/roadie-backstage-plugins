@@ -25,10 +25,11 @@ import { PluginEndpointDiscovery } from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export interface RoadieBedrockEmbeddingsConfig {
-  logger: Logger;
-  tokenManager: TokenManager;
+  logger: Logger | LoggerService;
+  tokenManager?: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;

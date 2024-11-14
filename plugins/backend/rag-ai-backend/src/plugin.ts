@@ -29,6 +29,7 @@ import {
   modelExtensionPoint,
 } from '@roadiehq/rag-ai-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
+import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 
 /**
  * Rag AI backend plugin
@@ -40,7 +41,7 @@ export const ragAiPlugin = createBackendPlugin({
   register(env) {
     let augmentationIndexer: AugmentationIndexer | undefined;
     let retrievalPipeline: RetrievalPipeline | undefined;
-    let model: BaseLLM | undefined;
+    let model: BaseLLM | BaseChatModel | undefined;
 
     env.registerExtensionPoint(augmentationIndexerExtensionPoint, {
       setAugmentationIndexer(indexer) {
