@@ -66,7 +66,7 @@ export class WizClient {
     params.append('client_id', this.clientId);
     params.append('client_secret', this.clientSecret);
     params.append('refresh_token', this.refreshToken);
-    params.append('grant_type', 'refresh_token');
+    params.append('grant_type', 'client_credentials');
     params.append('audience', 'wiz-api');
 
     const response = await fetch(this.tokenUrl, {
@@ -155,7 +155,7 @@ export class WizClient {
         body: JSON.stringify({
           query,
           variables: {
-            first: 100,
+            first: 500,
             filterBy: {
               project: [projectId],
             },
