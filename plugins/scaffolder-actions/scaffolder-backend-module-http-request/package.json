@@ -50,13 +50,13 @@
     "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/core-app-api": "^1.15.1",
     "@backstage/core-plugin-api": "^1.10.0",
-    "@backstage/plugin-scaffolder-backend": "^1.26.1",
+    "@backstage/plugin-scaffolder-backend": "^1.26.2",
     "@backstage/plugin-scaffolder-node": "^0.5.0",
     "cross-fetch": "^4.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.28.0"
+    "@backstage/cli": "^0.28.2"
   },
   "files": [
     "dist"

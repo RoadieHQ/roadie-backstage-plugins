@@ -59,7 +59,7 @@
     "@backstage/catalog-model": "^1.7.0",
     "@backstage/config": "^1.2.0",
     "@backstage/errors": "^1.2.4",
-    "@backstage/plugin-catalog-backend": "^1.27.0",
+    "@backstage/plugin-catalog-backend": "^1.27.1",
     "@backstage/plugin-catalog-node": "^1.13.1",
     "@backstage/types": "^1.1.1",
     "@okta/okta-sdk-nodejs": "^6.6.0",
@@ -68,7 +68,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.28.0",
+    "@backstage/cli": "^0.28.2",
     "@types/lodash": "^4.14.151",
     "yaml": "^2.2.2"
   },
