@@ -90,7 +90,8 @@ export function createReplaceInFileAction() {
 
         let find: string | RegExp = file.find;
         if (file.matchRegex) {
-          find = new RegExp(file.find, 'g');
+          find = new RegExp(file.find);
+          find = new RegExp(find.source, `${find.flags}g`);
         }
 
         const replacedContent = content.replaceAll(find, file.replaceWith);
