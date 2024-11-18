@@ -21,6 +21,7 @@ import {
   useEntity,
 } from '@backstage/plugin-catalog-react';
 import { SeverityChart } from './SeverityChart';
+import { IssuesProvider } from '../IssuesContext';
 
 export const WIZ_PROJECT_ANNOTATION = 'wiz.io/project-id';
 
@@ -32,6 +33,8 @@ export const EntitySeverityChart = () => {
   return !isWizAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={WIZ_PROJECT_ANNOTATION} />
   ) : (
-    <SeverityChart />
+    <IssuesProvider>
+      <SeverityChart />
+    </IssuesProvider>
   );
 };

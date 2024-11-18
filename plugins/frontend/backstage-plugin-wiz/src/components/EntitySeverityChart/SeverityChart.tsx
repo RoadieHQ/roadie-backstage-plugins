@@ -15,35 +15,24 @@
  */
 
 import React from 'react';
-import { useApi } from '@backstage/core-plugin-api';
-import { useEntity } from '@backstage/plugin-catalog-react';
-import { useAsync } from 'react-use';
-import { wizApiRef } from '../../api';
 import {
   InfoCard,
   Progress,
   ResponseErrorPanel,
 } from '@backstage/core-components';
 import { BarChart } from '.';
-import { WIZ_PROJECT_ANNOTATION } from '../constants';
 import { useStyles } from '../../style';
 import { Typography } from '@material-ui/core';
 import wizLogo from '../../assets/wiz-logo.png';
+import { useIssues } from '../IssuesContext';
 
 export const SeverityChart = () => {
-  const api = useApi(wizApiRef);
   const classes = useStyles();
-  const { entity } = useEntity();
-  const wizAnnotation =
-    entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION] ?? '';
-
   const WizIcon = () => {
     return <img src={wizLogo} alt="WIZ Logo" className={classes.logo} />;
   };
 
-  const { value, loading, error } = useAsync(async () => {
-    return await api.fetchIssuesForProject(wizAnnotation);
-  }, []);
+  const { issues: value, loading, error } = useIssues();
 
   if (loading) {
     return <Progress />;
@@ -61,7 +50,7 @@ export const SeverityChart = () => {
         },
       }}
     >
-      {value.length > 0 ? (
+      {value && value.length > 0 ? (
         <BarChart issues={value} />
       ) : (
         <Typography>There are no issues for this project</Typography>

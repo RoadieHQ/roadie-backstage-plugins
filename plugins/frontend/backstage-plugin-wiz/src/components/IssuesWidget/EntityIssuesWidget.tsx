@@ -21,17 +21,20 @@ import {
   useEntity,
 } from '@backstage/plugin-catalog-react';
 import { IssuesWidget } from './IssuesWidget';
-
-export const WIZ_PROJECT_ANNOTATION = 'wiz.io/project-id';
+import { WIZ_PROJECT_ANNOTATION } from '../constants';
+import { IssuesProvider } from '../IssuesContext';
 
 export const isWizAvailable = (entity: Entity) => {
   return Boolean(entity?.metadata.annotations?.[WIZ_PROJECT_ANNOTATION]);
 };
+
 export const EntityIssuesWidget = () => {
   const { entity } = useEntity();
   return !isWizAvailable(entity) ? (
     <MissingAnnotationEmptyState annotation={WIZ_PROJECT_ANNOTATION} />
   ) : (
-    <IssuesWidget />
+    <IssuesProvider>
+      <IssuesWidget />
+    </IssuesProvider>
   );
 };
