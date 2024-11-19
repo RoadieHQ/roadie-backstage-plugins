@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.6
+
+### Patch Changes
+
+- e890aae: Add Context to minimize number of API calls and return 500 results instead of 100
+
 ## 1.0.4
 
 ### Patch Changes
