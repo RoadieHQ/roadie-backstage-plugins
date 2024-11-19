@@ -13,4 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * @deprecated Please import from the root path instead.
+ */
 export { scaffolderBackendModuleHttpRequest as default } from './module';
