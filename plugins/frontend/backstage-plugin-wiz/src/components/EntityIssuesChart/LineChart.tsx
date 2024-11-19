@@ -50,7 +50,6 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
           monthMap[createdAtMonth].open += 1;
         }
 
-        // Filter based on resolvedAt
         if (resolvedAtDate && resolvedAtDate >= sixMonthsAgo) {
           const resolvedAtMonth = resolvedAtDate.toLocaleString('default', {
             month: 'short',
