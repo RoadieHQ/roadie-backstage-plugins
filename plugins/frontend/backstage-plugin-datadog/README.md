@@ -82,17 +82,6 @@ export const app = createApp({
 });
 ```
 
-2.  Next, enable your desired extensions in `app-config.yaml`. By default, the content and cards will only appear on entities that are components or resources. You can override that behavior by adding a config block, demonstrated on the 'datadog-graph' card.
-
-```yaml
-app:
-  extensions:
-    - entity-content:datadog/entity
-    - entity-card:datadog/datadog-graph:
-        config:
-          filter: kind:component,api,resource
-```
-
 ## Specify datadog domain
 
 Datadog embedded graph is using `datadoghq.eu`as default top-level domain, when other is not specified. If you are using other domain, you need to specify it with corresponding annotations `datadoghq.com/site`.
