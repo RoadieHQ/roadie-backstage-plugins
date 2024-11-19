@@ -252,10 +252,17 @@ export const Issues = () => {
   };
 
   const title = (
-    <Box display="flex">
-      <WizIcon />
-      <Typography variant="h4">Overview of WIZ issues </Typography>
-    </Box>
+    <>
+      <Box display="flex">
+        <WizIcon />
+        <Typography variant="h4">Overview of WIZ issues </Typography>
+      </Box>
+      <Box pt={1}>
+        <Typography variant="subtitle1">
+          A breakdown of the last 500 issues created.
+        </Typography>
+      </Box>
+    </>
   );
 
   return (

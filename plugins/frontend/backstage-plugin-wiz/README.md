@@ -12,19 +12,19 @@ This plugin is the frontend for WIZ Backend Backstage plugin. You can see the co
 
 Wiz Issues Component:
 
-- Shows issues for the project, grouped by Controls
+- Shows last 500 issues created for the project, grouped by Controls
 
 Issues widget Component:
 
-- Shows number of open issues grouped by severity
+- Shows number of open issues for last 500 issues created, grouped by severity
 
 Issues chart Component:
 
-- Shows graph with number of resolved and open issues for last 6 months
+- Shows graph of last 500 issues created, with number of resolved and open issues for last 6 months
 
 Severity chart Component:
 
-- Shows graph of issues grouped by severity, over time of last 6 months
+- Shows graph of last 500 issues created, grouped by severity, over time of last 6 months
 
 ## Getting started
 
