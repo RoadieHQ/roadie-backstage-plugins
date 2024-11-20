@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.0.1
+
+### Patch Changes
+
+- e85a28b: Remove import of scaffolder backend plugin.
+
 ## 5.0.0
 
 ### Major Changes

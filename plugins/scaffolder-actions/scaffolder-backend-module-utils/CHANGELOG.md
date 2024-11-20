@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.0.1
+
+### Patch Changes
+
+- e85a28b: Remove import of scaffolder backend plugin.
+
 ## 3.0.0
 
 ### Major Changes
