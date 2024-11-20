@@ -64,6 +64,7 @@
     "@backstage/cli": "^0.28.0",
     "@backstage/backend-test-utils": "^1.0.1",
     "@testing-library/jest-dom": "^6.4.2",
+    "@backstage/backend-common": "^0.25.0",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/js-yaml": "^4.0.0",
