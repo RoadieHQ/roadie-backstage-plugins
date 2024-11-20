@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { resolveSafeChildPath } from '@backstage/backend-common';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { InputError } from '@backstage/errors';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
