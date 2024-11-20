@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.2.1
+
+### Patch Changes
+
+- e85a28b: Remove import of scaffolder backend plugin.
+
 ## 1.2.0
 
 ### Minor Changes
