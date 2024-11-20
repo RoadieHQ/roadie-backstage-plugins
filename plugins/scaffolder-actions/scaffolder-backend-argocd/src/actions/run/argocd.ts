@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { Config } from '@backstage/config';
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ArgoService } from '@roadiehq/backstage-plugin-argo-cd-backend';
 import { Logger } from 'winston';
 
