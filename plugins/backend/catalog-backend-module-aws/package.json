@@ -49,6 +49,7 @@
     "@aws-sdk/client-rds": "^3.76.0",
     "@aws-sdk/client-s3": "^3.76.0",
     "@aws-sdk/client-sts": "^3.76.0",
+    "@aws-sdk/client-sns": "^3.76.0",
     "@aws-sdk/credential-providers": "^3.76.0",
     "@aws-sdk/lib-dynamodb": "^3.76.0",
     "@backstage/integration-aws-node": "^0.1.12",
