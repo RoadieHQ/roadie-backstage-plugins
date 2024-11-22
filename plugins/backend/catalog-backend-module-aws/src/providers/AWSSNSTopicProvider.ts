@@ -20,7 +20,6 @@ import * as winston from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import {
   LabelValueMapper,
@@ -97,6 +96,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
     for await (const topicPage of topicPages) {
       for (const topic of topicPage.Topics || []) {
         if (topic.TopicArn) {
+          const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
           const topicEntity: ResourceEntity = {
             kind: 'Resource',
@@ -107,8 +107,8 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
                 [ANNOTATION_AWS_SNS_TOPIC_ARN]: topic.TopicArn,
                 [ANNOTATION_VIEW_URL]: consoleLink.toString(),
               },
-              name: arnToName(topic.TopicArn),
-              title: arnToName(topic.TopicArn),
+              name: topicName,
+              title: topicName,
               labels: {}, // Add any labels if necessary
             },
             spec: {

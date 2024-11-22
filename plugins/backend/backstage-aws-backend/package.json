@@ -41,7 +41,7 @@
     "@backstage/catalog-client": "^1.7.1",
     "@backstage/config": "^1.2.0",
     "@types/express": "^4.17.6",
-    "@aws-sdk/client-cloudcontrol": "^3.76.0",
+    "@aws-sdk/client-cloudcontrol": "^3.696.0",
     "@aws-sdk/credential-providers": "^3.76.0",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
