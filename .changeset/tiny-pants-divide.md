@@ -1,5 +1,5 @@
 ---
-'@roadiehq/backstage-plugin-jira': major
+'@roadiehq/backstage-plugin-jira': patch
 ---
 
 Export the apiRef
