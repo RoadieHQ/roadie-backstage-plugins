@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.2.0
+
+### Minor Changes
+
+- ac7b6e7: Implement AWS SNS Topic provider
+
 ## 1.1.26
 
 ### Patch Changes
