@@ -16,6 +16,7 @@
 
 export const ANNOTATION_AWS_IAM_ROLE_ARN = 'amazon.com/iam-role-arn';
 export const ANNOTATION_AWS_IAM_USER_ARN = 'amazon.com/iam-user-arn';
+export const ANNOTATION_AWS_SNS_TOPIC_ARN = 'amazon.com/sns-topic-arn';
 export const ANNOTATION_AWS_LAMBDA_FUNCTION_ARN =
   'amazon.com/lambda-function-arn';
 export const ANNOTATION_AWS_S3_BUCKET_ARN = 'amazon.com/s3-bucket-arn';
