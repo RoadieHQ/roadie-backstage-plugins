@@ -1,7 +1,7 @@
 ---
-'@roadiehq/catalog-backend-module-aws': major
-'@roadiehq/backstage-plugin-aws-backend': major
-'backend': major
+'@roadiehq/catalog-backend-module-aws': minor
+'@roadiehq/backstage-plugin-aws-backend': minor
+'backend': minor
 ---
 
 Implement AWS SNS Topic provider
