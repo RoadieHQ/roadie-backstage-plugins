@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.2.0
+
+### Minor Changes
+
+- ac7b6e7: Implement AWS SNS Topic provider
+
 ## 5.1.0
 
 ### Minor Changes

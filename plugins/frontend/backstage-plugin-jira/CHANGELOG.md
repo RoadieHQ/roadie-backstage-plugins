@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.8.1
+
+### Patch Changes
+
+- b0d4347: Export the apiRef
+
 ## 2.8.0
 
 ### Minor Changes
