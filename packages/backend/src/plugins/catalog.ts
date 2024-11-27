@@ -17,7 +17,7 @@ import {
   CatalogBuilder,
   EntityProvider,
 } from '@backstage/plugin-catalog-backend';
-import { ScaffolderEntitiesProcessor } from '@backstage/plugin-scaffolder-backend';
+import { ScaffolderEntitiesProcessor } from '@backstage/plugin-catalog-backend-module-scaffolder-entity-model';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
 import {
@@ -32,6 +32,7 @@ import {
   AWSEC2Provider,
   AWSRDSProvider,
   AWSOrganizationAccountsProvider,
+  AWSSNSTopicProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -65,6 +66,7 @@ export default async function createPlugin(
     const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
     const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(config, env);
     const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
+    const snsTopicProvider = AWSSNSTopicProvider.fromConfig(config, env);
     const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, env);
     const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(config, env);
     const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, env);
@@ -78,6 +80,7 @@ export default async function createPlugin(
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
     builder.addEntityProvider(iamUserProvider);
+    builder.addEntityProvider(snsTopicProvider);
     builder.addEntityProvider(iamRoleProvider);
     builder.addEntityProvider(ddbTableProvider);
     builder.addEntityProvider(eksClusterProvider);
@@ -88,6 +91,7 @@ export default async function createPlugin(
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
     providers.push(iamRoleProvider);
+    providers.push(snsTopicProvider);
     providers.push(ddbTableProvider);
     providers.push(eksClusterProvider);
     providers.push(ec2Provider);

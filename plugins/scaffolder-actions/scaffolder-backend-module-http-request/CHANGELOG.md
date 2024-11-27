@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.0.1
+
+### Patch Changes
+
+- e85a28b: Remove import of scaffolder backend plugin.
+
+## 5.0.0
+
+### Major Changes
+
+- 9fb8723: Deprecated the exports from `new-backend.ts` and re-export from `index.ts` as part of the transition to the new backend system
+
 ## 4.3.5
 
 ### Patch Changes

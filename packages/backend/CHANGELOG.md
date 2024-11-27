@@ -1,5 +1,26 @@
 # backend
 
+## 2.2.0
+
+### Minor Changes
+
+- ac7b6e7: Implement AWS SNS Topic provider
+
+### Patch Changes
+
+- Updated dependencies [ac7b6e7]
+  - @roadiehq/catalog-backend-module-aws@5.2.0
+  - @roadiehq/backstage-plugin-aws-backend@1.2.0
+
+## 2.1.26
+
+### Patch Changes
+
+- Updated dependencies [904ba81]
+- Updated dependencies [9fb8723]
+  - @roadiehq/scaffolder-backend-module-utils@3.0.0
+  - @roadiehq/scaffolder-backend-module-http-request@5.0.0
+
 ## 2.1.25
 
 ### Patch Changes

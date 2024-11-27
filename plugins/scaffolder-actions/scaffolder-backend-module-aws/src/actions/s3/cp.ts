@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { S3Client, PutObjectCommand, S3ClientConfig } from '@aws-sdk/client-s3';
 import fs, { createReadStream } from 'fs-extra';
-import { resolveSafeChildPath } from '@backstage/backend-common';
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import glob from 'glob';
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';

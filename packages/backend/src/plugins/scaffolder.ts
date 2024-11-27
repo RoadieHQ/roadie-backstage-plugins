@@ -18,10 +18,10 @@ import {
   DockerContainerRunner,
 } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import {
   createBuiltinActions,
   createRouter,
-  TemplateAction,
 } from '@backstage/plugin-scaffolder-backend';
 import { createHttpBackstageAction } from '@roadiehq/scaffolder-backend-module-http-request';
 import {

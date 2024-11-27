@@ -15,7 +15,7 @@
  */
 import { PassThrough } from 'stream';
 import { getVoidLogger } from '@backstage/backend-common';
-import { TemplateAction } from '@backstage/plugin-scaffolder-backend';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ConfigReader } from '@backstage/config';
 import { createArgoCdResources } from './argocd';
 

@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.0.1
+
+### Patch Changes
+
+- e85a28b: Remove import of scaffolder backend plugin.
+
+## 3.0.0
+
+### Major Changes
+
+- 904ba81: Deprecated the exports from `new-backend.ts` and re-export from `index.ts` as part of the transition to the new backend system
+
 ## 2.0.2
 
 ### Patch Changes
