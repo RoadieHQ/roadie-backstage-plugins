@@ -1,5 +1,6 @@
 import React from 'react';
 import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
+import { isDatadogGraphAvailable } from '../plugin';
 
 /**
  * @alpha
@@ -7,7 +8,7 @@ import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
 export const entityDatadogGraphCard = EntityCardBlueprint.make({
   name: 'datadog-graph',
   params: {
-    filter: 'kind:component,resource',
+    filter: isDatadogGraphAvailable,
     loader: () =>
       import('../components/GraphWidget').then(m => <m.GraphWidget />),
   },
