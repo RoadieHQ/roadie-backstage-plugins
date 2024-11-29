@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.5.0
+
+### Minor Changes
+
+- a61209b: Compatibility with Backstage 1.33+
+
 ## 2.4.27
 
 ### Patch Changes
