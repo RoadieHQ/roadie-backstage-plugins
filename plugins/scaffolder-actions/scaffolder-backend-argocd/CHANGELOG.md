@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.3.0
+
+### Minor Changes
+
+- a61209b: Compatibility with Backstage 1.33+
+
 ## 1.2.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.1.0
+
+### Minor Changes
+
+- a61209b: Compatibility with Backstage 1.33+
+
 ## 3.0.1
 
 ### Patch Changes
