@@ -612,4 +612,157 @@ scripts: # Trailing comment
       scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
     });
   });
+
+  it('should merge content into the correct YAML document', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+---
+id: 1
+name: Document 1
+---
+id: 2
+scripts:
+  lsltr: ls -ltr
+---
+id: 3
+name: Document 3
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: YAML.stringify({
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        }),
+        useDocumentIncludingField: {
+          key: 'id',
+          value: '2',
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    const documents = YAML.parseAllDocuments(file);
+    expect(documents[0].toJSON()).toEqual({
+      id: 1,
+      name: 'Document 1',
+    });
+    expect(documents[1].toJSON()).toEqual({
+      id: 2,
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+    });
+    expect(documents[2].toJSON()).toEqual({
+      id: 3,
+      name: 'Document 3',
+    });
+  });
+
+  it('should merge content into the correct YAML document and preserve comments', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+---
+id: 1
+name: Document 1
+# Comment for document 1
+---
+id: 2
+scripts:
+  lsltr: ls -ltr # Inline comment
+# Comment for document 2
+---
+id: 3
+name: Document 3
+# Comment for document 3
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: YAML.stringify({
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        }),
+        useDocumentIncludingField: {
+          key: 'id',
+          value: '2',
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    const documents = YAML.parseAllDocuments(file);
+    expect(documents[0].toJSON()).toEqual({
+      id: 1,
+      name: 'Document 1',
+    });
+    expect(file).toContain('# Inline comment');
+    expect(file).toContain('# Comment for document 2');
+    expect(documents[1].toJSON()).toEqual({
+      id: 2,
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+    });
+    expect(file).toContain('# Comment for document 3');
+    expect(documents[2].toJSON()).toEqual({
+      id: 3,
+      name: 'Document 3',
+    });
+  });
+
+  it('should throw error when multiple yaml documents exist, but useDocumentIncludingField is missing', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+---
+id: 1
+name: Document 1
+---
+id: 2
+scripts:
+  lsltr: ls -ltr
+---
+id: 3
+name: Document 3
+`,
+      },
+    });
+
+    await expect(
+      action.handler({
+        ...mockContext,
+        workspacePath: 'fake-tmp-dir',
+        input: {
+          path: 'fake-file.yaml',
+          content: YAML.stringify({
+            scripts: {
+              lsltrh: 'ls -ltrh',
+            },
+          }),
+        },
+      }),
+    ).rejects.toThrow(
+      'Multiple documents found in the input content. Please provide a key and value to use to find the document to merge into.',
+    );
+  });
 });
