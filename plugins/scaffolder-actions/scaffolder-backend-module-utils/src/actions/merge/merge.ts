@@ -19,7 +19,7 @@ import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
-import YAML from 'yaml';
+import YAML, { Document } from 'yaml';
 import YAWN from 'yawn-yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
@@ -30,6 +30,23 @@ function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
   }
   return undefined;
 }
+
+const existPathInObject = (object: any, path: string, value: string) => {
+  const keys = path.split('.');
+  if (typeof object !== 'object') {
+    return false;
+  }
+
+  let current = object;
+  for (const key of keys) {
+    if (current[key] === undefined) {
+      current = undefined;
+      break;
+    }
+    current = current[key];
+  }
+  return current?.toString() === value;
+};
 
 export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   return createTemplateAction<{
@@ -139,6 +156,7 @@ export function createMergeAction() {
   return createTemplateAction<{
     path: string;
     content: any;
+    useDocumentIncludingField?: { key: string; value: string };
     mergeArrays?: boolean;
     preserveYamlComments?: boolean;
     options?: stringifyOptions;
@@ -175,6 +193,27 @@ export function createMergeAction() {
             title: 'Preserve Comments?',
             description:
               'Will preserve standalone and inline comments in YAML files',
+          },
+          useDocumentIncludingField: {
+            type: 'object',
+            title: 'Use Document Including Field',
+            default: undefined,
+            description:
+              'This option is only applicable to YAML files. It allows you to specify a field to use as a key to find the document to merge into.',
+            properties: {
+              key: {
+                title: 'Key',
+                description:
+                  'The key of the field to use to find the document to merge into.',
+                type: 'string',
+              },
+              value: {
+                title: 'Value',
+                description:
+                  'The value of the field to use to find the document to merge into.',
+                type: 'string',
+              },
+            },
           },
           options: {
             ...yamlOptionsSchema,
@@ -223,36 +262,31 @@ export function createMergeAction() {
           break;
         }
         case '.yml':
-        case '.yaml': {
-          const newContent =
-            typeof ctx.input.content === 'string'
-              ? YAML.parse(ctx.input.content)
-              : ctx.input.content; // This supports the case where dynamic keys are required
-          if (ctx.input.preserveYamlComments) {
-            const yawn = new YAWN(originalContent);
-            const parsedOriginal = yawn.json;
-            const mergedJsonContent = mergeWith(
-              parsedOriginal,
-              newContent,
-              ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
-            );
-            yawn.json = mergedJsonContent;
-            mergedContent = YAML.stringify(
-              YAML.parseDocument(yawn.yaml),
-              ctx.input.options,
-            );
-          } else {
-            mergedContent = YAML.stringify(
-              mergeWith(
-                YAML.parse(originalContent),
+        case '.yaml':
+          {
+            const newContent =
+              typeof ctx.input.content === 'string'
+                ? YAML.parse(ctx.input.content)
+                : ctx.input.content; // This supports the case where dynamic keys are required
+            if (ctx.input.preserveYamlComments) {
+              mergedContent = mergeContentPreserveComments(
+                originalContent,
                 newContent,
-                ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
-              ),
-              ctx.input.options,
-            );
+                ctx,
+              )
+                .map(doc => YAML.stringify(doc, ctx.input.options))
+                .join('---\n');
+            } else {
+              mergedContent = mergeDocumentsRemovingComments(
+                originalContent,
+                newContent,
+                ctx,
+              )
+                .map(doc => YAML.stringify(doc, ctx.input.options))
+                .join('---\n');
+            }
           }
           break;
-        }
         default:
           break;
       }
@@ -263,4 +297,113 @@ export function createMergeAction() {
       ctx.output('path', sourceFilepath);
     },
   });
+}
+
+function mergeDocumentsRemovingComments(
+  originalContent: string,
+  newContent: any,
+  ctx: any,
+): Document[] {
+  const documents = YAML.parseAllDocuments(originalContent);
+  checkDocumentExists(ctx, documents);
+  if (documents.length === 1) {
+    return [
+      mergeWith(
+        documents[0].toJSON(),
+        newContent,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+      ),
+    ];
+  }
+  checkUseDocumentIncludingFieldSet(ctx);
+  const { key, value } = ctx.input.useDocumentIncludingField;
+  return documents.map((document: Document) => {
+    let includingField = document.get(key);
+    if (typeof includingField === 'number') {
+      includingField = includingField.toString();
+    }
+    if (typeof includingField !== 'string') {
+      ctx.logger.error(
+        `The value at "${key}" defined in useDocumentIncludingField must be a string or a number.`,
+      );
+      throw new Error(
+        `The value at "${key}" defined in useDocumentIncludingField must be a string or a number.`,
+      );
+    }
+    if ((includingField as string) === value) {
+      return mergeWith(
+        document.toJSON(),
+        newContent,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+      );
+    }
+    return document.toJSON();
+  });
+}
+
+function mergeContentPreserveComments(
+  originalContent: string,
+  newContent: any,
+  ctx: any,
+): Document[] {
+  const yawns = splitYaml(originalContent).map(
+    (document: string) => new YAWN(document),
+  );
+  checkDocumentExists(ctx, yawns);
+  if (yawns.length === 1) {
+    return [
+      YAML.parseDocument(
+        mergeYawn(yawns[0], newContent, ctx.input.mergeArrays).yaml,
+      ),
+    ];
+  }
+  checkUseDocumentIncludingFieldSet(ctx);
+  const { key, value } = ctx.input.useDocumentIncludingField;
+  return yawns.map((yawn: YAWN) =>
+    YAML.parseDocument(
+      existPathInObject(yawn.json, key, value)
+        ? mergeYawn(yawn, newContent, ctx.input.mergeArrays).yaml
+        : yawn.yaml,
+    ),
+  );
+}
+
+function checkDocumentExists(ctx: any, documents: any[]) {
+  if (documents.length === 0) {
+    ctx.logger.error(
+      `No documents found in the input content. Please provide a valid YAML file.`,
+    );
+    throw new Error(
+      `No documents found in the input content. Please provide a valid YAML file.`,
+    );
+  }
+}
+
+function checkUseDocumentIncludingFieldSet(ctx: any) {
+  if (!ctx.input.useDocumentIncludingField) {
+    ctx.logger.error(
+      `Multiple documents found in the input content. Please provide a key and value to use to find the document to merge into.`,
+    );
+    throw new Error(
+      `Multiple documents found in the input content. Please provide a key and value to use to find the document to merge into.`,
+    );
+  }
+}
+
+function mergeYawn(
+  yawn: YAWN,
+  newContent: any,
+  mergeArrays: boolean | undefined,
+) {
+  const parsedOriginal = yawn.json;
+  yawn.json = mergeWith(
+    parsedOriginal,
+    newContent,
+    mergeArrays ? mergeArrayCustomiser : undefined,
+  );
+  return yawn;
+}
+
+function splitYaml(originalContent: string): string[] {
+  return originalContent.split(/^---\s*$/m).filter(doc => doc.trim() !== '');
 }
