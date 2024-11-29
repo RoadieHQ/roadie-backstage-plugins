@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.4.1
+
+### Patch Changes
+
+- d442269: Update default filtering to be based on required annotation for the new frontend system components
+
 ## 2.4.0
 
 ### Minor Changes
