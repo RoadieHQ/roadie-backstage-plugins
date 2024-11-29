@@ -100,7 +100,7 @@ describe('ReadmeCard', () => {
   });
 
   it('should render unicode correctly', async () => {
-    const rendered = render(
+    render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <ThemeProvider theme={lightTheme}>
@@ -111,8 +111,6 @@ describe('ReadmeCard', () => {
         </TestApiProvider>,
       ),
     );
-    expect(
-      await rendered.findByText('⭐', { exact: false }),
-    ).toBeInTheDocument();
+    expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
   });
 });

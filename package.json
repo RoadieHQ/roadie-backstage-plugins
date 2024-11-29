@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "14 || 16 || 18 || 20"
+    "node": "18 || 20 || 22"
   },
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
@@ -40,7 +40,8 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.28.0",
+    "@backstage/cli": "^0.29.2",
+    "@changesets/cli": "^2.18.0",
     "@spotify/prettier-config": "^14.0.0",
     "@types/webpack": "^5.28.0",
     "concurrently": "^7.0.0",
@@ -55,7 +56,5 @@
     "typescript": "^5.5.4"
   },
   "prettier": "@spotify/prettier-config",
-  "dependencies": {
-    "@changesets/cli": "^2.18.0"
-  }
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
