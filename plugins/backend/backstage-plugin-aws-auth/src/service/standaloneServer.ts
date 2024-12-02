@@ -15,10 +15,11 @@
  */
 import { Server } from 'http';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { createStandaloneApplication } from './standaloneApplication';
 
 export async function startStandaloneServer(
-  parentLogger: Logger,
+  parentLogger: Logger | LoggerService,
 ): Promise<Server> {
   const logger = parentLogger.child({ service: 'scaffolder-backend' });
   logger.debug('Creating application...');

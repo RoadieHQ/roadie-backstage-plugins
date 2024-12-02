@@ -17,6 +17,7 @@
 import { ResourceEntity } from '@backstage/catalog-model';
 import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
 import * as winston from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
@@ -49,7 +50,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -73,7 +74,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
   constructor(
     account: AccountConfig,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

@@ -16,11 +16,15 @@
 import { createRouter } from '@backstage/plugin-proxy-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
+import { loggerToWinstonLogger } from '@backstage/backend-common';
+import { Logger } from 'winston';
 
 export default async function createPlugin({
   logger,
   config,
   discovery,
 }: PluginEnvironment): Promise<Router> {
-  return await createRouter({ logger, config, discovery });
+  const winstonLogger =
+    logger instanceof Logger ? logger : loggerToWinstonLogger(logger);
+  return await createRouter({ logger: winstonLogger, config, discovery });
 }

@@ -20,6 +20,8 @@ import {
   Preparers,
   Publisher,
 } from '@backstage/plugin-techdocs-backend';
+import { Logger } from 'winston';
+import { loggerToWinstonLogger } from '@backstage/backend-common';
 import Docker from 'dockerode';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
@@ -58,11 +60,14 @@ export default async function createPlugin({
   // checks if the publisher is working and logs the result
   await publisher.getReadiness();
 
+  const winstonLogger =
+    logger instanceof Logger ? logger : loggerToWinstonLogger(logger);
+
   return await createRouter({
     preparers,
     generators,
     publisher,
-    logger,
+    logger: winstonLogger,
     config,
     discovery,
     cache,

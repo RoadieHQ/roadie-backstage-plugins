@@ -4,12 +4,13 @@ import {
 } from '@backstage/backend-common';
 import { Server } from 'http';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { createRouter } from './router';
 
 export interface ServerOptions {
   port: number;
   enableCors: boolean;
-  logger: Logger;
+  logger: Logger | LoggerService;
 }
 
 export async function startStandaloneServer(

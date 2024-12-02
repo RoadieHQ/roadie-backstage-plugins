@@ -17,10 +17,11 @@ import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { EmbeddingDoc } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { createPromptTemplates } from './prompts';
 
 export class LlmService {
-  private readonly logger: Logger;
+  private readonly logger: Logger | LoggerService;
   private readonly model: BaseLLM | BaseChatModel;
   private readonly prompts: {
     prefixPrompt: (embedding: string) => string;
@@ -32,7 +33,7 @@ export class LlmService {
     model,
     configuredPrompts,
   }: {
-    logger: Logger;
+    logger: Logger | LoggerService;
     model: BaseLLM | BaseChatModel;
     configuredPrompts?: {
       prefix?: string;

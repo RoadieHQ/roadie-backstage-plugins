@@ -23,10 +23,11 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { createRouter } from './router';
 
 export async function createStandaloneApplication(
-  logger: Logger,
+  logger: Logger | LoggerService,
 ): Promise<express.Application> {
   const app = express();
 

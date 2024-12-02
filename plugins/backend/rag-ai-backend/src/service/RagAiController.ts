@@ -15,6 +15,8 @@
  */
 import { Request, Response } from 'express';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
+
 import { LlmService } from './LlmService';
 import {
   AugmentationIndexer,
@@ -35,10 +37,10 @@ export class RagAiController {
   private readonly llmService: LlmService;
   private readonly augmentationIndexer: AugmentationIndexer;
   private readonly retrievalPipeline?: RetrievalPipeline;
-  private logger: Logger;
+  private logger: Logger | LoggerService;
 
   constructor(
-    logger: Logger,
+    logger: Logger | LoggerService,
     llmService: LlmService,
     augmentationIndexer: AugmentationIndexer,
     retrievalPipeline?: RetrievalPipeline,
@@ -55,7 +57,7 @@ export class RagAiController {
     augmentationIndexer,
     retrievalPipeline,
   }: {
-    logger: Logger;
+    logger: Logger | LoggerService;
     llmService: LlmService;
     augmentationIndexer: AugmentationIndexer;
     retrievalPipeline?: RetrievalPipeline;

@@ -17,6 +17,7 @@
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { SNS, paginateListTopics } from '@aws-sdk/client-sns';
 import * as winston from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
@@ -37,7 +38,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

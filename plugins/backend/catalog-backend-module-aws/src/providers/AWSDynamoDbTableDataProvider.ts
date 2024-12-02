@@ -31,6 +31,7 @@ import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
 import * as winston from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
@@ -51,11 +52,14 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   private readonly accountId: string;
   private readonly roleArn: string;
   private readonly tableDataConfig: DdbTableDataConfigOptions;
-  private readonly logger: winston.Logger;
+  private readonly logger: winston.Logger | LoggerService;
 
   private connection?: EntityProviderConnection;
 
-  static fromConfig(config: Config, options: { logger: winston.Logger }) {
+  static fromConfig(
+    config: Config,
+    options: { logger: winston.Logger | LoggerService },
+  ) {
     return new AWSDynamoDbTableDataProvider(
       config.getString('accountId'),
       config.getString('roleName'),
@@ -68,7 +72,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     accountId: string,
     roleArn: string,
     options: DdbTableDataConfigOptions,
-    logger: winston.Logger,
+    logger: winston.Logger | LoggerService,
   ) {
     this.accountId = accountId;
     this.roleArn = roleArn;
@@ -168,7 +172,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
         })),
       });
     } catch (e) {
-      this.logger.error(e);
+      this.logger.error((e as Error).message, e as Error);
     }
   }
 }
