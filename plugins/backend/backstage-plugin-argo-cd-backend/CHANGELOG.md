@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.3.0
+
+### Minor Changes
+
+- 8915f83: We are making the logger compatible with Backstage's LoggerService and winston's Logger so that Roadie can be used with newer and older versions of Backstage.
+
 ## 3.2.3
 
 ### Patch Changes

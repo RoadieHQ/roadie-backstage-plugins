@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.5.0
+
+### Minor Changes
+
+- 8915f83: We are making the logger compatible with Backstage's LoggerService and winston's Logger so that Roadie can be used with newer and older versions of Backstage.
+
 ## 0.4.26
 
 ### Patch Changes
