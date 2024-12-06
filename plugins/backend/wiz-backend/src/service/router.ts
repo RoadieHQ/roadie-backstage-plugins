@@ -17,13 +17,47 @@ import {
   LoggerService,
   RootConfigService,
 } from '@backstage/backend-plugin-api';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import Router from 'express-promise-router';
 import { WizClient } from './WizClient';
 
 export interface RouterOptions {
   logger: LoggerService;
   config: RootConfigService;
+}
+
+function validateWizConfig(config: any) {
+  return (_req: Request, res: Response, next: NextFunction): void => {
+    const wizConfig = {
+      clientId: config.getOptionalString('wiz.clientId'),
+      clientSecret: config.getOptionalString('wiz.clientSecret'),
+      tokenUrl: config.getOptionalString('wiz.tokenUrl'),
+      apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
+    };
+
+    if (!wizConfig.clientId || !wizConfig.clientSecret) {
+      res.status(401).send({
+        error: 'Not authenticated, missing Client Secret or Client ID.',
+      });
+      return;
+    }
+
+    if (!wizConfig.tokenUrl) {
+      res.status(400).send({
+        error: 'Missing token URL.',
+      });
+      return;
+    }
+
+    if (!wizConfig.apiUrl) {
+      res.status(400).send({
+        error: 'Missing API endpoint URL',
+      });
+      return;
+    }
+
+    next();
+  };
 }
 
 export async function createRouter(
@@ -34,33 +68,10 @@ export async function createRouter(
   const router = Router();
   const wizAuthClient = new WizClient(config);
 
+  router.use(validateWizConfig(config));
+
   router.get('/wiz-issues/:projectId', async (req, res) => {
     try {
-      const wizConfig = {
-        clientId: config.getOptionalString('wiz.clientId'),
-        clientSecret: config.getOptionalString('wiz.clientSecret'),
-        tokenUrl: config.getOptionalString('wiz.tokenUrl'),
-        apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
-      };
-
-      if (!wizConfig.clientId || !wizConfig.clientSecret) {
-        return res.status(401).send({
-          error: 'Not authenticated, missing Client Secret or Client ID.',
-        });
-      }
-
-      if (!wizConfig.tokenUrl) {
-        return res.status(400).send({
-          error: 'Missing token URL.',
-        });
-      }
-
-      if (!wizConfig.apiUrl) {
-        return res.status(400).send({
-          error: 'Missing API endpoint URL',
-        });
-      }
-
       await wizAuthClient.fetchAccessToken();
       const data = await wizAuthClient.getIssuesForProject(
         req.params.projectId,
@@ -77,8 +88,10 @@ export async function createRouter(
           error: error.message,
         });
       }
-      return res.status(500).send({
-        error: 'Failed to fetch issues for project',
+      return res.status(error.statusCode).send({
+        error:
+          error.message ??
+          'There was an error fetching issues for this project',
       });
     }
   });
