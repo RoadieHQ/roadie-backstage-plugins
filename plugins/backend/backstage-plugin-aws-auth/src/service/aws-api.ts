@@ -16,6 +16,7 @@
 
 import express from 'express';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { generateTemporaryCredentials } from './generateTemporaryCredentials';
 
 export type LambdaData = {
@@ -35,7 +36,7 @@ export function getAwsApiGenerateTempCredentialsForwarder({
 }: {
   AWS_ACCESS_KEY_ID?: string;
   AWS_ACCESS_KEY_SECRET?: string;
-  logger: Logger;
+  logger: Logger | LoggerService;
 }) {
   return async function forwardRequest(
     _: express.Request,

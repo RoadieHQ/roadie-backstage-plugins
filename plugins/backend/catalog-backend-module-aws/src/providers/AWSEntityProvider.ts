@@ -19,6 +19,7 @@ import {
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
 import * as winston from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { AccountConfig, DynamicAccountConfig } from '../types';
 import { STS } from '@aws-sdk/client-sts';
 import {
@@ -36,7 +37,7 @@ import { LabelValueMapper, labelsFromTags, Tag } from '../utils/tags';
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly useTemporaryCredentials: boolean;
   protected readonly providerId?: string;
-  protected readonly logger: winston.Logger;
+  protected readonly logger: winston.Logger | LoggerService;
   protected connection?: EntityProviderConnection;
   private readonly ownerTag: string | undefined;
   protected readonly catalogApi?: CatalogApi;
@@ -52,7 +53,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   protected constructor(
     account: AccountConfig,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

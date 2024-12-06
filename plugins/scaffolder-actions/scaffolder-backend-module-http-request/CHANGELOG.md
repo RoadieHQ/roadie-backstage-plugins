@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.2.0
+
+### Minor Changes
+
+- 8915f83: We are making the logger compatible with Backstage's LoggerService and winston's Logger so that Roadie can be used with newer and older versions of Backstage.
+
 ## 5.1.0
 
 ### Minor Changes
