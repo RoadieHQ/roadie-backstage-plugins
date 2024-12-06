@@ -26,10 +26,11 @@ export class WizClient {
   private tokenExpiresAt: number | null = null;
 
   constructor(config: Config) {
-    this.clientId = config.getString('wiz.clientId');
-    this.clientSecret = config.getString('wiz.clientSecret');
-    this.tokenUrl = config.getString('wiz.tokenUrl');
-    this.wizAPIUrl = config.getString('wiz.wizAPIUrl');
+    this.clientId = config.getOptionalString('wiz.clientId') ?? 'clientId';
+    this.clientSecret =
+      config.getOptionalString('wiz.clientSecret') ?? 'clientSecret';
+    this.tokenUrl = config.getOptionalString('wiz.tokenUrl') ?? 'tokenUrl';
+    this.wizAPIUrl = config.getOptionalString('wiz.wizAPIUrl') ?? 'wizAPIUrl';
   }
 
   async fetchAccessToken() {

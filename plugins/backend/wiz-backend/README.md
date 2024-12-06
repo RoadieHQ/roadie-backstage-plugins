@@ -23,11 +23,11 @@ After obtaining all of the above, add wiz configuration in your app-config.yaml
 
 ```yaml
 wiz:
-  enabled: true
   clientId: <Client ID>
   clientSecret: <Client Secret>
   tokenUrl: <Wiz token URL>
   wizAPIUrl: <API Endpoint URL>
+  dashboardLink: <your-wiz-url>
 ```
 
 Create a file in `packages/backend/src/plugins/wiz.ts`
@@ -54,7 +54,6 @@ async function main() {
   const wizEnv = useHotMemoize(module, () => createEnv('wiz'));
 
   const wizConfig = {
-  enabled: config.getOptionalBoolean('wiz.enabled'),
   clientId: config.getOptionalString('wiz.clientId'),
   clientSecret: config.getOptionalString('wiz.clientSecret'),
   tokenUrl: config.getOptionalString('wiz.tokenUrl'),

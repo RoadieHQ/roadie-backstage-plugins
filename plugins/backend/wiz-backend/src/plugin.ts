@@ -40,10 +40,6 @@ export const wizBackendPlugin = createBackendPlugin({
             config,
           }),
         );
-        httpRouter.addAuthPolicy({
-          path: '/health',
-          allow: 'unauthenticated',
-        });
       },
     });
   },

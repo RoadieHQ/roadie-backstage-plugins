@@ -42,7 +42,8 @@ export const SeverityChart = () => {
 
   return (
     <InfoCard
-      title="Severity graph"
+      title="Severity Graph"
+      subheader="Severity status of the last 500 issues created within the past 6 months."
       headerProps={{
         action: <WizIcon />,
         classes: {

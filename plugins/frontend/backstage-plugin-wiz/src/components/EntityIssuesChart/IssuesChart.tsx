@@ -43,6 +43,7 @@ export const IssuesChart = () => {
   return (
     <InfoCard
       title="Issues status graph"
+      subheader="Status (resolved vs. open) of the last 500 issues created within the past 6 months."
       headerProps={{
         action: <WizIcon />,
         classes: {

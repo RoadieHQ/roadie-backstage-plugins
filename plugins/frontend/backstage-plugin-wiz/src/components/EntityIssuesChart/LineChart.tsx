@@ -19,8 +19,14 @@ import { ResponsiveLine } from '@nivo/line';
 import { WizIssue } from '../Issues/types';
 import { useTheme } from '@material-ui/core';
 
+const issueStatusFilters = {
+  openIssues: 'OPEN',
+  resolvedIssues: 'RESOLVED',
+};
+
 export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
   const theme = useTheme();
+
   const transformIssuesForChart = () => {
     const monthMap: Record<string, { open: number; resolved: number }> = {};
 
@@ -28,16 +34,9 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
     issues?.forEach(
-      (issue: {
-        createdAt: string | number | Date;
-        resolvedAt: string | number | Date;
-      }) => {
+      (issue: { status: string; createdAt: string | number | Date }) => {
         const createdAtDate = new Date(issue.createdAt);
-        const resolvedAtDate = issue.resolvedAt
-          ? new Date(issue.resolvedAt)
-          : null;
 
-        // Filter based on createdAt
         if (createdAtDate >= sixMonthsAgo) {
           const createdAtMonth = createdAtDate.toLocaleString('default', {
             month: 'short',
@@ -47,19 +46,12 @@ export const LineChart = ({ issues }: { issues: WizIssue[] }) => {
           if (!monthMap[createdAtMonth]) {
             monthMap[createdAtMonth] = { open: 0, resolved: 0 };
           }
-          monthMap[createdAtMonth].open += 1;
-        }
 
-        if (resolvedAtDate && resolvedAtDate >= sixMonthsAgo) {
-          const resolvedAtMonth = resolvedAtDate.toLocaleString('default', {
-            month: 'short',
-            year: 'numeric',
-          });
-
-          if (!monthMap[resolvedAtMonth]) {
-            monthMap[resolvedAtMonth] = { open: 0, resolved: 0 };
+          if (issue.status === issueStatusFilters.openIssues) {
+            monthMap[createdAtMonth].open += 1;
+          } else if (issue.status === issueStatusFilters.resolvedIssues) {
+            monthMap[createdAtMonth].resolved += 1;
           }
-          monthMap[resolvedAtMonth].resolved += 1;
         }
       },
     );

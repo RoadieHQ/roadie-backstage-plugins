@@ -18,10 +18,6 @@ export interface Config {
     /**
      * @visibility frontend
      */
-    enabled?: boolean;
-    /**
-     * @visibility frontend
-     */
     dashboardLink?: string;
     /**
      * @visibility secret
