@@ -15,11 +15,14 @@
  */
 
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import Router from 'express-promise-router';
 import express from 'express';
 import { getAwsApiGenerateTempCredentialsForwarder } from './aws-api';
 
-export async function createRouter(logger: Logger): Promise<express.Router> {
+export async function createRouter(
+  logger: Logger | LoggerService,
+): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
 

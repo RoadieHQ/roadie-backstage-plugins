@@ -16,6 +16,7 @@
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { fetch } from 'cross-fetch';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { HttpOptions } from './types';
 
 class HttpError extends Error {}
@@ -40,7 +41,7 @@ export const generateBackstageUrl = async (
 
 export const http = async (
   options: HttpOptions,
-  logger: Logger,
+  logger: Logger | LoggerService,
   continueOnBadResponse: boolean = false,
 ): Promise<any> => {
   let res: any;

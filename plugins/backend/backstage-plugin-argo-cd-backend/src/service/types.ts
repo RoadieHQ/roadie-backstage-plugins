@@ -1,5 +1,6 @@
 import { Config } from '@backstage/config';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export type getRevisionDataResp = {
   author: string;
@@ -61,7 +62,7 @@ export interface CreateArgoResourcesProps {
   sourceRepo: string;
   sourcePath: string;
   labelValue: string;
-  logger: Logger;
+  logger: Logger | LoggerService;
 }
 
 export interface UpdateArgoProjectAndAppProps {

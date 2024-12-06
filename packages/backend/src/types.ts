@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import {
   PluginCacheManager,
@@ -26,7 +27,7 @@ import { PluginTaskScheduler } from '@backstage/backend-tasks';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
 
 export type PluginEnvironment = {
-  logger: Logger;
+  logger: Logger | LoggerService;
   cache: PluginCacheManager;
   database: PluginDatabaseManager;
   config: Config;

@@ -16,6 +16,7 @@
 import {
   ContainerRunner,
   DockerContainerRunner,
+  loggerToWinstonLogger,
 } from '@backstage/backend-common';
 import { CatalogClient } from '@backstage/catalog-client';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
@@ -49,6 +50,7 @@ import { ScmIntegrations } from '@backstage/integration';
 import { Config } from '@backstage/config';
 import { DiscoveryApi } from '@backstage/plugin-permission-common';
 import { UrlReaderService } from '@backstage/backend-plugin-api';
+import { Logger } from 'winston';
 
 export const createActions = (options: {
   reader: UrlReaderService;
@@ -98,8 +100,11 @@ export default async function createPlugin({
 
   const catalogClient = new CatalogClient({ discoveryApi: discovery });
 
+  const winstonLogger =
+    logger instanceof Logger ? logger : loggerToWinstonLogger(logger);
+
   return await createRouter({
-    logger,
+    logger: winstonLogger,
     config,
     database,
     catalogClient,
