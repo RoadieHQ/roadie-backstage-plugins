@@ -34,10 +34,34 @@ export async function createRouter(
   const router = Router();
   const wizAuthClient = new WizClient(config);
 
-  await wizAuthClient.fetchAccessToken();
-
   router.get('/wiz-issues/:projectId', async (req, res) => {
     try {
+      const wizConfig = {
+        clientId: config.getOptionalString('wiz.clientId'),
+        clientSecret: config.getOptionalString('wiz.clientSecret'),
+        tokenUrl: config.getOptionalString('wiz.tokenUrl'),
+        apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
+      };
+
+      if (!wizConfig.clientId || !wizConfig.clientSecret) {
+        return res.status(401).send({
+          error: 'Not authenticated, missing Client Secret or Client ID.',
+        });
+      }
+
+      if (!wizConfig.tokenUrl) {
+        return res.status(400).send({
+          error: 'Missing token URL.',
+        });
+      }
+
+      if (!wizConfig.apiUrl) {
+        return res.status(400).send({
+          error: 'Missing API endpoint URL',
+        });
+      }
+
+      await wizAuthClient.fetchAccessToken();
       const data = await wizAuthClient.getIssuesForProject(
         req.params.projectId,
       );
