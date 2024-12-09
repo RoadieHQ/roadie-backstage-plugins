@@ -112,14 +112,18 @@ export const IssuesWidget = () => {
           root: classes.card,
         },
       }}
-      deepLink={{
-        link: `https://${dashboardLink}`,
-        title: 'Go to WIZ',
-        onClick: e => {
-          e.preventDefault();
-          window.open(`https://${dashboardLink}`);
-        },
-      }}
+      deepLink={
+        dashboardLink
+          ? {
+              link: `https://${dashboardLink}`,
+              title: 'Go to your WIZ dashboard',
+              onClick: e => {
+                e.preventDefault();
+                window.open(`https://${dashboardLink}`);
+              },
+            }
+          : undefined
+      }
     >
       {' '}
       {value && value.length > 0 ? (
@@ -131,7 +135,7 @@ export const IssuesWidget = () => {
               display="flex"
               mt={2}
               flexDirection="column"
-              width="9vw"
+              width="8.5vw"
               style={{
                 backgroundColor: theme.palette.background.default,
               }}
@@ -186,7 +190,7 @@ export const IssuesWidget = () => {
               display="flex"
               mt={2}
               flexDirection="column"
-              width="9vw"
+              width="8.5vw"
               style={{
                 backgroundColor: theme.palette.background.default,
               }}
@@ -241,7 +245,7 @@ export const IssuesWidget = () => {
               display="flex"
               mt={2}
               flexDirection="column"
-              width="9vw"
+              width="8.5vw"
               style={{
                 backgroundColor: theme.palette.background.default,
               }}
@@ -296,7 +300,7 @@ export const IssuesWidget = () => {
               display="flex"
               mt={2}
               flexDirection="column"
-              width="9vw"
+              width="8.5vw"
               style={{
                 backgroundColor: theme.palette.background.default,
               }}
