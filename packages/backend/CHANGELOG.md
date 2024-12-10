@@ -1,5 +1,13 @@
 # backend
 
+## 2.3.1
+
+### Patch Changes
+
+- 07e34ae: Handle missing parameters message, remove uneeded config property. Improve description in WIZ graphs
+- Updated dependencies [07e34ae]
+  - @roadiehq/plugin-wiz-backend@1.0.7
+
 ## 2.3.0
 
 ### Minor Changes

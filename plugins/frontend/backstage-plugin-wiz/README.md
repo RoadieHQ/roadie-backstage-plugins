@@ -77,7 +77,6 @@ In order to add correct url which will lead to WIZ dashboard for your organisati
 
 ```yaml
 wiz:
-  enabled: true
   dashboardLink: <your-wiz-url>
   clientId: <Client ID>
   clientSecret: <Client Secret>

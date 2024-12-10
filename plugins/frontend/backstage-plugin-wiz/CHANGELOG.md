@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.7
+
+### Patch Changes
+
+- 07e34ae: Handle missing parameters message, remove uneeded config property. Improve description in WIZ graphs
+
 ## 1.0.6
 
 ### Patch Changes
