@@ -31,14 +31,16 @@ The module expects 2 pieces of configuration:
 
 ### AWS Bedrock configuration
 
-The module expects the name of the embeddings generative AI model to be configured via app-config.
+The module expects the name of the embeddings generative AI model to be configured via app-config. Optionally, you can also provide the maximum number of retries for the AWS SDK client.
 
 ```yaml
 ai:
   embeddings:
-    awsBedrock:
+    bedrock:
       # Name of the Bedrock model to use to create Embeddings
       modelName: 'amazon.titan-embed-text-v1'
+      # Maximum number of retries for the AWS SDK client
+      maxRetries: 3
 ```
 
 ### AWS Credentials Configuration

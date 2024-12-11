@@ -61,7 +61,7 @@ ai:
     concurrencyLimit: 10
 
     # AWS Bedrock Embeddings configuration
-    awsBedrock:
+    bedrock:
       # (Required) Name of the Bedrock model to use to create Embeddings.
       modelName: 'amazon.titan-embed-text-v1'
 

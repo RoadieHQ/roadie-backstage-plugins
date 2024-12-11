@@ -23,6 +23,7 @@ import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
 
 export type BedrockConfig = {
   modelName: string;
+  maxRetries?: number;
 };
 
 export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
@@ -41,8 +42,14 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
       model: config.bedrockConfig.modelName,
     };
     const embeddings = config.bedrockConfig.modelName.includes('cohere')
-      ? new BedrockCohereEmbeddings({ ...embeddingsConfig, maxRetries: 3 })
-      : new BedrockEmbeddings({ ...embeddingsConfig, maxRetries: 3 });
+      ? new BedrockCohereEmbeddings({
+          ...embeddingsConfig,
+          maxRetries: config.bedrockConfig.maxRetries ?? 3,
+        })
+      : new BedrockEmbeddings({
+          ...embeddingsConfig,
+          maxRetries: config.bedrockConfig.maxRetries ?? 3,
+        });
 
     super({ ...config, embeddings });
   }
