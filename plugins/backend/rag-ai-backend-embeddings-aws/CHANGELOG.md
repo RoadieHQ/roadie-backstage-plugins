@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.1.0
+
+### Minor Changes
+
+- d8e19e7: Made `maxRetries` configurable
+
 ## 1.0.3
 
 ### Patch Changes

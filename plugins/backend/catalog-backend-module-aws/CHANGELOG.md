@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.3.1
+
+### Patch Changes
+
+- 5417267: Add support from namespaced group tagging
+
 ## 5.3.0
 
 ### Minor Changes
