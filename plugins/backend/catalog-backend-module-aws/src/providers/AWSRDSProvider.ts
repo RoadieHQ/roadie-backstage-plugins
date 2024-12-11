@@ -29,6 +29,7 @@ import {
 import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -37,7 +38,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       useTemporaryCredentials?: boolean;

@@ -99,14 +99,6 @@ async function main() {
   const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
   const wizEnv = useHotMemoize(module, () => createEnv('wiz'));
 
-  const wizConfig = {
-    enabled: config.getOptionalBoolean('wiz.enabled'),
-    clientId: config.getOptionalString('wiz.clientId'),
-    clientSecret: config.getOptionalString('wiz.clientSecret'),
-    tokenUrl: config.getOptionalString('wiz.tokenUrl'),
-    apiUrl: config.getOptionalString('wiz.wizAPIUrl'),
-  };
-
   const apiRouter = Router();
   apiRouter.use('/catalog', await catalog(catalogEnv));
   apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv));
@@ -115,17 +107,7 @@ async function main() {
   apiRouter.use('/proxy', await proxy(proxyEnv));
   apiRouter.use('/aws', await aws(awsEnv));
   apiRouter.use('/argocd', await argocd(argocdEnv));
-
-  if (
-    wizConfig.enabled &&
-    wizConfig.clientId &&
-    wizConfig.clientSecret &&
-    wizConfig.tokenUrl &&
-    wizConfig.apiUrl
-  ) {
-    apiRouter.use('/wiz-backend', await wiz(wizEnv));
-  }
-
+  apiRouter.use('/wiz-backend', await wiz(wizEnv));
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)

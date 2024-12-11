@@ -7,7 +7,7 @@ import {
 } from './argocdTestResponses';
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
-import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { ResourceItem, UpdateArgoProjectAndAppProps } from './types';
 import { mocked } from 'jest-mock';
 
@@ -18,7 +18,7 @@ jest.mock('./timer.services', () => ({
 const loggerMock = {
   error: jest.fn(),
   info: jest.fn(),
-} as unknown as Logger;
+} as unknown as LoggerService;
 
 const getConfig = (options: {
   token?: string;

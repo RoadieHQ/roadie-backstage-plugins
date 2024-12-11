@@ -1,5 +1,30 @@
 # backend
 
+## 2.3.1
+
+### Patch Changes
+
+- 07e34ae: Handle missing parameters message, remove uneeded config property. Improve description in WIZ graphs
+- Updated dependencies [07e34ae]
+  - @roadiehq/plugin-wiz-backend@1.0.7
+
+## 2.3.0
+
+### Minor Changes
+
+- 8915f83: We are making the logger compatible with Backstage's LoggerService and winston's Logger so that Roadie can be used with newer and older versions of Backstage.
+
+### Patch Changes
+
+- Updated dependencies [8915f83]
+  - @roadiehq/scaffolder-backend-module-http-request@5.2.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.3.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.4.0
+  - @roadiehq/catalog-backend-module-aws@5.3.0
+  - @roadiehq/backstage-plugin-aws-auth@0.5.0
+  - @roadiehq/backstage-plugin-aws-backend@1.3.0
+  - @roadiehq/rag-ai-backend@1.3.0
+
 ## 2.2.0
 
 ### Minor Changes

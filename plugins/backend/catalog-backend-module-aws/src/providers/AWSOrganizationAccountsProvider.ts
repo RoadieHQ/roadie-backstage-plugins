@@ -22,6 +22,7 @@ import {
   paginateListTagsForResource,
 } from '@aws-sdk/client-organizations';
 import * as winston from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
@@ -46,7 +47,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger;
+      logger: winston.Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

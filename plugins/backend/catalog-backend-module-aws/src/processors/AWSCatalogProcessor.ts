@@ -17,17 +17,18 @@
 import { CatalogProcessor } from '@backstage/plugin-catalog-backend';
 import { CatalogApi } from '@backstage/catalog-client';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 
 export abstract class AWSCatalogProcessor implements CatalogProcessor {
   protected readonly catalogApi: CatalogApi;
-  protected readonly logger: Logger;
+  protected readonly logger: Logger | LoggerService;
   public abstract getProcessorName(): string;
   constructor({
     catalogApi,
     logger,
   }: {
     catalogApi: CatalogApi;
-    logger: Logger;
+    logger: Logger | LoggerService;
   }) {
     this.catalogApi = catalogApi;
     this.logger = logger;

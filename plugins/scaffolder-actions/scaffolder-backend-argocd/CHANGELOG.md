@@ -1,5 +1,16 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.4.0
+
+### Minor Changes
+
+- 8915f83: We are making the logger compatible with Backstage's LoggerService and winston's Logger so that Roadie can be used with newer and older versions of Backstage.
+
+### Patch Changes
+
+- Updated dependencies [8915f83]
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.3.0
+
 ## 1.3.0
 
 ### Minor Changes

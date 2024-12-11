@@ -17,6 +17,7 @@ import { errorHandler } from '@backstage/backend-common';
 import express, { NextFunction, Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
@@ -34,7 +35,7 @@ type AiBackendConfig = {
 };
 
 export interface RouterOptions {
-  logger: Logger;
+  logger: Logger | LoggerService;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
   model: BaseLLM | BaseChatModel;

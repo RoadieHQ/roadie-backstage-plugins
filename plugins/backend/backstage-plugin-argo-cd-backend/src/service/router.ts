@@ -3,11 +3,12 @@ import { Config } from '@backstage/config';
 import express from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import { ArgoService } from './argocd.service';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 export interface RouterOptions {
-  logger: Logger;
+  logger: Logger | LoggerService;
   config: Config;
 }
 export type Response = {
