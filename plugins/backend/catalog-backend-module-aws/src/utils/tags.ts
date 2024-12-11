@@ -108,7 +108,10 @@ export const ownerFromTags = (
 
   if (ownerString && groups && groups.length > 0) {
     const exactMatch = groups.find(
-      g => g.metadata.name.toLowerCase() === ownerString?.toLowerCase(),
+      g =>
+        g.metadata.name.toLowerCase() === ownerString?.toLowerCase() ||
+        `${g.metadata.namespace}/${g.metadata.name}`.toLowerCase() ===
+          ownerString?.toLowerCase(),
     );
     if (exactMatch) {
       return stringifyEntityRef(exactMatch);
