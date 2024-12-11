@@ -173,6 +173,24 @@ describe('labelsFromTags and ownerFromTags', () => {
       const result = ownerFromTags(tags, 'tagOwner', groups);
       expect(result).toBe('group:test/owner1');
     });
+
+    it('should return owner from an object of tags with different ownerTagKey when tag contains namespace', () => {
+      const tags = { tagOwner: 'test/owner1', 'tag:two': 'value2' };
+      const groupsWithMultipleNamespaces = [
+        ...groups,
+        {
+          kind: 'Group',
+          metadata: { name: 'owner1', namespace: 'default' },
+        } as Entity,
+      ];
+      const result = ownerFromTags(
+        tags,
+        'tagOwner',
+        groupsWithMultipleNamespaces,
+      );
+      expect(result).toBe('group:test/owner1');
+    });
+
     it('should handle complex owner keys and values in an array of tags', () => {
       const tags = [{ Key: 'owner:one', Value: 'owner1' }];
       const result = ownerFromTags(tags, 'owner:one', groups);
