@@ -21,11 +21,15 @@ export interface Config {
    */
   ai: {
     embeddings: {
-      awsBedrock: {
+      bedrock: {
         /**
          * Name of the Bedrock model to use to create Embeddings
          */
         modelName: string;
+        /**
+         * Maximum number of retries for the AWS SDK client. Defaults to 3
+         */
+        maxRetries?: string;
       };
     };
   };
