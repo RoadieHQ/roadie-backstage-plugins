@@ -16,7 +16,7 @@
 
 import { useEffect, useCallback } from 'react';
 import convert from 'xml-js';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
 import { useApi } from '@backstage/core-plugin-api';
 import { useAsyncFn } from 'react-use';
@@ -32,7 +32,7 @@ const getPropertyValue = (
   entry: ActivityStreamEntry,
   property: ActivityStreamKeys,
 ): string => entry[property]?._text;
-const getElapsedTime = (start: string) => moment(start).fromNow();
+const getElapsedTime = (start: string) => DateTime.fromISO(start).toRelative();;
 const decodeHtml = (html: string) => {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;
