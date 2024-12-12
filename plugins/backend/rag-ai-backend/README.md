@@ -65,6 +65,9 @@ ai:
       # (Required) Name of the Bedrock model to use to create Embeddings.
       modelName: 'amazon.titan-embed-text-v1'
 
+      # (Optional) Maximum number of retries for the AWS SDK client
+      maxRetries: 3
+
       ## AWS Bedrock uses integration-aws-node package to configure credentials. See the package README for more info.
 
     # OpenAI Embeddings configuration
