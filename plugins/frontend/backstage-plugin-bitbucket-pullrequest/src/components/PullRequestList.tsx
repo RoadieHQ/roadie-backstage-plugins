@@ -22,7 +22,7 @@ import {
   MarkdownContent,
   Link,
 } from '@backstage/core-components';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { useApi } from '@backstage/core-plugin-api';
 import { Box } from '@material-ui/core';
 import { isBITBUCKETSlugSet } from '../utils/isBITBUCKETSlugSet';
@@ -54,7 +54,7 @@ const PullRequestList: React.FC = () => {
   }, [stateFilter, projectName, repoName, bitbucketApi]);
 
   const GetElapsedTime = ({ start }: { start: string }) =>
-    moment(start).fromNow();
+    DateTime.fromISO(start).toRelative();
   const RenderStateIcon = ({ status }: { status: string }) => {
     switch (status) {
       case 'OPEN':

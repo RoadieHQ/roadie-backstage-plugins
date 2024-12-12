@@ -23,11 +23,12 @@ import {
   Typography,
   Box,
 } from '@material-ui/core';
+
+import { DateTime, Duration } from 'luxon';
 import { LogViewer } from '@backstage/core-components';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import moment from 'moment';
 import { useLog } from '../../useLog';
 import { generateRequestUrl } from '../../utils';
 
@@ -63,11 +64,9 @@ export const ActionOutput: FC<{
 
   // eslint-disable-next-line no-nested-ternary
   const timeElapsed = job.finished_at
-    ? moment
-        .duration(
-          moment(job.finished_at || moment()).diff(moment(job.started_at)),
-        )
-        .humanize()
+    ? Duration.fromMillis(
+        DateTime.fromISO(job.finished_at).diff(DateTime.fromISO(job.started_at)).toMillis()
+      ).toHuman()
     : job.started_at
     ? 'In Progress'
     : 'Pending';
