@@ -65,7 +65,9 @@ export const ActionOutput: FC<{
   // eslint-disable-next-line no-nested-ternary
   const timeElapsed = job.finished_at
     ? Duration.fromMillis(
-        DateTime.fromISO(job.finished_at).diff(DateTime.fromISO(job.started_at)).toMillis()
+        DateTime.fromISO(job.finished_at)
+          .diff(DateTime.fromISO(job.started_at))
+          .toMillis(),
       ).toHuman()
     : job.started_at
     ? 'In Progress'
