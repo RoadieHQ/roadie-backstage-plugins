@@ -32,7 +32,7 @@ const getPropertyValue = (
   entry: ActivityStreamEntry,
   property: ActivityStreamKeys,
 ): string => entry[property]?._text;
-const getElapsedTime = (start: string) => DateTime.fromISO(start).toRelative();;
+const getElapsedTime = (start: string) => DateTime.fromISO(start).toRelative();
 const decodeHtml = (html: string) => {
   const txt = document.createElement('textarea');
   txt.innerHTML = html;

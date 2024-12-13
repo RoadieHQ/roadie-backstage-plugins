@@ -30,7 +30,7 @@ import { BuildkiteStatus } from './components/BuildKiteRunStatus';
 import { BuildkiteBuildInfo, TableProps } from '../types';
 
 const getElapsedTime = (start: string) => {
-    return DateTime.fromISO(start).toRelative();
+  return DateTime.fromISO(start).toRelative();
 };
 
 const generatedColumns = [
