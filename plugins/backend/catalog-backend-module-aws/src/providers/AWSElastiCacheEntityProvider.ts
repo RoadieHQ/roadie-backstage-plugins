@@ -23,13 +23,13 @@ import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
-import { ANNOTATION_AWS_REDIS_CLUSTER_ARN } from '../annotations';
+import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
 
 /**
- * Provides entities from AWS ElastiCache (Redis) service.
+ * Provides entities from AWS ElastiCache  service.
  */
-export class AWSRedisEntityProvider extends AWSEntityProvider {
-  private readonly redisTypeValue: string;
+export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
+  private readonly elasticacheTypeValue: string;
 
   static fromConfig(
     config: Config,
@@ -47,7 +47,7 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSRedisEntityProvider(
+    return new AWSElastiCacheEntityProvider(
       { accountId, roleName, roleArn, externalId, region },
       options,
     );
@@ -64,11 +64,11 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
     },
   ) {
     super(account, options);
-    this.redisTypeValue = 'redis-cluster';
+    this.elasticacheTypeValue = 'elasticache-cluster';
   }
 
   getProviderName(): string {
-    return `aws-redis-cluster-${this.providerId ?? 0}`;
+    return `aws-elasticache-cluster-${this.providerId ?? 0}`;
   }
 
   private async getElastiCacheClient(
@@ -92,9 +92,9 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
     const { accountId } = this.getParsedConfig(dynamicAccountConfig);
 
     this.logger.info(
-      `Providing Redis (ElastiCache) cluster resources from AWS: ${accountId}`,
+      `Providing ElastiCache cluster resources from AWS: ${accountId}`,
     );
-    const redisResources: ResourceEntity[] = [];
+    const elasticacheResources: ResourceEntity[] = [];
 
     const elastiCache = await this.getElastiCacheClient(dynamicAccountConfig);
 
@@ -102,7 +102,6 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
       dynamicAccountConfig,
     );
 
-    // Fetch all Redis clusters
     const clusters = await elastiCache.describeCacheClusters({
       ShowCacheNodeInfo: true,
     });
@@ -132,11 +131,11 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
             name: clusterName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
             title: clusterName,
             labels: {
-              'aws-redis-region': this.region,
+              'aws-elasticache-region': this.region,
             },
             annotations: {
               ...defaultAnnotations,
-              [ANNOTATION_AWS_REDIS_CLUSTER_ARN]: clusterArn ?? '',
+              [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]: clusterArn ?? '',
             },
             status: clusterStatus,
             engine,
@@ -147,24 +146,24 @@ export class AWSRedisEntityProvider extends AWSEntityProvider {
           spec: {
             owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
             ...relationshipsFromTags(tags?.TagList || []),
-            type: this.redisTypeValue,
+            type: this.elasticacheTypeValue,
           },
         };
 
-        redisResources.push(resource);
+        elasticacheResources.push(resource);
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: redisResources.map(entity => ({
+      entities: elasticacheResources.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${redisResources.length} Redis (ElastiCache) cluster resources from AWS: ${accountId}`,
+      `Finished providing ${elasticacheResources.length} ElastiCache cluster resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

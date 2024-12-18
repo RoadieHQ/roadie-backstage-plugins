@@ -35,7 +35,7 @@ import {
   AWSSNSTopicProvider,
   AWSSQSEntityProvider,
   AWSOpenSearchEntityProvider,
-  AWSRedisEntityProvider,
+  AWSElastiCacheEntityProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -80,7 +80,7 @@ export default async function createPlugin(
       config,
       env,
     );
-    const redisProvider = AWSRedisEntityProvider.fromConfig(config, env);
+    const redisProvider = AWSElastiCacheEntityProvider.fromConfig(config, env);
     const awsAccountsProvider = AWSOrganizationAccountsProvider.fromConfig(
       config,
       env,
