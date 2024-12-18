@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { ResourceEntity } from '@backstage/catalog-model';
-import { SQS } from '@aws-sdk/client-sqs';
+import { SQS, paginateListQueues } from '@aws-sdk/client-sqs';
 import * as winston from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
@@ -78,7 +78,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
       : await this.getCredentialsProvider();
     return this.useTemporaryCredentials
       ? new SQS({ credentials, region })
-      : new SQS(credentials);
+      : new SQS({ region, ...credentials });
   }
 
   async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
@@ -98,58 +98,60 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
       dynamicAccountConfig,
     );
 
-    const queueUrls = await sqs.listQueues({});
-    if (queueUrls.QueueUrls) {
-      for (const queueUrl of queueUrls.QueueUrls) {
-        const attributes = await sqs.getQueueAttributes({
-          QueueUrl: queueUrl,
-          AttributeNames: ['All'],
-        });
+    const paginator = paginateListQueues({ client: sqs }, {});
+    for await (const page of paginator) {
+      if (page.QueueUrls) {
+        for (const queueUrl of page.QueueUrls) {
+          const attributes = await sqs.getQueueAttributes({
+            QueueUrl: queueUrl,
+            AttributeNames: ['All'],
+          });
 
-        const tagsResponse = await sqs.listQueueTags({ QueueUrl: queueUrl });
-        const tags = tagsResponse.Tags || {};
+          const tagsResponse = await sqs.listQueueTags({ QueueUrl: queueUrl });
+          const tags = tagsResponse.Tags || {};
 
-        const queueArn = attributes.Attributes?.QueueArn;
-        const queueName = queueArn?.split(':').slice(-1)[0] || 'unknown';
+          const queueArn = attributes.Attributes?.QueueArn;
+          const queueName = queueArn?.split(':').slice(-1)[0] || 'unknown';
 
-        const visibilityTimeout =
-          attributes.Attributes?.VisibilityTimeout || '';
-        const delaySeconds = attributes.Attributes?.DelaySeconds || '';
-        const maximumMessageSize =
-          attributes.Attributes?.MaximumMessageSize || '';
-        const retentionPeriod =
-          attributes.Attributes?.MessageRetentionPeriod || '';
-        const approximateNumberOfMessages =
-          attributes.Attributes?.ApproximateNumberOfMessages || '';
+          const visibilityTimeout =
+            attributes.Attributes?.VisibilityTimeout || '';
+          const delaySeconds = attributes.Attributes?.DelaySeconds || '';
+          const maximumMessageSize =
+            attributes.Attributes?.MaximumMessageSize || '';
+          const retentionPeriod =
+            attributes.Attributes?.MessageRetentionPeriod || '';
+          const approximateNumberOfMessages =
+            attributes.Attributes?.ApproximateNumberOfMessages || '';
 
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            name: queueName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-            title: queueName,
-            labels: {
-              'aws-sqs-region': this.region,
+          const resource: ResourceEntity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              name: queueName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
+              title: queueName,
+              labels: {
+                'aws-sqs-region': this.region,
+              },
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn ?? '',
+              },
+              queueArn,
+              visibilityTimeout,
+              delaySeconds,
+              maximumMessageSize,
+              retentionPeriod,
+              approximateNumberOfMessages,
             },
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn ?? '',
+            spec: {
+              owner: ownerFromTags(tags, this.getOwnerTag()),
+              ...relationshipsFromTags(tags),
+              type: this.queueTypeValue,
             },
-            queueArn,
-            visibilityTimeout,
-            delaySeconds,
-            maximumMessageSize,
-            retentionPeriod,
-            approximateNumberOfMessages,
-          },
-          spec: {
-            owner: ownerFromTags(tags, this.getOwnerTag()),
-            ...relationshipsFromTags(tags),
-            type: this.queueTypeValue,
-          },
-        };
+          };
 
-        sqsResources.push(resource);
+          sqsResources.push(resource);
+        }
       }
     }
 
