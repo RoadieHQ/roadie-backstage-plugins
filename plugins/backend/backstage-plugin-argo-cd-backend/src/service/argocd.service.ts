@@ -306,6 +306,7 @@ export class ArgoService implements ArgoServiceApi {
       metadata: {
         name: projectName,
         resourceVersion,
+        finalizers: ['resources-finalizer.argocd.argoproj.io'],
       },
       spec: {
         destinations: [
@@ -350,6 +351,7 @@ export class ArgoService implements ArgoServiceApi {
       },
       body: JSON.stringify(data),
     };
+
     const resp = await fetch(`${baseUrl}/api/v1/projects`, options);
     const responseData = await resp.json();
     if (resp.status === 403) {

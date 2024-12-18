@@ -287,6 +287,7 @@ export type Metadata = {
   deletionTimestamp?: string;
   deletionGracePeriodSeconds?: number;
   resourceVersion?: string;
+  finalizers?: string[];
 };
 
 export type ResourceItem = {
