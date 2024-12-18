@@ -25,3 +25,6 @@ export { AWSEC2Provider } from './AWSEC2Provider';
 export { AWSRDSProvider } from './AWSRDSProvider';
 export { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
 export { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
+export { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+export { AWSRedisEntityProvider } from './AWSRedisEntityProvider';
+export { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
