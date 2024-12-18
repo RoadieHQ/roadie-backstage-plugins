@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.4.0
+
+### Minor Changes
+
+- 4bf2752: Add SQS, Redis and OpenSearch providers
+
 ## 5.3.1
 
 ### Patch Changes
