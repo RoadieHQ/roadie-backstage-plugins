@@ -33,6 +33,9 @@ import {
   AWSRDSProvider,
   AWSOrganizationAccountsProvider,
   AWSSNSTopicProvider,
+  AWSSQSEntityProvider,
+  AWSOpenSearchEntityProvider,
+  AWSElastiCacheEntityProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -72,6 +75,12 @@ export default async function createPlugin(
     const eksClusterProvider = AWSEKSClusterProvider.fromConfig(config, env);
     const ec2Provider = AWSEC2Provider.fromConfig(config, env);
     const rdsProvider = AWSRDSProvider.fromConfig(config, env);
+    const sqsProvider = AWSSQSEntityProvider.fromConfig(config, env);
+    const openSearchProvider = AWSOpenSearchEntityProvider.fromConfig(
+      config,
+      env,
+    );
+    const redisProvider = AWSElastiCacheEntityProvider.fromConfig(config, env);
     const awsAccountsProvider = AWSOrganizationAccountsProvider.fromConfig(
       config,
       env,
@@ -86,6 +95,9 @@ export default async function createPlugin(
     builder.addEntityProvider(eksClusterProvider);
     builder.addEntityProvider(ec2Provider);
     builder.addEntityProvider(rdsProvider);
+    builder.addEntityProvider(sqsProvider);
+    builder.addEntityProvider(openSearchProvider);
+    builder.addEntityProvider(redisProvider);
     builder.addEntityProvider(awsAccountsProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
@@ -96,6 +108,9 @@ export default async function createPlugin(
     providers.push(eksClusterProvider);
     providers.push(ec2Provider);
     providers.push(rdsProvider);
+    providers.push(sqsProvider);
+    providers.push(openSearchProvider);
+    providers.push(redisProvider);
     providers.push(awsAccountsProvider);
 
     const useDdbData = config.has('dynamodbTableData');
