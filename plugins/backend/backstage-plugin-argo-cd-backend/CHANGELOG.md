@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.3.1
+
+### Patch Changes
+
+- 2bf0fa2: Adding the `resources-finalizer.argocd.argoproj.io` finalizer when creating a project. This allows the ability to delete the project first without getting stuck when deleting the application afterwards. This fix will allow the application to delete and not get stuck deleting.
+
 ## 3.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.4.1
+
+### Patch Changes
+
+- 30883b0: Allow custom label mapping for new AWS providers
+
 ## 5.4.0
 
 ### Minor Changes
