@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 1.3.1
+
+### Patch Changes
+
+- 855e5d1: Added `ai.embeddings.bedrock.maxRetries` to README
+
 ## 1.3.0
 
 ### Minor Changes
