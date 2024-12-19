@@ -1,5 +1,14 @@
 # backend
 
+## 2.3.2
+
+### Patch Changes
+
+- Updated dependencies [30883b0]
+- Updated dependencies [2bf0fa2]
+  - @roadiehq/catalog-backend-module-aws@5.4.1
+  - @roadiehq/backstage-plugin-argo-cd-backend@3.3.1
+
 ## 2.3.1
 
 ### Patch Changes
