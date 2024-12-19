@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.4.3
+
+### Patch Changes
+
+- 8fdf8c1: Use region from config in dynamo table provider
+
 ## 5.4.2
 
 ### Patch Changes
