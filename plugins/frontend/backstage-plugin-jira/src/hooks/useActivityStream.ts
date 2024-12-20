@@ -81,7 +81,7 @@ export const useActivityStream = (
           return {
             id: id,
             time: {
-              elapsed: getElapsedTime(time),
+              elapsed: getElapsedTime(time)!,
               value: new Date(time).toLocaleTimeString('en-US', {
                 weekday: 'long',
                 year: 'numeric',

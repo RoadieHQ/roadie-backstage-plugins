@@ -166,7 +166,7 @@ const OverviewComponent = ({ lambda }: { lambda: LambdaData }) => {
           </AboutField>
           <AboutField
             label="Last modified"
-            value={getElapsedTime(lambda.lastModifiedDate!)}
+            value={getElapsedTime(lambda.lastModifiedDate!) ?? undefined}
             gridSizes={{ xs: 12, sm: 6, lg: 4 }}
           />
 
