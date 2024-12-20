@@ -29,7 +29,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { useLambda } from '../../hooks/useLambda';
 import { LambdaData } from '../../types';
 import {
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const getElapsedTime = (start: string) => {
-  return moment(start).fromNow();
+  return DateTime.fromISO(start).toRelative();
 };
 
 const AboutField = ({
@@ -166,7 +166,7 @@ const OverviewComponent = ({ lambda }: { lambda: LambdaData }) => {
           </AboutField>
           <AboutField
             label="Last modified"
-            value={getElapsedTime(lambda.lastModifiedDate!)}
+            value={getElapsedTime(lambda.lastModifiedDate!) ?? undefined}
             gridSizes={{ xs: 12, sm: 6, lg: 4 }}
           />
 
