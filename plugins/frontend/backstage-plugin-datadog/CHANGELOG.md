@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.4.2
+
+### Patch Changes
+
+- ed8a7d6: chore: remove unused dependency moment
+
 ## 2.4.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.0.6
+
+### Patch Changes
+
+- ed8a7d6: chore: use luxon library insteaad of moment
+
 ## 2.0.5
 
 ### Patch Changes
