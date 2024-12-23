@@ -19,7 +19,7 @@ import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Link, List, ListItem } from '@material-ui/core';
 import React from 'react';
 import SyncIcon from '@material-ui/icons/Sync';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import {
   ArgoCDAppDeployRevisionDetails,
   ArgoCDAppHistoryDetails,
@@ -90,24 +90,23 @@ export const ArgoCDHistoryTable = ({
         <List dense style={{ padding: '0px' }}>
           <ListItem style={{ paddingLeft: '0px' }}>
             {row.deployedAt
-              ? `Deployed at ${moment(row.deployedAt)
-                  .local()
-                  .format('DD MMM YYYY, H:mm:ss')}`
+              ? `Deployed at ${DateTime.fromISO(row.deployedAt)
+                  .toLocal()
+                  .toFormat('dd MMM yyyy, HH:mm:ss')}`
               : null}
           </ListItem>
           <ListItem style={{ paddingLeft: '0px' }}>
-            {row.deployedAt
-              ? `Run ${moment(row.deployStartedAt).local().fromNow()}`
+            {row.deployStartedAt
+              ? `Run ${DateTime.fromISO(row.deployStartedAt)
+                  .toLocal()
+                  .toRelative()}`
               : null}
           </ListItem>
           <ListItem style={{ paddingLeft: '0px' }}>
             {row.deployedAt && row.deployStartedAt
-              ? `Took
-            ${moment
-              .duration(
-                moment(row.deployStartedAt).diff(moment(row.deployedAt)),
-              )
-              .humanize()}`
+              ? `Took ${DateTime.fromISO(row.deployStartedAt)
+                  .diff(DateTime.fromISO(row.deployedAt))
+                  .toFormat('hh:mm:ss')}`
               : null}
           </ListItem>
         </List>

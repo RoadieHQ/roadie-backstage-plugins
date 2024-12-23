@@ -24,7 +24,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { Entity } from '@backstage/catalog-model';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import {
   ARGOCD_ANNOTATION_APP_NAME,
   useArgoCDAppData,
@@ -90,7 +90,7 @@ const MessageComponent = ({
 };
 
 const getElapsedTime = (start: string) => {
-  return moment(start).fromNow();
+  return DateTime.fromISO(start).toRelative();
 };
 
 const getLastSyncState = (operationState: any) => {
@@ -230,12 +230,12 @@ const OverviewComponent = ({
           : '',
       customSort: (a: any, b: any) => {
         return (
-          moment(
+          DateTime.fromISO(
             a.status.operationState?.finishedAt || '3000-01-01T00:00:00.000Z',
-          ).valueOf() -
-          moment(
+          ).toMillis() -
+          DateTime.fromISO(
             b.status.operationState?.finishedAt || '3000-01-01T00:00:00.000Z',
-          ).valueOf()
+          ).toMillis()
         );
       },
     },
