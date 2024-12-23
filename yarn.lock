@@ -36644,10 +36644,15 @@ yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaml@^2.0.0, yaml@^2.2.1, yaml@^2.2.2, yaml@^2.3.4:
+yaml@^2.0.0, yaml@^2.2.1, yaml@^2.2.2:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.4.0.tgz#2376db1083d157f4b3a452995803dbcf43b08140"
   integrity sha512-j9iR8g+/t0lArF4V6NE/QCfT+CO7iLqrXAHZbJdo+LfjqP1vR8Fg5bSiaq6Q2lOD1AUEVrEVIgABvBFYojJVYQ==
+
+yaml@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.6.1.tgz#42f2b1ba89203f374609572d5349fb8686500773"
+  integrity sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==
 
 yargs-parser@20.2.4:
   version "20.2.4"
@@ -36731,10 +36736,10 @@ yauzl@^3.0.0:
     buffer-crc32 "~0.2.3"
     pend "~1.2.0"
 
-yawn-yaml@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/yawn-yaml/-/yawn-yaml-2.2.0.tgz#aa9673725f7c277a8b97e8d12496d2333d701890"
-  integrity sha512-2SJvllxsNXwvbf6s8m7TNDtdn2zakLQpmrwpxIdCInLyEx+/WsZwSTScBOVk3zBbuFPeh7hc+yvUVtyKOgBeKQ==
+yawn-yaml@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/yawn-yaml/-/yawn-yaml-2.3.0.tgz#79b2cdd58b7abe243c9b0418997795e5754b7135"
+  integrity sha512-hYS8kT4I2ftJyLw6LE/JG8rg+0NKdDmI+c2ncnJ9ZmUTsU0ggo3Zf8yjmhXxKlWINS/ZYkh3MvMIsQlIDtRL4A==
   dependencies:
     js-yaml "^4.1.0"
     lodash "^4.17.21"
