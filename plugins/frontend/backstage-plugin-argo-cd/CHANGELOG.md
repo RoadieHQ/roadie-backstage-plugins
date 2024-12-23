@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.8.6
+
+### Patch Changes
+
+- ed8a7d6: chore: use luxon library insteaad of moment
+
 ## 2.8.5
 
 ### Patch Changes

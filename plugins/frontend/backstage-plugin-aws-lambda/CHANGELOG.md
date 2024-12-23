@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.13
+
+### Patch Changes
+
+- ed8a7d6: chore: use luxon library insteaad of moment
+
 ## 2.2.12
 
 ### Patch Changes

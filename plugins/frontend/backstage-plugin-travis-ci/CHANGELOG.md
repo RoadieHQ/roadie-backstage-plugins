@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.1.27
+
+### Patch Changes
+
+- ed8a7d6: chore: remove unused dependency moment
+
 ## 2.1.26
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.3.5
+
+### Patch Changes
+
+- ed8a7d6: chore: use luxon library insteaad of moment
+
 ## 2.3.4
 
 ### Patch Changes
