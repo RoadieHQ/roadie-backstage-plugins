@@ -40,7 +40,6 @@ describe('AWSLambdaFunctionProvider', () => {
     accountId: '123456789012',
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
-    ownerTag: ownerTag,
   });
 
   beforeEach(() => {
@@ -148,7 +147,10 @@ describe('AWSLambdaFunctionProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
+        logger,
+        ownerTag,
+      });
       provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
