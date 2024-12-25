@@ -43,6 +43,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
       providerId?: string;
       useTemporaryCredentials?: boolean;
       labelValueMapper?: LabelValueMapper;
+      ownerTag?: string;
     },
   ) {
     const accountId = config.getString('accountId');
