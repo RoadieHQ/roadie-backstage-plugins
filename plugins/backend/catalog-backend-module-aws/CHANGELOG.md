@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.4.4
+
+### Patch Changes
+
+- e91c9e4: Add test, debug logging and RDS support for ownerTag mapping
+
 ## 5.4.3
 
 ### Patch Changes
