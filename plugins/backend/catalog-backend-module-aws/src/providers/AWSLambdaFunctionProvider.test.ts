@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { Lambda, ListFunctionsCommand } from '@aws-sdk/client-lambda';
+import {
+  Lambda,
+  ListFunctionsCommand,
+  ListTagsCommand,
+} from '@aws-sdk/client-lambda';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
@@ -31,10 +35,12 @@ const logger = createLogger({
 });
 
 describe('AWSLambdaFunctionProvider', () => {
+  const ownerTag = 'Owner-test';
   const config = new ConfigReader({
     accountId: '123456789012',
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
+    ownerTag: ownerTag,
   });
 
   beforeEach(() => {
@@ -64,6 +70,7 @@ describe('AWSLambdaFunctionProvider', () => {
   });
 
   describe('where there are is a function', () => {
+    const owner = 'engineering';
     beforeEach(() => {
       lambda.on(ListFunctionsCommand).resolves({
         Functions: [
@@ -85,6 +92,12 @@ describe('AWSLambdaFunctionProvider', () => {
             },
           },
         ],
+      });
+      lambda.on(ListTagsCommand).resolves({
+        Tags: {
+          [ownerTag]: owner,
+          owner: 'wrong',
+        },
       });
     });
 
@@ -123,6 +136,29 @@ describe('AWSLambdaFunctionProvider', () => {
                 name: 'bc6fa48d05a0a464c5e2a5214985bd957578cd50314fc6076cef1845fadb3c8',
                 runtime: 'nodejs14.x',
                 timeout: 30,
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('maps owner from custom tag mapping', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              spec: expect.objectContaining({
+                owner: owner,
               }),
             }),
           }),

@@ -128,6 +128,14 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
           if (lambdaFunction.Role) {
             annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = lambdaFunction.Role;
           }
+          const owner = ownerFromTags(tags, this.getOwnerTag(), groups);
+          const relationships = relationshipsFromTags(tags);
+          this.logger.debug(
+            `Setting Lambda owner from tags as ${owner} and relationships of ${JSON.stringify(
+              relationships,
+            )}`,
+          );
+
           lambdaComponents.push({
             kind: 'Resource',
             apiVersion: 'backstage.io/v1beta1',
@@ -144,8 +152,8 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
               labels: this.labelsFromTags(tags),
             },
             spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(tags),
+              owner: owner,
+              ...relationships,
               type: 'lambda-function',
             },
           });
