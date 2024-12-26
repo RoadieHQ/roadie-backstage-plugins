@@ -94,9 +94,14 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
 
     const topicPages = paginateListTopics(paginatorConfig, {});
 
+
     for await (const topicPage of topicPages) {
       for (const topic of topicPage.Topics || []) {
         if (topic.TopicArn) {
+          const tagsResponse = await sns.listTagsForResource({
+            ResourceArn: topic.TopicArn,
+          });
+          const tags = tagsResponse.Tags ?? [];
           const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
           const topicEntity: ResourceEntity = {
@@ -114,8 +119,8 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
             },
             spec: {
               type: 'aws-sns-topic',
-              owner: ownerFromTags([], this.getOwnerTag(), groups),
-              ...relationshipsFromTags([]),
+              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
             },
           };
 
