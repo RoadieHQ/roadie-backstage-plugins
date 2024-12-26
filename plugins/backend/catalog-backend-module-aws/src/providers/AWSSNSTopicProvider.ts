@@ -94,7 +94,6 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
 
     const topicPages = paginateListTopics(paginatorConfig, {});
 
-
     for await (const topicPage of topicPages) {
       for (const topic of topicPage.Topics || []) {
         if (topic.TopicArn) {
@@ -115,7 +114,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
               },
               name: topicName,
               title: topicName,
-              labels: {}, // Add any labels if necessary
+              labels: this.labelsFromTags(tags),
             },
             spec: {
               type: 'aws-sns-topic',
