@@ -81,6 +81,9 @@ describe('AWSSNSTopicProvider', () => {
           } as Partial<Topic> as any,
         ],
       });
+      sns.on(ListTagsForResourceCommand).resolves({
+        Tags: [],
+      });
     });
 
     it('creates SNS topic entities', async () => {
