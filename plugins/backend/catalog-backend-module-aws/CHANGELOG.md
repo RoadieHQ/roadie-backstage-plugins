@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.5.0
+
+### Minor Changes
+
+- 1a18001: Add tag mapping for SNS Resource Provider
+
 ## 5.4.4
 
 ### Patch Changes
