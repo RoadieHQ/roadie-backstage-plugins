@@ -97,6 +97,10 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
     for await (const topicPage of topicPages) {
       for (const topic of topicPage.Topics || []) {
         if (topic.TopicArn) {
+          const tagsResponse = await sns.listTagsForResource({
+            ResourceArn: topic.TopicArn,
+          });
+          const tags = tagsResponse.Tags ?? [];
           const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
           const topicEntity: ResourceEntity = {
@@ -110,12 +114,12 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
               },
               name: topicName,
               title: topicName,
-              labels: {}, // Add any labels if necessary
+              labels: this.labelsFromTags(tags),
             },
             spec: {
               type: 'aws-sns-topic',
-              owner: ownerFromTags([], this.getOwnerTag(), groups),
-              ...relationshipsFromTags([]),
+              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
             },
           };
 

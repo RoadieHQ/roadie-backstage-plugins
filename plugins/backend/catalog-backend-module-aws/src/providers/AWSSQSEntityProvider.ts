@@ -19,7 +19,11 @@ import * as winston from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
+import {
+  LabelValueMapper,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
@@ -39,6 +43,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     const accountId = config.getString('accountId');
@@ -61,6 +66,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
       providerId?: string;
       ownerTag?: string;
       useTemporaryCredentials?: boolean;
+      labelValueMapper?: LabelValueMapper;
     },
   ) {
     super(account, options);

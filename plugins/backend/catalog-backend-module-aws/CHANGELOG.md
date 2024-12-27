@@ -1,5 +1,35 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.5.0
+
+### Minor Changes
+
+- 1a18001: Add tag mapping for SNS Resource Provider
+
+## 5.4.4
+
+### Patch Changes
+
+- e91c9e4: Add test, debug logging and RDS support for ownerTag mapping
+
+## 5.4.3
+
+### Patch Changes
+
+- 8fdf8c1: Use region from config in dynamo table provider
+
+## 5.4.2
+
+### Patch Changes
+
+- 7a10368: Add more providers to allow custom label mapping
+
+## 5.4.1
+
+### Patch Changes
+
+- 30883b0: Allow custom label mapping for new AWS providers
+
 ## 5.4.0
 
 ### Minor Changes

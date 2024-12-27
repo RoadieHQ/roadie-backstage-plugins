@@ -342,6 +342,39 @@ describe('ArgoCD service', () => {
         },
       });
     });
+
+    it('creates project with resources-finalizer.argocd.argoproj.io finalizer', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          argocdCreateProjectResp,
+        }),
+      );
+      const service = new ArgoService(
+        'testusername',
+        'testpassword',
+        getConfig({
+          token: 'token',
+        }),
+        loggerMock,
+      );
+
+      await service.createArgoProject({
+        baseUrl: 'baseUrl',
+        argoToken: 'token',
+        projectName: 'projectName',
+        namespace: 'namespace',
+        sourceRepo: 'sourceRepo',
+      });
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({
+          body: expect.stringContaining(
+            '{"metadata":{"name":"projectName","finalizers":["resources-finalizer.argocd.argoproj.io"]}',
+          ),
+        }),
+      );
+    });
   });
 
   describe('createArgoApplication', () => {

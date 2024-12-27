@@ -22,7 +22,7 @@ import { Progress, Table, TableColumn } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import { Octokit } from '@octokit/rest';
 import { useAsync } from 'react-use';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { useProjectName } from '../useProjectName';
 import { useProjectEntity } from '../useProjectEntity';
 import { UpdateSeverityStatusModal } from '../UpdateSeverityStatusModal';
@@ -33,7 +33,7 @@ import { SecurityInsight, SecurityInsightFilterState } from '../../types';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 const getElapsedTime = (start: string) => {
-  return moment(start).fromNow();
+  return DateTime.fromISO(start).toRelative();
 };
 
 export const SecurityInsightsTable = () => {

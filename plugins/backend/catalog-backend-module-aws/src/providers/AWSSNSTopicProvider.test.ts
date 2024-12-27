@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { SNS, ListTopicsCommand, Topic } from '@aws-sdk/client-sns';
+import {
+  SNS,
+  ListTopicsCommand,
+  Topic,
+  ListTagsForResourceCommand,
+} from '@aws-sdk/client-sns';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
@@ -47,6 +52,9 @@ describe('AWSSNSTopicProvider', () => {
       sns.on(ListTopicsCommand).resolves({
         Topics: [],
       });
+      sns.on(ListTagsForResourceCommand).resolves({
+        Tags: [],
+      });
     });
 
     it('creates no SNS topics', async () => {
@@ -72,6 +80,9 @@ describe('AWSSNSTopicProvider', () => {
             TopicArn: 'arn:aws:sns:eu-west-1:123456789012:example-topic',
           } as Partial<Topic> as any,
         ],
+      });
+      sns.on(ListTagsForResourceCommand).resolves({
+        Tags: [],
       });
     });
 

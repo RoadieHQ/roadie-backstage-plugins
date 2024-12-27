@@ -22,7 +22,7 @@ import RetryIcon from '@material-ui/icons/Replay';
 import SyncIcon from '@material-ui/icons/Sync';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { Entity } from '@backstage/catalog-model';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { buildKiteBuildRouteRef } from '../../plugin';
 import { useBuilds } from '../useBuilds';
 import { useProjectEntity } from '../useProjectEntity';
@@ -30,7 +30,7 @@ import { BuildkiteStatus } from './components/BuildKiteRunStatus';
 import { BuildkiteBuildInfo, TableProps } from '../types';
 
 const getElapsedTime = (start: string) => {
-  return moment(start).fromNow();
+  return DateTime.fromISO(start).toRelative();
 };
 
 const generatedColumns = [
