@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.2.0
+
+### Minor Changes
+
+- dc75951: add support to handle multiple documents in yaml file
+
 ## 3.1.0
 
 ### Minor Changes
