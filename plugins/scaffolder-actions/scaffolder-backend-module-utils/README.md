@@ -583,6 +583,7 @@ spec:
 
 - mergeArrays: If `true` then where a value is an array the merge function will concatenate the provided array value with the target array.
 - preserveYamlComments: If `true`, it will preserve standalone and inline comments in YAML files.
+- useDocumentIncludingField: If multiple documents are present in the YAML file, it will merge the content into the document that includes the specified field.
 - options: YAML stringify options to customize the output format.
   - indent: (default: 2) - indentation width to use (in spaces).
   - noArrayIndent: (default: false) - when true, will not add an indentation level to array elements.
