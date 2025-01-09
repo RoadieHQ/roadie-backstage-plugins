@@ -18,29 +18,14 @@ import {
   ScmIntegrationsApi,
   scmIntegrationsApiRef,
   ScmAuth,
-  scmAuthApiRef,
 } from '@backstage/integration-react';
 import {
   AnyApiFactory,
-  ApiRef,
   configApiRef,
   createApiFactory,
-  createApiRef,
-  discoveryApiRef,
   fetchApiRef,
-  githubAuthApiRef,
-  OAuthApi,
-  oauthRequestApiRef,
-  ProfileInfoApi,
-  SessionApi,
 } from '@backstage/core-plugin-api';
 import fetch from 'cross-fetch';
-import { GithubAuth } from '@backstage/core-app-api';
-
-const ghesAuthApiRef: ApiRef<OAuthApi & ProfileInfoApi & SessionApi> =
-  createApiRef({
-    id: 'internal.auth.ghe',
-  });
 
 export const apis: AnyApiFactory[] = [
   createApiFactory({
@@ -48,37 +33,7 @@ export const apis: AnyApiFactory[] = [
     deps: { configApi: configApiRef },
     factory: ({ configApi }) => ScmIntegrationsApi.fromConfig(configApi),
   }),
-  createApiFactory({
-    api: ghesAuthApiRef,
-    deps: {
-      discoveryApi: discoveryApiRef,
-      oauthRequestApi: oauthRequestApiRef,
-      configApi: configApiRef,
-    },
-    factory: ({ discoveryApi, oauthRequestApi, configApi }) =>
-      GithubAuth.create({
-        configApi,
-        discoveryApi,
-        oauthRequestApi,
-        provider: { id: 'ghes', title: 'GitHub Enterprise', icon: () => null },
-        defaultScopes: ['read:user'],
-        environment: configApi.getOptionalString('auth.environment'),
-      }),
-  }),
-  createApiFactory({
-    api: scmAuthApiRef,
-    deps: {
-      gheAuthApi: ghesAuthApiRef,
-      githubAuthApi: githubAuthApiRef,
-    },
-    factory: ({ githubAuthApi, gheAuthApi }) =>
-      ScmAuth.merge(
-        ScmAuth.forGithub(githubAuthApi),
-        ScmAuth.forGithub(gheAuthApi, {
-          host: 'ghes.enginehouse.io',
-        }),
-      ),
-  }),
+  ScmAuth.createDefaultApiFactory(),
   createApiFactory({
     api: fetchApiRef,
     deps: {},
