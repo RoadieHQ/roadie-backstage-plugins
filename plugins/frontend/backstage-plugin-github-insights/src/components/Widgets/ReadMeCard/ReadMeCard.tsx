@@ -87,6 +87,7 @@ const ReadMeCard = (props: ReadMeCardProps) => {
         }}
       >
         <MarkdownContent
+          hostname={hostname}
           baseUrl={baseUrl}
           owner={owner}
           repo={repo}

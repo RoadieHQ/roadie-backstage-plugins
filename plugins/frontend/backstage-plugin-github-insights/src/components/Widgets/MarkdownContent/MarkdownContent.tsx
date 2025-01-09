@@ -140,11 +140,11 @@ const GithubNotAuthorized = ({
  * @public
  */
 const MarkdownContent = (props: MarkdownContentProps) => {
-  const { baseUrl } = props;
+  const { hostname } = props;
   const scmAuth = useApi(scmAuthApiRef);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  let githubUrl = baseUrl ?? 'https://github.com';
+  let githubUrl = hostname ? `https://${hostname}` : 'https://github.com';
   try {
     const u = new URL(githubUrl);
     githubUrl = `${u.protocol}//${u.host}`;
