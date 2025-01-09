@@ -16,7 +16,6 @@
 import { createRouter } from '@backstage/plugin-auth-backend';
 import { Router } from 'express';
 import { PluginEnvironment } from '../types';
-import { providers } from '@backstage/plugin-auth-backend';
 
 export default async function createPlugin({
   logger,
@@ -31,8 +30,5 @@ export default async function createPlugin({
     database,
     discovery,
     tokenManager,
-    providerFactories: {
-      ghes: providers.github.create(),
-    },
   });
 }
