@@ -20,7 +20,6 @@
  * @public
  */
 export type MarkdownContentProps = {
-  baseUrl?: string;
   hostname?: string;
   owner: string;
   repo: string;

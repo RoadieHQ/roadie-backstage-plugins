@@ -144,13 +144,7 @@ const MarkdownContent = (props: MarkdownContentProps) => {
   const scmAuth = useApi(scmAuthApiRef);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  let githubUrl = hostname ? `https://${hostname}` : 'https://github.com';
-  try {
-    const u = new URL(githubUrl);
-    githubUrl = `${u.protocol}//${u.host}`;
-  } catch (e) {
-    // ignored
-  }
+  const githubUrl = hostname ? `https://${hostname}` : 'https://github.com';
 
   useEffect(() => {
     const doLogin = async () => {

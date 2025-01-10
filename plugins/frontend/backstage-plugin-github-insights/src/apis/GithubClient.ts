@@ -41,8 +41,6 @@ const getRepositoryDefaultBranch = (url: string) => {
   return new URL(url).searchParams.get('ref');
 };
 
-const defaultBaseUrl = 'https://api.github.com';
-
 /**
  * Combines a given path to a README file with a relative path, resulting in a new path
  * that resolves the relative path against the directory of the README file.
@@ -111,21 +109,7 @@ export class GithubClient implements GithubApi {
     media: Record<string, string>;
     links: Record<string, string>;
   }> {
-    const {
-      path: customReadmePath,
-      repo,
-      owner,
-      branch,
-      baseUrl = defaultBaseUrl,
-    } = props;
-
-    let hostname = baseUrl ?? 'github.com';
-    try {
-      const u = new URL(hostname);
-      hostname = `${u.protocol}//${u.host}`;
-    } catch (e) {
-      // ignored
-    }
+    const { path: customReadmePath, repo, owner, branch, hostname } = props;
 
     const octokit = await this.getOctokit(hostname);
 
