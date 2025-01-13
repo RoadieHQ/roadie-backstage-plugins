@@ -1,5 +1,14 @@
 # app
 
+## 1.1.9
+
+### Patch Changes
+
+- Updated dependencies [6e4add9]
+  - @roadiehq/backstage-plugin-github-pull-requests@3.0.0
+  - @roadiehq/backstage-plugin-github-insights@3.0.0
+  - @roadiehq/backstage-plugin-security-insights@3.0.0
+
 ## 1.1.8
 
 ### Patch Changes
