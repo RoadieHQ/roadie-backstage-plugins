@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.0.0
+
+### Major Changes
+
+- 6e4add9: BREAKING: Needs SCM auth API to be configured in the application.
+
+  Migrate to use SCM auth instead of direct GitHub to allow possibility to work with multiple GitHub integrations at once.
+
+  This will work automatically if `ScmAuth.createDefaultApiFactory()` is used when APIs registered. If not, you need to register an implementation of `scmAuthApiRef` as documented in: https://backstage.io/docs/auth/#custom-scmauthapi-implementation.
+
 ## 2.6.0
 
 ### Minor Changes
