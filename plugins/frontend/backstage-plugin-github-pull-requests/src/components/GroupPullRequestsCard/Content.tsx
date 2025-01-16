@@ -1,4 +1,6 @@
 /*
+ * Copyright 2025 Larder Software Limited
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import React from 'react';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import {
@@ -18,15 +21,15 @@ import {
   SkeletonPullRequestsListView,
 } from '../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../useGithubSearchPullRequest';
-import { useGithubLoggedIn, GithubNotAuthorized } from '../useGithubLoggedIn';
 import {
-  isGithubTeamSlugSet,
   GITHUB_PULL_REQUESTS_TEAM_ANNOTATION,
+  isGithubTeamSlugSet,
 } from '../../utils/isGithubSlugSet';
 import Alert from '@material-ui/lab/Alert';
 import { Entity, isGroupEntity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
 
 export const getPullRequestsQueryForGroup = (entity: Entity) => {
   const githubTeamName = isGithubTeamSlugSet(entity);
@@ -51,10 +54,6 @@ const PullRequestsCard = () => {
 export const Content = () => {
   const { entity } = useEntity();
   const hostname = getHostname(entity);
-  const isLoggedIn = useGithubLoggedIn(hostname);
-  if (!isLoggedIn) {
-    return <GithubNotAuthorized hostname={hostname} />;
-  }
   const githubTeamName = isGithubTeamSlugSet(entity);
   if (!githubTeamName || githubTeamName === '') {
     return (
@@ -63,10 +62,20 @@ export const Content = () => {
       />
     );
   }
-  if (isGroupEntity(entity)) {
-    return <PullRequestsCard />;
+  if (!isGroupEntity(entity)) {
+    return (
+      <Alert severity="error">
+        This card can only be used on Group Entities
+      </Alert>
+    );
   }
+
   return (
-    <Alert severity="error">This card can only be used on Group Entities</Alert>
+    <GitHubAuthorizationWrapper
+      title="GitHub Pull Requests Statistics"
+      hostname={hostname}
+    >
+      <PullRequestsCard />
+    </GitHubAuthorizationWrapper>
   );
 };

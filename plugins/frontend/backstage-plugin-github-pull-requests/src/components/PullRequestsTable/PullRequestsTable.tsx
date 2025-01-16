@@ -45,6 +45,8 @@ import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
+import { getHostname } from '../../utils/githubUtils';
 
 const generatedColumns: TableColumn<PullRequest>[] = [
   {
@@ -322,6 +324,7 @@ const PullRequests = (__props: TableProps) => {
 
 export const PullRequestsTable = (__props: TableProps) => {
   const { entity } = useEntity();
+  const hostname = getHostname(entity);
   const projectName = isGithubSlugSet(entity);
   if (!projectName || projectName === '') {
     return (
@@ -330,5 +333,9 @@ export const PullRequestsTable = (__props: TableProps) => {
       />
     );
   }
-  return <PullRequests />;
+  return (
+    <GitHubAuthorizationWrapper title="Your Pull Requests" hostname={hostname}>
+      <PullRequests />
+    </GitHubAuthorizationWrapper>
+  );
 };

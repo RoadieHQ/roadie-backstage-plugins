@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Alert } from '@material-ui/lab';
 import {
   MarkdownContent as RawMarkdownContent,
@@ -23,14 +23,13 @@ import {
 import {
   ApiHolder,
   configApiRef,
-  useApi,
   useApiHolder,
 } from '@backstage/core-plugin-api';
 import { MarkdownContentProps } from './types';
-import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
 import useAsync from 'react-use/lib/useAsync';
 import { GithubApi, githubApiRef, GithubClient } from '../../../apis';
 import { scmAuthApiRef } from '@backstage/integration-react';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
 const getGithubClient = (apiHolder: ApiHolder) => {
   let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);
@@ -96,43 +95,6 @@ const GithubFileContent = (props: MarkdownContentProps) => {
   );
 };
 
-const GithubNotAuthorized = ({
-  hostname = 'github.com',
-}: {
-  hostname?: string;
-}) => {
-  const scmAuth = useApi(scmAuthApiRef);
-  return (
-    <Grid container>
-      <Grid item xs={8}>
-        <Typography>
-          You are not logged into github. You need to be signed in to see the
-          content of this card.
-        </Typography>
-      </Grid>
-      <Grid item xs={4} container justifyContent="flex-end">
-        <Tooltip placement="top" arrow title="Sign in to Github">
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() =>
-              scmAuth.getCredentials({
-                additionalScope: {
-                  customScopes: { github: ['repo'] },
-                },
-                url: `https://${hostname}`,
-                optional: true,
-              })
-            }
-          >
-            Sign in
-          </Button>
-        </Tooltip>
-      </Grid>
-    </Grid>
-  );
-};
-
 /**
  * A component to render a markdown file from github
  *
@@ -140,32 +102,10 @@ const GithubNotAuthorized = ({
  */
 const MarkdownContent = (props: MarkdownContentProps) => {
   const { hostname } = props;
-  const scmAuth = useApi(scmAuthApiRef);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const githubUrl = hostname ? `https://${hostname}` : 'https://github.com';
-
-  useEffect(() => {
-    const doLogin = async () => {
-      const credentials = await scmAuth.getCredentials({
-        additionalScope: {
-          customScopes: { github: ['repo'] },
-        },
-        url: githubUrl,
-        optional: true,
-      });
-
-      if (credentials?.token) {
-        setIsLoggedIn(true);
-      }
-    };
-    doLogin();
-  }, [scmAuth, githubUrl]);
-
-  return isLoggedIn ? (
-    <GithubFileContent {...props} />
-  ) : (
-    <GithubNotAuthorized />
+  return (
+    <GitHubAuthorizationWrapper title="Markdown Card" hostname={hostname}>
+      <GithubFileContent {...props} />
+    </GitHubAuthorizationWrapper>
   );
 };
 

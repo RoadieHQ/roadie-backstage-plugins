@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,10 @@ import {
 import WarningIcon from '@material-ui/icons/ErrorOutline';
 import { styles as useStyles } from '../../utils/styles';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
-const ComplianceCard = () => {
+const ComplianceCardContent = () => {
   const { entity } = useEntity();
   const { branches, loading, error } = useProtectedBranches(entity);
   const {
@@ -59,7 +61,7 @@ const ComplianceCard = () => {
   } else if (error || licenseError) {
     return (
       <Alert severity="error">
-        Error occured while fetching data for the compliance card:{' '}
+        Error occurred while fetching data for the compliance card:{' '}
         {error?.message}
       </Alert>
     );
@@ -106,6 +108,17 @@ const ComplianceCard = () => {
         }}
       />
     </InfoCard>
+  );
+};
+
+const ComplianceCard = () => {
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
+
+  return (
+    <GitHubAuthorizationWrapper title="Compliance" hostname={hostname}>
+      <ComplianceCardContent />
+    </GitHubAuthorizationWrapper>
   );
 };
 

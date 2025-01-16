@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
+import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
 type Environment = {
   id: number;
@@ -38,7 +40,7 @@ type Environment = {
   name: string;
 };
 
-const EnvironmentsCard = () => {
+const EnvironmentsCardContent = () => {
   const classes = useStyles();
   const { entity } = useEntity();
 
@@ -93,6 +95,17 @@ const EnvironmentsCard = () => {
     </InfoCard>
   ) : (
     <></>
+  );
+};
+
+const EnvironmentsCard = () => {
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
+
+  return (
+    <GitHubAuthorizationWrapper title="Environments" hostname={hostname}>
+      <EnvironmentsCardContent />
+    </GitHubAuthorizationWrapper>
   );
 };
 

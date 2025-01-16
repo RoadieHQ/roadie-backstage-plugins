@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,8 @@ import {
   SkeletonPullRequestsListView,
 } from '../../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
-import {
-  useGithubLoggedIn,
-  GithubNotAuthorized,
-} from '../../useGithubLoggedIn';
 import Alert from '@material-ui/lab/Alert';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
 type OpenPullRequestsCardProps = {
   query?: string;
@@ -48,10 +45,9 @@ const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
 };
 
 export const Content = (props: OpenPullRequestsCardProps) => {
-  const isLoggedIn = useGithubLoggedIn();
-  return isLoggedIn ? (
-    <OpenPullRequestsContent {...props} />
-  ) : (
-    <GithubNotAuthorized />
+  return (
+    <GitHubAuthorizationWrapper title="Your Pull Requests">
+      <OpenPullRequestsContent {...props} />
+    </GitHubAuthorizationWrapper>
   );
 };

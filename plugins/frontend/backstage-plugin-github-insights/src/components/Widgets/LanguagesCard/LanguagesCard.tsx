@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,22 @@
 
 import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
-// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import {
   InfoCard,
-  Progress,
   MissingAnnotationEmptyState,
+  Progress,
 } from '@backstage/core-components';
 import { useRequest } from '../../../hooks/useRequest';
 import { colors } from './colors';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
-  GithubNotAuthorized,
-  useGithubLoggedIn,
-} from '../../../hooks/useGithubLoggedIn';
-import {
-  isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION,
+  isGithubInsightsAvailable,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -159,15 +156,13 @@ const LanguagesCardContent = () => {
 };
 
 const LanguagesCard = () => {
-  const classes = useStyles();
-  const isLoggedIn = useGithubLoggedIn();
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
 
-  return isLoggedIn ? (
-    <LanguagesCardContent />
-  ) : (
-    <InfoCard title="Languages" className={classes.infoCard}>
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper title="Languages" hostname={hostname}>
+      <LanguagesCardContent />
+    </GitHubAuthorizationWrapper>
   );
 };
 

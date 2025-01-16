@@ -27,7 +27,7 @@ import { useAsync } from 'react-use';
 import { Octokit } from '@octokit/rest';
 import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';
-import { getSeverityBadge } from '../utils';
+import { getHostname, getSeverityBadge } from '../utils';
 import {
   IssuesCounterProps,
   SecurityInsight,
@@ -35,8 +35,8 @@ import {
   SeverityLevels,
 } from '../../types';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { GithubNotAuthorized, useGithubLoggedIn } from '../useGithubLoggedIn';
 import { scmAuthApiRef } from '@backstage/integration-react';
+import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -148,14 +148,12 @@ const SecurityInsightsWidgetContent = () => {
 };
 
 export const SecurityInsightsWidget = () => {
-  const classes = useStyles();
-  const isLoggedIn = useGithubLoggedIn();
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
 
-  return isLoggedIn ? (
-    <SecurityInsightsWidgetContent />
-  ) : (
-    <InfoCard title="Security Insights" className={classes.infoCard}>
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper title="Security Insights" hostname={hostname}>
+      <SecurityInsightsWidgetContent />
+    </GitHubAuthorizationWrapper>
   );
 };
