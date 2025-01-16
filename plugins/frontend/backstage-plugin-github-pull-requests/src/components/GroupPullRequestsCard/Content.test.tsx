@@ -84,7 +84,19 @@ describe('<GroupPullRequestCard>', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={api}>
-          <EntityProvider entity={entityMock}>
+          <EntityProvider
+            entity={{
+              ...entityMock,
+              kind: 'Group',
+              metadata: {
+                ...entityMock.metadata,
+                annotations: {
+                  ...entityMock.metadata.annotations,
+                  'github.com/team-slug': 'asdf',
+                },
+              },
+            }}
+          >
             <Content />
           </EntityProvider>
         </TestApiProvider>,
@@ -93,7 +105,7 @@ describe('<GroupPullRequestCard>', () => {
     );
 
     expect(
-      await screen.findByText('You are not logged into github.', {
+      await screen.findByText('You are not logged into GitHub.', {
         exact: false,
       }),
     ).toBeInTheDocument();

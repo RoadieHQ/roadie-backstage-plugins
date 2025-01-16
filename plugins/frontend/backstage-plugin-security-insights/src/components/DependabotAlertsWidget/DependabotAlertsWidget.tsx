@@ -15,7 +15,6 @@
  */
 
 import React, { FC } from 'react';
-// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
@@ -25,8 +24,9 @@ import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { InfoCard, Progress } from '@backstage/core-components';
-import { GithubNotAuthorized, useGithubLoggedIn } from '../useGithubLoggedIn';
 import { scmAuthApiRef } from '@backstage/integration-react';
+import { getHostname } from '../utils';
+import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {
@@ -289,14 +289,12 @@ const DependabotAlertsWidgetContent = () => {
 };
 
 export const DependabotAlertsWidget = () => {
-  const classes = useStyles();
-  const isLoggedIn = useGithubLoggedIn();
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
 
-  return isLoggedIn ? (
-    <DependabotAlertsWidgetContent />
-  ) : (
-    <InfoCard title="Dependabot Alerts" className={classes.infoCard}>
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper title="Dependabot Alerts" hostname={hostname}>
+      <DependabotAlertsWidgetContent />
+    </GitHubAuthorizationWrapper>
   );
 };

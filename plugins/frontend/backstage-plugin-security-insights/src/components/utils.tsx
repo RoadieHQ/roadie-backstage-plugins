@@ -3,6 +3,12 @@ import { Box } from '@material-ui/core';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import NoteRoundedIcon from '@material-ui/icons/NoteRounded';
+import {
+  ANNOTATION_LOCATION,
+  ANNOTATION_SOURCE_LOCATION,
+  Entity,
+} from '@backstage/catalog-model';
+import gitUrlParse from 'git-url-parse';
 
 export const getSeverityBadge = (
   severityLevel: string,
@@ -51,4 +57,14 @@ export const getSeverityBadge = (
     default:
       return 'Unknown';
   }
+};
+
+export const getHostname = (entity: Entity) => {
+  const location =
+    entity?.metadata.annotations?.[ANNOTATION_SOURCE_LOCATION] ??
+    entity?.metadata.annotations?.[ANNOTATION_LOCATION];
+
+  return location?.startsWith('url:')
+    ? gitUrlParse(location.slice(4)).resource
+    : undefined;
 };

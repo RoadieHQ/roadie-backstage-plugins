@@ -39,7 +39,8 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { TooltipContent } from './components/TooltipContent';
-import { GithubNotAuthorized, useGithubLoggedIn } from '../useGithubLoggedIn';
+import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
+import { getHostname } from '../../utils/githubUtils';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -129,9 +130,8 @@ const StatsCard = (props: Props) => {
 
 const PullRequestsStatsCard = (props: Props) => {
   const { entity } = useEntity();
+  const hostname = getHostname(entity);
   const projectName = isGithubSlugSet(entity);
-  const isLoggedIn = useGithubLoggedIn();
-
   if (!projectName || projectName === '') {
     return (
       <MissingAnnotationEmptyState
@@ -139,13 +139,13 @@ const PullRequestsStatsCard = (props: Props) => {
       />
     );
   }
-
-  return isLoggedIn ? (
-    <StatsCard {...props} />
-  ) : (
-    <InfoCard title="GitHub Pull Requests Statistics">
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper
+      title="GitHub Pull Requests Statistics"
+      hostname={hostname}
+    >
+      <StatsCard {...props} />
+    </GitHubAuthorizationWrapper>
   );
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,25 @@
  */
 
 import React from 'react';
-import { Link, List, ListItem, Chip } from '@material-ui/core';
+import { Chip, Link, List, ListItem } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 import Alert from '@material-ui/lab/Alert';
 import {
   InfoCard,
-  Progress,
   MissingAnnotationEmptyState,
+  Progress,
 } from '@backstage/core-components';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
-  isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION,
+  isGithubInsightsAvailable,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
-import {
-  GithubNotAuthorized,
-  useGithubLoggedIn,
-} from '../../../hooks/useGithubLoggedIn';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
+import { getHostname } from '../../utils/githubUtils';
 
 type Release = {
   id: number;
@@ -113,15 +111,13 @@ const ReleasesCardContent = () => {
 };
 
 const ReleasesCard = () => {
-  const classes = useStyles();
-  const isLoggedIn = useGithubLoggedIn();
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
 
-  return isLoggedIn ? (
-    <ReleasesCardContent />
-  ) : (
-    <InfoCard title="Releases" className={classes.infoCard}>
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper title="Releases" hostname={hostname}>
+      <ReleasesCardContent />
+    </GitHubAuthorizationWrapper>
   );
 };
 

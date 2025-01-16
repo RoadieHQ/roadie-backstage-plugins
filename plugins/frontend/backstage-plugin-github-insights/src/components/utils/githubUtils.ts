@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createRouter, providers } from '@backstage/plugin-auth-backend';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
+import {
+  ANNOTATION_LOCATION,
+  ANNOTATION_SOURCE_LOCATION,
+  Entity,
+} from '@backstage/catalog-model';
+import gitUrlParse from 'git-url-parse';
 
-export default async function createPlugin({
-  logger,
-  database,
-  config,
-  discovery,
-  tokenManager,
-}: PluginEnvironment): Promise<Router> {
-  return await createRouter({
-    logger,
-    config,
-    database,
-    discovery,
-    tokenManager,
-    providerFactories: {
-      ghes: providers.github.create(),
-    },
-  });
-}
+export const getHostname = (entity: Entity) => {
+  const location =
+    entity?.metadata.annotations?.[ANNOTATION_SOURCE_LOCATION] ??
+    entity?.metadata.annotations?.[ANNOTATION_LOCATION];
+
+  return location?.startsWith('url:')
+    ? gitUrlParse(location.slice(4)).resource
+    : undefined;
+};

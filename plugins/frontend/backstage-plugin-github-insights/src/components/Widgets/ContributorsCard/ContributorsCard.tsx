@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import {
   InfoCard,
-  Progress,
   MissingAnnotationEmptyState,
+  Progress,
 } from '@backstage/core-components';
 import ContributorsList from './components/ContributorsList';
 import { useRequest } from '../../../hooks/useRequest';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import {
-  isGithubInsightsAvailable,
   GITHUB_INSIGHTS_ANNOTATION,
+  isGithubInsightsAvailable,
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import {
-  GithubNotAuthorized,
-  useGithubLoggedIn,
-} from '../../../hooks/useGithubLoggedIn';
+import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
@@ -89,15 +87,13 @@ const ContributorsCardContent = () => {
 };
 
 const ContributorsCard = () => {
-  const classes = useStyles();
-  const isLoggedIn = useGithubLoggedIn();
+  const { entity } = useEntity();
+  const hostname = getHostname(entity);
 
-  return isLoggedIn ? (
-    <ContributorsCardContent />
-  ) : (
-    <InfoCard title="Contributors" className={classes.infoCard}>
-      <GithubNotAuthorized />
-    </InfoCard>
+  return (
+    <GitHubAuthorizationWrapper title="Contributors" hostname={hostname}>
+      <ContributorsCardContent />
+    </GitHubAuthorizationWrapper>
   );
 };
 
