@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.0.1
+
+### Patch Changes
+
+- 7cd4044: Modify login functionality to allow logging in using the Sign In button.
+
 ## 3.0.0
 
 ### Major Changes
