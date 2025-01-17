@@ -16,7 +16,7 @@
 
 import * as anything from './';
 
-describe('techdocs-common', () => {
+describe('github-auth-utils-react', () => {
   it('should exist', () => {
     expect(anything).toBeTruthy();
   });
