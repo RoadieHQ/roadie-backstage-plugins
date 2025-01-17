@@ -31,7 +31,7 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { getHostname } from '../../utils/githubUtils';
-import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {

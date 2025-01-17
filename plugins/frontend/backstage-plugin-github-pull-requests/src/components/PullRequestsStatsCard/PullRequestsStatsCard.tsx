@@ -39,8 +39,8 @@ import {
 import { Entity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { TooltipContent } from './components/TooltipContent';
-import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
 import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {

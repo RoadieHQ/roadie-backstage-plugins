@@ -26,7 +26,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin",
+    "role": "web-library",
     "pluginId": "backstage-plugin-github-insights",
     "pluginPackages": [
       "@roadiehq/backstage-plugin-github-insights"
@@ -58,6 +58,7 @@
     "@material-ui/lab": "4.0.0-alpha.45",
     "@octokit/rest": "^19.0.3",
     "@octokit/types": "^9.0.0",
+    "@roadiehq/github-auth-utils-react": "^0.1.0",
     "git-url-parse": "^14.0.0",
     "history": "^5.0.0",
     "immer": "9.0.7",

@@ -25,7 +25,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
-// eslint-disable-next-line
 import Alert from '@material-ui/lab/Alert';
 import { DateTime } from 'luxon';
 import { graphql } from '@octokit/graphql';

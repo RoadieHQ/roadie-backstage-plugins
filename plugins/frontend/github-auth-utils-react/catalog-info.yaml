@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: github-auth-utils-react
+  title: '@roadiehq/github-auth-utils-react'
+  description: >-
+    Common functionality for GitHub frontend OAuth authentication
+spec:
+  lifecycle: production
+  type: common-library
+  owner: engineering
