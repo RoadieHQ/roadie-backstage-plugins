@@ -60,7 +60,7 @@ export const useGithubLoggedIn = (
     };
 
     doLogin();
-  }, [hostname, scmAuth, useGitHubLoginStatusStore]);
+  }, [hash, hostname, scmAuth, scope, url]);
 
   return {
     isLoggedIn: getStatus(hash),
