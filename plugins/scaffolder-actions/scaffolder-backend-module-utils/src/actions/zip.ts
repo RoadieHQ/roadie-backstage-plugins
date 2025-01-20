@@ -20,7 +20,12 @@ import { InputError } from '@backstage/errors';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
 
-export function createZipAction() {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createZipAction(): TemplateAction<{
+  path: string;
+  outputPath: string;
+}> {
   return createTemplateAction<{ path: string; outputPath: string }>({
     id: 'roadiehq:utils:zip',
     description: 'Zips the content of the path',

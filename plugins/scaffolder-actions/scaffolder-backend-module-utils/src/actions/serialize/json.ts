@@ -15,7 +15,13 @@
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 
-export function createSerializeJsonAction() {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createSerializeJsonAction(): TemplateAction<{
+  data: any;
+  replacer?: string[];
+  space?: string;
+}> {
   return createTemplateAction<{
     data: any;
     replacer?: string[];

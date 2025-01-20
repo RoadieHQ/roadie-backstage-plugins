@@ -20,7 +20,15 @@ import fs from 'fs-extra';
 import YAML from 'yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
 
-export function createYamlJSONataTransformAction() {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createYamlJSONataTransformAction(): TemplateAction<{
+  path: string;
+  expression: string;
+  options?: stringifyOptions;
+  loadAll?: boolean;
+  as?: 'string' | 'object';
+}> {
   return createTemplateAction<{
     path: string;
     expression: string;

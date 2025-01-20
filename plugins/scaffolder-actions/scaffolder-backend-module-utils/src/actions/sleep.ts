@@ -17,7 +17,11 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { InputError } from '@backstage/errors';
 
-export function createSleepAction(options?: { maxSleep?: number }) {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createSleepAction(options?: {
+  maxSleep?: number;
+}): TemplateAction<{ amount: number }> {
   return createTemplateAction<{ amount: number }>({
     id: 'roadiehq:utils:sleep',
     description: 'Halts the scaffolding for the given amount of seconds',

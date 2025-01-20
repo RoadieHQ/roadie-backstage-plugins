@@ -17,7 +17,12 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import YAML from 'yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
 
-export function createSerializeYamlAction() {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createSerializeYamlAction(): TemplateAction<{
+  data: any;
+  options?: stringifyOptions;
+}> {
   return createTemplateAction<{
     data: any;
     options?: stringifyOptions;
