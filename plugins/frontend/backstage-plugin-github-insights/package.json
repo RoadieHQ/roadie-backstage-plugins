@@ -26,7 +26,7 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "web-library",
+    "role": "frontend-plugin",
     "pluginId": "backstage-plugin-github-insights",
     "pluginPackages": [
       "@roadiehq/backstage-plugin-github-insights"
