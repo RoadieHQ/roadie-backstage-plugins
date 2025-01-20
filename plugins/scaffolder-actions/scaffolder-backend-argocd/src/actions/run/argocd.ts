@@ -18,11 +18,20 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ArgoService } from '@roadiehq/backstage-plugin-argo-cd-backend';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
 export const createArgoCdResources = (
   config: Config,
   logger: Logger | LoggerService,
-) => {
+): TemplateAction<{
+  argoInstance: string;
+  namespace: string;
+  projectName?: string;
+  appName: string;
+  repoUrl: string;
+  path: string;
+  labelValue?: string;
+}> => {
   return createTemplateAction<{
     argoInstance: string;
     namespace: string;

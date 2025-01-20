@@ -18,6 +18,7 @@ import { createEcrAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { ECRClient } from '@aws-sdk/client-ecr';
 import { getVoidLogger } from '@backstage/backend-common';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node/index';
 
 // @ts-ignore
 const ecrClient = mockClient(ECRClient);
@@ -27,6 +28,9 @@ ecrClient.resolves({});
 
 describe('create', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
@@ -39,7 +43,7 @@ describe('create', () => {
   describe('Create ECR repository without tags', () => {
     const repoName = 'no-tags';
 
-    const action = createEcrAction();
+    const action: TemplateAction<any> = createEcrAction();
 
     it('Should call ECR client send without tags', async () => {
       await action.handler({

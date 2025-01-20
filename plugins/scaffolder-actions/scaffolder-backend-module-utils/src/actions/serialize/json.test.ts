@@ -19,6 +19,9 @@ import { createSerializeJsonAction } from './json';
 
 describe('roadiehq:utils:serialize:json', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

@@ -18,7 +18,13 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 
-export function createWriteFileAction() {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createWriteFileAction(): TemplateAction<{
+  path: string;
+  content: string;
+  preserveFormatting?: boolean;
+}> {
   return createTemplateAction<{
     path: string;
     content: string;

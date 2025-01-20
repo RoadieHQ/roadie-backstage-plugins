@@ -16,7 +16,6 @@
 import {
   createLegacyAuthAdapters,
   PluginEndpointDiscovery,
-  TokenManager,
 } from '@backstage/backend-common';
 import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 import { ResponseError } from '@backstage/errors';
@@ -48,7 +47,6 @@ export class SearchClient {
     discoveryApi: PluginEndpointDiscovery;
     logger: LoggerService;
     auth?: AuthService;
-    tokenManager?: TokenManager;
   }) {
     this.discoveryApi = options.discoveryApi;
     this.logger = options.logger;

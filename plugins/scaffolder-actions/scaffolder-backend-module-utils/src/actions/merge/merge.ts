@@ -48,7 +48,18 @@ const existPathInObject = (object: any, path: string, value: string) => {
   return current?.toString() === value;
 };
 
-export function createMergeJSONAction({ actionId }: { actionId?: string }) {
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
+
+export function createMergeJSONAction({
+  actionId,
+}: {
+  actionId?: string;
+}): TemplateAction<{
+  path: string;
+  content: any;
+  mergeArrays?: boolean;
+  matchFileIndent?: boolean;
+}> {
   return createTemplateAction<{
     path: string;
     content: any;
@@ -152,7 +163,14 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
   });
 }
 
-export function createMergeAction() {
+export function createMergeAction(): TemplateAction<{
+  path: string;
+  content: any;
+  useDocumentIncludingField?: { key: string; value: string };
+  mergeArrays?: boolean;
+  preserveYamlComments?: boolean;
+  options?: stringifyOptions;
+}> {
   return createTemplateAction<{
     path: string;
     content: any;

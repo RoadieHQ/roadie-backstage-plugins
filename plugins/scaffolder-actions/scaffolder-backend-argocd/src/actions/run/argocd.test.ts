@@ -63,6 +63,15 @@ describe('argocd:create-resources', () => {
     createTemporaryDirectory: jest.fn(),
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
+    task: {
+      id: 'task-id',
+      getWorkspaceName: jest.fn(),
+      getWorkspacePath: jest.fn(),
+      getLogger: jest.fn(),
+      emitLog: jest.fn(),
+      getSecrets: jest.fn(),
+      getParameters: jest.fn(),
+    },
     input: {
       argoInstance: 'argoInstance1',
       namespace: 'testNamespace',

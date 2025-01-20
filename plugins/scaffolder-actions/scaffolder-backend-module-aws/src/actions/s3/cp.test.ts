@@ -38,6 +38,9 @@ jest.mock('fs-extra', () => {
 
 describe('roadiehq:aws:s3:cp', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

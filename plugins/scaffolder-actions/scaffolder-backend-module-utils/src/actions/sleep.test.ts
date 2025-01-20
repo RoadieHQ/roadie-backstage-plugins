@@ -19,6 +19,7 @@ import { createSleepAction } from './sleep';
 
 describe('roadiehq:utils:sleep', () => {
   const mockContext = {
+    task: { id: 'task-id' },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

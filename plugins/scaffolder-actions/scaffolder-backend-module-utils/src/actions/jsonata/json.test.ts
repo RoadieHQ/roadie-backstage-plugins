@@ -26,6 +26,9 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

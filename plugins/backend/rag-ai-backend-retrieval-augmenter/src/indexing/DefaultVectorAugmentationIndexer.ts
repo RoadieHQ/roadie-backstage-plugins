@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  createLegacyAuthAdapters,
-  TokenManager,
-} from '@backstage/backend-common';
+import { createLegacyAuthAdapters } from '@backstage/backend-common';
 import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
@@ -55,7 +52,6 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     catalogApi,
     logger,
     auth,
-    tokenManager,
     embeddings,
     discovery,
     augmentationOptions,
@@ -64,7 +60,6 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     catalogApi: CatalogApi;
     logger: LoggerService;
     auth?: AuthService;
-    tokenManager?: TokenManager;
     embeddings: Embeddings;
     discovery: DiscoveryService;
     augmentationOptions?: AugmentationOptions;
@@ -77,7 +72,6 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     this.auth = createLegacyAuthAdapters({
       auth,
       discovery,
-      tokenManager,
     }).auth;
     this.discovery = discovery;
   }

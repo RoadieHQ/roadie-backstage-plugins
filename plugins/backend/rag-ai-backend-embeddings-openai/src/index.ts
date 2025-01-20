@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TokenManager } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
@@ -25,7 +24,6 @@ import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmente
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger | LoggerService;
-  tokenManager: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;
@@ -34,7 +32,6 @@ export interface RoadieBedrockEmbeddingsConfig {
 
 export async function initializeOpenAiEmbeddings({
   logger,
-  tokenManager,
   vectorStore,
   catalogApi,
   discovery,
@@ -59,7 +56,6 @@ export async function initializeOpenAiEmbeddings({
     discovery,
     augmentationOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),
-    tokenManager,
     config: openAiConfig,
   });
 }
