@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Common functionality for GitHub frontend OAuth authentication",
   "backstage": {
-    "role": "common-library"
+    "role": "web-library"
   },
   "publishConfig": {
     "access": "public",
