@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/github-auth-utils-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Common functionality for GitHub frontend OAuth authentication",
   "backstage": {
     "role": "web-library"
