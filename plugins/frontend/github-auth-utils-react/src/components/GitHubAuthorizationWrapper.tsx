@@ -23,12 +23,14 @@ export const GitHubAuthorizationWrapper = ({
   children,
   title,
   hostname,
+  scopes,
 }: {
   children: React.ReactNode;
   title: string;
   hostname?: string;
+  scopes?: string[];
 }) => {
-  const { isLoggedIn, addLoginStatus } = useGithubLoggedIn();
+  const { isLoggedIn, addLoginStatus } = useGithubLoggedIn(hostname, scopes);
   return isLoggedIn ? (
     children
   ) : (
