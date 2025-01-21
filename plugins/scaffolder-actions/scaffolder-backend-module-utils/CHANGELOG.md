@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.3.0
+
+### Minor Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
 ## 3.2.0
 
 ### Minor Changes

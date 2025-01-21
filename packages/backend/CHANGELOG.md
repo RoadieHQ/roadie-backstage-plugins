@@ -1,5 +1,21 @@
 # backend
 
+## 2.4.0
+
+### Minor Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
+### Patch Changes
+
+- Updated dependencies [e9c26c6]
+  - @roadiehq/scaffolder-backend-module-http-request@5.3.0
+  - @roadiehq/scaffolder-backend-module-utils@3.3.0
+  - @roadiehq/scaffolder-backend-module-aws@2.6.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.2
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.4.1
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.1.1
+
 ## 2.3.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.3.0
+
+### Minor Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
 ## 5.2.0
 
 ### Minor Changes

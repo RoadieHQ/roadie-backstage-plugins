@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.1.1
+
+### Patch Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+- Updated dependencies [e9c26c6]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.2
+
 ## 1.1.0
 
 ### Minor Changes

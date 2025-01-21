@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.1.2
+
+### Patch Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
 ## 1.1.1
 
 ### Patch Changes
