@@ -45,8 +45,8 @@ import { PullRequestState } from '../../types';
 import { Entity } from '@backstage/catalog-model';
 import { getStatusIconType } from '../Icons';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
 import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const generatedColumns: TableColumn<PullRequest>[] = [
   {

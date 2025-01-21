@@ -36,7 +36,7 @@ import {
 } from '../../types';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { scmAuthApiRef } from '@backstage/integration-react';
-import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {

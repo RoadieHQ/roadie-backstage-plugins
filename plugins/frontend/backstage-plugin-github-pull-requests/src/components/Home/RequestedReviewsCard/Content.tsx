@@ -21,7 +21,7 @@ import {
 } from '../../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
 import Alert from '@material-ui/lab/Alert';
-import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 type RequestedReviewsCardProps = {
   query?: string;
