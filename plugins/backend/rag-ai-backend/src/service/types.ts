@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { TokenManager } from '@backstage/backend-common';
 import { AugmentationIndexer, RetrievalPipeline } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { Config } from '@backstage/config';
-import { TokenManager } from '@backstage/backend-common';
 
 export interface RagAiConfig {
   logger: Logger | LoggerService;

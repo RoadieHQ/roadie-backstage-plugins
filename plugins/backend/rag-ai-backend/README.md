@@ -152,6 +152,7 @@ const retrievalPipeline = createDefaultRetrievalPipeline({
   discovery,
   logger,
   vectorStore: augmentationIndexer.vectorStore,
+  tokenManager,
 });
 ```
 
@@ -193,6 +194,7 @@ import { Bedrock } from '@langchain/community/llms/bedrock';
 
 export default async function createPlugin({
   logger,
+  tokenManager,
   database,
   discovery,
   config,
@@ -211,6 +213,7 @@ export default async function createPlugin({
   const credProvider = await awsCredentialsManager.getCredentialProvider();
   const augmentationIndexer = await initializeBedrockEmbeddings({
     logger,
+    tokenManager,
     catalogApi,
     vectorStore,
     discovery,
@@ -231,11 +234,13 @@ export default async function createPlugin({
 
   const ragAi = await initializeRagAiBackend({
     logger,
+    tokenManager,
     augmentationIndexer,
     retrievalPipeline: createDefaultRetrievalPipeline({
       discovery,
       logger,
       vectorStore: augmentationIndexer.vectorStore,
+      tokenManager,
     }),
     model,
     config,
@@ -300,6 +305,7 @@ export default async function createPlugin({
       discovery,
       logger,
       vectorStore: augmentationIndexer.vectorStore,
+      tokenManager,
     }),
     model,
     config,

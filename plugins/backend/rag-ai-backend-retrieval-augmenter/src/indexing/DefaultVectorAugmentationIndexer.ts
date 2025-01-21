@@ -55,19 +55,19 @@ export class DefaultVectorAugmentationIndexer implements AugmentationIndexer {
     catalogApi,
     logger,
     auth,
+    tokenManager,
     embeddings,
     discovery,
     augmentationOptions,
-    tokenManager,
   }: {
     vectorStore: RoadieVectorStore;
     catalogApi: CatalogApi;
     logger: LoggerService;
     auth?: AuthService;
+    tokenManager?: TokenManager;
     embeddings: Embeddings;
     discovery: DiscoveryService;
     augmentationOptions?: AugmentationOptions;
-    tokenManager?: TokenManager;
   }) {
     vectorStore.connectEmbeddings(embeddings);
     this._vectorStore = vectorStore;

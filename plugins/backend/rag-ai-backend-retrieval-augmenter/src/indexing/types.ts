@@ -30,9 +30,9 @@ export type AugmentationOptions = {
 
 export interface RoadieEmbeddingsConfig {
   logger: LoggerService;
+  tokenManager?: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
-  tokenManager?: TokenManager;
   discovery: PluginEndpointDiscovery;
   augmentationOptions?: AugmentationOptions;
 }

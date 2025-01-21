@@ -25,8 +25,8 @@ import { Bedrock } from '@langchain/community/llms/bedrock';
 
 export default async function createPlugin({
   logger,
-  database,
   tokenManager,
+  database,
   discovery,
   config,
 }: PluginEnvironment) {
@@ -44,8 +44,8 @@ export default async function createPlugin({
   const credProvider = await awsCredentialsManager.getCredentialProvider();
   const augmentationIndexer = await initializeBedrockEmbeddings({
     logger,
-    catalogApi,
     tokenManager,
+    catalogApi,
     vectorStore,
     discovery,
     config,
@@ -64,8 +64,8 @@ export default async function createPlugin({
 
   const ragAi = await initializeRagAiBackend({
     logger,
-    augmentationIndexer,
     tokenManager,
+    augmentationIndexer,
     retrievalPipeline: createDefaultRetrievalPipeline({
       discovery,
       logger,
