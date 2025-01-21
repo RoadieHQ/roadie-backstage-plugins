@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
 import { scmAuthApiRef } from '@backstage/integration-react';
 import { create } from 'zustand';
@@ -38,8 +38,8 @@ export const useGithubLoggedIn = (
 ) => {
   const { getStatus } = useGitHubLoginStatusStore();
   const scmAuth = useApi(scmAuthApiRef);
-  const url = `https://${hostname}`;
-  const hash = url + scope.toString();
+  const url = useMemo(() => `https://${hostname}`, [hostname]);
+  const hash = useMemo(() => url + scope.toString(), [scope, url]);
 
   useEffect(() => {
     const doLogin = async () => {
@@ -59,8 +59,10 @@ export const useGithubLoggedIn = (
       }
     };
 
-    doLogin();
-  }, [hash, hostname, scmAuth, scope, url]);
+    if (!getStatus(hash)) {
+      doLogin();
+    }
+  }, [hash, hostname, scmAuth, scope, url, getStatus]);
 
   return {
     isLoggedIn: getStatus(hash),

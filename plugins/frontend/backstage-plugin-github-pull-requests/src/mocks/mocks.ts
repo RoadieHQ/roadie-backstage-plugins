@@ -27,7 +27,7 @@ export const groupEntityMock = {
     namespace: 'default',
     annotations: {
       'backstage.io/managed-by-location':
-        'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
+        'url:https://github.com/RoadieHQ/sample-service/main/admin-group.yaml',
     },
     name: 'roadie-backstage-admin',
     description: 'The Backstage Admins',
@@ -55,7 +55,7 @@ export const groupEntityMockWithSlug = {
     namespace: 'default',
     annotations: {
       'backstage.io/managed-by-location':
-        'url:https://github.com/org/repo/blob/master/catalog-info.yaml',
+        'url:https://github.com/RoadieHQ/sample-service/main/admin-group.yaml',
       'github.com/team-slug': 'rroadie-backstage-admin',
     },
     name: 'roadie-backstage-admin',
