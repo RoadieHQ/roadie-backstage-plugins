@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.5.0
+
+### Minor Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
 ## 1.4.0
 
 ### Minor Changes

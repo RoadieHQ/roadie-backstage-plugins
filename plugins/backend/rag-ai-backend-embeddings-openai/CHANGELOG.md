@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.4.1
+
+### Patch Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+- Updated dependencies [e9c26c6]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.2
+
 ## 0.4.0
 
 ### Minor Changes

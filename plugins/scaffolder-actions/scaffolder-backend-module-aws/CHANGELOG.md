@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.6.0
+
+### Minor Changes
+
+- e9c26c6: Update scaffolder packages, tidy up some imports
+
 ## 2.5.0
 
 ### Minor Changes
