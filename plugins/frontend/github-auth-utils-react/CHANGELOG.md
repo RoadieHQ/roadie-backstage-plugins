@@ -1,5 +1,11 @@
 # @roadiehq/github-auth-utils-react
 
+## 1.0.1
+
+### Patch Changes
+
+- 3537934: Modify published package to point to the correct entry file.
+
 ## 1.0.0
 
 ### Major Changes
