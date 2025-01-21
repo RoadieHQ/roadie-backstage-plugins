@@ -29,7 +29,7 @@ import { MarkdownContentProps } from './types';
 import useAsync from 'react-use/lib/useAsync';
 import { GithubApi, githubApiRef, GithubClient } from '../../../apis';
 import { scmAuthApiRef } from '@backstage/integration-react';
-import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const getGithubClient = (apiHolder: ApiHolder) => {
   let githubClient: GithubApi | undefined = apiHolder.get(githubApiRef);

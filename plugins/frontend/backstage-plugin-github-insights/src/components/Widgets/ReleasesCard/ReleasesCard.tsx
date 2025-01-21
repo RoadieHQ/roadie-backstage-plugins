@@ -32,8 +32,8 @@ import {
 } from '../../utils/isGithubInsightsAvailable';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
-import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
 import { getHostname } from '../../utils/githubUtils';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 type Release = {
   id: number;

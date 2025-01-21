@@ -26,7 +26,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { InfoCard, Progress } from '@backstage/core-components';
 import { scmAuthApiRef } from '@backstage/integration-react';
 import { getHostname } from '../utils';
-import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {

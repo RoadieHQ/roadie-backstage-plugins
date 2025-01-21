@@ -32,7 +32,7 @@ import {
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { styles as useStyles } from '../../utils/styles';
 import { getHostname } from '../../utils/githubUtils';
-import { GitHubAuthorizationWrapper } from '../../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 type Environment = {
   id: number;

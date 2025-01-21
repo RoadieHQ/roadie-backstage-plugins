@@ -29,7 +29,7 @@ import Alert from '@material-ui/lab/Alert';
 import { Entity, isGroupEntity } from '@backstage/catalog-model';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { getHostname } from '../../utils/githubUtils';
-import { GitHubAuthorizationWrapper } from '../GitHubAuthorizationWrapper';
+import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 export const getPullRequestsQueryForGroup = (entity: Entity) => {
   const githubTeamName = isGithubTeamSlugSet(entity);
