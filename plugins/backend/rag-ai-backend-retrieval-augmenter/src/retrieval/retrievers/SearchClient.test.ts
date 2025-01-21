@@ -41,6 +41,7 @@ describe('SearchClient', () => {
 
     searchClient = new SearchClient({
       discoveryApi: mockDiscoveryApi,
+      tokenManager: mockTokenManager,
       logger: mockLogger,
     });
   });
