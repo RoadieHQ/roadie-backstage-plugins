@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import {
+  createTemplateAction,
+  TemplateAction,
+} from '@backstage/plugin-scaffolder-node';
 import jsonata from 'jsonata';
 
-export function createJSONataAction() {
+export function createJSONataAction(): TemplateAction<{
+  data: any;
+  expression: string;
+}> {
   return createTemplateAction<{
     data: any;
     expression: string;

@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import {
+  createTemplateAction,
+  TemplateAction,
+} from '@backstage/plugin-scaffolder-node';
 import {
   SecretsManagerClient,
   SecretsManagerClientConfig,
@@ -22,10 +25,24 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
+import { JsonObject } from '@backstage/config/index';
 
 export function createAwsSecretsManagerCreateAction(options?: {
   credentials?: CredentialProvider;
-}) {
+}): TemplateAction<
+  {
+    name: string;
+    description: string;
+    value: string;
+    tags: Array<{
+      Key: string;
+      Value: string;
+    }>;
+    profile: string;
+    region: string;
+  },
+  JsonObject
+> {
   return createTemplateAction<{
     name: string;
     description: string;

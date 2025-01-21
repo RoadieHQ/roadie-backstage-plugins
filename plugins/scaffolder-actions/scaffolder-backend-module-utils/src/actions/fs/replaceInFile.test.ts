@@ -35,6 +35,15 @@ describe('roadiehq:utils:fs:replace', () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
+    task: {
+      id: 'task-id',
+      emitLog: jest.fn(),
+      done: jest.fn(),
+      fail: jest.fn(),
+      getWorkspaceName: jest.fn(),
+      getWorkspacePath: jest.fn(),
+      getWorkspaceInfo: jest.fn(),
+    },
   };
   const action = createReplaceInFileAction();
   const fileCreationAction = createWriteFileAction();

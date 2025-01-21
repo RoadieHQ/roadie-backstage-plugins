@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TokenManager } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import {
@@ -21,7 +20,10 @@ import {
   RoadieBedrockAugmenter,
 } from './RoadieBedrockAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
@@ -29,9 +31,9 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger | LoggerService;
-  tokenManager?: TokenManager;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
+  tokenManager?: TokenManager;
   discovery: PluginEndpointDiscovery;
   config: Config;
   options: {
@@ -42,9 +44,9 @@ export interface RoadieBedrockEmbeddingsConfig {
 
 export async function initializeBedrockEmbeddings({
   logger,
-  tokenManager,
   vectorStore,
   catalogApi,
+  tokenManager,
   discovery,
   config,
   options,
@@ -66,9 +68,9 @@ export async function initializeBedrockEmbeddings({
     catalogApi,
     discovery,
     logger: logger.child({ label: 'roadie-bedrock-embedder' }),
-    tokenManager,
     options,
     bedrockConfig,
+    tokenManager,
     augmentationOptions,
   });
 }

@@ -26,6 +26,9 @@ describe('roadiehq:utils:fs:parse', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

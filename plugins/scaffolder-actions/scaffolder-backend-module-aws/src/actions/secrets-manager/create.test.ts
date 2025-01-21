@@ -25,6 +25,9 @@ const region = 'us-east-1';
 
 describe('create', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

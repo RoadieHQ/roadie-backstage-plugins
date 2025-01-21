@@ -18,8 +18,16 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import fs from 'fs-extra';
 import { InputError } from '@backstage/errors';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
-export function createReplaceInFileAction() {
+export function createReplaceInFileAction(): TemplateAction<{
+  files: Array<{
+    file: string;
+    find: string;
+    matchRegex: boolean;
+    replaceWith: string;
+  }>;
+}> {
   return createTemplateAction<{
     files: Array<{
       file: string;

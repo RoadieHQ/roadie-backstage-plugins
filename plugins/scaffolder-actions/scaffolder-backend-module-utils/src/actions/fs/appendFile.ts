@@ -17,8 +17,12 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
-export function createAppendFileAction() {
+export function createAppendFileAction(): TemplateAction<{
+  path: string;
+  content: string;
+}> {
   return createTemplateAction<{ path: string; content: string }>({
     id: 'roadiehq:utils:fs:append',
     description:

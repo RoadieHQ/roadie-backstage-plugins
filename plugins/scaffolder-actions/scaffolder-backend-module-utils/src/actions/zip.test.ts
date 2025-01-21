@@ -24,6 +24,9 @@ mockLogger.error = jest.fn();
 
 describe('roadiehq:utils:zip', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

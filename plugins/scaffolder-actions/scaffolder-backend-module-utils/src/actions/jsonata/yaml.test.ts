@@ -23,6 +23,9 @@ import { Scalar } from 'yaml';
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const mockContext = {
     logger: getVoidLogger(),
+    task: {
+      id: 'task-id',
+    },
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

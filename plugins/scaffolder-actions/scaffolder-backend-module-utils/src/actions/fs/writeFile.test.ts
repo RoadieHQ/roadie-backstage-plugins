@@ -34,6 +34,15 @@ describe('roadiehq:utils:fs:write', () => {
     checkpoint: jest.fn(),
     getInitiatorCredentials: jest.fn(),
     workspacePath: 'lol',
+    task: {
+      id: 'task-id',
+      getWorkspaceName: jest.fn(),
+      getWorkspacePath: jest.fn(),
+      getLogger: jest.fn(),
+      emitLog: jest.fn(),
+      getSecrets: jest.fn(),
+      getWorkspaceInfo: jest.fn(),
+    },
   };
   const action = createWriteFileAction();
 

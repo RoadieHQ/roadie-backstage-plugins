@@ -30,6 +30,9 @@ describe('roadiehq:utils:json:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
@@ -284,6 +287,9 @@ describe('roadiehq:utils:merge', () => {
   });
   afterEach(() => mock.restore());
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),

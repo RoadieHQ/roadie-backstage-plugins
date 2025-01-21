@@ -24,17 +24,21 @@ import {
 } from '@aws-sdk/client-ecr';
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
+import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
 export function createEcrAction(options?: {
   credentials?: CredentialProvider;
-}) {
-  return createTemplateAction<{
+}): TemplateAction<
+  {
     repoName: string;
     tags: Array<any>;
     imageMutability: boolean;
     scanOnPush: boolean;
     region: string;
-  }>({
+  },
+  any
+> {
+  return createTemplateAction({
     id: 'roadiehq:aws:ecr:create',
     schema: {
       input: {
@@ -46,11 +50,7 @@ export function createEcrAction(options?: {
             title: 'repoName',
             description: 'The name of the ECR repository',
           },
-          tags: {
-            type: 'array',
-            title: 'tags',
-            description: 'list of tags',
-          },
+          tags: { type: 'array', title: 'tags', description: 'list of tags' },
           imageMutability: {
             type: 'boolean',
             title: 'ImageMutability',
@@ -59,13 +59,12 @@ export function createEcrAction(options?: {
           scanOnPush: {
             type: 'boolean',
             title: 'Scan On Push',
-            description:
-              'The image scanning configuration for the repository. This determines whether images are scanned for known vulnerabilities after being pushed to the repository.',
+            description: 'Scan images for vulnerabilities on push',
           },
           region: {
             type: 'string',
             title: 'aws region',
-            description: 'aws region to create ECR on',
+            description: 'AWS region to create ECR in',
           },
         },
       },

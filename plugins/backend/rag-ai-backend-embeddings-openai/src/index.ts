@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TokenManager } from '@backstage/backend-common';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { OpenAiConfig, RoadieOpenAiAugmenter } from './RoadieOpenAiAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 

@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
+import {
+  createTemplateAction,
+  TemplateAction,
+} from '@backstage/plugin-scaffolder-node';
 import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
+import { JsonObject } from '@backstage/config/index';
 
-export function createJsonJSONataTransformAction() {
+export function createJsonJSONataTransformAction(): TemplateAction<
+  {
+    path: string;
+    expression: string;
+    replacer?: string[];
+    space?: string;
+    as?: 'string' | 'object';
+  },
+  JsonObject
+> {
   return createTemplateAction<{
     path: string;
     expression: string;

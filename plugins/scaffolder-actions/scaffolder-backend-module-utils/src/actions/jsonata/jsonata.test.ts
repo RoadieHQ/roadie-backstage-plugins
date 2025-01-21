@@ -19,6 +19,9 @@ import { getVoidLogger } from '@backstage/backend-common';
 
 describe('roadiehq:utils:jsonata', () => {
   const mockContext = {
+    task: {
+      id: 'task-id',
+    },
     logger: getVoidLogger(),
     logStream: new PassThrough(),
     output: jest.fn(),
