@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 3.1.1
+
+### Patch Changes
+
+- Updated dependencies [1dd9384]
+  - @roadiehq/github-auth-utils-react@1.0.0
+
 ## 3.1.0
 
 ### Minor Changes

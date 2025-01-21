@@ -1,5 +1,11 @@
 # @roadiehq/github-auth-utils-react
 
+## 1.0.0
+
+### Major Changes
+
+- 1dd9384: Release GH auth utils first version.
+
 ## 0.2.0
 
 ### Minor Changes
