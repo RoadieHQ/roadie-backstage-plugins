@@ -18,7 +18,10 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import { AugmentationIndexer, RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { OpenAiConfig, RoadieOpenAiAugmenter } from './RoadieOpenAiAugmenter';
 import { CatalogApi } from '@backstage/catalog-client';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 
@@ -26,6 +29,7 @@ export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger | LoggerService;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
+  tokenManager: TokenManager;
   discovery: PluginEndpointDiscovery;
   config: Config;
 }
@@ -34,6 +38,7 @@ export async function initializeOpenAiEmbeddings({
   logger,
   vectorStore,
   catalogApi,
+  tokenManager,
   discovery,
   config,
 }: RoadieBedrockEmbeddingsConfig): Promise<AugmentationIndexer> {
@@ -57,5 +62,6 @@ export async function initializeOpenAiEmbeddings({
     augmentationOptions,
     logger: logger.child({ label: 'roadie-openai-embeddings' }),
     config: openAiConfig,
+    tokenManager,
   });
 }

@@ -20,7 +20,10 @@ import {
   EmbeddingsSource,
 } from '@roadiehq/rag-ai-node';
 import { SearchClient } from './SearchClient';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 
 export class SearchRetriever implements AugmentationRetriever {
@@ -32,11 +35,13 @@ export class SearchRetriever implements AugmentationRetriever {
     logger,
     searchClient,
     auth,
+    tokenManager,
   }: {
     discovery: PluginEndpointDiscovery;
     logger: LoggerService;
     searchClient?: SearchClient;
     auth?: AuthService;
+    tokenManager?: TokenManager;
   }) {
     this.searchClient =
       searchClient ??
@@ -44,6 +49,7 @@ export class SearchRetriever implements AugmentationRetriever {
         discoveryApi: discovery,
         logger: logger.child({ label: 'rag-ai-searchclient' }),
         auth,
+        tokenManager,
       });
     this.logger = logger;
   }

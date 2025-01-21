@@ -19,9 +19,11 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
 import { Config } from '@backstage/config';
+import { TokenManager } from '@backstage/backend-common';
 
 export interface RagAiConfig {
   logger: Logger | LoggerService;
+  tokenManager: TokenManager;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
   model: BaseLLM | BaseChatModel;

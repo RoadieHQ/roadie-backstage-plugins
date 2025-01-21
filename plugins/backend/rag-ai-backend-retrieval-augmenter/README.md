@@ -19,6 +19,7 @@ const retrievalPipeline = createDefaultRetrievalPipeline({
   discovery,
   logger,
   vectorStore: augmentationIndexer.vectorStore,
+  tokenManager,
 });
 ```
 

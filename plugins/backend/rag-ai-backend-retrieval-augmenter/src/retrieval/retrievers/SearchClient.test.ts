@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 import { SearchClient, SearchClientQuery } from './SearchClient';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import {
+  PluginEndpointDiscovery,
+  TokenManager,
+} from '@backstage/backend-common';
 import { EmbeddingsSource } from '@roadiehq/rag-ai-node';
 
 describe('SearchClient', () => {
   let mockDiscoveryApi: PluginEndpointDiscovery;
+  let mockTokenManager: TokenManager;
   let mockLogger: any;
   let searchClient: SearchClient;
 
@@ -26,6 +30,10 @@ describe('SearchClient', () => {
     mockDiscoveryApi = {
       getBaseUrl: jest.fn().mockResolvedValue('http://mock-search-url'),
       getExternalBaseUrl: jest.fn(),
+    };
+    mockTokenManager = {
+      getToken: jest.fn().mockResolvedValue({ token: 'mock-token' }),
+      authenticate: jest.fn(),
     };
     mockLogger = {
       warn: jest.fn(),
@@ -57,6 +65,7 @@ describe('SearchClient', () => {
     await searchClient.query(query);
 
     expect(mockDiscoveryApi.getBaseUrl).toHaveBeenCalled();
+    expect(mockTokenManager.getToken).toHaveBeenCalled();
     expect(mockFetch).toHaveBeenCalledWith(
       'http://mock-search-url/query?term=catalog&types[0]=software-catalog',
       {
