@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.1.3
+
+### Patch Changes
+
+- 0a4cf09: Update common auth lib
+
 ## 3.1.2
 
 ### Patch Changes
