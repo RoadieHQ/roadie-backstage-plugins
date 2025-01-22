@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.2.1
+
+### Patch Changes
+
+- 0a4cf09: Update common auth lib
+
 ## 3.2.0
 
 ### Minor Changes
