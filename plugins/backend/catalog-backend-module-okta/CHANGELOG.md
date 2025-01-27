@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.1.0
+
+### Minor Changes
+
+- 7d8ea53: export EntityTransformer types, including example factory usage
+
 ## 1.0.3
 
 ### Patch Changes
