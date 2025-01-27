@@ -243,8 +243,9 @@ by providing `userTransformer` and `groupTransformer`.
 import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
 import { GroupEntity } from '@backstage/catalog-model';
 import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroupEntityTransformer } from '@roadiehq/catalog-backend-module-okta';
 
-function myGroupTransformer(
+export const myGroupTransformer: OktaGroupEntityTransformer = function (
   group: Group,
   namingStrategy: GroupNamingStrategy,
   parentGroup: Group | undefined,
@@ -277,7 +278,7 @@ function myGroupTransformer(
     groupEntity.spec.parent = namingStrategy(parentGroup);
   }
   return groupEntity;
-}
+};
 ```
 
 2. Configure the provider with the transformer:
@@ -289,6 +290,57 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
     userNamingStrategy: 'strip-domain-email',
     groupNamingStrategy: 'kebab-case-name',
     groupTransformer: myGroupTransformer,
+  });
+```
+
+#### Stacked Custom Transformers
+
+Transformers may be stacked to isolate specific business logic.
+
+This example continues the above custom transformer case.
+
+```typescript
+import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { GroupEntity } from '@backstage/catalog-model';
+import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroupEntityTransformer } from '@roadiehq/catalog-backend-module-okta';
+import { LoggerService } from '@backstage/backend-plugin-api';
+
+export function myLoggingGroupTransformerFactory(
+  f: OktaGroupEntityTransformer,
+  logger: LoggerService,
+): OktaGroupEntityTransformer {
+  let f2: OktaGroupEntityTransformer = function (
+    group: Group,
+    namingStrategy: GroupNamingStrategy,
+    options: {
+      annotations: annotationRecord;
+      members: string[];
+    },
+    parentGroup: Group | undefined,
+  ): GroupEntity {
+    logger
+      .child({ id: group.id })
+      .debug('Okta group info=' + JSON.stringify(group));
+    // Modify the group here for an example
+    return f(group, namingStrategy, options, parentGroup);
+  };
+  return f2;
+}
+```
+
+2. Configure the provider with the transformer factory:
+
+```typescript
+const factory: EntityProviderFactory = (oktaConfig: Config) =>
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    groupTransformer: myLoggingGroupTransformerFactory(
+      myGroupTransformer,
+      logger,
+    ),
   });
 ```
 
@@ -383,8 +435,9 @@ In case you want to customize the emitted entities, the provider allows to pass 
 import { UserEntity } from '@backstage/catalog-model';
 import { User } from '@okta/okta-sdk-nodejs';
 import { UserNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
+import { OktaUserEntityTransformer } from '@roadiehq/catalog-backend-module-okta';
 
-function myUserTransformer(
+export const myUserTransformer: OktaUserEntityTransformer = function (
   user: User,
   namingStrategy: UserNamingStrategy,
   options: { annotations: Record<string, string> },
@@ -406,7 +459,7 @@ function myUserTransformer(
       memberOf: [],
     },
   };
-}
+};
 ```
 
 2. Configure the provider with the transformer:
@@ -496,8 +549,9 @@ In case you want to customize the emitted entities, the provider allows to pass 
 import { GroupNamingStrategy } from '@roadiehq/catalog-backend-module-okta';
 import { GroupEntity } from '@backstage/catalog-model';
 import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroupEntityTransformer } from '@roadiehq/catalog-backend-module-okta';
 
-function myGroupTransformer(
+export const myGroupTransformer: OktaGroupEntityTransformer = function (
   group: Group,
   namingStrategy: GroupNamingStrategy,
   parentGroup: Group | undefined,
@@ -530,7 +584,7 @@ function myGroupTransformer(
     groupEntity.spec.parent = namingStrategy(parentGroup);
   }
   return groupEntity;
-}
+};
 ```
 
 2. Configure the provider with the transformer:
