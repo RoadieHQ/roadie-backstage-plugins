@@ -73,18 +73,15 @@ export const oktaCatalogBackendModule = createBackendModule({
         const oktaConfigs =
           config.getOptionalConfigArray('catalog.providers.okta') ?? [];
         for (const oktaConfig of oktaConfigs) {
-          const provider = entityFactory(oktaConfig);
-          catalog.addEntityProvider(provider);
-          const schedule = readSchedulerServiceTaskScheduleDefinitionFromConfig(
-            oktaConfig.getConfig('schedule'),
+          const schedule = scheduler.createScheduledTaskRunner(
+            readSchedulerServiceTaskScheduleDefinitionFromConfig(
+              oktaConfig.getConfig('schedule'),
+            ),
           );
-          await scheduler.scheduleTask({
-            id: `okta-entity-provider-${provider.getProviderName()}`,
-            fn: async () => {
-              await provider.run();
-            },
-            ...schedule,
-          });
+
+          const provider = entityFactory(oktaConfig);
+          provider.schedule(schedule);
+          catalog.addEntityProvider(provider);
         }
       },
     });

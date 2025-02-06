@@ -34,7 +34,10 @@ import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { OktaGroupEntityTransformer } from './types';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import {
+  LoggerService,
+  SchedulerServiceTaskRunner,
+} from '@backstage/backend-plugin-api';
 
 /**
  * Provides entities from Okta Group service.
@@ -64,6 +67,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         parentKey: string;
         key?: string;
       };
+      schedule?: 'manual' | SchedulerServiceTaskRunner;
     },
   ) {
     const accountConfig = getAccountConfig(config);

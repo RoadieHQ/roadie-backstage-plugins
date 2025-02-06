@@ -27,7 +27,10 @@ import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userE
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { OktaUserEntityTransformer } from './types';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import {
+  LoggerService,
+  SchedulerServiceTaskRunner,
+} from '@backstage/backend-plugin-api';
 
 /**
  * Provides entities from Okta User service.
@@ -46,6 +49,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
+      schedule?: 'manual' | SchedulerServiceTaskRunner;
     },
   ) {
     const accountConfig = getAccountConfig(config);
