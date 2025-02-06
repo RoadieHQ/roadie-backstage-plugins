@@ -70,7 +70,8 @@ export const oktaCatalogBackendModule = createBackendModule({
         }
         userTransformer ??= userEntityFromOktaUser;
 
-        const oktaConfigs = config.getConfigArray('catalog.providers.okta');
+        const oktaConfigs =
+          config.getOptionalConfigArray('catalog.providers.okta') ?? [];
         for (const oktaConfig of oktaConfigs) {
           const provider = entityFactory(oktaConfig);
           catalog.addEntityProvider(provider);
