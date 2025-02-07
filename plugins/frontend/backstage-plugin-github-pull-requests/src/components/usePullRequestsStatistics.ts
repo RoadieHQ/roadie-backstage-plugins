@@ -60,9 +60,10 @@ function calculateStatistics(pullRequestsData: PullRequestStatsData[]) {
         ? new Date(curr.pullRequest.mergedAt).getTime() -
           new Date(curr.createdAt).getTime()
         : 0;
-      acc.avgCodingTime +=
-        new Date(curr.createdAt).getTime() -
-        new Date(curr.firstCommitAt).getTime();
+      const avgCodingTime =
+          new Date(curr.createdAt).getTime() -
+          new Date(curr.firstCommitAt).getTime();
+      acc.avgCodingTime += avgCodingTime > 0 ? avgCodingTime : 0;
       acc.mergedCount += curr.pullRequest.mergedAt ? 1 : 0;
       acc.closedCount += curr.closedAt ? 1 : 0;
       acc.additions += curr.pullRequest.additions;
