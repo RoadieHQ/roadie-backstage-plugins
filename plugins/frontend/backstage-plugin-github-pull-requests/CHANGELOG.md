@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.3.0
+
+### Minor Changes
+
+- 6d3a4d8: Fix negative Average Coding Time Of PR
+
 ## 3.2.1
 
 ### Patch Changes
