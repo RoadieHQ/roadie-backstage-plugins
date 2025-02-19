@@ -56,7 +56,7 @@ function modifyPlaceholders(obj) {
           obj[k] = 'DUMMY TEXT';
           return;
         }
-      } catch {
+      } catch (e) {
         throw new Error(
           `Placeholder with name '${k}' is empty. Please remove it or populate it.`,
         );
@@ -167,9 +167,5 @@ export const validateFromFile = async (
     console.log(`Validating Entity Schema policies for file ${filepath}`);
   }
 
-  return await validate(
-      fileContents,
-      verbose,
-      customAnnotationSchemaLocation,
-  );
+  return await validate(fileContents, verbose, customAnnotationSchemaLocation);
 };
