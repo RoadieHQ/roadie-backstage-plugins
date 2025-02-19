@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.4.0
+
+### Minor Changes
+
+- ba9c8ed: Revert back to using old backend until we migrate all plugins
+
 ## 3.3.0
 
 ### Minor Changes
