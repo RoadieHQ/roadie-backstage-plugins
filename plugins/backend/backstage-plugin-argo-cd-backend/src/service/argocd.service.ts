@@ -1,6 +1,5 @@
 import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
-import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { timer } from './timer.services';
 
@@ -46,7 +45,7 @@ export class ArgoService implements ArgoServiceApi {
     private readonly username: string,
     private readonly password: string,
     private readonly config: Config,
-    private readonly logger: Logger | LoggerService,
+    private readonly logger: LoggerService, // perhaps we pass the integration provider
   ) {
     this.instanceConfigs = this.config
       .getConfigArray('argocd.appLocatorMethods')
@@ -66,6 +65,7 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   getArgoInstanceArray(): InstanceConfig[] {
+    // consider each argo cd instance could have a different integration log by host
     return this.getAppArray().map(instance => ({
       name: instance.getString('name'),
       url: instance.getString('url'),
