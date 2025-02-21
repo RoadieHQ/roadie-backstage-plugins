@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -51,7 +51,7 @@
     "@roadiehq/rag-ai-backend-embeddings-aws": "^1.1.1",
     "@roadiehq/rag-ai-backend-embeddings-openai": "^0.4.1",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^1.1.2",
-    "@roadiehq/rag-ai-storage-pgvector": "^1.0.2",
+    "@roadiehq/rag-ai-storage-pgvector": "^2.0.0",
     "@roadiehq/catalog-backend-module-gravatar": "^1.0.5",
     "@roadiehq/scaffolder-backend-module-aws": "^2.6.0",
     "@roadiehq/scaffolder-backend-module-http-request": "^5.3.0",
