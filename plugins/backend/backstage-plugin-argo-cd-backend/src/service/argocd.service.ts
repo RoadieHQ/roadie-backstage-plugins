@@ -44,7 +44,7 @@ export class ArgoService implements ArgoServiceApi {
     private readonly username: string,
     private readonly password: string,
     private readonly config: Config,
-    private readonly logger: LoggerService, // perhaps we pass the integration provider
+    private readonly logger: LoggerService,
   ) {
     this.instanceConfigs = this.config
       .getConfigArray('argocd.appLocatorMethods')
@@ -64,7 +64,6 @@ export class ArgoService implements ArgoServiceApi {
   }
 
   getArgoInstanceArray(): InstanceConfig[] {
-    // consider each argo cd instance could have a different integration log by host
     return this.getAppArray().map(instance => ({
       name: instance.getString('name'),
       url: instance.getString('url'),
@@ -737,7 +736,8 @@ export class ArgoService implements ArgoServiceApi {
         argoToken: token,
       });
       if (
-        terminateOperationResp.statusCode !== (404 || 200) &&
+        terminateOperationResp.statusCode !== 404 &&
+        terminateOperationResp.statusCode !== 200 &&
         'message' in terminateOperationResp
       ) {
         terminateOperationDetails = {
@@ -767,7 +767,8 @@ export class ArgoService implements ArgoServiceApi {
     });
 
     if (
-      deleteAppResp.statusCode !== (404 || 200) &&
+      deleteAppResp.statusCode !== 404 &&
+      deleteAppResp.statusCode !== 200 &&
       'message' in deleteAppResp
     ) {
       deleteAppDetails = {
@@ -830,7 +831,8 @@ export class ArgoService implements ArgoServiceApi {
         argoToken: token,
       });
       if (
-        deleteProjectResponse.statusCode !== (404 || 200) &&
+        deleteProjectResponse.statusCode !== 404 &&
+        deleteProjectResponse.statusCode !== 200 &&
         'message' in deleteProjectResponse
       ) {
         deleteProjectDetails = {
