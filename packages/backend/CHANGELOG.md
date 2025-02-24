@@ -1,5 +1,12 @@
 # backend
 
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [43962bd]
+  - @roadiehq/rag-ai-storage-pgvector@2.0.0
+
 ## 2.4.0
 
 ### Minor Changes

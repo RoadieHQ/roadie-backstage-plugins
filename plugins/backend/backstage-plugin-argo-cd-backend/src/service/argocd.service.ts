@@ -2,7 +2,6 @@ import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { timer } from './timer.services';
-
 import {
   ArgoServiceApi,
   CreateArgoApplicationProps,
