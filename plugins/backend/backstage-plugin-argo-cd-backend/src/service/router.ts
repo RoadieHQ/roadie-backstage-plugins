@@ -28,7 +28,7 @@ export function createRouter({
       argoInstanceName,
       argoConfigs: argocdService.getArgoInstanceArray(),
     });
-    console.log('argoConfigs', argocdService.getArgoInstanceArray());
+
     if (matchedArgoInstance === undefined) {
       return response.status(500).send({
         status: 'failed',
