@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 3.3.2
+
+### Patch Changes
+
+- eb5a107: removing old way of starting app locally, to new way of starting app locally.
+
 ## 3.3.1
 
 ### Patch Changes
