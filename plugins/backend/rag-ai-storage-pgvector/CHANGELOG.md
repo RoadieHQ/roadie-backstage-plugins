@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 2.0.0
+
+### Major Changes
+
+- 43962bd: Remove `@roadiehq/backend-common`. The interface of `createRoadiePgVectorStore` now expects `DatabaseService` in place of `PluginDatabaseManager`.
+
 ## 1.0.2
 
 ### Patch Changes
