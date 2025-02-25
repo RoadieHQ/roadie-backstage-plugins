@@ -6,7 +6,7 @@ Fix: No longer expecting winston logger types for router. This may cause type er
 
 BREAKING CHANGE:
 
-We have extracted the argo cd service into its own service factory/reference. The change was made to enable dependency injection of the argocd service into the router. Dependency injection helps with testing the functionality of the code more easily. Service factories also have several checks that backstage validates at startup - like those that prevent circular depdnencies, and validation on dependencies missing.
+We have extracted the argo cd service into its own service factory/reference. The change was made to enable dependency injection of the argocd service into the router. Dependency injection helps with testing the functionality of the code more easily. Service factories also have several checks that backstage validates at startup - like those that prevent circular depednencies, and validation on dependencies missing.
 
 This is a breaking change because if you are using the new backend system, you will need to now import the argocd service in your `backend/index.ts` file like this:
 
