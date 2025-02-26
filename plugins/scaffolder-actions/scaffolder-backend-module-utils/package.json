@@ -62,8 +62,9 @@
     "yawn-yaml": "^2.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
+    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-test-utils": "^1.1.0",
+    "@backstage/cli": "^0.29.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
