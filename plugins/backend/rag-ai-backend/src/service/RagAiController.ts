@@ -129,56 +129,64 @@ export class RagAiController {
       'Cache-Control': 'no-cache',
     });
 
-    const embeddingDocs = this.retrievalPipeline
-      ? await this.retrievalPipeline.retrieveAugmentationContext(
-          query,
-          source,
-          entityFilter,
-        )
-      : [];
+    try {
+      const embeddingDocs = this.retrievalPipeline
+        ? await this.retrievalPipeline.retrieveAugmentationContext(
+            query,
+            source,
+            entityFilter,
+          )
+        : [];
 
-    const embeddingsEvent = `event: embeddings\n`;
-    const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
-    res.write(embeddingsEvent + embeddingsData);
+      const embeddingsEvent = `event: embeddings\n`;
+      const embeddingsData = `data: ${JSON.stringify(embeddingDocs)}\n\n`;
+      res.write(embeddingsEvent + embeddingsData);
 
-    const stream = await this.llmService.query(embeddingDocs, query);
-    const usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
+      const stream = await this.llmService.query(embeddingDocs, query);
+      const usage = { input_tokens: 0, output_tokens: 0, total_tokens: 0 };
 
-    for await (const chunk of stream) {
-      if (typeof chunk !== 'string' && 'usage_metadata' in chunk) {
-        usage.input_tokens +=
-          (chunk.usage_metadata as UsageMetadata)?.input_tokens ?? 0;
-        usage.output_tokens +=
-          (chunk.usage_metadata as UsageMetadata)?.output_tokens ?? 0;
-        usage.total_tokens +=
-          (chunk.usage_metadata as UsageMetadata)?.total_tokens ?? 0;
+      for await (const chunk of stream) {
+        if (typeof chunk !== 'string' && 'usage_metadata' in chunk) {
+          usage.input_tokens +=
+            (chunk.usage_metadata as UsageMetadata)?.input_tokens ?? 0;
+          usage.output_tokens +=
+            (chunk.usage_metadata as UsageMetadata)?.output_tokens ?? 0;
+          usage.total_tokens +=
+            (chunk.usage_metadata as UsageMetadata)?.total_tokens ?? 0;
+        }
+
+        const text =
+          typeof chunk === 'string' ? chunk : (chunk.content as string);
+        const event = `event: response\n`;
+        const data = this.parseSseText(text);
+        res.write(event + data);
+        res.flush?.();
       }
 
-      const text =
-        typeof chunk === 'string' ? chunk : (chunk.content as string);
-      const event = `event: response\n`;
-      const data = this.parseSseText(text);
-      res.write(event + data);
-      res.flush?.();
-    }
-
-    if (Object.values(usage).some(it => it !== 0)) {
-      this.logger.info(
-        `Produced response with token usage: ${JSON.stringify(usage)}`,
+      if (Object.values(usage).some(it => it !== 0)) {
+        this.logger.info(
+          `Produced response with token usage: ${JSON.stringify(usage)}`,
+        );
+        res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
+      } else {
+        this.logger.info(
+          `Unable to retrieve token usage information from this model invocation.`,
+        );
+        res.write(
+          `event: usage\n` +
+            `data: ${JSON.stringify({
+              input_tokens: -1,
+              output_tokens: -1,
+              total_tokens: -1,
+            })}\n\n`,
+        );
+      }
+    } catch (e: any) {
+      this.logger.error(
+        `There was an error executing query ${query} for source ${source} on entity ${entityFilter}: ${e.message}`,
+        e,
       );
-      res.write(`event: usage\n` + `data: ${JSON.stringify(usage)}\n\n`);
-    } else {
-      this.logger.info(
-        `Unable to retrieve token usage information from this model invocation.`,
-      );
-      res.write(
-        `event: usage\n` +
-          `data: ${JSON.stringify({
-            input_tokens: -1,
-            output_tokens: -1,
-            total_tokens: -1,
-          })}\n\n`,
-      );
+      throw e;
     }
 
     res.end();
