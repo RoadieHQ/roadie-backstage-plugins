@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 1.3.2
+
+### Patch Changes
+
+- dffd381: Add error logging to query endpoint
+
 ## 1.3.1
 
 ### Patch Changes
