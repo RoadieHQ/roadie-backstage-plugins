@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.4.0
+
+### Minor Changes
+
+- 5463d71: Add support for wildcards in roadiehq:utils:fs:replace
+
 ## 3.3.0
 
 ### Minor Changes
