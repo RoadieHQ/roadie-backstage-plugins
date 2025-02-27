@@ -1,11 +1,23 @@
 # Argo CD Plugin Backend for Backstage
 
+## New Backend System
+
+```typescript
+import { argocdServiceFactory } from '@roadiehq/backstage-plugin-argo-cd-backend';
+
+backend.add(argocdServiceFactory); // Import Service Factory
+backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend/alpha')); // Import Plugin
+```
+
+If you have middleware you'd like to add, consider creating a module on top of this plugin.
+
 ## Support for multiple ArgoCD instances - Option 2 - Argo CD backend plugin
 
 If you want to create multiple components that fetch data from different argoCD instances, you can dynamically set the ArgoCD instance url by adding the following to your app-config.yaml files.
 
 The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
 
+<!-- we will first use the instance token, then instance user name and password, then, if no instance, then we'll use username and password on upper argocd level configuration, and if not, then azure login information (if available) -->
 ```yml
 argocd:
   username: ${ARGOCD_USERNAME}

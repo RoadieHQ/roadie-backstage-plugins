@@ -2115,23 +2115,6 @@ describe('ArgoCD service', () => {
         }),
       ).rejects.toThrow(/does not have argo information/i);
     });
-  });
-
-  describe('getArgoToken', () => {
-    it('fails because credentials are incorrect', async () => {
-      const mockGetArgoToken = jest
-        .spyOn(ArgoService.prototype, 'getArgoToken')
-        .mockRejectedValueOnce('Unauthorized');
-
-      await expect(
-        argoServiceForNoToken.terminateArgoAppOperation({
-          argoAppName: 'application',
-          argoInstanceName: 'argoInstance1',
-        }),
-      ).rejects.toEqual('Unauthorized');
-
-      expect(mockGetArgoToken).toHaveBeenCalledTimes(1);
-    });
 
     it('raises error if argo instance not included and either base url or token not included', async () => {
       await expect(
@@ -2152,6 +2135,25 @@ describe('ArgoCD service', () => {
           argoInstanceName: 'argoInstance1',
         }),
       ).rejects.toThrow(/invalid json/i);
+    });
+  });
+
+  describe('getArgoToken', () => {
+    it('returns token from argo instance when provided', async () => {
+      const argoConfig = getConfig({ token: 'token' });
+      const argoServiceWithToken = new ArgoService(
+        'testusername',
+        'testpassword',
+        argoConfig,
+        loggerMock,
+      );
+
+      const token = await argoServiceWithToken.getArgoToken(
+        argoServiceWithToken.instanceConfigs[0],
+      );
+
+      expect(token).toEqual('token');
+      expect(fetchMock).not.toHaveBeenCalled();
     });
   });
 });
