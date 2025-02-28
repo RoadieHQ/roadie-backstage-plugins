@@ -16,10 +16,12 @@
 import { scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { createScaffolderFieldExtension } from '@backstage/plugin-scaffolder-react';
 import { SelectFieldFromApi } from './components/SelectFieldFromApi';
+import { SelectFieldFromApiSchema } from './components/SelectFieldFromApi/schema';
 
 export const SelectFieldFromApiExtension = scaffolderPlugin.provide(
   createScaffolderFieldExtension({
     name: 'SelectFieldFromApi',
     component: SelectFieldFromApi,
+    schema: SelectFieldFromApiSchema,
   }),
 );
