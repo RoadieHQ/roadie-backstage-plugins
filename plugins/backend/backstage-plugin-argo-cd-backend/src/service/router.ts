@@ -119,6 +119,7 @@ export function createRouter({
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoAppName = request.params.argoAppName;
       const argoAppNamespace = request.query?.appNamespace;
+      const sourceIndex = request.query?.sourceIndex;
       logger.info(`Getting info on ${argoAppName}`);
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = getArgoConfigByInstanceName({
@@ -140,6 +141,7 @@ export function createRouter({
         {
           name: argoAppName,
           namespace: argoAppNamespace as string,
+          sourceIndex: sourceIndex as string,
         },
         token,
         revisionID,

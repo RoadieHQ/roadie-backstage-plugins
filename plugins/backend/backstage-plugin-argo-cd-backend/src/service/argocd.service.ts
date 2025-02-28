@@ -91,6 +91,7 @@ export class ArgoService implements ArgoServiceApi {
     options: {
       name: string;
       namespace?: string;
+      sourceIndex?: string;
     },
     argoToken: string,
     revisionID: string,
@@ -103,10 +104,17 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    let url = `${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`;
+    const urlBuilder = new URL(`${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`);
+
     if (options.namespace) {
-      url = `${url}?${APP_NAMESPACE_QUERY_PARAM}=${options.namespace}`;
+      urlBuilder.searchParams.set(APP_NAMESPACE_QUERY_PARAM, options.namespace);
     }
+
+    if (options.sourceIndex) {
+      urlBuilder.searchParams.set('sourceIndex', options.sourceIndex);
+    }
+
+    const url = urlBuilder.toString();
 
     const resp = await fetch(url, requestOptions);
 
