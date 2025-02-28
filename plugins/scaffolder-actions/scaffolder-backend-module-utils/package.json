@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/scaffolder-backend-module-utils",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -53,6 +53,7 @@
     "adm-zip": "^0.5.9",
     "cross-fetch": "^3.1.4",
     "detect-indent": "^6.1.0",
+    "fast-glob": "^3.3.3",
     "fs-extra": "^10.0.0",
     "jsonata": "^2.0.4",
     "lodash": "^4.17.21",
@@ -61,10 +62,10 @@
     "yawn-yaml": "^2.3.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
-    "@backstage/backend-test-utils": "^1.1.0",
-    "@testing-library/jest-dom": "^6.4.2",
     "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-test-utils": "^1.1.0",
+    "@backstage/cli": "^0.29.2",
+    "@testing-library/jest-dom": "^6.4.2",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/js-yaml": "^4.0.0",
