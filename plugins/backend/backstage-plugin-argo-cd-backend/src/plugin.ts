@@ -3,7 +3,7 @@ import {
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './service/router';
-import { loggerToWinstonLogger } from '@backstage/backend-common';
+import { argocdServiceRef } from './refs/argocdService.ref';
 
 export const ArgoCDPlugin = createBackendPlugin({
   pluginId: 'argocd',
@@ -13,13 +13,15 @@ export const ArgoCDPlugin = createBackendPlugin({
         http: coreServices.httpRouter,
         logger: coreServices.logger,
         config: coreServices.rootConfig,
+        argocdService: argocdServiceRef,
       },
-      async init({ http, logger, config }) {
+      async init({ http, logger, config, argocdService }) {
         logger.info('ArgoCD plugin is initializing');
         http.use(
           await createRouter({
-            logger: loggerToWinstonLogger(logger),
+            logger,
             config,
+            argocdService,
           }),
         );
       },
