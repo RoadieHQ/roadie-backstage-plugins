@@ -25,7 +25,10 @@ import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import {
+  LoggerService,
+  SchedulerServiceTaskRunner,
+} from '@backstage/backend-plugin-api';
 
 export type OktaScope = 'okta.groups.read' | 'okta.users.read';
 
@@ -33,6 +36,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
   protected readonly account: AccountConfig;
   protected readonly logger: LoggerService;
   protected connection?: EntityProviderConnection;
+  private scheduleFn?: () => Promise<void>;
 
   public abstract getProviderName(): string;
 
@@ -75,6 +79,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
 
   public async connect(connection: EntityProviderConnection): Promise<void> {
     this.connection = connection;
+    await this.scheduleFn?.();
   }
 
   protected async buildDefaultAnnotations() {
@@ -94,6 +99,29 @@ export abstract class OktaEntityProvider implements EntityProvider {
       }
     }
     return profileAnnotations;
+  }
+
+  public schedule(schedule?: 'manual' | SchedulerServiceTaskRunner) {
+    if (!schedule || schedule === 'manual') {
+      return;
+    }
+
+    this.scheduleFn = async () => {
+      const id = `${this.getProviderName()}:run`;
+      await schedule.run({
+        id,
+        fn: async () => {
+          try {
+            await this.run();
+          } catch (error) {
+            this.logger.error(
+              `${this.getProviderName()} run failed, ${error}`,
+              error as Error,
+            );
+          }
+        },
+      });
+    };
   }
 
   abstract run(): Promise<void>;

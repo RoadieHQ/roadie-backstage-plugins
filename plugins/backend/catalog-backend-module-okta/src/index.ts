@@ -15,3 +15,4 @@
  */
 
 export * from './providers';
+export { oktaCatalogBackendModule as default } from './module';
