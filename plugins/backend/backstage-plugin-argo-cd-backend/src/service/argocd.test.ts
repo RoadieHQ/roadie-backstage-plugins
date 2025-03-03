@@ -2155,5 +2155,13 @@ describe('ArgoCD service', () => {
       expect(token).toEqual('token');
       expect(fetchMock).not.toHaveBeenCalled();
     });
+
+    it('successfully returns token from argoService when only username and password is provided', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
+
+      const token = await argoServiceForNoToken.getArgoToken(argoServiceForNoToken.instanceConfigs[0]);
+
+      expect(token).toEqual('token');
+    });
   });
 });
