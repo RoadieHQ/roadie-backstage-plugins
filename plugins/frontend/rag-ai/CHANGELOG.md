@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.7
+
+### Patch Changes
+
+- cdd962d: Improve error messaging for frontend by exposing backend api error when query fails
+
 ## 1.1.6
 
 ### Patch Changes
