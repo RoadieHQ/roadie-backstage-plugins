@@ -2,14 +2,14 @@ import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express from 'express';
 import Router from 'express-promise-router';
-import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { ArgoService } from './argocd.service';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
+import { ArgoServiceApi } from './types';
 
 export interface RouterOptions {
-  logger: Logger | LoggerService;
+  logger: LoggerService;
   config: Config;
+  argocdService: ArgoServiceApi;
 }
 export type Response = {
   status: string;
@@ -17,22 +17,16 @@ export type Response = {
 };
 export function createRouter({
   logger,
-  config,
+  argocdService,
 }: RouterOptions): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
-
-  const argoUserName =
-    config.getOptionalString('argocd.username') ?? 'argocdUsername';
-  const argoPassword =
-    config.getOptionalString('argocd.password') ?? 'argocdPassword';
-  const argoSvc = new ArgoService(argoUserName, argoPassword, config, logger);
 
   router.get('/allArgoApps/:argoInstanceName', async (request, response) => {
     const argoInstanceName = request.params.argoInstanceName;
     const matchedArgoInstance = getArgoConfigByInstanceName({
       argoInstanceName,
-      argoConfigs: argoSvc.getArgoInstanceArray(),
+      argoConfigs: argocdService.getArgoInstanceArray(),
     });
 
     if (matchedArgoInstance === undefined) {
@@ -43,7 +37,7 @@ export function createRouter({
     }
     const token: string =
       matchedArgoInstance.token ??
-      (await argoSvc.getArgoToken(matchedArgoInstance));
+      (await argocdService.getArgoToken(matchedArgoInstance));
 
     if (!token) {
       return response.status(500).send({
@@ -52,7 +46,7 @@ export function createRouter({
       });
     }
     return response.send(
-      await argoSvc.getArgoAppData(
+      await argocdService.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
@@ -66,7 +60,7 @@ export function createRouter({
       const argoInstanceName = request.params.argoInstance;
       const matchedArgoInstance = getArgoConfigByInstanceName({
         argoInstanceName,
-        argoConfigs: argoSvc.getArgoInstanceArray(),
+        argoConfigs: argocdService.getArgoInstanceArray(),
       });
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
@@ -76,7 +70,7 @@ export function createRouter({
       }
       const token: string =
         matchedArgoInstance.token ??
-        (await argoSvc.getArgoToken(matchedArgoInstance));
+        (await argocdService.getArgoToken(matchedArgoInstance));
 
       if (!token) {
         return response.status(500).send({
@@ -84,7 +78,7 @@ export function createRouter({
           message: 'could not generate token',
         });
       }
-      const argoData = await argoSvc.getArgoAppData(
+      const argoData = await argocdService.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
@@ -105,7 +99,7 @@ export function createRouter({
     const argoAppName = request.params.argoAppName;
     const argoAppNamespace = request.query?.appNamespace;
     response.send(
-      await argoSvc.findArgoApp({
+      await argocdService.findArgoApp({
         name: argoAppName as string,
         namespace: argoAppNamespace as string,
       }),
@@ -124,7 +118,7 @@ export function createRouter({
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = getArgoConfigByInstanceName({
         argoInstanceName,
-        argoConfigs: argoSvc.getArgoInstanceArray(),
+        argoConfigs: argocdService.getArgoInstanceArray(),
       });
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
@@ -134,9 +128,9 @@ export function createRouter({
       }
       const token: string =
         matchedArgoInstance.token ??
-        (await argoSvc.getArgoToken(matchedArgoInstance));
+        (await argocdService.getArgoToken(matchedArgoInstance));
 
-      const resp = await argoSvc.getRevisionData(
+      const resp = await argocdService.getRevisionData(
         matchedArgoInstance.url,
         {
           name: argoAppName,
@@ -160,7 +154,7 @@ export function createRouter({
       logger.info(`Getting app ${argoAppName} on ${argoInstanceName}`);
       const matchedArgoInstance = getArgoConfigByInstanceName({
         argoInstanceName,
-        argoConfigs: argoSvc.getArgoInstanceArray(),
+        argoConfigs: argocdService.getArgoInstanceArray(),
       });
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
@@ -170,9 +164,9 @@ export function createRouter({
       }
       const token: string =
         matchedArgoInstance.token ??
-        (await argoSvc.getArgoToken(matchedArgoInstance));
+        (await argocdService.getArgoToken(matchedArgoInstance));
 
-      const resp = await argoSvc.getArgoAppData(
+      const resp = await argocdService.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
@@ -186,7 +180,7 @@ export function createRouter({
     const argoAppNamespace = request.query?.appNamespace;
     logger.info(`Getting apps for selector ${argoAppSelector}`);
     response.send(
-      await argoSvc.findArgoApp({
+      await argocdService.findArgoApp({
         selector: argoAppSelector,
         namespace: argoAppNamespace as string,
       }),
@@ -203,7 +197,7 @@ export function createRouter({
       );
       const matchedArgoInstance = getArgoConfigByInstanceName({
         argoInstanceName,
-        argoConfigs: argoSvc.getArgoInstanceArray(),
+        argoConfigs: argocdService.getArgoInstanceArray(),
       });
       if (matchedArgoInstance === undefined) {
         return response.status(500).send({
@@ -213,9 +207,9 @@ export function createRouter({
       }
       const token: string =
         matchedArgoInstance.token ??
-        (await argoSvc.getArgoToken(matchedArgoInstance));
+        (await argocdService.getArgoToken(matchedArgoInstance));
 
-      const resp = await argoSvc.getArgoAppData(
+      const resp = await argocdService.getArgoAppData(
         matchedArgoInstance.url,
         matchedArgoInstance.name,
         token,
@@ -237,7 +231,7 @@ export function createRouter({
     const sourcePath = request.body.sourcePath;
     const matchedArgoInstance = getArgoConfigByInstanceName({
       argoInstanceName,
-      argoConfigs: argoSvc.getArgoInstanceArray(),
+      argoConfigs: argocdService.getArgoInstanceArray(),
     });
     if (matchedArgoInstance === undefined) {
       return response.status(500).send({
@@ -248,7 +242,7 @@ export function createRouter({
     let token: string;
     if (!matchedArgoInstance.token) {
       try {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
+        token = await argocdService.getArgoToken(matchedArgoInstance);
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
@@ -259,7 +253,7 @@ export function createRouter({
       token = matchedArgoInstance.token;
     }
     try {
-      await argoSvc.createArgoProject({
+      await argocdService.createArgoProject({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -275,7 +269,7 @@ export function createRouter({
     }
 
     try {
-      await argoSvc.createArgoApplication({
+      await argocdService.createArgoApplication({
         baseUrl: matchedArgoInstance.url,
         argoToken: token,
         projectName,
@@ -307,7 +301,7 @@ export function createRouter({
     const sourcePath = request.body.sourcePath;
     const matchedArgoInstance = getArgoConfigByInstanceName({
       argoInstanceName,
-      argoConfigs: argoSvc.getArgoInstanceArray(),
+      argoConfigs: argocdService.getArgoInstanceArray(),
     });
 
     if (matchedArgoInstance === undefined) {
@@ -319,7 +313,7 @@ export function createRouter({
     let token: string;
     if (!matchedArgoInstance.token) {
       try {
-        token = await argoSvc.getArgoToken(matchedArgoInstance);
+        token = await argocdService.getArgoToken(matchedArgoInstance);
       } catch (e: any) {
         return response.status(e.status || 500).send({
           status: e.status,
@@ -331,7 +325,7 @@ export function createRouter({
     }
 
     try {
-      await argoSvc.updateArgoProjectAndApp({
+      await argocdService.updateArgoProjectAndApp({
         instanceConfig: matchedArgoInstance,
         argoToken: token,
         projectName,
@@ -359,7 +353,7 @@ export function createRouter({
     const terminateOperation: boolean =
       Boolean(request.body.terminateOperation) ?? false;
     try {
-      const argoSyncResp = await argoSvc.resyncAppOnAllArgos({
+      const argoSyncResp = await argocdService.resyncAppOnAllArgos({
         appSelector,
         terminateOperation,
       });
@@ -380,11 +374,12 @@ export function createRouter({
         Boolean(request.query.terminateOperation) ?? false;
       logger.info(`Getting info on ${argoInstanceName} and ${argoAppName}`);
 
-      const argoDeleteAppandProjectResp = await argoSvc.deleteAppandProject({
-        argoAppName,
-        argoInstanceName,
-        terminateOperation,
-      });
+      const argoDeleteAppandProjectResp =
+        await argocdService.deleteAppandProject({
+          argoAppName,
+          argoInstanceName,
+          terminateOperation,
+        });
       return response.send(argoDeleteAppandProjectResp);
     },
   );
@@ -395,10 +390,12 @@ export function createRouter({
       const argoInstanceName: string = request.params.argoInstanceName;
       const argoApplicationName: string = request.params.argoAppName;
 
-      const applicationInformation = await argoSvc.getArgoApplicationInfo({
-        argoApplicationName,
-        argoInstanceName,
-      });
+      const applicationInformation = await argocdService.getArgoApplicationInfo(
+        {
+          argoApplicationName,
+          argoInstanceName,
+        },
+      );
 
       return response
         .status(applicationInformation.statusCode)
@@ -413,7 +410,7 @@ export function createRouter({
       const argoAppName: string = request.params.argoAppName;
 
       const terminateArgoAppOperationResp =
-        await argoSvc.terminateArgoAppOperation({
+        await argocdService.terminateArgoAppOperation({
           argoAppName,
           argoInstanceName,
         });
