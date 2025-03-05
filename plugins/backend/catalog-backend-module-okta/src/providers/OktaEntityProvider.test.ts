@@ -18,17 +18,18 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { OktaEntityProvider, OktaScope } from './OktaEntityProvider';
 import { AccountConfig } from '../types';
 import { Client } from '@okta/okta-sdk-nodejs';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 class ConcreteEntityProvider extends OktaEntityProvider {
-  public getProviderName(): string {
-    throw new Error('Method not implemented.');
-  }
   constructor(accountConfig: AccountConfig) {
     super(accountConfig, {
       logger: getVoidLogger(),
     });
   }
-
+  getProviderName(): string {
+    return 'ConcreteEntityProvider';
+  }
   getClient(
     orgUrl: string,
     oauthScopes: OktaScope[] | undefined = undefined,
@@ -86,6 +87,33 @@ describe('OktaEntityProvider', () => {
         orgUrl: 'http://someorg',
         privateKey: 'some string encoded PEM or JWK',
         scopes: ['okta.users.read'],
+      });
+    });
+  });
+
+  describe('connect', () => {
+    it('schedules a run after the connection is established', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      const provider = new ConcreteEntityProvider({
+        orgUrl: 'http://someorg',
+        token: 'secret',
+      });
+
+      const mockSchedule: SchedulerServiceTaskRunner = {
+        run: jest.fn(),
+      };
+
+      provider.schedule(mockSchedule);
+      expect(mockSchedule.run).not.toHaveBeenCalled();
+
+      await provider.connect(entityProviderConnection);
+      expect(mockSchedule.run).toHaveBeenCalledWith({
+        id: 'ConcreteEntityProvider:run',
+        fn: expect.any(Function),
       });
     });
   });
