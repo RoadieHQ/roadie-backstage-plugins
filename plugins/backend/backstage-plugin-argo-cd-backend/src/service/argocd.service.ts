@@ -1,6 +1,5 @@
 import { Config } from '@backstage/config';
 import fetch from 'cross-fetch';
-import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { timer } from './timer.services';
 import {
@@ -45,7 +44,7 @@ export class ArgoService implements ArgoServiceApi {
     private readonly username: string,
     private readonly password: string,
     private readonly config: Config,
-    private readonly logger: Logger | LoggerService,
+    private readonly logger: LoggerService,
   ) {
     this.instanceConfigs = this.config
       .getConfigArray('argocd.appLocatorMethods')
@@ -737,7 +736,8 @@ export class ArgoService implements ArgoServiceApi {
         argoToken: token,
       });
       if (
-        terminateOperationResp.statusCode !== (404 || 200) &&
+        terminateOperationResp.statusCode !== 404 &&
+        terminateOperationResp.statusCode !== 200 &&
         'message' in terminateOperationResp
       ) {
         terminateOperationDetails = {
@@ -767,7 +767,8 @@ export class ArgoService implements ArgoServiceApi {
     });
 
     if (
-      deleteAppResp.statusCode !== (404 || 200) &&
+      deleteAppResp.statusCode !== 404 &&
+      deleteAppResp.statusCode !== 200 &&
       'message' in deleteAppResp
     ) {
       deleteAppDetails = {
@@ -830,7 +831,8 @@ export class ArgoService implements ArgoServiceApi {
         argoToken: token,
       });
       if (
-        deleteProjectResponse.statusCode !== (404 || 200) &&
+        deleteProjectResponse.statusCode !== 404 &&
+        deleteProjectResponse.statusCode !== 200 &&
         'message' in deleteProjectResponse
       ) {
         deleteProjectDetails = {
