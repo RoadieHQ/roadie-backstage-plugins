@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.5.29
+
+### Patch Changes
+
+- bd84b36: Remove unused dependencies.
+
 ## 2.5.28
 
 ### Patch Changes
