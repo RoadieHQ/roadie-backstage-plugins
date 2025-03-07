@@ -49,8 +49,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
-    "@backstage/dev-utils": "^1.1.4"
+    "@backstage/cli": "^0.29.2"
   },
   "files": [
     "dist"
