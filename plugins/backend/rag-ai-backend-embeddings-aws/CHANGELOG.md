@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.1.2
+
+### Patch Changes
+
+- c551190: Update dependency on rag backend.
+
 ## 1.1.1
 
 ### Patch Changes
