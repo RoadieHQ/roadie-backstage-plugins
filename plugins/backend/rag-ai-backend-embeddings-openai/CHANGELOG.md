@@ -1,5 +1,14 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.4.2
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.3
+  - @roadiehq/rag-ai-node@0.1.10
+
 ## 0.4.1
 
 ### Patch Changes

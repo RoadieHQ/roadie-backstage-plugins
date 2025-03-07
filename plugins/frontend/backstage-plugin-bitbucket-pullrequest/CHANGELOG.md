@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.0.7
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 2.0.6
 
 ### Patch Changes

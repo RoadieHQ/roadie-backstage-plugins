@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.1.1
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.1.0
 
 ### Minor Changes
