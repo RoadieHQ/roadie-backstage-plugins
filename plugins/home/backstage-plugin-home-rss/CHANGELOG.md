@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.3.15
+
+### Patch Changes
+
+- bd84b36: Remove unused dependencies.
+
 ## 1.3.14
 
 ### Patch Changes
