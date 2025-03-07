@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 1.0.8
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.0.7
 
 ### Patch Changes

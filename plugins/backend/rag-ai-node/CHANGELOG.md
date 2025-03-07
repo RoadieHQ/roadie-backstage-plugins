@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.1.10
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 0.1.9
 
 ### Patch Changes
