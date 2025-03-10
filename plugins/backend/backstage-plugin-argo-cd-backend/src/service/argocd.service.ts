@@ -103,7 +103,9 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    const urlBuilder = new URL(`${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`);
+    const urlBuilder = new URL(
+      `${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`,
+    );
 
     if (options.namespace) {
       urlBuilder.searchParams.set(APP_NAMESPACE_QUERY_PARAM, options.namespace);
