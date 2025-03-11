@@ -60,7 +60,8 @@
     "cross-fetch": "^3.1.4",
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "qs": "^6.10.3"
   },
   "devDependencies": {
     "@backstage/backend-defaults": "^0.5.3",

@@ -10,6 +10,7 @@ import { timer } from './timer.services';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { ResourceItem, UpdateArgoProjectAndAppProps } from './types';
 import { mocked } from 'jest-mock';
+import qs from 'qs';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services', () => ({
@@ -31,7 +32,7 @@ const getConfig = (options: {
     token?: string;
     username?: string;
     password?: string;
-  }
+  };
 }): Config => {
   const {
     clusterResourceBlacklist,
@@ -40,7 +41,7 @@ const getConfig = (options: {
     namespaceResourceWhitelist,
     waitCycles,
     waitInterval,
-    instanceCredentials
+    instanceCredentials,
   } = options;
   const configObject = {
     context: '',
@@ -59,7 +60,7 @@ const getConfig = (options: {
               {
                 name: 'argoInstance1',
                 url: 'https://argoInstance1.com',
-                ...instanceCredentials
+                ...instanceCredentials,
               },
             ],
           },
@@ -83,7 +84,7 @@ describe('ArgoCD service', () => {
   const argoServiceForNoToken = new ArgoService(
     'testusername',
     'testpassword',
-    getConfig({ instanceCredentials: { username: 'user', password: "pass" } }),
+    getConfig({ instanceCredentials: { username: 'user', password: 'pass' } }),
     loggerMock,
   );
 
@@ -1469,7 +1470,11 @@ describe('ArgoCD service', () => {
       const argoServiceWaitInterval = new ArgoService(
         'testusername',
         'testpassword',
-        getConfig({ instanceCredentials: { token: 'token' }, waitCycles: 2, waitInterval: 2000 }),
+        getConfig({
+          instanceCredentials: { token: 'token' },
+          waitCycles: 2,
+          waitInterval: 2000,
+        }),
         loggerMock,
       );
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
@@ -2143,12 +2148,7 @@ describe('ArgoCD service', () => {
   describe('getArgoToken', () => {
     it('uses token from argo instance when only token provided', async () => {
       const argoConfig = getConfig({ instanceCredentials: { token: 'token' } });
-      const argoCdService= new ArgoService(
-        '',
-        '',
-        argoConfig,
-        loggerMock,
-      );
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
 
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2159,13 +2159,14 @@ describe('ArgoCD service', () => {
     });
 
     it('prioritizes token from argo instance when token, username, and password provided', async () => {
-      const argoConfig = getConfig({ instanceCredentials: { token: 'token', username: "username", password: "password" } });
-      const argoCdService= new ArgoService(
-        '',
-        '',
-        argoConfig,
-        loggerMock,
-      );
+      const argoConfig = getConfig({
+        instanceCredentials: {
+          token: 'token',
+          username: 'username',
+          password: 'password',
+        },
+      });
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
 
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2176,19 +2177,23 @@ describe('ArgoCD service', () => {
     });
 
     it('retrieves argo token using instance level username and password when upper level username and password is not provided', async () => {
-      const argoConfig = getConfig({ instanceCredentials: { username: "username", password: "password" } });
-      const argoCdService= new ArgoService(
-        '',
-        '',
-        argoConfig,
-        loggerMock,
-      );
+      const argoConfig = getConfig({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
 
-      const token = await argoCdService.getArgoToken(argoServiceForNoToken.instanceConfigs[0]);
+      const token = await argoCdService.getArgoToken(
+        argoServiceForNoToken.instanceConfigs[0],
+      );
 
-      expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect(fetchMock).toHaveBeenCalledWith(`${argoCdService.instanceConfigs[0].url}/api/v1/session`, expect.objectContaining({ body: JSON.stringify({ username: "user", password: "pass"})}));
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
+        expect.objectContaining({
+          body: JSON.stringify({ username: 'user', password: 'pass' }),
+        }),
+      );
       expect(token).toEqual('token');
     });
 
@@ -2210,7 +2215,9 @@ describe('ArgoCD service', () => {
     });
 
     it('retrieves argo token using instance level username and password when upper level username and password provided', async () => {
-      const argoConfig = getConfig({ instanceCredentials: { username: "username", password: "password" } });
+      const argoConfig = getConfig({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
       const argoCdService = new ArgoService(
         'upper-level-username',
         'upper-level-password',
@@ -2224,8 +2231,13 @@ describe('ArgoCD service', () => {
         argoCdService.instanceConfigs[0],
       );
 
-      expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect(fetchMock).toHaveBeenCalledWith(`${argoCdService.instanceConfigs[0].url}/api/v1/session`, expect.objectContaining({ body: JSON.stringify({ username: "username", password: "password"})}))
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
+        expect.objectContaining({
+          body: JSON.stringify({ username: 'username', password: 'password' }),
+        }),
+      );
       expect(token).toEqual('token');
     });
 
@@ -2244,40 +2256,172 @@ describe('ArgoCD service', () => {
         argoCdService.instanceConfigs[0],
       );
 
-      expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect(fetchMock).toHaveBeenCalledWith(`${argoCdService.instanceConfigs[0].url}/api/v1/session`, expect.objectContaining({ body: JSON.stringify({ username: "upper-level-username", password: "upper-level-password"})}))
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
+        expect.objectContaining({
+          body: JSON.stringify({
+            username: 'upper-level-username',
+            password: 'upper-level-password',
+          }),
+        }),
+      );
       expect(token).toEqual('token');
     });
 
-    it.only('retrieves argo token using azure credentials when no other credentials provided', async () => {
+    it('retrieves argo token using azure credentials when no other credentials provided', async () => {
       const argoConfig = getConfig({});
       const azureConfig = {
-        tenantId: "tenantId",
-        clientId: "clientId",
-        clientSecret: "clientSecret",
-        loginUrl: "loginUrl"
-      }
+        tenantId: 'tenantId',
+        clientId: 'clientId',
+        clientSecret: 'clientSecret',
+        loginUrl: 'loginUrl',
+      };
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({ access_token: 'azure_token' }),
+      );
+
+      const token = await argoCdService.getArgoToken(
+        argoCdService.instanceConfigs[0],
+        azureConfig,
+      );
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${azureConfig.loginUrl}/${azureConfig.tenantId}/oauth2/v2.0/token`,
+        expect.objectContaining({
+          body: qs.stringify({
+            grant_type: 'client_credentials',
+            client_id: azureConfig.clientId,
+            client_secret: azureConfig.clientSecret,
+            scope: `${azureConfig.clientId}/.default`,
+          }),
+        }),
+      );
+      expect(token).toEqual('azure_token');
+    });
+
+    it('throws when unable to get argo token from azure login', async () => {
+      const argoConfig = getConfig({});
+      const azureConfig = {
+        tenantId: 'tenantId',
+        clientId: 'clientId',
+        clientSecret: 'clientSecret',
+        loginUrl: 'loginUrl',
+      };
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          error: 'error',
+          error_description: 'error_description',
+          error_codes: [1],
+        }),
+        {
+          status: 2,
+        },
+      );
+
+      await expect(
+        argoCdService.getArgoToken(
+          argoCdService.instanceConfigs[0],
+          azureConfig,
+        ),
+      ).rejects.toThrow(
+        'Failed to get argo token through your azure config credentials: error_description (error, codes: [1], status code: 2)',
+      );
+    });
+
+    it('returns instance level token from argo instance when azure credentials provided', async () => {
+      const argoConfig = getConfig({ instanceCredentials: { token: 'token' } });
+      const azureConfig = {
+        tenantId: 'tenantId',
+        clientId: 'clientId',
+        clientSecret: 'clientSecret',
+        loginUrl: 'loginUrl',
+      };
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+
+      const token = await argoCdService.getArgoToken(
+        argoCdService.instanceConfigs[0],
+        azureConfig,
+      );
+
+      expect(fetchMock).not.toHaveBeenCalled();
+      expect(token).toBe('token');
+    });
+
+    it('retrieves argo token using instance level username and password when azure credentials provided', async () => {
+      const argoConfig = getConfig({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+      const azureConfig = {
+        tenantId: 'tenantId',
+        clientId: 'clientId',
+        clientSecret: 'clientSecret',
+        loginUrl: 'loginUrl',
+      };
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
+      const token = await argoCdService.getArgoToken(
+        argoCdService.instanceConfigs[0],
+        azureConfig,
+      );
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
+        expect.objectContaining({
+          body: JSON.stringify({ username: 'username', password: 'password' }),
+        }),
+      );
+      expect(token).toEqual('token');
+    });
+
+    it('retrieves argo token using upper level username and password when azure credentials provided', async () => {
+      const argoConfig = getConfig({});
+      const azureConfig = {
+        tenantId: 'tenantId',
+        clientId: 'clientId',
+        clientSecret: 'clientSecret',
+        loginUrl: 'loginUrl',
+      };
       const argoCdService = new ArgoService(
-        '',
-        '',
+        'upper-level-username',
+        'upper-level-password',
         argoConfig,
         loggerMock,
       );
-
-      fetchMock.mockResponseOnce(JSON.stringify({ access_token: 'azure_token' }));
-
+      fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
       const token = await argoCdService.getArgoToken(
-        argoCdService.instanceConfigs[0], azureConfig
+        argoCdService.instanceConfigs[0],
+        azureConfig,
       );
 
-      expect(fetchMock).toHaveBeenCalledTimes(1)
-      expect(fetchMock).toHaveBeenCalledWith(`${azureConfig.loginUrl}/${azureConfig.tenantId}/oauth2/v2.0/token`, qs.stringify({
-          grant_type: 'client_credentials',
-          client_id: azureConfig.clientId,
-          client_secret: azureConfig.clientSecret,
-          scope: `${azureConfig.clientId}/.default`,
-        }))
-      expect(token).toEqual('azure_token');
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
+        expect.objectContaining({
+          body: JSON.stringify({
+            username: 'upper-level-username',
+            password: 'upper-level-password',
+          }),
+        }),
+      );
+      expect(token).toEqual('token');
+    });
+
+    it('throws when upper level username and password, argoInstanceConfig, and azureCredentials are undefined', async () => {
+      const argoConfig = getConfig({});
+      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      fetchMock.mockRejectOnce(
+        new Error('Missing credentials in config for Argo Instance.'),
+      );
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow('Missing credentials in config for Argo Instance.');
     });
   });
 });

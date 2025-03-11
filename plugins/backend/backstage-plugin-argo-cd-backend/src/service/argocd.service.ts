@@ -32,8 +32,10 @@ import {
   GetArgoApplicationFetchResponse,
   getArgoApplicationInfoProps,
   terminateArgoAppOperationProps,
+  AzureConfig,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
+import qs from 'qs';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 
@@ -207,32 +209,61 @@ export class ArgoService implements ArgoServiceApi {
     return data;
   }
 
-  async getArgoToken(argoInstanceConfig: InstanceConfig): Promise<string> {
-    const { url, username, password } = argoInstanceConfig;
+  async getArgoToken(
+    argoInstanceConfig: InstanceConfig,
+    azureCredentials?: AzureConfig,
+  ): Promise<string> {
+    const { url, username, password, token } = argoInstanceConfig;
 
-    if (argoInstanceConfig.token) {
-      return argoInstanceConfig.token;
+    if (token) return token;
+
+    if ((username && password) || (this.username && this.password)) {
+      const resp = await fetch(`${url}/api/v1/session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username || this.username,
+          password: password || this.password,
+        }),
+      });
+      if (!resp.ok) {
+        this.logger.error(`failed to get argo token: ${url}`);
+      }
+      if (resp.status === 401) {
+        throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
+      }
+      const data = await resp.json();
+      return data.token;
     }
 
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username || this.username,
-        password: password || this.password,
-      }),
-    };
-    const resp = await fetch(`${url}/api/v1/session`, options);
-    if (!resp.ok) {
-      this.logger.error(`failed to get argo token: ${url}`);
+    if (azureCredentials) {
+      const resp = await fetch(
+        `${azureCredentials.loginUrl}/${azureCredentials.tenantId}/oauth2/v2.0/token`,
+        {
+          method: 'POST',
+          body: qs.stringify({
+            grant_type: 'client_credentials',
+            client_id: azureCredentials.clientId,
+            client_secret: azureCredentials.clientSecret,
+            scope: `${azureCredentials.clientId}/.default`,
+          }),
+        },
+      );
+
+      const data: { access_token: string; } | { error: string, error_description: string, error_codes: []} = await resp.json();
+
+      if ("error" in data) {
+        throw new Error(
+          `Failed to get argo token through your azure config credentials: ${data.error_description} (${data.error}, codes: [${data.error_codes}], status code: ${resp.status})`,
+        );
+      }
+
+      return data.access_token;
     }
-    if (resp.status === 401) {
-      throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
-    }
-    const data = await resp.json();
-    return data.token;
+
+    throw new Error('Missing credentials in config for Argo Instance.');
   }
 
   async getArgoAppData(
@@ -732,12 +763,7 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error('cannot find an argo instance to match this cluster');
     }
 
-    let token: string;
-    if (!matchedArgoInstance.token) {
-      token = await this.getArgoToken(matchedArgoInstance);
-    } else {
-      token = matchedArgoInstance.token;
-    }
+    const token = await this.getArgoToken(matchedArgoInstance);
 
     if (terminateOperation) {
       const terminateOperationResp = await this.terminateArgoAppOperation({
