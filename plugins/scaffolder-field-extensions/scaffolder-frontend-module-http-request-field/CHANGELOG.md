@@ -1,5 +1,17 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.8.1
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
+## 1.8.0
+
+### Minor Changes
+
+- adf79be: Add schema for SelectFieldFromApi so it is visible in custom fields playground
+
 ## 1.7.2
 
 ### Patch Changes

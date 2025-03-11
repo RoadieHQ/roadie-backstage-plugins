@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.1.3
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/rag-ai-node@0.1.10
+
 ## 1.1.2
 
 ### Patch Changes

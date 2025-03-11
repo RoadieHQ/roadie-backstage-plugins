@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.4.1
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
+## 3.4.0
+
+### Minor Changes
+
+- 5463d71: Add support for wildcards in roadiehq:utils:fs:replace
+
 ## 3.3.0
 
 ### Minor Changes

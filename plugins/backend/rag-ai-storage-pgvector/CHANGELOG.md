@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 2.0.1
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/rag-ai-node@0.1.10
+
 ## 2.0.0
 
 ### Major Changes

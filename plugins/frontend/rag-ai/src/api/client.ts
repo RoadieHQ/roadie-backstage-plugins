@@ -100,7 +100,7 @@ export class RoadieRagAiClient implements RagAiApi {
       // eslint-disable-next-line
       console.error(e.message);
       yield {
-        data: `Failed to receive response from the backend endpoint.`,
+        data: `Failed to complete query due to error: ${e.message}`,
         event: 'error',
         type: 'event',
       };

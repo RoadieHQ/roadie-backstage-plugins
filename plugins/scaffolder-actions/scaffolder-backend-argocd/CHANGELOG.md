@@ -1,5 +1,20 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.5.2
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.0.1
+
+## 1.5.1
+
+### Patch Changes
+
+- Updated dependencies [58b87ce]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.0.0
+
 ## 1.5.0
 
 ### Minor Changes

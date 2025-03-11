@@ -1,5 +1,13 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.4.1
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/github-auth-utils-react@1.0.2
+
 ## 3.4.0
 
 ### Minor Changes

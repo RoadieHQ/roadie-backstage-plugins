@@ -178,6 +178,7 @@ export interface ArgoServiceApi {
     options: {
       name: string;
       namespace?: string;
+      sourceIndex?: string;
     },
     argoToken: string,
     revisionID: string,
