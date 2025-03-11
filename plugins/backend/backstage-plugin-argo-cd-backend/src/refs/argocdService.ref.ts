@@ -1,4 +1,8 @@
-import { coreServices, createServiceFactory, createServiceRef } from '@backstage/backend-plugin-api';
+import {
+  coreServices,
+  createServiceFactory,
+  createServiceRef,
+} from '@backstage/backend-plugin-api';
 import { ArgoService } from '../service/argocd.service';
 import { ArgoServiceApi } from '../service/types';
 
