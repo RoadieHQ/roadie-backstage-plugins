@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.1.0
+
+### Minor Changes
+
+- b156e17: Add sourceIndex query parameter for fetching revision metadata.
+
 ## 4.0.1
 
 ### Patch Changes
