@@ -18,12 +18,11 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Prepare Setup
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: yarn install
       - run: yarn lint
       - run: yarn tsc
       - run: yarn test

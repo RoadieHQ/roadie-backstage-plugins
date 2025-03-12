@@ -1,0 +1,40 @@
+name: 'Setup Node and install dependencies'
+description: 'Setup Node and install dependencies using cache'
+inputs:
+  node-version:
+    description: 'Node version'
+    required: false
+  corepack-version:
+    description: 'Corepack version'
+    required: true
+    default: 'latest'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup NodeJS
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        # Pull the node version from "engines" or "volta" in package.json if `node-version` is not supplied
+        node-version-file: 'package.json'
+
+    - name: Prepare Yarn
+      shell: bash
+      # installing using npm to avoid problems if NodeJS decides the default behavior
+      # https://github.com/nodejs/node/pull/51981
+      run: |
+        npm install -g --force corepack@${{ inputs.corepack-version }}
+        corepack enable
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'yarn'
+
+    - name: Install Dependencies
+      shell: bash
+      # --immutable flag is used to ensure yarn.lock is not modified
+      # This is the default in CI but we want to make it explicit
+      run: yarn install --immutable
