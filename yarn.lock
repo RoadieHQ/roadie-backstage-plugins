@@ -26472,7 +26472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:^28.0.0":
+"eslint-plugin-jest@npm:*, eslint-plugin-jest@npm:^28.0.0":
   version: 28.11.0
   resolution: "eslint-plugin-jest@npm:28.11.0"
   dependencies:
@@ -41059,6 +41059,7 @@ __metadata:
     "@types/webpack": "npm:^5.28.0"
     concurrently: "npm:^7.0.0"
     eslint: "npm:^8.6.0"
+    eslint-plugin-jest: "npm:*"
     eslint-plugin-notice: "npm:^0.9.10"
     eslint-plugin-react: "npm:^7.28.0"
     eslint-plugin-unused-imports: "npm:^3.1.0"
