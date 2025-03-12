@@ -14,15 +14,14 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Prepare Setup
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies and bump versions
-        run: |
-          yarn install
-          yarn backstage-cli versions:bump
+        run: yarn backstage-cli versions:bump
+
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
