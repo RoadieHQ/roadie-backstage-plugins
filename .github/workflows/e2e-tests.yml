@@ -42,6 +42,7 @@ jobs:
           start: yarn dev:ci
           wait-on: 'http://localhost:7007'
           project: ./packages/app
+          install-command: yarn install --immutable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
