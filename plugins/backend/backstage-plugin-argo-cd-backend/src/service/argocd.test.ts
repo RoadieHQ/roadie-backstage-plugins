@@ -356,7 +356,7 @@ describe('ArgoCD service', () => {
         'testusername',
         'testpassword',
         getConfig({
-          token: 'token',
+          instanceCredentials: { token: 'token' },
         }),
         loggerMock,
       );
@@ -1876,7 +1876,7 @@ describe('ArgoCD service', () => {
         'testusername',
         'testpassword',
         getConfig({
-          token: 'token',
+          instanceCredentials: { token: 'token' },
           clusterResourceWhitelist: [
             { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
           ],
@@ -1946,7 +1946,7 @@ describe('ArgoCD service', () => {
         'testusername',
         'testpassword',
         getConfig({
-          token: 'token',
+          instanceCredentials: { token: 'token' },
           clusterResourceWhitelist: [
             { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
           ],
@@ -2004,7 +2004,7 @@ describe('ArgoCD service', () => {
         'testusername',
         'testpassword',
         getConfig({
-          token: 'token',
+          instanceCredentials: { token: 'token' },
         }),
         loggerMock,
       );
