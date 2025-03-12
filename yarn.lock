@@ -29389,7 +29389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-server@npm:^14.0.0":
+"http-server@npm:^14.0.0, http-server@npm:^14.1.1":
   version: 14.1.1
   resolution: "http-server@npm:14.1.1"
   dependencies:
@@ -41063,6 +41063,7 @@ __metadata:
     eslint-plugin-notice: "npm:^0.9.10"
     eslint-plugin-react: "npm:^7.28.0"
     eslint-plugin-unused-imports: "npm:^3.1.0"
+    http-server: "npm:^14.1.1"
     husky: "npm:^8.0.1"
     lerna: "npm:^6.0.0"
     lint-staged: "npm:^13.0.3"
