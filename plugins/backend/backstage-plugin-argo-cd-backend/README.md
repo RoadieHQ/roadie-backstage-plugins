@@ -17,7 +17,6 @@ If you want to create multiple components that fetch data from different argoCD 
 
 The Argo plugin will fetch the Argo CD instances an app is deployed to and use the backstage-plugin-argo-cd-backend plugin to reach out to each Argo instance based on the mapping mentioned below.
 
-<!-- we will first use the instance token, then instance user name and password, then, if no instance, then we'll use username and password on upper argocd level configuration, and if not, then azure login information (if available) -->
 ```yml
 argocd:
   username: ${ARGOCD_USERNAME}
@@ -89,6 +88,22 @@ argocd:
           url: https://argoInstance1.com
           token: ${ARGOCD_AUTH_TOKEN} # Token to use to instance 1
 ```
+
+**Option 4**: Define a `azure` service principal credentials. It has the lowest priority of all other options.
+
+_Example_
+
+```yml
+azure:
+  tenantId: ${AZURE_TENANT_ID}
+  clientId: ${AZURE_CLIENT_ID}
+  clientSecret: ${AZURE_CLIENT_SECRET}
+  loginUrl: https://login.microsoftonline.com
+```
+
+#### Special Notes on Authenticating with Azure Active Directory (Microsoft Entra ID)
+
+JAY, please document here.
 
 ## Project Resource Restrictions
 
