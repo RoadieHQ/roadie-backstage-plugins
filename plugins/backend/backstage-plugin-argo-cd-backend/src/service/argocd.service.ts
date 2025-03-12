@@ -142,7 +142,7 @@ export class ArgoService implements ArgoServiceApi {
         let getArgoAppDataResp: any;
         let token: string;
         try {
-          token = argoInstance.token || (await this.getArgoToken(argoInstance));
+          token = await this.getArgoToken(argoInstance);
         } catch (error: any) {
           this.logger.error(
             `Error getting token from Argo Instance ${argoInstance.name}: ${error.message}`,
@@ -252,9 +252,12 @@ export class ArgoService implements ArgoServiceApi {
         },
       );
 
-      const data: { access_token: string; } | { error: string, error_description: string, error_codes: []} = await resp.json();
+      const data:
+        | { access_token: string }
+        | { error: string; error_description: string; error_codes: [] } =
+        await resp.json();
 
-      if ("error" in data) {
+      if ('error' in data) {
         throw new Error(
           `Failed to get argo token through your azure config credentials: ${data.error_description} (${data.error}, codes: [${data.error_codes}], status code: ${resp.status})`,
         );
@@ -923,9 +926,7 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error(`Unable to find Argo instance named '${argoInstance}'`);
     }
 
-    const token =
-      matchedArgoInstance.token ||
-      (await this.getArgoToken(matchedArgoInstance));
+    const token = await this.getArgoToken(matchedArgoInstance);
 
     await this.createArgoProject({
       baseUrl: matchedArgoInstance.url,
@@ -1068,9 +1069,7 @@ export class ArgoService implements ArgoServiceApi {
         throw new Error(
           `config does not have argo information for the cluster named '${argoInstanceName}'`,
         );
-      token =
-        matchedArgoInstance.token ??
-        (await this.getArgoToken(matchedArgoInstance));
+      token = await this.getArgoToken(matchedArgoInstance);
       url = matchedArgoInstance.url;
     }
 
@@ -1127,9 +1126,7 @@ export class ArgoService implements ArgoServiceApi {
         throw new Error(
           `config does not have argo information for the cluster named '${argoInstanceName}'`,
         );
-      token =
-        matchedArgoInstance.token ??
-        (await this.getArgoToken(matchedArgoInstance));
+      token = await this.getArgoToken(matchedArgoInstance);
       url = matchedArgoInstance.url;
     }
     const options = {
