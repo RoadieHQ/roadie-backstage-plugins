@@ -10,7 +10,6 @@
     "github",
     "pull-requests"
   ],
-  "private": false,
   "homepage": "https://roadie.io/backstage/plugins/github-pull-requests/",
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",

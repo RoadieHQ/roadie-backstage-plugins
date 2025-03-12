@@ -9,7 +9,6 @@
     "plugin",
     "cloudsmith"
   ],
-  "private": false,
   "homepage": "https://roadie.io/backstage/plugins/cloudsmith/",
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",

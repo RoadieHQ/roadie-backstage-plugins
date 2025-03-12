@@ -5,7 +5,6 @@
   "description": "Backstage entity validator library",
   "main": "src/index.js",
   "license": "Apache-2.0",
-  "private": false,
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
     "email": "support@roadie.io"
