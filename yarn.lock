@@ -9204,6 +9204,14 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
+"@grpc/grpc-js@^1.11.1":
+  version "1.13.0"
+  resolved "https://artifactory.cd-tech26.de/artifactory/api/npm/npm/@grpc/grpc-js/-/grpc-js-1.13.0.tgz#69c229eacb77f3468afa9d375c23dc9b694d1af9"
+  integrity sha512-pMuxInZjUnUkgMT2QLZclRqwk2ykJbIU05aZgPgJYXEpN9+2I7z7aNwcjWZSycRPl232FfhPszyBFJyOxTHNog==
+  dependencies:
+    "@grpc/proto-loader" "^0.7.13"
+    "@js-sdsl/ordered-map" "^4.4.2"
+
 "@grpc/grpc-js@~1.10.0":
   version "1.10.9"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.10.9.tgz#468cc1549a3fe37b760a16745fb7685d91f4f10c"
@@ -15923,6 +15931,15 @@
     "@types/docker-modem" "*"
     "@types/node" "*"
 
+"@types/dockerode@^3.3.35":
+  version "3.3.35"
+  resolved "https://artifactory.cd-tech26.de/artifactory/api/npm/npm/@types/dockerode/-/dockerode-3.3.35.tgz#d78c844a246f8717e3bcf2cc134a976bfa630b10"
+  integrity sha512-P+DCMASlsH+QaKkDpekKrP5pLls767PPs+/LrlVbKnEnY5tMpEUa2C6U4gRsdFZengOqxdCIqy16R22Q3pLB6Q==
+  dependencies:
+    "@types/docker-modem" "*"
+    "@types/node" "*"
+    "@types/ssh2" "*"
+
 "@types/domhandler@2.4.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/domhandler/-/domhandler-2.4.1.tgz#7b3b347f7762180fbcb1ece1ce3dd0ebbb8c64cf"
@@ -18293,14 +18310,6 @@ better-sqlite3@^11.0.0:
   version "11.2.1"
   resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-11.2.1.tgz#3c6b8a8e2e12444d380e811796b59c8aba012e03"
   integrity sha512-Xbt1d68wQnUuFIEVsbt6V+RG30zwgbtCGQ4QOcXVrOH0FE4eHk64FWZ9NUfRHS4/x1PXqwz/+KOrnXD7f0WieA==
-  dependencies:
-    bindings "^1.5.0"
-    prebuild-install "^7.1.1"
-
-better-sqlite3@^9.0.0:
-  version "9.4.3"
-  resolved "https://registry.yarnpkg.com/better-sqlite3/-/better-sqlite3-9.4.3.tgz#7df39ba3273fbb7c0561cf913572547142868cc4"
-  integrity sha512-ud0bTmD9O3uWJGuXDltyj3R47Nz0OHX8iqPOT5PMspGqlu/qQFn+5S2eFBUCrySpavTjFXbi4EgrfVvPAHlImw==
   dependencies:
     bindings "^1.5.0"
     prebuild-install "^7.1.1"
@@ -20975,16 +20984,6 @@ dns-packet@^5.2.2:
   dependencies:
     "@leichtgewicht/ip-codec" "^2.0.1"
 
-docker-modem@^3.0.0:
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/docker-modem/-/docker-modem-3.0.8.tgz#ef62c8bdff6e8a7d12f0160988c295ea8705e77a"
-  integrity sha512-f0ReSURdM3pcKPNS30mxOHSbaFLcknGmQjwSfmbcdOw1XWKXVhukM3NJHhr7NpY9BIyyWQb0EBo3KQvvuU5egQ==
-  dependencies:
-    debug "^4.1.1"
-    readable-stream "^3.5.0"
-    split-ca "^1.0.1"
-    ssh2 "^1.11.0"
-
 docker-modem@^5.0.3:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/docker-modem/-/docker-modem-5.0.3.tgz#50c06f11285289f58112b5c4c4d89824541c41d0"
@@ -20995,14 +20994,15 @@ docker-modem@^5.0.3:
     split-ca "^1.0.1"
     ssh2 "^1.15.0"
 
-dockerode@^3.3.0:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/dockerode/-/dockerode-3.3.5.tgz#7ae3f40f2bec53ae5e9a741ce655fff459745629"
-  integrity sha512-/0YNa3ZDNeLr/tSckmD69+Gq+qVNhvKfAHNeZJBnp7EOP6RGKV8ORrJHkUn20So5wU+xxT7+1n5u8PjHbfjbSA==
+docker-modem@^5.0.6:
+  version "5.0.6"
+  resolved "https://artifactory.cd-tech26.de/artifactory/api/npm/npm/docker-modem/-/docker-modem-5.0.6.tgz#cbe9d86a1fe66d7a072ac7fb99a9fc390a3e8b9a"
+  integrity sha512-ens7BiayssQz/uAxGzH8zGXCtiV24rRWXdjNha5V4zSOcxmAZsfGVm/PPFbwQdqEkDnhG+SyR9E3zSHUbOKXBQ==
   dependencies:
-    "@balena/dockerignore" "^1.0.2"
-    docker-modem "^3.0.0"
-    tar-fs "~2.0.1"
+    debug "^4.1.1"
+    readable-stream "^3.5.0"
+    split-ca "^1.0.1"
+    ssh2 "^1.15.0"
 
 dockerode@^4.0.0:
   version "4.0.2"
@@ -21012,6 +21012,19 @@ dockerode@^4.0.0:
     "@balena/dockerignore" "^1.0.2"
     docker-modem "^5.0.3"
     tar-fs "~2.0.1"
+
+dockerode@^4.0.4:
+  version "4.0.4"
+  resolved "https://artifactory.cd-tech26.de/artifactory/api/npm/npm/dockerode/-/dockerode-4.0.4.tgz#3db42ce77241cbe5f20eac44afa933dcff59a268"
+  integrity sha512-6GYP/EdzEY50HaOxTVTJ2p+mB5xDHTMJhS+UoGrVyS6VC+iQRh7kZ4FRpUYq6nziby7hPqWhOrFFUFTMUZJJ5w==
+  dependencies:
+    "@balena/dockerignore" "^1.0.2"
+    "@grpc/grpc-js" "^1.11.1"
+    "@grpc/proto-loader" "^0.7.13"
+    docker-modem "^5.0.6"
+    protobufjs "^7.3.2"
+    tar-fs "~2.0.1"
+    uuid "^10.0.0"
 
 doctrine@^2.1.0:
   version "2.1.0"
@@ -31294,6 +31307,24 @@ protobufjs@7.2.6, protobufjs@^7.2.4, protobufjs@^7.2.5, protobufjs@^7.2.6:
     "@types/node" ">=13.7.0"
     long "^5.0.0"
 
+protobufjs@^7.3.2:
+  version "7.4.0"
+  resolved "https://artifactory.cd-tech26.de/artifactory/api/npm/npm/protobufjs/-/protobufjs-7.4.0.tgz#7efe324ce9b3b61c82aae5de810d287bc08a248a"
+  integrity sha512-mRUWCc3KUU4w1jU8sGxICXH/gNS94DvI1gxqDvBzhj1JpcsimQkYiOJfwsPUykUI5ZaspFbSgmBLER8IrQ3tqw==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/node" ">=13.7.0"
+    long "^5.0.0"
+
 protocols@^2.0.0, protocols@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/protocols/-/protocols-2.0.1.tgz#8f155da3fc0f32644e83c5782c8e8212ccf70a86"
@@ -33751,7 +33782,7 @@ sqlstring@^2.3.2:
   resolved "https://registry.yarnpkg.com/sqlstring/-/sqlstring-2.3.3.tgz#2ddc21f03bce2c387ed60680e739922c65751d0c"
   integrity sha512-qC9iz2FlN7DQl3+wjwn3802RTyjCx7sDvfQEXchwa6CWOx07/WVfh91gBmQ9fahw8snwGEWU3xGzOt4tFyHLxg==
 
-ssh2@^1.11.0, ssh2@^1.15.0:
+ssh2@^1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/ssh2/-/ssh2-1.15.0.tgz#2f998455036a7f89e0df5847efb5421748d9871b"
   integrity sha512-C0PHgX4h6lBxYx7hcXwu3QWdh4tg6tZZsTfXcdvc5caW/EMxaB4H9dWsl7qk+F7LAW762hp8VbXOX7x4xUYvEw==
