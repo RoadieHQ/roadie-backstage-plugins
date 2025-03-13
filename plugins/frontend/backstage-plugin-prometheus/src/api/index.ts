@@ -18,6 +18,7 @@ import {
   ConfigApi,
   createApiRef,
   DiscoveryApi,
+  FetchApi,
 } from '@backstage/core-plugin-api';
 import { DateTime, Duration } from 'luxon';
 
@@ -31,15 +32,18 @@ export const prometheusApiRef = createApiRef<PrometheusApi>({
 type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
+  fetchApi: FetchApi;
 };
 
 export class PrometheusApi {
   private readonly discoveryApi: DiscoveryApi;
   private readonly configApi: ConfigApi;
+  private readonly fetchApi: FetchApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
     this.configApi = options.configApi;
+    this.fetchApi = options.fetchApi;
   }
 
   private async getApiUrl({ serviceName }: { serviceName?: string }) {
@@ -103,7 +107,7 @@ export class PrometheusApi {
 
     const end = DateTime.now().toSeconds();
     const start = DateTime.now().minus(Duration.fromObject(range)).toSeconds();
-    const response = await fetch(
+    const response = await this.fetchApi.fetch(
       `${apiUrl}/query_range?query=${query}&start=${start}&end=${end}&step=${step}`,
       {
         headers: {
@@ -121,7 +125,7 @@ export class PrometheusApi {
 
   async getAlerts({ serviceName }: { serviceName?: string }) {
     const apiUrl = await this.getApiUrl({ serviceName });
-    const response = await fetch(`${apiUrl}/rules?type=alert`, {
+    const response = await this.fetchApi.fetch(`${apiUrl}/rules?type=alert`, {
       headers: {
         [SERVICE_NAME_HEADER]: serviceName || '',
       },
