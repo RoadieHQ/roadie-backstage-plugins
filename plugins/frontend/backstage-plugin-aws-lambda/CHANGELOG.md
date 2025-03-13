@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-lambda
 
+## 2.2.14
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 2.2.13
 
 ### Patch Changes

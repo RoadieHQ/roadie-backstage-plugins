@@ -6,6 +6,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'jest-mock';
+import { ArgoServiceApi } from './types';
 
 const mockDeleteApp = jest.fn();
 const mockDeleteProject = jest.fn();
@@ -19,26 +20,20 @@ const mockUpdateArgoProjectAndApp = jest.fn();
 const mockGetArgoApplicationInfo = jest.fn();
 const mockTerminateArgoAppOperation = jest.fn();
 const mockResyncAppOnAllArgos = jest.fn();
-jest.mock('./argocd.service', () => {
-  return {
-    ArgoService: jest.fn().mockImplementation(() => {
-      return {
-        deleteApp: mockDeleteApp,
-        deleteProject: mockDeleteProject,
-        getArgoAppData: mockGetArgoAppData,
-        getArgoToken: mockGetArgoToken,
-        createArgoProject: mockCreateArgoProject,
-        createArgoApplication: mockCreateArgoApplication,
-        deleteAppandProject: mockDeleteAppandProject,
-        getArgoInstanceArray: mockGetArgoInstanceArray,
-        updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
-        getArgoApplicationInfo: mockGetArgoApplicationInfo,
-        terminateArgoAppOperation: mockTerminateArgoAppOperation,
-        resyncAppOnAllArgos: mockResyncAppOnAllArgos,
-      };
-    }),
-  };
-});
+const ArgoService = {
+  deleteApp: mockDeleteApp,
+  deleteProject: mockDeleteProject,
+  getArgoAppData: mockGetArgoAppData,
+  getArgoToken: mockGetArgoToken,
+  createArgoProject: mockCreateArgoProject,
+  createArgoApplication: mockCreateArgoApplication,
+  deleteAppandProject: mockDeleteAppandProject,
+  getArgoInstanceArray: mockGetArgoInstanceArray,
+  updateArgoProjectAndApp: mockUpdateArgoProjectAndApp,
+  getArgoApplicationInfo: mockGetArgoApplicationInfo,
+  terminateArgoAppOperation: mockTerminateArgoAppOperation,
+  resyncAppOnAllArgos: mockResyncAppOnAllArgos,
+};
 jest.mock('./timer.services');
 
 const logger = getVoidLogger();
@@ -74,7 +69,11 @@ const config = ConfigReader.fromConfigs([
 describe('router', () => {
   let app: Express;
   beforeEach(async () => {
-    const router = await createRouter({ config, logger });
+    const router = await createRouter({
+      config,
+      logger,
+      argocdService: ArgoService as unknown as ArgoServiceApi,
+    });
     app = express().use(router);
     mocked(timer).mockResolvedValue(0);
     fetchMock.resetMocks();

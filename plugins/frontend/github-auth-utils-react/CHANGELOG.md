@@ -1,5 +1,11 @@
 # @roadiehq/github-auth-utils-react
 
+## 1.0.2
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.0.1
 
 ### Patch Changes

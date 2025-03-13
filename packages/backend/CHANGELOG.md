@@ -1,5 +1,41 @@
 # backend
 
+## 2.4.5
+
+### Patch Changes
+
+- Updated dependencies [b156e17]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.1.0
+
+## 2.4.4
+
+### Patch Changes
+
+- Updated dependencies [c551190]
+- Updated dependencies [a83e7e9]
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.1.2
+  - @roadiehq/scaffolder-backend-module-http-request@5.3.1
+  - @roadiehq/scaffolder-backend-module-utils@3.4.1
+  - @roadiehq/scaffolder-backend-module-aws@2.6.1
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.3
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.0.1
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.4.2
+  - @roadiehq/catalog-backend-module-gravatar@1.0.6
+  - @roadiehq/catalog-backend-module-okta@1.1.1
+  - @roadiehq/catalog-backend-module-aws@5.5.1
+  - @roadiehq/backstage-plugin-aws-auth@0.5.1
+  - @roadiehq/rag-ai-storage-pgvector@2.0.1
+  - @roadiehq/backstage-plugin-aws-backend@1.3.1
+  - @roadiehq/rag-ai-backend@1.3.3
+  - @roadiehq/plugin-wiz-backend@1.0.8
+
+## 2.4.3
+
+### Patch Changes
+
+- Updated dependencies [58b87ce]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.0.0
+
 ## 2.4.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.8.3
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 2.8.2
 
 ### Patch Changes

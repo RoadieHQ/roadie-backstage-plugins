@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-cloudsmith
 
+## 1.1.3
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.1.2
 
 ### Patch Changes

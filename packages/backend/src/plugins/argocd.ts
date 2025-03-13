@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createRouter } from '@roadiehq/backstage-plugin-argo-cd-backend';
+import {
+  createRouter,
+  ArgoService,
+} from '@roadiehq/backstage-plugin-argo-cd-backend';
 import { PluginEnvironment } from '../types';
 
 export default async function createPlugin({
   logger,
   config,
 }: PluginEnvironment) {
-  return await createRouter({ logger, config });
+  console.log('ArgoCD plugin is initializing');
+  const argoUserName =
+    config.getOptionalString('argocd.username') ?? 'argocdUsername';
+  const argoPassword =
+    config.getOptionalString('argocd.password') ?? 'argocdPassword';
+  return createRouter({
+    logger,
+    config,
+    argocdService: new ArgoService(argoUserName, argoPassword, config, logger),
+  });
 }

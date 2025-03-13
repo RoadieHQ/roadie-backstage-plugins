@@ -143,11 +143,12 @@ export interface ArgoServiceApi {
     baseUrl: string,
     argoInstanceName: string,
     argoToken: string,
-    options: {
-      name: string;
-      selector: string;
+    options?: {
+      name?: string;
+      selector?: string;
+      namespace?: string;
     },
-  ) => Promise<object>;
+  ) => Promise<{ items: any[] }>;
   createArgoProject: (props: CreateArgoProjectProps) => Promise<object>;
   createArgoApplication: (props: CreateArgoApplicationProps) => Promise<object>;
   createArgoResources: (props: CreateArgoResourcesProps) => Promise<boolean>;
@@ -159,10 +160,12 @@ export interface ArgoServiceApi {
   syncArgoApp: (props: SyncArgoApplicationProps) => Promise<SyncResponse>;
   resyncAppOnAllArgos: (props: {
     appSelector: string;
+    terminateOperation: boolean;
   }) => Promise<SyncResponse[][]>;
   findArgoApp: (options: {
     name?: string;
     selector?: string;
+    namespace?: string;
   }) => Promise<findArgoAppResp[]>;
   updateArgoProjectAndApp: (
     props: UpdateArgoProjectAndAppProps,
@@ -174,6 +177,16 @@ export interface ArgoServiceApi {
   terminateArgoAppOperation: (
     props: terminateArgoAppOperationProps,
   ) => Promise<DeleteResponse>;
+  getRevisionData: (
+    baseUrl: string,
+    options: {
+      name: string;
+      namespace?: string;
+      sourceIndex?: string;
+    },
+    argoToken: string,
+    revisionID: string,
+  ) => Promise<getRevisionDataResp>;
 }
 
 export type InstanceConfig = {

@@ -1,5 +1,13 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.1.4
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+- Updated dependencies [a83e7e9]
+  - @roadiehq/github-auth-utils-react@1.0.2
+
 ## 3.1.3
 
 ### Patch Changes

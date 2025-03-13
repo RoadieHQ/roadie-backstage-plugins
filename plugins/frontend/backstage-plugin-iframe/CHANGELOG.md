@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.4.4
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.4.3
 
 ### Patch Changes

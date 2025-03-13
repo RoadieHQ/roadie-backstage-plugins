@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.0.6
+
+### Patch Changes
+
+- a83e7e9: Tidy unused plugin depdendencies.
+
 ## 1.0.5
 
 ### Patch Changes
