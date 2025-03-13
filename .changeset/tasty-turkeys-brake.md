@@ -4,7 +4,7 @@
 
 ## 🚀 New Feature:
 
-You can now add azure active directory (Microsoft Entra ID) using your service principal credentials to authentication to Argo CD instances!
+You can now use azure active directory (Microsoft Entra ID) to authentication to Argo CD instances!
 
 **Login Priorities** (We will prioritize logins as follows):
 
