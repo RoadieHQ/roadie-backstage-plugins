@@ -96,6 +96,8 @@ const overviewContent = (
 
 ```
 
+See table customisation steps below for extra context of available customisation.
+
 ## Entity annotations
 
 The plugin uses entity annotations to determine what data to display. There are two different annotations that can be used:
@@ -170,7 +172,25 @@ Type definition for `PrometheusAlertStatus' props is:
 ```typescript
 {
   alerts: string[] | 'all';
+  extraColumns: TableColumn<PrometheusDisplayableAlert>[];
+  showAnnotations: boolean;
+  showLabels: boolean;
 }
+```
+
+example for extra alerts table columns:
+
+```typescript
+const extraColumns: TableColumn<PrometheusDisplayableAlert>[] = [
+  {
+    title: 'Summary',
+    field: 'annotations.summary',
+  },
+  {
+    title: 'Description',
+    field: 'annotations.description',
+  }
+];
 ```
 
 ## Multiple Prometheus instances
