@@ -56,9 +56,13 @@ type PrometheusRule = {
   alerts: PrometheusAlert[];
 };
 
+interface PrometheusAnnotations {
+  [key: string]: string;
+}
+
 type PrometheusAlert = {
   activeAt: string;
-  annotations: {};
+  annotations: PrometheusAnnotations;
   labels: {
     alertname: string;
   };

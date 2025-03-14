@@ -19,9 +19,10 @@ import { Grid } from '@material-ui/core';
 import {
   Content,
   ContentHeader,
-  MissingAnnotationEmptyState,
   SupportButton,
+  TableColumn,
 } from '@backstage/core-components';
+import { MissingAnnotationEmptyState } from '@backstage/plugin-catalog-react';
 import { PrometheusGraph } from './PrometheusGraph';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import {
@@ -32,15 +33,22 @@ import {
   PROMETHEUS_PLUGIN_DOCUMENTATION,
 } from './util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
+import { PrometheusDisplayableAlert } from '../types';
 
 const PrometheusContentWrapper = ({
   step = 14,
   range = { hours: 1 },
   graphType,
+  extraColumns,
+  showAlertsAnnotations,
+  showAlertsLabels,
 }: {
   step?: number;
   range?: { hours?: number; minutes?: number };
   graphType?: 'line' | 'area';
+  extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
+  showAlertsAnnotations?: boolean;
+  showAlertsLabels?: boolean;
 }) => {
   const { entity } = useEntity();
   const graphContent = isPrometheusGraphAvailable(entity);
@@ -74,7 +82,12 @@ const PrometheusContentWrapper = ({
       {alertContent && (
         <Grid container spacing={3} direction="column">
           <Grid item>
-            <PrometheusAlertStatus alerts={alertProp} />
+            <PrometheusAlertStatus
+              alerts={alertProp}
+              extraColumns={extraColumns}
+              showAnnotations={showAlertsAnnotations}
+              showLabels={showAlertsLabels}
+            />
           </Grid>
         </Grid>
       )}

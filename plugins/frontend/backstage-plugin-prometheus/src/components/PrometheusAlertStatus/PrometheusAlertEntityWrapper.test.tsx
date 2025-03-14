@@ -17,10 +17,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import {
-  setupRequestMockHandlers,
-  TestApiProvider,
-} from '@backstage/test-utils';
+import { registerMswTestHooks, TestApiProvider } from '@backstage/test-utils';
+import { TableColumn } from '@backstage/core-components';
 import {
   configApiRef,
   errorApiRef,
@@ -31,6 +29,7 @@ import { PrometheusAlertEntityWrapper } from './PrometheusAlertEntityWrapper';
 import { prometheusApiRef } from '../../api';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
+import { PrometheusDisplayableAlert } from '../../types';
 
 const entityMock = {
   metadata: {
@@ -69,7 +68,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
 describe('PrometheusAlertEntityWrapper', () => {
   const server = setupServer();
   // Enable sane handlers for network requests
-  setupRequestMockHandlers(server);
+  registerMswTestHooks(server);
 
   // setup mock response
   beforeEach(() => {
@@ -94,6 +93,26 @@ describe('PrometheusAlertEntityWrapper', () => {
     );
     expect(await rendered.findByText('Prometheus Alerts')).toBeInTheDocument();
     expect(await rendered.findByText('firing')).toBeInTheDocument();
+    expect(await rendered.queryByText('Summary')).not.toBeInTheDocument();
+  });
+
+  it('should render extended table', async () => {
+    const extraColumns: TableColumn<PrometheusDisplayableAlert>[] = [
+      {
+        title: 'Summary',
+        field: 'annotations.summary',
+      },
+    ];
+    const rendered = render(
+      <ThemeProvider theme={lightTheme}>
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <PrometheusAlertEntityWrapper extraColumns={extraColumns} />
+          </EntityProvider>
+        </TestApiProvider>
+      </ThemeProvider>,
+    );
+    expect(await rendered.findByText('Summary')).toBeInTheDocument();
   });
 
   it('should render compontent with clickable rows', async () => {

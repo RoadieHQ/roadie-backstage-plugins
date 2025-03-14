@@ -38,26 +38,24 @@ export interface Config {
      * Should be used if you have multiple Prometheus instances you like to proxy to.
      * @visibility frontend
      */
-    instances?: [
-      {
-        /**
-         * The proxy service instance name.
-         * Should match the annotation prometheus.io/service-name.
-         * @visibility frontend
-         */
-        name: string;
-        /**
-         * The proxy path for the service instance.
-         * Should match a Backstage proxy.
-         * @visibility frontend
-         */
-        proxyPath: string;
-        /**
-         * The URL for the Prometheus UI.
-         * @visibility frontend
-         */
-        uiUrl?: string;
-      },
-    ];
+    instances?: Array<{
+      /**
+       * The proxy service instance name.
+       * Should match the annotation prometheus.io/service-name.
+       * @visibility frontend
+       */
+      name: string;
+      /**
+       * The proxy path for the service instance.
+       * Should match a Backstage proxy.
+       * @visibility frontend
+       */
+      proxyPath: string;
+      /**
+       * The URL for the Prometheus UI.
+       * @visibility frontend
+       */
+      uiUrl?: string;
+    }>;
   };
 }
