@@ -189,7 +189,7 @@ const extraColumns: TableColumn<PrometheusDisplayableAlert>[] = [
   {
     title: 'Description',
     field: 'annotations.description',
-  }
+  },
 ];
 ```
 
