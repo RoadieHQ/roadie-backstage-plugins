@@ -149,7 +149,7 @@ export const PrometheusAlertStatus = ({
   extraColumns,
   onRowClick,
   showAnnotations = true,
-  showLabels = false,
+  showLabels = true,
 }: {
   alerts: string[] | 'all';
   extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
