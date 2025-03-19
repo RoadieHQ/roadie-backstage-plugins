@@ -46,9 +46,11 @@
     "@types/webpack": "^5.28.0",
     "concurrently": "^7.0.0",
     "eslint": "^8.6.0",
+    "eslint-plugin-jest": "*",
     "eslint-plugin-notice": "^0.9.10",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-unused-imports": "^3.1.0",
+    "http-server": "^14.1.1",
     "husky": "^8.0.1",
     "lerna": "^6.0.0",
     "lint-staged": "^13.0.3",
@@ -56,5 +58,9 @@
     "typescript": "^5.5.4"
   },
   "prettier": "@spotify/prettier-config",
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "volta": {
+    "node": "22.14.0",
+    "yarn": "4.7.0"
+  },
+  "packageManager": "yarn@4.7.0"
 }

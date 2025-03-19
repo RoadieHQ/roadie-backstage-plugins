@@ -18,23 +18,14 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version}}
-
-      - name: Log node version
-        run: node --version
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
 
-      - uses: actions/setup-node@v3
+      - name: Prepare Setup
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: yarn install
 
       - name: Lint
         run: yarn lint
@@ -51,6 +42,7 @@ jobs:
           start: yarn dev:ci
           wait-on: 'http://localhost:7007'
           project: ./packages/app
+          install-command: yarn install --immutable
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -65,23 +57,14 @@ jobs:
         node-version: [18]
 
     steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version}}
-
-      - name: Log node version
-        run: node --version
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: '0'
 
-      - uses: actions/setup-node@v3
+      - name: Prepare Setup
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: yarn install
 
       - name: Lint
         run: yarn lint
