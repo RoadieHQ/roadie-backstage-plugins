@@ -23,7 +23,7 @@ import { Config } from '@backstage/config';
 
 export interface RagAiConfig {
   logger: Logger | LoggerService;
-  tokenManager: TokenManager;
+  tokenManager?: TokenManager;
   augmentationIndexer: AugmentationIndexer;
   retrievalPipeline: RetrievalPipeline;
   model: BaseLLM | BaseChatModel;
