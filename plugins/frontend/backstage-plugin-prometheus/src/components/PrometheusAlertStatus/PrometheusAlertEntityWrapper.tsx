@@ -15,20 +15,27 @@
  */
 
 import React from 'react';
-import { MissingAnnotationEmptyState } from '@backstage/core-components';
+import { MissingAnnotationEmptyState } from '@backstage/plugin-catalog-react';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { TableColumn } from '@backstage/core-components';
 import {
   isPrometheusAlertAvailable,
   PROMETHEUS_ALERT_ANNOTATION,
   PROMETHEUS_PLUGIN_DOCUMENTATION,
 } from '../util';
 import { PrometheusAlertStatus } from './PrometheusAlertStatus';
-import { OnRowClick } from '../../types';
+import { OnRowClick, PrometheusDisplayableAlert } from '../../types';
 
 export const PrometheusAlertEntityWrapper = ({
+  extraColumns,
   onRowClick,
+  showAnnotations = true,
+  showLabels = true,
 }: {
+  extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
   onRowClick?: OnRowClick;
+  showAnnotations?: boolean;
+  showLabels?: boolean;
 }) => {
   const { entity } = useEntity();
   const alertContent = isPrometheusAlertAvailable(entity);
@@ -45,8 +52,20 @@ export const PrometheusAlertEntityWrapper = ({
     : [];
 
   return alerts.length > 0 && alerts[0] === 'all' ? (
-    <PrometheusAlertStatus alerts="all" onRowClick={onRowClick} />
+    <PrometheusAlertStatus
+      alerts="all"
+      onRowClick={onRowClick}
+      extraColumns={extraColumns}
+      showAnnotations={showAnnotations}
+      showLabels={showLabels}
+    />
   ) : (
-    <PrometheusAlertStatus alerts={alerts} onRowClick={onRowClick} />
+    <PrometheusAlertStatus
+      alerts={alerts}
+      onRowClick={onRowClick}
+      extraColumns={extraColumns}
+      showAnnotations={showAnnotations}
+      showLabels={showLabels}
+    />
   );
 };

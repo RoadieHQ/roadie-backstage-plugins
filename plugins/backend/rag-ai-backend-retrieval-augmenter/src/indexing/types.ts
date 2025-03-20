@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { CatalogApi } from '@backstage/catalog-client';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 import {
   PluginEndpointDiscovery,
   TokenManager,
@@ -31,6 +31,7 @@ export type AugmentationOptions = {
 export interface RoadieEmbeddingsConfig {
   logger: LoggerService;
   tokenManager?: TokenManager;
+  auth?: AuthService;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   discovery: PluginEndpointDiscovery;
