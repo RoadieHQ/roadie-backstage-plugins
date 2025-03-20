@@ -1,5 +1,5 @@
 ---
-'@roadiehq/scaffolder-backend-argocd': major
+'@roadiehq/scaffolder-backend-argocd': minor
 ---
 
 Remove deprecated loggerToWinstonLogger and getVoidLogger from scaffolderBackendArgoCD
