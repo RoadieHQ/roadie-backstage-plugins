@@ -1,5 +1,20 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 3.0.0
+
+### Major Changes
+
+- 69c8f6d: Customisation improvements:
+
+  - Add `extraColumns` prop to `EntityPrometheusAlertCard` & `EntityPrometheusContent`
+  - Add `showAnnotations` prop to `EntityPrometheusAlertCard` & `EntityPrometheusContent`
+  - Add `showLabels` prop to `EntityPrometheusAlertCard` & `EntityPrometheusContent`
+
+  Fixes:
+
+  - Fix #1823 to support multiple instances of Prometheus.
+  - Move import of `MissingAnnotationEmptyState` to `@backstage/plugin-catalog-react` to clear deprecation warning.
+
 ## 2.11.4
 
 ### Patch Changes
