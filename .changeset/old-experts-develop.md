@@ -1,5 +1,5 @@
 ---
-'@roadiehq/rag-ai-backend': patch
+'@roadiehq/rag-ai-backend': major
 ---
 
-Make unused TokenManager param optional to enable future removal and fix README examples
+Remove deprecated TokenManager param from router constructor that was deprecated and fix README examples
