@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 2.0.0
+
+### Major Changes
+
+- 31ae687: Remove deprecated TokenManager param from router constructor that was deprecated and fix README examples
+
 ## 1.3.3
 
 ### Patch Changes

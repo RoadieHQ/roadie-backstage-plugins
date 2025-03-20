@@ -1,5 +1,13 @@
 # backend
 
+## 2.4.7
+
+### Patch Changes
+
+- Updated dependencies [31ae687]
+  - @roadiehq/rag-ai-backend@2.0.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.1.4
+
 ## 2.4.6
 
 ### Patch Changes
