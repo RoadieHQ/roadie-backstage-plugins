@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.1.3
+
+### Patch Changes
+
+- 11112a6: Allow AuthService to be passed and avoid deprecated TokenManager
+- Updated dependencies [11112a6]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.4
+
 ## 1.1.2
 
 ### Patch Changes
