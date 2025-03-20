@@ -1,5 +1,12 @@
 # backend
 
+## 2.4.8
+
+### Patch Changes
+
+- Updated dependencies [5a98f83]
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.5.0
+
 ## 2.4.7
 
 ### Patch Changes
