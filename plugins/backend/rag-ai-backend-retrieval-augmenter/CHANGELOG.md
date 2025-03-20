@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 1.1.4
+
+### Patch Changes
+
+- 11112a6: Allow AuthService to be passed and avoid deprecated TokenManager
+
 ## 1.1.3
 
 ### Patch Changes
