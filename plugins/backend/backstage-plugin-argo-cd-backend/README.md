@@ -126,7 +126,7 @@ Example:
           essential: true
     allowedAudiences:
       - <ClientId>
-     - <ClientIdOfClientCredSp> # If a different service principal is being used for client_credentials authentication
+      - <ClientIdOfClientCredSp> # If a different service principal is being used for client_credentials authentication
 ```
 
 ## Project Resource Restrictions
