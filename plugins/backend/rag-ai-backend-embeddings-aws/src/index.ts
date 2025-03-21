@@ -27,13 +27,14 @@ import {
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import { Config } from '@backstage/config';
 import { AugmentationOptions } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 
 export interface RoadieBedrockEmbeddingsConfig {
   logger: Logger | LoggerService;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
   tokenManager?: TokenManager;
+  auth?: AuthService;
   discovery: PluginEndpointDiscovery;
   config: Config;
   options: {
@@ -47,6 +48,7 @@ export async function initializeBedrockEmbeddings({
   vectorStore,
   catalogApi,
   tokenManager,
+  auth,
   discovery,
   config,
   options,
@@ -70,6 +72,7 @@ export async function initializeBedrockEmbeddings({
     logger: logger.child({ label: 'roadie-bedrock-embedder' }),
     options,
     bedrockConfig,
+    auth,
     tokenManager,
     augmentationOptions,
   });

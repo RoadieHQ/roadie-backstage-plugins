@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.5.0
+
+### Minor Changes
+
+- 5a98f83: Allow use of AuthService and removal of deprecated TokenManager
+
 ## 0.4.2
 
 ### Patch Changes
