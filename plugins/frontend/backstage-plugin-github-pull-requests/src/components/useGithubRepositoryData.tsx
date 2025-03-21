@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useApi } from '@backstage/core-plugin-api';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import { GithubRepositoryData } from '../types';
 import { githubPullRequestsApiRef } from '../api';
+import { readGithubIntegrationConfigs } from '@backstage/integration';
 
 export const useGithubRepositoryData = (url: string) => {
   const githubPullRequestsApi = useApi(githubPullRequestsApiRef);
+  const configApi = useApi(configApiRef);
 
-  let domain = '';
-  try {
-    const hostname = new URL(url).hostname;
-    const parts = hostname.split('.');
-    if (parts.length >= 2) {
-      domain = `${parts[parts.length - 2]}.${parts[parts.length - 1]}`;
-    } else {
-      throw new Error('Hostname is not valid for domain extraction');
-    }
-  } catch (err) {
-    throw new Error('Invalid URL for extracting domain');
-  }
+  // Find the correct integration config from the repository API URL.
+  const configs = readGithubIntegrationConfigs(
+    configApi.getOptionalConfigArray('integrations.github') ?? [],
+  );
+  const githubIntegrationConfig = configs.find(
+    v => v.apiBaseUrl && url.startsWith(v.apiBaseUrl),
+  );
+  // If undefined, the getRepositoryData below will use the default GitHub API URL.
+  const host = githubIntegrationConfig?.host;
 
   return useAsync(async (): Promise<GithubRepositoryData> => {
     return githubPullRequestsApi.getRepositoryData({
       url,
-      hostname: domain,
+      hostname: host,
     });
-  }, [githubPullRequestsApi, domain]);
+  }, [githubPullRequestsApi, host]);
 };
