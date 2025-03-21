@@ -103,7 +103,31 @@ azure:
 
 #### Special Notes on Authenticating with Azure Active Directory (Microsoft Entra ID)
 
-JAY, please document here.
+For azure service principal authentication you need to configure a few things to allow for a successful `client_credentials` auth flow.
+
+1. Ensure the service principal you want to use is added to the appropriate AD groups you have configured for RBAC.
+
+1. You have to opt the `.default` `client_credentials` flow into receiving the groups on the token. This is because argo uses the groups claim on an oauth token to ensure RBAC rules.
+
+   ![image](./images/azure-argo.png)
+
+1. Argo validates the `aud` claim on the token defaulting to the ClientId of the service principal you have configured in `argocd-cm` if `allowedAudiences` is not set. If you are using a DIFFERENT service principal from the one you have configured argo to use as the SSO service principal you will need to ensure you add it as an `argocd-cm` value `allowedAudiences`. [Further documentaion](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#existing-oidc-provider)
+
+Example:
+
+```
+  oidc.config: >
+    name: Azure
+    issuer: https://login.microsoftonline.com/<ClientId>/v2.0
+    clientID: <ClientId>
+    clientSecret: $oidc.azure.clientSecret
+    requestedIDTokenClaims:
+      groups:
+          essential: true
+    allowedAudiences:
+      - <ClientId>
+<ClientIdOfClientCredSp> # If a different service principal is being used for client_credentials authentication
+```
 
 ## Project Resource Restrictions
 
