@@ -134,7 +134,10 @@ export interface ResyncProps {
 export interface ArgoServiceApi {
   getArgoInstanceArray: () => InstanceConfig[];
   getAppArray: () => Config[];
-  getArgoToken: (appConfig: InstanceConfig, azureCredentials?: AzureConfig) => Promise<string>;
+  getArgoToken: (
+    appConfig: InstanceConfig,
+    azureCredentials?: AzureConfig,
+  ) => Promise<string>;
   getArgoAppData: (
     baseUrl: string,
     argoInstanceName: string,
@@ -194,10 +197,10 @@ export type InstanceConfig = {
 };
 
 export type AzureConfig = {
-  tenantId: string,
-  clientId: string,
-  clientSecret: string,
-  loginUrl: string
+  tenantId: string;
+  clientId: string;
+  clientSecret: string;
+  loginUrl: string;
 };
 
 export type BuildArgoProjectArgs = {
