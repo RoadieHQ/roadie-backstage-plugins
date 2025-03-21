@@ -160,7 +160,7 @@ export class WizClient {
             filterBy: {
               project: [projectId],
             },
-            orderBy: { direction: 'DESC', field: 'SEVERITY' },
+            orderBy: { direction: 'DESC', field: 'CREATED_AT' },
           },
         }),
       };
