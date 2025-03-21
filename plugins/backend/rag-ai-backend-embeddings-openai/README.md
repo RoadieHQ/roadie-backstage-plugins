@@ -10,6 +10,7 @@ const vectorStore = await createRoadiePgVectorStore({ logger, database });
 const augmentationIndexer = await initializeOpenAiEmbeddings({
   logger,
   catalogApi,
+  auth,
   vectorStore,
   discovery,
   config,
