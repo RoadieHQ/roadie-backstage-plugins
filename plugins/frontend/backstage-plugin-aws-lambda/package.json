@@ -9,7 +9,6 @@
     "plugin",
     "aws-lambda"
   ],
-  "private": false,
   "homepage": "https://roadie.io/backstage/plugins/aws-lambda/",
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
