@@ -42,7 +42,7 @@ You can now use azure active directory (Microsoft Entra ID) to authentication to
           username: ${ARGOCD_USERNAME}
           password: ${ARGOCD_PASSWORD}
           appLocatorMethods:
-              - type: 'config'
+              - type: config
               instances:
                   - name: argoInstance1
                     url: https://argoInstance1.com
