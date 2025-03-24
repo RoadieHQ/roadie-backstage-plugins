@@ -13,7 +13,7 @@ You can now use azure active directory (Microsoft Entra ID) to authentication to
    ```json
        argocd:
            appLocatorMethods:
-               - type: 'config'
+               - type: config
                instances:
                    - name: argoInstance1
                    url: https://argoInstance1.com
