@@ -188,6 +188,11 @@ export interface ArgoServiceApi {
   ) => Promise<getRevisionDataResp>;
 }
 
+export type OIDCConfig = {
+  provider: 'azure';
+  providerConfigKey: string;
+};
+
 export type InstanceConfig = {
   name: string;
   password?: string;

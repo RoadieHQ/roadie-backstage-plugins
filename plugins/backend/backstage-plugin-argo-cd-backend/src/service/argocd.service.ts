@@ -33,9 +33,9 @@ import {
   getArgoApplicationInfoProps,
   terminateArgoAppOperationProps,
   AzureConfig,
+  OIDCConfig,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
-import qs from 'qs';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 
@@ -209,10 +209,8 @@ export class ArgoService implements ArgoServiceApi {
     return data;
   }
 
-  async getArgoToken(
-    argoInstanceConfig: InstanceConfig,
-    azureCredentials?: AzureConfig,
-  ): Promise<string> {
+  async getArgoToken(argoInstanceConfig: InstanceConfig): Promise<string> {
+    const oidcConfig = this.config.getOptional<OIDCConfig>('argocd.oidcConfig');
     const { url, username, password, token } = argoInstanceConfig;
 
     if (token) return token;
@@ -238,17 +236,21 @@ export class ArgoService implements ArgoServiceApi {
       return data.token;
     }
 
-    if (azureCredentials) {
+    if (oidcConfig?.provider === 'azure' && oidcConfig.providerConfigKey) {
+      const azureCredentials = this.config.get<AzureConfig>(
+        oidcConfig.providerConfigKey,
+      );
+
       const resp = await fetch(
         `${azureCredentials.loginUrl}/${azureCredentials.tenantId}/oauth2/v2.0/token`,
         {
           method: 'POST',
-          body: qs.stringify({
+          body: new URLSearchParams({
             grant_type: 'client_credentials',
             client_id: azureCredentials.clientId,
             client_secret: azureCredentials.clientSecret,
             scope: `${azureCredentials.clientId}/.default`,
-          }),
+          }).toString(),
         },
       );
 
