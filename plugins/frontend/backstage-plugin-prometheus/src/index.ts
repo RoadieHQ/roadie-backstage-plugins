@@ -23,3 +23,4 @@ export {
 export { PrometheusGraph } from './components/PrometheusGraph';
 export { PrometheusAlertStatus } from './components/PrometheusAlertStatus';
 export { isPrometheusAvailable } from './conditions';
+export type { PrometheusDisplayableAlert } from './types';

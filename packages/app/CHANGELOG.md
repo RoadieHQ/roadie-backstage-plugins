@@ -1,5 +1,12 @@
 # app
 
+## 1.1.10
+
+### Patch Changes
+
+- Updated dependencies [69c8f6d]
+  - @roadiehq/backstage-plugin-prometheus@3.0.0
+
 ## 1.1.9
 
 ### Patch Changes

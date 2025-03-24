@@ -79,7 +79,7 @@ export const EntityGithubPullRequestsTable = githubPullRequestsPlugin.provide(
 );
 
 export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
-  createCardExtension<{ query?: string }>({
+  createCardExtension<{ query?: string; hostname?: string }>({
     name: 'HomePageRequestedReviewsCard',
     title: 'Review requests',
     components: () => import('./components/Home/RequestedReviewsCard'),
@@ -88,7 +88,7 @@ export const HomePageRequestedReviewsCard = githubPullRequestsPlugin.provide(
 
 export const HomePageYourOpenPullRequestsCard =
   githubPullRequestsPlugin.provide(
-    createCardExtension<{ query?: string }>({
+    createCardExtension<{ query?: string; hostname?: string }>({
       name: 'YourOpenPullRequestsCard',
       title: 'Your open pull requests',
       components: () => import('./components/Home/YourOpenPullRequestsCard'),

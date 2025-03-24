@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.2.0
+
+### Minor Changes
+
+- 84e87f6: Removed requirement for external service factory include
+
 ## 4.1.0
 
 ### Minor Changes

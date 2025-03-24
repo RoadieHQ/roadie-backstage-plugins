@@ -22,12 +22,13 @@ import {
   Box,
   Chip,
   InputAdornment,
+  Link,
   Theme,
   Typography,
   useTheme,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useApi } from '@backstage/core-plugin-api';
+import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { wizApiRef } from '../../api';
 import { useAsync } from 'react-use';
 import {
@@ -120,6 +121,9 @@ export const Issues = () => {
     return await api.fetchIssuesForProject(wizAnnotation);
   }, []);
 
+  const config = useApi(configApiRef);
+  const wizBaseUrl = config.getOptionalString('wiz.dashboardLink') ?? '';
+
   const groupBySourceRuleId = (data: WizIssue[]) => {
     return data?.reduce<Record<string, WizIssue[]>>((acc, issue) => {
       const sourceRuleId = issue.sourceRule.id;
@@ -141,8 +145,26 @@ export const Issues = () => {
         header: 'Issue',
         size: 10,
         maxSize: 10,
-        accessorFn: row =>
-          `${row.entitySnapshot.type} | ${row.entitySnapshot.name}`,
+        accessorFn: row => row.entitySnapshot.name,
+        Cell: ({
+          row,
+        }: {
+          row: {
+            original: WizIssue;
+          };
+        }) => {
+          const issueId = row.original.id;
+          const issueLink = wizBaseUrl.startsWith('http')
+            ? `${wizBaseUrl}/issues/${issueId}`
+            : `https://${wizBaseUrl}/issues/${issueId}`;
+
+          return (
+            <Link href={issueLink} target="_blank" rel="noopener noreferrer">
+              {row.original.entitySnapshot.type} |{' '}
+              {row.original.entitySnapshot.name}
+            </Link>
+          );
+        },
       },
       {
         id: 'type',
@@ -235,7 +257,7 @@ export const Issues = () => {
         ),
       },
     ];
-  }, [theme]);
+  }, [theme, wizBaseUrl]);
 
   if (loading) {
     return <Progress />;

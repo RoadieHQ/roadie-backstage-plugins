@@ -36,7 +36,12 @@ const mockScmAuth = {
 
 const config = {
   getOptionalConfigArray(_: string) {
-    return [{ getOptionalString: (_s: string) => undefined }];
+    return [
+      {
+        getOptionalString: (_s: string) => undefined,
+        getOptionalConfigArray: (_s: string) => undefined,
+      },
+    ];
   },
 } as ConfigApi;
 

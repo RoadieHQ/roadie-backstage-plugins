@@ -64,79 +64,98 @@ const state = (str: string) => {
   }
 };
 
-const columns: TableColumn<PrometheusDisplayableAlert>[] = [
-  {
-    field: 'name',
-    title: 'Name',
-    render: row => (
-      <Tooltip title={`${row.query}`}>
-        <p>{row.name}</p>
-      </Tooltip>
-    ),
-  },
-  { field: 'state', title: 'State', render: row => state(row.state) },
-  {
-    field: 'lastEvaluation',
-    title: 'Last Evaluation',
-    render: row =>
-      DateTime.fromISO(row.lastEvaluation).toLocaleString(
-        DateTime.DATETIME_SHORT_WITH_SECONDS,
-      ),
-  },
-  {
-    field: 'value',
-    title: 'Value',
-    render: row => {
-      const formatter = new Intl.NumberFormat('en', {
-        notation: 'compact',
-      });
-      // @ts-ignore
-      const shortVal = formatter.format(row.value);
-      return (
-        <Tooltip title={row.value}>
-          <p>{shortVal}</p>
+const getColumns = (
+  showAnnotations: boolean,
+  showLabels: boolean,
+): TableColumn<PrometheusDisplayableAlert>[] => {
+  const columns: TableColumn<PrometheusDisplayableAlert>[] = [
+    {
+      field: 'name',
+      title: 'Name',
+      render: row => (
+        <Tooltip title={`${row.query}`}>
+          <p>{row.name}</p>
         </Tooltip>
-      );
+      ),
     },
-  },
-  {
-    field: 'labels',
-    title: 'Labels',
-    render: row => (
-      <>
-        {Object.entries(row.labels).map(([k, v]) => (
-          <Chip key={k + v} label={`${k}: ${v}`} size="small" />
-        ))}
-      </>
-    ),
-  },
-  {
-    field: 'annotations',
-    title: 'Annotations',
-    render: row => (
-      <>
-        {Object.entries(row.annotations).map(([k, v]) => (
-          <Chip
-            key={k + v}
-            label={`${k}: ${v}`}
-            size="small"
-            classes={{
-              root: useStyles().chipRoot,
-              label: useStyles().chipLabel,
-            }}
-          />
-        ))}
-      </>
-    ),
-  },
-];
+    { field: 'state', title: 'State', render: row => state(row.state) },
+    {
+      field: 'lastEvaluation',
+      title: 'Last Evaluation',
+      render: row =>
+        DateTime.fromISO(row.lastEvaluation).toLocaleString(
+          DateTime.DATETIME_SHORT_WITH_SECONDS,
+        ),
+    },
+    {
+      field: 'value',
+      title: 'Value',
+      render: row => {
+        const formatter = new Intl.NumberFormat('en', {
+          notation: 'compact',
+        });
+        // @ts-ignore
+        const shortVal = formatter.format(row.value);
+        return (
+          <Tooltip title={row.value}>
+            <p>{shortVal}</p>
+          </Tooltip>
+        );
+      },
+    },
+  ];
+
+  if (showLabels) {
+    columns.push({
+      field: 'labels',
+      title: 'Labels',
+      render: row => (
+        <>
+          {Object.entries(row.labels).map(([k, v]) => (
+            <Chip key={k + v} label={`${k}: ${v}`} size="small" />
+          ))}
+        </>
+      ),
+    });
+  }
+
+  if (showAnnotations) {
+    columns.push({
+      field: 'annotations',
+      title: 'Annotations',
+      render: row => (
+        <>
+          {Object.entries(row.annotations).map(([k, v]) => (
+            <Chip
+              key={k + v}
+              label={`${k}: ${v}`}
+              size="small"
+              classes={{
+                root: useStyles().chipRoot,
+                label: useStyles().chipLabel,
+              }}
+            />
+          ))}
+        </>
+      ),
+    });
+  }
+
+  return columns;
+};
 
 export const PrometheusAlertStatus = ({
   alerts,
+  extraColumns,
   onRowClick,
+  showAnnotations = true,
+  showLabels = true,
 }: {
   alerts: string[] | 'all';
+  extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
   onRowClick?: OnRowClick;
+  showAnnotations?: boolean;
+  showLabels?: boolean;
 }) => {
   const { error, loading, displayableAlerts, uiUrl } = useAlerts(alerts);
   if (loading) {
@@ -158,6 +177,8 @@ export const PrometheusAlertStatus = ({
     </Grid>
   );
 
+  const columns = getColumns(showAnnotations, showLabels);
+
   return (
     <div>
       <InfoCard title={title} noPadding>
@@ -171,7 +192,7 @@ export const PrometheusAlertStatus = ({
             onRowClick ? (_, rowData) => onRowClick(rowData!) : undefined
           }
           data={displayableAlerts}
-          columns={columns}
+          columns={extraColumns ? columns.concat(extraColumns) : columns}
         />
       </InfoCard>
     </div>
