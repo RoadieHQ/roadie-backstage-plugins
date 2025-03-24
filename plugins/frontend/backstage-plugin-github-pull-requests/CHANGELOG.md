@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.4.2
+
+### Patch Changes
+
+- 462c922: Allow to pass the `hostname` props on `HomePageRequestedReviewsCard` and `HomePageYourOpenPullRequestsCard` when using GitHub Enterprise instances.
+
 ## 3.4.1
 
 ### Patch Changes
