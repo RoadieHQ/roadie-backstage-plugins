@@ -22,10 +22,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn install --frozen-lockfile
@@ -73,12 +73,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org
+
       - run: yarn install --frozen-lockfile
 
       - name: build type declarations
@@ -87,18 +89,16 @@ jobs:
       - name: build packages
         run: yarn backstage-cli repo build
 
-      - name: 'Login to npmjs npm repo .npmrc'
-        shell: bash
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_AUTH_TOKEN}}" >> .npmrc
-          echo "_auth = ${{ secrets.NPM_CONFIG__AUTH }}" >> .npmrc
-          echo "always-auth = true" >> .npmrc
       # Publishes current version of packages that are not already present in the registry.
       - name: Run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
           lerna publish from-package --yes --no-verify-access
+
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
       - name: Create a release tag
         id: create_tag
