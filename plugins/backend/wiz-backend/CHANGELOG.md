@@ -1,5 +1,11 @@
 # @roadiehq/plugin-wiz-backend
 
+## 1.1.0
+
+### Minor Changes
+
+- 9b66e34: Add links for issues, order by created date
+
 ## 1.0.8
 
 ### Patch Changes

@@ -64,7 +64,6 @@ export default async function createPlugin({
 
   const ragAi = await initializeRagAiBackend({
     logger,
-    tokenManager,
     augmentationIndexer,
     retrievalPipeline: createDefaultRetrievalPipeline({
       discovery,
