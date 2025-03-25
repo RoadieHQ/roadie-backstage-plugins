@@ -21,6 +21,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          cache: yarn
+          # yarn lint (backstage-cli repo lint) uses this
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
