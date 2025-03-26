@@ -1,9 +1,32 @@
+/*
+ * Copyright 2025 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { ResourceEntity } from '@backstage/catalog-model';
-import { ECR, paginateDescribeRepositories } from '@aws-sdk/client-ecr';
+import {
+  ECRClient,
+  ListTagsForResourceCommand,
+  paginateDescribeRepositories,
+} from '@aws-sdk/client-ecr';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { LabelValueMapper } from '../utils/tags';
+import {
+  LabelValueMapper,
+  ownerFromTags,
+  relationshipsFromTags,
+} from '../utils/tags';
 import { CatalogApi } from '@backstage/catalog-client';
 import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
@@ -65,8 +88,8 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
       : await this.getCredentialsProvider();
 
     return this.useTemporaryCredentials
-      ? new ECR({ credentials, region })
-      : new ECR({ region, ...credentials });
+      ? new ECRClient({ credentials, region })
+      : new ECRClient({ region, ...credentials });
   }
 
   async run(dynamicAccountConfig?: DynamicAccountConfig): Promise<void> {
@@ -92,7 +115,17 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
       for (const repo of page.repositories ?? []) {
         const repositoryName = repo.repositoryName ?? 'unknown';
         const repositoryArn = repo.repositoryArn ?? '';
-        const uri = repo.repositoryUri ?? '';
+
+        const tagsResponse = await ecr.send(
+          new ListTagsForResourceCommand({
+            resourceArn: repo.repositoryArn!,
+          }),
+        );
+
+        const tags = (tagsResponse.tags ?? []).reduce((acc, tag) => {
+          if (tag.Key && tag.Value) acc[tag.Key] = tag.Value;
+          return acc;
+        }, {} as Record<string, string>);
 
         const resource: ResourceEntity = {
           kind: 'Resource',
@@ -102,14 +135,20 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
             title: repositoryName,
             labels: {
               'aws-ecr-region': this.region,
+              ...tags,
             },
             annotations: {
               ...defaultAnnotations,
               [ANNOTATION_AWS_ECR_REPO_ARN]: repositoryArn,
             },
+            uri: repo.repositoryUri ?? '',
+            tagImmutability: repo.imageTagMutability,
+            createdAt: repo.createdAt?.toDateString(),
+            encryption: repo.encryptionConfiguration?.encryptionType ?? '',
           },
           spec: {
-            owner: 'unknown', // ECR does not support tagging on repositories by default
+            owner: ownerFromTags(tags, this.getOwnerTag()),
+            ...relationshipsFromTags(tags),
             type: this.repoTypeValue,
           },
         };

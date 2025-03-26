@@ -36,6 +36,7 @@ import {
   AWSSQSEntityProvider,
   AWSOpenSearchEntityProvider,
   AWSElastiCacheEntityProvider,
+  AWSECRRepositoryEntityProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -85,6 +86,10 @@ export default async function createPlugin(
       config,
       env,
     );
+    const ecrRepositoryProvider = AWSECRRepositoryEntityProvider.fromConfig(
+      config,
+      env,
+    );
 
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
@@ -99,6 +104,7 @@ export default async function createPlugin(
     builder.addEntityProvider(openSearchProvider);
     builder.addEntityProvider(redisProvider);
     builder.addEntityProvider(awsAccountsProvider);
+    builder.addEntityProvider(ecrRepositoryProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
@@ -112,6 +118,7 @@ export default async function createPlugin(
     providers.push(openSearchProvider);
     providers.push(redisProvider);
     providers.push(awsAccountsProvider);
+    providers.push(ecrRepositoryProvider);
 
     const useDdbData = config.has('dynamodbTableData');
     if (useDdbData) {
