@@ -32,6 +32,7 @@ export const ANNOTATION_AWS_EKS_CLUSTER_ARN = 'amazon.com/eks-cluster-arn';
 export const ANNOTATION_AWS_EKS_CLUSTER_VERSION =
   'amazon.com/eks-cluster-version';
 
+export const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';
 // Accounts
 export const ANNOTATION_ACCOUNT_ID = 'amazon.com/account-id';
 export const ANNOTATION_AWS_ACCOUNT_ARN = 'amazon.com/account-arn';
