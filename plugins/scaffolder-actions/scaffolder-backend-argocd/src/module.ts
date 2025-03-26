@@ -18,7 +18,6 @@ import {
   coreServices,
 } from '@backstage/backend-plugin-api';
 import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node/alpha';
-import { loggerToWinstonLogger } from '@backstage/backend-common';
 import * as backendModuleUtils from './actions';
 
 /**
@@ -37,10 +36,7 @@ export const scaffolderBackendArgoCD = createBackendModule({
       },
       async init({ scaffolder, config, logger }) {
         scaffolder.addActions(
-          backendModuleUtils.createArgoCdResources(
-            config,
-            loggerToWinstonLogger(logger),
-          ),
+          backendModuleUtils.createArgoCdResources(config, logger),
         );
       },
     });
