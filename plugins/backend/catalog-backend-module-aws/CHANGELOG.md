@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.6.0
+
+### Minor Changes
+
+- eb1a3b7: Add AWSECRRepositoryEntityProvider to ingest aws ecr repos
+
 ## 5.5.1
 
 ### Patch Changes
