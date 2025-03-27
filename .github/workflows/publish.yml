@@ -79,6 +79,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org
+
       - run: yarn install --frozen-lockfile
 
       - name: build type declarations
@@ -87,14 +89,10 @@ jobs:
       - name: build packages
         run: yarn backstage-cli repo build
 
-      - name: 'Login to npmjs npm repo .npmrc'
-        shell: bash
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_AUTH_TOKEN}}" >> .npmrc
-          echo "_auth = ${{ secrets.NPM_CONFIG__AUTH }}" >> .npmrc
-          echo "always-auth = true" >> .npmrc
       # Publishes current version of packages that are not already present in the registry.
       - name: Run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
