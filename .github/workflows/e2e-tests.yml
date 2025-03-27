@@ -69,6 +69,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
           # yarn lint (backstage-cli repo lint) uses this
           fetch-depth: 0
 
