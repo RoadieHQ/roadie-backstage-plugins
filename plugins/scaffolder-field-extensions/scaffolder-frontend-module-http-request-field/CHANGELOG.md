@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 1.8.2
+
+### Patch Changes
+
+- dcf952a: Set the value in the http request field if provided in the formData.
+
 ## 1.8.1
 
 ### Patch Changes
