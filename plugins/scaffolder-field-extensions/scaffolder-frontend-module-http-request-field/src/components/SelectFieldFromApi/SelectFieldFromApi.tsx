@@ -75,7 +75,7 @@ const SelectFieldFromApiComponent = (
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const { formContext, uiSchema, identity } = props;
+  const { formContext, uiSchema, identity, formData } = props;
   const isArrayField = props?.schema?.type === 'array';
 
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
@@ -180,10 +180,11 @@ const SelectFieldFromApiComponent = (
     <FormControl
       margin="normal"
       required={props.required}
-      error={(props?.rawErrors?.length || 0) > 0 && !props.formData}
+      error={(props?.rawErrors?.length || 0) > 0 && !formData}
     >
       <Select
         items={dropDownData}
+        selected={formData}
         placeholder={placeholder}
         label={title}
         multiple={isArrayField}
