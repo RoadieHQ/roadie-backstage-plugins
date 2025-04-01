@@ -39,6 +39,8 @@ import { OktaGroupEntityTransformer, OktaUserEntityTransformer } from './types';
 import chunk from 'lodash/chunk';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
+const DEFAULT_CHUNK_SIZE = 250;
+
 /**
  * Provides entities from Okta Org service.
  */
@@ -117,7 +119,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.hierarchyConfig = options.hierarchyConfig;
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
-    this.chunkSize = options.chunkSize || 250;
+    this.chunkSize = options.chunkSize || DEFAULT_CHUNK_SIZE;
   }
 
   getProviderName(): string {
