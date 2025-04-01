@@ -10,12 +10,12 @@ jobs:
       matrix:
         node-version: [18]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: '0'
+          fetch-depth: 0
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -23,11 +23,13 @@ jobs:
         run: |
           yarn install
           yarn backstage-cli versions:bump
+
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time
         with:
           format: YYYYMMDD-HH-MM
+
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
