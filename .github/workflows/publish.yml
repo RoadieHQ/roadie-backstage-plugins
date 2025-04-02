@@ -78,6 +78,7 @@ jobs:
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
+          always-auth: true
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org
 
