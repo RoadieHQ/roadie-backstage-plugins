@@ -11,7 +11,7 @@ backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend/alpha')); // Impo
 
 If you have middleware you'd like to add, consider creating a module on top of this plugin.
 
-## Support for multiple ArgoCD instances - Option 2 - Argo CD backend plugin
+## Support for multiple ArgoCD instances
 
 If you want to create multiple components that fetch data from different argoCD instances, you can dynamically set the ArgoCD instance url by adding the following to your app-config.yaml files.
 
@@ -87,6 +87,59 @@ argocd:
         - name: argoInstance1
           url: https://argoInstance1.com
           token: ${ARGOCD_AUTH_TOKEN} # Token to use to instance 1
+```
+
+**Option 4**: Define a `azure` service principal credentials. It has the lowest priority of all other options.
+
+_Example_
+
+```yml
+argocd:
+  # Upper Level Argo OIDC Config using Azure signals to use azure for logging in purposes, if no other login options available.
+  oidcConfig:
+    provider: azure # currently only the term azure is supported
+    providerConfigKey: <anyConfigKey> # this is where your azure config is found. You may provide any key here so long as it's found in your config.
+  appLocatorMethods:
+    - type: config
+      instances:
+        - name: argoInstance1
+          url: https://argoInstance1.com
+```
+
+```yml
+azure: # azure config must have these fields below (key for where the config is found can vary).
+  tenantId: ${AZURE_TENANT_ID}
+  clientId: ${AZURE_CLIENT_ID}
+  clientSecret: ${AZURE_CLIENT_SECRET}
+  loginUrl: https://login.microsoftonline.com
+```
+
+#### Special Notes on Authenticating with Azure Active Directory (Microsoft Entra ID)
+
+For azure service principal authentication you need to configure a few things to allow for a successful `client_credentials` auth flow.
+
+1. Ensure the service principal you want to use is added to the appropriate AD groups you have configured for RBAC.
+
+1. You have to opt the `.default` `client_credentials` flow into receiving the groups on the token. This is because argo uses the groups claim on an oauth token to ensure RBAC rules.
+
+   ![image](./images/azure-argo.png)
+
+1. Argo validates the `aud` claim on the token defaulting to the ClientId of the service principal you have configured in `argocd-cm` if `allowedAudiences` is not set. If you are using a DIFFERENT service principal from the one you have configured argo to use as the SSO service principal you will need to ensure you add it as an `argocd-cm` value `allowedAudiences`. [Further documentaion](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#existing-oidc-provider)
+
+Example:
+
+```
+  oidc.config: >
+    name: Azure
+    issuer: https://login.microsoftonline.com/<ClientId>/v2.0
+    clientID: <ClientId>
+    clientSecret: $oidc.azure.clientSecret
+    requestedIDTokenClaims:
+      groups:
+          essential: true
+    allowedAudiences:
+      - <ClientId>
+      - <ClientIdOfClientCredSp> # If a different service principal is being used for client_credentials authentication
 ```
 
 ## Project Resource Restrictions

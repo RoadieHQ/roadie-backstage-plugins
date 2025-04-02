@@ -1,5 +1,15 @@
 # backend
 
+## 2.4.9
+
+### Patch Changes
+
+- 207966d: upgraded `better-sqlite3` to support Node `v22`
+- Updated dependencies [eb1a3b7]
+- Updated dependencies [8548407]
+  - @roadiehq/catalog-backend-module-aws@5.6.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.3.0
+
 ## 2.4.8
 
 ### Patch Changes

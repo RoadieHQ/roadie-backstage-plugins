@@ -35,9 +35,7 @@ export function createRouter({
         message: 'cannot find an argo instance to match this cluster',
       });
     }
-    const token: string =
-      matchedArgoInstance.token ??
-      (await argocdService.getArgoToken(matchedArgoInstance));
+    const token: string = await argocdService.getArgoToken(matchedArgoInstance);
 
     if (!token) {
       return response.status(500).send({
@@ -68,9 +66,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      const token: string =
-        matchedArgoInstance.token ??
-        (await argocdService.getArgoToken(matchedArgoInstance));
+      const token: string = await argocdService.getArgoToken(
+        matchedArgoInstance,
+      );
 
       if (!token) {
         return response.status(500).send({
@@ -126,9 +124,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      const token: string =
-        matchedArgoInstance.token ??
-        (await argocdService.getArgoToken(matchedArgoInstance));
+      const token: string = await argocdService.getArgoToken(
+        matchedArgoInstance,
+      );
 
       const resp = await argocdService.getRevisionData(
         matchedArgoInstance.url,
@@ -162,9 +160,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      const token: string =
-        matchedArgoInstance.token ??
-        (await argocdService.getArgoToken(matchedArgoInstance));
+      const token: string = await argocdService.getArgoToken(
+        matchedArgoInstance,
+      );
 
       const resp = await argocdService.getArgoAppData(
         matchedArgoInstance.url,
@@ -205,9 +203,9 @@ export function createRouter({
           message: 'cannot find an argo instance to match this cluster',
         });
       }
-      const token: string =
-        matchedArgoInstance.token ??
-        (await argocdService.getArgoToken(matchedArgoInstance));
+      const token: string = await argocdService.getArgoToken(
+        matchedArgoInstance,
+      );
 
       const resp = await argocdService.getArgoAppData(
         matchedArgoInstance.url,
@@ -240,17 +238,13 @@ export function createRouter({
       });
     }
     let token: string;
-    if (!matchedArgoInstance.token) {
-      try {
-        token = await argocdService.getArgoToken(matchedArgoInstance);
-      } catch (e: any) {
-        return response.status(e.status || 500).send({
-          status: e.status,
-          message: e.message,
-        });
-      }
-    } else {
-      token = matchedArgoInstance.token;
+    try {
+      token = await argocdService.getArgoToken(matchedArgoInstance);
+    } catch (e: any) {
+      return response.status(e.status || 500).send({
+        status: e.status,
+        message: e.message,
+      });
     }
     try {
       await argocdService.createArgoProject({
@@ -311,17 +305,13 @@ export function createRouter({
       });
     }
     let token: string;
-    if (!matchedArgoInstance.token) {
-      try {
-        token = await argocdService.getArgoToken(matchedArgoInstance);
-      } catch (e: any) {
-        return response.status(e.status || 500).send({
-          status: e.status,
-          message: e.message,
-        });
-      }
-    } else {
-      token = matchedArgoInstance.token;
+    try {
+      token = await argocdService.getArgoToken(matchedArgoInstance);
+    } catch (e: any) {
+      return response.status(e.status || 500).send({
+        status: e.status,
+        message: e.message,
+      });
     }
 
     try {

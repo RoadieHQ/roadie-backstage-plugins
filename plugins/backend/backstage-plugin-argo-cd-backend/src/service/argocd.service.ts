@@ -32,6 +32,8 @@ import {
   GetArgoApplicationFetchResponse,
   getArgoApplicationInfoProps,
   terminateArgoAppOperationProps,
+  AzureConfig,
+  OIDCConfig,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
@@ -140,7 +142,7 @@ export class ArgoService implements ArgoServiceApi {
         let getArgoAppDataResp: any;
         let token: string;
         try {
-          token = argoInstance.token || (await this.getArgoToken(argoInstance));
+          token = await this.getArgoToken(argoInstance);
         } catch (error: any) {
           this.logger.error(
             `Error getting token from Argo Instance ${argoInstance.name}: ${error.message}`,
@@ -207,32 +209,66 @@ export class ArgoService implements ArgoServiceApi {
     return data;
   }
 
-  async getArgoToken(appConfig: {
-    url: string;
-    username?: string;
-    password?: string;
-  }): Promise<string> {
-    const { url, username, password } = appConfig;
+  async getArgoToken(argoInstanceConfig: InstanceConfig): Promise<string> {
+    const oidcConfig = this.config.getOptional<OIDCConfig>('argocd.oidcConfig');
+    const { url, username, password, token } = argoInstanceConfig;
 
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username || this.username,
-        password: password || this.password,
-      }),
-    };
-    const resp = await fetch(`${url}/api/v1/session`, options);
-    if (!resp.ok) {
-      this.logger.error(`failed to get argo token: ${url}`);
+    if (token) return token;
+
+    if ((username && password) || (this.username && this.password)) {
+      const resp = await fetch(`${url}/api/v1/session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username || this.username,
+          password: password || this.password,
+        }),
+      });
+      if (!resp.ok) {
+        this.logger.error(`failed to get argo token: ${url}`);
+      }
+      if (resp.status === 401) {
+        throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
+      }
+      const data = await resp.json();
+      return data.token;
     }
-    if (resp.status === 401) {
-      throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
+
+    if (oidcConfig?.provider === 'azure' && oidcConfig.providerConfigKey) {
+      const azureCredentials = this.config.get<AzureConfig>(
+        oidcConfig.providerConfigKey,
+      );
+
+      const resp = await fetch(
+        `${azureCredentials.loginUrl}/${azureCredentials.tenantId}/oauth2/v2.0/token`,
+        {
+          method: 'POST',
+          body: new URLSearchParams({
+            grant_type: 'client_credentials',
+            client_id: azureCredentials.clientId,
+            client_secret: azureCredentials.clientSecret,
+            scope: `${azureCredentials.clientId}/.default`,
+          }).toString(),
+        },
+      );
+
+      const data:
+        | { access_token: string }
+        | { error: string; error_description: string; error_codes: [] } =
+        await resp.json();
+
+      if ('error' in data) {
+        throw new Error(
+          `Failed to get argo token through your azure config credentials: ${data.error_description} (${data.error}, codes: [${data.error_codes}], status code: ${resp.status})`,
+        );
+      }
+
+      return data.access_token;
     }
-    const data = await resp.json();
-    return data.token;
+
+    throw new Error('Missing credentials in config for Argo Instance.');
   }
 
   async getArgoAppData(
@@ -732,12 +768,7 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error('cannot find an argo instance to match this cluster');
     }
 
-    let token: string;
-    if (!matchedArgoInstance.token) {
-      token = await this.getArgoToken(matchedArgoInstance);
-    } else {
-      token = matchedArgoInstance.token;
-    }
+    const token = await this.getArgoToken(matchedArgoInstance);
 
     if (terminateOperation) {
       const terminateOperationResp = await this.terminateArgoAppOperation({
@@ -897,9 +928,7 @@ export class ArgoService implements ArgoServiceApi {
       throw new Error(`Unable to find Argo instance named '${argoInstance}'`);
     }
 
-    const token =
-      matchedArgoInstance.token ||
-      (await this.getArgoToken(matchedArgoInstance));
+    const token = await this.getArgoToken(matchedArgoInstance);
 
     await this.createArgoProject({
       baseUrl: matchedArgoInstance.url,
@@ -1042,9 +1071,7 @@ export class ArgoService implements ArgoServiceApi {
         throw new Error(
           `config does not have argo information for the cluster named '${argoInstanceName}'`,
         );
-      token =
-        matchedArgoInstance.token ??
-        (await this.getArgoToken(matchedArgoInstance));
+      token = await this.getArgoToken(matchedArgoInstance);
       url = matchedArgoInstance.url;
     }
 
@@ -1101,9 +1128,7 @@ export class ArgoService implements ArgoServiceApi {
         throw new Error(
           `config does not have argo information for the cluster named '${argoInstanceName}'`,
         );
-      token =
-        matchedArgoInstance.token ??
-        (await this.getArgoToken(matchedArgoInstance));
+      token = await this.getArgoToken(matchedArgoInstance);
       url = matchedArgoInstance.url;
     }
     const options = {
