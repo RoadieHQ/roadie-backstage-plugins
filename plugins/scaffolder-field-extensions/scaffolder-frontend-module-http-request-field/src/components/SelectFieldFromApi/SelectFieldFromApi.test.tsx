@@ -57,6 +57,8 @@ describe('SelectFieldFromApi', () => {
 
   it('should use response body directly where there is no arraySelector', async () => {
     fetchApi.fetch.mockResolvedValueOnce({
+      status: 200,
+      ok: true,
       json: jest.fn().mockResolvedValue(['result1', 'result2']),
     });
     const uiSchema = { 'ui:options': { path: '/test-endpoint' } };
@@ -71,7 +73,7 @@ describe('SelectFieldFromApi', () => {
         </TestApiProvider>,
       ),
     );
-    const input = await getByTestId('select');
+    const input = getByTestId('select');
     expect(input.textContent).toBe('Select from results');
     fireEvent.mouseDown(within(input).getByRole('button'));
 
@@ -79,8 +81,61 @@ describe('SelectFieldFromApi', () => {
     expect(getByText('result2')).toBeInTheDocument();
   });
 
+  it('should fail if response is not ok', async () => {
+    fetchApi.fetch.mockResolvedValueOnce({
+      status: 403,
+      ok: false,
+      statusText: 'Not Authorized',
+      json: jest.fn().mockResolvedValue(['result1', 'result2']),
+    });
+    const uiSchema = { 'ui:options': { path: '/test-endpoint' } };
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
+    const { getByText } = await renderWithEffects(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <SelectFieldFromApi {...props} />
+        </TestApiProvider>,
+      ),
+    );
+
+    expect(
+      getByText('Error: Failed to retrieve data from API: Not Authorized'),
+    ).toBeInTheDocument();
+  });
+
+  it('should fail if response is 200 and I explicitly ask for 201', async () => {
+    fetchApi.fetch.mockResolvedValueOnce({
+      status: 200,
+      ok: true,
+      statusText: 'OK',
+      json: jest.fn().mockResolvedValue(['result1', 'result2']),
+    });
+    const uiSchema = {
+      'ui:options': { path: '/test-endpoint', successStatusCode: 201 },
+    };
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
+    const { getByText } = await renderWithEffects(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <SelectFieldFromApi {...props} />
+        </TestApiProvider>,
+      ),
+    );
+    expect(
+      getByText('Error: Failed to retrieve data from API: OK'),
+    ).toBeInTheDocument();
+  });
+
   it('should use array specified by arraySelector', async () => {
     fetchApi.fetch.mockResolvedValueOnce({
+      status: 200,
+      ok: true,
       json: jest.fn().mockResolvedValue({ myarray: ['result1', 'result2'] }),
     });
     const uiSchema = {
@@ -97,7 +152,7 @@ describe('SelectFieldFromApi', () => {
         </TestApiProvider>,
       ),
     );
-    const input = await getByTestId('select');
+    const input = getByTestId('select');
     expect(input.textContent).toBe('Select from results');
     fireEvent.mouseDown(within(input).getByRole('button'));
 
@@ -107,6 +162,8 @@ describe('SelectFieldFromApi', () => {
 
   it('should pass an access token through in the Authorization header if "oauth" is configured', async () => {
     fetchApi.fetch.mockResolvedValueOnce({
+      status: 200,
+      ok: true,
       json: jest.fn().mockResolvedValue({ myarray: ['result1', 'result2'] }),
     });
     mockGithubAuthApi.getAccessToken.mockResolvedValue('my-github-auth-token');

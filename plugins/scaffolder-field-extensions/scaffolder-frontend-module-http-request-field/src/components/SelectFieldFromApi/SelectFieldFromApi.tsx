@@ -114,6 +114,17 @@ const SelectFieldFromApiComponent = (
       })}?${params}`,
       { headers },
     );
+    if (options.successStatusCode) {
+      if (response.status !== options.successStatusCode) {
+        throw new Error(
+          `Failed to retrieve data from API: ${response.statusText}`,
+        );
+      }
+    } else if (!response.ok) {
+      throw new Error(
+        `Failed to retrieve data from API: ${response.statusText}`,
+      );
+    }
     const body = await response.json();
     const array = options.arraySelector
       ? get(
