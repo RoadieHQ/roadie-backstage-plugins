@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.4.2
+
+### Patch Changes
+
+- e7e0b71: Upgraded `mock-fs` to latest version which supports Node `v20`+
+
 ## 3.4.1
 
 ### Patch Changes
