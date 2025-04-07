@@ -19,6 +19,7 @@ import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 import YAML from 'yaml';
 import { stringifyOptions, yamlOptionsSchema } from '../../types';
+import { yamlStringifyAll } from '../serialize/yaml';
 
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
@@ -27,6 +28,7 @@ export function createYamlJSONataTransformAction(): TemplateAction<{
   expression: string;
   options?: stringifyOptions;
   loadAll?: boolean;
+  writeMulti?: boolean;
   as?: 'string' | 'object';
 }> {
   return createTemplateAction<{
@@ -34,6 +36,7 @@ export function createYamlJSONataTransformAction(): TemplateAction<{
     expression: string;
     options?: stringifyOptions;
     loadAll?: boolean;
+    writeMulti?: boolean;
     as?: 'string' | 'object';
   }>({
     id: 'roadiehq:utils:jsonata:yaml:transform',
@@ -59,6 +62,12 @@ export function createYamlJSONataTransformAction(): TemplateAction<{
             title: 'Load All',
             description:
               'Use this if the yaml source file contains multiple yaml objects',
+            type: 'boolean',
+          },
+          writeMulti: {
+            title: 'Write Multi',
+            description:
+              'Use this (e.g. together with loadAll) if the yaml output should be multiple yaml documents (separated by ---).',
             type: 'boolean',
           },
           as: {
@@ -87,7 +96,11 @@ export function createYamlJSONataTransformAction(): TemplateAction<{
       if (ctx.input.as === 'object') {
         resultHandler = rz => rz;
       } else {
-        resultHandler = rz => YAML.stringify(rz, ctx.input.options);
+        if (ctx.input.writeMulti) {
+          resultHandler = rz => yamlStringifyAll(rz, ctx.input.options);
+        } else {
+          resultHandler = rz => YAML.stringify(rz, ctx.input.options);
+        }
       }
       const sourceFilepath = resolveSafeChildPath(
         ctx.workspacePath,

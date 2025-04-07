@@ -171,4 +171,28 @@ describe('roadiehq:utils:jsonata:yaml:transform', () => {
       hello: ['world'],
     });
   });
+
+  it('should be able to write back multi yaml', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': '---\nhello: [world]\n---\nfoo: [bar]',
+      },
+    });
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        expression: '$',
+        loadAll: true,
+        writeMulti: true,
+        as: 'string',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'result',
+      `hello:\n  - world\n---\nfoo:\n  - bar\n`,
+    );
+  });
 });
