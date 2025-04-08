@@ -1,5 +1,11 @@
 # @roadiehq/plugin-wiz-backend
 
+## 1.2.0
+
+### Minor Changes
+
+- bd8e49f: Allow using WizClient outside the plugin.
+
 ## 1.1.0
 
 ### Minor Changes

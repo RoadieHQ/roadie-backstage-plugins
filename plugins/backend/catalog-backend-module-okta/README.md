@@ -344,6 +344,20 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
   });
 ```
 
+#### Membership Resolution Parallelism
+
+By default, Group membership will attempt to be resolved 250 groups at a time. If you would like to increase or decrease this parallelism, provide a new value for `chunkSize`:
+
+```typescript
+const factory: EntityProviderFactory = (oktaConfig: Config) =>
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    chunkSize: 100,
+  });
+```
+
 #### Legacy backend
 
 <details>

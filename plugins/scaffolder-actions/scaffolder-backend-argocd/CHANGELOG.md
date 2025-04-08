@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.6.0
+
+### Minor Changes
+
+- a3b71c6: Remove deprecated loggerToWinstonLogger and getVoidLogger from scaffolderBackendArgoCD
+
 ## 1.5.2
 
 ### Patch Changes

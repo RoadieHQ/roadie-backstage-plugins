@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 import { PassThrough } from 'stream';
-import { getVoidLogger } from '@backstage/backend-common';
 import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ConfigReader } from '@backstage/config';
 import { createArgoCdResources } from './argocd';
+import { Logger } from 'winston';
 
 const mockCreateArgoResources = jest.fn();
 
@@ -56,8 +56,10 @@ describe('argocd:create-resources', () => {
   ]);
 
   let action: TemplateAction<any>;
+  const logger: Logger = {} as Logger;
+
   const mockContext = {
-    logger: getVoidLogger(),
+    logger: logger,
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -85,7 +87,7 @@ describe('argocd:create-resources', () => {
   };
 
   beforeEach(() => {
-    action = createArgoCdResources(config, getVoidLogger());
+    action = createArgoCdResources(config, logger);
   });
 
   it('should create argocd application', async () => {
