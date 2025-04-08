@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.1.2
+
+### Patch Changes
+
+- 98ff2bf: Apply chunking of membership resolution to OktaGroupEntityProvider
+
 ## 1.1.1
 
 ### Patch Changes
