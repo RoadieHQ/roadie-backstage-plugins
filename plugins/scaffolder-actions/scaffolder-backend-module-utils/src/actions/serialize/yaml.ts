@@ -22,10 +22,12 @@ import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 export function createSerializeYamlAction(): TemplateAction<{
   data: any;
   options?: stringifyOptions;
+  writeMulti?: boolean;
 }> {
   return createTemplateAction<{
     data: any;
     options?: stringifyOptions;
+    writeMulti?: boolean;
   }>({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
@@ -49,6 +51,12 @@ export function createSerializeYamlAction(): TemplateAction<{
             },
           },
           options: yamlOptionsSchema,
+          writeMulti: {
+            title: 'Write Multi',
+            description:
+              'Use this if the yaml output should be multiple yaml documents (separated by ---).',
+            type: 'boolean',
+          },
         },
       },
       output: {
@@ -63,10 +71,22 @@ export function createSerializeYamlAction(): TemplateAction<{
     },
 
     async handler(ctx) {
-      ctx.output(
-        'serialized',
-        YAML.stringify(ctx.input.data, ctx.input.options),
-      );
+      const serialized = ctx.input.writeMulti
+        ? yamlStringifyAll(ctx.input.data, ctx.input.options)
+        : YAML.stringify(ctx.input.data, ctx.input.options);
+      ctx.output('serialized', serialized);
     },
   });
+}
+
+export function yamlStringifyAll(
+  value: any,
+  options?: stringifyOptions,
+): string {
+  if (!Array.isArray(value)) {
+    throw new Error(
+      'input is not an array, cannot be stringified as multidoc yaml',
+    );
+  }
+  return value.map((doc: any) => YAML.stringify(doc, options)).join('---\n');
 }

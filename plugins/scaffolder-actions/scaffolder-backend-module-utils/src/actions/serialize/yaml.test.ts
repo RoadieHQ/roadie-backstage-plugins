@@ -69,6 +69,37 @@ describe('roadiehq:utils:serialize:yaml', () => {
     );
   });
 
+  it('should write file to the workspacePath with multidoc content', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: [{ hello: 'world' }, { are: 'you there?' }],
+        writeMulti: true,
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      `hello: world\n---\nare: you there?\n`,
+    );
+  });
+
+  it('should error when input is not suitable for multidoc', async () => {
+    await expect(
+      action.handler({
+        ...mockContext,
+        workspacePath: 'fake-tmp-dir',
+        input: {
+          data: { hello: 'world' },
+          writeMulti: true,
+        },
+      }),
+    ).rejects.toThrow(
+      'input is not an array, cannot be stringified as multidoc yaml',
+    );
+  });
+
   it('should pass options to YAML.stringify', async () => {
     const opts = {
       indent: 3,
