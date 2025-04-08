@@ -98,12 +98,12 @@ export class JiraAPI {
   private async pagedIssuesRequest(
     apiUrl: string,
     jql: string,
-    startAt: number,
+    nextPageToken?: string,
     maxResults?: number,
   ): Promise<IssuesResult> {
     const data = {
       jql,
-      maxResults: maxResults ?? -1,
+      maxResults: maxResults ?? 5000,
       fields: [
         'key',
         'issuetype',
@@ -116,9 +116,9 @@ export class JiraAPI {
         'updated',
         'project',
       ],
-      startAt,
+      nextPageToken,
     };
-    const request = await this.fetchApi.fetch(`${apiUrl}search`, {
+    const request = await this.fetchApi.fetch(`${apiUrl}search/jql`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,11 +131,10 @@ export class JiraAPI {
       );
     }
     const response: IssuesResponse = await request.json();
-    const lastElement = response.startAt + response.maxResults;
 
     return {
       issues: response.issues,
-      next: response.total > lastElement ? lastElement : undefined,
+      nextPageToken: response.nextPageToken,
     };
   }
 
@@ -161,18 +160,18 @@ export class JiraAPI {
       AND statuscategory not in ("Done") 
     `;
 
-    let startAt: number | undefined = 0;
+    let nextPageToken: string | undefined;
     const issues: Ticket[] = [];
 
-    while (startAt !== undefined) {
+    do {
       const res: IssuesResult = await this.pagedIssuesRequest(
         apiUrl,
         jql,
-        startAt,
+        nextPageToken,
       );
-      startAt = res.next;
+      nextPageToken = res.nextPageToken;
       issues.push(...res.issues);
-    }
+    } while (nextPageToken !== undefined);
 
     return issues;
   }
@@ -336,18 +335,18 @@ export class JiraAPI {
 
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
 
-    let startAt: number | undefined = 0;
+    let nextPageToken: string | undefined;
     const foundIssues: Ticket[] = [];
 
-    while (startAt !== undefined) {
+    do {
       const res: IssuesResult = await this.pagedIssuesRequest(
         apiUrl,
         jql,
-        startAt,
+        nextPageToken,
       );
-      startAt = res.next;
+      nextPageToken = res.nextPageToken;
       foundIssues.push(...res.issues);
-    }
+    } while (nextPageToken !== undefined);
 
     tickets = foundIssues.map(index => {
       return {
@@ -381,17 +380,18 @@ export class JiraAPI {
 
     const issues = [];
 
-    let startAt: number | undefined = 0;
-    while (startAt !== undefined) {
+    let nextPageToken: string | undefined;
+    do {
       const res: IssuesResult = await this.pagedIssuesRequest(
         apiUrl,
         query,
-        startAt,
+        nextPageToken,
         maxResults,
       );
-      startAt = res.next;
+      nextPageToken = res.nextPageToken;
       issues.push(...res.issues);
-    }
+    } while (nextPageToken !== undefined);
+
     return issues;
   }
 }
