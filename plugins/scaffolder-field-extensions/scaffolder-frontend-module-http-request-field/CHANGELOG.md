@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.0.0
+
+### Major Changes
+
+- 59c552a: Adds validation of the response code. By default it will ensure its within the 200 range. Otherwise it will fail.
+
 ## 1.8.2
 
 ### Patch Changes
