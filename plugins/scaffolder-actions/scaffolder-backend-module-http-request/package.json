@@ -50,7 +50,7 @@
     "@backstage/backend-plugin-api": "^1.0.2",
     "@backstage/core-app-api": "^1.15.2",
     "@backstage/core-plugin-api": "^1.10.1",
-    "@backstage/plugin-scaffolder-node": "^0.6.2",
+    "@backstage/plugin-scaffolder-node": "^0.8.0",
     "cross-fetch": "^4.0.0",
     "winston": "^3.2.1"
   },
