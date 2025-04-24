@@ -37225,9 +37225,9 @@ xml-but-prettier@^1.0.1:
     repeat-string "^1.5.2"
 
 xml-crypto@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-6.0.0.tgz#9657ce63cbbaacc48b2c74a13d05cf0a9d339d47"
-  integrity sha512-L3RgnkaDrHaYcCnoENv4Idzt1ZRj5U1z1BDH98QdDTQfssScx8adgxhd9qwyYo+E3fXbQZjEQH7aiXHLVgxGvw==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/xml-crypto/-/xml-crypto-6.1.1.tgz#e2e28025891cb8ade93dc0a507274716d6fa9dba"
+  integrity sha512-ni6H4Xnd5zvpDKvevmFmmKNojF2cAoTcioeSasICsDTkF0pjqS/PlHsMCLjiruH0N6iVa3OCBMHRLwRfcUPo2g==
   dependencies:
     "@xmldom/is-dom-node" "^1.0.1"
     "@xmldom/xmldom" "^0.8.10"
