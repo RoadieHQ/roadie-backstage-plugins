@@ -50,6 +50,7 @@
     "@aws-sdk/client-organizations": "^3.696.0",
     "@aws-sdk/client-rds": "^3.696.0",
     "@aws-sdk/client-s3": "^3.696.0",
+    "@aws-sdk/client-elastic-load-balancing-v2": "^3.696.0",
     "@aws-sdk/client-sns": "^3.696.0",
     "@aws-sdk/client-sqs": "^3.696.0",
     "@aws-sdk/client-sts": "^3.696.0",

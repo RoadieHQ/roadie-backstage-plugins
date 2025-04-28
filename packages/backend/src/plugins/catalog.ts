@@ -37,6 +37,11 @@ import {
   AWSOpenSearchEntityProvider,
   AWSElastiCacheEntityProvider,
   AWSECRRepositoryEntityProvider,
+  AWSVPCProvider,
+  AWSSubnetProvider,
+  AWSSecurityGroupProvider,
+  AWSEBSVolumeProvider,
+  AWSLoadBalancerProvider,
 } from '@roadiehq/catalog-backend-module-aws';
 import { OktaOrgEntityProvider } from '@roadiehq/catalog-backend-module-okta';
 import { Duration } from 'luxon';
@@ -91,6 +96,18 @@ export default async function createPlugin(
       env,
     );
 
+    const vpcProvider = AWSVPCProvider.fromConfig(config, env);
+    const subnetProvider = AWSSubnetProvider.fromConfig(config, env);
+    const securityGroupProvider = AWSSecurityGroupProvider.fromConfig(
+      config,
+      env,
+    );
+    const ebsVolProvider = AWSEBSVolumeProvider.fromConfig(config, env);
+    const loadBalancerProvider = AWSLoadBalancerProvider.fromConfig(
+      config,
+      env,
+    );
+
     builder.addEntityProvider(s3Provider);
     builder.addEntityProvider(lambdaProvider);
     builder.addEntityProvider(iamUserProvider);
@@ -105,6 +122,11 @@ export default async function createPlugin(
     builder.addEntityProvider(redisProvider);
     builder.addEntityProvider(awsAccountsProvider);
     builder.addEntityProvider(ecrRepositoryProvider);
+    builder.addEntityProvider(vpcProvider);
+    builder.addEntityProvider(subnetProvider);
+    builder.addEntityProvider(securityGroupProvider);
+    builder.addEntityProvider(ebsVolProvider);
+    builder.addEntityProvider(loadBalancerProvider);
     providers.push(s3Provider);
     providers.push(lambdaProvider);
     providers.push(iamUserProvider);
@@ -119,6 +141,11 @@ export default async function createPlugin(
     providers.push(redisProvider);
     providers.push(awsAccountsProvider);
     providers.push(ecrRepositoryProvider);
+    providers.push(vpcProvider);
+    providers.push(subnetProvider);
+    providers.push(securityGroupProvider);
+    providers.push(ebsVolProvider);
+    providers.push(loadBalancerProvider);
 
     const useDdbData = config.has('dynamodbTableData');
     if (useDdbData) {
