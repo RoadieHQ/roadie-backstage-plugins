@@ -99,45 +99,6 @@ export class AWSSubnetProvider extends AWSEntityProvider {
       const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
       const consoleLink = new ARN(arn).consoleLink;
 
-      // Get route table association information
-      let routeTableInfo = 'Not associated';
-      try {
-        const routeTables = await ec2.describeRouteTables({
-          Filters: [
-            {
-              Name: 'association.subnet-id',
-              Values: [subnetId],
-            },
-          ],
-        });
-
-        if (routeTables.RouteTables && routeTables.RouteTables.length > 0) {
-          const routeTable = routeTables.RouteTables[0];
-          routeTableInfo = routeTable.RouteTableId || 'Associated';
-
-          // Add route info if available
-          if (routeTable.Routes && routeTable.Routes.length > 0) {
-            const routes = routeTable.Routes.map(
-              route =>
-                `${
-                  route.DestinationCidrBlock ||
-                  route.DestinationIpv6CidrBlock ||
-                  'unknown'
-                } -> ${
-                  route.GatewayId ||
-                  route.NatGatewayId ||
-                  route.VpcPeeringConnectionId ||
-                  route.TransitGatewayId ||
-                  'unknown'
-                }`,
-            ).join('; ');
-            routeTableInfo += ` (${routes})`;
-          }
-        }
-      } catch (error) {
-        routeTableInfo = 'Error fetching route table';
-      }
-
       const resource: ResourceEntity = {
         kind: 'Resource',
         apiVersion: 'backstage.io/v1beta1',
@@ -149,8 +110,6 @@ export class AWSSubnetProvider extends AWSEntityProvider {
           },
           labels: this.labelsFromTags(subnet.Tags),
           name: subnetId,
-          title:
-            subnet.Tags?.find(tag => tag.Key === 'Name')?.Value || subnetId,
           cidrBlock: subnet.CidrBlock,
           vpcId: subnet.VpcId,
           availabilityZone: subnet.AvailabilityZone,
@@ -158,7 +117,6 @@ export class AWSSubnetProvider extends AWSEntityProvider {
           defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
           mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
           state: subnet.State,
-          routeTable: routeTableInfo,
         },
         spec: {
           owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
