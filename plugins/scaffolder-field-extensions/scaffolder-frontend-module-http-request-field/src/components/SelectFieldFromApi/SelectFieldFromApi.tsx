@@ -172,7 +172,9 @@ const SelectFieldFromApiComponent = (
         label: label || value,
       };
     });
-    setDropDownData(sortBy(constructedData, 'label'));
+    setDropDownData(
+      sortBy(constructedData, item => item.label?.toLowerCase() ?? ''),
+    );
   });
 
   const {
