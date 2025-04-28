@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.0.1
+
+### Patch Changes
+
+- 145dde6: Modify display labels to be sorted alphabetically ignoring the case.
+
 ## 2.0.0
 
 ### Major Changes
