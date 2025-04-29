@@ -29,6 +29,7 @@ import {
 import { DynamicAccountConfig } from '../types';
 import { ARN } from 'link2aws';
 import { duration } from '../utils/timer';
+import { DescribeSubnetsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSubnetsCommand';
 
 const ANNOTATION_SUBNET_ID = 'amazonaws.com/subnet-id';
 
@@ -90,43 +91,50 @@ export class AWSSubnetProvider extends AWSEntityProvider {
       dynamicAccountConfig,
     );
 
-    const subnets = await ec2.describeSubnets({});
+    let nextToken: string | undefined = undefined;
+    do {
+      const subnets: DescribeSubnetsCommandOutput = await ec2.describeSubnets({
+        NextToken: nextToken,
+      });
 
-    for (const subnet of subnets.Subnets || []) {
-      const subnetId = subnet.SubnetId;
-      if (!subnetId) continue;
+      for (const subnet of subnets.Subnets || []) {
+        const subnetId = subnet.SubnetId;
+        if (!subnetId) continue;
 
-      const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
-      const consoleLink = new ARN(arn).consoleLink;
+        const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
+        const consoleLink = new ARN(arn).consoleLink;
 
-      const resource: ResourceEntity = {
-        kind: 'Resource',
-        apiVersion: 'backstage.io/v1beta1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_SUBNET_ID]: subnetId,
+        const resource: ResourceEntity = {
+          kind: 'Resource',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              [ANNOTATION_SUBNET_ID]: subnetId,
+            },
+            labels: this.labelsFromTags(subnet.Tags),
+            name: subnetId,
+            cidrBlock: subnet.CidrBlock,
+            vpcId: subnet.VpcId,
+            availabilityZone: subnet.AvailabilityZone,
+            availableIpAddressCount: subnet.AvailableIpAddressCount,
+            defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
+            mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
+            state: subnet.State,
           },
-          labels: this.labelsFromTags(subnet.Tags),
-          name: subnetId,
-          cidrBlock: subnet.CidrBlock,
-          vpcId: subnet.VpcId,
-          availabilityZone: subnet.AvailabilityZone,
-          availableIpAddressCount: subnet.AvailableIpAddressCount,
-          defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
-          mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
-          state: subnet.State,
-        },
-        spec: {
-          owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
-          ...relationshipsFromTags(subnet.Tags),
-          type: 'subnet',
-        },
-      };
+          spec: {
+            owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(subnet.Tags),
+            type: 'subnet',
+          },
+        };
 
-      subnetResources.push(resource);
-    }
+        subnetResources.push(resource);
+      }
+
+      nextToken = subnets.NextToken;
+    } while (nextToken);
 
     await this.connection.applyMutation({
       type: 'full',

@@ -29,6 +29,7 @@ import {
 import { DynamicAccountConfig } from '../types';
 import { ARN } from 'link2aws';
 import { duration } from '../utils/timer';
+import { DescribeSecurityGroupsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSecurityGroupsCommand';
 
 const ANNOTATION_SECURITY_GROUP_ID = 'amazonaws.com/security-group-id';
 
@@ -92,78 +93,90 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
       dynamicAccountConfig,
     );
 
-    const securityGroups = await ec2.describeSecurityGroups({});
+    let nextToken: string | undefined = undefined;
+    let pageCount = 0;
 
-    for (const sg of securityGroups.SecurityGroups || []) {
-      const securityGroupId = sg.GroupId;
-      if (!securityGroupId) continue;
+    do {
+      const securityGroups: DescribeSecurityGroupsCommandOutput =
+        await ec2.describeSecurityGroups({
+          NextToken: nextToken,
+        });
 
-      const arn = `arn:aws:ec2:${region}:${accountId}:security-group/${securityGroupId}`;
-      const consoleLink = new ARN(arn).consoleLink;
+      pageCount++;
 
-      // Format the rules for better readability
-      const ingressRules =
-        sg.IpPermissions?.map(perm => {
-          const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
-          const portRange =
-            perm.FromPort === perm.ToPort
-              ? perm.FromPort?.toString() || 'All'
-              : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
+      for (const sg of securityGroups.SecurityGroups || []) {
+        const securityGroupId = sg.GroupId;
+        if (!securityGroupId) continue;
 
-          const sources = [
-            ...(perm.IpRanges?.map(r => r.CidrIp) || []),
-            ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
-          ].join(', ');
+        const arn = `arn:aws:ec2:${region}:${accountId}:security-group/${securityGroupId}`;
+        const consoleLink = new ARN(arn).consoleLink;
 
-          return `${protocol}:${portRange} from ${sources || 'None'}`;
-        }).join('; ') || 'None';
+        // Format the rules for better readability
+        const ingressRules =
+          sg.IpPermissions?.map(perm => {
+            const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
+            const portRange =
+              perm.FromPort === perm.ToPort
+                ? perm.FromPort?.toString() || 'All'
+                : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
 
-      const egressRules =
-        sg.IpPermissionsEgress?.map(perm => {
-          const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
-          const portRange =
-            perm.FromPort === perm.ToPort
-              ? perm.FromPort?.toString() || 'All'
-              : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
+            const sources = [
+              ...(perm.IpRanges?.map(r => r.CidrIp) || []),
+              ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
+            ].join(', ');
 
-          const destinations = [
-            ...(perm.IpRanges?.map(r => r.CidrIp) || []),
-            ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
-          ].join(', ');
+            return `${protocol}:${portRange} from ${sources || 'None'}`;
+          }).join('; ') || 'None';
 
-          return `${protocol}:${portRange} to ${destinations || 'None'}`;
-        }).join('; ') || 'None';
+        const egressRules =
+          sg.IpPermissionsEgress?.map(perm => {
+            const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
+            const portRange =
+              perm.FromPort === perm.ToPort
+                ? perm.FromPort?.toString() || 'All'
+                : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
 
-      const resource: ResourceEntity = {
-        kind: 'Resource',
-        apiVersion: 'backstage.io/v1beta1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId,
+            const destinations = [
+              ...(perm.IpRanges?.map(r => r.CidrIp) || []),
+              ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
+            ].join(', ');
+
+            return `${protocol}:${portRange} to ${destinations || 'None'}`;
+          }).join('; ') || 'None';
+
+        const resource: ResourceEntity = {
+          kind: 'Resource',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId,
+            },
+            labels: this.labelsFromTags(sg.Tags),
+            name: securityGroupId,
+            title:
+              sg.Tags?.find(tag => tag.Key === 'Name')?.Value ||
+              sg.GroupName ||
+              securityGroupId,
+            description: sg.Description,
+            vpcId: sg.VpcId,
+            groupName: sg.GroupName,
+            ingressRules: ingressRules,
+            egressRules: egressRules,
           },
-          labels: this.labelsFromTags(sg.Tags),
-          name: securityGroupId,
-          title:
-            sg.Tags?.find(tag => tag.Key === 'Name')?.Value ||
-            sg.GroupName ||
-            securityGroupId,
-          description: sg.Description,
-          vpcId: sg.VpcId,
-          groupName: sg.GroupName,
-          ingressRules: ingressRules,
-          egressRules: egressRules,
-        },
-        spec: {
-          owner: ownerFromTags(sg.Tags, this.getOwnerTag(), groups),
-          ...relationshipsFromTags(sg.Tags),
-          type: 'security-group',
-        },
-      };
+          spec: {
+            owner: ownerFromTags(sg.Tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(sg.Tags),
+            type: 'security-group',
+          },
+        };
 
-      sgResources.push(resource);
-    }
+        sgResources.push(resource);
+      }
+
+      nextToken = securityGroups.NextToken;
+    } while (nextToken);
 
     await this.connection.applyMutation({
       type: 'full',
@@ -174,7 +187,7 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
     });
 
     this.logger.info(
-      `Finished providing ${sgResources.length} Security Group resources from AWS: ${accountId}`,
+      `Finished providing ${sgResources.length} Security Group resources from AWS: ${accountId} (processed ${pageCount} pages)`,
       { run_duration: duration(startTimestamp) },
     );
   }

@@ -28,6 +28,7 @@ import {
 } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+import { DescribeVolumesCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeVolumesCommand';
 
 const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
 
@@ -92,51 +93,57 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
       dynamicAccountConfig,
     );
 
-    const volumes = await ec2.describeVolumes({});
+    let nextToken: string | undefined = undefined;
+    do {
+      const volumes: DescribeVolumesCommandOutput = await ec2.describeVolumes({
+        NextToken: nextToken,
+      });
+      for (const volume of volumes.Volumes || []) {
+        const volumeId = volume.VolumeId;
+        if (!volumeId) continue;
 
-    for (const volume of volumes.Volumes || []) {
-      const volumeId = volume.VolumeId;
-      if (!volumeId) continue;
+        const arn = `arn:aws:ec2:${region}:${accountId}:volume/${volumeId}`;
+        const arnParts = arn.split(':');
+        const resourceParts = arnParts[5].split('/');
+        const ebsVolumeId = resourceParts[3];
 
-      const arn = `arn:aws:ec2:${region}:${accountId}:volume/${volumeId}`;
-      const arnParts = arn.split(':');
-      const resourceParts = arnParts[5].split('/');
-      const ebsVolumeId = resourceParts[3];
+        const consoleLink = createEbsVolumeConsoleLink(region, ebsVolumeId);
 
-      const consoleLink = createEbsVolumeConsoleLink(region, ebsVolumeId);
-
-      const resource: ResourceEntity = {
-        kind: 'Resource',
-        apiVersion: 'backstage.io/v1beta1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_EBS_VOLUME_ID]: volumeId,
+        const resource: ResourceEntity = {
+          kind: 'Resource',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              [ANNOTATION_EBS_VOLUME_ID]: volumeId,
+            },
+            labels: this.labelsFromTags(volume.Tags),
+            name: volumeId,
+            title:
+              volume.Tags?.find(tag => tag.Key === 'Name')?.Value || volumeId,
+            size: volume.Size,
+            volumeType: volume.VolumeType,
+            availabilityZone: volume.AvailabilityZone,
+            state: volume.State,
+            encrypted: volume.Encrypted ? 'Yes' : 'No',
+            attachedInstanceIds: volume.Attachments?.map(
+              a => a.InstanceId,
+            ).join(', '),
+            createTime: volume.CreateTime?.toISOString(),
           },
-          labels: this.labelsFromTags(volume.Tags),
-          name: volumeId,
-          title:
-            volume.Tags?.find(tag => tag.Key === 'Name')?.Value || volumeId,
-          size: volume.Size,
-          volumeType: volume.VolumeType,
-          availabilityZone: volume.AvailabilityZone,
-          state: volume.State,
-          encrypted: volume.Encrypted ? 'Yes' : 'No',
-          attachedInstanceIds: volume.Attachments?.map(a => a.InstanceId).join(
-            ', ',
-          ),
-          createTime: volume.CreateTime?.toISOString(),
-        },
-        spec: {
-          owner: ownerFromTags(volume.Tags, this.getOwnerTag(), groups),
-          ...relationshipsFromTags(volume.Tags),
-          type: 'ebs-volume',
-        },
-      };
+          spec: {
+            owner: ownerFromTags(volume.Tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(volume.Tags),
+            type: 'ebs-volume',
+          },
+        };
 
-      ebsResources.push(resource);
-    }
+        ebsResources.push(resource);
+      }
+
+      nextToken = volumes.NextToken;
+    } while (nextToken);
 
     await this.connection.applyMutation({
       type: 'full',
