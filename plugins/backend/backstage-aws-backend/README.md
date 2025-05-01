@@ -13,6 +13,16 @@ integrations:
       externalId: 'blah'
 ```
 
+# New Backend System
+
+Add the following to the backend in the `packages/backend/src/index.ts` file.
+
+```typescript
+backend.add(import('@roadiehq/backstage-plugin-aws-backend'));
+```
+
+# Old Backend System
+
 Create a file in `packages/backend/src/plugins/aws.ts`
 
 ```typescript
