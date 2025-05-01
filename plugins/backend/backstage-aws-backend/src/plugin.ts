@@ -9,16 +9,16 @@ export const AWSBackendPlugin = createBackendPlugin({
   register(env) {
     env.registerInit({
       deps: {
+        config: coreServices.rootConfig,
         http: coreServices.httpRouter,
         logger: coreServices.logger,
-        config: coreServices.rootConfig,
       },
-      async init({ http, logger, config }) {
+      async init({ config, http, logger }) {
         logger.info('AWSBackendPlugin is initializing');
         http.use(
           await createRouter({
-            logger,
             config,
+            logger,
           }),
         );
       },
