@@ -27,6 +27,7 @@ export function createReplaceInFileAction(): TemplateAction<{
     find: string;
     matchRegex: boolean;
     replaceWith: string;
+    includeDotFiles: boolean;
   }>;
 }> {
   return createTemplateAction<{
@@ -35,6 +36,7 @@ export function createReplaceInFileAction(): TemplateAction<{
       find: string;
       matchRegex: boolean;
       replaceWith: string;
+      includeDotFiles: boolean;
     }>;
   }>({
     id: 'roadiehq:utils:fs:replace',
@@ -70,6 +72,11 @@ export function createReplaceInFileAction(): TemplateAction<{
                   type: 'string',
                   title: 'Text to be used to replace the found lines with',
                 },
+                includeDotFiles: {
+                  type: 'bool',
+                  title:
+                    'A configuration option to include dotfiles when globbing files. Defaults to false',
+                },
               },
             },
           },
@@ -99,6 +106,7 @@ export function createReplaceInFileAction(): TemplateAction<{
         const resolvedSourcePaths = await fg(sourceFilepath, {
           cwd: ctx.workspacePath,
           absolute: true,
+          dot: file.includeDotFiles,
         });
 
         for (const filepath of resolvedSourcePaths) {
