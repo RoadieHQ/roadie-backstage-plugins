@@ -27,7 +27,7 @@ export function createReplaceInFileAction(): TemplateAction<{
     find: string;
     matchRegex: boolean;
     replaceWith: string;
-    includeDotFiles: boolean;
+    includeDotFiles?: boolean;
   }>;
 }> {
   return createTemplateAction<{
@@ -36,7 +36,7 @@ export function createReplaceInFileAction(): TemplateAction<{
       find: string;
       matchRegex: boolean;
       replaceWith: string;
-      includeDotFiles: boolean;
+      includeDotFiles?: boolean;
     }>;
   }>({
     id: 'roadiehq:utils:fs:replace',
