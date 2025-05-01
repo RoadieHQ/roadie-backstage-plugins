@@ -106,7 +106,7 @@ export function createReplaceInFileAction(): TemplateAction<{
         const resolvedSourcePaths = await fg(sourceFilepath, {
           cwd: ctx.workspacePath,
           absolute: true,
-          dot: file.includeDotFiles,
+          dot: file.includeDotFiles ?? false,
         });
 
         for (const filepath of resolvedSourcePaths) {
