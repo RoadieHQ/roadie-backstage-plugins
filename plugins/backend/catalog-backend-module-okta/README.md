@@ -190,6 +190,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -432,6 +433,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -526,6 +528,7 @@ User naming strategies:
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 

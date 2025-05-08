@@ -145,6 +145,10 @@ catalog:
       target: ../entities/ecr-repo-create-template.yaml
       rules:
         - allow: [Template]
+    - type: file
+      target: ../entities/http-request-proxy-debug.yaml
+      rules:
+        - allow: [Template]
     # Backstage example components
     - type: url
       target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
