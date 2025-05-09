@@ -18,6 +18,7 @@ import { UserNamingStrategies, UserNamingStrategy } from './types';
 import { idUserNamingStrategy } from './idUserNamingStrategy';
 import { stripEmailDomainUserNamingStrategy } from './stripEmailDomainUserNamingStrategy';
 import { kebabCaseEmailUserNamingStrategy } from './kebabCaseEmailUserNamingStrategy';
+import { slugifyEmailUserNamingStrategy } from './slugifyEmailUserNamingStrategy';
 
 export const userNamingStrategyFactory = (
   strategy: UserNamingStrategies | UserNamingStrategy = 'id',
@@ -32,6 +33,8 @@ export const userNamingStrategyFactory = (
       return kebabCaseEmailUserNamingStrategy;
     case 'strip-domain-email':
       return stripEmailDomainUserNamingStrategy;
+    case 'slugify-email':
+      return slugifyEmailUserNamingStrategy;
     default:
       throw new Error(`Unknown naming strategy ${strategy}`);
   }

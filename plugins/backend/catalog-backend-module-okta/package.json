@@ -60,7 +60,8 @@
     "@backstage/plugin-catalog-backend": "^1.28.0",
     "@backstage/plugin-catalog-node": "^1.14.0",
     "@okta/okta-sdk-nodejs": "^6.6.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
     "@backstage/cli": "^0.29.2",
