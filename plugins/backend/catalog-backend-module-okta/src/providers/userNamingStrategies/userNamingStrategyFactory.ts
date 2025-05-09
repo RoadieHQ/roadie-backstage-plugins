@@ -33,7 +33,7 @@ export const userNamingStrategyFactory = (
       return kebabCaseEmailUserNamingStrategy;
     case 'strip-domain-email':
       return stripEmailDomainUserNamingStrategy;
-    case 'slugify':
+    case 'slugify-email':
       return slugifyEmailUserNamingStrategy;
     default:
       throw new Error(`Unknown naming strategy ${strategy}`);

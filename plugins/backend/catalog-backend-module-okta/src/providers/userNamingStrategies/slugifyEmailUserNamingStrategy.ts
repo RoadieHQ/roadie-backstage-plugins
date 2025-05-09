@@ -22,6 +22,7 @@ export const slugifyEmailUserNamingStrategy: UserNamingStrategy = user => {
   const cleanUser = slugify(plainUser, {
     lower: true,
     trim: true,
+    remove: /[+]/g,
   });
   const cleanDomain = slugify(domain, {
     lower: true,

@@ -157,7 +157,7 @@ describe('OktaUserEntityProvider', () => {
       };
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
-        namingStrategy: 'slugify',
+        namingStrategy: 'slugify-email',
       });
       provider.connect(entityProviderConnection);
       await provider.run();
