@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { User } from '@okta/okta-sdk-nodejs';
+import { UserNamingStrategy } from './types';
+import slugify from 'slugify';
 
-export type UserNamingStrategy = (user: User) => string;
-export type UserNamingStrategies =
-  | 'id'
-  | 'kebab-case-email'
-  | 'strip-domain-email'
-  | 'slugify-email'
-  | undefined;
+export const slugifyEmailUserNamingStrategy: UserNamingStrategy = user => {
+  const [plainUser, domain] = user.profile.email.split('@');
+
+  const cleanUser = slugify(plainUser, {
+    lower: true,
+    trim: true,
+    remove: /[+]/g,
+  });
+  const cleanDomain = slugify(domain, {
+    lower: true,
+    trim: true,
+  });
+  const userId = `${cleanUser}-${cleanDomain}`;
+  return userId;
+};

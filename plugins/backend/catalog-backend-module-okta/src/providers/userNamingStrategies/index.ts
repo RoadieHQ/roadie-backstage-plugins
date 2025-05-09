@@ -18,3 +18,4 @@ export * from './idUserNamingStrategy';
 export * from './stripEmailDomainUserNamingStrategy';
 export * from './kebabCaseEmailUserNamingStrategy';
 export * from './userNamingStrategyFactory';
+export * from './slugifyEmailUserNamingStrategy';
