@@ -145,14 +145,29 @@ const SelectFieldFromApiComponent = (
             parameters: formContext.formData,
           }),
         );
-        label = options.labelSelector
-          ? get(
+        
+        if (options.labelSelector) {
+          if (Array.isArray(options.labelSelector)) {
+            const labels = options.labelSelector.map(selector =>
+              get(
+                item,
+                renderOption(selector, {
+                  parameters: formContext.formData,
+                }),
+              ),
+            );
+            label = labels.join(options.labelDelimiter || ' ');
+          } else {
+            label = get(
               item,
               renderOption(options.labelSelector, {
                 parameters: formContext.formData,
               }),
-            )
-          : value;
+            );
+          }
+        } else {
+          label = value;
+        }
       } else {
         if (!(typeof item === 'string')) {
           throw new Error(
