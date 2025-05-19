@@ -49,6 +49,10 @@ export const selectFieldFromApiSchema = z.object({
     .describe(
       'This selects the field in the array to use for the label of each select item',
     ),
+  labelDelimiter: z
+    .string()
+    .optional()
+    .describe('This sets the delimiter used when multiple labels are selected'),
   title: z.string().optional(),
   placeholder: z
     .string()
