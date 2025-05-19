@@ -145,7 +145,7 @@ const SelectFieldFromApiComponent = (
             parameters: formContext.formData,
           }),
         );
-        
+
         if (options.labelSelector) {
           if (Array.isArray(options.labelSelector)) {
             const labels = options.labelSelector.map(selector =>
