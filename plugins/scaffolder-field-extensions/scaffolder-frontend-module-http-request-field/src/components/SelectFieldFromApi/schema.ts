@@ -49,10 +49,12 @@ export const selectFieldFromApiSchema = z.object({
     .describe(
       'This selects the field in the array to use for the label of each select item',
     ),
-  labelDelimiter: z
+  labelTemplate: z
     .string()
     .optional()
-    .describe('This sets the delimiter used when multiple labels are selected'),
+    .describe(
+      'This selects the field in the array to use for the label of each select item using Nunjucks templating',
+    ),
   title: z.string().optional(),
   placeholder: z
     .string()

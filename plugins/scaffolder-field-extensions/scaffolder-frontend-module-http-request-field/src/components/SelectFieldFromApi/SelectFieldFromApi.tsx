@@ -134,7 +134,7 @@ const SelectFieldFromApiComponent = (
           }),
         )
       : body;
-    const constructedData = array.map((item: unknown) => {
+    const constructedData = array.map((item: Record<string, any>) => {
       let value: string | undefined;
       let label: string | undefined;
 
@@ -146,27 +146,19 @@ const SelectFieldFromApiComponent = (
           }),
         );
 
-        if (options.labelSelector) {
-          if (Array.isArray(options.labelSelector)) {
-            const labels = options.labelSelector.map(selector =>
-              get(
-                item,
-                renderOption(selector, {
-                  parameters: formContext.formData,
-                }),
-              ),
-            );
-            label = labels.join(options.labelDelimiter || ' ');
-          } else {
-            label = get(
-              item,
-              renderOption(options.labelSelector, {
-                parameters: formContext.formData,
-              }),
-            );
-          }
+        if (options.labelTemplate) {
+          const renderedLabel = renderString(options.labelTemplate, { item });
+          label = renderedLabel || value;
         } else {
-          label = value;
+          label = options.labelSelector
+            ? get(
+                item,
+                renderOption(options.labelSelector, {
+                  parameters: formContext.formData,
+                  item,
+                }),
+              )
+            : value;
         }
       } else {
         if (!(typeof item === 'string')) {
