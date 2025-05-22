@@ -150,7 +150,31 @@ describe('OktaUserEntityProvider', () => {
         ],
       });
     });
-
+    it('allows slugifying the users email for the name', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        namingStrategy: 'slugify-email',
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                name: 'fname-domain.com',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
     it('I can customize the naming strategy', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),

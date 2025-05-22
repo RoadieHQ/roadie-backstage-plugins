@@ -1,5 +1,17 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.0.1
+
+### Patch Changes
+
+- 145dde6: Modify display labels to be sorted alphabetically ignoring the case.
+
+## 2.0.0
+
+### Major Changes
+
+- 59c552a: Adds validation of the response code. By default it will ensure its within the 200 range. Otherwise it will fail.
+
 ## 1.8.2
 
 ### Patch Changes

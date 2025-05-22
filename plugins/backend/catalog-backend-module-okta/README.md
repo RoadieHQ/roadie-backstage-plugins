@@ -190,6 +190,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -344,6 +345,20 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
   });
 ```
 
+#### Membership Resolution Parallelism
+
+By default, Group membership will attempt to be resolved 250 groups at a time. If you would like to increase or decrease this parallelism, provide a new value for `chunkSize`:
+
+```typescript
+const factory: EntityProviderFactory = (oktaConfig: Config) =>
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    chunkSize: 100,
+  });
+```
+
 #### Legacy backend
 
 <details>
@@ -418,6 +433,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -512,6 +528,7 @@ User naming strategies:
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 

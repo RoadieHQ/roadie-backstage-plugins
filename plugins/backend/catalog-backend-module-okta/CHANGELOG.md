@@ -1,5 +1,17 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.1.3
+
+### Patch Changes
+
+- eb31089: Add new user naming strategy `slugify`. This will allow to use the whole username as a user entity. jhon.doe@example.com -> jhon.doe-example.com
+
+## 1.1.2
+
+### Patch Changes
+
+- 98ff2bf: Apply chunking of membership resolution to OktaGroupEntityProvider
+
 ## 1.1.1
 
 ### Patch Changes

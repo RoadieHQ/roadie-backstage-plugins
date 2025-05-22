@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 3.5.0
+
+### Minor Changes
+
+- 1577b80: Add configuration option to fsreplace action to allow optionally to include dotfiles when globbing for files
+
+## 3.4.2
+
+### Patch Changes
+
+- e7e0b71: Upgraded `mock-fs` to latest version which supports Node `v20`+
+
 ## 3.4.1
 
 ### Patch Changes

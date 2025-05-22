@@ -1,5 +1,12 @@
 # app
 
+## 1.1.11
+
+### Patch Changes
+
+- Updated dependencies [59c552a]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.0.0
+
 ## 1.1.10
 
 ### Patch Changes

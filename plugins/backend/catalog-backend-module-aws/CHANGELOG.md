@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.7.0
+
+### Minor Changes
+
+- ce66df6: Add 5 more resources to the AWS entity provider. Include VPCs, subnets, EBS volumes, Load Balancers and security groups
+
 ## 5.6.0
 
 ### Minor Changes

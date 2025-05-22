@@ -29,3 +29,8 @@ export { AWSECRRepositoryEntityProvider } from './AWSECRRepositoryEntityProvider
 export { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
 export { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
 export { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+export { AWSEBSVolumeProvider } from './AWSEBSVolumeProvider';
+export { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
+export { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
+export { AWSSubnetProvider } from './AWSSubnetProvider';
+export { AWSVPCProvider } from './AWSVPCProvider';
