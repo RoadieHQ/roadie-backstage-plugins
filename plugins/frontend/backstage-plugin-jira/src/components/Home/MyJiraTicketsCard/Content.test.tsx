@@ -34,7 +34,7 @@ describe('MyJiraTicketsCard', () => {
   it('should display error in displaying tickets', async () => {
     worker.use(
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
@@ -70,11 +70,10 @@ describe('MyJiraTicketsCard', () => {
   it('should display no tickets found', async () => {
     worker.use(
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) =>
           res(
             ctx.json({
-              startAt: 0,
               maxResults: 50,
               total: 0,
               issues: [],
@@ -112,7 +111,7 @@ describe('MyJiraTicketsCard', () => {
   it('should display found tickets', async () => {
     worker.use(
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
