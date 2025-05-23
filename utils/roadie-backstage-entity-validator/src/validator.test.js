@@ -666,4 +666,94 @@ spec:
       );
     });
   });
+
+  describe('source-location annotation', () => {
+    const baseEntity = `
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: test-entity
+  description: Test entity
+  annotations:
+    backstage.io/source-location: %s
+spec:
+  type: service
+  owner: user:test
+  lifecycle: experimental
+`;
+
+    it('should validate URLs with trailing slash for directories', async () => {
+      const validUrls = [
+        'url:https://github.com/org/repo/tree/main/',
+        'gitlab:https://gitlab.com/org/repo/-/tree/main/',
+        'github:https://github.com/org/repo/tree/main/',
+        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/',
+        'dir:path/to/dir/',
+      ];
+
+      for (const url of validUrls) {
+        vol.fromJSON({
+          'test-entity.yaml': baseEntity.replace('%s', url),
+        });
+        await expect(
+          validator.validateFromFile('test-entity.yaml'),
+        ).resolves.toBeDefined();
+      }
+    });
+
+    it('should validate URLs without trailing slash for files', async () => {
+      const validUrls = [
+        'url:https://github.com/org/repo/blob/main/file.txt',
+        'gitlab:https://gitlab.com/org/repo/-/blob/main/file.json',
+        'github:https://github.com/org/repo/blob/main/file.md',
+        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt',
+      ];
+
+      for (const url of validUrls) {
+        vol.fromJSON({
+          'test-entity.yaml': baseEntity.replace('%s', url),
+        });
+        await expect(
+          validator.validateFromFile('test-entity.yaml'),
+        ).resolves.toBeDefined();
+      }
+    });
+
+    it('should reject URLs without trailing slash for directories', async () => {
+      const invalidUrls = [
+        'url:https://github.com/org/repo/tree/main',
+        'gitlab:https://gitlab.com/org/repo/-/tree/main',
+        'github:https://github.com/org/repo/tree/main',
+        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/',
+        'dir:path/to/dir',
+      ];
+
+      for (const url of invalidUrls) {
+        vol.fromJSON({
+          'test-entity.yaml': baseEntity.replace('%s', url),
+        });
+        await expect(
+          validator.validateFromFile('test-entity.yaml'),
+        ).rejects.toThrow();
+      }
+    });
+
+    it('should reject URLs with trailing slash for files', async () => {
+      const invalidUrls = [
+        'url:https://github.com/org/repo/blob/main/file.txt',
+        'gitlab:https://gitlab.com/org/repo/-/blob/main/file.json',
+        'github:https://github.com/org/repo/blob/main/file.md',
+        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt',
+      ];
+
+      for (const url of invalidUrls) {
+        vol.fromJSON({
+          'test-entity.yaml': baseEntity.replace('%s', url),
+        });
+        await expect(
+          validator.validateFromFile('test-entity.yaml'),
+        ).rejects.toThrow();
+      }
+    });
+  });
 });
