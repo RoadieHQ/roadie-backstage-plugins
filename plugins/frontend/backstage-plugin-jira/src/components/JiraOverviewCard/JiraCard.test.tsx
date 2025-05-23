@@ -60,7 +60,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.json(projectResponseStub)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
@@ -106,7 +106,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.json(projectResponseStub)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
@@ -152,7 +152,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.status(403)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.status(403)),
       ),
       rest.get(
