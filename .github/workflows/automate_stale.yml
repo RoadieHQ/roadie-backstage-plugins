@@ -2,7 +2,7 @@ name: Automate staleness
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *' # run every 10 minutes as it also removes labels.
+    - cron: '0 */6 * * *' # run at minute 0 past every 6th hour'
 
 permissions:
   contents: read
