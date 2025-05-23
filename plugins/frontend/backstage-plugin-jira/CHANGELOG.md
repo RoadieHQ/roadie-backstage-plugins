@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.9.0
+
+### Minor Changes
+
+- 50ed11f: #1892 switch to search jql api
+
 ## 2.8.3
 
 ### Patch Changes
