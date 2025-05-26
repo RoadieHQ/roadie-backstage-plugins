@@ -119,7 +119,7 @@ export type Status = {
 };
 
 export type IssuesResponse = {
-  startAt: number;
+  nextPageToken: string;
   maxResults: number;
   total: number;
   issues: Ticket[];
@@ -193,7 +193,7 @@ export type User = {
 };
 
 export type IssuesResult = {
-  next: number | undefined;
+  nextPageToken: string | undefined;
   issues: Ticket[];
 };
 
