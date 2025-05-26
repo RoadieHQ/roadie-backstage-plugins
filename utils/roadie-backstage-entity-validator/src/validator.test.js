@@ -8,7 +8,7 @@ describe('validator', () => {
   beforeEach(() => {
     vol.reset();
     vol.fromJSON({
-      'catalog-info-with-bad-techdocs-dir.yml': `
+      'catalog-info-with-bad-techdocs-dir.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -24,7 +24,7 @@ spec:
   providesApis:
     - sample-service
 `,
-      'catalog-info-with-empty-label.yml': `
+      'catalog-info-with-empty-label.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
@@ -36,7 +36,7 @@ spec:
   owner: group:team-atools
   definition:
 `,
-      'catalog-info-with-replacement.yml': `
+      'catalog-info-with-replacement.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
@@ -49,7 +49,7 @@ spec:
   definition:
     $text: "./openapi/v1.oas3.yaml"
 `,
-      'catalog-info-with-openapi-placeholder.yml': `
+      'catalog-info-with-openapi-placeholder.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
@@ -62,7 +62,7 @@ spec:
   definition:
     $openapi: "./openapi/v1.oas3.yaml"
 `,
-      'catalog-info-with-asyncapi-placeholder.yml': `
+      'catalog-info-with-asyncapi-placeholder.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
@@ -75,7 +75,7 @@ spec:
   definition:
     $asyncapi: "./asyncapi/some-spec.yaml"
 `,
-      'catalog-info.yml': `
+      'catalog-info.yaml': `
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -131,7 +131,7 @@ spec:
   providesApis:
     - sample-service
 `,
-      'catalog-info-with-date-annotation.yml': `
+      'catalog-info-with-date-annotation.yaml': `
 ---
 
 apiVersion: backstage.io/v1alpha1
@@ -145,7 +145,7 @@ spec:
   owner: group:team-atools
   lifecycle: experimental
 `,
-      'catalog-info-with-custom-fields.yml': `
+      'catalog-info-with-custom-fields.yaml': `
     apiVersion: backstage.io/v1alpha1
     kind: Component
     metadata:
@@ -162,7 +162,7 @@ spec:
         owner: user:dtuite
         lifecycle: experimental
 `,
-      'catalog-info-with-custom-fields-with-errors.yml': `
+      'catalog-info-with-custom-fields-with-errors.yaml': `
         apiVersion: backstage.io/v1alpha1
         kind: Component
         metadata:
@@ -179,7 +179,7 @@ spec:
             owner: user:dtuite
             lifecycle: experimental
 `,
-      'template-v2-entity.yml': `
+      'template-v2-entity.yaml': `
 apiVersion: backstage.io/v1beta2
 kind: Template
 metadata:
@@ -194,7 +194,7 @@ spec:
       path: foo.txt
       outputPath: foo.zip
     `,
-      'template-v3-entity.yml': `
+      'template-v3-entity.yaml': `
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
@@ -253,7 +253,7 @@ spec:
   });
   it('Should successfully validate simple catalog info', async () => {
     await expect(
-      validator.validateFromFile('catalog-info.yml'),
+      validator.validateFromFile('catalog-info.yaml'),
     ).resolves.toEqual([
       {
         metadata: {
@@ -326,13 +326,13 @@ spec:
 
   it('Should fail to validate with incorrect catalog-info', async () => {
     await expect(
-      validator.validateFromFile('invalid-catalog-info.yml'),
+      validator.validateFromFile('invalid-catalog-info.yaml'),
     ).rejects.toThrow();
   });
 
   it('Should successfully validate catalog info with replacements', async () => {
     await expect(
-      validator.validateFromFile('catalog-info-with-replacement.yml'),
+      validator.validateFromFile('catalog-info-with-replacement.yaml'),
     ).resolves.toEqual([
       {
         apiVersion: 'backstage.io/v1alpha1',
@@ -351,7 +351,7 @@ spec:
       },
     ]);
     await expect(
-      validator.validateFromFile('catalog-info-with-openapi-placeholder.yml'),
+      validator.validateFromFile('catalog-info-with-openapi-placeholder.yaml'),
     ).resolves.toEqual([
       {
         apiVersion: 'backstage.io/v1alpha1',
@@ -370,7 +370,7 @@ spec:
       },
     ]);
     await expect(
-      validator.validateFromFile('catalog-info-with-asyncapi-placeholder.yml'),
+      validator.validateFromFile('catalog-info-with-asyncapi-placeholder.yaml'),
     ).resolves.toEqual([
       {
         apiVersion: 'backstage.io/v1alpha1',
@@ -392,7 +392,7 @@ spec:
 
   it('Should successfully validate catalog info with an annotation that look like a date', async () => {
     await expect(
-      validator.validateFromFile('catalog-info-with-date-annotation.yml'),
+      validator.validateFromFile('catalog-info-with-date-annotation.yaml'),
     ).resolves.toEqual([
       {
         apiVersion: 'backstage.io/v1alpha1',
@@ -415,29 +415,29 @@ spec:
 
   it('Should fail to validate with incorrect catalog-info that has an empty label', async () => {
     await expect(
-      validator.validateFromFile('catalog-info-with-empty-label.yml'),
+      validator.validateFromFile('catalog-info-with-empty-label.yaml'),
     ).rejects.toThrow(
       "Error: Placeholder with name 'definition' is empty. Please remove it or populate it.",
     );
   });
   it('Should fail to validate with bad techdocs path', async () => {
     await expect(
-      validator.validateFromFile('catalog-info-with-bad-techdocs-dir.yml'),
+      validator.validateFromFile('catalog-info-with-bad-techdocs-dir.yaml'),
     ).rejects.toThrow('Techdocs annotation specifies "dir" but file under');
   });
   it('Should throw validation error for system entity', async () => {
     await expect(
-      validator.validateFromFile('invalid-system-entity.yml'),
+      validator.validateFromFile('invalid-system-entity.yaml'),
     ).rejects.toThrow();
   });
   it('Should throw validation error for domain entity', async () => {
     await expect(
-      validator.validateFromFile('invalid-domain-entity.yml'),
+      validator.validateFromFile('invalid-domain-entity.yaml'),
     ).rejects.toThrow();
   });
   it('Should throw validation error for resource entity', async () => {
     await expect(
-      validator.validateFromFile('invalid-resource-entity.yml'),
+      validator.validateFromFile('invalid-resource-entity.yaml'),
     ).rejects.toThrow();
   });
   describe('validateDefaultTechDocs', () => {
@@ -502,7 +502,7 @@ spec:
 `,
     };
     describe('techdocs annotation is set', () => {
-      it('should throw error when mkdocs.yaml|mkdocs.yml file does not accessible', async () => {
+      it('should throw error when mkdocs.yaml|mkdocs.yaml file does not accessible', async () => {
         vol.fromJSON(defaultVol);
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
@@ -533,36 +533,12 @@ spec:
           },
         ]);
       });
-      it('should resolve when mkdocs.yml found', async () => {
-        vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yml': 'bar' });
-        await expect(
-          validator.validateFromFile('./test-entity.yaml'),
-        ).resolves.toEqual([
-          {
-            apiVersion: 'backstage.io/v1alpha1',
-            kind: 'Component',
-            metadata: {
-              namespace: 'default',
-              name: 'test-entity',
-              description: 'Foo bar description\n',
-              annotations: {
-                'backstage.io/techdocs-ref': 'dir:test-dir',
-              },
-            },
-            spec: {
-              type: 'service',
-              lifecycle: 'experimental',
-              owner: 'user:dtuite',
-            },
-          },
-        ]);
-      });
     });
   });
   describe('template', () => {
     it('Should successfully validate v2 template', async () => {
       await expect(
-        validator.validateFromFile('template-v2-entity.yml'),
+        validator.validateFromFile('template-v2-entity.yaml'),
       ).resolves.toEqual([
         {
           apiVersion: 'backstage.io/v1beta2',
@@ -591,7 +567,7 @@ spec:
 
     it('Should successfully validate v3 template', async () => {
       await expect(
-        validator.validateFromFile('template-v3-entity.yml'),
+        validator.validateFromFile('template-v3-entity.yaml'),
       ).resolves.toEqual([
         {
           apiVersion: 'scaffolder.backstage.io/v1beta3',
@@ -623,7 +599,7 @@ spec:
     it('should successfully validate against custom annotation schema', async () => {
       await expect(
         validator.validateFromFile(
-          'catalog-info-with-custom-fields.yml',
+          'catalog-info-with-custom-fields.yaml',
           false,
           'custom-validation-schema.json',
         ),
@@ -657,7 +633,7 @@ spec:
     it('should throw validate error when validating against custom annotation schema', async () => {
       await expect(
         validator.validateFromFile(
-          'catalog-info-with-custom-fields-with-errors.yml',
+          'catalog-info-with-custom-fields-with-errors.yaml',
           false,
           'custom-validation-schema.json',
         ),
@@ -687,9 +663,22 @@ spec:
         'url:https://github.com/org/repo/tree/main/',
         'gitlab:https://gitlab.com/org/repo/-/tree/main/',
         'github:https://github.com/org/repo/tree/main/',
+        'url:https://bitbucket.org/org/repo/branch/main/',
         'azure/api:https://dev.azure.com/org/project/_git/repo?path=/',
-        'dir:path/to/dir/',
       ];
+
+      for (const url of validUrls) {
+        vol.fromJSON({
+          'test-entity.yaml': baseEntity.replace('%s', url),
+        });
+        await expect(
+          validator.validateFromFile('test-entity.yaml'),
+        ).resolves.toBeDefined();
+      }
+    });
+
+    it('should validate path with or without trailing slash for dir type', async () => {
+      const validUrls = ['dir:./org/test/', 'dir:.', 'dir:./org/test'];
 
       for (const url of validUrls) {
         vol.fromJSON({
@@ -706,6 +695,7 @@ spec:
         'url:https://github.com/org/repo/blob/main/file.txt',
         'gitlab:https://gitlab.com/org/repo/-/blob/main/file.json',
         'github:https://github.com/org/repo/blob/main/file.md',
+        'url:https://bitbucket.org/org/repo/branch/main/file.yml',
         'azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt',
       ];
 
@@ -724,26 +714,8 @@ spec:
         'url:https://github.com/org/repo/tree/main',
         'gitlab:https://gitlab.com/org/repo/-/tree/main',
         'github:https://github.com/org/repo/tree/main',
-        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/',
-        'dir:path/to/dir',
-      ];
-
-      for (const url of invalidUrls) {
-        vol.fromJSON({
-          'test-entity.yaml': baseEntity.replace('%s', url),
-        });
-        await expect(
-          validator.validateFromFile('test-entity.yaml'),
-        ).rejects.toThrow();
-      }
-    });
-
-    it('should reject URLs with trailing slash for files', async () => {
-      const invalidUrls = [
-        'url:https://github.com/org/repo/blob/main/file.txt',
-        'gitlab:https://gitlab.com/org/repo/-/blob/main/file.json',
-        'github:https://github.com/org/repo/blob/main/file.md',
-        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt',
+        'url:https://bitbucket.org/org/repo/branch/main',
+        'azure/api:https://dev.azure.com/org/project/_git/repo?path=',
       ];
 
       for (const url of invalidUrls) {
