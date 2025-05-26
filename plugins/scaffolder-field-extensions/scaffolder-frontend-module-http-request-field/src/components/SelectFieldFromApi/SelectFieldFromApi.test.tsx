@@ -198,4 +198,39 @@ describe('SelectFieldFromApi', () => {
       }),
     );
   });
+
+  it('should use labelTemplate to format the label when provided', async () => {
+    fetchApi.fetch.mockResolvedValueOnce({
+      status: 200,
+      ok: true,
+      json: jest.fn().mockResolvedValue([
+        { spec: { namespace: 'main' }, metadata: { name: 'component1' } },
+        { spec: { namespace: 'remote' }, metadata: { name: 'component2' } },
+      ]),
+    });
+    const uiSchema = {
+      'ui:options': {
+        path: '/test-endpoint',
+        valueSelector: 'name',
+        labelTemplate: '{{ item.spec.namespace }}:{{ item.metadata.name }}',
+      },
+    };
+    const props = {
+      uiSchema,
+      formContext: { formData: {} },
+    } as unknown as FieldExtensionComponentProps<string | string[]>;
+    const { getByTestId, getByText } = await renderWithEffects(
+      wrapInTestApp(
+        <TestApiProvider apis={apis}>
+          <SelectFieldFromApi {...props} />
+        </TestApiProvider>,
+      ),
+    );
+    const input = getByTestId('select');
+    expect(input.textContent).toBe('Select from results');
+    fireEvent.mouseDown(within(input).getByRole('button'));
+
+    expect(getByText('main:component1')).toBeInTheDocument();
+    expect(getByText('remote:component2')).toBeInTheDocument();
+  });
 });
