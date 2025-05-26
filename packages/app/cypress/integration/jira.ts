@@ -27,7 +27,7 @@ describe('Jira plugin', () => {
     ).as('getProject');
     cy.intercept(
       'POST',
-      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',
+      'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search/jql',
       { fixture: 'jira/searchresult.json' },
     ).as('postSearchResult');
 
@@ -64,7 +64,7 @@ describe('Jira plugin', () => {
       cy.visit('/catalog/default/component/sample-service/jira');
       cy.intercept(
         'POST',
-        'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search',
+        'http://localhost:7007/api/proxy/jira/api/rest/api/latest/search/jql',
         { fixture: 'jira/jqlQueryResult.json' },
       ).as('queryResult');
       cy.wait('@queryResult');

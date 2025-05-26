@@ -56,6 +56,8 @@ interface ConditionRow extends Condition {
   key: string;
 }
 
+const defaultTableTitle = 'ArgoCD overview';
+
 const MessageComponent = ({
   conditions,
 }: {
@@ -157,12 +159,16 @@ const State = ({
 type OverviewComponentProps = {
   data: ArgoCDAppList;
   extraColumns: TableColumn[];
+  title: string;
+  subtitle: string;
   retry: () => void;
 };
 
 const OverviewComponent = ({
   data,
   extraColumns,
+  title,
+  subtitle,
   retry,
 }: OverviewComponentProps) => {
   const configApi = useApi(configApiRef);
@@ -253,7 +259,8 @@ const OverviewComponent = ({
 
   return (
     <Table
-      title="ArgoCD overview"
+      title={title ?? defaultTableTitle}
+      subtitle={subtitle}
       options={{
         paging: true,
         search: false,
@@ -278,9 +285,13 @@ const OverviewComponent = ({
 const ArgoCDDetails = ({
   entity,
   extraColumns,
+  title,
+  subtitle,
 }: {
   entity: Entity;
   extraColumns: TableColumn[];
+  title?: string;
+  subtitle?: string;
 }) => {
   const { url, appName, appSelector, appNamespace, projectName } =
     useArgoCDAppData({
@@ -295,14 +306,14 @@ const ArgoCDDetails = ({
   });
   if (loading) {
     return (
-      <InfoCard title="ArgoCD overview">
+      <InfoCard title={title ?? defaultTableTitle} subheader={subtitle}>
         <LinearProgress />
       </InfoCard>
     );
   }
   if (error) {
     return (
-      <InfoCard title="ArgoCD overview">
+      <InfoCard title={title ?? defaultTableTitle} subheader={subtitle}>
         Error occurred while fetching data. {error.name}: {error.message}
       </InfoCard>
     );
@@ -314,6 +325,8 @@ const ArgoCDDetails = ({
           data={value as ArgoCDAppList}
           retry={retry}
           extraColumns={extraColumns}
+          title={title ?? defaultTableTitle}
+          subtitle={subtitle ?? ''}
         />
       );
     }
@@ -326,6 +339,8 @@ const ArgoCDDetails = ({
           data={wrapped}
           retry={retry}
           extraColumns={extraColumns}
+          title={title ?? defaultTableTitle}
+          subtitle={subtitle ?? ''}
         />
       );
     }
@@ -337,6 +352,8 @@ const ArgoCDDetails = ({
         data={wrapped}
         retry={retry}
         extraColumns={extraColumns}
+        title={title ?? defaultTableTitle}
+        subtitle={subtitle ?? ''}
       />
     );
   }
@@ -347,6 +364,8 @@ type Props = {
   /** @deprecated The entity is now grabbed from context instead */
   entity?: Entity;
   extraColumns?: TableColumn[];
+  title?: string;
+  subtitle?: string;
 };
 
 export const ArgoCDDetailsCard = (props: Props) => {
@@ -355,7 +374,12 @@ export const ArgoCDDetailsCard = (props: Props) => {
     <MissingAnnotationEmptyState annotation={ARGOCD_ANNOTATION_APP_NAME} />
   ) : (
     <ErrorBoundary>
-      <ArgoCDDetails entity={entity} extraColumns={props.extraColumns || []} />
+      <ArgoCDDetails
+        entity={entity}
+        extraColumns={props.extraColumns || []}
+        title={props.title}
+        subtitle={props.subtitle}
+      />
     </ErrorBoundary>
   );
 };

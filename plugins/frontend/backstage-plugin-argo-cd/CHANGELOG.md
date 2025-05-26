@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.9.0
+
+### Minor Changes
+
+- 98f83e4: Provide title & subtitle option for the EntityArgoCDOverviewCard
+
 ## 2.8.7
 
 ### Patch Changes
