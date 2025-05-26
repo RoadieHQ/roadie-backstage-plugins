@@ -211,7 +211,7 @@ describe('SelectFieldFromApi', () => {
     const uiSchema = {
       'ui:options': {
         path: '/test-endpoint',
-        valueSelector: 'name',
+        valueSelector: 'metadata.name',
         labelTemplate: '{{ item.spec.namespace }}:{{ item.metadata.name }}',
       },
     };
