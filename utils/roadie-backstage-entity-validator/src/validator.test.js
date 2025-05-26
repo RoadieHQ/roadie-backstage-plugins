@@ -502,7 +502,7 @@ spec:
 `,
     };
     describe('techdocs annotation is set', () => {
-      it('should throw error when mkdocs.yaml|mkdocs.yaml file does not accessible', async () => {
+      it('should throw error when mkdocs.yaml|mkdocs.yml file does not accessible', async () => {
         vol.fromJSON(defaultVol);
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
@@ -511,6 +511,30 @@ spec:
 
       it('should resolve when mkdocs.yaml found', async () => {
         vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yaml': 'bar' });
+        await expect(
+          validator.validateFromFile('./test-entity.yaml'),
+        ).resolves.toEqual([
+          {
+            apiVersion: 'backstage.io/v1alpha1',
+            kind: 'Component',
+            metadata: {
+              namespace: 'default',
+              name: 'test-entity',
+              description: 'Foo bar description\n',
+              annotations: {
+                'backstage.io/techdocs-ref': 'dir:test-dir',
+              },
+            },
+            spec: {
+              type: 'service',
+              lifecycle: 'experimental',
+              owner: 'user:dtuite',
+            },
+          },
+        ]);
+      });
+      it('should resolve when mkdocs.yml found', async () => {
+        vol.fromJSON({ ...defaultVol, 'test-dir/mkdocs.yml': 'bar' });
         await expect(
           validator.validateFromFile('./test-entity.yaml'),
         ).resolves.toEqual([
