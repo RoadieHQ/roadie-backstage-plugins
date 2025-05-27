@@ -60,7 +60,7 @@ spec:
               # (Optional) This selects the field in the array to use for the label of each select item.
               labelSelector: 'value'
               # (Optional) This selects the fields in the array to use for the label of each select item with Nunjucks templating format.
-              labelTemplate: '{{ value1 }}:{{ value2 }}'
+              labelTemplate: '{{ item.value1 }}:{{ item.value2 }}'
 ```
 
 The configuration above will result in an outgoing request to: `https://my.backstage.com/api/catalog/entity-facets?facet=kind`
