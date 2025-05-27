@@ -744,7 +744,9 @@ spec:
         });
         await expect(
           validator.validateFromFile('test-entity.yaml'),
-        ).rejects.toThrow();
+        ).rejects.toThrow(
+          'Error: Malformed annotation, /metadata/annotations/backstage.io~1source-location must match pattern "^(?:dir:.*|(?:(?:github|gitlab|url):.+/|azure/api:.*\\?path=.*/)(?:[^/]+\\.[^/]+)?)$"',
+        );
       },
     );
   });
