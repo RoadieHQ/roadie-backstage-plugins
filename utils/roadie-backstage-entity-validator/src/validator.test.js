@@ -682,74 +682,70 @@ spec:
   lifecycle: experimental
 `;
 
-    it('should validate URLs with trailing slash for directories', async () => {
-      const validUrls = [
-        'url:https://github.com/org/repo/tree/main/',
-        'gitlab:https://gitlab.com/org/repo/-/tree/main/',
-        'github:https://github.com/org/repo/tree/main/',
-        'url:https://bitbucket.org/org/repo/branch/main/',
-        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/',
-      ];
-
-      for (const url of validUrls) {
+    it.each([
+      ['url:https://github.com/org/repo/tree/main/'],
+      ['gitlab:https://gitlab.com/org/repo/-/tree/main/'],
+      ['github:https://github.com/org/repo/tree/main/'],
+      ['url:https://bitbucket.org/org/repo/branch/main/'],
+      ['azure/api:https://dev.azure.com/org/project/_git/repo?path=/'],
+    ])(
+      'should validate URLs with trailing slash for directories: %s',
+      async url => {
         vol.fromJSON({
           'test-entity.yaml': baseEntity.replace('%s', url),
         });
         await expect(
           validator.validateFromFile('test-entity.yaml'),
         ).resolves.toBeDefined();
-      }
-    });
+      },
+    );
 
-    it('should validate path with or without trailing slash for dir type', async () => {
-      const validUrls = ['dir:./org/test/', 'dir:.', 'dir:./org/test'];
-
-      for (const url of validUrls) {
+    it.each([['dir:./org/test/'], ['dir:.'], ['dir:./org/test']])(
+      'should validate path with or without trailing slash for dir type: %s',
+      async url => {
         vol.fromJSON({
           'test-entity.yaml': baseEntity.replace('%s', url),
         });
         await expect(
           validator.validateFromFile('test-entity.yaml'),
         ).resolves.toBeDefined();
-      }
-    });
+      },
+    );
 
-    it('should validate URLs without trailing slash for files', async () => {
-      const validUrls = [
-        'url:https://github.com/org/repo/blob/main/file.txt',
-        'gitlab:https://gitlab.com/org/repo/-/blob/main/file.json',
-        'github:https://github.com/org/repo/blob/main/file.md',
-        'url:https://bitbucket.org/org/repo/branch/main/file.yml',
-        'azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt',
-      ];
-
-      for (const url of validUrls) {
+    it.each([
+      ['url:https://github.com/org/repo/blob/main/file.txt'],
+      ['gitlab:https://gitlab.com/org/repo/-/blob/main/file.json'],
+      ['github:https://github.com/org/repo/blob/main/file.md'],
+      ['url:https://bitbucket.org/org/repo/branch/main/file.yml'],
+      ['azure/api:https://dev.azure.com/org/project/_git/repo?path=/file.txt'],
+    ])(
+      'should validate URLs without trailing slash for files: %s',
+      async url => {
         vol.fromJSON({
           'test-entity.yaml': baseEntity.replace('%s', url),
         });
         await expect(
           validator.validateFromFile('test-entity.yaml'),
         ).resolves.toBeDefined();
-      }
-    });
+      },
+    );
 
-    it('should reject URLs without trailing slash for directories', async () => {
-      const invalidUrls = [
-        'url:https://github.com/org/repo/tree/main',
-        'gitlab:https://gitlab.com/org/repo/-/tree/main',
-        'github:https://github.com/org/repo/tree/main',
-        'url:https://bitbucket.org/org/repo/branch/main',
-        'azure/api:https://dev.azure.com/org/project/_git/repo?path=',
-      ];
-
-      for (const url of invalidUrls) {
+    it.each([
+      ['url:https://github.com/org/repo/tree/main'],
+      ['gitlab:https://gitlab.com/org/repo/-/tree/main'],
+      ['github:https://github.com/org/repo/tree/main'],
+      ['url:https://bitbucket.org/org/repo/branch/main'],
+      ['azure/api:https://dev.azure.com/org/project/_git/repo?path='],
+    ])(
+      'should reject URLs without trailing slash for directories: %s',
+      async url => {
         vol.fromJSON({
           'test-entity.yaml': baseEntity.replace('%s', url),
         });
         await expect(
           validator.validateFromFile('test-entity.yaml'),
         ).rejects.toThrow();
-      }
-    });
+      },
+    );
   });
 });
