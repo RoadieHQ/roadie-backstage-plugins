@@ -134,7 +134,7 @@ const SelectFieldFromApiComponent = (
           }),
         )
       : body;
-    const constructedData = array.map((item: unknown) => {
+    const constructedData = array.map((item: Record<string, any>) => {
       let value: string | undefined;
       let label: string | undefined;
 
@@ -145,14 +145,21 @@ const SelectFieldFromApiComponent = (
             parameters: formContext.formData,
           }),
         );
-        label = options.labelSelector
-          ? get(
-              item,
-              renderOption(options.labelSelector, {
-                parameters: formContext.formData,
-              }),
-            )
-          : value;
+
+        if (options.labelTemplate) {
+          const renderedLabel = renderString(options.labelTemplate, { item });
+          label = renderedLabel || value;
+        } else {
+          label = options.labelSelector
+            ? get(
+                item,
+                renderOption(options.labelSelector, {
+                  parameters: formContext.formData,
+                  item,
+                }),
+              )
+            : value;
+        }
       } else {
         if (!(typeof item === 'string')) {
           throw new Error(
