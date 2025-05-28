@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.1.0
+
+### Minor Changes
+
+- c4fe549: Add the ability to set a template string for use as the dropdown item label.
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.5.0
+
+### Minor Changes
+
+- ec58273: Validate trailing slash for source-location annotations
+
 ## 2.4.14
 
 ### Patch Changes
