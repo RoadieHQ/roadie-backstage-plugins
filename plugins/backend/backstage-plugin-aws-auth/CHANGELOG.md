@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.5.2
+
+### Patch Changes
+
+- 0e70a13: Remove deprecated `@backstage/backend-common` package.
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.3.2
+
+### Patch Changes
+
+- 5eb9cc2: Move some `dependencies` into `devDependencies`.
+
 ## 5.3.1
 
 ### Patch Changes

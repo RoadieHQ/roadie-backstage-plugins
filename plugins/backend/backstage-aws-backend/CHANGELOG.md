@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.3.2
+
+### Patch Changes
+
+- 296cca7: Remove deprecated `@backstage/backend-common` from dependencies.
+
 ## 1.3.1
 
 ### Patch Changes
