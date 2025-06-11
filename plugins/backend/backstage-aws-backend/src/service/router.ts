@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import { errorHandler } from '@backstage/backend-common';
 import { Config } from '@backstage/config';
 import express, { Request } from 'express';
 import Router from 'express-promise-router';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { CloudControl } from '@aws-sdk/client-cloudcontrol';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
@@ -123,6 +122,5 @@ export function createRouter({
     },
   );
 
-  router.use(errorHandler());
   return Promise.resolve(router);
 }

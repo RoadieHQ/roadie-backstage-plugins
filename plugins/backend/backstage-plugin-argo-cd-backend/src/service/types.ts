@@ -1,5 +1,5 @@
 import { Config } from '@backstage/config';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 export type getRevisionDataResp = {
