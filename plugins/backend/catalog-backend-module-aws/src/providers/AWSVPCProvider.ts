@@ -18,7 +18,7 @@ import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
@@ -39,7 +39,7 @@ export class AWSVPCProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

@@ -16,7 +16,7 @@
 
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { S3, Tag } from '@aws-sdk/client-s3';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
@@ -39,7 +39,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

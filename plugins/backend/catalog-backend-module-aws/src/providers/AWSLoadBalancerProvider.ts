@@ -31,7 +31,7 @@ import {
   relationshipsFromTags,
 } from '../utils/tags';
 import { duration } from '../utils/timer';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 
 const ANNOTATION_LOAD_BALANCER_ARN = 'amazonaws.com/load-balancer-arn';
 const ANNOTATION_LOAD_BALANCER_DNS_NAME =
@@ -47,7 +47,7 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

@@ -16,7 +16,7 @@
 
 import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
 import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
@@ -38,7 +38,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       useTemporaryCredentials?: boolean;

@@ -30,7 +30,7 @@ import { DynamoDB, DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { merge } from 'lodash';
 import { mapColumnsToEntityValues } from '../utils/columnMapper';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   ANNOTATION_ACCOUNT_ID,
@@ -52,13 +52,13 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   private readonly accountId: string;
   private readonly roleArn: string;
   private readonly tableDataConfig: DdbTableDataConfigOptions;
-  private readonly logger: winston.Logger | LoggerService;
+  private readonly logger: Logger | LoggerService;
 
   private connection?: EntityProviderConnection;
 
   static fromConfig(
     config: Config,
-    options: { logger: winston.Logger | LoggerService },
+    options: { logger: Logger | LoggerService },
   ) {
     return new AWSDynamoDbTableDataProvider(
       config.getString('accountId'),
@@ -72,7 +72,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     accountId: string,
     roleArn: string,
     options: DdbTableDataConfigOptions,
-    logger: winston.Logger | LoggerService,
+    logger: Logger | LoggerService,
   ) {
     this.accountId = accountId;
     this.roleArn = roleArn;
