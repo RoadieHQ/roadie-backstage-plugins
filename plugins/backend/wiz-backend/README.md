@@ -30,6 +30,21 @@ wiz:
   dashboardLink: <your-wiz-url>
 ```
 
+### Using the new backend plugin system
+
+**_Note: This approach requires v2 of the frontend backstage-plugin-wiz plugin_**
+
+Edit your `backend/src/index.ts` file, and add the following lines alongside the rest of your plugins
+
+```typescript
+// Install wiz backend plugin
+backend.add(import('@roadiehq/plugin-wiz-backend'));
+```
+
+### Using the legacy plugin system
+
+This approach is compatible with the v1 versions of frontend backstage-plugin-wiz plugin.
+
 Create a file in `packages/backend/src/plugins/wiz.ts`
 
 ```typescript
