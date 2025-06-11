@@ -185,7 +185,9 @@ describe('http', () => {
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
             expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
+              expect.stringContaining(
+                `"There was an issue with your request. Status code: 401 Response body"`,
+              ),
             ]),
           );
         });
@@ -210,7 +212,9 @@ describe('http', () => {
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
             expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
+              expect.stringContaining(
+                `There was an issue with your request. Status code: 401 Response body`,
+              ),
             ]),
           );
         });
