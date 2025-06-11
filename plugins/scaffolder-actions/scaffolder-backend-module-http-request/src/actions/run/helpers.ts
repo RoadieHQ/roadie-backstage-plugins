@@ -15,7 +15,7 @@
  */
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { fetch } from 'cross-fetch';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { HttpOptions } from './types';
 
