@@ -20,7 +20,6 @@ import {
   getPluginId,
 } from './helpers';
 import { HttpOptions } from './types';
-import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
 import * as winston from 'winston';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -52,7 +51,7 @@ logStream._write = (chunk, _encoding, next) => {
   next();
 };
 const streamTransport = new winston.transports.Stream({ stream: logStream });
-const logger = getRootLogger();
+const logger = winston.createLogger();
 logger.add(streamTransport);
 
 jest.mock('cross-fetch');
