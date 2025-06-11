@@ -186,7 +186,7 @@ describe('http', () => {
           expect(logEvents).toEqual(
             expect.arrayContaining([
               expect.stringContaining(
-                `"There was an issue with your request. Status code: 401 Response body"`,
+                `There was an issue with your request. Status code: 401 Response body`,
               ),
             ]),
           );
