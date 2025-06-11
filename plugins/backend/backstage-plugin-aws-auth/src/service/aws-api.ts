@@ -15,7 +15,7 @@
  */
 
 import express from 'express';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { generateTemporaryCredentials } from './generateTemporaryCredentials';
 
