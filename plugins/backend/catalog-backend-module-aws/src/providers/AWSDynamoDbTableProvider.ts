@@ -16,7 +16,7 @@
 
 import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
 import { Config } from '@backstage/config';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ResourceEntity } from '@backstage/catalog-model';
@@ -38,7 +38,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

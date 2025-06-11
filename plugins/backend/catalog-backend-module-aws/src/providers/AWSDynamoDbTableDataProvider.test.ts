@@ -16,7 +16,7 @@
 
 import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
 import { ConfigReader } from '@backstage/config';
-import { getVoidLogger } from '@backstage/backend-common';
+import { createLogger } from 'winston';
 
 const validConfig = {
   accountId: '123456789012',
@@ -48,7 +48,7 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: getVoidLogger(),
+        logger: createLogger(),
       });
     };
     expect(testWrapper).toThrow(
@@ -64,7 +64,7 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: getVoidLogger(),
+        logger: createLogger(),
       });
     };
     expect(testWrapper).not.toThrow();

@@ -16,7 +16,7 @@
 
 import { CatalogProcessor } from '@backstage/plugin-catalog-backend';
 import { CatalogApi } from '@backstage/catalog-client';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 export abstract class AWSCatalogProcessor implements CatalogProcessor {
