@@ -141,7 +141,10 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         entries.map(async ([_, group]) => {
           const members: string[] = [];
           try {
-            await group.listUsers().each(user => {
+            const collection = await client.groupApi.listGroupUsers({
+              groupId: group.id!,
+            });
+            await collection.each(user => {
               try {
                 const userName = this.userNamingStrategy(user);
                 members.push(userName);
@@ -169,12 +172,14 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           });
           const profileAnnotations: Record<string, string> = {};
           if (this.customAttributesToAnnotationAllowlist.length) {
-            for (const [key, value] of new Map(Object.entries(group.profile))) {
+            for (const [key, value] of new Map(
+              Object.entries(group.profile!),
+            )) {
               const stringKey = key.toString();
               if (
                 this.customAttributesToAnnotationAllowlist.includes(stringKey)
               ) {
-                profileAnnotations[stringKey] = value.toString();
+                profileAnnotations[stringKey] = value!.toString();
               }
             }
           }

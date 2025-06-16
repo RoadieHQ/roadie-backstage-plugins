@@ -17,4 +17,4 @@ import { UserNamingStrategy } from './types';
 import { kebabCase } from 'lodash';
 
 export const kebabCaseEmailUserNamingStrategy: UserNamingStrategy = user =>
-  kebabCase(user.profile.email);
+  kebabCase(user.profile!.email!);

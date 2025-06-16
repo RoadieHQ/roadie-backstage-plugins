@@ -143,8 +143,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     ]);
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
+    const collection = await client.userApi.listUsers({
+      search: this.account.userFilter,
+    });
 
-    await client.listUsers({ search: this.account.userFilter }).each(user => {
+    collection.each(user => {
       try {
         const userName = this.userNamingStrategy(user);
         userResources[userName] = this.userEntityFromOktaUser(
@@ -178,7 +181,14 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       const promiseResults = await Promise.allSettled(
         chunkOfGroups.map(async group => {
           const members: string[] = [];
-          await group.listUsers().each(user => {
+
+          const listGroupUsersCollection = await client.groupApi.listGroupUsers(
+            {
+              groupId: group.id!,
+            },
+          );
+
+          listGroupUsersCollection.each(user => {
             try {
               const userName = this.userNamingStrategy(user);
               if (userResources[userName]) {

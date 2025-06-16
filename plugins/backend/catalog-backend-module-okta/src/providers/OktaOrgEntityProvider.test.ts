@@ -701,12 +701,12 @@ describe('OktaOrgEntityProvider', () => {
           metadata: {
             annotations: { ...options.annotations },
             name: namingStrategy(group),
-            title: group.profile.name,
-            description: group.profile.description || '',
+            title: group.profile!.name!,
+            description: group.profile!.description || '',
           },
           spec: {
             profile: {
-              displayName: group.profile.displayName as string,
+              displayName: group.profile!.displayName as string,
             },
             members: options.members,
             type: 'group',
@@ -781,12 +781,12 @@ describe('OktaOrgEntityProvider', () => {
           metadata: {
             annotations: { ...options.annotations },
             name: namingStrategy(user),
-            title: user.profile.email,
+            title: user.profile!.email!,
           },
           spec: {
             profile: {
-              displayName: user.profile.displayName,
-              email: user.profile.email,
+              displayName: user.profile!.displayName!,
+              email: user.profile!.email!,
               picture: 'picture.com',
             },
             memberOf: [],

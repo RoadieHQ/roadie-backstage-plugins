@@ -16,4 +16,4 @@
 import { GroupNamingStrategy } from './types';
 
 export const profileNameGroupNamingStrategy: GroupNamingStrategy = group =>
-  group.profile.name;
+  group.profile!.name!;

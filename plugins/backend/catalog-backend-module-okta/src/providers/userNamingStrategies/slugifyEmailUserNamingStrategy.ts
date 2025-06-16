@@ -17,7 +17,7 @@ import { UserNamingStrategy } from './types';
 import slugify from 'slugify';
 
 export const slugifyEmailUserNamingStrategy: UserNamingStrategy = user => {
-  const [plainUser, domain] = user.profile.email.split('@');
+  const [plainUser, domain] = user.profile!.email!.split('@');
 
   const cleanUser = slugify(plainUser, {
     lower: true,

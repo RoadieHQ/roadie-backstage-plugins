@@ -468,12 +468,12 @@ describe('OktaGroupProvider', () => {
           metadata: {
             annotations: { ...options.annotations },
             name: namingStrategy(group),
-            title: group.profile.name,
-            description: group.profile.description || '',
+            title: group.profile!.name!,
+            description: group.profile!.description || '',
           },
           spec: {
             profile: {
-              displayName: group.profile.displayName as string,
+              displayName: group.profile!.displayName as string,
             },
             members: options.members,
             type: 'group',

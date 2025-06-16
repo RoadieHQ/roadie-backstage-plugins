@@ -16,4 +16,4 @@
 import { UserNamingStrategy } from './types';
 
 export const stripEmailDomainUserNamingStrategy: UserNamingStrategy = user =>
-  user.profile.email.substring(0, user.profile.email.indexOf('@'));
+  user.profile!.email!.substring(0, user.profile!.email!.indexOf('@'));

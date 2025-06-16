@@ -15,4 +15,4 @@
  */
 import { UserNamingStrategy } from './types';
 
-export const idUserNamingStrategy: UserNamingStrategy = user => user.id;
+export const idUserNamingStrategy: UserNamingStrategy = user => user.id!;

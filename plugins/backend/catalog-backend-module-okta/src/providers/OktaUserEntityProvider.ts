@@ -88,7 +88,9 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    const allUsers = await client.listUsers({ search: this.userFilter });
+    const allUsers = await client.userApi.listUsers({
+      search: this.userFilter,
+    });
 
     await allUsers.each(user => {
       const profileAnnotations = this.getCustomAnnotations(

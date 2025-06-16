@@ -182,7 +182,7 @@ describe('OktaUserEntityProvider', () => {
       };
       const provider = OktaUserEntityProvider.fromConfig(config, {
         logger,
-        namingStrategy: user => user.id,
+        namingStrategy: user => user.id!,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
@@ -262,12 +262,12 @@ describe('OktaUserEntityProvider', () => {
           metadata: {
             annotations: { ...options.annotations },
             name: namingStrategy(user),
-            title: user.profile.email,
+            title: user.profile!.email!,
           },
           spec: {
             profile: {
-              displayName: user.profile.displayName,
-              email: user.profile.email,
+              displayName: user.profile!.displayName!,
+              email: user.profile!.email!,
               picture: 'picture.com',
             },
             memberOf: [],

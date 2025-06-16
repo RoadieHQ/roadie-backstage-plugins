@@ -34,8 +34,8 @@ export const groupEntityFromOktaGroup = (
         ...options.annotations,
       },
       name: namingStrategy(group),
-      title: group.profile.name,
-      description: group.profile.description || '',
+      title: group.profile!.name!,
+      description: group.profile!.description || '',
     },
     spec: {
       members: options.members,

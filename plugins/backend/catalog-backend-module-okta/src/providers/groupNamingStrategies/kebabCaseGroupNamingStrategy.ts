@@ -17,4 +17,4 @@ import { kebabCase } from 'lodash';
 import { GroupNamingStrategy } from './types';
 
 export const kebabCaseGroupNamingStrategy: GroupNamingStrategy = group =>
-  kebabCase(group.profile.name);
+  kebabCase(group.profile!.name!);

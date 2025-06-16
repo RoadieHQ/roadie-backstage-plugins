@@ -28,12 +28,12 @@ export const userEntityFromOktaUser = (
     metadata: {
       annotations: { ...options.annotations },
       name: namingStrategy(user),
-      title: user.profile.email,
+      title: user.profile!.email!,
     },
     spec: {
       profile: {
-        displayName: user.profile.displayName,
-        email: user.profile.email,
+        displayName: user.profile!.displayName!,
+        email: user.profile!.email!,
       },
       memberOf: [],
     },

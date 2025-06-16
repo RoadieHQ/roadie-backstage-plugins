@@ -15,4 +15,4 @@
  */
 import { GroupNamingStrategy } from './types';
 
-export const idGroupNamingStrategy: GroupNamingStrategy = group => group.id;
+export const idGroupNamingStrategy: GroupNamingStrategy = group => group.id!;
