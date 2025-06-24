@@ -15,6 +15,7 @@ import {
   domainEntityV1alpha1Validator,
   resourceEntityV1alpha1Validator,
   entityKindSchemaValidator,
+  makeValidator,
 } from '@backstage/catalog-model';
 import { templateEntityV1beta3Validator } from '@backstage/plugin-scaffolder-common';
 import annotationSchema from './schemas/annotations.schema.json';
@@ -73,6 +74,26 @@ export const validate = async (
   customAnnotationSchemaLocation = '',
 ) => {
   let validator;
+
+  const overrides = {
+    isValidEntityName(value) {
+      return (
+        typeof value === 'string' &&
+        value.length >= 1 &&
+        value.length <= 120 &&
+        /^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/.test(value)
+      );
+    },
+    isValidLabelValue(value) {
+      return typeof value === 'string';
+    },
+    isValidTag(value) {
+      return (
+        typeof value === 'string' && value.length >= 1 && value.length <= 63
+      );
+    },
+  };
+
   const validateAnnotations = (entity, idx) => {
     if (!validator) {
       if (customAnnotationSchemaLocation) {
@@ -118,7 +139,7 @@ export const validate = async (
     });
     const entityPolicies = EntityPolicies.allOf([
       new DefaultNamespaceEntityPolicy(),
-      new FieldFormatEntityPolicy(),
+      new FieldFormatEntityPolicy(makeValidator(overrides)),
       new NoForeignRootFieldsEntityPolicy(),
       new SchemaValidEntityPolicy(),
     ]);
