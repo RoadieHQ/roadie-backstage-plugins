@@ -1,4 +1,18 @@
-#!/usr/bin/env node
+/*
+ * Copyright 2025 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /* eslint-disable import/no-extraneous-dependencies */
 /*
@@ -30,6 +44,8 @@ if (!BOOL_CREATE_RELEASE) {
 const GH_OWNER = 'RoadieHQ';
 const GH_REPO = 'roadie-backstage-plugins';
 const EXPECTED_COMMIT_MESSAGE = /^Merge pull request #(?<prNumber>[0-9]+) from/;
+const EXPECTED_COMMIT_MESSAGE_VERSION_BUMP =
+  /^Version Packages #(?<prNumber>[0-9]+)/;
 const CHANGESET_RELEASE_BRANCH =
   'roadie-backstage-plugins/changeset-release/main';
 
@@ -92,15 +108,22 @@ async function getCommitMessageUsingTagName(tagName) {
 // There is a PR number in our expected commit message. Get the description of that PR.
 async function getReleaseDescriptionFromCommitMessage(commitMessage) {
   // It should exactly match the pattern of changeset commit message, or else will abort.
-  const expectedMessage = RegExp(EXPECTED_COMMIT_MESSAGE);
-  if (!expectedMessage.test(commitMessage)) {
+  const expectedMessage1 = RegExp(EXPECTED_COMMIT_MESSAGE);
+  const expectedMessage2 = RegExp(EXPECTED_COMMIT_MESSAGE_VERSION_BUMP);
+  if (
+    !expectedMessage1.test(commitMessage) ||
+    !expectedMessage2.test(commitMessage)
+  ) {
     throw new Error(
       `Expected regex did not match commit message: ${commitMessage}`,
     );
   }
 
   // Get the PR description from the commit message
-  const prNumber = commitMessage.match(expectedMessage).groups.prNumber;
+  const match =
+    commitMessage.match(expectedMessage1) ||
+    commitMessage.match(expectedMessage2);
+  const prNumber = match.groups.prNumber;
   const { data } = await octokit.pulls.get({
     owner: GH_OWNER,
     repo: GH_REPO,

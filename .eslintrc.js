@@ -18,7 +18,7 @@ var path = require('path');
 
 module.exports = {
   root: true,
-  plugins: ['notice'],
+  plugins: ['notice', 'import'],
   rules: {
     'notice/notice': [
       'error',
@@ -33,5 +33,14 @@ module.exports = {
       },
     ],
     eqeqeq: ['error', 'smart'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: false }],
+  },
+  parserOptions: {
+    ecmaVersion: 2021,
+    sourceType: 'module',
+  },
+  env: {
+    es6: true,
+    node: true,
   },
 };
