@@ -1,3 +1,13 @@
+<div align="center">
+  <img src="https://images.ctfassets.net/hcqpbvoqhwhm/5J0FSNghLU8M6nZNtQHS0D/96bf022e075a5e10a5b3ba6b35ae8990/roadie-horiz-big-transp-back.png" alt="Roadie Logo" width="400"/>
+</div>
+
+> ⚠️ **Reference Implementation Only**  
+> The rag-ai plugin and its modules are a reference implementation provided for demonstration and educational purposes.  
+> We provide minimal support for these components and do not actively maintain or update them.
+
+---
+
 # RAG AI Backend-embeddings OpenAI submodule
 
 This is a submodule for the `@roadiehq/rag-ai-backend` module, which provides functionality to use OpenAI embeddings to generate a RAG AI Backend plugin for Backstage. It exposes configuration options to configure OpenAI API token and wanted embeddings model, as well as the parameters for the model.
