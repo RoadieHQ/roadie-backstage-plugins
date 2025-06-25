@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai
 
+## 1.1.9
+
+### Patch Changes
+
+- 27d5559: The `rag-ai` plugins are no longer being actively maintained.
+
 ## 1.1.8
 
 ### Patch Changes
