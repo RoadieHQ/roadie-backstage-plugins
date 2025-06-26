@@ -1,5 +1,15 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 1.1.5
+
+### Patch Changes
+
+- 27d5559: The `rag-ai` plugins are no longer being actively maintained.
+- Updated dependencies [27d5559]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.1.5
+  - @roadiehq/rag-ai-backend@2.0.1
+  - @roadiehq/rag-ai-node@0.1.11
+
 ## 1.1.4
 
 ### Patch Changes
