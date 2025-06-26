@@ -53,6 +53,7 @@ export function createHttpBackstageAction(options: {
     body?: any;
     logRequestPath?: boolean;
     continueOnBadResponse?: boolean;
+    timeout?: number;
   }>({
     id: 'http:backstage:request',
     description:
@@ -111,6 +112,13 @@ export function createHttpBackstageAction(options: {
               'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
             type: 'boolean',
             default: 'false',
+          },
+          timeout: {
+            title: 'Timeout for the request (milliseconds)',
+            description:
+              'If the request takes more than the specified timeout it throws an error',
+            type: 'number',
+            default: '60000',
           },
         },
       },
@@ -174,6 +182,7 @@ export function createHttpBackstageAction(options: {
 
       const httpOptions: HttpOptions = {
         method: input.method,
+        timeout: input.timeout,
         url: queryParams !== '' ? `${url}?${queryParams}` : url,
         headers: input.headers ? (input.headers as Headers) : {},
         body: inputBody,
