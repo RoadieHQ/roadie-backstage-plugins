@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.3.3
+
+### Patch Changes
+
+- b7f31ad: Added timeout for the http request as input parameter
+
 ## 5.3.2
 
 ### Patch Changes
