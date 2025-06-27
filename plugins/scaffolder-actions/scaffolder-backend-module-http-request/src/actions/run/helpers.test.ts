@@ -273,7 +273,19 @@ describe('http', () => {
             new AbortController().abort(),
           );
           await expect(async () => await http(options, logger)).rejects.toThrow(
-            'There was an issue with the request: Error: Request was aborted as it took longer than 60 seconds',
+            'Request was aborted as it took longer than 60 seconds',
+          );
+        });
+      });
+
+      describe('when the request timesout with custom timeout', () => {
+        it('fails with an error', async () => {
+          (fetch as unknown as jest.Mock).mockResolvedValue(
+            new AbortController().abort(),
+          );
+          options.timeout = 5000;
+          await expect(async () => await http(options, logger)).rejects.toThrow(
+            'Request was aborted as it took longer than 5 seconds',
           );
         });
       });

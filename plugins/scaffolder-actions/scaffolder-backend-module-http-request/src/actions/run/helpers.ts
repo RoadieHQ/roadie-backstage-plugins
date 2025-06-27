@@ -20,7 +20,6 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import { HttpOptions } from './types';
 
 class HttpError extends Error {}
-const DEFAULT_TIMEOUT = 60_000;
 
 export const getPluginId = (path: string): string => {
   const pluginId = (path.startsWith('/') ? path.substring(1) : path).split(
@@ -45,22 +44,21 @@ export const http = async (
   continueOnBadResponse: boolean = false,
 ): Promise<any> => {
   let res: any;
+  const TIMEOUT = options.timeout || 60_000;
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
   const { url, ...other } = options;
   const httpOptions = { ...other, signal: controller.signal };
 
   try {
     res = await fetch(url, httpOptions);
-    if (!res) {
-      throw new HttpError(
-        `Request was aborted as it took longer than ${
-          DEFAULT_TIMEOUT / 1000
-        } seconds`,
-      );
-    }
   } catch (e) {
     throw new HttpError(`There was an issue with the request: ${e}`);
+  }
+  if (!res) {
+    throw new HttpError(
+      `Request was aborted as it took longer than ${TIMEOUT / 1000} seconds`,
+    );
   }
 
   clearTimeout(timeoutId);
