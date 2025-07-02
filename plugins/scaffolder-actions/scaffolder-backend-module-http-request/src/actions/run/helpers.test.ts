@@ -266,25 +266,28 @@ describe('http', () => {
           );
         });
       });
+    });
 
-      describe('when the request timesout', () => {
-        it('fails with an error', async () => {
-          (fetch as unknown as jest.Mock).mockResolvedValue(
-            new AbortController().abort(),
-          );
-          await expect(async () => await http(options, logger)).rejects.toThrow(
-            'Request was aborted as it took longer than 60 seconds',
-          );
+    describe('when requests time out', () => {
+      beforeEach(() => {
+        (fetch as unknown as jest.Mock).mockRejectedValue({
+          name: 'TimeoutError',
         });
       });
 
-      describe('when the request timesout with custom timeout', () => {
-        it('fails with an error', async () => {
-          (fetch as unknown as jest.Mock).mockResolvedValue(
-            new AbortController().abort(),
-          );
+      it('fails with an error', async () => {
+        await expect(() => http(options, logger)).rejects.toThrow(
+          'Request was aborted as it took longer than 60 seconds',
+        );
+      });
+
+      describe('with a custom timeout', () => {
+        beforeEach(() => {
           options.timeout = 5000;
-          await expect(async () => await http(options, logger)).rejects.toThrow(
+        });
+
+        it('fails with an error', async () => {
+          await expect(() => http(options, logger)).rejects.toThrow(
             'Request was aborted as it took longer than 5 seconds',
           );
         });

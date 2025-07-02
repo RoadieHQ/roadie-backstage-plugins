@@ -20,6 +20,7 @@ import { LoggerService } from '@backstage/backend-plugin-api';
 import { HttpOptions } from './types';
 
 class HttpError extends Error {}
+const DEFAULT_TIMEOUT = 60_000;
 
 export const getPluginId = (path: string): string => {
   const pluginId = (path.startsWith('/') ? path.substring(1) : path).split(
@@ -39,29 +40,28 @@ export const generateBackstageUrl = async (
 };
 
 export const http = async (
-  options: HttpOptions,
+  { url, timeout = DEFAULT_TIMEOUT, ...options }: HttpOptions,
   logger: Logger | LoggerService,
   continueOnBadResponse: boolean = false,
 ): Promise<any> => {
-  let res: any;
-  const TIMEOUT = options.timeout || 60_000;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
-  const { url, ...other } = options;
-  const httpOptions = { ...other, signal: controller.signal };
+  let res: Response;
 
   try {
-    res = await fetch(url, httpOptions);
+    res = await fetch(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeout),
+    });
   } catch (e) {
+    // thrown by AbortSignal.timeout
+    // https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static
+    if (e.name === 'TimeoutError') {
+      throw new HttpError(
+        `Request was aborted as it took longer than ${timeout / 1000} seconds`,
+      );
+    }
+
     throw new HttpError(`There was an issue with the request: ${e}`);
   }
-  if (!res) {
-    throw new HttpError(
-      `Request was aborted as it took longer than ${TIMEOUT / 1000} seconds`,
-    );
-  }
-
-  clearTimeout(timeoutId);
 
   const headers: any = {};
   for (const [name, value] of res.headers) {
