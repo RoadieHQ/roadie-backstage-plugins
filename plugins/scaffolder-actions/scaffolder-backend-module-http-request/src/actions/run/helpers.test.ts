@@ -269,10 +269,13 @@ describe('http', () => {
     });
 
     describe('when requests time out', () => {
+      // although the DOMException constructor exists in Node, it's not
+      // accessible in tests so we're cobbling it together.
+      const fetchError = new Error('catpants');
+      fetchError.name = 'TimeoutError';
+
       beforeEach(() => {
-        (fetch as unknown as jest.Mock).mockRejectedValue({
-          name: 'TimeoutError',
-        });
+        (fetch as unknown as jest.Mock).mockRejectedValue(fetchError);
       });
 
       it('fails with an error', async () => {

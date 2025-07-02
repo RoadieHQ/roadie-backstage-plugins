@@ -54,7 +54,7 @@ export const http = async (
   } catch (e) {
     // thrown by AbortSignal.timeout
     // https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static
-    if (e.name === 'TimeoutError') {
+    if (e instanceof Error && e.name === 'TimeoutError') {
       throw new HttpError(
         `Request was aborted as it took longer than ${timeout / 1000} seconds`,
       );
