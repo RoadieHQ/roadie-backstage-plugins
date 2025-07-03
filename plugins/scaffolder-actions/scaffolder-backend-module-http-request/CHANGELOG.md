@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.3.4
+
+### Patch Changes
+
+- ddeddb7: Updated timeout to use native functionality
+
 ## 5.3.3
 
 ### Patch Changes
