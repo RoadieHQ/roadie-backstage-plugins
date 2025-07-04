@@ -36,6 +36,18 @@ spec:
   owner: group:team-atools
   definition:
 `,
+      'catalog-info-with-long-name.yaml': `
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: test-service-api
+  description: API for test-service
+spec:
+  type: openapi
+  lifecycle: production
+  owner: group:team-atools
+  definition:
+`,
       'catalog-info-with-replacement.yaml': `
 apiVersion: backstage.io/v1alpha1
 kind: API
@@ -178,6 +190,62 @@ spec:
             type: service
             owner: user:dtuite
             lifecycle: experimental
+`,
+      'catalog-info-long-name.yaml': `
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: test-verylongname-test-verylongname-test-verylongname-test-verylongname-test-verylongname-test-verylongname
+  description: |
+    A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.
+  annotations:
+    github.com/project-slug: roadiehq/sample-service
+    sentry.io/project-slug: sample-service
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/sample-service/tree/main
+    jira/project-key: TEST
+    jira/component: COMP
+    snyk.io/org-name: roadie
+    backstage.io/view-url: https://github.com/RoadieHQ/sample-service/tree/main
+    backstage.io/source-location: url:https://github.com/RoadieHQ/sample-service/tree/main/
+    testextraannotation: adfstea
+    backstage.io/ldap-uuid: c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21
+spec:
+    type: service
+    owner: user:dtuite
+    lifecycle: experimental
+    providesApis:
+      - sample-service
+
+---
+    
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-5
+  description: |
+      A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.
+  annotations:
+    github.com/project-slug: roadiehq/sample-service
+    sentry.io/project-slug: sample-service
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/sample-service/tree/main
+    jira/project-key: TEST
+    jira/component: COMP
+    snyk.io/org-name: roadie
+    backstage.io/view-url: https://github.com/RoadieHQ/sample-service/tree/main
+    backstage.io/source-location: url:https://github.com/RoadieHQ/sample-service/tree/main/
+    testextraannotation: adfstea
+    backstage.io/ldap-uuid: c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21
+spec:
+  type: service
+  owner: user:dtuite
+  lifecycle: experimental
+  providesApis:
+    - sample-service
 `,
       'template-v2-entity.yaml': `
 apiVersion: backstage.io/v1beta2
@@ -323,7 +391,78 @@ spec:
       },
     ]);
   });
-
+  it('Should successfully validate entity with name loger than 63 chars', async () => {
+    await expect(
+      validator.validateFromFile('catalog-info-long-name.yaml'),
+    ).resolves.toEqual([
+      {
+        metadata: {
+          namespace: 'default',
+          name: 'test-verylongname-test-verylongname-test-verylongname-test-verylongname-test-verylongname-test-verylongname',
+          description:
+            'A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.\n',
+          annotations: {
+            'github.com/project-slug': 'roadiehq/sample-service',
+            'sentry.io/project-slug': 'sample-service',
+            'aws.com/lambda-function-name': 'HelloWorld',
+            'aws.com/lambda-region': 'eu-west-1',
+            'backstage.io/techdocs-ref':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main',
+            'jira/project-key': 'TEST',
+            'jira/component': 'COMP',
+            'snyk.io/org-name': 'roadie',
+            'backstage.io/view-url':
+              'https://github.com/RoadieHQ/sample-service/tree/main',
+            'backstage.io/source-location':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main/',
+            testextraannotation: 'adfstea',
+            'backstage.io/ldap-uuid': 'c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21',
+          },
+        },
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Component',
+        spec: {
+          type: 'service',
+          owner: 'user:dtuite',
+          lifecycle: 'experimental',
+          providesApis: ['sample-service'],
+        },
+      },
+      {
+        metadata: {
+          namespace: 'default',
+          name: 'sample-service-5',
+          description:
+            'A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda, Datadog and mis-configured techdocs.\n',
+          annotations: {
+            'github.com/project-slug': 'roadiehq/sample-service',
+            'sentry.io/project-slug': 'sample-service',
+            'aws.com/lambda-function-name': 'HelloWorld',
+            'aws.com/lambda-region': 'eu-west-1',
+            'backstage.io/techdocs-ref':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main',
+            'jira/project-key': 'TEST',
+            'jira/component': 'COMP',
+            'snyk.io/org-name': 'roadie',
+            'backstage.io/view-url':
+              'https://github.com/RoadieHQ/sample-service/tree/main',
+            'backstage.io/source-location':
+              'url:https://github.com/RoadieHQ/sample-service/tree/main/',
+            testextraannotation: 'adfstea',
+            'backstage.io/ldap-uuid': 'c57e8ba2-6cc4-1039-9ebc-d5f241a7ca21',
+          },
+        },
+        apiVersion: 'backstage.io/v1alpha1',
+        kind: 'Component',
+        spec: {
+          type: 'service',
+          owner: 'user:dtuite',
+          lifecycle: 'experimental',
+          providesApis: ['sample-service'],
+        },
+      },
+    ]);
+  });
   it('Should fail to validate with incorrect catalog-info', async () => {
     await expect(
       validator.validateFromFile('invalid-catalog-info.yaml'),
