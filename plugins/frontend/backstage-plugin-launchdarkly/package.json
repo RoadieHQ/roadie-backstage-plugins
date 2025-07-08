@@ -46,6 +46,7 @@
   "devDependencies": {
     "@backstage/cli": "^0.29.2",
     "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.3.0",
     "react": "^16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "files": [
