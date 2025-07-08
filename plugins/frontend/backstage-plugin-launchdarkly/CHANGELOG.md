@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 0.0.12
+
+### Patch Changes
+
+- 67628b6: Update Launchdarkly plugin overview table to also render complex values.
+
 ## 0.0.11
 
 ### Patch Changes
