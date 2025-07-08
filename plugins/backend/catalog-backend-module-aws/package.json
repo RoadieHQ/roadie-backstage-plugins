@@ -69,7 +69,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
+    "@backstage/cli": "^0.33.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/link2aws": "^1.0.0",
     "@types/lodash": "^4.14.151",
