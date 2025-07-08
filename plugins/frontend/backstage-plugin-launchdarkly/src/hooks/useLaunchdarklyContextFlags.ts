@@ -61,6 +61,6 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
 
       return (await response.json()).items;
     }
-    return [];
+    return undefined;
   });
 };
