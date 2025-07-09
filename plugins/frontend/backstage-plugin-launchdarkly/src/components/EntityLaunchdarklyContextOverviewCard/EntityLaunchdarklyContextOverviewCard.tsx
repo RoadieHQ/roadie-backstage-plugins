@@ -37,6 +37,26 @@ export type EntityLaunchdarklyOverviewCardProps = {
   enableSearch?: boolean;
 };
 
+const ValueRenderer = ({ value }: { value: any }) => {
+  if (typeof value === 'object' && value !== null) {
+    return (
+      <pre
+        style={{
+          margin: 0,
+          fontSize: '0.875rem',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          maxWidth: '400px',
+          overflow: 'auto',
+        }}
+      >
+        {JSON.stringify(value, null, 2)}
+      </pre>
+    );
+  }
+  return String(value);
+};
+
 const columns: Array<TableColumn> = [
   {
     title: 'Name',
@@ -45,6 +65,7 @@ const columns: Array<TableColumn> = [
   {
     title: 'Value',
     field: '_value',
+    render: (row: any) => <ValueRenderer value={row._value} />,
   },
 ];
 
