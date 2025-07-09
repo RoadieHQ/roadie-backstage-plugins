@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import {
-  SchedulerServiceTaskScheduleDefinition,
   readSchedulerServiceTaskScheduleDefinitionFromConfig,
+  SchedulerServiceTaskScheduleDefinition,
 } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
-import { InputError } from '@backstage/errors';
 
 const configKey = 'glean';
 export const defaults = {
@@ -42,7 +41,7 @@ export function readScheduleConfigOptions(
         schedule =
           readSchedulerServiceTaskScheduleDefinitionFromConfig(scheduleConfig);
       } catch (error) {
-        throw new InputError(`Invalid schedule at ${configKey}, ${error}`);
+        throw new Error(`Invalid schedule at ${configKey}, ${error}`);
       }
     }
   }
