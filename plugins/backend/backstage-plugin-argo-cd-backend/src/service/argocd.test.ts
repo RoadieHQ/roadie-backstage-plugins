@@ -1,4 +1,3 @@
-import { getVoidLogger } from '@backstage/backend-common';
 import { Config, ConfigReader } from '@backstage/config';
 import { ArgoService } from './argocd.service';
 import {
@@ -14,6 +13,7 @@ import {
   UpdateArgoProjectAndAppProps,
 } from './types';
 import { mocked } from 'jest-mock';
+import { createLogger } from 'winston';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services', () => ({
@@ -492,7 +492,7 @@ describe('ArgoCD service', () => {
         sourceRepo: 'https://github.com/backstage/backstage',
         sourcePath: 'kubernetes/nonproduction',
         labelValue: 'backstageId',
-        logger: getVoidLogger(),
+        logger: createLogger(),
       });
 
       expect(resp).toStrictEqual(true);
@@ -516,7 +516,7 @@ describe('ArgoCD service', () => {
         sourceRepo: 'https://github.com/backstage/backstage',
         sourcePath: 'kubernetes/nonproduction',
         labelValue: 'backstageId',
-        logger: getVoidLogger(),
+        logger: createLogger(),
       });
 
       await expect(resp).rejects.toThrow();

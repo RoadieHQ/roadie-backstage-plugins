@@ -1,7 +1,7 @@
 {
   "name": "@roadiehq/catalog-backend-module-aws",
   "description": "A set of Backstage catalog providers for AWS",
-  "version": "5.7.0",
+  "version": "5.7.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -57,7 +57,6 @@
     "@aws-sdk/credential-providers": "^3.696.0",
     "@aws-sdk/lib-dynamodb": "^3.696.0",
     "@aws-sdk/util-arn-parser": "^3.76.0",
-    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "^1.0.1",
     "@backstage/catalog-client": "^1.8.0",
     "@backstage/catalog-model": "^1.7.1",
@@ -67,15 +66,15 @@
     "@backstage/plugin-catalog-node": "^1.14.0",
     "@backstage/plugin-kubernetes-common": "^0.9.0",
     "link2aws": "^1.0.18",
-    "lodash": "^4.17.21",
-    "winston": "^3.2.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@backstage/cli": "^0.29.2",
     "@testing-library/jest-dom": "^6.4.2",
     "@types/link2aws": "^1.0.0",
     "@types/lodash": "^4.14.151",
-    "aws-sdk-client-mock": "^4.1.0"
+    "aws-sdk-client-mock": "^4.1.0",
+    "winston": "^3.2.1"
   },
   "files": [
     "dist"

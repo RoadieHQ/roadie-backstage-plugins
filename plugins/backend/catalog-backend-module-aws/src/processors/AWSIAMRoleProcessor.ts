@@ -29,9 +29,8 @@ import {
 } from '@backstage/plugin-catalog-backend';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { Config } from '@backstage/config';
-import * as winston from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { PluginEndpointDiscovery } from '@backstage/backend-common';
+import type { Logger } from 'winston';
+import { LoggerService, DiscoveryService } from '@backstage/backend-plugin-api';
 import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
 import { arnToName } from '../utils/arnToName';
 
@@ -39,8 +38,8 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
   static fromConfig(
     _config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
-      discovery: PluginEndpointDiscovery;
+      logger: Logger | LoggerService;
+      discovery: DiscoveryService;
     },
   ) {
     const catalogApi: CatalogApi = new CatalogClient({

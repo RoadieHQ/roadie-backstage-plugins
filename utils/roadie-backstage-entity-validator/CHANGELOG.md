@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.6.0
+
+### Minor Changes
+
+- 3bcfdc6: Loosen validation restrictions on tags, label values and name fields
+
 ## 2.5.0
 
 ### Minor Changes

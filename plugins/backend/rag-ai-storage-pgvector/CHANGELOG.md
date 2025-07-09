@@ -1,5 +1,13 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 2.0.2
+
+### Patch Changes
+
+- 27d5559: The `rag-ai` plugins are no longer being actively maintained.
+- Updated dependencies [27d5559]
+  - @roadiehq/rag-ai-node@0.1.11
+
 ## 2.0.1
 
 ### Patch Changes

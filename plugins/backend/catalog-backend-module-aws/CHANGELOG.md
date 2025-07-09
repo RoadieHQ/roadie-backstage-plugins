@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.7.1
+
+### Patch Changes
+
+- faf20d0: Remove deprecated `@backstage/backend-common` package.
+
 ## 5.7.0
 
 ### Minor Changes

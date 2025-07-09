@@ -266,14 +266,32 @@ describe('http', () => {
           );
         });
       });
+    });
 
-      describe('when the request timesout', () => {
+    describe('when requests time out', () => {
+      // although the DOMException constructor exists in Node, it's not
+      // accessible in tests so we're cobbling it together.
+      const fetchError = new Error('catpants');
+      fetchError.name = 'TimeoutError';
+
+      beforeEach(() => {
+        (fetch as unknown as jest.Mock).mockRejectedValue(fetchError);
+      });
+
+      it('fails with an error', async () => {
+        await expect(() => http(options, logger)).rejects.toThrow(
+          'Request was aborted as it took longer than 60 seconds',
+        );
+      });
+
+      describe('with a custom timeout', () => {
+        beforeEach(() => {
+          options.timeout = 5000;
+        });
+
         it('fails with an error', async () => {
-          (fetch as unknown as jest.Mock).mockResolvedValue(
-            new AbortController().abort(),
-          );
-          await expect(async () => await http(options, logger)).rejects.toThrow(
-            'There was an issue with the request: Error: Request was aborted as it took longer than 60 seconds',
+          await expect(() => http(options, logger)).rejects.toThrow(
+            'Request was aborted as it took longer than 5 seconds',
           );
         });
       });

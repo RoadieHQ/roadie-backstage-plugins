@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.9.1
+
+### Patch Changes
+
+- c56e0b2: Fixing crashing when using the `argocd` plugin with the new frontend system. The wrong Blueprint type was used, as this should be a tab used within context of an Entity.
+
 ## 2.9.0
 
 ### Minor Changes

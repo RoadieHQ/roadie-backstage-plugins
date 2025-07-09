@@ -16,7 +16,7 @@
 
 import { ResourceEntity } from '@backstage/catalog-model';
 import { OpenSearch } from '@aws-sdk/client-opensearch';
-import * as winston from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
@@ -39,7 +39,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
   static fromConfig(
     config: Config,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -62,7 +62,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
   constructor(
     account: AccountConfig,
     options: {
-      logger: winston.Logger | LoggerService;
+      logger: Logger | LoggerService;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;

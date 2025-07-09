@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.3.1
+
+### Patch Changes
+
+- 296cca7: Remove deprecated `@backstage/backend-common` from dependencies.
+
 ## 4.3.0
 
 ### Minor Changes
