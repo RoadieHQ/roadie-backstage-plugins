@@ -15,54 +15,21 @@
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createSerializeJsonAction(): TemplateAction<{
-  data: any;
-  replacer?: string[];
-  space?: string;
-}> {
-  return createTemplateAction<{
-    data: any;
-    replacer?: string[];
-    space?: string;
-  }>({
+export function createSerializeJsonAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:serialize:json',
     description: 'Allows performing serialization on an object',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['data'],
-        properties: {
-          data: {
-            title: 'Data',
-            description: 'Input data to perform seriazation on.',
-            type: 'object',
-          },
-          replacer: {
-            title: 'Replacer',
-            description: 'Replacer array',
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          space: {
-            title: 'Space',
-            description: 'Space character',
-            type: 'string',
-          },
-        },
+        data: z =>
+          z.object({}).describe('Input data to perform serialization on.'),
+        replacer: z => z.array(z.string()).describe('Replacer array'),
+        space: z => z.string().describe('Space character'),
       },
       output: {
-        type: 'string',
-        properties: {
-          serialized: {
-            title: 'Output result from serialization',
-            type: 'string',
-          },
-        },
+        serialized: z =>
+          z.string().describe('Output result from serialization'),
       },
     },
 

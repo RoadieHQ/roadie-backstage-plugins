@@ -17,26 +17,15 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { InputError } from '@backstage/errors';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createSleepAction(options?: {
-  maxSleep?: number;
-}): TemplateAction<{ amount: number }> {
-  return createTemplateAction<{ amount: number }>({
+export function createSleepAction(options?: { maxSleep?: number }) {
+  return createTemplateAction({
     id: 'roadiehq:utils:sleep',
     description: 'Halts the scaffolding for the given amount of seconds',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['amount'],
-        properties: {
-          amount: {
-            title: 'Sleep Amount',
-            description: 'How much seconds should this step take.',
-            type: 'number',
-          },
-        },
+        amount: z =>
+          z.number().describe('How much seconds should this step take.'),
       },
     },
     async handler(ctx) {

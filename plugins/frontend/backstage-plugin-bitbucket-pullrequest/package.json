@@ -38,12 +38,12 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/core-components": "^0.16.1",
-    "@backstage/core-plugin-api": "^1.10.1",
+    "@backstage/core-components": "^0.17.3",
+    "@backstage/core-plugin-api": "^1.10.8",
     "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
-    "@backstage/plugin-catalog-react": "^1.14.2",
-    "@backstage/catalog-model": "^1.7.1",
+    "@backstage/plugin-catalog-react": "^1.19.0",
+    "@backstage/catalog-model": "^1.7.4",
     "luxon": "^3.0.0",
     "msw": "^1.0.1",
     "cross-fetch": "4.0.0"
@@ -55,10 +55,10 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.0.0",
-    "@backstage/cli": "^0.29.2",
-    "@backstage/core-app-api": "^1.15.2",
-    "@backstage/dev-utils": "^1.1.4",
-    "@backstage/test-utils": "^1.7.2",
+    "@backstage/cli": "^0.33.0",
+    "@backstage/core-app-api": "^1.17.1",
+    "@backstage/dev-utils": "^1.1.11",
+    "@backstage/test-utils": "^1.7.9",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0"
   },

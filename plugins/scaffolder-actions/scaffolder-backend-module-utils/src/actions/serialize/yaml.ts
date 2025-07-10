@@ -15,53 +15,24 @@
  */
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import YAML from 'yaml';
-import { stringifyOptions, yamlOptionsSchema } from '../../types';
+import { yamlOptionsSchema } from '../../types';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createSerializeYamlAction(): TemplateAction<{
-  data: any;
-  options?: stringifyOptions;
-}> {
-  return createTemplateAction<{
-    data: any;
-    options?: stringifyOptions;
-  }>({
+export function createSerializeYamlAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:serialize:yaml',
     description: 'Allows performing serialization on an object',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['data'],
-        properties: {
-          data: {
-            title: 'Data',
-            description: 'Input data to perform seriazation on.',
-            type: 'object',
-          },
-          replacer: {
-            title: 'Replacer',
-            description: 'Replacer array',
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          options: yamlOptionsSchema,
-        },
+        data: z =>
+          z.object({}).describe('Input data to perform serialization on.'),
+        options: yamlOptionsSchema,
       },
       output: {
-        type: 'string',
-        properties: {
-          serialized: {
-            title: 'Output result from serialization',
-            type: 'string',
-          },
-        },
+        serialized: z =>
+          z.string().describe('Output result from serialization'),
       },
     },
-
     async handler(ctx) {
       ctx.output(
         'serialized',
