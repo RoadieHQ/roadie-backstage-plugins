@@ -57,7 +57,8 @@
     "jsonata": "^2.0.4",
     "lodash": "^4.17.21",
     "yaml": "^2.6.1",
-    "yawn-yaml": "^2.3.0"
+    "yawn-yaml": "^2.3.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@backstage/backend-common": "^0.25.0",

@@ -42,31 +42,28 @@ export function createEcrAction(options?: {
     id: 'roadiehq:aws:ecr:create',
     schema: {
       input: {
-        required: ['repoName', 'region'],
-        type: 'object',
-        properties: {
-          repoName: {
-            type: 'string',
-            title: 'repoName',
-            description: 'The name of the ECR repository',
-          },
-          tags: { type: 'array', title: 'tags', description: 'list of tags' },
-          imageMutability: {
-            type: 'boolean',
-            title: 'ImageMutability',
-            description: 'set image mutability to true or false',
-          },
-          scanOnPush: {
-            type: 'boolean',
-            title: 'Scan On Push',
-            description: 'Scan images for vulnerabilities on push',
-          },
-          region: {
-            type: 'string',
-            title: 'aws region',
-            description: 'AWS region to create ECR in',
-          },
-        },
+        repoName: z => z.string().describe('The name of the ECR repository'),
+        tags: z =>
+          z
+            .array(
+              z.object({
+                Key: z.string(),
+                Value: z.string(),
+              }),
+            )
+            .optional()
+            .describe('list of tags'),
+        imageMutability: z =>
+          z
+            .boolean()
+            .describe('set image mutability to true or false')
+            .optional(),
+        scanOnPush: z =>
+          z
+            .boolean()
+            .describe('Scan images for vulnerabilities on push')
+            .optional(),
+        region: z => z.string().describe('AWS region to create ECR in'),
       },
     },
     async handler(ctx) {

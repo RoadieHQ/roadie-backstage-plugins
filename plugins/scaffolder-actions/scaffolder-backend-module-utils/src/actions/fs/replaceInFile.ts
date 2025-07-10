@@ -19,68 +19,36 @@ import fg from 'fast-glob';
 import fs from 'fs-extra';
 import { InputError } from '@backstage/errors';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
-export function createReplaceInFileAction(): TemplateAction<{
-  files: Array<{
-    file: string;
-    find: string;
-    matchRegex: boolean;
-    replaceWith: string;
-    includeDotFiles?: boolean;
-  }>;
-}> {
-  return createTemplateAction<{
-    files: Array<{
-      file: string;
-      find: string;
-      matchRegex: boolean;
-      replaceWith: string;
-      includeDotFiles?: boolean;
-    }>;
-  }>({
+export function createReplaceInFileAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:fs:replace',
     description: 'Replaces content of a file with given values.',
     supportsDryRun: true,
     schema: {
       input: {
-        required: ['files'],
-        type: 'object',
-        properties: {
-          files: {
-            title: 'Files',
-            description: 'A list of files and replacements to be done',
-            type: 'array',
-            items: {
-              type: 'object',
-              required: [],
-              properties: {
-                file: {
-                  type: 'string',
-                  title:
-                    'The source location of the file to be used to run replace against (supports wildcards)',
-                },
-                find: {
-                  type: 'string',
-                  title: 'A string to be replaced',
-                },
-                matchRegex: {
-                  type: 'bool',
-                  title: 'Use regex to match the find string',
-                },
-                replaceWith: {
-                  type: 'string',
-                  title: 'Text to be used to replace the found lines with',
-                },
-                includeDotFiles: {
-                  type: 'bool',
-                  title:
-                    'A configuration option to include dotfiles when globbing files. Defaults to false',
-                },
-              },
-            },
-          },
-        },
+        files: z =>
+          z.array(
+            z.object({
+              file: z
+                .string()
+                .describe(
+                  'The source location of the file to be used to run replace against (supports wildcards)',
+                ),
+              find: z.string().describe('A string to be replaced'),
+              matchRegex: z
+                .boolean()
+                .describe('Use regex to match the find string'),
+              replaceWith: z
+                .string()
+                .describe('Text to be used to replace the found lines with'),
+              includeDotFiles: z
+                .boolean()
+                .describe(
+                  'A configuration option to include dotfiles when globbing files. Defaults to false',
+                ),
+            }),
+          ),
       },
     },
     async handler(ctx) {
