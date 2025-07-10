@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.0.0
+
+### Major Changes
+
+- 037c0c2: Improve LaunchDarkly card to display variations, link to the flag, allow an expandable row to display environments and their targeting information.
+
 ## 0.0.12
 
 ### Patch Changes
