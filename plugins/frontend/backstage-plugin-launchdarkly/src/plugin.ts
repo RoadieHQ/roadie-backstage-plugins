@@ -23,7 +23,11 @@ import {
 import { rootRouteRef } from './routes';
 import { Entity } from '@backstage/catalog-model';
 import difference from 'lodash/difference';
-import { LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION } from './constants';
+import {
+  LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
+  LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+} from './constants';
 
 export const entityContentRouteRef = createRouteRef({
   id: 'launch-darkly-project',
@@ -64,6 +68,17 @@ export const EntityLaunchdarklyProjectOverviewContent =
 export const isLaunchdarklyContextAvailable = (entity: Entity) => {
   const diff = difference(
     [LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION],
+    Object.keys(entity.metadata?.annotations || {}),
+  );
+  return diff.length === 0;
+};
+
+export const isLaunchdarklyProjectAvailable = (entity: Entity) => {
+  const diff = difference(
+    [
+      LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
+      LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+    ],
     Object.keys(entity.metadata?.annotations || {}),
   );
   return diff.length === 0;
