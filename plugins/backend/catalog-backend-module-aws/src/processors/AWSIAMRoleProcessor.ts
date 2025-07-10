@@ -26,7 +26,7 @@ import {
   CatalogProcessorEmit,
   LocationSpec,
   processingResult,
-} from '@backstage/plugin-catalog-backend';
+} from '@backstage/plugin-catalog-node';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { Config } from '@backstage/config';
 import type { Logger } from 'winston';

@@ -24,7 +24,7 @@ import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,

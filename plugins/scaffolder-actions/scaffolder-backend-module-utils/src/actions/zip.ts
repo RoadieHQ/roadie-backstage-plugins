@@ -20,42 +20,20 @@ import { InputError } from '@backstage/errors';
 import AdmZip from 'adm-zip';
 import fs from 'fs-extra';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createZipAction(): TemplateAction<{
-  path: string;
-  outputPath: string;
-}> {
-  return createTemplateAction<{ path: string; outputPath: string }>({
+export function createZipAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:zip',
     description: 'Zips the content of the path',
     supportsDryRun: true,
     schema: {
       input: {
-        required: ['path'],
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Relative path you would like to zip',
-            type: 'string',
-          },
-
-          outputPath: {
-            title: 'Output Path',
-            description: 'The name of the result of the zip command',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Relative path you would like to zip'),
+        outputPath: z =>
+          z.string().describe('The name of the result of the zip command'),
       },
       output: {
-        type: 'object',
-        properties: {
-          outputPath: {
-            title: 'Zip Path',
-            type: 'string',
-          },
-        },
+        outputPath: z =>
+          z.string().describe('The name of the result of the zip command'),
       },
     },
     async handler(ctx) {

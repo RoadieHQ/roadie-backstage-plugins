@@ -6869,6 +6869,17 @@
     "@material-ui/lab" "^4.0.0-alpha.61"
     react-use "^17.2.4"
 
+"@backstage/plugin-auth-backend-module-guest-provider@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend-module-guest-provider/-/plugin-auth-backend-module-guest-provider-0.2.9.tgz#735c0757148c4c84d8b3a384cfe5852faa2293d6"
+  integrity sha512-pHKeWqGQTR1B8hdU6d0O9JDaudyHhIJsPVv5/4SsYC05XmEvV9v9V54FYloPKfev1688jZpVupHhJesBSceG6Q==
+  dependencies:
+    "@backstage/backend-plugin-api" "^1.4.0"
+    "@backstage/catalog-model" "^1.7.4"
+    "@backstage/errors" "^1.2.7"
+    "@backstage/plugin-auth-node" "^0.6.4"
+    passport-oauth2 "^1.7.0"
+
 "@backstage/plugin-auth-backend@^0.25.1":
   version "0.25.1"
   resolved "https://registry.yarnpkg.com/@backstage/plugin-auth-backend/-/plugin-auth-backend-0.25.1.tgz#64aace82ada47aa415c98e4d93d0065280ede2f7"
@@ -16919,7 +16930,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.7.tgz#50ae4353eaaddc04044279812f52c8c65857dbcb"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react-dom@*", "@types/react-dom@^18", "@types/react-dom@^18.0.0":
+"@types/react-dom@*", "@types/react-dom@^18.0.0":
   version "18.3.7"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.7.tgz#b89ddf2cd83b4feafcc4e2ea41afdfb95a0d194f"
   integrity sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==
@@ -16955,12 +16966,21 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^16.13.1 || ^17.0.0", "@types/react@^16.13.1 || ^17.0.0 || ^18.0.0", "@types/react@^18":
+"@types/react@*", "@types/react@^16.13.1 || ^17.0.0 || ^18.0.0":
   version "18.3.21"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.21.tgz#ba9bdc8833ceaf2b5edabbbabfbf9a84040df89a"
   integrity sha512-gXLBtmlcRJeT09/sI4PxVwyrku6SaNUj/6cMubjE6T6XdY1fDmBL7r0nX0jbSZPU/Xr0KuwLLZh6aOYY5d91Xw==
   dependencies:
     "@types/prop-types" "*"
+    csstype "^3.0.2"
+
+"@types/react@^16.13.1 || ^17.0.0":
+  version "17.0.87"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.87.tgz#998a5e146fbea449986d95a794c0aff47f12b6e6"
+  integrity sha512-wpg9AbtJ6agjA+BKYmhG6dRWEU/2DHYwMzCaBzsz137ft6IyuqZ5fI4ic1DWL4DrI03Zy78IyVE6ucrXl0mu4g==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "^0.16"
     csstype "^3.0.2"
 
 "@types/recharts@^1.8.14":
@@ -17009,6 +17029,11 @@
   integrity sha512-DrH26m7CV6PB4YVckjbSIx+xloB7HBolr9Ctm0gZBffSu5dDV4yJKFQGPquJlReVW+xmg59gx+b/8/qYHxZEuw==
   dependencies:
     htmlparser2 "^4.1.0"
+
+"@types/scheduler@^0.16":
+  version "0.16.8"
+  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.8.tgz#ce5ace04cfeabe7ef87c0091e50752e36707deff"
+  integrity sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==
 
 "@types/semver@7.5.8", "@types/semver@^7.5.0":
   version "7.5.8"
@@ -18892,6 +18917,11 @@ base64-stream@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/base64-stream/-/base64-stream-1.0.0.tgz#157ae00bc7888695e884e1fcc51c551fdfa8a1fa"
   integrity sha512-BQQZftaO48FcE1Kof9CmXMFaAdqkcNorgc8CxesZv9nMbbTF1EFyQe89UOuh//QMmdtfUDXyO8rgUalemL5ODA==
+
+base64url@3.x.x:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/base64url/-/base64url-3.0.1.tgz#6399d572e2bc3f90a9a8b22d5dbb0a32d33f788d"
+  integrity sha512-ir1UPr3dkwexU7FdV8qBBbNDRUhMmIekYMFZfi+C/sLNnRESKPl23nB9b2pltqfOQNnGzsDdId90AEtG5tCx4A==
 
 basic-auth@^2.0.1, basic-auth@~2.0.1:
   version "2.0.1"
@@ -30699,6 +30729,11 @@ oauth4webapi@^3.5.4:
   resolved "https://registry.yarnpkg.com/oauth4webapi/-/oauth4webapi-3.5.5.tgz#8568c6f84e4e3864aac7f0d9b32a285c46cc6abd"
   integrity sha512-1K88D2GiAydGblHo39NBro5TebGXa+7tYoyIbxvqv3+haDDry7CBE1eSYuNbOSsYCCU6y0gdynVZAkm4YPw4hg==
 
+oauth@0.10.x:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/oauth/-/oauth-0.10.2.tgz#fd7139b0ce1a1037bd11fa4e236afc588132418c"
+  integrity sha512-JtFnB+8nxDEXgNyniwz573xxbKSOu3R8D40xQKqcjwJ2CDkYqUDI53o6IuzDJBx60Z8VKCm271+t8iFjakrl8Q==
+
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -31508,6 +31543,17 @@ pascal-case@^3.1.2:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
+
+passport-oauth2@^1.7.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/passport-oauth2/-/passport-oauth2-1.8.0.tgz#55725771d160f09bbb191828d5e3d559eee079c8"
+  integrity sha512-cjsQbOrXIDE4P8nNb3FQRCCmJJ/utnFKEz2NX209f7KOHPoX18gF7gBzBbLLsj2/je4KrgiwLLGjf0lm9rtTBA==
+  dependencies:
+    base64url "3.x.x"
+    oauth "0.10.x"
+    passport-strategy "1.x.x"
+    uid2 "0.0.x"
+    utils-merge "1.x.x"
 
 passport-strategy@1.x.x:
   version "1.0.0"
@@ -36681,6 +36727,11 @@ uid-safe@~2.1.5:
   dependencies:
     random-bytes "~1.0.0"
 
+uid2@0.0.x:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/uid2/-/uid2-0.0.4.tgz#033f3b1d5d32505f5ce5f888b9f3b667123c0a44"
+  integrity sha512-IevTus0SbGwQzYh3+fRsAMTVVPOoIVufzacXcHPmdlle1jUpq7BRL+mw3dgeLanvGZdwwbWhRV6XrcFNdBmjWA==
+
 unbox-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/unbox-primitive/-/unbox-primitive-1.0.2.tgz#29032021057d5e6cdbd08c5129c226dff8ed6f9e"
@@ -37064,7 +37115,7 @@ utility-types@^3.10.0:
   resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.11.0.tgz#607c40edb4f258915e901ea7995607fdf319424c"
   integrity sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==
 
-utils-merge@1.0.1, utils-merge@^1.0.1:
+utils-merge@1.0.1, utils-merge@1.x.x, utils-merge@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==

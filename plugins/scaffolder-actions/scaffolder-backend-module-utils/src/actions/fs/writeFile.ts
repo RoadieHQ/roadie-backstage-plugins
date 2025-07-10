@@ -18,55 +18,27 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createWriteFileAction(): TemplateAction<{
-  path: string;
-  content: string;
-  preserveFormatting?: boolean;
-}> {
-  return createTemplateAction<{
-    path: string;
-    content: string;
-    preserveFormatting?: boolean;
-  }>({
+export function createWriteFileAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:fs:write',
     description: 'Creates a file with the content on the given path',
     supportsDryRun: true,
     schema: {
       input: {
-        required: ['path', 'content'],
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Relative path',
-            type: 'string',
-          },
-          content: {
-            title: 'Content',
-            description: 'This will be the content of the file',
-            type: 'string',
-          },
-          preserveFormatting: {
-            title: 'Preserve Formatting',
-            description:
-              'Specify whether to preserve formatting for JSON content',
-            type: 'boolean',
-            default: false,
-          },
-        },
+        path: z => z.string().describe('Relative path'),
+        content: z =>
+          z.string().describe('This will be the content of the file'),
+        preserveFormatting: z =>
+          z
+            .boolean()
+            .describe('Specify whether to preserve formatting for JSON content')
+            .optional(),
       },
       output: {
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Path to the file that was written'),
       },
     },
+
     async handler(ctx) {
       const destFilepath = resolveSafeChildPath(
         ctx.workspacePath,

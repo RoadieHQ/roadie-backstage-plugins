@@ -17,42 +17,20 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
-export function createAppendFileAction(): TemplateAction<{
-  path: string;
-  content: string;
-}> {
-  return createTemplateAction<{ path: string; content: string }>({
+export function createAppendFileAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:fs:append',
     description:
       'Append content to the end of the given file, it will create the file if it does not exist.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['content', 'path'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Path to existing file to append.',
-            type: 'string',
-          },
-          content: {
-            title: 'Content',
-            description: 'This will be appended to the file',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Path to existing file to append.'),
+        content: z => z.string().describe('This will be appended to the file'),
       },
       output: {
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Path to the file that was appended to'),
       },
     },
     async handler(ctx) {

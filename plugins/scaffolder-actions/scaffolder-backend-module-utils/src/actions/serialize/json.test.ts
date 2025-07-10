@@ -38,6 +38,8 @@ describe('roadiehq:utils:serialize:json', () => {
       workspacePath: 'fake-tmp-dir',
       input: {
         data: { hello: 'world' },
+        replacer: [],
+        space: '',
       },
     });
 
@@ -53,6 +55,7 @@ describe('roadiehq:utils:serialize:json', () => {
       workspacePath: 'fake-tmp-dir',
       input: {
         data: { hello1: 'world1' },
+        replacer: [],
         space: '\t',
       },
     });

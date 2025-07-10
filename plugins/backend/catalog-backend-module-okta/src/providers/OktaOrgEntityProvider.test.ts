@@ -16,7 +16,7 @@
 
 import { OktaOrgEntityProvider } from './OktaOrgEntityProvider';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { MockOktaCollection } from '../test-utls';
 import { createLogger } from 'winston';
 import { ProfileFieldGroupNamingStrategy } from './groupNamingStrategies';
