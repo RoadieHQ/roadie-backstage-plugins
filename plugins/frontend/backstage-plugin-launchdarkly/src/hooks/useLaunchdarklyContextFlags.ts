@@ -1,13 +1,25 @@
 import { Entity } from '@backstage/catalog-model';
 import { useAsync } from 'react-use';
 import {
-  LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
   LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
-  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
-  LAUNCHDARKLY_FILTER_TAGS_ANNOTATION,
   LAUNCHDARKLY_FILTER_QUERY_ANNOTATION,
+  LAUNCHDARKLY_FILTER_TAGS_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
 } from '../constants';
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
+
+export type ContextFlag = {
+  name: string;
+  key: string;
+  status: string;
+  environmentKey: string;
+  link: string;
+  variations?: Array<{
+    value: any;
+    name?: string;
+    description?: string;
+  }>;
+};
 
 export const useLaunchdarklyContextFlags = (entity: Entity) => {
   const discovery = useApi(discoveryApiRef);
@@ -19,8 +31,6 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
     const environmentKey =
       entity.metadata.annotations?.[LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION] ||
       'production';
-    const cntxt =
-      entity.metadata.annotations?.[LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION];
     const tags =
       entity.metadata.annotations?.[LAUNCHDARKLY_FILTER_TAGS_ANNOTATION];
     const query =
@@ -36,31 +46,52 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
       filters.push(`query equals ${query}`);
     }
 
-    const filterQueryParam = filters.join(', ');
+    const filterQueryParam =
+      filters.length > 0 ? `&filter=${filters.join(', ')}` : '';
 
-    if (projectKey && environmentKey && cntxt) {
-      const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
-      const response = await fetch(
-        `${url}/v2/projects/${projectKey}/environments/${environmentKey}/flags/evaluate${
-          filters.length > 0 ? `?filter=${filterQueryParam}` : ''
-        }`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: cntxt,
-        },
+    const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
+    const response = await fetch(
+      `${url}/v2/flags/${projectKey}?env=${environmentKey}&limit=100&offset=0${filterQueryParam}`,
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to retrieve LaunchDarkly flags for project ${projectKey}: ${response.statusText}`,
       );
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to retrieve launchdarkly environment ${environmentKey}: ${response.statusText}`,
-        );
-      }
-
-      return (await response.json()).items;
     }
-    return undefined;
+
+    const flags = (await response.json()).items;
+    // Fetch environment-specific information for each flag
+    const contextFlags = await Promise.all(
+      flags.map(async (flag: any) => {
+        const link = `https://app.launchdarkly.com/projects/${projectKey}/flags/${flag.key}/targeting?env=${environmentKey}&selected-env=${environmentKey}`;
+        try {
+          const envDetails = flag.environments[environmentKey];
+
+          return {
+            name: flag.name,
+            key: flag.key,
+            status: envDetails?.on
+              ? `${envDetails._environmentName}: Enabled`
+              : `${envDetails._environmentName}: Disabled`,
+            environmentKey,
+            link: link,
+            variations: flag.variations,
+          };
+        } catch (error) {
+          // Silently continue if we can't fetch details for a flag
+        }
+
+        return {
+          name: flag.name,
+          key: flag.key,
+          status: 'Unknown',
+          environmentKey,
+          link: link,
+        };
+      }),
+    );
+
+    return contextFlags;
   });
 };

@@ -15,57 +15,79 @@
  */
 import React from 'react';
 import {
-  useEntity,
   MissingAnnotationEmptyState,
+  useEntity,
 } from '@backstage/plugin-catalog-react';
 import {
-  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
-  LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
   LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
 } from '../../constants';
 import difference from 'lodash/difference';
 import {
+  ErrorBoundary,
   ErrorPanel,
+  Link,
   Progress,
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { useLaunchdarklyContextFlags } from '../../hooks/useLaunchdarklyContextFlags';
+
+import {
+  ContextFlag,
+  useLaunchdarklyContextFlags,
+} from '../../hooks/useLaunchdarklyContextFlags';
+import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
+import { FlagDetailsPanel } from './FlagDetailsPanel';
+import { ValueRenderer } from './FlagVariationValueRenderer';
 
 export type EntityLaunchdarklyOverviewCardProps = {
   title?: string;
   enableSearch?: boolean;
 };
 
-const ValueRenderer = ({ value }: { value: any }) => {
-  if (typeof value === 'object' && value !== null) {
-    return (
-      <pre
-        style={{
-          margin: 0,
-          fontSize: '0.875rem',
-          whiteSpace: 'pre-wrap',
-          wordBreak: 'break-word',
-          maxWidth: '400px',
-          overflow: 'auto',
-        }}
-      >
-        {JSON.stringify(value, null, 2)}
-      </pre>
-    );
-  }
-  return String(value);
-};
-
-const columns: Array<TableColumn> = [
+const columns: Array<TableColumn<ContextFlag>> = [
   {
     title: 'Name',
     field: 'name',
+    render: row => (
+      <Link to={row.link} target="_blank">
+        {row.name}
+      </Link>
+    ),
   },
   {
-    title: 'Value',
-    field: '_value',
-    render: (row: any) => <ValueRenderer value={row._value} />,
+    title: 'Key',
+    field: 'key',
+  },
+  {
+    title: 'Status',
+    field: 'status',
+    render: row => {
+      const statuses = Array.isArray(row.status) ? row.status : [row.status];
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {statuses.map((status, index) => {
+            let color = 'gray';
+            if (status.includes('Enabled')) {
+              color = 'green';
+            } else if (status.includes('Disabled')) {
+              color = 'red';
+            }
+            return (
+              <span key={index} style={{ color, fontSize: '0.875rem' }}>
+                {status}
+              </span>
+            );
+          })}
+        </div>
+      );
+    },
+  },
+  {
+    title: 'Variations',
+    render: row =>
+      row.variations ? <ValueRenderer value={row.variations} /> : 'N/A',
   },
 ];
 
@@ -74,10 +96,11 @@ export const EntityLaunchdarklyContextOverviewCard = (
 ) => {
   const { title, enableSearch = false } = props;
   const { entity } = useEntity();
+  const discoveryApi = useApi(discoveryApiRef);
+
   const unsetAnnotations = difference(
     [
       LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
-      LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
       LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
     ],
     Object.keys(entity.metadata?.annotations || {}),
@@ -106,7 +129,16 @@ export const EntityLaunchdarklyContextOverviewCard = (
     <Table
       title={title || 'Feature flags from LaunchDarkly'}
       columns={columns}
-      data={value}
+      data={value ?? []}
+      detailPanel={({ rowData }) => (
+        <ErrorBoundary>
+          <FlagDetailsPanel
+            flag={rowData}
+            discoveryApi={discoveryApi}
+            entity={entity}
+          />
+        </ErrorBoundary>
+      )}
       options={{
         paging: true,
         search: enableSearch,

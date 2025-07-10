@@ -20,4 +20,5 @@ export {
   isLaunchdarklyAvailable,
   EntityLaunchdarklyProjectOverviewContent,
   isLaunchdarklyContextAvailable,
+  isLaunchdarklyProjectAvailable,
 } from './plugin';
