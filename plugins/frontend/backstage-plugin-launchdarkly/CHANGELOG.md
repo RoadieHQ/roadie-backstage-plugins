@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.0.1
+
+### Patch Changes
+
+- df9da78: Fix dark theme rendering on Launchdarkly card
+
 ## 1.0.0
 
 ### Major Changes
