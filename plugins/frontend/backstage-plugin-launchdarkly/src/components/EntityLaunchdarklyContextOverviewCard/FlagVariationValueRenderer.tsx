@@ -1,6 +1,10 @@
 import React from 'react';
+import { useTheme } from '@material-ui/core/styles';
+import { Chip } from '@material-ui/core';
 
 export const ValueRenderer = ({ value }: { value: any }) => {
+  const theme = useTheme();
+
   if (typeof value === 'object' && value !== null) {
     // Check if it's an array of objects that look like variations
     if (Array.isArray(value) && value.length > 0) {
@@ -28,37 +32,53 @@ export const ValueRenderer = ({ value }: { value: any }) => {
                   displayValue.toLowerCase().includes('enable'));
 
               const valueString = isEnabledValue ? 'Enabled' : 'Disabled';
-              const valueColor = isEnabledValue ? '#e8f5e8' : '#ffeaea';
-              const valueTextColor = isEnabledValue ? '#2e7d32' : '#c62828';
+
               return (
                 <div
                   key={item._id || item.key || index}
                   style={{
-                    padding: '8px 12px',
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '4px',
-                    border: '1px solid #e0e0e0',
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'start',
                     alignItems: 'center',
                     fontSize: '0.875rem',
                   }}
                 >
-                  <span style={{ fontWeight: 500 }}>{displayName}</span>
                   <span
                     style={{
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      backgroundColor: isBooleanValue ? valueColor : '#f0f0f0',
-                      color: isBooleanValue ? valueTextColor : '#666',
-                      fontSize: '0.75rem',
                       fontWeight: 500,
+                      color: theme.palette.text.primary,
+                      padding: '2px 8px',
                     }}
                   >
-                    {isBooleanValue
-                      ? valueString
-                      : JSON.stringify(displayValue, null, 2)}
+                    {displayName}
                   </span>
+                  {isBooleanValue ? (
+                    <Chip
+                      label={valueString}
+                      size="small"
+                      color={isEnabledValue ? 'primary' : 'secondary'}
+                      style={{
+                        backgroundColor: isEnabledValue
+                          ? theme.palette.success?.main || '#4caf50'
+                          : theme.palette.error?.main || '#f44336',
+                        color: 'white',
+                      }}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        backgroundColor:
+                          theme.palette.type === 'dark' ? '#333' : '#f0f0f0',
+                        color: theme.palette.type === 'dark' ? '#bbb' : '#666',
+                        fontSize: '0.75rem',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {JSON.stringify(displayValue, null, 2)}
+                    </span>
+                  )}
                 </div>
               );
             })}
@@ -76,15 +96,25 @@ export const ValueRenderer = ({ value }: { value: any }) => {
               key={key}
               style={{
                 padding: '4px 8px',
-                backgroundColor: '#f8f9fa',
+                backgroundColor:
+                  theme.palette.type === 'dark' ? '#424242' : '#f8f9fa',
                 borderRadius: '3px',
                 fontSize: '0.875rem',
                 display: 'flex',
                 justifyContent: 'space-between',
               }}
             >
-              <span style={{ fontWeight: 500, color: '#555' }}>{key}:</span>
-              <span>{String(val)}</span>
+              <span
+                style={{
+                  fontWeight: 500,
+                  color: theme.palette.text.primary,
+                }}
+              >
+                {key}:
+              </span>
+              <span style={{ color: theme.palette.text.primary }}>
+                {String(val)}
+              </span>
             </div>
           ))}
         </div>
@@ -101,6 +131,7 @@ export const ValueRenderer = ({ value }: { value: any }) => {
           wordBreak: 'break-word',
           maxWidth: '400px',
           overflow: 'auto',
+          color: theme.palette.text.primary,
         }}
       >
         {JSON.stringify(value, null, 2)}
