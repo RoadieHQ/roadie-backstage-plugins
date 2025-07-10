@@ -15,7 +15,6 @@
  */
 import { DEFAULT_NAMESPACE, Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { TechDocsMetadata } from '@backstage/plugin-techdocs-backend';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
@@ -25,9 +24,12 @@ import {
   GetEntitiesResponse,
 } from '@backstage/catalog-client';
 
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+import {
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 import https from 'https';
-
 import { EntityUri } from './types';
 
 export class TechDocsClient {
@@ -41,7 +43,7 @@ export class TechDocsClient {
     catalogApi,
   }: {
     config: Config;
-    discoveryApi: DiscoveryApi;
+    discoveryApi: DiscoveryService;
     catalogApi: CatalogApi;
     logger: LoggerService;
     auth: AuthService;
@@ -51,7 +53,7 @@ export class TechDocsClient {
 
   constructor(
     private readonly config: Config,
-    private readonly discoveryApi: DiscoveryApi,
+    private readonly discoveryApi: DiscoveryService,
     private logger: LoggerService,
     private readonly auth: AuthService,
     private readonly catalogApi: CatalogApi,

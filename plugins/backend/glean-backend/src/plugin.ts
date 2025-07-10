@@ -17,11 +17,10 @@ import {
   coreServices,
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
-import { catalogServiceRef } from '@backstage/plugin-catalog-node/alpha';
-
 import { GleanIndexClient } from './client/GleanIndexClient';
 import { readScheduleConfigOptions } from './config';
 import { TechDocsClient } from './client/TechDocsClient';
+import { CatalogClient } from '@backstage/catalog-client';
 
 /**
  * glean-backend plugin
@@ -34,20 +33,13 @@ export const gleanPlugin = createBackendPlugin({
     env.registerInit({
       deps: {
         auth: coreServices.auth,
-        catalogApi: catalogServiceRef,
         config: coreServices.rootConfig,
         discoveryApi: coreServices.discovery,
         logger: coreServices.logger,
         scheduler: coreServices.scheduler,
       },
-      async init({
-        auth,
-        catalogApi,
-        config,
-        discoveryApi,
-        logger,
-        scheduler,
-      }) {
+      async init({ auth, config, discoveryApi, logger, scheduler }) {
+        const catalogApi = new CatalogClient({ discoveryApi });
         await scheduler.scheduleTask({
           ...readScheduleConfigOptions(config),
           id: 'glean-backend-batch-index',

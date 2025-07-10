@@ -22,11 +22,12 @@ import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { TechDocsClient } from './TechDocsClient';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
+import { CatalogApi } from '@backstage/catalog-client';
 
 describe('TechDocsClient', () => {
   let techDocsClient: TechDocsClient;
   const server = setupServer();
-  const discoveryApi = { getBaseUrl: jest.fn() };
+  const discoveryApi = { getBaseUrl: jest.fn(), getExternalBaseUrl: jest.fn() };
   const baseUrl = 'http://localhost/api';
   const auth = mockServices.auth();
 
@@ -63,7 +64,7 @@ describe('TechDocsClient', () => {
     },
   };
   const entities = [entityWithTechdocsRef, entityWithoutTechdocsRef];
-  const catalogApi = catalogServiceMock({ entities });
+  const catalogApi = catalogServiceMock({ entities }) as CatalogApi;
 
   beforeAll(() => server.listen());
 

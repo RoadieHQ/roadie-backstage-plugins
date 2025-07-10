@@ -24,11 +24,16 @@ import { setupServer } from 'msw/node';
 import { GleanIndexClient } from './GleanIndexClient';
 import { htmlFixture } from './fixtures/staticTechDocsHtml';
 import { DocumentId, EntityUri, GleanDocument } from './types';
+import { DiscoveryService } from '@backstage/backend-plugin-api';
+import { CatalogApi } from '@backstage/catalog-client';
 
 describe('GleanIndexClient', () => {
   let gleanIndexClient: GleanIndexClient;
   const server = setupServer();
-  const discoveryApi = { getBaseUrl: jest.fn() };
+  const discoveryApi: DiscoveryService = {
+    getBaseUrl: jest.fn(),
+    getExternalBaseUrl: jest.fn(),
+  };
   const gleanApiIndexUrl =
     'https://customer-be.glean.com/api/index/v1/bulkindexdocuments';
   const auth = mockServices.auth();
@@ -74,7 +79,7 @@ describe('GleanIndexClient', () => {
     },
   };
   const entities = [entityWithUrlRef, entityWithDirRef];
-  const catalogApi = catalogServiceMock({ entities });
+  const catalogApi = catalogServiceMock({ entities }) as CatalogApi;
 
   beforeAll(() => server.listen());
 

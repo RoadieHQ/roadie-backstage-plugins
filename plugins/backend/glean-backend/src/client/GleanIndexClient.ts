@@ -15,15 +15,18 @@
  */
 import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
-import { CatalogApi } from '@backstage/catalog-client';
 import { startCase } from 'lodash';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
 import { v4 as uuidv4 } from 'uuid';
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+import {
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 import { TechDocsClient } from './TechDocsClient';
 import { DocumentId, GleanDocument } from './types';
+import { CatalogApi } from '@backstage/catalog-client';
 
 export class GleanIndexClient {
   private techDocsClient: TechDocsClient;
@@ -37,7 +40,7 @@ export class GleanIndexClient {
   }: {
     auth: AuthService;
     config: Config;
-    discoveryApi: DiscoveryApi;
+    discoveryApi: DiscoveryService;
     catalogApi: CatalogApi;
     logger: LoggerService;
   }) {
@@ -47,7 +50,7 @@ export class GleanIndexClient {
   constructor(
     private readonly config: Config,
     private logger: LoggerService,
-    discoveryApi: DiscoveryApi,
+    discoveryApi: DiscoveryService,
     catalogApi: CatalogApi,
     auth: AuthService,
   ) {
