@@ -173,8 +173,76 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
 
   const environments = flagDetails.environments;
 
+  // Display evaluation details if available
+  const EvaluationDetails = () => {
+    if (!flag.evaluationDetails) {
+      return null;
+    }
+
+    return (
+      <Box style={{ marginBottom: '16px' }}>
+        <Typography variant="h6" style={{ marginBottom: '8px' }}>
+          Evaluation Details
+        </Typography>
+        <Card variant="outlined">
+          <CardContent>
+            <Box style={{ marginBottom: '12px' }}>
+              <Typography
+                variant="body2"
+                style={{ fontWeight: 'bold', marginBottom: '4px' }}
+              >
+                Variation:
+              </Typography>
+              <Typography variant="body2">
+                {flag.evaluationDetails.variationIndex !== undefined
+                  ? `Variation ${flag.evaluationDetails.variationIndex}`
+                  : 'Unknown'}
+              </Typography>
+            </Box>
+
+            {flag.evaluationDetails.reason && (
+              <Box style={{ marginBottom: '12px' }}>
+                <Typography
+                  variant="body2"
+                  style={{ fontWeight: 'bold', marginBottom: '4px' }}
+                >
+                  Reason:
+                </Typography>
+                <Typography variant="body2">
+                  {flag.evaluationDetails.reason.kind}
+                  {flag.evaluationDetails.reason.ruleIndex !== undefined &&
+                    ` (Rule ${flag.evaluationDetails.reason.ruleIndex})`}
+                </Typography>
+              </Box>
+            )}
+
+            {flag.variations &&
+              flag.evaluationDetails.variationIndex !== undefined && (
+                <Box style={{ marginBottom: '12px' }}>
+                  <Typography
+                    variant="body2"
+                    style={{ fontWeight: 'bold', marginBottom: '4px' }}
+                  >
+                    Value:
+                  </Typography>
+                  <Typography variant="body2">
+                    {JSON.stringify(
+                      flag.variations[flag.evaluationDetails.variationIndex]
+                        ?.value,
+                    )}
+                  </Typography>
+                </Box>
+              )}
+          </CardContent>
+        </Card>
+      </Box>
+    );
+  };
+
   return (
     <Box style={{ margin: '16px' }}>
+      {flag.isEvaluated && <EvaluationDetails />}
+
       <Typography variant="h6" style={{ marginBottom: '16px' }}>
         Environment Targeting
       </Typography>
