@@ -42,18 +42,18 @@
   },
   "dependencies": {
     "@backstage/backend-common": "^0.25.0",
-    "@backstage/backend-plugin-api": "^1.4.0",
-    "@backstage/catalog-client": "^1.10.1",
-    "@backstage/catalog-model": "^1.7.4",
-    "@backstage/errors": "^1.2.7",
-    "@backstage/plugin-search-common": "^1.2.18",
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/catalog-client": "backstage:^",
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/errors": "backstage:^",
+    "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "^0.2.27",
     "@roadiehq/rag-ai-node": "^0.1.11",
     "langchain": "^0.1.21",
     "p-limit": "^3.0.2"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.33.0"
+    "@backstage/cli": "backstage:^"
   },
   "files": [
     "dist"

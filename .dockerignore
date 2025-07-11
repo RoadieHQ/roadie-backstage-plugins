@@ -3,3 +3,5 @@ node_modules
 packages
 !packages/backend/dist
 plugins
+.yarn/cache
+.yarn/install-state.gz
