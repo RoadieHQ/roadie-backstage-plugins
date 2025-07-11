@@ -10,7 +10,6 @@
     "aws",
     "auth"
   ],
-  "private": false,
   "publishConfig": {
     "access": "public",
     "main": "dist/index.cjs.js",
@@ -38,7 +37,7 @@
     "directory": "plugins/backend/backstage-plugin-argo-cd-backend"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "^1.4.0",
+    "@backstage/backend-plugin-api": "backstage:^",
     "@types/express": "^4.17.11",
     "aws-sdk": "^2.902.0",
     "cors": "^2.8.5",
@@ -47,7 +46,7 @@
     "helmet": "^4.5.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.33.0",
+    "@backstage/cli": "backstage:^",
     "winston": "^3.2.1"
   },
   "files": [

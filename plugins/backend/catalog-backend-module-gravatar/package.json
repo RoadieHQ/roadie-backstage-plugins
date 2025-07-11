@@ -45,11 +45,11 @@
     "start": "backstage-cli package start"
   },
   "dependencies": {
-    "@backstage/catalog-model": "^1.7.4",
-    "@backstage/plugin-catalog-node": "^1.17.1"
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/plugin-catalog-node": "backstage:^"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.33.0"
+    "@backstage/cli": "backstage:^"
   },
   "files": [
     "dist",

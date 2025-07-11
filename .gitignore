@@ -137,3 +137,12 @@ site
 .npmrc
 /packages/app/cypress/videos/
 /packages/app/cypress/screenshots/
+
+# Yarn files
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

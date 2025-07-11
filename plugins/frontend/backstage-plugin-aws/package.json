@@ -43,26 +43,26 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@backstage/core-components": "^0.17.3",
-    "@backstage/core-plugin-api": "^1.10.8",
-    "@backstage/catalog-model": "^1.7.4",
-    "@backstage/plugin-catalog-react": "^1.19.0",
-    "@material-ui/core": "^4.12.2",
     "@aws-sdk/util-arn-parser": "^3.53.0",
+    "@backstage/catalog-model": "backstage:^",
+    "@backstage/core-components": "backstage:^",
+    "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/plugin-catalog-react": "backstage:^",
+    "@material-ui/core": "^4.12.2",
     "react-use": "^17.2.4"
   },
   "peerDependencies": {
     "react": "^16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.33.0",
-    "@backstage/core-app-api": "^1.17.1",
-    "@backstage/test-utils": "^1.7.9",
+    "@backstage/cli": "backstage:^",
+    "@backstage/core-app-api": "backstage:^",
+    "@backstage/test-utils": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
-    "msw": "^1.0.1",
     "cross-fetch": "^3.1.5",
-    "jest-fetch-mock": "^3.0.3"
+    "jest-fetch-mock": "^3.0.3",
+    "msw": "^1.0.1"
   },
   "files": [
     "dist"
