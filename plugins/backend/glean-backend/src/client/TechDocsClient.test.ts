@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { getVoidLogger } from '@backstage/backend-common';
-import { mockServices } from '@backstage/backend-test-utils';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { TechDocsMetadata } from '@backstage/plugin-techdocs-backend';
@@ -23,13 +22,21 @@ import { setupServer } from 'msw/node';
 import { TechDocsClient } from './TechDocsClient';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 import { CatalogApi } from '@backstage/catalog-client';
+import { AuthService } from '@backstage/backend-plugin-api';
 
 describe('TechDocsClient', () => {
   let techDocsClient: TechDocsClient;
   const server = setupServer();
   const discoveryApi = { getBaseUrl: jest.fn(), getExternalBaseUrl: jest.fn() };
+
+  const auth = {
+    getOwnServiceCredentials: jest
+      .fn()
+      .mockImplementation(async () => ({ token: 'I-am-a-token' })),
+    getPluginRequestToken: () => ({ token: 'I-am-a-token' }),
+  } as unknown as AuthService;
+
   const baseUrl = 'http://localhost/api';
-  const auth = mockServices.auth();
 
   const config = new ConfigReader({
     backend: {

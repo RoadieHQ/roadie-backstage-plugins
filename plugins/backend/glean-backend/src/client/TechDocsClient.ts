@@ -89,11 +89,12 @@ export class TechDocsClient {
   }
 
   async getTechDocsEntitiesResponse(): Promise<GetEntitiesResponse> {
-    const { token } = await this.auth.getPluginRequestToken({
+    const res = await this.auth.getPluginRequestToken({
       onBehalfOf: await this.auth.getOwnServiceCredentials(),
       targetPluginId: 'catalog',
     });
 
+    const { token } = res;
     const entities = await this.catalogApi.getEntities(
       {
         filter: {

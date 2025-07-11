@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 import { getVoidLogger } from '@backstage/backend-common';
-import { mockServices } from '@backstage/backend-test-utils';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
@@ -24,7 +23,7 @@ import { setupServer } from 'msw/node';
 import { GleanIndexClient } from './GleanIndexClient';
 import { htmlFixture } from './fixtures/staticTechDocsHtml';
 import { DocumentId, EntityUri, GleanDocument } from './types';
-import { DiscoveryService } from '@backstage/backend-plugin-api';
+import { AuthService, DiscoveryService } from '@backstage/backend-plugin-api';
 import { CatalogApi } from '@backstage/catalog-client';
 
 describe('GleanIndexClient', () => {
@@ -34,9 +33,16 @@ describe('GleanIndexClient', () => {
     getBaseUrl: jest.fn(),
     getExternalBaseUrl: jest.fn(),
   };
+
+  const auth = {
+    getOwnServiceCredentials: jest
+      .fn()
+      .mockImplementation(async () => ({ token: 'I-am-a-token' })),
+    getPluginRequestToken: () => ({ token: 'I-am-a-token' }),
+  } as unknown as AuthService;
+
   const gleanApiIndexUrl =
     'https://customer-be.glean.com/api/index/v1/bulkindexdocuments';
-  const auth = mockServices.auth();
 
   const config = new ConfigReader({
     backend: {
