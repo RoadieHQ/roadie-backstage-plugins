@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.0.2
+
+### Patch Changes
+
+- 3336220: Modify LD query to include context values again. Fix query filter
+
 ## 1.0.1
 
 ### Patch Changes
