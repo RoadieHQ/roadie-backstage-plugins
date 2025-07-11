@@ -52,20 +52,6 @@ const columns: Array<TableColumn<ContextFlag>> = [
     render: row => (
       <Link to={row.link} target="_blank">
         {row.name}
-        {row.isEvaluated && (
-          <span
-            style={{
-              marginLeft: '8px',
-              fontSize: '0.75rem',
-              padding: '2px 6px',
-              backgroundColor: '#e3f2fd',
-              borderRadius: '4px',
-              color: '#0d47a1',
-            }}
-          >
-            Evaluated
-          </span>
-        )}
       </Link>
     ),
   },
