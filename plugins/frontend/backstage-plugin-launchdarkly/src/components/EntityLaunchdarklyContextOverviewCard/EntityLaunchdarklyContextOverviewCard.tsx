@@ -60,6 +60,15 @@ const columns: Array<TableColumn<ContextFlag>> = [
     field: 'key',
   },
   {
+    title: 'Description',
+    field: 'description',
+    render: row => (
+      <span style={{ fontSize: '0.875rem' }}>
+        {row.description || 'No description'}
+      </span>
+    ),
+  },
+  {
     title: 'Status',
     field: 'status',
     render: row => {
@@ -80,6 +89,35 @@ const columns: Array<TableColumn<ContextFlag>> = [
               </span>
             );
           })}
+        </div>
+      );
+    },
+  },
+  {
+    title: 'Tags',
+    field: 'tags',
+    render: row => {
+      if (!row.tags || row.tags.length === 0) {
+        return (
+          <span style={{ color: 'gray', fontSize: '0.875rem' }}>None</span>
+        );
+      }
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+          {row.tags.map((tag, index) => (
+            <span
+              key={index}
+              style={{
+                fontSize: '0.75rem',
+                padding: '2px 6px',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '4px',
+                color: '#616161',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       );
     },
