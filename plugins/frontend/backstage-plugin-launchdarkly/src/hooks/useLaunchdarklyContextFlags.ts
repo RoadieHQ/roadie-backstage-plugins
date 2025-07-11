@@ -63,7 +63,7 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
 
     const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
 
-    // First query - evaluate flags for a specific context
+    // evaluate flags for a specific context
     const evaluateResponse = await fetch(
       `${url}/v2/projects/${projectKey}/environments/${environmentKey}/flags/evaluate${
         filterQueryParam ? `?${filterQueryParam}` : ''
@@ -83,7 +83,7 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
       );
     }
 
-    // Second query - get all flags for the project and environment
+    // get all flags for the project and environment
     const allFlagsResponse = await fetch(
       `${url}/v2/flags/${projectKey}?env=${environmentKey}&limit=100&offset=0${
         flagFilterQueryParam ? `${flagFilterQueryParam}` : ''
@@ -104,7 +104,6 @@ export const useLaunchdarklyContextFlags = (entity: Entity) => {
       allFlagsMap.set(flag.key, flag);
     });
 
-    // Helper function to create flag entry
     const createFlagEntry = (flag: any, evaluatedFlag?: any) => {
       const link = `https://app.launchdarkly.com/projects/${projectKey}/flags/${flag.key}/targeting?env=${environmentKey}&selected-env=${environmentKey}`;
 
