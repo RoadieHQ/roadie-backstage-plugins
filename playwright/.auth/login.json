@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:3000",
+      "localStorage": [
+        {
+          "name": "@backstage/core:SignInPage:provider",
+          "value": "guest"
+        },
+        {
+          "name": "language",
+          "value": "en"
+        }
+      ]
+    }
+  ]
+}
