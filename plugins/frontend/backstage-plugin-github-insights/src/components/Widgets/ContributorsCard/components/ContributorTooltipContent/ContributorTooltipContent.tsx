@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {
-  Avatar,
-  Box,
-  Divider,
-  Grid,
-  Link,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Avatar, Box, Divider, Grid, Link, makeStyles, Typography } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { Progress } from '@backstage/core-components';
 import LocationOnIcon from '@material-ui/icons/LocationOn';

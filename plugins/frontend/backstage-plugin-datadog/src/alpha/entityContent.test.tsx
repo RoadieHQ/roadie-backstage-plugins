@@ -8,7 +8,6 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { entityDatadogContent } from './entityContent';
 import { DatadogApi, datadogApiRef } from '../api';
 import { entityWithDatadogAnnotations } from '../mocks/mocks';
-import React from 'react';
 
 describe('Entity content extensions', () => {
   const mockDatadogApi = {

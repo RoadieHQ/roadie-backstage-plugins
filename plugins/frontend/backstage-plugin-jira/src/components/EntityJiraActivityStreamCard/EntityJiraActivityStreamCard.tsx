@@ -1,5 +1,4 @@
 import { ActivityStream } from './ActivityStream';
-import React from 'react';
 import { useProjectEntity, useProjectInfo, useStatuses } from '../../hooks';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { InfoCard } from '@backstage/core-components';

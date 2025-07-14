@@ -17,7 +17,7 @@
 import { useApi } from '@backstage/core-plugin-api';
 import { scmAuthApiRef } from '@backstage/integration-react';
 import { Button, Grid, Tooltip, Typography } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
 export const GithubNotAuthorized = ({
   hostname = 'github.com',

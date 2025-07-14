@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { MarkdownContent } from '../index';

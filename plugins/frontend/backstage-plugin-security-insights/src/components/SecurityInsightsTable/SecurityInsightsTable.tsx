@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Typography, Box, Grid } from '@material-ui/core';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { useApi } from '@backstage/core-plugin-api';

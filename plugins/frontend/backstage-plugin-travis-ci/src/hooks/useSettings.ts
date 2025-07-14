@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { useContext } from 'react';
 import { StateContext } from '../components/ContextProvider';
 
 export const useSettings = () => {
-  const context = React.useContext(StateContext);
+  const context = useContext(StateContext);
   if (context === undefined) {
     throw new Error("You must use 'useSettings' hook inside ContextProvider");
   }

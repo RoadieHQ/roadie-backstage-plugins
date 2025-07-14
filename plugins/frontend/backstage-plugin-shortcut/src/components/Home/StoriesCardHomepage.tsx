@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {
-  Box,
-  Grid,
-  Link,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { Box, Grid, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { Story } from '../../api/types';
 import { useAsync } from 'react-use';
 import {

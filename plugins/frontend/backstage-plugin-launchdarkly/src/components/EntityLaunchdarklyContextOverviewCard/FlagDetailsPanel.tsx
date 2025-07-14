@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { FC } from 'react';
 import { Progress } from '@backstage/core-components';
 import { LAUNCHDARKLY_PROJECT_KEY_ANNOTATION } from '../../constants';
 import { ContextFlag } from '../../hooks/useLaunchdarklyContextFlags';
@@ -135,7 +135,7 @@ const formatLastModified = (timestamp: number) => {
   return new Date(timestamp).toLocaleString();
 };
 
-export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
+export const FlagDetailsPanel: FC<FlagDetailsPanelProps> = ({
   flag,
   entity,
   discoveryApi,

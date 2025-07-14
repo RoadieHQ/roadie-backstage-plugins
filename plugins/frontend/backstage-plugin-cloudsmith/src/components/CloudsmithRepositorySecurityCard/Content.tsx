@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { CloudsmithRepositorySecurityScanProps } from './types';
 import { CloudsmithApi, CloudsmithClient } from '../../api';
 import {
@@ -154,7 +154,7 @@ export const Content = ({
     };
 
     const handleChangePage = (
-      _: React.ChangeEvent<unknown>,
+      _: ChangeEvent<unknown>,
       newPage: number,
     ) => {
       setPage(newPage);

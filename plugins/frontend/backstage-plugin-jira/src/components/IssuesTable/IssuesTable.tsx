@@ -1,7 +1,6 @@
 import { Link, Table, TableColumn } from '@backstage/core-components';
 import { Box, Tooltip } from '@material-ui/core';
 import Person from '@material-ui/icons/Person';
-import React from 'react';
 import { Ticket } from '../../types';
 
 export type IssuesTableProps = {

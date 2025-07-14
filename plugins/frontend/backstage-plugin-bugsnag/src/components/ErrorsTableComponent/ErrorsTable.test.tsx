@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { AnyApiRef, errorApiRef } from '@backstage/core-plugin-api';

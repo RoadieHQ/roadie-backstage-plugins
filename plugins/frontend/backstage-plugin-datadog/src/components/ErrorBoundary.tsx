@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Alert from '@material-ui/lab/Alert';
 
 interface Props {

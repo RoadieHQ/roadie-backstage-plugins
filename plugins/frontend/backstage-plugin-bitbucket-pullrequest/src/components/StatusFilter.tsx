@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import { ButtonGroup, Button } from '@material-ui/core';
 
 interface StatusFilterProps {
   onFilterChange: (filter: string) => void;
 }
-const StatusFilter: React.FC<StatusFilterProps> = ({ onFilterChange }) => {
+const StatusFilter: FC<StatusFilterProps> = ({ onFilterChange }) => {
   const [status, setStatus] = useState('ALL');
 
   const handleStatusChange = (newStatus: any) => {

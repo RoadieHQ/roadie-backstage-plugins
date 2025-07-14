@@ -5,7 +5,6 @@ import { useAsync } from 'react-use';
 import { ErrorPanel, WarningPanel } from '@backstage/core-components';
 import { LinearProgress } from '@material-ui/core';
 import { IssuesTable, IssuesTableProps } from '../IssuesTable';
-import React from 'react';
 
 export type JiraQueryCardProps = {
   jqlQuery: string;

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';
 import {
   PullRequestsListView,

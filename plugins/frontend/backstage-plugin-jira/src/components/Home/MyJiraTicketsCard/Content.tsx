@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Typography, Card, Avatar, Grid, Link } from '@material-ui/core';
 import { useUserInfo } from '../../../hooks';
 import Skeleton from '@material-ui/lab/Skeleton';

@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {
-  AnyApiRef,
-  discoveryApiRef,
-  FetchApi,
-  fetchApiRef,
-  errorApiRef,
-} from '@backstage/core-plugin-api';
+import { AnyApiRef, discoveryApiRef, FetchApi, fetchApiRef, errorApiRef } from '@backstage/core-plugin-api';
 import {
   renderInTestApp,
   setupRequestMockHandlers,

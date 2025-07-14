@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import { FC, createContext, useEffect } from 'react';
 import { travisCIApiRef } from '../api';
 import { useLocalStorage } from 'react-use';
 import { Entity } from '@backstage/catalog-model';
@@ -23,13 +23,13 @@ export type Settings = {
   entity: Entity;
 };
 
-export const StateContext = React.createContext<
+export const StateContext = createContext<
   [Settings, React.Dispatch<Settings>]
 >([] as any);
 const STORAGE_KEY = `${travisCIApiRef.id}.settings`;
 
 type Props = { entity: Entity; children: JSX.Element };
-export const ContextProvider: React.FC<Props> = ({ entity, children }) => {
+export const ContextProvider: FC<Props> = ({ entity, children }) => {
   const [settings, setSettings] = useLocalStorage(STORAGE_KEY, { entity });
   if (settings === undefined) {
     throw new Error('Firebase functions plugin settings is undefined');

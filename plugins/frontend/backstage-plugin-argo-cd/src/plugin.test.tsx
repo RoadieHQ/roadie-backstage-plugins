@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { TableColumn } from '@backstage/core-components';
 import {
   AnyApiRef,

@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-
-import {
-  PullRequestsListView,
-  SkeletonPullRequestsListView,
-} from '../../PullRequestsListView';
+import { PullRequestsListView, SkeletonPullRequestsListView } from '../../PullRequestsListView';
 import { useGithubSearchPullRequest } from '../../useGithubSearchPullRequest';
 import Alert from '@material-ui/lab/Alert';
 import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';

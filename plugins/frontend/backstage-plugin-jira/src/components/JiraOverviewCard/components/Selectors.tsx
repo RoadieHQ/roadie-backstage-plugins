@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { ChangeEvent } from 'react';
 import {
   Box,
   Checkbox,
@@ -61,7 +61,7 @@ export const Selectors = ({
   const analytics = useAnalytics();
 
   const handleStatusesChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: ChangeEvent<{ value: unknown }>,
   ) => {
     const _statusNames = event.target.value as string[];
     setStatusesNames(_statusNames);

@@ -50,6 +50,4 @@ backend.add(import('@roadiehq/backstage-plugin-aws-backend'));
 backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend'));
 backend.add(import('./plugins/roadiehq-local-catalog'));
 
-
-
 backend.start();

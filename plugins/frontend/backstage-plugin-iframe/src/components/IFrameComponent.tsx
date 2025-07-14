@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { ErrorComponent } from './ErrorComponent';
 import {
   IFrameProps,

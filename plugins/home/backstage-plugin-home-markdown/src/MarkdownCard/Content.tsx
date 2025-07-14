@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Alert } from '@material-ui/lab';
 import { MarkdownContent, Progress } from '@backstage/core-components';
 import {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { rest } from 'msw';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import {

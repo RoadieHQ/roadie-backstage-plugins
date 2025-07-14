@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, useRef, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import {
   Box,

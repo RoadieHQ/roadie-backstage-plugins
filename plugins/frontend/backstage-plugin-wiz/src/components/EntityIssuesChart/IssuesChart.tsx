@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
-import {
-  InfoCard,
-  Progress,
-  ResponseErrorPanel,
-} from '@backstage/core-components';
+import { InfoCard, Progress, ResponseErrorPanel } from '@backstage/core-components';
 import { LineChart } from './LineChart';
 import { useStyles } from '../../style';
 import { Typography } from '@material-ui/core';

@@ -22,7 +22,7 @@ import {
   useEntity,
 } from '@backstage/plugin-catalog-react';
 import { LinearProgress } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isArgocdAvailable } from '../conditions';
 import {
   ArgoCDAppDetails,
