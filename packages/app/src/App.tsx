@@ -36,7 +36,7 @@ import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
 
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import { AlertDisplay, OAuthRequestDialog, SignInPage } from '@backstage/core-components';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
@@ -44,7 +44,6 @@ import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
 import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
-import { RagModal } from '@roadiehq/rag-ai';
 
 const app = createApp({
   apis,
@@ -62,6 +61,9 @@ const app = createApp({
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
   },
+    components: {
+      SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
+    },
 });
 
 const AppProvider = app.getProvider();
@@ -112,7 +114,6 @@ const App = () => (
     <AlertDisplay />
     <OAuthRequestDialog />
     <AppRouter>
-      <RagModal />
       <Root>{routes}</Root>
     </AppRouter>
   </AppProvider>

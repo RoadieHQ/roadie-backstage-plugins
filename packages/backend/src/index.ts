@@ -30,10 +30,18 @@ backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 backend.add(
   import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
 );
+
+backend.add(import('@backstage/plugin-permission-backend'));
+backend.add(
+  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+);
+
 backend.add(import('@backstage/plugin-catalog-backend'));
 backend.add(import('@backstage/plugin-techdocs-backend'));
 backend.add(import('@backstage/plugin-app-backend'));
 backend.add(import('@backstage/plugin-proxy-backend'));
+backend.add(import('@backstage/plugin-scaffolder-backend'));
+backend.add(import('@backstage/plugin-scaffolder-backend-module-github'));
 
 backend.add(import('@roadiehq/scaffolder-backend-module-utils'));
 backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
@@ -41,5 +49,7 @@ backend.add(import('@roadiehq/plugin-wiz-backend'));
 backend.add(import('@roadiehq/backstage-plugin-aws-backend'));
 backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend'));
 backend.add(import('./plugins/roadiehq-local-catalog'));
+
+
 
 backend.start();

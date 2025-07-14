@@ -27,14 +27,12 @@ import {
   createApiFactory,
   createApiRef,
   discoveryApiRef,
-  fetchApiRef,
   githubAuthApiRef,
   OAuthApi,
   oauthRequestApiRef,
   ProfileInfoApi,
   SessionApi,
 } from '@backstage/core-plugin-api';
-import fetch from 'cross-fetch';
 import { GithubAuth } from '@backstage/core-app-api';
 
 const ghesAuthApiRef: ApiRef<OAuthApi & ProfileInfoApi & SessionApi> =
@@ -78,11 +76,5 @@ export const apis: AnyApiFactory[] = [
         }),
       ),
   }),
-  createApiFactory({
-    api: fetchApiRef,
-    deps: {},
-    factory: () => {
-      return { fetch: fetch.bind(window) };
-    },
-  }),
+
 ];

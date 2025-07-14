@@ -21,9 +21,6 @@ backend:
     connection: ':memory:'
   cache:
     store: memory
-  auth:
-    keys:
-      - secret: foo
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -122,7 +119,9 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  providers:
+    guest: {}
+  
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}
@@ -134,10 +133,10 @@ catalog:
   locations:
     # File used for testing purposes
     - type: file
-      target: ../entities/test-entity.yaml
+      target: ../../entities/test-entity.yaml
 
     - type: file
-      target: ../entities/test-template.yaml
+      target: ../../entities/test-template.yaml
       rules:
         - allow: [Template]
     # Roadie example AWS ECR repo creation
@@ -146,7 +145,7 @@ catalog:
       rules:
         - allow: [Template]
     - type: file
-      target: ../entities/http-request-proxy-debug.yaml
+      target: ../../entities/http-request-proxy-debug.yaml
       rules:
         - allow: [Template]
     # Backstage example components
@@ -236,3 +235,7 @@ bugsnag:
 
 iframe:
   allowList: ['example.com']
+
+permission:
+  # setting this to `false` will disable permissions
+  enabled: true

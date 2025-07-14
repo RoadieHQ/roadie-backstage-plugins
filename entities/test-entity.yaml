@@ -1,0 +1,114 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service
+  description: |
+    A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
+  annotations:
+    github.com/project-slug: organisation/github-project-slug
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
+    jira/project-key: TEST
+    jira/component: COMP
+    jira/all-issues-jql: 'filter = "10002"'
+    datadoghq.com/dashboard-url: https://p.datadoghq.eu/sb/test-datadog-link
+    datadoghq.com/graph-token: qwertytoken1234
+    argocd/app-name: test-app
+    bugsnag.com/project-key: RoadieHQTest/Test bugsnag application
+    prometheus.io/rule: prometheus_http_requests_total,sum by (handler) (prometheus_http_requests_total),prometheus_http_requests_total|component
+    prometheus.io/alert: all
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-github
+  description: |
+    A service for testing Backstage functionality. Configured for GitHub Actions, Sentry, AWS Lambda.
+  annotations:
+    github.com/project-slug: RoadieHQ/roadie-backstage-plugins
+    aws.com/lambda-function-name: HelloWorld
+    aws.com/lambda-region: eu-west-1
+    jira/project-key: TEST
+    jira/component: COMP
+    datadoghq.com/dashboard-url: https://p.datadoghq.eu/sb/test-datadog-link
+    datadoghq.com/graph-token: qwertytoken1234
+    argocd/app-name: test-app
+    bugsnag.com/project-key: RoadieHQTest/qwerty12345
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-2
+  description: |
+    A service for testing Travis CI plugin
+  annotations:
+    travis-ci.com/repo-slug: RoadieHQ/sample-service
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service-2
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-3
+  description: |
+    A service for testing Buildkite and Prometheus plugins
+  annotations:
+    buildkite.com/project-slug: exampleorganization/exampleproject
+    prometheus.io/alert: 'test alert name'
+    prometheus.io/rule: node_memory_Active_bytes|instance,memUsage
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service-3
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-4
+  description: |
+    A service for testing the Buildkite plugin with a buildkite.com/branch annotation
+  annotations:
+    buildkite.com/project-slug: exampleorganization/exampleproject
+    buildkite.com/branch: main
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service-4
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sample-service-5
+  description: |
+    A service for testing the Buildkite plugin with a buildkite.com/default-branch-only annotation
+  annotations:
+    buildkite.com/project-slug: exampleorganization/exampleproject
+    buildkite.com/default-branch-only: foo
+spec:
+  type: service
+  owner: roadie
+  lifecycle: experimental
+  providesApis:
+    - sample-service-5

@@ -1,0 +1,70 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-repository
+  title: Create a github repository
+  description: Creates a github repository with the selected settings
+spec:
+  owner: roadie
+  type: service
+
+  parameters:
+    - title: Create Repo
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            requestUserCredentials:
+              secretsKey: USER_OAUTH_TOKEN
+              additionalScopes:
+                github:
+                  - workflow:write
+            allowedHosts:
+              - github.com
+        description:
+          type: string
+        defaultBranch:
+          default: master
+          type: string
+        repoVisibility:
+          type: string
+          enum: ['private', 'public', 'internal']
+        requireCodeOwnerReviews:
+          type: boolean
+
+        collaborators:
+          type: array
+          items:
+            type: 'object'
+            required: ['username', 'access']
+            properties:
+              access:
+                type: 'string'
+                description: 'The type of access for the user'
+                enum: ['push', 'pull', 'admin', 'maintain', 'triage']
+              username:
+                type: 'string'
+                description: 'The username or group'
+        topics:
+          type: array
+          items:
+            type: string
+
+  steps:
+    - id: publish
+      name: Create repository
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        topics: ${{ parameters.topics }}
+        collaborators: ${{ parameters.collaborators }}
+        repoVisibility: ${{ parameters.repoVisibility }}
+        defaultBranch: ${{ parameters.defaultBranch }}
+        requireCodeOwnerReviews: ${{parameters.requireCodeOwnerReviews}}
+        description: ${{ parameters.description }}
+        token: ${{ secrets.USER_OAUTH_TOKEN }}
+
+  output:
+    remoteUrl: ${{steps.publish.output.remoteUrl}}

@@ -48,7 +48,7 @@ import {
   catalogProcessingExtensionPoint,
   catalogModelExtensionPoint,
   catalogAnalysisExtensionPoint,
-} from '@backstage/plugin-catalog-node';
+} from '@backstage/plugin-catalog-node/alpha';
 import { EntityProvider } from '@backstage/plugin-catalog-node';
 
 type RunnableProvider = EntityProvider & {
