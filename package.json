@@ -18,7 +18,7 @@
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli clean && lerna run clean",
     "diff": "lerna run diff --",
-    "test": "yarn backstage-cli repo test --workerIdleMemoryLimit=800M --coverage --runInBand",
+    "test": "backstage-cli repo test --workerIdleMemoryLimit=800M --coverage --runInBand",
     "test:all": "lerna run test -- --coverage --runInBand",
     "lint": "backstage-cli repo lint --since origin/main",
     "lint:all": "lerna run lint --",

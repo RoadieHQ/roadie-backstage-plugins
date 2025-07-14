@@ -13,8 +13,8 @@
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "outDir": "dist-types",
     "rootDir": ".",
+    "outDir": "dist-types",
     "jsx": "react-jsx"
   }
 }

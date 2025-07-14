@@ -39,7 +39,7 @@
     "@backstage/plugin-permission-node": "backstage:^",
     "@backstage/plugin-proxy-backend": "backstage:^",
     "@backstage/plugin-scaffolder-backend": "backstage:^",
-    "@backstage/plugin-scaffolder-backend-module-github": "^0.8.0",
+    "@backstage/plugin-scaffolder-backend-module-github": "backstage:^",
     "@backstage/plugin-scaffolder-node": "backstage:^",
     "@backstage/plugin-techdocs-backend": "backstage:^",
     "@gitbeaker/node": "^35.1.0",
