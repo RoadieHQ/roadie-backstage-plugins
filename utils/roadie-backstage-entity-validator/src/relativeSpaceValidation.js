@@ -6,7 +6,7 @@ const fileExists = filePath => {
   let flag = true;
   try {
     fs.accessSync(filePath, fs.constants.F_OK);
-  } catch (e) {
+  } catch {
     flag = false;
   }
   return flag;

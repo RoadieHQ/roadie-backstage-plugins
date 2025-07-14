@@ -16,7 +16,6 @@
 
 import { useEffect, useState } from 'react';
 
-import * as React from 'react';
 import {
   Avatar,
   Box,
@@ -122,7 +121,7 @@ export const JiraOverviewCard = (
     changeType,
   } = useEmptyIssueTypeFilter(issues);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
