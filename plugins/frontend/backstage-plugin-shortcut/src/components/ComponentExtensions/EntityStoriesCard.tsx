@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-import { ErrorPanel, Table, TableColumn, Link } from '@backstage/core-components';
+import {
+  ErrorPanel,
+  Table,
+  TableColumn,
+  Link,
+} from '@backstage/core-components';
 import SyncIcon from '@material-ui/icons/Sync';
 import { shortcutApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';

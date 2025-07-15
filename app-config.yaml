@@ -121,7 +121,7 @@ auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   providers:
     guest: {}
-  
+
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}

@@ -153,10 +153,7 @@ export const Content = ({
       }
     };
 
-    const handleChangePage = (
-      _: ChangeEvent<unknown>,
-      newPage: number,
-    ) => {
+    const handleChangePage = (_: ChangeEvent<unknown>, newPage: number) => {
       setPage(newPage);
     };
 

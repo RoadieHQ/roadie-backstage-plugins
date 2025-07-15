@@ -23,9 +23,9 @@ export type Settings = {
   entity: Entity;
 };
 
-export const StateContext = createContext<
-  [Settings, React.Dispatch<Settings>]
->([] as any);
+export const StateContext = createContext<[Settings, React.Dispatch<Settings>]>(
+  [] as any,
+);
 const STORAGE_KEY = `${travisCIApiRef.id}.settings`;
 
 type Props = { entity: Entity; children: JSX.Element };

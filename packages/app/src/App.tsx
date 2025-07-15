@@ -35,7 +35,11 @@ import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
 
-import { AlertDisplay, OAuthRequestDialog, SignInPage } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  SignInPage,
+} from '@backstage/core-components';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
@@ -60,9 +64,9 @@ const app = createApp({
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
   },
-    components: {
-      SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
-    },
+  components: {
+    SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
+  },
 });
 
 const AppProvider = app.getProvider();

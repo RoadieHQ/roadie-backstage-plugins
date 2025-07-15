@@ -55,9 +55,11 @@ describe('SearchClient', () => {
     const mockResponse = {
       ok: true,
       json: jest.fn().mockResolvedValue({ results: [] }),
-    }  as unknown as Response;
+    } as unknown as Response;
 
-    const mockFetch = jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
+    const mockFetch = jest
+      .spyOn(global, 'fetch')
+      .mockResolvedValue(mockResponse);
 
     const query: SearchClientQuery = {
       term: 'catalog',

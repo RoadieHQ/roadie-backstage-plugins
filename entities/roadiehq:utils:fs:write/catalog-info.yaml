@@ -31,4 +31,3 @@ spec:
     - id: print
       name: print content
       action: debug:log
-

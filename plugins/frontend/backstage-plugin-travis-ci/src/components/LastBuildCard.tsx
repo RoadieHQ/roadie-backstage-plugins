@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-import { Link, Theme, makeStyles, LinearProgress, TableContainer, Card, Typography } from '@material-ui/core';
+import {
+  Link,
+  Theme,
+  makeStyles,
+  LinearProgress,
+  TableContainer,
+  Card,
+  Typography,
+} from '@material-ui/core';
 import { Table } from '@backstage/core-components';
 import { Build, useBuilds } from '../hooks/useBuilds';
 import { getStatusComponent } from './BuildsPage/lib/CITable/CITable';

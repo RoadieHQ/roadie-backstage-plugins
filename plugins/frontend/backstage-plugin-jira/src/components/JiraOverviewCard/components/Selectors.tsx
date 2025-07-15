@@ -60,9 +60,7 @@ export const Selectors = ({
   const { statuses, statusesLoading, statusesError } = useStatuses(projectKey);
   const analytics = useAnalytics();
 
-  const handleStatusesChange = (
-    event: ChangeEvent<{ value: unknown }>,
-  ) => {
+  const handleStatusesChange = (event: ChangeEvent<{ value: unknown }>) => {
     const _statusNames = event.target.value as string[];
     setStatusesNames(_statusNames);
     if (_statusNames.length > 0)

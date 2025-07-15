@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { AnyApiRef, errorApiRef, githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  AnyApiRef,
+  errorApiRef,
+  githubAuthApiRef,
+} from '@backstage/core-plugin-api';
 import { TestApiProvider } from '@backstage/test-utils';
 import { render, screen } from '@testing-library/react';
 import { Content } from './Content';

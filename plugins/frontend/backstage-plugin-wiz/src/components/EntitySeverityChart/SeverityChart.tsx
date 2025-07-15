@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { InfoCard, Progress, ResponseErrorPanel } from '@backstage/core-components';
+import {
+  InfoCard,
+  Progress,
+  ResponseErrorPanel,
+} from '@backstage/core-components';
 import { BarChart } from '.';
 import { useStyles } from '../../style';
 import { Typography } from '@material-ui/core';

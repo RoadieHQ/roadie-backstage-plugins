@@ -198,9 +198,7 @@ export const Content = ({ owner, repo }: CloudsmithPackageListContentProps) => {
     execute();
   }, [execute]);
 
-  const handleSearchTypeChange = (
-    event: ChangeEvent<{ value: unknown }>,
-  ) => {
+  const handleSearchTypeChange = (event: ChangeEvent<{ value: unknown }>) => {
     setSearchType(event.target.value as string);
     setQuery('');
   };
@@ -241,9 +239,7 @@ export const Content = ({ owner, repo }: CloudsmithPackageListContentProps) => {
     [execute],
   );
 
-  const handleChangeRowsPerPage = (
-    event: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setPageSize(parseInt(event.target.value, 10));
     setPage(0);
   };
