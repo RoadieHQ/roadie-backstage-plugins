@@ -93,7 +93,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     this.clusterTypeValue = options.clusterTypeValue ?? 'eks-cluster';
     if (options.template) {
       const env = new Environment();
-      env.addFilter('to_entity_name', function (input) {
+      env.addFilter('to_entity_name', input => {
         return crypto
           .createHash('sha256')
           .update(input)
