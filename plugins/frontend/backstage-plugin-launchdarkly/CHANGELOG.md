@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.0.2
+
+### Patch Changes
+
+- 3336220: Modify LD query to include context values again. Fix query filter
+
+## 1.0.1
+
+### Patch Changes
+
+- df9da78: Fix dark theme rendering on Launchdarkly card
+
+## 1.0.0
+
+### Major Changes
+
+- 037c0c2: Improve LaunchDarkly card to display variations, link to the flag, allow an expandable row to display environments and their targeting information.
+
 ## 0.0.12
 
 ### Patch Changes
