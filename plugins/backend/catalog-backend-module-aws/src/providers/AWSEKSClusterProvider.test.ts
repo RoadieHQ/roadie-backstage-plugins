@@ -20,7 +20,8 @@ import {
   DescribeClusterCommand,
 } from '@aws-sdk/client-eks';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
@@ -94,6 +95,48 @@ describe('AWSEKSClusterProvider', () => {
         refresh: jest.fn(),
       };
       const provider = AWSEKSClusterProvider.fromConfig(config, { logger });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                labels: {
+                  some_url: 'https---asdfhwef.com-hello-world',
+                },
+                name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
+                title: '123456789012:eu-west-1:cluster1',
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_EKS_CLUSTER_ARN]:
+                    'arn:aws:eks:eu-west-1:123456789012:cluster/cluster1',
+                  [ANNOTATION_AWS_IAM_ROLE_ARN]:
+                    'arn:aws:iam::123456789012:role/cluster1',
+                  'kubernetes.io/auth-provider': 'aws',
+                  'kubernetes.io/x-k8s-aws-id': 'cluster1',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('creates eks cluster using template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSEKSClusterProvider.example.yaml.njs'),
+      ).toString();
+
+      const provider = AWSEKSClusterProvider.fromConfig(config, {
+        logger,
+        template,
+      });
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
