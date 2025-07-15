@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
-    "@types/jest": "^29.5.14",
     "@types/uuid": "^9.0.8",
     "msw": "^1.3.3"
   },

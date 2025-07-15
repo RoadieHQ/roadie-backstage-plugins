@@ -44,8 +44,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
-    "@vercel/ncc": "^0.38.0",
-    "jest": "^27.0.1"
+    "@vercel/ncc": "^0.38.0"
   },
   "keywords": [
     "backstage",

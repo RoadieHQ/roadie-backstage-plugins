@@ -55,9 +55,10 @@ describe('SearchClient', () => {
     const mockResponse = {
       ok: true,
       json: jest.fn().mockResolvedValue({ results: [] }),
-    };
-    const mockFetch = jest.fn().mockResolvedValue(mockResponse);
-    global.fetch = mockFetch;
+    }  as unknown as Response;
+
+    const mockFetch = jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
+
     const query: SearchClientQuery = {
       term: 'catalog',
       source: 'catalog' as EmbeddingsSource,
