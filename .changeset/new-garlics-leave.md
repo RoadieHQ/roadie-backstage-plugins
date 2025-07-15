@@ -1,10 +1,13 @@
 ---
+'@roadiehq/backstage-plugin-wiz': major
 '@roadiehq/plugin-wiz-backend': major
 ---
 
 **BREAKING** Fixed an issue with backend plugin initialisation approach which required additional configuration for the end user.
 
-This fix allows plugin consumers to add the backend plugin using the new backend system, unfortunately, this breaks existing approaches as plugin consumers will have customised the backend plugin to respond on the incorrect URL.
+This fix allows plugin consumers to add the backend plugin using the new backend system, unfortunately, this breaks existing approaches as plugin consumers will have customised the backend plugin to respond on the incorrect/previous URL.
+
+Using v2 of the frontend (backstage-plugin-wiz) plugin requires v2 of the backend (plugin-wiz-backend) plugin.
 
 These changes are **required** to `packages/backend/src/index.ts`
 

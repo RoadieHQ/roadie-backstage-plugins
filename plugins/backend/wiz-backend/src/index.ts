@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 export * from './service';
-export { wizBackendPlugin as default } from './plugin';
+export { wizPlugin as default } from './plugin';

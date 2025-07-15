@@ -30,6 +30,8 @@ Severity chart Component:
 
 Make sure you have installed [WIZ backend plugin](../../backend/wiz-backend/README.md). This will generate access token needed for retriving and displaying issues in components.
 
+**_Note: v2 of this plugin (wiz-frontend) requires v2 of the wiz-backend plugin_**
+
 ### Add plugin component to your Backstage instance:
 
 ```ts
