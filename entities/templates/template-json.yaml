@@ -1,0 +1,101 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: serialize-json-demo
+  title: Serialize JSON Action Demo
+  description: Demonstrates the roadiehq:utils:serialize:json action
+  tags:
+    - demo
+    - serialize
+    - json
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: JSON Configuration
+      required:
+        - inputData
+      properties:
+        inputData:
+          title: Data to Serialize
+          type: object
+          description: Object data to serialize to JSON
+          default:
+            name: 'Demo Service'
+            version: '1.0.0'
+            config:
+              port: 8080
+              debug: true
+              features: ['auth', 'logging', 'metrics']
+        useReplacer:
+          title: Use Property Filter
+          type: boolean
+          description: Filter specific properties during serialization
+          default: false
+        replacerProperties:
+          title: Properties to Include
+          type: array
+          description: List of properties to include (leave empty for all)
+          items:
+            type: string
+          default: ['name', 'version']
+        useFormatting:
+          title: Use Formatting
+          type: boolean
+          description: Add indentation for readable JSON
+          default: true
+        indentSize:
+          title: Indent Size
+          type: string
+          description: Indentation (spaces or tab)
+          default: '  '
+
+  steps:
+    - id: serialize-basic
+      name: Basic JSON Serialization
+      action: roadiehq:utils:serialize:json
+      input:
+        data: ${{ parameters.inputData }}
+
+    - id: serialize-filtered
+      name: Filtered JSON Serialization
+      if: ${{ parameters.useReplacer }}
+      action: roadiehq:utils:serialize:json
+      input:
+        data: ${{ parameters.inputData }}
+        replacer: ${{ parameters.replacerProperties }}
+
+    - id: serialize-formatted
+      name: Formatted JSON Serialization
+      if: ${{ parameters.useFormatting }}
+      action: roadiehq:utils:serialize:json
+      input:
+        data: ${{ parameters.inputData }}
+        space: ${{ parameters.indentSize }}
+
+    - id: write-output
+      name: Write Serialized JSON
+      action: roadiehq:utils:fs:write
+      input:
+        path: output.json
+        content: ${{ steps['serialize-formatted'].output.serialized || steps['serialize-filtered'].output.serialized || steps['serialize-basic'].output.serialized }}
+
+  output:
+    text:
+      - title: JSON Serialization Complete
+        content: |
+          Successfully serialized JSON data!
+
+          **Output written to:** output.json
+
+          **Result:**
+          ```json
+          ${{ steps['serialize-formatted'].output.serialized || steps['serialize-filtered'].output.serialized || steps['serialize-basic'].output.serialized }}
+          ```
+
+          Features demonstrated:
+          - Object to JSON string conversion
+          - Property filtering with replacer
+          - Custom formatting and indentation
+          - Integration with file operations
