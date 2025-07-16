@@ -1,5 +1,12 @@
 # app
 
+## 1.1.13
+
+### Patch Changes
+
+- Updated dependencies [ab88aee]
+  - @roadiehq/backstage-plugin-wiz@2.0.0
+
 ## 1.1.12
 
 ### Patch Changes
