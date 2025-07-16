@@ -1,5 +1,13 @@
 # backend
 
+## 2.4.11
+
+### Patch Changes
+
+- Updated dependencies [ab88aee]
+  - @roadiehq/plugin-wiz-backend@2.0.0
+  - app@1.1.13
+
 ## 2.4.10
 
 ### Patch Changes
