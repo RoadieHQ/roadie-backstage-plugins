@@ -16,7 +16,7 @@
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { registerMswTestHooks, TestApiProvider } from '@backstage/test-utils';
+import { mockApis, registerMswTestHooks, TestApiProvider } from '@backstage/test-utils';
 import { TableColumn } from '@backstage/core-components';
 import {
   configApiRef,
@@ -29,6 +29,7 @@ import { prometheusApiRef } from '../../api';
 import { ThemeProvider } from '@material-ui/core';
 import { lightTheme } from '@backstage/theme';
 import { PrometheusDisplayableAlert } from '../../types';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
 
 const entityMock = {
   metadata: {
@@ -62,6 +63,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, config],
   [prometheusApiRef, mockPrometheusApi],
+  [translationApiRef, mockApis.translation()]
 ];
 
 describe('PrometheusAlertEntityWrapper', () => {

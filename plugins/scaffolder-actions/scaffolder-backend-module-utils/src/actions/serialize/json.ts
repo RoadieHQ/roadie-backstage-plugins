@@ -23,20 +23,24 @@ export function createSerializeJsonAction() {
     schema: {
       input: {
         data: z =>
-          z.object({}).describe('Input data to perform serialization on.'),
-        replacer: z => z.array(z.string()).describe('Replacer array'),
-        space: z => z.string().describe('Space character'),
+          z.record(z.any()).describe('Input data to perform serialization on.'),
+        replacer: z => z.array(z.string()).describe('Replacer array').optional(),
+        space: z => z.string().describe('Space character').optional(),
       },
       output: {
         serialized: z =>
-          z.string().describe('Output result from serialization'),
+          z.string().describe('Output result from serialization').optional(),
       },
     },
 
     async handler(ctx) {
       ctx.output(
         'serialized',
-        JSON.stringify(ctx.input.data, ctx.input.replacer, ctx.input.space),
+        JSON.stringify(
+          ctx.input.data,
+          ctx.input.replacer?.length ? ctx.input.replacer : null,
+          ctx.input.space
+        ),
       );
     },
   });

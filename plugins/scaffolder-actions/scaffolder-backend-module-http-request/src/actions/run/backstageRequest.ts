@@ -93,7 +93,7 @@ export function createHttpBackstageAction(options: {
       },
       output: {
         code: z => z.string().describe('The response code of the request'),
-        headers: z => z.object({}).describe('The headers of the response'),
+        headers: z => z.record(z.any()).describe('The headers of the response'),
         body: z => z.any().describe('The body of the response'),
       },
     },
@@ -158,8 +158,7 @@ export function createHttpBackstageAction(options: {
       const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
       if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
         ctx.logger.info(
-          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
-            queryParams !== '' ? `${input.path}?${queryParams}` : input.path
+          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${queryParams !== '' ? `${input.path}?${queryParams}` : input.path
           }`,
         );
         return;

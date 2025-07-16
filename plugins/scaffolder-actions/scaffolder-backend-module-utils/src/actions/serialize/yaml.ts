@@ -25,7 +25,7 @@ export function createSerializeYamlAction() {
     schema: {
       input: {
         data: z =>
-          z.object({}).describe('Input data to perform serialization on.'),
+          z.record(z.any()).describe('Input data to perform serialization on.'),
         options: yamlOptionsSchema,
       },
       output: {

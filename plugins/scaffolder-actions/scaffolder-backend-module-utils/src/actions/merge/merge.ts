@@ -58,7 +58,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
         path: z => z.string().describe('Path to existing file to append.'),
         content: z =>
           z
-            .union([z.string(), z.object({})])
+            .union([z.string(), z.record(z.any())])
             .describe(
               'This will be merged into to the file. Can be either an object or a string.',
             ),
@@ -143,7 +143,7 @@ export function createMergeAction() {
         path: z => z.string().describe('Path to existing file to append.'),
         content: z =>
           z
-            .union([z.string(), z.object({})])
+            .union([z.string(), z.record(z.any())])
             .describe(
               'This will be merged into to the file. Can be either an object or a string.',
             ),

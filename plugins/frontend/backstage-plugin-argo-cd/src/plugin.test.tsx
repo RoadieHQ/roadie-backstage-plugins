@@ -28,7 +28,7 @@ import { setupServer } from 'msw/node';
 import { ArgoCDApiClient, argoCDApiRef } from './api';
 import { argocdPlugin } from './plugin';
 import { ArgoCDDetailsCard } from './components/ArgoCDDetailsCard';
-import { TestApiProvider } from '@backstage/test-utils';
+import { mockApis, TestApiProvider } from '@backstage/test-utils';
 import {
   getEntityStub,
   getResponseStub,
@@ -44,6 +44,7 @@ import {
   getEntityStubWithAppNamespace,
 } from './mocks/mocks';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const errorApiMock = { post: jest.fn(), error$: jest.fn() };
@@ -61,6 +62,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
+  [translationApiRef, mockApis.translation()]
 ];
 const apisScan: [AnyApiRef, Partial<unknown>][] = [
   [
@@ -93,6 +95,7 @@ const apisScan: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
+  [translationApiRef, mockApis.translation()]
 ];
 const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
   [
@@ -129,6 +132,7 @@ const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
+  [translationApiRef, mockApis.translation()]
 ];
 
 describe('argo-cd', () => {
@@ -186,6 +190,7 @@ describe('argo-cd', () => {
 
     it('should display link to argo cd source', async () => {
       const apisWithArgoCDBaseURL: [AnyApiRef, Partial<unknown>][] = [
+        [translationApiRef, mockApis.translation()],
         [
           configApiRef,
           new ConfigReader({
@@ -318,6 +323,7 @@ describe('argo-cd', () => {
 
     it('should display namespaced apps', async () => {
       const apisWithArgoCDNamespacedApps: [AnyApiRef, Partial<unknown>][] = [
+        [translationApiRef, mockApis.translation()],
         [
           configApiRef,
           new ConfigReader({
@@ -363,27 +369,28 @@ describe('argo-cd', () => {
         AnyApiRef,
         Partial<unknown>,
       ][] = [
-        [
-          configApiRef,
-          new ConfigReader({
-            argocd: {
-              namespacedApps: true,
-              baseUrl: 'www.example-argocd-url.com',
-            },
-          }),
-        ],
-        [errorApiRef, errorApiMock],
-        [
-          argoCDApiRef,
-          new ArgoCDApiClient({
-            discoveryApi,
-            identityApi: getIdentityApiStub,
-            backendBaseUrl: 'https://testbackend.com',
-            searchInstances: false,
-            useNamespacedApps: true,
-          }),
-        ],
-      ];
+          [
+            configApiRef,
+            new ConfigReader({
+              argocd: {
+                namespacedApps: true,
+                baseUrl: 'www.example-argocd-url.com',
+              },
+            }),
+          ],
+          [errorApiRef, errorApiMock],
+          [translationApiRef, mockApis.translation()],
+          [
+            argoCDApiRef,
+            new ArgoCDApiClient({
+              discoveryApi,
+              identityApi: getIdentityApiStub,
+              backendBaseUrl: 'https://testbackend.com',
+              searchInstances: false,
+              useNamespacedApps: true,
+            }),
+          ],
+        ];
 
       worker.use(
         rest.get('*', (_, res, ctx) =>
@@ -510,6 +517,7 @@ describe('argo-cd', () => {
           }),
         ],
         [errorApiRef, errorApiMock],
+        [translationApiRef, mockApis.translation()],
         [
           argoCDApiRef,
           new ArgoCDApiClient({
@@ -583,6 +591,7 @@ describe('argo-cd', () => {
 
     it('should display link to argo cd source using instance url', async () => {
       const apisWithArgoCDBaseURL: [AnyApiRef, Partial<unknown>][] = [
+        [translationApiRef, mockApis.translation()],
         [
           configApiRef,
           new ConfigReader({

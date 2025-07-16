@@ -65,4 +65,36 @@ describe('roadiehq:utils:serialize:json', () => {
       JSON.stringify({ hello1: 'world1' }, null, '\t'),
     );
   });
+
+  it('should filter properties when replacer array has values', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { name: 'John', age: 30, secret: 'hidden' },
+        replacer: ['name', 'age'],
+        space: '',
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      JSON.stringify({ name: 'John', age: 30, secret: 'hidden' }, ['name', 'age']),
+    );
+  });
+
+  it('should work with minimal input (no replacer and space)', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { simple: 'test' },
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      JSON.stringify({ simple: 'test' }),
+    );
+  });
 });

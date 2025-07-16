@@ -29,6 +29,8 @@ import {
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
 import { repoVulnerabilityResponse } from '../../api/mocks/mocks';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
+import { mockApis } from '@backstage/test-utils';
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [errorApiRef, {}],
@@ -59,6 +61,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
       },
     } as any as FetchApi,
   ],
+  [translationApiRef, mockApis.translation()]
 ];
 
 describe('Content', () => {

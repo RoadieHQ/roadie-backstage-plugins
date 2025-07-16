@@ -63,7 +63,7 @@
   "devDependencies": {
     "@backstage/backend-common": "^0.25.0",
     "@backstage/cli": "backstage:^",
-    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/jest-dom": "^6.0.0",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/mock-fs": "^4.13.1",
