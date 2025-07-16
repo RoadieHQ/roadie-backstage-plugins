@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "backend-plugin",
-    "pluginId": "plugin-wiz-backend",
+    "pluginId": "wiz",
     "pluginPackages": [
       "@roadiehq/plugin-wiz-backend"
     ]

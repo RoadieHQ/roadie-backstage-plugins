@@ -31,7 +31,7 @@ export class WizClient implements WizAPI {
   }
 
   async fetchIssuesForProject(projectId: string): Promise<any> {
-    const baseUrl = await this.discoveryApi.getBaseUrl('wiz-backend');
+    const baseUrl = await this.discoveryApi.getBaseUrl('wiz');
 
     try {
       const response = await this.fetchApi.fetch(
