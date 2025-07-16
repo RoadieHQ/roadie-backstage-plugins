@@ -1,0 +1,104 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: argocd-create-demo
+  title: ArgoCD Resources Demo
+  description: Minimal demo for creating ArgoCD applications and projects
+  tags:
+    - demo
+    - argocd
+    - gitops
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: ArgoCD Configuration
+      required:
+        - appName
+        - repoUrl
+      properties:
+        appName:
+          title: Application Name
+          type: string
+          description: Name for the ArgoCD application
+          default: demo-app
+        repoUrl:
+          title: Repository URL
+          type: string
+          description: Git repository URL for the application
+          default: https://github.com/example/demo-app
+        argoInstance:
+          title: ArgoCD Instance
+          type: string
+          description: ArgoCD instance name
+          default: default
+        namespace:
+          title: Target Namespace
+          type: string
+          description: Kubernetes namespace for deployment
+          default: demo
+
+  steps:
+    - id: create-manifest
+      name: Create Kubernetes Manifest
+      action: roadiehq:utils:fs:write
+      input:
+        path: k8s/deployment.yaml
+        content: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ${{ parameters.appName }}
+            namespace: ${{ parameters.namespace }}
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: ${{ parameters.appName }}
+            template:
+              metadata:
+                labels:
+                  app: ${{ parameters.appName }}
+              spec:
+                containers:
+                - name: app
+                  image: nginx:latest
+                  ports:
+                  - containerPort: 80
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: ${{ parameters.appName }}-service
+            namespace: ${{ parameters.namespace }}
+          spec:
+            selector:
+              app: ${{ parameters.appName }}
+            ports:
+            - port: 80
+              targetPort: 80
+
+    - id: create-argocd-resources
+      name: Create ArgoCD Application
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.appName }}
+        argoInstance: ${{ parameters.argoInstance }}
+        namespace: ${{ parameters.namespace }}
+        projectName: ${{ parameters.appName }}-project
+        repoUrl: ${{ parameters.repoUrl }}
+        path: k8s
+        labelValue: ${{ parameters.appName }}
+
+  output:
+    text:
+      - title: ArgoCD Application Created
+        content: |
+          Successfully created ArgoCD application: **${{ parameters.appName }}**
+
+          - **Repository:** `${{ parameters.repoUrl }}`
+          - **Namespace:** `${{ parameters.namespace }}`
+          - **Path:** `k8s`
+
+          The application will sync from the Git repository to deploy Kubernetes resources.

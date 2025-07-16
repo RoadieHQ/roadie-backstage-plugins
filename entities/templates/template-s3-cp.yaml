@@ -1,0 +1,261 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: aws-s3-cp-demo
+  title: AWS S3 Copy Action Demo
+  description: Demonstrates the roadiehq:aws:s3:cp action for uploading files to S3
+  tags:
+    - demo
+    - aws
+    - s3
+    - upload
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: AWS Configuration
+      required:
+        - bucketName
+        - region
+      properties:
+        bucketName:
+          title: S3 Bucket Name
+          type: string
+          description: The S3 bucket to upload files to
+          default: my-demo-bucket
+        region:
+          title: AWS Region
+          type: string
+          description: AWS region where the bucket is located
+          enum:
+            - us-east-1
+            - us-west-2
+            - eu-west-1
+            - eu-central-1
+            - ap-southeast-1
+          default: us-east-1
+        prefix:
+          title: S3 Key Prefix
+          type: string
+          description: Optional prefix for S3 keys (folder structure)
+          default: demo-uploads
+        uploadType:
+          title: Upload Type
+          type: string
+          description: Choose what type of files to create and upload
+          enum:
+            - static-website
+            - application-build
+            - documentation
+            - config-files
+          enumNames:
+            - 'Static Website'
+            - 'Application Build'
+            - 'Documentation'
+            - 'Configuration Files'
+          default: static-website
+
+  steps:
+    - id: create-static-website
+      name: Create Static Website Files
+      if: ${{ parameters.uploadType === 'static-website' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: public/index.html
+        content: |
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Demo Website</title>
+              <link rel="stylesheet" href="styles.css">
+          </head>
+          <body>
+              <header>
+                  <h1>Welcome to Demo Website</h1>
+              </header>
+              <main>
+                  <p>This is a demo static website uploaded to S3.</p>
+                  <p>Generated at: ${{ '' | now }}</p>
+              </main>
+              <script src="script.js"></script>
+          </body>
+          </html>
+
+    - id: create-css
+      name: Create CSS File
+      if: ${{ parameters.uploadType === 'static-website' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: public/styles.css
+        content: |
+          body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 20px;
+              background-color: #f5f5f5;
+          }
+          header {
+              background-color: #333;
+              color: white;
+              padding: 1rem;
+              text-align: center;
+          }
+          main {
+              padding: 2rem;
+              background-color: white;
+              margin-top: 1rem;
+              border-radius: 8px;
+          }
+
+    - id: create-js
+      name: Create JavaScript File
+      if: ${{ parameters.uploadType === 'static-website' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: public/script.js
+        content: |
+          console.log('Demo website loaded successfully!');
+          document.addEventListener('DOMContentLoaded', function() {
+              console.log('DOM content loaded');
+          });
+
+    - id: create-build-files
+      name: Create Application Build
+      if: ${{ parameters.uploadType === 'application-build' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: dist/app.js
+        content: |
+          // Minified application build
+          !function(){console.log("Production build loaded")}();
+
+    - id: create-build-assets
+      name: Create Build Assets
+      if: ${{ parameters.uploadType === 'application-build' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: dist/assets/main.css
+        content: |
+          .app{display:flex;flex-direction:column;min-height:100vh}
+
+    - id: create-documentation
+      name: Create Documentation
+      if: ${{ parameters.uploadType === 'documentation' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: docs/README.md
+        content: |
+          # Project Documentation
+
+          This documentation was uploaded to S3 for hosting.
+
+          ## Features
+          - API Reference
+          - Getting Started Guide
+          - Architecture Overview
+
+          Last updated: ${{ '' | now }}
+
+    - id: create-api-docs
+      name: Create API Documentation
+      if: ${{ parameters.uploadType === 'documentation' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: docs/api.md
+        content: |
+          # API Documentation
+
+          ## Endpoints
+
+          ### GET /api/health
+          Returns the health status of the service.
+
+          ### POST /api/data
+          Creates new data entries.
+
+    - id: create-config-files
+      name: Create Configuration Files
+      if: ${{ parameters.uploadType === 'config-files' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config/production.json
+        content: |
+          {
+            "database": {
+              "host": "prod-db.example.com",
+              "port": 5432
+            },
+            "cache": {
+              "redis": "prod-redis.example.com"
+            }
+          }
+
+    - id: create-env-config
+      name: Create Environment Config
+      if: ${{ parameters.uploadType === 'config-files' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config/.env.production
+        content: |
+          NODE_ENV=production
+          LOG_LEVEL=info
+          API_VERSION=v1
+
+    - id: upload-to-s3
+      name: Upload Files to S3
+      action: roadiehq:aws:s3:cp
+      input:
+        bucket: ${{ parameters.bucketName }}
+        region: ${{ parameters.region }}
+        prefix: ${{ parameters.prefix }}
+        path: ${{ parameters.uploadType === 'static-website' && 'public' || parameters.uploadType === 'application-build' && 'dist' || parameters.uploadType === 'documentation' && 'docs' || 'config' }}
+
+    - id: create-upload-summary
+      name: Create Upload Summary
+      action: roadiehq:utils:fs:write
+      input:
+        path: upload-summary.md
+        content: |
+          # S3 Upload Summary
+
+          ## Upload Details
+          - **Bucket:** ${{ parameters.bucketName }}
+          - **Region:** ${{ parameters.region }}
+          - **Prefix:** ${{ parameters.prefix }}
+          - **Upload Type:** ${{ parameters.uploadType }}
+          - **Uploaded at:** ${{ '' | now }}
+
+          ## S3 URLs
+          Base URL: `https://${{ parameters.bucketName }}.s3.${{ parameters.region }}.amazonaws.com/${{ parameters.prefix }}/`
+
+          ## Files Uploaded
+          ${{ parameters.uploadType === 'static-website' && '- index.html\n- styles.css\n- script.js' || parameters.uploadType === 'application-build' && '- app.js\n- assets/main.css' || parameters.uploadType === 'documentation' && '- README.md\n- api.md' || '- production.json\n- .env.production' }}
+
+          ## Use Cases
+          - Static website hosting
+          - Application deployment artifacts
+          - Documentation hosting
+          - Configuration distribution
+          - Backup and archival
+
+  output:
+    text:
+      - title: S3 Upload Complete
+        content: |
+          Successfully uploaded **${{ parameters.uploadType }}** files to S3!
+
+          **Bucket:** `${{ parameters.bucketName }}`
+          **Region:** `${{ parameters.region }}`
+          **Prefix:** `${{ parameters.prefix }}`
+
+          **Base URL:** `https://${{ parameters.bucketName }}.s3.${{ parameters.region }}.amazonaws.com/${{ parameters.prefix }}/`
+
+          Features demonstrated:
+          - File and directory upload to S3
+          - Custom S3 key prefixes
+          - Multiple file types support
+          - Glob pattern file selection
+          - AWS region configuration
