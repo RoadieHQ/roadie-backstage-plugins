@@ -62,7 +62,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 const apisScan: [AnyApiRef, Partial<unknown>][] = [
   [
@@ -95,7 +95,7 @@ const apisScan: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
   [
@@ -132,7 +132,7 @@ const apisScanMultipleInstances: [AnyApiRef, Partial<unknown>][] = [
       useNamespacedApps: false,
     }),
   ],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('argo-cd', () => {
@@ -369,28 +369,28 @@ describe('argo-cd', () => {
         AnyApiRef,
         Partial<unknown>,
       ][] = [
-          [
-            configApiRef,
-            new ConfigReader({
-              argocd: {
-                namespacedApps: true,
-                baseUrl: 'www.example-argocd-url.com',
-              },
-            }),
-          ],
-          [errorApiRef, errorApiMock],
-          [translationApiRef, mockApis.translation()],
-          [
-            argoCDApiRef,
-            new ArgoCDApiClient({
-              discoveryApi,
-              identityApi: getIdentityApiStub,
-              backendBaseUrl: 'https://testbackend.com',
-              searchInstances: false,
-              useNamespacedApps: true,
-            }),
-          ],
-        ];
+        [
+          configApiRef,
+          new ConfigReader({
+            argocd: {
+              namespacedApps: true,
+              baseUrl: 'www.example-argocd-url.com',
+            },
+          }),
+        ],
+        [errorApiRef, errorApiMock],
+        [translationApiRef, mockApis.translation()],
+        [
+          argoCDApiRef,
+          new ArgoCDApiClient({
+            discoveryApi,
+            identityApi: getIdentityApiStub,
+            backendBaseUrl: 'https://testbackend.com',
+            searchInstances: false,
+            useNamespacedApps: true,
+          }),
+        ],
+      ];
 
       worker.use(
         rest.get('*', (_, res, ctx) =>

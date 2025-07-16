@@ -16,7 +16,11 @@
 import { render } from '@testing-library/react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { mockApis, registerMswTestHooks, TestApiProvider } from '@backstage/test-utils';
+import {
+  mockApis,
+  registerMswTestHooks,
+  TestApiProvider,
+} from '@backstage/test-utils';
 import { TableColumn } from '@backstage/core-components';
 import {
   configApiRef,
@@ -63,7 +67,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [errorApiRef, config],
   [prometheusApiRef, mockPrometheusApi],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('PrometheusAlertEntityWrapper', () => {

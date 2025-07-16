@@ -79,7 +79,10 @@ describe('roadiehq:utils:serialize:json', () => {
 
     expect(mockContext.output).toHaveBeenCalledWith(
       'serialized',
-      JSON.stringify({ name: 'John', age: 30, secret: 'hidden' }, ['name', 'age']),
+      JSON.stringify({ name: 'John', age: 30, secret: 'hidden' }, [
+        'name',
+        'age',
+      ]),
     );
   });
 

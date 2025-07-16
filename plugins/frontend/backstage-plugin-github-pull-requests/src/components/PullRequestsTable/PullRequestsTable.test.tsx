@@ -15,7 +15,12 @@
  */
 
 import { render } from '@testing-library/react';
-import { configApiRef, AnyApiRef, ConfigApi, errorApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  AnyApiRef,
+  ConfigApi,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
 import { rest } from 'msw';
 import {
   setupRequestMockHandlers,

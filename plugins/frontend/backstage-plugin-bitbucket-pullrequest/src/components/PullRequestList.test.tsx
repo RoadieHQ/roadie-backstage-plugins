@@ -35,7 +35,7 @@ const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [bitbucketApiRef, new BitbucketApi({ discoveryApi })],
   [errorApiRef, new MockErrorApi()],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('PullRequestList', () => {

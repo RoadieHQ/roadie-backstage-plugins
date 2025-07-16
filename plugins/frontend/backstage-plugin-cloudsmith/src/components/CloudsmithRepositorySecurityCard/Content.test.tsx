@@ -61,7 +61,7 @@ const apis: [AnyApiRef, Partial<unknown>][] = [
       },
     } as any as FetchApi,
   ],
-  [translationApiRef, mockApis.translation()]
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('Content', () => {

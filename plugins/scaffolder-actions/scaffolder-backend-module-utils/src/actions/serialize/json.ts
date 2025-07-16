@@ -24,7 +24,8 @@ export function createSerializeJsonAction() {
       input: {
         data: z =>
           z.record(z.any()).describe('Input data to perform serialization on.'),
-        replacer: z => z.array(z.string()).describe('Replacer array').optional(),
+        replacer: z =>
+          z.array(z.string()).describe('Replacer array').optional(),
         space: z => z.string().describe('Space character').optional(),
       },
       output: {
@@ -39,7 +40,7 @@ export function createSerializeJsonAction() {
         JSON.stringify(
           ctx.input.data,
           ctx.input.replacer?.length ? ctx.input.replacer : null,
-          ctx.input.space
+          ctx.input.space,
         ),
       );
     },
