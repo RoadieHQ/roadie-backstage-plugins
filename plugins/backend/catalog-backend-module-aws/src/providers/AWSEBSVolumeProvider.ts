@@ -30,7 +30,7 @@ import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 import { DescribeVolumesCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeVolumesCommand';
 
-const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
+export const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
 
 const createEbsVolumeConsoleLink = (region: string, volumeId: string): string =>
   `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#VolumeDetails:volumeId=${volumeId}`;
