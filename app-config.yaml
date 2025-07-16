@@ -134,20 +134,6 @@ catalog:
     # File used for testing purposes
     - type: file
       target: ../../entities/test-entity.yaml
-
-    - type: file
-      target: ../../entities/test-template.yaml
-      rules:
-        - allow: [Template]
-    # Roadie example AWS ECR repo creation
-    - type: file
-      target: ../entities/ecr-repo-create-template.yaml
-      rules:
-        - allow: [Template]
-    - type: file
-      target: ../../entities/http-request-proxy-debug.yaml
-      rules:
-        - allow: [Template]
     - type: file
       target: ../../entities/templates/*.yaml
       rules:

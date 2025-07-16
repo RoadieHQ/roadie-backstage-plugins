@@ -141,6 +141,11 @@ spec:
       input:
         path: transformed-results.json
         content: ${{ steps['extract-transform'].output.result || steps['structure-transform'].output.result || steps['aggregate-transform'].output.result || steps['filter-transform'].output.result || steps['custom-transform'].output.result | dump }}
+    - id:
+      name: log
+      action: debug:log
+      input:
+        message: ${{ steps['extract-transform'].output.result || steps['structure-transform'].output.result || steps['aggregate-transform'].output.result || steps['filter-transform'].output.result || steps['custom-transform'].output.result | dump }}
 
   output:
     text:
