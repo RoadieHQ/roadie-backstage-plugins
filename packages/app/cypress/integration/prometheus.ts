@@ -19,6 +19,7 @@ import 'os';
 
 describe('Prometheus', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept(
       'GET',

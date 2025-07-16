@@ -19,6 +19,7 @@ import 'os';
 
 describe('Argo CD', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept(
       'GET',

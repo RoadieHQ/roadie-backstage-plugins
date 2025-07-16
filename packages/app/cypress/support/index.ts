@@ -22,6 +22,11 @@ Cypress.Commands.add('loginAsGuest', () => {
   });
 });
 
+Cypress.Commands.add('login', () => {
+  cy.visit('/');
+  cy.contains('button', 'enter').click();
+});
+
 Cypress.Commands.add('saveGithubToken', () => {
   cy.intercept(
     'GET',

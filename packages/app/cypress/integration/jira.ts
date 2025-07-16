@@ -19,6 +19,7 @@ import 'os';
 
 describe('Jira plugin', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept(
       'GET',

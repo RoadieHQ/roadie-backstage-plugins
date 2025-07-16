@@ -20,6 +20,7 @@ import 'os';
 describe('Buildkite', () => {
   describe('When the entity is configured to display all branch builds', () => {
     beforeEach(() => {
+      cy.login();
       cy.saveGithubToken();
       cy.intercept(
         'GET',
@@ -42,6 +43,7 @@ describe('Buildkite', () => {
 
   describe('When the entity is configured to display the builds of a specific branch', () => {
     beforeEach(() => {
+      cy.login();
       cy.saveGithubToken();
       cy.intercept(
         'GET',
@@ -65,6 +67,7 @@ describe('Buildkite', () => {
 
   describe('When the entity is configured to display default branch builds only', () => {
     beforeEach(() => {
+      cy.login();
       cy.saveGithubToken();
       cy.intercept(
         'GET',

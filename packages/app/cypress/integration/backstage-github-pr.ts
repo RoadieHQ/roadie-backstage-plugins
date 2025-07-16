@@ -19,6 +19,7 @@ import 'os';
 
 describe('Github Pull Requests', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
   });
 

@@ -19,6 +19,7 @@ import 'os';
 
 describe('GithubInsights', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept(
       'GET',

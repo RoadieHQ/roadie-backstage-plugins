@@ -19,6 +19,7 @@ import 'os';
 
 describe('AWS Lambda', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept('POST', 'http://localhost:7007/api/aws/credentials', {
       fixture: 'AWSLambda/AWSCredentials.json',

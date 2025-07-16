@@ -19,6 +19,7 @@ import 'os';
 
 describe('scaffolder http request', () => {
   beforeEach(() => {
+    cy.login();
     cy.visit('/create/actions');
   });
 

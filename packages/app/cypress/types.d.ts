@@ -22,6 +22,7 @@ declare namespace Cypress {
      * @example cy.loginAsGuests
      */
     loginAsGuest(): Chainable<Element>;
+    login(): Chainable<Element>;
     saveGithubToken(): Chainable<Element>;
   }
 }

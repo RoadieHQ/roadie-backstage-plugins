@@ -19,6 +19,7 @@ import 'os';
 
 describe('Travis CI', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept(
       'GET',

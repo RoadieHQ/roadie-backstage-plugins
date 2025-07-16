@@ -19,6 +19,7 @@ import 'os';
 
 describe('SecurityInsights', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
   });
 

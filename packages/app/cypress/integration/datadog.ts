@@ -19,6 +19,7 @@ import 'os';
 
 describe('Datadog', () => {
   beforeEach(() => {
+    cy.login();
     cy.saveGithubToken();
     cy.intercept('GET', 'https://p.datadoghq.eu/sb/test-datadog-link', {
       fixture: 'datadog/datadogdashboard.json',
@@ -32,6 +33,7 @@ describe('Datadog', () => {
 
   describe('Navigate to datadog dashboard', () => {
     it('should show Datadog dashboard', () => {
+      cy.login();
       cy.visit('/catalog/default/component/sample-service/datadog');
 
       cy.wait('@getDashboardJson');
@@ -40,6 +42,7 @@ describe('Datadog', () => {
     });
 
     it('should show Datadog graph', () => {
+      cy.login();
       cy.visit('/catalog/default/component/sample-service');
 
       cy.wait('@getDashboardHtml');
