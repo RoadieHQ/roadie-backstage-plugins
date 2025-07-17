@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-/* eslint-disable no-console */
-
 import { test, expect } from '@playwright/test';
 import buildsData from './fixtures/buildkite/builds.json';
 import pipelineData from './fixtures/buildkite/pipeline.json';
@@ -23,14 +21,6 @@ import pipelineData from './fixtures/buildkite/pipeline.json';
 test.describe('Buildkite', () => {
   test.describe('When the entity is configured to display all branch builds', () => {
     test.beforeEach(async ({ page }) => {
-      console.log(
-        'LocalStorage check:',
-        await page.evaluate(() => {
-          return window.localStorage.getItem(
-            '@backstage/core:SignInPage:provider',
-          );
-        }),
-      );
       await page.route(
         'http://localhost:7007/api/proxy/buildkite/api/organizations/exampleorganization/pipelines/exampleproject/builds?page=1&per_page=5',
         async route => {
