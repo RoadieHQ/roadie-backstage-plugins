@@ -19,7 +19,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { login } from './helpers/auth';
 import projectData from './fixtures/jira/project.json';
 import searchResultData from './fixtures/jira/searchresult.json';
 import statusesData from './fixtures/jira/statuses.json';
@@ -32,8 +31,6 @@ const activityStreamData = fs.readFileSync(
 );
 test.describe('Jira plugin', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-
     await page.route(
       'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST',
       async route => {

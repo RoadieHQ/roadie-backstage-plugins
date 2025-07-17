@@ -33,13 +33,16 @@ export default defineConfig({
     trace: 'on-first-retry',
     headless: true,
     screenshot: 'only-on-failure',
+    storageState: 'playwright/.auth/login.json',
   },
 
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
       testDir: './packages/app/e2e',
+      dependencies: ['setup'],
     },
   ],
 

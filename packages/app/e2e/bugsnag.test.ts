@@ -15,15 +15,12 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login } from './helpers/auth';
 import organizationsData from './fixtures/Bugsnag/organisations.json';
 import projectsData from './fixtures/Bugsnag/projects.json';
 import errorsData from './fixtures/Bugsnag/errors.json';
 
 test.describe('Bugsnag', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-
     await page.route(
       'http://localhost:7007/api/proxy/bugsnag/api/user/organizations',
       async route => {

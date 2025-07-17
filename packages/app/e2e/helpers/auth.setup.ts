@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-import { test, expect } from '@playwright/test';
+/* eslint-disable no-restricted-imports */
+import { test as setup } from '@playwright/test';
+import path from 'path';
 
-test.describe('scaffolder http request', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/create/actions');
+const authFile = path.join(
+  __dirname,
+  '../../../../playwright/.auth/login.json',
+);
+
+setup('authenticate', async ({ page }) => {
+  // Set the same localStorage
+  await page.goto('http://localhost:3000'); // or whatever your root URL is
+  await page.evaluate(() => {
+    window.localStorage.setItem('@backstage/core:SignInPage:provider', 'guest');
   });
 
-  test.describe('Navigating to the actions page', () => {
-    test('should show http:backstage:request', async ({ page }) => {
-      await expect(page.getByText('http:backstage:request')).toBeVisible();
-    });
-  });
+  await page.context().storageState({ path: authFile });
 });

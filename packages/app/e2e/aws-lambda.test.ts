@@ -15,14 +15,11 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login } from './helpers/auth';
 import awsCredentials from './fixtures/AWSLambda/AWSCredentials.json';
 import lambdaResponse from './fixtures/AWSLambda/AWSLambdaResponse.json';
 
 test.describe('AWS Lambda', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-
     await page.route(
       'http://localhost:7007/api/aws/credentials',
       async route => {

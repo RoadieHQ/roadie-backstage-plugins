@@ -17,7 +17,7 @@
 /* eslint-disable no-restricted-imports */
 
 import { test, expect } from '@playwright/test';
-import { login, saveGithubToken } from './helpers/auth';
+import { saveGithubToken } from './helpers/auth';
 import dashboardJsonData from './fixtures/datadog/datadogdashboard.json';
 
 import fs from 'fs';
@@ -30,7 +30,6 @@ const dashboardHtmlData = fs.readFileSync(
 
 test.describe('Datadog', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
     await saveGithubToken(page);
 
     // Set up API mocking for Datadog endpoints

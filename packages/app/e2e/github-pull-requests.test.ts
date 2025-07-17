@@ -15,12 +15,11 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login, saveGithubToken } from './helpers/auth';
+import { saveGithubToken } from './helpers/auth';
 import pullRequestsData from './fixtures/githubPRs/pull-requests.json';
 
 test.describe('Github Pull Requests', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
     await saveGithubToken(page);
   });
 

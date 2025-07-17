@@ -15,13 +15,10 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login } from './helpers/auth';
 import buildsData from './fixtures/travisCi/builds.json';
 
 test.describe('Travis CI', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-
     await page.route(
       'http://localhost:7007/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5',
       async route => {

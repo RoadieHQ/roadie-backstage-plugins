@@ -15,13 +15,12 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login, saveGithubToken } from './helpers/auth';
+import { saveGithubToken } from './helpers/auth';
 import alertsData from './fixtures/securityInsights/alerts.json';
 import graphqlData from './fixtures/securityInsights/graphql.json';
 
 test.describe('SecurityInsights', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
     await saveGithubToken(page);
   });
 

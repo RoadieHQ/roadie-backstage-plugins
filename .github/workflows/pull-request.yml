@@ -47,6 +47,9 @@ jobs:
       - name: Playwright Tests
         run: npx playwright install --with-deps chromium
 
+      - name: Make playwright/.auth dir
+        run: mkdir -p playwright/.auth && echo '{}' > playwright/.auth/login.json
+
       - name: Run Playwright tests
         run: |
           npx playwright test
@@ -58,7 +61,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.node-version }}
           path: playwright-report
           retention-days: 1
 

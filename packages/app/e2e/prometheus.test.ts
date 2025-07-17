@@ -15,14 +15,13 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login, saveGithubToken } from './helpers/auth';
+import { saveGithubToken } from './helpers/auth';
 import alertsData from './fixtures/prometheus/alerts.json';
 import graphsData from './fixtures/prometheus/graphs.json';
 import graphs2Data from './fixtures/prometheus/graphs2.json';
 
 test.describe('Prometheus', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
     await saveGithubToken(page);
 
     // Set up API mocking for Prometheus endpoints

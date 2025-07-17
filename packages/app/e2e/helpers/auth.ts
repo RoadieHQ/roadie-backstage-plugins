@@ -19,13 +19,6 @@ import loginFixture from '../fixtures/githubLogin/login.json';
 
 export const API_BASE_URL = 'http://localhost:7007';
 
-export async function login(page: Page) {
-  await page.addInitScript(() => {
-    window.localStorage.setItem('@backstage/core:SignInPage:provider', 'guest');
-  });
-  await page.goto('/');
-}
-
 export async function saveGithubToken(page: Page) {
   await page.route(
     'http://localhost:7007/api/auth/github/refresh?optional&scope=read%3Auser%20repo%20read%3Aorg&env=development',

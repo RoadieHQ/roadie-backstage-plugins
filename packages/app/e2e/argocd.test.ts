@@ -15,14 +15,11 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login } from './helpers/auth';
 import applicationData from './fixtures/ArgoCD/applications-test-app.json';
 import revisionData from './fixtures/ArgoCD/deploy-history-data.json';
 
 test.describe('Argo CD', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
-
     await page.route(
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       async route => {

@@ -15,7 +15,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login, saveGithubToken } from './helpers/auth';
+import { saveGithubToken } from './helpers/auth';
 import languagesData from './fixtures/githubInsights/languages.json';
 import releasesData from './fixtures/githubInsights/releases.json';
 import readmeData from './fixtures/githubInsights/readme.json';
@@ -24,7 +24,6 @@ import contributorsData from './fixtures/githubInsights/contributors.json';
 
 test.describe('GithubInsights', () => {
   test.beforeEach(async ({ page }) => {
-    await login(page);
     await saveGithubToken(page);
 
     await page.route(

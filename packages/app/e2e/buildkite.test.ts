@@ -15,7 +15,6 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { login } from './helpers/auth';
 import buildsData from './fixtures/buildkite/builds.json';
 import pipelineData from './fixtures/buildkite/pipeline.json';
 
@@ -35,8 +34,6 @@ test.describe('Buildkite', () => {
     });
     test.describe('Navigate to CI/CD dashboard', () => {
       test('should show Buildkite builds table', async ({ page }) => {
-        await login(page);
-
         await page.goto('/catalog/default/component/sample-service-3/ci-cd');
 
         await expect(page.getByText('Create PR to test')).toBeVisible();
@@ -63,7 +60,6 @@ test.describe('Buildkite', () => {
       test('should show Buildkite builds table limited only to builds of the specified branch', async ({
         page,
       }) => {
-        await login(page);
         await page.goto('/catalog/default/component/sample-service-4/ci-cd');
 
         await expect(
@@ -103,7 +99,6 @@ test.describe('Buildkite', () => {
       test('should show Buildkite builds table limited to the default branch builds', async ({
         page,
       }) => {
-        await login(page);
         await page.goto('/catalog/default/component/sample-service-5/ci-cd');
 
         await expect(
