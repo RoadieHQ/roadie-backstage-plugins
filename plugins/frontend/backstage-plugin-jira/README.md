@@ -66,6 +66,8 @@ jira:
   confluenceActivityFilter: wiki@uuid
   # Defaults to latest and can be omitted if you want to use the latest version of the api
   apiVersion: latest
+  # Defaults to `cloud`, but also supports `datacenter`
+  product: cloud
 ```
 
 3. Set img-src in Content Security Policy

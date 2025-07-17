@@ -118,13 +118,6 @@ export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
 };
 
-export type IssuesResponse = {
-  nextPageToken: string;
-  maxResults: number;
-  total: number;
-  issues: Ticket[];
-};
-
 export type Ticket = {
   key: string;
   self: string;
@@ -190,11 +183,6 @@ export type User = {
   avatarUrls: {
     [key: string]: string;
   };
-};
-
-export type IssuesResult = {
-  nextPageToken: string | undefined;
-  issues: Ticket[];
 };
 
 export type UserSummary = {
