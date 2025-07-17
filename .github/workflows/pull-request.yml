@@ -46,14 +46,10 @@ jobs:
         run: yarn build
 
       - name: Playwright Tests
-        uses: microsoft/playwright-github-action@v1
-        with:
-          # Install all dependencies and Playwright browsers
-          install-deps: true
+        run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
         run: |
-          npx playwright install --with-deps
           npx playwright test
         working-directory: .
         env:
