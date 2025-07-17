@@ -63,6 +63,7 @@
     "react-use": "^15.3.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
@@ -70,8 +71,6 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "cross-env": "^7.0.0",
-    "cypress": "^7.3.0",
-    "eslint-plugin-cypress": "^2.10.3",
     "http-server": "^14.0.0",
     "start-server-and-test": "^1.10.11"
   },
@@ -81,10 +80,11 @@
     "test": "backstage-cli package test",
     "lint": "backstage-cli package lint",
     "clean": "backstage-cli clean",
-    "test:e2e": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 cy:dev",
-    "test:e2e:ci": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 cy:run",
-    "cy:dev": "cypress open",
-    "cy:run": "cypress run"
+    "test:e2e:playwright": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 playwright:dev",
+    "test:e2e:playwright:ci": "cross-env PORT=3001 start-server-and-test start http://localhost:3001 playwright:run",
+    "playwright:dev": "playwright test --ui",
+    "playwright:run": "playwright test",
+    "playwright:install": "playwright install"
   },
   "browserslist": {
     "production": [

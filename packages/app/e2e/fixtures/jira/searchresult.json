@@ -1,0 +1,31 @@
+{
+  "startAt": 0,
+  "maxResults": 50,
+  "total": 2,
+  "issues": [
+    {
+      "self": "https://backstage-test.atlassian.net/rest/api/latest/status/10003",
+      "id": "10003",
+      "key": "10003",
+      "fields": {
+        "issuetype": {
+          "id": 1,
+          "name": "Task",
+          "iconUrl": "http://example.com/avatar.jpg"
+        }
+      }
+    },
+    {
+      "self": "https://backstage-test.atlassian.net/rest/api/latest/status/10003",
+      "id": "10004",
+      "key": "10004",
+      "fields": {
+        "issuetype": {
+          "id": 3,
+          "name": "New Feature",
+          "iconUrl": "http://example.com/avatar.jpg"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "status": "success",
+  "data": {
+    "groups": [
+      {
+        "name": "memUsage",
+        "file": "/etc/config/alerting_rules.yml",
+        "rules": [
+          {
+            "state": "firing",
+            "name": "test alert name",
+            "query": "sum by(component) (node_memory_Active_bytes) \u003e 2e+08",
+            "duration": 600,
+            "labels": {
+              "severity": "page"
+            },
+            "annotations": {
+              "summary": "Excessive memory usage"
+            },
+            "alerts": [
+              {
+                "labels": {
+                  "alertname": "Excessive Memory Usage",
+                  "component": "node-exporter",
+                  "severity": "page"
+                },
+                "annotations": {
+                  "summary": "Excessive memory usage"
+                },
+                "state": "firing",
+                "activeAt": "2021-09-27T12:07:31Z",
+                "value": "7.25843968e+09"
+              }
+            ],
+            "health": "ok",
+            "evaluationTime": 0.001013663,
+            "lastEvaluation": "2021-09-30T12:33:31.870359967Z",
+            "type": "alerting"
+          }
+        ],
+        "interval": 60,
+        "evaluationTime": 0.001457038,
+        "lastEvaluation": "2021-09-30T12:33:31.869921072Z"
+      }
+    ]
+  }
+}

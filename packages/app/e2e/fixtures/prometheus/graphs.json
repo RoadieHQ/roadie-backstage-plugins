@@ -1,0 +1,18 @@
+{
+  "status": "success",
+  "data": {
+    "resultType": "matrix",
+    "result": [
+      {
+        "metric": {
+          "__name__": "node_memory_Active_bytes",
+          "instance": "test-instance"
+        },
+        "values": [
+          [1633001642.261, "6461119616"],
+          [1633001656.261, "6444519616"]
+        ]
+      }
+    ]
+  }
+}

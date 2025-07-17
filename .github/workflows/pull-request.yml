@@ -1,0 +1,105 @@
+name: CI tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 18
+          - 20
+          - 22
+
+    env:
+      CI: true
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # yarn lint (backstage-cli repo lint) uses this
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+          node-version: ${{ matrix.node-version}}
+
+      - name: Log node version
+        run: node --version
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Run tsc
+        run: yarn tsc
+
+      - name: Run build
+        run: yarn build
+
+      - name: Playwright Tests
+        uses: microsoft/playwright-github-action@v1
+        with:
+          # Install all dependencies and Playwright browsers
+          install-deps: true
+
+      - name: Run Playwright tests
+        run: |
+          npx playwright install --with-deps
+          npx playwright test
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  verify:
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 18
+          - 20
+          - 22
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # yarn lint (backstage-cli repo lint) uses this
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: yarn
+          node-version: ${{ matrix.node-version}}
+
+      - name: Log node version
+        run: node --version
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Run prettier
+        run: yarn prettier --check .
+
+      - name: Run tsc
+        run: yarn tsc
+
+      - name: Run build
+        run: yarn build
+
+      - name: Run test
+        run: yarn test
