@@ -1,6 +1,6 @@
 import { Ticket } from '../../../types';
 
-export type IssuesDataCenterResponse = {
+export type SearchDataCenterResponse = {
   startAt: number;
   maxResults: number;
   total: number;

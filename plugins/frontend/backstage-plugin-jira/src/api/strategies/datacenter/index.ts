@@ -1,6 +1,6 @@
 import { JiraProductStrategy } from '../base';
 import { Ticket } from '../../../types';
-import { IssuesDataCenterResponse } from './types';
+import { SearchDataCenterResponse } from './types';
 
 export class JiraDataCenterStrategy extends JiraProductStrategy {
   async pagedIssuesRequest(
@@ -40,7 +40,7 @@ export class JiraDataCenterStrategy extends JiraProductStrategy {
           `failed to fetch data, status ${request.status}: ${request.statusText}`,
         );
       }
-      const response: IssuesDataCenterResponse = await request.json();
+      const response: SearchDataCenterResponse = await request.json();
       const lastElement = response.startAt + response.maxResults;
       startAt = response.total > lastElement ? lastElement : undefined;
       issues = issues.concat(response.issues);
