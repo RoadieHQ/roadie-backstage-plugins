@@ -31,4 +31,10 @@ setup('authenticate', async ({ page }) => {
   });
 
   await page.context().storageState({ path: authFile });
+  console.log(
+    'LocalStorage check:',
+    await page.evaluate(() => {
+      return window.localStorage.getItem('@backstage/core:SignInPage:provider');
+    }),
+  );
 });
