@@ -8,5 +8,9 @@ export type JiraProductStrategyOptions = {
 export abstract class JiraProductStrategy {
   constructor(protected options: JiraProductStrategyOptions) {}
 
-  abstract pagedIssuesRequest(apiUrl: string, jql: string, maxResults?: number): Promise<Ticket[]>;
+  abstract pagedIssuesRequest(
+    apiUrl: string,
+    jql: string,
+    maxResults?: number,
+  ): Promise<Ticket[]>;
 }

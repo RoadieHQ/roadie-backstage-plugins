@@ -1,4 +1,9 @@
-import { mockApis, MockFetchApi, registerMswTestHooks } from '@backstage/test-utils';
+/* eslint-disable no-new */
+import {
+  mockApis,
+  MockFetchApi,
+  registerMswTestHooks,
+} from '@backstage/test-utils';
 import { JiraAPI } from './index';
 import { JiraProductStrategyFactory } from './strategies';
 import { JiraCloudStrategy } from './strategies/cloud';
@@ -13,7 +18,10 @@ describe('JiraAPI', () => {
   const discoveryApi = mockApis.discovery();
   const fetchApi = new MockFetchApi();
 
-  const strategyFactorySpy = jest.spyOn(JiraProductStrategyFactory, 'createStrategy');
+  const strategyFactorySpy = jest.spyOn(
+    JiraProductStrategyFactory,
+    'createStrategy',
+  );
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -46,7 +54,9 @@ describe('JiraAPI', () => {
   });
 
   it('should default to cloud strategy when product data center is configured', () => {
-    const configApi = mockApis.config({ data: { jira: { product: 'datacenter' } } });
+    const configApi = mockApis.config({
+      data: { jira: { product: 'datacenter' } },
+    });
 
     const options = {
       discoveryApi,
@@ -65,7 +75,10 @@ describe('JiraAPI', () => {
       fetchApi,
     });
 
-    const pagedIssuesRequestSpy = jest.spyOn(JiraCloudStrategy.prototype, 'pagedIssuesRequest');
+    const pagedIssuesRequestSpy = jest.spyOn(
+      JiraCloudStrategy.prototype,
+      'pagedIssuesRequest',
+    );
 
     it("should call the strategy's pagedIssuesRequest method", async () => {
       const query = 'foo';
@@ -74,7 +87,11 @@ describe('JiraAPI', () => {
       pagedIssuesRequestSpy.mockImplementation();
       await jiraApi.jqlQuery(query, maxResults);
 
-      expect(pagedIssuesRequestSpy).toHaveBeenCalledWith(expect.any(String), query, maxResults);
+      expect(pagedIssuesRequestSpy).toHaveBeenCalledWith(
+        expect.any(String),
+        query,
+        maxResults,
+      );
     });
   });
 
@@ -85,18 +102,23 @@ describe('JiraAPI', () => {
       fetchApi,
     });
 
-    const pagedIssuesRequestSpy = jest.spyOn(JiraCloudStrategy.prototype, 'pagedIssuesRequest');
+    const pagedIssuesRequestSpy = jest.spyOn(
+      JiraCloudStrategy.prototype,
+      'pagedIssuesRequest',
+    );
 
     beforeEach(() => {
       worker.use(
-        rest.get('http://example.com/api/proxy/jira/api/rest/api/latest/user', (_, res, ctx) =>
-          res(
-            ctx.status(200),
-            ctx.json({
-              avatarUrls: { '48x48': 'http://example.com' },
-              self: 'http://example.com',
-            }),
-          ),
+        rest.get(
+          'http://example.com/api/proxy/jira/api/rest/api/latest/user',
+          (_, res, ctx) =>
+            res(
+              ctx.status(200),
+              ctx.json({
+                avatarUrls: { '48x48': 'http://example.com' },
+                self: 'http://example.com',
+              }),
+            ),
         ),
       );
     });

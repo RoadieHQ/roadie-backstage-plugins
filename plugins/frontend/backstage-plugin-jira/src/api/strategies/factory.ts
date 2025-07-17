@@ -3,7 +3,10 @@ import { JiraCloudStrategy } from './cloud';
 import { JiraDataCenterStrategy } from './datacenter';
 
 export class JiraProductStrategyFactory {
-  static createStrategy(product: string, options: JiraProductStrategyOptions): JiraProductStrategy {
+  static createStrategy(
+    product: string,
+    options: JiraProductStrategyOptions,
+  ): JiraProductStrategy {
     switch (product) {
       case 'datacenter':
         return new JiraDataCenterStrategy(options);

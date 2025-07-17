@@ -3,7 +3,11 @@ import { Ticket } from '../../../types';
 import { IssuesCloudResponse } from './types';
 
 export class JiraCloudStrategy extends JiraProductStrategy {
-  async pagedIssuesRequest(apiUrl: string, jql: string, maxResults?: number): Promise<Ticket[]> {
+  async pagedIssuesRequest(
+    apiUrl: string,
+    jql: string,
+    maxResults?: number,
+  ): Promise<Ticket[]> {
     let issues: Ticket[] = [];
     let nextPageToken: string | undefined;
     do {
@@ -32,7 +36,9 @@ export class JiraCloudStrategy extends JiraProductStrategy {
         body: JSON.stringify(data),
       });
       if (!request.ok) {
-        throw new Error(`failed to fetch data, status ${request.status}: ${request.statusText}`);
+        throw new Error(
+          `failed to fetch data, status ${request.status}: ${request.statusText}`,
+        );
       }
       const response: IssuesCloudResponse = await request.json();
       nextPageToken = response.nextPageToken;

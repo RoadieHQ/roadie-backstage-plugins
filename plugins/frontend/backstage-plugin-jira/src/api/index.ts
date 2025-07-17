@@ -64,8 +64,9 @@ export class JiraAPI {
     this.apiVersion = apiVersion
       ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
-      
-    const product = options.configApi.getOptionalString('jira.product') ?? 'cloud';
+
+    const product =
+      options.configApi.getOptionalString('jira.product') ?? 'cloud';
     this.strategy = JiraProductStrategyFactory.createStrategy(product, options);
 
     this.confluenceActivityFilter = options.configApi.getOptionalString(
@@ -120,10 +121,7 @@ export class JiraAPI {
       AND statuscategory not in ("Done") 
     `;
 
-    return this.strategy.pagedIssuesRequest(
-      apiUrl,
-      jql
-    );
+    return this.strategy.pagedIssuesRequest(apiUrl, jql);
   }
 
   async getProjectDetails(
@@ -285,10 +283,7 @@ export class JiraAPI {
 
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
 
-    const foundIssues = await this.strategy.pagedIssuesRequest(
-      apiUrl,
-      jql,
-    );
+    const foundIssues = await this.strategy.pagedIssuesRequest(apiUrl, jql);
 
     tickets = foundIssues.map(index => {
       return {
@@ -320,10 +315,6 @@ export class JiraAPI {
   async jqlQuery(query: string, maxResults?: number) {
     const { apiUrl } = await this.getUrls();
 
-    return this.strategy.pagedIssuesRequest(
-      apiUrl,
-      query,
-      maxResults,
-    );
+    return this.strategy.pagedIssuesRequest(apiUrl, query, maxResults);
   }
 }
