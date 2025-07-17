@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-restricted-imports */
+
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { login, saveGithubToken } from './helpers/auth';
+import dashboardJsonData from './fixtures/datadog/datadogdashboard.json';
+
+import fs from 'fs';
+import path from 'path';
+
+const dashboardHtmlData = fs.readFileSync(
+  path.resolve(__dirname, './fixtures/datadog/dashboard.html'),
+  'utf8',
+);
 
 test.describe('Datadog', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await saveGithubToken(page);
-
-    // Load fixture data
-    const dashboardJsonData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/datadog/datadogdashboard.json'),
-        'utf-8',
-      ),
-    );
-    const dashboardHtmlData = readFileSync(
-      join(__dirname, 'fixtures/datadog/dashboard.html'),
-      'utf-8',
-    );
 
     // Set up API mocking for Datadog endpoints
     await page.route(

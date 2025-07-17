@@ -15,9 +15,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { login, saveGithubToken } from './helpers/auth';
+import pullRequestsData from './fixtures/githubPRs/pull-requests.json';
 
 test.describe('Github Pull Requests', () => {
   test.beforeEach(async ({ page }) => {
@@ -26,13 +25,9 @@ test.describe('Github Pull Requests', () => {
   });
 
   test.describe('Navigating to GitHub Pull Requests', () => {
-    test('should show GitHub Pull Requests in Overview tab', async ({ page }) => {
-      // Load fixture data
-      const pullRequestsData = JSON.parse(
-        readFileSync(join(__dirname, 'fixtures/githubPRs/pull-requests.json'), 'utf-8')
-      );
-
-      // Set up API mocking for closed PRs in overview
+    test('should show GitHub Pull Requests in Overview tab', async ({
+      page,
+    }) => {
       await page.route(
         'https://api.github.com/search/issues?q=state%3Aclosed%20in%3Atitle%20type%3Apr%20repo%3Aorganisation%2Fgithub-project-slug&per_page=20&page=1',
         async route => {
@@ -41,21 +36,19 @@ test.describe('Github Pull Requests', () => {
             contentType: 'application/json',
             body: JSON.stringify(pullRequestsData),
           });
-        }
+        },
       );
 
       await page.goto('/catalog/default/component/sample-service');
 
-      await expect(page.getByText('GitHub Pull Requests Statistics')).toBeVisible();
+      await expect(
+        page.getByText('GitHub Pull Requests Statistics'),
+      ).toBeVisible();
     });
 
-    test('should show GitHub Pull Requests when navigating to Pull Requests tab', async ({ page }) => {
-      // Load fixture data
-      const pullRequestsData = JSON.parse(
-        readFileSync(join(__dirname, 'fixtures/githubPRs/pull-requests.json'), 'utf-8')
-      );
-
-      // Set up API mocking for open PRs in dedicated tab
+    test('should show GitHub Pull Requests when navigating to Pull Requests tab', async ({
+      page,
+    }) => {
       await page.route(
         'https://api.github.com/search/issues?q=state%3Aopen%20%20in%3Atitle%20type%3Apr%20repo%3Aorganisation%2Fgithub-project-slug&per_page=5&page=1',
         async route => {
@@ -64,12 +57,14 @@ test.describe('Github Pull Requests', () => {
             contentType: 'application/json',
             body: JSON.stringify(pullRequestsData),
           });
-        }
+        },
       );
 
-      await page.goto('/catalog/default/component/sample-service/pull-requests');
+      await page.goto(
+        '/catalog/default/component/sample-service/pull-requests',
+      );
 
       await expect(page.getByText('GitHub Pull Requests')).toBeVisible();
     });
   });
-}); 
+});

@@ -15,28 +15,15 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { login, saveGithubToken } from './helpers/auth';
+import alertsData from './fixtures/prometheus/alerts.json';
+import graphsData from './fixtures/prometheus/graphs.json';
+import graphs2Data from './fixtures/prometheus/graphs2.json';
 
 test.describe('Prometheus', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await saveGithubToken(page);
-
-    // Load fixture data
-    const alertsData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/prometheus/alerts.json'), 'utf-8'),
-    );
-    const graphsData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/prometheus/graphs.json'), 'utf-8'),
-    );
-    const graphs2Data = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/prometheus/graphs2.json'),
-        'utf-8',
-      ),
-    );
 
     // Set up API mocking for Prometheus endpoints
     await page.route(

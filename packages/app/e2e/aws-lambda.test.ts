@@ -15,30 +15,14 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { login, saveGithubToken } from './helpers/auth';
+import { login } from './helpers/auth';
+import awsCredentials from './fixtures/AWSLambda/AWSCredentials.json';
+import lambdaResponse from './fixtures/AWSLambda/AWSLambdaResponse.json';
 
 test.describe('AWS Lambda', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await saveGithubToken(page);
 
-    // Load fixture data
-    const awsCredentials = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/AWSLambda/AWSCredentials.json'),
-        'utf-8',
-      ),
-    );
-    const lambdaResponse = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/AWSLambda/AWSLambdaResponse.json'),
-        'utf-8',
-      ),
-    );
-
-    // Set up API mocking for AWS Lambda data
     await page.route(
       'http://localhost:7007/api/aws/credentials',
       async route => {

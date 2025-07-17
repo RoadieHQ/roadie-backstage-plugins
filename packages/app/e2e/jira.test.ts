@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-restricted-imports */
+
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { login, saveGithubToken } from './helpers/auth';
+import { login } from './helpers/auth';
+import projectData from './fixtures/jira/project.json';
+import searchResultData from './fixtures/jira/searchresult.json';
+import statusesData from './fixtures/jira/statuses.json';
+import fs from 'fs';
+import path from 'path';
 
+const activityStreamData = fs.readFileSync(
+  path.resolve(__dirname, './fixtures/jira/activitystream.xml'),
+  'utf8',
+);
 test.describe('Jira plugin', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await saveGithubToken(page);
 
-    // Load fixture data
-    const projectData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/jira/project.json'), 'utf-8'),
-    );
-    const searchResultData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/jira/searchresult.json'), 'utf-8'),
-    );
-    const activityStreamData = readFileSync(
-      join(__dirname, 'fixtures/jira/activitystream.xml'),
-      'utf-8',
-    );
-    const statusesData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/jira/statuses.json'), 'utf-8'),
-    );
-
-    // Set up API mocking for Jira endpoints
     await page.route(
       'http://localhost:7007/api/proxy/jira/api/rest/api/latest/project/TEST',
       async route => {

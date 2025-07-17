@@ -15,21 +15,13 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { login, saveGithubToken } from './helpers/auth';
+import { login } from './helpers/auth';
+import buildsData from './fixtures/travisCi/builds.json';
 
 test.describe('Travis CI', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await saveGithubToken(page);
 
-    // Load fixture data
-    const buildsData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/travisCi/builds.json'), 'utf-8'),
-    );
-
-    // Set up API mocking for Travis CI endpoints
     await page.route(
       'http://localhost:7007/api/proxy/travisci/api/repo/RoadieHQ%2Fsample-service/builds?offset=0&limit=5',
       async route => {
@@ -47,7 +39,9 @@ test.describe('Travis CI', () => {
       await page.goto('/catalog/default/component/sample-service-2/ci-cd');
 
       await expect(page.getByText('All builds')).toBeVisible();
-      await expect(page.getByText('Playwright test Commit message')).toBeVisible();
+      await expect(
+        page.getByText('Playwright test Commit message'),
+      ).toBeVisible();
     });
 
     test('should show Travis CI build card', async ({ page }) => {

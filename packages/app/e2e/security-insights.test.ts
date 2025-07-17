@@ -15,9 +15,9 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { login, saveGithubToken } from './helpers/auth';
+import alertsData from './fixtures/securityInsights/alerts.json';
+import graphqlData from './fixtures/securityInsights/graphql.json';
 
 test.describe('SecurityInsights', () => {
   test.beforeEach(async ({ page }) => {
@@ -29,15 +29,6 @@ test.describe('SecurityInsights', () => {
     test('should show Security Insights Releases in Overview tab', async ({
       page,
     }) => {
-      // Load fixture data
-      const alertsData = JSON.parse(
-        readFileSync(
-          join(__dirname, 'fixtures/securityInsights/alerts.json'),
-          'utf-8',
-        ),
-      );
-
-      // Set up API mocking for security alerts
       await page.route(
         'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts',
         async route => {
@@ -68,15 +59,6 @@ test.describe('SecurityInsights', () => {
     test('should show dependabot issues when navigating to dependabot tab', async ({
       page,
     }) => {
-      // Load fixture data
-      const graphqlData = JSON.parse(
-        readFileSync(
-          join(__dirname, 'fixtures/securityInsights/graphql.json'),
-          'utf-8',
-        ),
-      );
-
-      // Set up API mocking for GraphQL endpoint
       await page.route('https://api.github.com/graphql', async route => {
         if (route.request().method() === 'POST') {
           await route.fulfill({
@@ -95,15 +77,6 @@ test.describe('SecurityInsights', () => {
     test('should show security Insights when navigating to security insights tab', async ({
       page,
     }) => {
-      // Load fixture data
-      const alertsData = JSON.parse(
-        readFileSync(
-          join(__dirname, 'fixtures/securityInsights/alerts.json'),
-          'utf-8',
-        ),
-      );
-
-      // Set up API mocking for 100 alerts
       await page.route(
         'https://api.github.com/repos/organisation/github-project-slug/code-scanning/alerts?per_page=100',
         async route => {

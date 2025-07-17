@@ -15,30 +15,14 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { login, saveGithubToken } from './helpers/auth';
+import { login } from './helpers/auth';
+import applicationData from './fixtures/ArgoCD/applications-test-app.json';
+import revisionData from './fixtures/ArgoCD/deploy-history-data.json';
 
 test.describe('Argo CD', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await saveGithubToken(page);
 
-    // Load fixture data
-    const applicationData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/ArgoCD/applications-test-app.json'),
-        'utf-8',
-      ),
-    );
-    const revisionData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/ArgoCD/deploy-history-data.json'),
-        'utf-8',
-      ),
-    );
-
-    // Set up API mocking for ArgoCD data
     await page.route(
       'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
       async route => {
@@ -62,14 +46,6 @@ test.describe('Argo CD', () => {
     );
 
     await page.goto('/catalog/default/component/sample-service');
-
-    // // Wait for API calls to complete
-    // await page.waitForResponse(
-    //   'http://localhost:7007/api/proxy/argocd/api/applications/test-app',
-    // );
-    // await page.waitForResponse(
-    //   'http://localhost:7007/api/proxy/argocd/api/applications/test-app/revisions/53e28ff20cc530b9ada2173fbbd64d48338583ba/metadata',
-    // );
   });
 
   test.describe('Navigate to Overview', () => {

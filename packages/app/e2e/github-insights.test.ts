@@ -15,48 +15,18 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { login, saveGithubToken } from './helpers/auth';
+import languagesData from './fixtures/githubInsights/languages.json';
+import releasesData from './fixtures/githubInsights/releases.json';
+import readmeData from './fixtures/githubInsights/readme.json';
+import complianceData from './fixtures/githubInsights/compliance.json';
+import contributorsData from './fixtures/githubInsights/contributors.json';
 
 test.describe('GithubInsights', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await saveGithubToken(page);
 
-    // Load fixture data
-    const languagesData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/githubInsights/languages.json'),
-        'utf-8',
-      ),
-    );
-    const releasesData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/githubInsights/releases.json'),
-        'utf-8',
-      ),
-    );
-    const readmeData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/githubInsights/readme.json'),
-        'utf-8',
-      ),
-    );
-    const complianceData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/githubInsights/compliance.json'),
-        'utf-8',
-      ),
-    );
-    const contributorsData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/githubInsights/contributors.json'),
-        'utf-8',
-      ),
-    );
-
-    // Set up API mocking for GitHub endpoints
     await page.route(
       'https://api.github.com/repos/organisation/github-project-slug/languages',
       async route => {

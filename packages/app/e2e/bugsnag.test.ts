@@ -15,30 +15,15 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { login, saveGithubToken } from './helpers/auth';
+import { login } from './helpers/auth';
+import organizationsData from './fixtures/Bugsnag/organisations.json';
+import projectsData from './fixtures/Bugsnag/projects.json';
+import errorsData from './fixtures/Bugsnag/errors.json';
 
 test.describe('Bugsnag', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
-    await saveGithubToken(page);
 
-    // Load fixture data
-    const organizationsData = JSON.parse(
-      readFileSync(
-        join(__dirname, 'fixtures/Bugsnag/organisations.json'),
-        'utf-8',
-      ),
-    );
-    const projectsData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/Bugsnag/projects.json'), 'utf-8'),
-    );
-    const errorsData = JSON.parse(
-      readFileSync(join(__dirname, 'fixtures/Bugsnag/errors.json'), 'utf-8'),
-    );
-
-    // Set up API mocking for Bugsnag endpoints
     await page.route(
       'http://localhost:7007/api/proxy/bugsnag/api/user/organizations',
       async route => {
