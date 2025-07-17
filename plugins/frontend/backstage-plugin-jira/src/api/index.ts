@@ -21,17 +21,16 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 import {
-  IssuesResult,
-  IssuesResponse,
   IssuesCounter,
   IssueType,
   Project,
   Status,
-  Ticket,
   UserSummary,
   User,
   TicketSummary,
 } from '../types';
+import { JiraProductStrategy } from './strategies/base';
+import { JiraProductStrategyFactory } from './strategies';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
   id: 'plugin.jira.service',
@@ -51,6 +50,7 @@ export class JiraAPI {
   private readonly discoveryApi: DiscoveryApi;
   private readonly proxyPath: string;
   private readonly apiVersion: string;
+  private readonly strategy: JiraProductStrategy;
   private readonly confluenceActivityFilter: string | undefined;
   private readonly fetchApi: FetchApi;
 
@@ -64,6 +64,10 @@ export class JiraAPI {
     this.apiVersion = apiVersion
       ? apiVersion.toString()
       : DEFAULT_REST_API_VERSION;
+
+    const product =
+      options.configApi.getOptionalString('jira.product') ?? 'cloud';
+    this.strategy = JiraProductStrategyFactory.createStrategy(product, options);
 
     this.confluenceActivityFilter = options.configApi.getOptionalString(
       'jira.confluenceActivityFilter',
@@ -95,49 +99,6 @@ export class JiraAPI {
       .map(i => `'${i}'`)
       .join(',');
 
-  private async pagedIssuesRequest(
-    apiUrl: string,
-    jql: string,
-    nextPageToken?: string,
-    maxResults?: number,
-  ): Promise<IssuesResult> {
-    const data = {
-      jql,
-      maxResults: maxResults ?? 5000,
-      fields: [
-        'key',
-        'issuetype',
-        'summary',
-        'status',
-        'assignee',
-        'priority',
-        'parent',
-        'created',
-        'updated',
-        'project',
-      ],
-      nextPageToken,
-    };
-    const request = await this.fetchApi.fetch(`${apiUrl}search/jql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    if (!request.ok) {
-      throw new Error(
-        `failed to fetch data, status ${request.status}: ${request.statusText}`,
-      );
-    }
-    const response: IssuesResponse = await request.json();
-
-    return {
-      issues: response.issues,
-      nextPageToken: response.nextPageToken,
-    };
-  }
-
   private async getIssuesPaged({
     apiUrl,
     projectKey,
@@ -160,20 +121,7 @@ export class JiraAPI {
       AND statuscategory not in ("Done") 
     `;
 
-    let nextPageToken: string | undefined;
-    const issues: Ticket[] = [];
-
-    do {
-      const res: IssuesResult = await this.pagedIssuesRequest(
-        apiUrl,
-        jql,
-        nextPageToken,
-      );
-      nextPageToken = res.nextPageToken;
-      issues.push(...res.issues);
-    } while (nextPageToken !== undefined);
-
-    return issues;
+    return this.strategy.pagedIssuesRequest(apiUrl, jql);
   }
 
   async getProjectDetails(
@@ -335,18 +283,7 @@ export class JiraAPI {
 
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
 
-    let nextPageToken: string | undefined;
-    const foundIssues: Ticket[] = [];
-
-    do {
-      const res: IssuesResult = await this.pagedIssuesRequest(
-        apiUrl,
-        jql,
-        nextPageToken,
-      );
-      nextPageToken = res.nextPageToken;
-      foundIssues.push(...res.issues);
-    } while (nextPageToken !== undefined);
+    const foundIssues = await this.strategy.pagedIssuesRequest(apiUrl, jql);
 
     tickets = foundIssues.map(index => {
       return {
@@ -378,20 +315,6 @@ export class JiraAPI {
   async jqlQuery(query: string, maxResults?: number) {
     const { apiUrl } = await this.getUrls();
 
-    const issues = [];
-
-    let nextPageToken: string | undefined;
-    do {
-      const res: IssuesResult = await this.pagedIssuesRequest(
-        apiUrl,
-        query,
-        nextPageToken,
-        maxResults,
-      );
-      nextPageToken = res.nextPageToken;
-      issues.push(...res.issues);
-    } while (nextPageToken !== undefined);
-
-    return issues;
+    return this.strategy.pagedIssuesRequest(apiUrl, query, maxResults);
   }
 }

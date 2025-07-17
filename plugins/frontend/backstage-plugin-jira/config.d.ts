@@ -33,10 +33,17 @@ export interface Config {
     confluenceActivityFilter?: string;
 
     /**
-     * The verison of the Jira API
+     * The version of the Jira API
      * Should be used if you do not want to use the latest Jira API.
      * @visibility frontend
      */
     apiVersion?: number;
+
+    /**
+     * The product type of the Jira instance.
+     * This is used to determine the correct API endpoints.
+     * @visibility frontend
+     */
+    product?: 'cloud' | 'datacenter';
   };
 }
