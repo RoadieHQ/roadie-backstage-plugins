@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+/* eslint-disable no-console */
+
 import { test, expect } from '@playwright/test';
 import buildsData from './fixtures/buildkite/builds.json';
 import pipelineData from './fixtures/buildkite/pipeline.json';

@@ -15,6 +15,7 @@
  */
 
 /* eslint-disable no-restricted-imports */
+/* eslint-disable no-console */
 import { test as setup } from '@playwright/test';
 import path from 'path';
 
