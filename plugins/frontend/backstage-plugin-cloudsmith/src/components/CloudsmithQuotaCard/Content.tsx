@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { CloudsmithQuotaCardContentProps } from './types';
 import { CloudsmithApi, CloudsmithClient } from '../../api';
 import {

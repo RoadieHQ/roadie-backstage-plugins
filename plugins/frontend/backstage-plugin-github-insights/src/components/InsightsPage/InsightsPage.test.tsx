@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
 import { InsightsPage } from './InsightsPage';
 import { ThemeProvider } from '@material-ui/core';

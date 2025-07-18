@@ -98,4 +98,52 @@ describe('roadiehq:utils:serialize:yaml', () => {
       YAML.stringify({ hello3: 'world3' }, opts),
     );
   });
+
+  it('should serialize complex nested objects', async () => {
+    const complexData = {
+      metadata: {
+        name: 'my-service',
+        labels: {
+          app: 'backend',
+          version: 'v1.0.0',
+        },
+      },
+      spec: {
+        replicas: 3,
+        ports: [8080, 9090],
+        env: {
+          NODE_ENV: 'production',
+          DEBUG: false,
+        },
+      },
+    };
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: complexData,
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      YAML.stringify(complexData),
+    );
+  });
+
+  it('should work with minimal input (no options)', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { simple: 'yaml-test', number: 42 },
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      YAML.stringify({ simple: 'yaml-test', number: 42 }),
+    );
+  });
 });

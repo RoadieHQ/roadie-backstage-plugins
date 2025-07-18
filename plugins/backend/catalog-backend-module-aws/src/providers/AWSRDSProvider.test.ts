@@ -19,7 +19,7 @@ import { RDS, DescribeDBInstancesCommand } from '@aws-sdk/client-rds';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSRDSProvider } from './AWSRDSProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 

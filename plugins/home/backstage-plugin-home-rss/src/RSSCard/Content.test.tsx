@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
 import { render, screen, cleanup } from '@testing-library/react';
@@ -43,7 +42,7 @@ const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
 </rss>
 `;
 
-global.fetch = jest.fn(async (url: string) => {
+window.fetch = jest.fn(async (url: string) => {
   if (url.endsWith('test-feed')) {
     return {
       text: () => rssFeed,

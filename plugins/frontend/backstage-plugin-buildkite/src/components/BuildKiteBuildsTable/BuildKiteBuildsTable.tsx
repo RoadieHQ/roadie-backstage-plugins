@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Box, IconButton, Typography, Tooltip } from '@material-ui/core';
 import { Table, Link } from '@backstage/core-components';
 import { useRouteRef } from '@backstage/core-plugin-api';

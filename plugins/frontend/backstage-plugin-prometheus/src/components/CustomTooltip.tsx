@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Typography, Paper, Box } from '@material-ui/core';
 import { TooltipProps } from 'recharts';
 

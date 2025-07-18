@@ -21,9 +21,6 @@ backend:
     connection: ':memory:'
   cache:
     store: memory
-  auth:
-    keys:
-      - secret: foo
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
 
 integrations:
@@ -122,7 +119,9 @@ techdocs:
 
 auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  providers:
+    guest: {}
+
 scaffolder:
   github:
     token: ${GITHUB_TOKEN}
@@ -134,67 +133,12 @@ catalog:
   locations:
     # File used for testing purposes
     - type: file
-      target: ../entities/test-entity.yaml
-
+      target: ../../entities/test-entity.yaml
     - type: file
-      target: ../entities/test-template.yaml
-      rules:
-        - allow: [Template]
-    # Roadie example AWS ECR repo creation
-    - type: file
-      target: ../entities/ecr-repo-create-template.yaml
-      rules:
-        - allow: [Template]
-    - type: file
-      target: ../entities/http-request-proxy-debug.yaml
-      rules:
-        - allow: [Template]
-    # Backstage example components
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-components.yaml
-
-    # Backstage example systems
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-systems.yaml
-
-    # Backstage example APIs
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-apis.yaml
-
-    # Backstage example resources
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all-resources.yaml
-
-    # Backstage example organization groups
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme/org.yaml
-
-    - type: url
-      target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/remote-templates.yaml
+      target: ../../entities/templates/*.yaml
       rules:
         - allow: [Template]
 
-    # Backstage example templates
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/react-ssr-template/template.yaml
-    #   rules:
-    #     - allow: [Template]
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/springboot-grpc-template/template.yaml
-    #   rules:
-    #     - allow: [Template]
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/create-react-app/template.yaml
-    #   rules:
-    #     - allow: [Template]
-    # - type: url
-    #   target: https://github.com/spotify/cookiecutter-golang/blob/master/template.yaml
-    #   rules:
-    #     - allow: [Template]
-    # - type: url
-    #   target: https://github.com/backstage/backstage/blob/master/plugins/scaffolder-backend/sample-templates/docs-template/template.yaml
-    #   rules:
-    #     - allow: [Template]
 argocd:
   baseUrl: https://localhost:8080
   username: ${ARGOCD_USERNAME}
@@ -236,3 +180,7 @@ bugsnag:
 
 iframe:
   allowList: ['example.com']
+
+permission:
+  # setting this to `false` will disable permissions
+  enabled: true

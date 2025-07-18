@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { ChangeEvent } from 'react';
 import {
   Box,
   Checkbox,
@@ -60,9 +60,7 @@ export const Selectors = ({
   const { statuses, statusesLoading, statusesError } = useStatuses(projectKey);
   const analytics = useAnalytics();
 
-  const handleStatusesChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-  ) => {
+  const handleStatusesChange = (event: ChangeEvent<{ value: unknown }>) => {
     const _statusNames = event.target.value as string[];
     setStatusesNames(_statusNames);
     if (_statusNames.length > 0)

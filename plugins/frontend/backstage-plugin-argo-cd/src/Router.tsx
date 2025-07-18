@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ARGOCD_ANNOTATION_APP_NAME } from './components/useArgoCDAppData';
 import { MissingAnnotationEmptyState } from '@backstage/core-components';

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 import { WizIssue } from '../Issues/types';
 import { useTheme } from '@material-ui/core';

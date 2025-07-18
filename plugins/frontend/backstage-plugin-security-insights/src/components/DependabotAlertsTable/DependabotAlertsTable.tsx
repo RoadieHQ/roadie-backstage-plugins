@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { useAsync } from 'react-use';
 import {
   Box,

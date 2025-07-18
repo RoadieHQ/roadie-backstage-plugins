@@ -37,11 +37,11 @@
     "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
-    "@langchain/core": "^0.2.27",
-    "@backstage/backend-plugin-api": "^1.0.2"
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@langchain/core": "^0.2.27"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2"
+    "@backstage/cli": "backstage:^"
   },
   "files": [
     "dist"

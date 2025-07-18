@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Content,
   TableColumn,
@@ -34,7 +34,7 @@ import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import StatusFilter from '../components/StatusFilter';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
-const PullRequestList: React.FC = () => {
+const PullRequestList: FC = () => {
   const [pullRequests, setPullRequests] = useState<PullRequest[]>([]);
   const [stateFilter, setStateFilter] = useState<string>('All');
   const { entity } = useEntity();

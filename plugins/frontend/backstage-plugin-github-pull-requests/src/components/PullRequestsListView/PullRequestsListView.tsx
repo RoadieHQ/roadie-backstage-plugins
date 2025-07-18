@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-
 import { Box, Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';

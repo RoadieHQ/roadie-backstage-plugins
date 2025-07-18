@@ -1,0 +1,123 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: sleep-demo
+  title: Sleep Action Demo
+  description: Demonstrates the roadiehq:utils:sleep action for timing control
+  tags:
+    - demo
+    - utils
+    - sleep
+    - timing
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: Sleep Configuration
+      required:
+        - sleepSeconds
+      properties:
+        sleepSeconds:
+          title: Sleep Duration (seconds)
+          type: number
+          description: How many seconds to wait
+          default: 3
+          minimum: 1
+          maximum: 30
+        demoScenario:
+          title: Demo Scenario
+          type: string
+          description: Choose a timing scenario to demonstrate
+          enum:
+            - api-wait
+            - deployment-delay
+            - rate-limit
+            - synchronization
+          enumNames:
+            - 'API Rate Limiting'
+            - 'Deployment Delay'
+            - 'Rate Limit Compliance'
+            - 'Step Synchronization'
+          default: api-wait
+
+  steps:
+    - id: start-message
+      name: Start Process
+      action: roadiehq:utils:fs:write
+      input:
+        path: process.log
+        content: |
+          Process started at: ${{ '' | now }}
+          Scenario: ${{ parameters.demoScenario }}
+          Planned delay: ${{ parameters.sleepSeconds }} seconds
+
+    - id: sleep-step
+      name: Sleep for ${{ parameters.sleepSeconds }} seconds
+      action: roadiehq:utils:sleep
+      input:
+        amount: ${{ parameters.sleepSeconds }}
+
+    - id: completion-message
+      name: Complete Process
+      action: roadiehq:utils:fs:append
+      input:
+        path: process.log
+        content: |
+          Sleep completed at: ${{ '' | now }}
+          Actual delay: ${{ parameters.sleepSeconds }} seconds
+          Status: Success
+
+    - id: create-summary
+      name: Create Summary
+      action: roadiehq:utils:fs:write
+      input:
+        path: summary.md
+        content: |
+          # Sleep Action Demo Results
+
+          ## Scenario: ${{ parameters.demoScenario }}
+
+          **Duration:** ${{ parameters.sleepSeconds }} seconds
+
+          ## Use Cases Demonstrated
+
+          The sleep action is useful for:
+
+          ### API Rate Limiting
+          - Prevent hitting API rate limits
+          - Space out API calls appropriately
+          - Implement backoff strategies
+
+          ### Deployment Delays
+          - Wait for services to start
+          - Allow time for DNS propagation
+          - Ensure dependencies are ready
+
+          ### Rate Limit Compliance
+          - Respect external service limits
+          - Implement ethical scraping delays
+          - Manage resource consumption
+
+          ### Step Synchronization
+          - Coordinate parallel processes
+          - Create deterministic timing
+          - Debug timing-sensitive workflows
+
+  output:
+    text:
+      - title: Sleep Demo Complete
+        content: |
+          Successfully demonstrated sleep action with **${{ parameters.sleepSeconds }} seconds** delay!
+
+          **Scenario:** ${{ parameters.demoScenario }}
+
+          **Files created:**
+          - process.log (execution timeline)
+          - summary.md (use case documentation)
+
+          The sleep action is essential for:
+          - Rate limiting and throttling
+          - Waiting for external processes
+          - Creating deterministic timing
+          - Debugging and testing workflows

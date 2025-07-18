@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { makeStyles, Tooltip } from '@material-ui/core';
 import { PullRequest } from './usePullRequests';
 import { GithubSearchPullRequestsDataItem } from '../types';

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CatalogProcessor } from '@backstage/plugin-catalog-backend';
+import { CatalogProcessor } from '@backstage/plugin-catalog-node';
 import { CatalogApi } from '@backstage/catalog-client';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';

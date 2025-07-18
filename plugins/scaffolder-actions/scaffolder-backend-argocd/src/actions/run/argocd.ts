@@ -18,78 +18,56 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { ArgoService } from '@roadiehq/backstage-plugin-argo-cd-backend';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
 export const createArgoCdResources = (
   config: Config,
   logger: Logger | LoggerService,
-): TemplateAction<{
-  argoInstance: string;
-  namespace: string;
-  projectName?: string;
-  appName: string;
-  repoUrl: string;
-  path: string;
-  labelValue?: string;
-}> => {
-  return createTemplateAction<{
-    argoInstance: string;
-    namespace: string;
-    projectName?: string;
-    appName: string;
-    repoUrl: string;
-    path: string;
-    labelValue?: string;
-  }>({
+) => {
+  return createTemplateAction({
     id: 'argocd:create-resources',
     schema: {
       input: {
-        required: ['appName', 'argoInstance', 'namespace', 'repoUrl', 'path'],
-        type: 'object',
-        properties: {
-          projectName: {
-            type: 'string',
-            title: 'Project Name',
-            description:
-              'The name of the project as it will show up in Argo CD. By default we use the application name.',
-          },
-          appName: {
-            type: 'string',
-            title: 'Application Name',
-            description: 'The name of the app as it will show up in Argo CD',
-          },
-          argoInstance: {
-            type: 'string',
-            title: 'Argo CD Instance',
-            description: 'The name of the Argo CD Instance to deploy to',
-          },
-          namespace: {
-            type: 'string',
-            title: 'Namespace',
-            description:
+        appName: z =>
+          z
+            .string()
+            .describe('The name of the app as it will show up in Argo CD'),
+        argoInstance: z =>
+          z.string().describe('The name of the Argo CD Instance to deploy to'),
+        namespace: z =>
+          z
+            .string()
+            .describe(
               'The namespace Argo CD will target for resource deployment',
-          },
-          repoUrl: {
-            type: 'string',
-            title: 'Repository URL',
-            description:
+            ),
+        repoUrl: z =>
+          z
+            .string()
+            .describe(
               'The Repo URL that will be programmed into the Argo CD project and application',
-          },
-          path: {
-            type: 'string',
-            title: 'path',
-            description:
+            ),
+        path: z =>
+          z
+            .string()
+            .describe(
               'The path of the resources Argo CD will watch in the repository mentioned',
-          },
-          labelValue: {
-            type: 'string',
-            title: 'Label Value',
-            description:
+            ),
+        labelValue: z =>
+          z
+            .string()
+            .describe(
               'The label Backstage will use to find applications in Argo CD',
-          },
-        },
+            )
+            .optional(),
+        projectName: z =>
+          z
+            .string()
+            .describe(
+              'The name of the project as it will show up in Argo CD. By default we use the application name.',
+            )
+            .optional(),
       },
     },
+
     async handler(ctx) {
       const argoUserName =
         config.getOptionalString('argocd.username') ?? 'argocdUsername';

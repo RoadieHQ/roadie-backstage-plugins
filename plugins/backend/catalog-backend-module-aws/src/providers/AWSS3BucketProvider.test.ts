@@ -20,7 +20,7 @@ import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSS3BucketProvider } from './AWSS3BucketProvider';
 
 const s3 = mockClient(S3);

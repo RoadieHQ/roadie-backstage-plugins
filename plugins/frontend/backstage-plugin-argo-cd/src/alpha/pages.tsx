@@ -1,6 +1,4 @@
-import React from 'react'; // Add this line to import React
-
-import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha';
+import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha'; // Add this line to import React
 import {
   compatWrapper,
   convertLegacyRouteRef,

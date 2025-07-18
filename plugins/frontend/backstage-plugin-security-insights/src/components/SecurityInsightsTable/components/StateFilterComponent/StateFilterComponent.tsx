@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Box, Paper, ButtonGroup, Button } from '@material-ui/core';
 import { StateFilterComponentProps } from '../../../../types';
 

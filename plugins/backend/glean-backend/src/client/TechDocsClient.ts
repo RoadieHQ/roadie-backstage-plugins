@@ -15,7 +15,7 @@
  */
 import { DEFAULT_NAMESPACE, Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { TechDocsMetadata } from '@backstage/plugin-techdocs-backend';
+import { TechDocsMetadata } from '@backstage/plugin-techdocs-node';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
 import {

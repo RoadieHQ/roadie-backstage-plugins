@@ -19,7 +19,7 @@ import { EC2, DescribeInstancesCommand } from '@aws-sdk/client-ec2';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSEC2Provider } from './AWSEC2Provider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 

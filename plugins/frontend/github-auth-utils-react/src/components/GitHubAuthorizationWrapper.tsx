@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { ReactNode } from 'react';
 import { InfoCard } from '@backstage/core-components';
 import { useGithubLoggedIn } from '../hooks/useGithubLoggedIn';
 import { GithubNotAuthorized } from './GitHubNotAuthorized';
@@ -25,7 +25,7 @@ export const GitHubAuthorizationWrapper = ({
   hostname,
   scopes,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   title: string;
   hostname?: string;
   scopes?: string[];

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { FC } from 'react';
 import { Gauge } from '@backstage/core-components';
 import { Typography, makeStyles } from '@material-ui/core';
 
@@ -36,7 +36,7 @@ type UsageGaugeProps = {
   planLimit: number;
 };
 
-export const UsageGauge: React.FC<UsageGaugeProps> = ({
+export const UsageGauge: FC<UsageGaugeProps> = ({
   title,
   used,
   configured,

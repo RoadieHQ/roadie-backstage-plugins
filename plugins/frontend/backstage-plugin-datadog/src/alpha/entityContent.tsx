@@ -4,7 +4,6 @@ import {
 } from '@backstage/core-compat-api';
 import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha';
 import { entityContentRouteRef, isDatadogDashboardAvailable } from '../plugin';
-import React from 'react';
 
 /**
  * @alpha

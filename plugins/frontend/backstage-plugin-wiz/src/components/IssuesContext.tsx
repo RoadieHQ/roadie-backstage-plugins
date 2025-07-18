@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 import { WIZ_PROJECT_ANNOTATION } from './constants';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useApi } from '@backstage/core-plugin-api';

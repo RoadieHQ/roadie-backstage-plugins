@@ -1,0 +1,161 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: parse-file-demo
+  title: Parse File Action Demo
+  description: Demonstrates the roadiehq:utils:fs:parse action with JSON, YAML, and text parsing
+  tags:
+    - demo
+    - fs
+    - parse
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: File Format Selection
+      required:
+        - fileType
+      properties:
+        fileType:
+          title: File Type to Parse
+          type: string
+          description: Choose which type of file to create and parse
+          enum:
+            - json
+            - yaml
+            - multiyaml
+            - text
+          enumNames:
+            - 'JSON File'
+            - 'YAML File'
+            - 'Multi-YAML File'
+            - 'Plain Text File'
+          default: json
+        customData:
+          title: Custom Data
+          type: string
+          description: Enter custom data for JSON/YAML files
+          ui:widget: textarea
+          default: |
+            name: "My Service"
+            version: "1.0.0"
+            description: "A demo service"
+
+  steps:
+    - id: create-json-file
+      name: Create JSON File
+      if: ${{ parameters.fileType === 'json' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config.json
+        content: |
+          {
+            "service": {
+              "name": "demo-service",
+              "port": 8080,
+              "features": ["logging", "metrics"],
+              "custom": ${{ parameters.customData | dump }}
+            }
+          }
+
+    - id: create-yaml-file
+      name: Create YAML File
+      if: ${{ parameters.fileType === 'yaml' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config.yaml
+        content: |
+          service:
+            name: demo-service
+            port: 8080
+            features:
+              - logging
+              - metrics
+            custom: |
+              ${{ parameters.customData }}
+
+    - id: create-multiyaml-file
+      name: Create Multi-YAML File
+      if: ${{ parameters.fileType === 'multiyaml' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config.yaml
+        content: |
+          ---
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: demo-config
+          data:
+            config.yaml: |
+              ${{ parameters.customData }}
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: demo-service
+          spec:
+            ports:
+            - port: 8080
+
+    - id: create-text-file
+      name: Create Text File
+      if: ${{ parameters.fileType === 'text' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: README.md
+        content: |
+          # Demo Service
+
+          This is a demo service configuration.
+
+          ## Custom Content
+          ${{ parameters.customData }}
+
+          Generated at: ${{ '' | now }}
+
+    - id: parse-json
+      name: Parse JSON File
+      if: ${{ parameters.fileType === 'json' }}
+      action: roadiehq:utils:fs:parse
+      input:
+        path: config.json
+        parser: json
+
+    - id: parse-yaml
+      name: Parse YAML File
+      if: ${{ parameters.fileType === 'yaml' }}
+      action: roadiehq:utils:fs:parse
+      input:
+        path: config.yaml
+        parser: yaml
+
+    - id: parse-multiyaml
+      name: Parse Multi-YAML File
+      if: ${{ parameters.fileType === 'multiyaml' }}
+      action: roadiehq:utils:fs:parse
+      input:
+        path: config.yaml
+        parser: multiyaml
+
+    - id: parse-text
+      name: Parse Text File
+      if: ${{ parameters.fileType === 'text' }}
+      action: roadiehq:utils:fs:parse
+      input:
+        path: README.md
+
+  output:
+    text:
+      - title: Parse Results
+        content: |
+          Successfully parsed **${{ parameters.fileType }}** file!
+
+          **Parser used:** ${{ parameters.fileType === 'text' && 'none (raw text)' || parameters.fileType }}
+
+          The parseFile action can:
+          - Read any file from the workspace
+          - Parse JSON, YAML, and multi-YAML documents
+          - Return raw text when no parser is specified
+          - Handle complex nested structures

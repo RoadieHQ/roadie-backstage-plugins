@@ -1,0 +1,65 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: write-file-demo
+  title: Write File Action Demo
+  description: Demonstrates the roadiehq:utils:fs:write action
+  tags:
+    - demo
+    - fs
+    - write
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: File Configuration
+      required:
+        - filename
+        - content
+      properties:
+        filename:
+          title: File Name
+          type: string
+          description: Path to the file to create
+          default: config/app.json
+        content:
+          title: File Content
+          type: string
+          description: Content to write to the file
+          ui:widget: textarea
+          default: |
+            {
+              "name": "demo-app",
+              "version": "1.0.0",
+              "config": {
+                "port": 3000,
+                "debug": true
+              }
+            }
+        preserveFormatting:
+          title: Preserve JSON Formatting
+          type: boolean
+          description: Auto-format JSON content with proper indentation
+          default: true
+
+  steps:
+    - id: write-file
+      name: Write File
+      action: roadiehq:utils:fs:write
+      input:
+        path: ${{ parameters.filename }}
+        content: ${{ parameters.content }}
+        preserveFormatting: ${{ parameters.preserveFormatting }}
+
+  output:
+    text:
+      - title: File Created
+        content: |
+          Successfully created file: **${{ steps['write-file'].output.path }}**
+
+          Features demonstrated:
+          - Create files with custom content
+          - Automatic directory creation
+          - Optional JSON formatting
+          - Path resolution and safety

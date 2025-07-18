@@ -6,7 +6,7 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
-import React from 'react';
+import { KeyboardEvent, MouseEvent, useState, Fragment } from 'react';
 import { StructuredMetadataTable } from '@backstage/core-components';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CloseIcon from '@material-ui/icons/Close';
@@ -43,17 +43,17 @@ export const DetailsDrawerComponent = (
   baseUrl: string | undefined,
 ) => {
   const classes = useStyles();
-  const [state, setState] = React.useState(false);
+  const [state, setState] = useState(false);
   const configApi = useApi(configApiRef);
   const namespaced =
     configApi.getOptionalBoolean('argocd.namespacedApps') ?? false;
 
   const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (open: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
+        ((event as KeyboardEvent).key === 'Tab' ||
+          (event as KeyboardEvent).key === 'Shift')
       ) {
         return;
       }
@@ -119,7 +119,7 @@ export const DetailsDrawerComponent = (
     </>
   );
   return (
-    <React.Fragment>
+    <Fragment>
       <Button
         title={rowData.metadata.name}
         className={classes.button}
@@ -135,6 +135,6 @@ export const DetailsDrawerComponent = (
       >
         {drawerContents()}
       </Drawer>
-    </React.Fragment>
+    </Fragment>
   );
 };

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { AnyApiRef, ConfigApi, configApiRef } from '@backstage/core-plugin-api';
 import {
   setupRequestMockHandlers,

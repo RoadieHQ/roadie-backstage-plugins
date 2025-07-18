@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { ErrorPanel, Link, Table } from '@backstage/core-components';
 import { DataItem, RSSContentProps } from './types';
 import { useAsync } from 'react-use';

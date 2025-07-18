@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Chip, makeStyles, Tooltip } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import {

@@ -24,7 +24,7 @@ import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 

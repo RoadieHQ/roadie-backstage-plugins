@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { fireEvent, within } from '@testing-library/react';
 import {
   renderWithEffects,

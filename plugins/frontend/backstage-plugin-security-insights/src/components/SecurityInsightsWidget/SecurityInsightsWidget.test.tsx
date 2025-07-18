@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
 import { configApiRef, AnyApiRef } from '@backstage/core-plugin-api';
 import { rest } from 'msw';

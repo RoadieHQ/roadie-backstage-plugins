@@ -16,12 +16,7 @@
 
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  useCallback,
-  useState,
-} from 'react';
+import { ChangeEvent, KeyboardEvent, useCallback, useState } from 'react';
 import {
   Button,
   FormControl,

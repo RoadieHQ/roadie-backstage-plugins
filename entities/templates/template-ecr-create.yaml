@@ -1,0 +1,395 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: aws-ecr-create-demo
+  title: AWS ECR Repository Create Demo
+  description: Demonstrates the roadiehq:aws:ecr:create action for creating container repositories
+  tags:
+    - demo
+    - aws
+    - ecr
+    - containers
+    - docker
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: ECR Configuration
+      required:
+        - repositoryName
+        - region
+      properties:
+        repositoryName:
+          title: Repository Name
+          type: string
+          description: Name for the ECR repository
+          pattern: '^[a-z0-9]+(?:[._-][a-z0-9]+)*$'
+          default: demo-app
+        region:
+          title: AWS Region
+          type: string
+          description: AWS region to create the ECR repository
+          enum:
+            - us-east-1
+            - us-west-2
+            - eu-west-1
+            - eu-central-1
+            - ap-southeast-1
+          default: us-east-1
+        repositoryType:
+          title: Repository Type
+          type: string
+          description: Choose the application type for appropriate configuration
+          enum:
+            - web-application
+            - microservice
+            - batch-job
+            - lambda-function
+          enumNames:
+            - 'Web Application'
+            - 'Microservice'
+            - 'Batch Job'
+            - 'Lambda Function'
+          default: web-application
+        environment:
+          title: Environment
+          type: string
+          description: Environment for the repository
+          enum:
+            - development
+            - staging
+            - production
+          default: development
+        enableScanOnPush:
+          title: Enable Vulnerability Scanning
+          type: boolean
+          description: Scan images for vulnerabilities when pushed
+          default: true
+        imageMutability:
+          title: Allow Image Mutability
+          type: boolean
+          description: Allow image tags to be overwritten
+          default: false
+
+  steps:
+    - id: create-ecr-repository
+      name: Create ECR Repository
+      action: roadiehq:aws:ecr:create
+      input:
+        repoName: '${{ parameters.repositoryName }}-${{ parameters.environment }}'
+        region: ${{ parameters.region }}
+        scanOnPush: ${{ parameters.enableScanOnPush }}
+        imageMutability: ${{ parameters.imageMutability }}
+        tags:
+          - Key: 'Environment'
+            Value: ${{ parameters.environment }}
+          - Key: 'Application'
+            Value: ${{ parameters.repositoryName }}
+          - Key: 'Type'
+            Value: ${{ parameters.repositoryType }}
+          - Key: 'ManagedBy'
+            Value: 'backstage-scaffolder'
+          - Key: 'CreatedAt'
+            Value: ${{ '' | now }}
+
+    - id: create-dockerfile
+      name: Create Sample Dockerfile
+      action: roadiehq:utils:fs:write
+      input:
+        path: Dockerfile
+        content: |
+          # Multi-stage build for ${{ parameters.repositoryType }}
+          FROM node:18-alpine AS builder
+
+          WORKDIR /app
+          COPY package*.json ./
+          RUN npm ci --only=production
+
+          FROM node:18-alpine AS runtime
+
+          # Create app directory
+          WORKDIR /app
+
+          # Add non-root user
+          RUN addgroup -g 1001 -S nodejs && \
+              adduser -S nodejs -u 1001
+
+          # Copy application files
+          COPY --from=builder /app/node_modules ./node_modules
+          COPY . .
+
+          # Set ownership
+          RUN chown -R nodejs:nodejs /app
+          USER nodejs
+
+          # Expose port
+          EXPOSE ${{ parameters.repositoryType === 'web-application' && '3000' || parameters.repositoryType === 'microservice' && '8080' || '3000' }}
+
+          # Health check
+          HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+            CMD curl -f http://localhost:${{ parameters.repositoryType === 'web-application' && '3000' || parameters.repositoryType === 'microservice' && '8080' || '3000' }}/health || exit 1
+
+          # Start application
+          CMD ["npm", "start"]
+
+    - id: create-dockerignore
+      name: Create .dockerignore
+      action: roadiehq:utils:fs:write
+      input:
+        path: .dockerignore
+        content: |
+          node_modules
+          npm-debug.log
+          .git
+          .gitignore
+          README.md
+          .env
+          .nyc_output
+          coverage
+          .coverage
+          .cache
+          .tmp
+          .DS_Store
+          *.log
+
+    - id: create-build-script
+      name: Create Build Script
+      action: roadiehq:utils:fs:write
+      input:
+        path: build-and-push.sh
+        content: |
+          #!/bin/bash
+
+          # ECR Build and Push Script for ${{ parameters.repositoryName }}-${{ parameters.environment }}
+
+          # Configuration
+          AWS_REGION="${{ parameters.region }}"
+          REPOSITORY_NAME="${{ parameters.repositoryName }}-${{ parameters.environment }}"
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          REGISTRY_URL="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+          IMAGE_TAG="${REPOSITORY_NAME}:latest"
+          FULL_IMAGE_NAME="${REGISTRY_URL}/${IMAGE_TAG}"
+
+          echo "Building and pushing to ECR..."
+          echo "Repository: ${REPOSITORY_NAME}"
+          echo "Region: ${AWS_REGION}"
+          echo "Full image name: ${FULL_IMAGE_NAME}"
+
+          # Get login token and authenticate Docker client to registry
+          echo "Authenticating with ECR..."
+          aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${REGISTRY_URL}
+
+          # Build the Docker image
+          echo "Building Docker image..."
+          docker build -t ${IMAGE_TAG} .
+
+          # Tag the image for ECR
+          echo "Tagging image for ECR..."
+          docker tag ${IMAGE_TAG} ${FULL_IMAGE_NAME}
+
+          # Push the image to ECR
+          echo "Pushing image to ECR..."
+          docker push ${FULL_IMAGE_NAME}
+
+          echo "Build and push completed successfully!"
+          echo "Image URI: ${FULL_IMAGE_NAME}"
+
+    - id: create-package-json
+      name: Create Package JSON
+      if: ${{ parameters.repositoryType === 'web-application' || parameters.repositoryType === 'microservice' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: package.json
+        content: |
+          {
+            "name": "${{ parameters.repositoryName }}-${{ parameters.environment }}",
+            "version": "1.0.0",
+            "description": "${{ parameters.repositoryType }} application",
+            "main": "index.js",
+            "scripts": {
+              "start": "node index.js",
+              "dev": "nodemon index.js",
+              "test": "jest",
+              "build": "echo 'Build completed'",
+              "docker:build": "./build-and-push.sh"
+            },
+            "dependencies": {
+              "express": "^4.18.2"
+            },
+            "devDependencies": {
+              "nodemon": "^2.0.22",
+              "jest": "^29.0.0"
+            }
+          }
+
+    - id: create-sample-app
+      name: Create Sample Application
+      if: ${{ parameters.repositoryType === 'web-application' || parameters.repositoryType === 'microservice' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: index.js
+        content: |
+          const express = require('express');
+          const app = express();
+          const port = process.env.PORT || ${{ parameters.repositoryType === 'web-application' && '3000' || '8080' }};
+
+          app.use(express.json());
+
+          // Health check endpoint
+          app.get('/health', (req, res) => {
+            res.status(200).json({
+              status: 'healthy',
+              timestamp: new Date().toISOString(),
+              service: '${{ parameters.repositoryName }}-${{ parameters.environment }}',
+              type: '${{ parameters.repositoryType }}'
+            });
+          });
+
+          // Main endpoint
+          app.get('/', (req, res) => {
+            res.json({
+              message: 'Hello from ${{ parameters.repositoryName }}!',
+              environment: '${{ parameters.environment }}',
+              type: '${{ parameters.repositoryType }}',
+              timestamp: new Date().toISOString()
+            });
+          });
+
+          app.listen(port, () => {
+            console.log(`${{ parameters.repositoryType }} listening on port ${port}`);
+          });
+
+    - id: create-deployment-guide
+      name: Create Deployment Guide
+      action: roadiehq:utils:fs:write
+      input:
+        path: ECR-DEPLOYMENT-GUIDE.md
+        content: |
+          # ECR Repository Deployment Guide
+
+          ## Repository Details
+          - **Name:** `${{ parameters.repositoryName }}-${{ parameters.environment }}`
+          - **Region:** `${{ parameters.region }}`
+          - **Type:** `${{ parameters.repositoryType }}`
+          - **Scan on Push:** `${{ parameters.enableScanOnPush }}`
+          - **Image Mutability:** `${{ parameters.imageMutability }}`
+
+          ## Repository URI
+          ```
+          AWS_ACCOUNT_ID.dkr.ecr.${{ parameters.region }}.amazonaws.com/${{ parameters.repositoryName }}-${{ parameters.environment }}
+          ```
+
+          ## Quick Start
+
+          ### 1. Build and Push (Automated)
+          ```bash
+          chmod +x build-and-push.sh
+          ./build-and-push.sh
+          ```
+
+          ### 2. Manual Build and Push
+          ```bash
+          # Get AWS account ID
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+          # Login to ECR
+          aws ecr get-login-password --region ${{ parameters.region }} | \
+            docker login --username AWS --password-stdin \
+            ${AWS_ACCOUNT_ID}.dkr.ecr.${{ parameters.region }}.amazonaws.com
+
+          # Build image
+          docker build -t ${{ parameters.repositoryName }}-${{ parameters.environment }} .
+
+          # Tag for ECR
+          docker tag ${{ parameters.repositoryName }}-${{ parameters.environment }}:latest \
+            ${AWS_ACCOUNT_ID}.dkr.ecr.${{ parameters.region }}.amazonaws.com/${{ parameters.repositoryName }}-${{ parameters.environment }}:latest
+
+          # Push to ECR
+          docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${{ parameters.region }}.amazonaws.com/${{ parameters.repositoryName }}-${{ parameters.environment }}:latest
+          ```
+
+          ## ECS Deployment
+
+          ### Task Definition Example
+          ```json
+          {
+            "family": "${{ parameters.repositoryName }}-${{ parameters.environment }}",
+            "containerDefinitions": [
+              {
+                "name": "${{ parameters.repositoryName }}",
+                "image": "AWS_ACCOUNT_ID.dkr.ecr.${{ parameters.region }}.amazonaws.com/${{ parameters.repositoryName }}-${{ parameters.environment }}:latest",
+                "portMappings": [
+                  {
+                    "containerPort": ${{ parameters.repositoryType === 'web-application' && '3000' || parameters.repositoryType === 'microservice' && '8080' || '3000' }},
+                    "protocol": "tcp"
+                  }
+                ],
+                "essential": true,
+                "logConfiguration": {
+                  "logDriver": "awslogs",
+                  "options": {
+                    "awslogs-group": "/ecs/${{ parameters.repositoryName }}-${{ parameters.environment }}",
+                    "awslogs-region": "${{ parameters.region }}",
+                    "awslogs-stream-prefix": "ecs"
+                  }
+                }
+              }
+            ],
+            "requiresCompatibilities": ["FARGATE"],
+            "networkMode": "awsvpc",
+            "cpu": "256",
+            "memory": "512"
+          }
+          ```
+
+          ## Lambda Deployment (for lambda-function type)
+          ${{ parameters.repositoryType === 'lambda-function' && '```bash\n# Deploy to Lambda\naws lambda update-function-code \\\n  --function-name ' + parameters.repositoryName + '-' + parameters.environment + ' \\\n  --image-uri AWS_ACCOUNT_ID.dkr.ecr.' + parameters.region + '.amazonaws.com/' + parameters.repositoryName + '-' + parameters.environment + ':latest\n```' || 'Not applicable for this repository type.' }}
+
+          ## Monitoring and Security
+
+          ### Image Scanning
+          ${{ parameters.enableScanOnPush && '✅ Vulnerability scanning is enabled - images will be scanned automatically on push' || '❌ Vulnerability scanning is disabled - consider enabling for production workloads' }}
+
+          ### Image Mutability
+          ${{ parameters.imageMutability && '⚠️ Image mutability is enabled - tags can be overwritten' || '🔒 Image mutability is disabled - tags are immutable once pushed' }}
+
+          ### Repository Policies
+          ```bash
+          # Set repository policy (example)
+          aws ecr set-repository-policy \
+            --repository-name ${{ parameters.repositoryName }}-${{ parameters.environment }} \
+            --policy-text file://repository-policy.json \
+            --region ${{ parameters.region }}
+          ```
+
+          ## Best Practices
+
+          1. **Tagging Strategy:** Use semantic versioning (e.g., v1.2.3)
+          2. **Security Scanning:** Always enable for production repositories
+          3. **Image Optimization:** Use multi-stage builds to reduce image size
+          4. **Lifecycle Policies:** Set up automatic cleanup of old images
+          5. **Access Control:** Use IAM policies to restrict repository access
+
+  output:
+    text:
+      - title: ECR Repository Created Successfully
+        content: |
+          Successfully created ECR repository: **${{ parameters.repositoryName }}-${{ parameters.environment }}**
+
+          **Region:** `${{ parameters.region }}`
+          **Type:** `${{ parameters.repositoryType }}`
+          **Vulnerability Scanning:** `${{ parameters.enableScanOnPush }}`
+          **Image Mutability:** `${{ parameters.imageMutability }}`
+
+          **Next Steps:**
+          1. Run `chmod +x build-and-push.sh` to make the build script executable
+          2. Execute `./build-and-push.sh` to build and push your first image
+          3. Check the deployment guide in `ECR-DEPLOYMENT-GUIDE.md`
+
+          Features demonstrated:
+          - ECR repository creation with security settings
+          - Comprehensive tagging strategy
+          - Docker build optimization
+          - Deployment automation scripts
+          - Environment-specific configuration

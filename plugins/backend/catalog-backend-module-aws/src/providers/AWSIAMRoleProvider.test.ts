@@ -21,7 +21,7 @@ import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { AWSIAMRoleProvider } from './AWSIAMRoleProvider';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
