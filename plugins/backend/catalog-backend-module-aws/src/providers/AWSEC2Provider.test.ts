@@ -63,7 +63,7 @@ describe('AWSEC2Provider', () => {
     });
   });
 
-  describe('where there are is a instance', () => {
+  describe('where there is an instance', () => {
     beforeEach(() => {
       ec2.on(DescribeInstancesCommand).resolves({
         Reservations: [
