@@ -150,4 +150,4 @@ site
 playwright-report/
 test-results/
 
-playwright/.auth
+playwright/*
