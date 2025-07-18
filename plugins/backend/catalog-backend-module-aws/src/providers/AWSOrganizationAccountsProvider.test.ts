@@ -25,7 +25,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
 import {
   ANNOTATION_ACCOUNT_ID,
