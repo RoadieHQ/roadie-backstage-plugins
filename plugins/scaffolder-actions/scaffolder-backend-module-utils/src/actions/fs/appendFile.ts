@@ -30,7 +30,11 @@ export function createAppendFileAction() {
         content: z => z.string().describe('This will be appended to the file'),
       },
       output: {
-        path: z => z.string().describe('Path to the file that was appended to'),
+        path: z =>
+          z
+            .string()
+            .describe('Path to the file that was appended to')
+            .optional(),
       },
     },
     async handler(ctx) {

@@ -41,7 +41,10 @@ export function createParseFileAction() {
       },
       output: {
         content: z =>
-          z.union([z.string(), z.object({})]).describe('Content of the file'),
+          z
+            .union([z.string(), z.object({})])
+            .describe('Content of the file')
+            .optional(),
       },
     },
     async handler(ctx) {

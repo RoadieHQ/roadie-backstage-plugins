@@ -35,7 +35,8 @@ export function createWriteFileAction() {
             .optional(),
       },
       output: {
-        path: z => z.string().describe('Path to the file that was written'),
+        path: z =>
+          z.string().describe('Path to the file that was written').optional(),
       },
     },
 

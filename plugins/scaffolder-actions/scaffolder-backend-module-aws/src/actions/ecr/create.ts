@@ -43,6 +43,7 @@ export function createEcrAction(options?: {
     schema: {
       input: {
         repoName: z => z.string().describe('The name of the ECR repository'),
+        region: z => z.string().describe('AWS region to create ECR in'),
         tags: z =>
           z
             .array(
@@ -63,7 +64,6 @@ export function createEcrAction(options?: {
             .boolean()
             .describe('Scan images for vulnerabilities on push')
             .optional(),
-        region: z => z.string().describe('AWS region to create ECR in'),
       },
     },
     async handler(ctx) {

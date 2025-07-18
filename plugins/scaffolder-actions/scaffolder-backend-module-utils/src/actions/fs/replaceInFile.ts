@@ -34,19 +34,23 @@ export function createReplaceInFileAction() {
                 .string()
                 .describe(
                   'The source location of the file to be used to run replace against (supports wildcards)',
-                ),
-              find: z.string().describe('A string to be replaced'),
+                )
+                .optional(),
+              find: z.string().describe('A string to be replaced').optional(),
               matchRegex: z
                 .boolean()
-                .describe('Use regex to match the find string'),
+                .describe('Use regex to match the find string')
+                .optional(),
               replaceWith: z
                 .string()
-                .describe('Text to be used to replace the found lines with'),
+                .describe('Text to be used to replace the found lines with')
+                .optional(),
               includeDotFiles: z
                 .boolean()
                 .describe(
                   'A configuration option to include dotfiles when globbing files. Defaults to false',
-                ),
+                )
+                .optional(),
             }),
           ),
       },

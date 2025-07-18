@@ -1,0 +1,89 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: component-name-validator
+  title: Component Name Validator
+  description: Validates if a component name is available before creation
+  tags:
+    - validation
+    - component
+    - utility
+spec:
+  owner: platform-team
+  type: utility
+  
+  parameters:
+    - title: Component Information
+      required:
+        - componentName
+        - namespace
+      properties:
+        componentName:
+          title: Component Name
+          type: string
+          description: 'Name of the component to validate'
+          pattern: '^[a-z0-9-]+$'
+          
+        namespace:
+          title: Namespace
+          type: string
+          description: 'Namespace for the component'
+          default: 'default'
+          enum:
+            - default
+            - production
+            - staging
+            - development
+
+  steps:
+    - id: check-component-exists
+      name: Check if Component Exists
+      action: http:backstage:request
+      input:
+        path: '/catalog/entities/by-name/component:${{ parameters.namespace }}/${{ parameters.componentName }}'
+        method: GET
+        headers:
+          accept: 'application/json'
+        continueOnBadResponse: true
+        logRequestPath: false
+
+    - id: check-similar-names
+      name: Search for Similar Names
+      action: http:backstage:request
+      input:
+        path: '/catalog/entities'
+        method: GET
+        params:
+          filter: 'kind=component,metadata.namespace=${{ parameters.namespace }}'
+          limit: '100'
+        headers:
+          accept: 'application/json'
+        continueOnBadResponse: true
+
+    - id: validate-result
+      name: Validate Component Name
+      action: debug:log
+      input:
+        message: |
+          🔍 Component Name Validation Results
+          =====================================
+          
+          Component: ${{ parameters.componentName }}
+          Namespace: ${{ parameters.namespace }}
+          Full Reference: component:${{ parameters.namespace }}/${{ parameters.componentName }}
+          
+          📊 Validation Status:
+          - Direct Match Check: ${{ steps['check-component-exists'].output.code }}
+          - Similar Names Found: ${{ steps['check-similar-names'].output.body.length || 0 }} components in namespace
+          
+          ✅ Recommendation:
+          ${{ steps['check-component-exists'].output.code == '404' and 'SAFE TO PROCEED - Component name is available!' or 'WARNING - Component already exists!' }}
+          
+          📋 Existing Components in Namespace:
+          ${{ steps['check-similar-names'].output.body | selectattr('metadata.name', 'match', '.*' + parameters.componentName + '.*') | map(attribute='metadata.name') | list | join(', ') || 'No similar names found' }}
+
+  output:
+    componentExists: '${{ steps["check-component-exists"].output.code != "404" }}'
+    statusCode: '${{ steps["check-component-exists"].output.code }}'
+    similarComponents: '${{ steps["check-similar-names"].output.body | selectattr("metadata.name", "match", ".*" + parameters.componentName + ".*") | list }}'
+    recommendation: '${{ steps["check-component-exists"].output.code == "404" and "PROCEED" or "REVIEW_REQUIRED" }}' 

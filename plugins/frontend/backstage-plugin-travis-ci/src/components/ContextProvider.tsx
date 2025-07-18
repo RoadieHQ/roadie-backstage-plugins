@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { FC, createContext, useEffect } from 'react';
+import { Dispatch, FC, createContext, useEffect } from 'react';
 import { travisCIApiRef } from '../api';
 import { useLocalStorage } from 'react-use';
 import { Entity } from '@backstage/catalog-model';
@@ -23,7 +23,7 @@ export type Settings = {
   entity: Entity;
 };
 
-export const StateContext = createContext<[Settings, React.Dispatch<Settings>]>(
+export const StateContext = createContext<[Settings, Dispatch<Settings>]>(
   [] as any,
 );
 const STORAGE_KEY = `${travisCIApiRef.id}.settings`;

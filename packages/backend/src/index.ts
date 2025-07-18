@@ -45,6 +45,7 @@ backend.add(import('@backstage/plugin-scaffolder-backend-module-github'));
 
 backend.add(import('@roadiehq/scaffolder-backend-module-utils'));
 backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
+backend.add(import('@roadiehq/scaffolder-backend-module-aws'));
 backend.add(import('@roadiehq/plugin-wiz-backend'));
 backend.add(import('@roadiehq/backstage-plugin-aws-backend'));
 backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend'));

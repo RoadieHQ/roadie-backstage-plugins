@@ -26,11 +26,13 @@ export function createSerializeYamlAction() {
       input: {
         data: z =>
           z.record(z.any()).describe('Input data to perform serialization on.'),
+        replacer: z =>
+          z.array(z.string()).describe('Replacer array').optional(),
         options: yamlOptionsSchema,
       },
       output: {
         serialized: z =>
-          z.string().describe('Output result from serialization'),
+          z.string().describe('Output result from serialization').optional(),
       },
     },
     async handler(ctx) {

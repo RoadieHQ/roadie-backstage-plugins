@@ -53,16 +53,12 @@ export function createHttpBackstageAction(options: {
             .describe('The method type of the request'),
         headers: z =>
           z
-            .object({
-              'content-type': z
-                .string()
-                .describe('The content type of the request'),
-            })
+            .record(z.any())
             .optional()
             .describe('The headers you would like to pass to your request'),
         params: z =>
           z
-            .object({})
+            .record(z.any())
             .optional()
             .describe(
               'The query parameters you would like to pass to your request',
@@ -92,9 +88,11 @@ export function createHttpBackstageAction(options: {
             .default(60000),
       },
       output: {
-        code: z => z.string().describe('The response code of the request'),
-        headers: z => z.record(z.any()).describe('The headers of the response'),
-        body: z => z.any().describe('The body of the response'),
+        code: z =>
+          z.string().describe('The response code of the request').optional(),
+        headers: z =>
+          z.record(z.any()).describe('The headers of the response').optional(),
+        body: z => z.any().describe('The body of the response').optional(),
       },
     },
 

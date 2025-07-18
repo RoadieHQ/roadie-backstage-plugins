@@ -39,12 +39,6 @@ export const createArgoCdResources = (
             .describe(
               'The namespace Argo CD will target for resource deployment',
             ),
-        projectName: z =>
-          z
-            .string()
-            .describe(
-              'The name of the project as it will show up in Argo CD. By default we use the application name.',
-            ),
         repoUrl: z =>
           z
             .string()
@@ -62,7 +56,15 @@ export const createArgoCdResources = (
             .string()
             .describe(
               'The label Backstage will use to find applications in Argo CD',
-            ),
+            )
+            .optional(),
+        projectName: z =>
+          z
+            .string()
+            .describe(
+              'The name of the project as it will show up in Argo CD. By default we use the application name.',
+            )
+            .optional(),
       },
     },
 
