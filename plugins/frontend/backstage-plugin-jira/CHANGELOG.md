@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.10.0
+
+### Minor Changes
+
+- 3e8bc34: Improved support for Data Center by using a separate search endpoint
+
 ## 2.9.0
 
 ### Minor Changes
