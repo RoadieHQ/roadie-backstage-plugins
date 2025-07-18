@@ -35,6 +35,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Run tsc
+        run: yarn tsc
+
+      - name: Run build
+        run: yarn build
+
       - name: Playwright Tests
         run: npx playwright install --with-deps chromium
 
