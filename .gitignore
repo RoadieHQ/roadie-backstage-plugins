@@ -151,3 +151,4 @@ playwright-report/
 test-results/
 
 playwright/*
+test-results/*
