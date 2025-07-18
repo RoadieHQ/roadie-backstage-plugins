@@ -25,7 +25,7 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
-import { JsonObject } from '@backstage/config/index';
+import { JsonObject } from '@backstage/types';
 
 export function createAwsSecretsManagerCreateAction(options?: {
   credentials?: CredentialProvider;

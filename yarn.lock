@@ -16932,6 +16932,7 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@backstage/errors": "backstage:^"
     "@backstage/plugin-scaffolder-node": "backstage:^"
+    "@backstage/types": "npm:^1.2.1"
     "@types/fs-extra": "npm:^9.0.13"
     "@types/glob": "npm:^7.2.0"
     "@types/mock-fs": "npm:^4.13.1"

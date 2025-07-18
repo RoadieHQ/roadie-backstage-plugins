@@ -50,6 +50,7 @@ import {
   catalogAnalysisExtensionPoint,
 } from '@backstage/plugin-catalog-node/alpha';
 import { EntityProvider } from '@backstage/plugin-catalog-node';
+import { Config } from '@backstage/config';
 
 type RunnableProvider = EntityProvider & {
   run: () => Promise<void>;
@@ -103,95 +104,49 @@ export default createBackendModule({
         for (const config of env.config.getOptionalConfigArray(
           'aws.accounts',
         ) || []) {
-          const s3Provider = AWSS3BucketProvider.fromConfig(config, env);
-          const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(
-            config,
-            env,
-          );
-          const iamUserProvider = AWSIAMUserProvider.fromConfig(config, env);
-          const snsTopicProvider = AWSSNSTopicProvider.fromConfig(config, env);
-          const iamRoleProvider = AWSIAMRoleProvider.fromConfig(config, env);
-          const ddbTableProvider = AWSDynamoDbTableProvider.fromConfig(
-            config,
-            env,
-          );
-          const eksClusterProvider = AWSEKSClusterProvider.fromConfig(
-            config,
-            env,
-          );
-          const ec2Provider = AWSEC2Provider.fromConfig(config, env);
-          const rdsProvider = AWSRDSProvider.fromConfig(config, env);
-          const sqsProvider = AWSSQSEntityProvider.fromConfig(config, env);
-          const openSearchProvider = AWSOpenSearchEntityProvider.fromConfig(
-            config,
-            env,
-          );
-          const redisProvider = AWSElastiCacheEntityProvider.fromConfig(
-            config,
-            env,
-          );
-          const awsAccountsProvider =
-            AWSOrganizationAccountsProvider.fromConfig(config, env);
-          const ecrRepositoryProvider =
-            AWSECRRepositoryEntityProvider.fromConfig(config, env);
+          const addProvider = (
+            ProviderClass: {
+              fromConfig: (
+                config: Config,
+                env: any,
+                ...args: any[]
+              ) => RunnableProvider;
+            },
+            ...args: any[]
+          ): RunnableProvider => {
+            const provider = ProviderClass.fromConfig(config, env, ...args);
+            env.builder.addEntityProvider(provider);
+            providers.push(provider);
+            return provider;
+          };
 
-          const vpcProvider = AWSVPCProvider.fromConfig(config, env);
-          const subnetProvider = AWSSubnetProvider.fromConfig(config, env);
-          const securityGroupProvider = AWSSecurityGroupProvider.fromConfig(
-            config,
-            env,
-          );
-          const ebsVolProvider = AWSEBSVolumeProvider.fromConfig(config, env);
-          const loadBalancerProvider = AWSLoadBalancerProvider.fromConfig(
-            config,
-            env,
-          );
+          const awsProviders = [
+            AWSS3BucketProvider,
+            AWSLambdaFunctionProvider,
+            AWSIAMUserProvider,
+            AWSSNSTopicProvider,
+            AWSIAMRoleProvider,
+            AWSDynamoDbTableProvider,
+            AWSEKSClusterProvider,
+            AWSEC2Provider,
+            AWSRDSProvider,
+            AWSSQSEntityProvider,
+            AWSOpenSearchEntityProvider,
+            AWSElastiCacheEntityProvider,
+            AWSOrganizationAccountsProvider,
+            AWSECRRepositoryEntityProvider,
+            AWSVPCProvider,
+            AWSSubnetProvider,
+            AWSSecurityGroupProvider,
+            AWSEBSVolumeProvider,
+            AWSLoadBalancerProvider,
+          ];
 
-          env.builder.addEntityProvider(s3Provider);
-          env.builder.addEntityProvider(lambdaProvider);
-          env.builder.addEntityProvider(iamUserProvider);
-          env.builder.addEntityProvider(snsTopicProvider);
-          env.builder.addEntityProvider(iamRoleProvider);
-          env.builder.addEntityProvider(ddbTableProvider);
-          env.builder.addEntityProvider(eksClusterProvider);
-          env.builder.addEntityProvider(ec2Provider);
-          env.builder.addEntityProvider(rdsProvider);
-          env.builder.addEntityProvider(sqsProvider);
-          env.builder.addEntityProvider(openSearchProvider);
-          env.builder.addEntityProvider(redisProvider);
-          env.builder.addEntityProvider(awsAccountsProvider);
-          env.builder.addEntityProvider(ecrRepositoryProvider);
-          env.builder.addEntityProvider(vpcProvider);
-          env.builder.addEntityProvider(subnetProvider);
-          env.builder.addEntityProvider(securityGroupProvider);
-          env.builder.addEntityProvider(ebsVolProvider);
-          env.builder.addEntityProvider(loadBalancerProvider);
-          providers.push(s3Provider);
-          providers.push(lambdaProvider);
-          providers.push(iamUserProvider);
-          providers.push(iamRoleProvider);
-          providers.push(snsTopicProvider);
-          providers.push(ddbTableProvider);
-          providers.push(eksClusterProvider);
-          providers.push(ec2Provider);
-          providers.push(rdsProvider);
-          providers.push(sqsProvider);
-          providers.push(openSearchProvider);
-          providers.push(redisProvider);
-          providers.push(awsAccountsProvider);
-          providers.push(ecrRepositoryProvider);
-          providers.push(vpcProvider);
-          providers.push(subnetProvider);
-          providers.push(securityGroupProvider);
-          providers.push(ebsVolProvider);
-          providers.push(loadBalancerProvider);
+          awsProviders.forEach(ProviderClass => addProvider(ProviderClass));
 
           const useDdbData = config.has('dynamodbTableData');
           if (useDdbData) {
-            const ddbTableDataProvider =
-              AWSDynamoDbTableDataProvider.fromConfig(config, env);
-            env.builder.addEntityProvider(ddbTableDataProvider);
-            providers.push(ddbTableDataProvider);
+            addProvider(AWSDynamoDbTableDataProvider);
           }
         }
 
