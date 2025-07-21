@@ -15262,8 +15262,10 @@ __metadata:
     "@types/link2aws": "npm:^1.0.0"
     "@types/lodash": "npm:^4.14.151"
     aws-sdk-client-mock: "npm:^4.1.0"
+    js-yaml: "npm:^4.1.0"
     link2aws: "npm:^1.0.18"
     lodash: "npm:^4.17.21"
+    nunjucks: "npm:^3.2.4"
     winston: "npm:^3.2.1"
   languageName: unknown
   linkType: soft
