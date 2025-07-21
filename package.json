@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
+    "@changesets/cli": "^2.14.0",
     "concurrently": "^7.0.0",
     "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-notice": "^1.0.0",
