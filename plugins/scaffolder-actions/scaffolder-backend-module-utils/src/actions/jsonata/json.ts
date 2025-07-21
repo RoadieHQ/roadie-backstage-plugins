@@ -35,7 +35,9 @@ export function createJsonJSONataTransformAction() {
         as: z =>
           z
             .enum(['string', 'object'])
-            .describe('Desired Result Type. Permitted values are: "string" (default) and "object"')
+            .describe(
+              'Desired Result Type. Permitted values are: "string" (default) and "object"',
+            )
             .default('string')
             .optional(),
       },
