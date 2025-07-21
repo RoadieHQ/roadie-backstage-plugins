@@ -52,19 +52,85 @@ export const yamlOptionsSchema = (z: typeof zz) =>
           z.literal('QUOTE_SINGLE'),
           z.literal('PLAIN'),
         ])
+        .describe(
+          "(default: 'PLAIN') - the default type of string literal used to stringify values",
+        )
         .optional(),
-      directives: z.union([z.boolean(), z.null()]).optional(),
-      doubleQuotedAsJSON: z.boolean().optional(),
-      doubleQuotedMinMultiLineLength: z.number().optional(),
-      falseStr: z.string().optional(),
-      flowCollectionPadding: z.boolean().optional(),
-      indent: z.number().optional(),
-      indentSeq: z.boolean().optional(),
-      lineWidth: z.number().optional(),
-      minContentWidth: z.number().optional(),
-      nullStr: z.string().optional(),
-      simpleKeys: z.boolean().optional(),
-      singleQuote: z.union([z.boolean(), z.null()]).optional(),
-      trueStr: z.string().optional(),
+      directives: z
+        .union([z.boolean(), z.null()])
+        .describe(
+          '(default: null) - include directives in the output. If true, at least the document-start marker --- is always included. If false, no directives or marker is ever included. If null, directives and marker may be included if required',
+        )
+        .optional(),
+      doubleQuotedAsJSON: z
+        .boolean()
+        .describe(
+          '(default: false) - if true, restrict double-quoted strings to use JSON-compatible syntax',
+        )
+        .optional(),
+      doubleQuotedMinMultiLineLength: z
+        .number()
+        .describe(
+          '(default: 40) - minimum length for double-quoted strings to use multiple lines to represent the value instead of escaping newlines',
+        )
+        .optional(),
+      falseStr: z
+        .string()
+        .describe(
+          "(default: 'false') - string representation for false boolean values",
+        )
+        .optional(),
+      flowCollectionPadding: z
+        .boolean()
+        .describe(
+          '(default: true) - if true, a single space of padding will be added inside the delimiters of non-empty single-line flow collections',
+        )
+        .optional(),
+      indent: z
+        .number()
+        .describe(
+          '(default: 2) - the number of spaces to use when indenting code. Should be a strictly positive integer',
+        )
+        .optional(),
+      indentSeq: z
+        .boolean()
+        .describe(
+          '(default: true) - if true, block sequences should be indented',
+        )
+        .optional(),
+      lineWidth: z
+        .number()
+        .describe(
+          '(default: 80) -maximum line width (set to 0 to disable folding). This is a soft limit, as only double-quoted semantics allow for inserting a line break in the middle of a word ',
+        )
+        .optional(),
+      minContentWidth: z
+        .number()
+        .describe(
+          '(default: 20) - minimum line width for highly-indented content (set to 0 to disable)',
+        )
+        .optional(),
+      nullStr: z
+        .string()
+        .describe("(default: 'null') - string representation for null values")
+        .optional(),
+      simpleKeys: z
+        .boolean()
+        .describe(
+          '(default: false) - if true, require keys to be scalars and always use implicit rather than explicit notation',
+        )
+        .optional(),
+      singleQuote: z
+        .union([z.boolean(), z.null()])
+        .describe(
+          '(default: null) - Use single quote rather than double quote where applicable. Set to false to disable single quotes completely',
+        )
+        .optional(),
+      trueStr: z
+        .string()
+        .describe(
+          "(default: 'true') - string representation for true boolean values",
+        )
+        .optional(),
     })
     .optional();

@@ -42,12 +42,17 @@ export function createYamlJSONataTransformAction() {
         as: z =>
           z
             .enum(['string', 'object'])
-            .describe('Desired Result Type')
+            .describe(
+              'Desired Result Type. Permitted values are: "string" (default) and "object"',
+            )
             .default('string')
             .optional(),
       },
       output: {
-        result: z => z.any().describe('Output result from JSONata'),
+        result: z =>
+          z
+            .record(z.union([z.string(), z.record(z.any())]))
+            .describe('Output result from JSONata'),
       },
     },
 

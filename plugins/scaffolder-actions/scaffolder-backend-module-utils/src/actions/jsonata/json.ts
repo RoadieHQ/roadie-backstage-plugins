@@ -40,7 +40,10 @@ export function createJsonJSONataTransformAction() {
             .optional(),
       },
       output: {
-        result: z => z.any().describe('Output result from JSONata'),
+        result: z =>
+          z
+            .union([z.string(), z.record(z.any())])
+            .describe('Output result from JSONata'),
       },
     },
     async handler(ctx) {

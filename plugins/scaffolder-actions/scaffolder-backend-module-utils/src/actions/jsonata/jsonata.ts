@@ -29,7 +29,7 @@ export function createJSONataAction() {
           z.string().describe('JSONata expression to perform on the input'),
       },
       output: {
-        result: z => z.any().describe('Output result from JSONata'),
+        result: z => z.record(z.any()).describe('Output result from JSONata'),
       },
     },
 
