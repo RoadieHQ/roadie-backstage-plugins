@@ -19,8 +19,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use project-pinned Yarn version
+        run: yarn set version 4.9.2
+
       - name: Install Dependencies
-        run: yarn
+        run: yarn install --immutable --immutable-cache
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
