@@ -22,7 +22,6 @@ import { createLogger, transports } from 'winston';
 import { AWSIAMUserProvider } from './AWSIAMUserProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 

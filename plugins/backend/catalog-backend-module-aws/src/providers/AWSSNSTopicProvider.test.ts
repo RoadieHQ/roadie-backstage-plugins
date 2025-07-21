@@ -27,7 +27,6 @@ import { createLogger, transports } from 'winston';
 import { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
 
