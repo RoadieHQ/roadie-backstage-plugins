@@ -28,7 +28,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
 
       - name: Fetch previous commit for release check
         run: git fetch origin '${{ github.event.before }}'
@@ -82,7 +82,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org
 
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
 
       - name: build type declarations
         run: yarn tsc
