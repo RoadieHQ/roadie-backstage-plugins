@@ -128,10 +128,13 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
           return acc;
         }, {} as Record<string, string>);
 
-        let entity: Entity | undefined = this.renderEntity({
-          repository: repo,
-          tags,
-        }, { defaultAnnotations });
+        let entity: Entity | undefined = this.renderEntity(
+          {
+            repository: repo,
+            tags,
+          },
+          { defaultAnnotations },
+        );
         if (!entity) {
           entity = {
             kind: 'Resource',

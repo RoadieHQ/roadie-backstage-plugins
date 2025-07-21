@@ -101,9 +101,12 @@ export class AWSEC2Provider extends AWSEntityProvider {
           const arn = `arn:aws:ec2:${region}:${accountId}:instance/${instanceId}`;
           const consoleLink = new ARN(arn).consoleLink;
 
-          let entity: Entity | undefined = this.renderEntity({
-            instance,
-          }, { defaultAnnotations: await defaultAnnotations });
+          let entity: Entity | undefined = this.renderEntity(
+            {
+              instance,
+            },
+            { defaultAnnotations: await defaultAnnotations },
+          );
 
           if (!entity) {
             entity = {

@@ -104,7 +104,10 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
           const tags = tagsResponse.Tags ?? [];
           const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
-          let entity = this.renderEntity({ topic }, { defaultAnnotations: await defaultAnnotations });
+          let entity = this.renderEntity(
+            { topic },
+            { defaultAnnotations: await defaultAnnotations },
+          );
           if (!entity) {
             entity = {
               kind: 'Resource',

@@ -137,9 +137,12 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             )}`,
           );
 
-          const entity: Entity | undefined = this.renderEntity({
-            lambdaFunction,
-          }, { defaultAnnotations: await defaultAnnotations });
+          const entity: Entity | undefined = this.renderEntity(
+            {
+              lambdaFunction,
+            },
+            { defaultAnnotations: await defaultAnnotations },
+          );
           if (entity) {
             lambdaComponents.push(entity);
           } else {
