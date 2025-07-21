@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { Typography, Box, IconButton, Link } from '@material-ui/core';
 import RetryIcon from '@material-ui/icons/Replay';
 import {

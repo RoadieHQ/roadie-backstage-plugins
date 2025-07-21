@@ -25,7 +25,7 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { CredentialProvider } from '@aws-sdk/types';
 import { assertError } from '@backstage/errors';
-import { JsonObject } from '@backstage/config/index';
+import { JsonObject } from '@backstage/types';
 
 export function createAwsSecretsManagerCreateAction(options?: {
   credentials?: CredentialProvider;
@@ -43,67 +43,34 @@ export function createAwsSecretsManagerCreateAction(options?: {
   },
   JsonObject
 > {
-  return createTemplateAction<{
-    name: string;
-    description: string;
-    value: string;
-    tags: Array<{ Key: string; Value: string }>;
-    profile: string;
-    region: string;
-  }>({
+  return createTemplateAction({
     id: 'roadiehq:aws:secrets-manager:create',
     description: 'Creates a new secret in AWS Secrets Manager',
     schema: {
       input: {
-        required: ['name', 'region'],
-        type: 'object',
-        properties: {
-          name: {
-            title: 'Secret name',
-            description: 'The name of the secret to be created',
-            type: 'string',
-          },
-          description: {
-            title: 'Secret description',
-            description: 'The description of the secret to be created',
-            type: 'string',
-            required: false,
-          },
-          value: {
-            title: 'Secret value',
-            description: 'The string value to be encrypted in the new secret',
-            type: 'string',
-            required: false,
-          },
-          tags: {
-            title: 'Tags',
-            description: 'AWS tags to be added to the secret',
-            type: 'array',
-            required: false,
-            items: {
-              type: 'object',
-              properties: {
-                Key: {
-                  type: 'string',
-                },
-                Value: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-          profile: {
-            title: 'AWS profile',
-            description: 'AWS profile to use',
-            type: 'string',
-            required: false,
-          },
-          region: {
-            title: 'Region',
-            description: 'AWS region to create the secret on',
-            type: 'string',
-          },
-        },
+        name: z => z.string().describe('The name of the secret to be created'),
+        region: z => z.string().describe('AWS region to create the secret on'),
+        description: z =>
+          z
+            .string()
+            .describe('The description of the secret to be created')
+            .optional(),
+        value: z =>
+          z
+            .string()
+            .describe('The string value to be encrypted in the new secret')
+            .optional(),
+        tags: z =>
+          z
+            .array(
+              z.object({
+                Key: z.string(),
+                Value: z.string(),
+              }),
+            )
+            .optional()
+            .describe('AWS tags to be added to the secret'),
+        profile: z => z.string().describe('AWS profile to use').optional(),
       },
     },
     async handler(ctx) {

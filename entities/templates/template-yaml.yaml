@@ -1,0 +1,115 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: serialize-yaml-demo
+  title: Serialize YAML Action Demo
+  description: Demonstrates the roadiehq:utils:serialize:yaml action
+  tags:
+    - demo
+    - serialize
+    - yaml
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: YAML Configuration
+      required:
+        - inputData
+      properties:
+        inputData:
+          title: Data to Serialize
+          type: object
+          description: Object data to serialize to YAML
+          default:
+            apiVersion: 'v1'
+            kind: 'ConfigMap'
+            metadata:
+              name: 'demo-config'
+              namespace: 'default'
+            data:
+              app.name: 'Demo Service'
+              app.version: '1.0.0'
+              app.port: '8080'
+        useCustomOptions:
+          title: Use Custom YAML Options
+          type: boolean
+          description: Apply custom YAML formatting options
+          default: false
+        indentSize:
+          title: Indent Size
+          type: integer
+          description: Number of spaces for indentation
+          default: 2
+        sortKeys:
+          title: Sort Keys
+          type: boolean
+          description: Sort object keys alphabetically
+          default: false
+
+  steps:
+    - id: serialize-basic
+      name: Basic YAML Serialization
+      action: roadiehq:utils:serialize:yaml
+      input:
+        data: ${{ parameters.inputData }}
+
+    - id: serialize-custom
+      name: Custom YAML Serialization
+      if: ${{ parameters.useCustomOptions }}
+      action: roadiehq:utils:serialize:yaml
+      input:
+        data: ${{ parameters.inputData }}
+        options:
+          indent: ${{ parameters.indentSize }}
+          sortKeys: ${{ parameters.sortKeys }}
+          lineWidth: -1
+          noRefs: true
+
+    - id: create-configmap
+      name: Create Kubernetes ConfigMap
+      action: roadiehq:utils:fs:write
+      input:
+        path: configmap.yaml
+        content: ${{ steps['serialize-custom'].output.serialized || steps['serialize-basic'].output.serialized }}
+
+    - id: create-values
+      name: Create Helm Values
+      action: roadiehq:utils:serialize:yaml
+      input:
+        data:
+          service:
+            name: ${{ parameters.inputData.metadata.name || 'demo-service' }}
+            port: ${{ parameters.inputData.data['app.port'] || '8080' }}
+            version: ${{ parameters.inputData.data['app.version'] || '1.0.0' }}
+          config:
+            debug: true
+            replicas: 3
+
+    - id: write-values
+      name: Write Helm Values
+      action: roadiehq:utils:fs:write
+      input:
+        path: values.yaml
+        content: ${{ steps['create-values'].output.serialized }}
+
+  output:
+    text:
+      - title: YAML Serialization Complete
+        content: |
+          Successfully serialized YAML data!
+
+          **Files created:**
+          - configmap.yaml (Kubernetes ConfigMap)
+          - values.yaml (Helm Values)
+
+          **ConfigMap YAML:**
+          ```yaml
+          ${{ steps['serialize-custom'].output.serialized || steps['serialize-basic'].output.serialized }}
+          ```
+
+          Features demonstrated:
+          - Object to YAML string conversion
+          - Custom YAML formatting options
+          - Kubernetes manifest generation
+          - Helm values file creation

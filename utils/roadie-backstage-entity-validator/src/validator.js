@@ -58,7 +58,7 @@ function modifyPlaceholders(obj) {
           obj[k] = 'DUMMY TEXT';
           return;
         }
-      } catch (e) {
+      } catch {
         throw new Error(
           `Placeholder with name '${k}' is empty. Please remove it or populate it.`,
         );

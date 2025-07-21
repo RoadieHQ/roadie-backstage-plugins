@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
 import { AnyApiRef, ConfigApi, configApiRef } from '@backstage/core-plugin-api';
 import {

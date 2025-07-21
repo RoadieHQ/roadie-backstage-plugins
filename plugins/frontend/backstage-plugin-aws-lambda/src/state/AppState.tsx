@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-import React, { FC, useReducer, Dispatch, Reducer } from 'react';
+import { createContext, FC, useReducer, Dispatch, Reducer } from 'react';
 import { awsLambdaApiRef } from '../api';
 import { State, Action } from './types';
 
-export const AppContext = React.createContext<[State, Dispatch<Action>]>(
-  [] as any,
-);
+export const AppContext = createContext<[State, Dispatch<Action>]>([] as any);
 export const STORAGE_KEY = `${awsLambdaApiRef.id}.settings`;
 
 const initialState: State = {

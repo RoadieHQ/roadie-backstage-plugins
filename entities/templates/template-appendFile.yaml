@@ -1,0 +1,72 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: append-file-demo
+  title: Append File Action Demo
+  description: Demonstrates the roadiehq:utils:fs:append action
+  tags:
+    - demo
+    - fs
+    - append
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: File Configuration
+      required:
+        - filename
+        - content
+      properties:
+        filename:
+          title: File Name
+          type: string
+          description: Name of the file to create/append to
+          default: logs/activity.log
+        content:
+          title: Content to Append
+          type: string
+          description: Text content to append to the file
+          ui:widget: textarea
+          default: |
+            [INFO] Application started successfully
+            [DEBUG] Configuration loaded from config.json
+
+  steps:
+    - id: create-initial
+      name: Create Initial File
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.filename }}
+        content: |
+          # Activity Log
+          Started at: ${{ '' | now }}
+
+    - id: append-content
+      name: Append User Content
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.filename }}
+        content: ${{ parameters.content }}
+
+    - id: append-footer
+      name: Append Footer
+      action: roadiehq:utils:fs:append
+      input:
+        path: ${{ parameters.filename }}
+        content: |
+
+          ---
+          Log completed at: ${{ '' | now }}
+
+  output:
+    text:
+      - title: File Created
+        content: |
+          Successfully created and appended to: **${{ steps['create-initial'].output.path }}**
+
+          Features demonstrated:
+          - Create files if they don't exist
+          - Append content to existing files
+          - Multiple append operations
+          - Timestamp insertion

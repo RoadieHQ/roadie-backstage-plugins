@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import {
   Box,
   LinearProgress,
@@ -200,7 +200,7 @@ const OverviewComponent = ({
       title: 'Name',
       highlight: true,
       field: 'name',
-      render: (row: any): React.ReactNode =>
+      render: (row: any): ReactNode =>
         detailsDrawerComponent(row, getBaseUrl(row)),
       customSort: (a: any, b: any) =>
         a.metadata.name.localeCompare(b.metadata.name),
@@ -208,7 +208,7 @@ const OverviewComponent = ({
     {
       title: 'Sync Status',
       field: 'syncStatus',
-      render: (row: any): React.ReactNode => (
+      render: (row: any): ReactNode => (
         <State
           value={row.status.sync.status}
           conditions={row.status.conditions}
@@ -220,7 +220,7 @@ const OverviewComponent = ({
     {
       title: 'Health Status',
       field: 'healthStatus',
-      render: (row: any): React.ReactNode => (
+      render: (row: any): ReactNode => (
         <State value={row.status.health.status} conditions={undefined} />
       ),
       customSort: (a: any, b: any) =>
@@ -230,7 +230,7 @@ const OverviewComponent = ({
       title: 'Last Synced',
       defaultSort: 'desc',
       field: 'lastSynced',
-      render: (row: any): React.ReactNode =>
+      render: (row: any): ReactNode =>
         row.status.operationState
           ? getLastSyncState(row.status.operationState)
           : '',
@@ -251,7 +251,7 @@ const OverviewComponent = ({
     columns.splice(1, 0, {
       title: 'Instance',
       field: 'instance',
-      render: (row: any): React.ReactNode => row.metadata?.instance?.name,
+      render: (row: any): ReactNode => row.metadata?.instance?.name,
       customSort: (a: any, b: any) =>
         a.metadata?.instance?.name.localeCompare(b.metadata?.instance?.name),
     });

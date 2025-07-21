@@ -17,7 +17,7 @@ import { getVoidLogger } from '@backstage/backend-common';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
-import { TechDocsMetadata } from '@backstage/plugin-techdocs-backend';
+import { TechDocsMetadata } from '@backstage/plugin-techdocs-node';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import { GleanIndexClient } from './GleanIndexClient';

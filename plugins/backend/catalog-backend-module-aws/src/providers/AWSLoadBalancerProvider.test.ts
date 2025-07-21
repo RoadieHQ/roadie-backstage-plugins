@@ -25,7 +25,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);

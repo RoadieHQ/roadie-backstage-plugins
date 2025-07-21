@@ -46,16 +46,16 @@
     "clean": "backstage-cli clean"
   },
   "dependencies": {
-    "@backstage/backend-plugin-api": "^1.0.2",
-    "@backstage/core-plugin-api": "^1.10.1",
-    "@backstage/plugin-scaffolder-node": "^0.6.2",
+    "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/plugin-scaffolder-node": "backstage:^",
     "cross-fetch": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
     "@backstage/backend-common": "^0.25.0",
-    "winston": "^3.2.1",
-    "@backstage/core-app-api": "^1.15.2"
+    "@backstage/cli": "backstage:^",
+    "@backstage/core-app-api": "backstage:^",
+    "winston": "^3.2.1"
   },
   "files": [
     "dist"

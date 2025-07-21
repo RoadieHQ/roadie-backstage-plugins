@@ -18,7 +18,7 @@
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli clean && lerna run clean",
     "diff": "lerna run diff --",
-    "test": "yarn backstage-cli repo test --workerIdleMemoryLimit=800M --coverage --runInBand",
+    "test": "backstage-cli repo test --workerIdleMemoryLimit=800M --coverage --runInBand",
     "test:all": "lerna run test -- --coverage --runInBand",
     "lint": "backstage-cli repo lint --since origin/main",
     "lint:all": "lerna run lint --",
@@ -40,21 +40,25 @@
     ]
   },
   "devDependencies": {
-    "@backstage/cli": "^0.29.2",
-    "@changesets/cli": "^2.18.0",
-    "@spotify/prettier-config": "^14.0.0",
-    "@types/webpack": "^5.28.0",
+    "@backstage/cli": "backstage:^",
     "concurrently": "^7.0.0",
-    "eslint": "^8.6.0",
-    "eslint-plugin-notice": "^0.9.10",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-unused-imports": "^3.1.0",
+    "eslint-plugin-jest": "^29.0.1",
+    "eslint-plugin-notice": "^1.0.0",
+    "http-server": "^14.1.1",
     "husky": "^8.0.1",
-    "lerna": "^6.0.0",
-    "lint-staged": "^13.0.3",
+    "node-gyp": "^10.0.0",
     "prettier": "^2.3.2",
     "typescript": "^5.5.4"
   },
-  "prettier": "@spotify/prettier-config",
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": "@backstage/cli/config/prettier",
+  "packageManager": "yarn@4.9.2"
 }

@@ -17,7 +17,7 @@
 import { Table, TableColumn } from '@backstage/core-components';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Link, List, ListItem } from '@material-ui/core';
-import React from 'react';
+import { ReactNode } from 'react';
 import SyncIcon from '@material-ui/icons/Sync';
 import { DateTime } from 'luxon';
 import {
@@ -67,7 +67,7 @@ export const ArgoCDHistoryTable = ({
     {
       title: 'Name',
       field: 'name',
-      render: (row: any): React.ReactNode =>
+      render: (row: any): ReactNode =>
         linkUrl ? (
           <Link
             href={`${linkUrl(row)}/applications/${
@@ -86,7 +86,7 @@ export const ArgoCDHistoryTable = ({
       title: 'Deploy Details',
       defaultSort: 'desc',
       field: 'deployedAt',
-      render: (row: any): React.ReactNode => (
+      render: (row: any): ReactNode => (
         <List dense style={{ padding: '0px' }}>
           <ListItem style={{ paddingLeft: '0px' }}>
             {row.deployedAt
@@ -115,21 +115,21 @@ export const ArgoCDHistoryTable = ({
     {
       title: 'Author',
       field: 'revisionDetails.author',
-      render: (row: any): React.ReactNode => (
+      render: (row: any): ReactNode => (
         <div>{row.revisionDetails?.author || 'Loading...'}</div>
       ),
     },
     {
       title: 'Message',
       field: 'revisionDetails.message',
-      render: (row: any): React.ReactNode => (
+      render: (row: any): ReactNode => (
         <div>{row.revisionDetails?.message || 'Loading...'}</div>
       ),
     },
     {
       title: 'Revision',
       field: 'revision',
-      render: (row: any): React.ReactNode => <div>{row.revision}</div>,
+      render: (row: any): ReactNode => <div>{row.revision}</div>,
     },
   ];
 
@@ -137,7 +137,7 @@ export const ArgoCDHistoryTable = ({
     columns.splice(1, 0, {
       title: 'Instance',
       field: 'instance',
-      render: (row: any): React.ReactNode =>
+      render: (row: any): ReactNode =>
         row.metadata?.instance?.name
           ? row.metadata?.instance?.name
           : row.instance,

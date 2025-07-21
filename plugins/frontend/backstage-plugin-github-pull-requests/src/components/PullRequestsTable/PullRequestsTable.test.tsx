@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
-import { configApiRef, AnyApiRef, ConfigApi } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  AnyApiRef,
+  ConfigApi,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
 import { rest } from 'msw';
 import {
   setupRequestMockHandlers,
@@ -31,6 +35,8 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { ScmAuthApi, scmAuthApiRef } from '@backstage/integration-react';
 import { ConfigReader } from '@backstage/core-app-api';
 import { defaultIntegrationsConfig } from '../../mocks/scmIntegrationsApiMock';
+import { mockApis, MockErrorApi } from '@backstage/test-utils';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
 
 const mockScmAuth = {
   getCredentials: async () => ({ token: 'test-token', headers: {} }),
@@ -50,6 +56,8 @@ const config = {
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
   [scmAuthApiRef, mockScmAuth],
+  [errorApiRef, new MockErrorApi()],
+  [translationApiRef, mockApis.translation()],
   [
     githubPullRequestsApiRef,
     new GithubPullRequestsClient({

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAsync } from 'react-use';
 import { Grid } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';

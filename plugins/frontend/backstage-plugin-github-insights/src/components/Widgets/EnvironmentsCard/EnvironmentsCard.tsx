@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Link, List, ListItem } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {

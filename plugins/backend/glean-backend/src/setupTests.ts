@@ -13,10 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { webcrypto } from 'crypto';
-
-if (typeof globalThis.crypto === 'undefined') {
-  globalThis.crypto = webcrypto as Crypto;
-}
 
 export {};

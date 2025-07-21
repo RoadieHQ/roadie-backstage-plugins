@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
@@ -27,11 +26,16 @@ import { bitbucketApiRef, BitbucketApi } from '../api/BitbucketApi';
 import PullRequestList from '../components/PullRequestList';
 import { pullRequestsResponseStub, entityStub } from '../responseStubs';
 import { render, screen, waitFor } from '@testing-library/react';
+import { errorApiRef } from '@backstage/core-plugin-api';
+import { mockApis, MockErrorApi } from '@backstage/test-utils';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
 
 const discoveryApi = UrlPatternDiscovery.compile('http://exampleapi.com');
 
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [bitbucketApiRef, new BitbucketApi({ discoveryApi })],
+  [errorApiRef, new MockErrorApi()],
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('PullRequestList', () => {

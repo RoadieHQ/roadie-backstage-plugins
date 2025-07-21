@@ -13,59 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  createTemplateAction,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import jsonata from 'jsonata';
 
-export function createJSONataAction(): TemplateAction<{
-  data: any;
-  expression: string;
-}> {
-  return createTemplateAction<{
-    data: any;
-    expression: string;
-  }>({
+export function createJSONataAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:jsonata',
     description:
       'Allows performing JSONata operations and transformations on input objects and produces the output result as a step output.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['data', 'expression'],
-        properties: {
-          data: {
-            title: 'Data',
-            description: 'Input data to be transformed',
-            type: [
-              'object',
-              'array',
-              'string',
-              'number',
-              'integer',
-              'boolean',
-              'null',
-            ],
-          },
-          expression: {
-            title: 'Expression',
-            description: 'JSONata expression to perform on the input',
-            type: 'string',
-          },
-        },
+        data: z => z.any().describe('Input data to be transformed'),
+        expression: z =>
+          z.string().describe('JSONata expression to perform on the input'),
       },
       output: {
-        type: 'object',
-        properties: {
-          result: {
-            title: 'Output result from JSONata',
-            type: 'object',
-          },
-        },
+        result: z => z.record(z.any()).describe('Output result from JSONata'),
       },
     },
+
     async handler(ctx) {
       try {
         const expression = jsonata(ctx.input.expression);

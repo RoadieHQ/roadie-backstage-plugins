@@ -27,7 +27,7 @@ import {
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
 

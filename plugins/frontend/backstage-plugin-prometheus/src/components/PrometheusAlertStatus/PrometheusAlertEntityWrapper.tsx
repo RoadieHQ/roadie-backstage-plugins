@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { MissingAnnotationEmptyState } from '@backstage/plugin-catalog-react';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { TableColumn } from '@backstage/core-components';

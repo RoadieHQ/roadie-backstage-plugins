@@ -13,81 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {
-  createTemplateAction,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
-import { JsonObject } from '@backstage/config/index';
 
-export function createJsonJSONataTransformAction(): TemplateAction<
-  {
-    path: string;
-    expression: string;
-    replacer?: string[];
-    space?: string;
-    as?: 'string' | 'object';
-  },
-  JsonObject
-> {
-  return createTemplateAction<{
-    path: string;
-    expression: string;
-    replacer?: string[];
-    space?: string;
-    as?: 'string' | 'object';
-  }>({
+export function createJsonJSONataTransformAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:jsonata:json:transform',
     description:
       'Allows performing JSONata operations and transformations on a JSON file in the workspace. The result can be read from the `result` step output.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['path', 'expression'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Input path to read json file',
-            type: 'string',
-          },
-          expression: {
-            title: 'Expression',
-            description: 'JSONata expression to perform on the input',
-            type: 'string',
-          },
-          as: {
-            title: 'Desired Result Type',
-            description:
-              'Permitted values are: "string" (default) and "object"',
-            type: 'string',
-            enum: ['string', 'object'],
-          },
-          replacer: {
-            title: 'Replacer',
-            description: 'Replacer array',
-            type: 'array',
-            items: {
-              type: 'string',
-            },
-          },
-          space: {
-            title: 'Space',
-            description: 'Space character',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Input path to read json file'),
+        expression: z =>
+          z.string().describe('JSONata expression to perform on the input'),
+        replacer: z =>
+          z.array(z.string()).describe('Replacer array').optional(),
+        space: z => z.string().describe('Space character').optional(),
+        as: z =>
+          z
+            .enum(['string', 'object'])
+            .describe(
+              'Desired Result Type. Permitted values are: "string" (default) and "object"',
+            )
+            .default('string')
+            .optional(),
       },
       output: {
-        type: 'object',
-        properties: {
-          result: {
-            title: 'Output result from JSONata',
-            type: 'object | string',
-          },
-        },
+        result: z =>
+          z
+            .union([z.string(), z.record(z.any())])
+            .describe('Output result from JSONata'),
       },
     },
     async handler(ctx) {

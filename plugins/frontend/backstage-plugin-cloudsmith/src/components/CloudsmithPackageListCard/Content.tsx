@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import {
+  SetStateAction,
+  Dispatch,
+  ChangeEvent,
+  MouseEvent,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+} from 'react';
 import { CloudsmithPackageListContentProps } from './types';
 import { CloudsmithClient, Package } from '../../api';
 import {
@@ -132,7 +141,7 @@ const getPlaceholder = (searchType: string) => {
 const renderSearchInput = (
   searchType: string,
   query: string,
-  setQuery: React.Dispatch<React.SetStateAction<string>>,
+  setQuery: Dispatch<SetStateAction<string>>,
   classes: Record<string, string>,
 ) => {
   return (
@@ -189,9 +198,7 @@ export const Content = ({ owner, repo }: CloudsmithPackageListContentProps) => {
     execute();
   }, [execute]);
 
-  const handleSearchTypeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-  ) => {
+  const handleSearchTypeChange = (event: ChangeEvent<{ value: unknown }>) => {
     setSearchType(event.target.value as string);
     setQuery('');
   };
@@ -222,7 +229,7 @@ export const Content = ({ owner, repo }: CloudsmithPackageListContentProps) => {
   };
 
   const handleTagClick = useCallback(
-    (event: React.MouseEvent, tag: string) => {
+    (event: MouseEvent, tag: string) => {
       event.stopPropagation();
       setSearchType('tag');
       setQuery(tag.split(':')[1]);
@@ -232,9 +239,7 @@ export const Content = ({ owner, repo }: CloudsmithPackageListContentProps) => {
     [execute],
   );
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setPageSize(parseInt(event.target.value, 10));
     setPage(0);
   };

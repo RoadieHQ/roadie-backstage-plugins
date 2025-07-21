@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@material-ui/core';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';

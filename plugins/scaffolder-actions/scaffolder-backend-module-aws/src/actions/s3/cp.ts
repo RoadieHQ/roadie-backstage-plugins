@@ -39,53 +39,32 @@ export function createAwsS3CpAction(options?: {
   },
   JsonObject
 > {
-  return createTemplateAction<{
-    bucket: string;
-    region: string;
-    path?: string;
-    prefix?: string;
-    endpoint?: string;
-    s3ForcePathStyle?: boolean;
-  }>({
+  return createTemplateAction({
     id: 'roadiehq:aws:s3:cp',
     description: 'Copies the path to the given bucket',
     schema: {
       input: {
-        required: ['bucket', 'region'],
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            description:
+        bucket: z => z.string().describe('The bucket to copy the given path'),
+        region: z => z.string().describe('AWS region'),
+        path: z =>
+          z
+            .string()
+            .describe(
               'A Glob pattern that lists the files to upload. Defaults to everything in the workspace',
-            type: 'string',
-          },
-          bucket: {
-            title: 'Bucket',
-            description: 'The bucket to copy the given path',
-            type: 'string',
-          },
-          region: {
-            title: 'Region',
-            description: 'AWS region',
-            type: 'string',
-          },
-          prefix: {
-            title: 'Prefix',
-            description: 'Prefix to use in the s3 key.',
-            type: 'string',
-          },
-          endpoint: {
-            title: 'Endpoint',
-            description: 'The fully qualified endpoint of the webservice. ',
-            type: 'string',
-          },
-          s3ForcePathStyle: {
-            title: 'Force Path Style',
-            description: 'Whether to force path style URLs for S3 objects',
-            type: 'boolean',
-          },
-        },
+            )
+            .optional(),
+        prefix: z =>
+          z.string().describe('Prefix to use in the s3 key.').optional(),
+        endpoint: z =>
+          z
+            .string()
+            .describe('The fully qualified endpoint of the webservice. ')
+            .optional(),
+        s3ForcePathStyle: z =>
+          z
+            .boolean()
+            .describe('Whether to force path style URLs for S3 objects')
+            .optional(),
       },
     },
     async handler(ctx) {

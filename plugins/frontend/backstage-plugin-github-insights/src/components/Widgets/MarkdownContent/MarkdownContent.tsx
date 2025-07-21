@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Alert } from '@material-ui/lab';
 import {
   MarkdownContent as RawMarkdownContent,

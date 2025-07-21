@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 import uniq from 'lodash/uniq';
 import { ResponseEmbedding } from '../../types';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EntityRefLink } from '@backstage/plugin-catalog-react';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DescriptionIcon from '@material-ui/icons/Description';
