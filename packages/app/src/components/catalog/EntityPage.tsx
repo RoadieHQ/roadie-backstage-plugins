@@ -61,10 +61,7 @@ import {
   EntityAWSLambdaOverviewCard,
 } from '@roadiehq/backstage-plugin-aws-lambda';
 
-import {
-  isLaunchdarklyProjectAvailable,
-  EntityLaunchdarklyContextOverviewCard,
-} from '@roadiehq/backstage-plugin-launchdarkly';
+import { EntityLaunchdarklyCard } from '@roadiehq/backstage-plugin-launchdarkly';
 import {
   EntityGithubInsightsContent,
   EntityGithubInsightsContributorsCard,
@@ -173,13 +170,9 @@ const overviewContent = (
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
     </Grid>
-    <EntitySwitch>
-      <EntitySwitch.Case if={isLaunchdarklyProjectAvailable}>
-        <Grid item md={6}>
-          <EntityLaunchdarklyContextOverviewCard />
-        </Grid>
-      </EntitySwitch.Case>
-    </EntitySwitch>
+    <Grid item md={6}>
+      <EntityLaunchdarklyCard envs={['production', 'test']} />
+    </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={isWizAvailable}>
         <Grid item md={6}>
