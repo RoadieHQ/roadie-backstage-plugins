@@ -28,6 +28,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
 import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 // @ts-ignore
 const elasticache = mockClient(ElastiCache);
@@ -105,6 +107,61 @@ describe('AWSElastiCacheEntityProvider', () => {
           },
         ],
       } as ListTagsForResourceCommandOutput);
+    });
+
+    it('creates cluster with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSElastiCacheEntityProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSElastiCacheEntityProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-elasticache-cluster-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'elasticache-cluster',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-redis-cluster',
+                title: 'my-redis-cluster',
+                labels: {
+                  'aws-elasticache-region': 'eu-west-1',
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]:
+                    'arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster',
+                  'backstage.io/managed-by-location':
+                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
+                }),
+                status: 'available',
+                engine: 'redis',
+                engineVersion: '7.0.7',
+                nodeType: 'cache.t3.micro',
+                endpoint: 'my-redis-cluster.abc123.cache.amazonaws.com:6379',
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates cluster', async () => {

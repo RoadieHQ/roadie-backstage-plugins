@@ -22,6 +22,8 @@ import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSS3BucketProvider } from './AWSS3BucketProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const s3 = mockClient(S3);
 const sts = mockClient(STS);
@@ -63,7 +65,7 @@ describe('AWSS3BucketProvider', () => {
     });
   });
 
-  describe('where there are is a function', () => {
+  describe('where there is a bucket', () => {
     beforeEach(() => {
       s3.on(ListBucketsCommand).resolves({
         Buckets: [
@@ -75,7 +77,36 @@ describe('AWSS3BucketProvider', () => {
       });
     });
 
-    it('creates aws functions', async () => {
+    it('creates aws buckets with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSS3BucketProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                title: 'my-bucket',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('creates aws buckets', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
         refresh: jest.fn(),

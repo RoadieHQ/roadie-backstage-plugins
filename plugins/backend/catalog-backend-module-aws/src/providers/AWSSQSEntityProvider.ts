@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import { SQS, paginateListQueues } from '@aws-sdk/client-sqs';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -39,6 +39,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -62,6 +63,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
     account: AccountConfig,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -96,7 +98,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
     const { accountId } = this.getParsedConfig(dynamicAccountConfig);
 
     this.logger.info(`Providing SQS queue resources from AWS: ${accountId}`);
-    const sqsResources: ResourceEntity[] = [];
+    const entities: Entity[] = [];
 
     const sqs = await this.getSQSClient(dynamicAccountConfig);
 
@@ -129,48 +131,52 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
           const approximateNumberOfMessages =
             attributes.Attributes?.ApproximateNumberOfMessages || '';
 
-          const resource: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              name: queueName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-              title: queueName,
-              labels: {
-                'aws-sqs-region': this.region,
-              },
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn ?? '',
-              },
-              queueArn,
-              visibilityTimeout,
-              delaySeconds,
-              maximumMessageSize,
-              retentionPeriod,
-              approximateNumberOfMessages,
-            },
-            spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag()),
-              ...relationshipsFromTags(tags),
-              type: this.queueTypeValue,
-            },
-          };
+          let entity = this.renderEntity({ queueAttributes: attributes });
 
-          sqsResources.push(resource);
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                name: queueName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
+                title: queueName,
+                labels: {
+                  'aws-sqs-region': this.region,
+                },
+                annotations: {
+                  ...defaultAnnotations,
+                  [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn ?? '',
+                },
+                queueArn,
+                visibilityTimeout,
+                delaySeconds,
+                maximumMessageSize,
+                retentionPeriod,
+                approximateNumberOfMessages,
+              },
+              spec: {
+                owner: ownerFromTags(tags, this.getOwnerTag()),
+                ...relationshipsFromTags(tags),
+                type: this.queueTypeValue,
+              },
+            };
+          }
+
+          entities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: sqsResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${sqsResources.length} SQS queue resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} SQS queue resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

@@ -19,7 +19,7 @@ import { Config } from '@backstage/config';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
@@ -39,6 +39,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -93,7 +94,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
 
     const tablePages = paginateListTables(paginatorConfig, {});
 
-    let ddbComponents: ResourceEntity[] = [];
+    let ddbComponents: Entity[] = [];
     for await (const tablePage of tablePages) {
       if (!tablePage.TableNames) {
         continue;
@@ -110,26 +111,35 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             });
             const tags = tagsResponse.Tags ?? [];
             const table = tableDescriptionResult.Table;
+
             if (table && table.TableName && table.TableArn) {
-              const component: ResourceEntity = {
-                kind: 'Resource',
-                apiVersion: 'backstage.io/v1beta1',
-                metadata: {
-                  annotations: {
-                    ...defaultAnnotations,
-                    [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
+              let entity: Entity | undefined = this.renderEntity({
+                tags,
+                table,
+                defaultAnnotations,
+              });
+
+              if (!entity) {
+                entity = {
+                  kind: 'Resource',
+                  apiVersion: 'backstage.io/v1beta1',
+                  metadata: {
+                    annotations: {
+                      ...defaultAnnotations,
+                      [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
+                    },
+                    name: arnToName(table.TableArn),
+                    title: table.TableName,
+                    labels: this.labelsFromTags(tags),
                   },
-                  name: arnToName(table.TableArn),
-                  title: table.TableName,
-                  labels: this.labelsFromTags(tags),
-                },
-                spec: {
-                  owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-                  ...relationshipsFromTags(tags),
-                  type: 'dynamo-db-table',
-                },
-              };
-              return component;
+                  spec: {
+                    owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                    ...relationshipsFromTags(tags),
+                    type: 'dynamo-db-table',
+                  },
+                };
+              }
+              return entity;
             }
             return null;
           }),

@@ -17,6 +17,7 @@
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
+  Entity,
 } from '@backstage/catalog-model';
 import {
   EntityProvider,
@@ -37,6 +38,9 @@ import {
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
 import { ValueMapping } from '../types';
+import { compile, Environment, Template } from 'nunjucks';
+import crypto from 'crypto';
+import yaml from 'js-yaml';
 
 type DdbTableDataConfigOptions = {
   entityKind?: string;
@@ -53,18 +57,20 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   private readonly roleArn: string;
   private readonly tableDataConfig: DdbTableDataConfigOptions;
   private readonly logger: Logger | LoggerService;
+  private template: Template | undefined;
 
   private connection?: EntityProviderConnection;
 
   static fromConfig(
     config: Config,
-    options: { logger: Logger | LoggerService },
+    options: { logger: Logger | LoggerService; template?: string },
   ) {
     return new AWSDynamoDbTableDataProvider(
       config.getString('accountId'),
       config.getString('roleName'),
       config.get<DdbTableDataConfigOptions>('dynamodbTableData'),
       options.logger,
+      options.template,
     );
   }
 
@@ -73,11 +79,23 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     roleArn: string,
     options: DdbTableDataConfigOptions,
     logger: Logger | LoggerService,
+    template?: string,
   ) {
     this.accountId = accountId;
     this.roleArn = roleArn;
     this.tableDataConfig = options;
     this.logger = logger;
+    if (template) {
+      const env = new Environment();
+      env.addFilter('to_entity_name', input => {
+        return crypto
+          .createHash('sha256')
+          .update(input)
+          .digest('hex')
+          .slice(0, 63);
+      });
+      this.template = compile(template, env);
+    }
   }
 
   getProviderName(): string {
@@ -86,6 +104,18 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
 
   async connect(connection: EntityProviderConnection): Promise<void> {
     this.connection = connection;
+  }
+
+  private renderEntity(options: any): Entity | undefined {
+    if (this.template) {
+      return yaml.load(
+        this.template.render({
+          ...options,
+          accountId: this.accountId,
+        }),
+      ) as Entity;
+    }
+    return undefined;
   }
 
   async run(): Promise<void> {
@@ -134,35 +164,47 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
         );
       }
       const tableArn = tableDescription?.Table?.TableArn;
-      const entities =
-        tableRows.Items?.map(row => {
-          const o = {
-            kind: this.tableDataConfig.entityKind ?? 'Component',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                ...(tableArn
-                  ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn }
-                  : {}),
+
+      let entities: Entity[] = [];
+
+      if (this.template) {
+        for (const row of tableRows.Items || []) {
+          const entity = this.renderEntity({ row, defaultAnnotations });
+          if (entity) {
+            entities.push(entity);
+          }
+        }
+      } else {
+        entities =
+          tableRows.Items?.map(row => {
+            const o = {
+              kind: this.tableDataConfig.entityKind ?? 'Component',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations: {
+                  ...defaultAnnotations,
+                  ...(tableArn
+                    ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn }
+                    : {}),
+                },
+                name: row[idColumn],
+                title: row[idColumn],
               },
-              name: row[idColumn],
-              title: row[idColumn],
-            },
-            spec: {
-              owner: this.accountId,
-              type: 'dynamo-db-table-data',
-              lifecycle: 'production',
-            },
-          };
-          const mappedColumns = this.tableDataConfig.columnValueMapping
-            ? mapColumnsToEntityValues(
-                this.tableDataConfig.columnValueMapping,
-                row,
-              )
-            : {};
-          return merge(o, mappedColumns);
-        }) ?? [];
+              spec: {
+                owner: this.accountId,
+                type: 'dynamo-db-table-data',
+                lifecycle: 'production',
+              },
+            };
+            const mappedColumns = this.tableDataConfig.columnValueMapping
+              ? mapColumnsToEntityValues(
+                  this.tableDataConfig.columnValueMapping,
+                  row,
+                )
+              : {};
+            return merge(o, mappedColumns);
+          }) ?? [];
+      }
 
       await this.connection.applyMutation({
         type: 'full',

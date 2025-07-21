@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import {
   ECRClient,
   ListTagsForResourceCommand,
@@ -43,6 +43,7 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -103,7 +104,7 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing ECR repository resources from AWS: ${accountId}`,
     );
-    const ecrResources: ResourceEntity[] = [];
+    const ecrResources: Entity[] = [];
 
     const ecr = await this.getECRClient(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -127,33 +128,40 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
           return acc;
         }, {} as Record<string, string>);
 
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            name: repositoryName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-            title: repositoryName,
-            labels: {
-              'aws-ecr-region': this.region,
-              ...tags,
+        let entity: Entity | undefined = this.renderEntity({
+          repository: repo,
+        });
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              name: repositoryName
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9\-]/g, '-'),
+              title: repositoryName,
+              labels: {
+                'aws-ecr-region': this.region,
+                ...tags,
+              },
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_AWS_ECR_REPO_ARN]: repositoryArn,
+              },
+              uri: repo.repositoryUri ?? '',
+              tagImmutability: repo.imageTagMutability,
+              createdAt: repo.createdAt?.toDateString(),
+              encryption: repo.encryptionConfiguration?.encryptionType ?? '',
             },
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_AWS_ECR_REPO_ARN]: repositoryArn,
+            spec: {
+              owner: ownerFromTags(tags, this.getOwnerTag()),
+              ...relationshipsFromTags(tags),
+              type: this.repoTypeValue,
             },
-            uri: repo.repositoryUri ?? '',
-            tagImmutability: repo.imageTagMutability,
-            createdAt: repo.createdAt?.toDateString(),
-            encryption: repo.encryptionConfiguration?.encryptionType ?? '',
-          },
-          spec: {
-            owner: ownerFromTags(tags, this.getOwnerTag()),
-            ...relationshipsFromTags(tags),
-            type: this.repoTypeValue,
-          },
-        };
+          };
+        }
 
-        ecrResources.push(resource);
+        ecrResources.push(entity);
       }
     }
 

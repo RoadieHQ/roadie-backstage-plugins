@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 
 import {
   OrganizationsClient,
@@ -48,6 +48,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -98,7 +99,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing Organization account resources from AWS: ${accountId}`,
     );
-    const accountResources: ResourceEntity[] = [];
+    const accountEntities: Entity[] = [];
 
     const organizationsClient = await this.getOrganizationsClient(
       dynamicAccountConfig,
@@ -130,40 +131,43 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
           annotations[ANNOTATION_AWS_ACCOUNT_ARN] = account.Arn ?? '';
           annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
 
-          const resource: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations,
-              name: arnToName(account.Arn!),
-              title: account.Name,
-              joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
-              joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
-              status: account.Status ?? 'UNKNOWN',
-              labels: this.labelsFromTags(tags),
-            },
-            spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(tags),
-              type: 'aws-account',
-            },
-          };
+          let entity = this.renderEntity({ account });
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations,
+                name: arnToName(account.Arn!),
+                title: account.Name,
+                joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
+                joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
+                status: account.Status ?? 'UNKNOWN',
+                labels: this.labelsFromTags(tags),
+              },
+              spec: {
+                owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                ...relationshipsFromTags(tags),
+                type: 'aws-account',
+              },
+            };
+          }
 
-          accountResources.push(resource);
+          accountEntities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: accountResources.map(entity => ({
+      entities: accountEntities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${accountResources.length} Organization account resources from AWS: ${accountId}`,
+      `Finished providing ${accountEntities.length} Organization account resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

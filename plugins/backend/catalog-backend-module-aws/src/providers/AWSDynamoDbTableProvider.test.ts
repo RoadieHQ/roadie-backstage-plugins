@@ -27,6 +27,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const eks = mockClient(DynamoDB);
 const sts = mockClient(STS);
@@ -95,6 +97,46 @@ describe('AWSDynamoDbTableProvider', () => {
         refresh: jest.fn(),
       };
       const provider = AWSDynamoDbTableProvider.fromConfig(config, { logger });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                name: '789400bd545150a5e718539098e053ad2242a887ffe74c390197aed9dceb621',
+                title: 'table1',
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_DDB_TABLE_ARN]:
+                    'arn:aws:dynamodb::123456789012:table/table1',
+                }),
+                labels: {
+                  something: 'something--something',
+                },
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('creates table with template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSDynamoDbTableProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSDynamoDbTableProvider.fromConfig(config, {
+        logger,
+        template,
+      });
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({

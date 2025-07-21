@@ -40,16 +40,12 @@ import {
 import { CatalogApi } from '@backstage/catalog-client';
 import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
-import { compile, Template, Environment } from 'nunjucks';
-import yaml from 'js-yaml';
-import crypto from 'crypto';
 
 /**
  * Provides entities from AWS EKS Cluster service.
  */
 export class AWSEKSClusterProvider extends AWSEntityProvider {
   private readonly clusterTypeValue: string;
-  private readonly template: Template | undefined;
 
   static fromConfig(
     config: Config,
@@ -91,17 +87,6 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
   ) {
     super(account, options);
     this.clusterTypeValue = options.clusterTypeValue ?? 'eks-cluster';
-    if (options.template) {
-      const env = new Environment();
-      env.addFilter('to_entity_name', input => {
-        return crypto
-          .createHash('sha256')
-          .update(input)
-          .digest('hex')
-          .slice(0, 63);
-      });
-      this.template = compile(options.template, env);
-    }
   }
 
   getProviderName(): string {
@@ -185,17 +170,10 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
           annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
 
           const labels = this.labelsFromTags(cluster.cluster?.tags);
-          let entity: Entity;
-          if (this.template) {
-            entity = yaml.load(
-              this.template.render({
-                cluster: cluster.cluster,
-                accountId,
-                region: this.region,
-              }),
-            ) as Entity;
-            console.log(entity);
-          } else {
+          let entity: Entity | undefined = this.renderEntity({
+            cluster: cluster.cluster,
+          });
+          if (!entity) {
             entity = {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',

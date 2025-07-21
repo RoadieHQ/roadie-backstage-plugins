@@ -22,6 +22,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSEC2Provider } from './AWSEC2Provider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -125,6 +127,50 @@ describe('AWSEC2Provider', () => {
         ],
       });
     });
+
+    it('creates table with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSEC2Provider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSEC2Provider.fromConfig(config, { logger, template });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-ec2-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'ec2-instance',
+              },
+              metadata: expect.objectContaining({
+                labels: {
+                  something: 'something--something',
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_EC2_INSTANCE_ID]: 'asdf',
+                  'backstage.io/managed-by-location':
+                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
+
+                  'backstage.io/view-url':
+                    'https://eu-west-1.console.aws.amazon.com/ec2/v2/home',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
   });
 
   describe('where there are is a table and I have a value mapper', () => {
@@ -154,10 +200,12 @@ describe('AWSEC2Provider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
+
       const provider = AWSEC2Provider.fromConfig(config, {
         logger,
         labelValueMapper: value => value,
       });
+
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({

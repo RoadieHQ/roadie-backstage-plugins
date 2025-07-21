@@ -16,7 +16,7 @@
 
 import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
@@ -40,6 +40,7 @@ export class AWSVPCProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -83,7 +84,7 @@ export class AWSVPCProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing VPC resources from aws: ${accountId}`);
-    const vpcResources: ResourceEntity[] = [];
+    const entities: Entity[] = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -126,44 +127,48 @@ export class AWSVPCProvider extends AWSEntityProvider {
         }
       }
 
-      const resource: ResourceEntity = {
-        kind: 'Resource',
-        apiVersion: 'backstage.io/v1beta1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_VPC_ID]: vpcId,
-          },
-          labels: this.labelsFromTags(vpc.Tags),
-          name: vpcId,
-          title: vpc.Tags?.find(tag => tag.Key === 'Name')?.Value || vpcId,
-          cidrBlocks: cidrBlocksResult,
-          dhcpOptions: dhcpOptionsDetails,
-          isDefault: vpc.IsDefault ? 'Yes' : 'No',
-          state: vpc.State,
-          instanceTenancy: vpc.InstanceTenancy,
-        },
-        spec: {
-          owner: ownerFromTags(vpc.Tags, this.getOwnerTag(), groups),
-          ...relationshipsFromTags(vpc.Tags),
-          type: 'vpc',
-        },
-      };
+      let entity = this.renderEntity({ vpc });
 
-      vpcResources.push(resource);
+      if (!entity) {
+        entity = {
+          kind: 'Resource',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              [ANNOTATION_VPC_ID]: vpcId,
+            },
+            labels: this.labelsFromTags(vpc.Tags),
+            name: vpcId,
+            title: vpc.Tags?.find(tag => tag.Key === 'Name')?.Value || vpcId,
+            cidrBlocks: cidrBlocksResult,
+            dhcpOptions: dhcpOptionsDetails,
+            isDefault: vpc.IsDefault ? 'Yes' : 'No',
+            state: vpc.State,
+            instanceTenancy: vpc.InstanceTenancy,
+          },
+          spec: {
+            owner: ownerFromTags(vpc.Tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(vpc.Tags),
+            type: 'vpc',
+          },
+        };
+      }
+
+      entities.push(entity);
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: vpcResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${vpcResources.length} VPC resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} VPC resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

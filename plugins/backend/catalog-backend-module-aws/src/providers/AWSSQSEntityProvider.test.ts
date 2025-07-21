@@ -30,6 +30,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
 import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 // @ts-ignore
 const sqs = mockClient(SQS);
@@ -99,6 +101,60 @@ describe('AWSSQSEntityProvider', () => {
           Team: 'backend-team',
         },
       } as ListQueueTagsCommandOutput);
+    });
+
+    it('creates queue with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSSNSTopicProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSSQSEntityProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-sqs-queue-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'sqs-queue',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-standard-queue',
+                title: 'my-standard-queue',
+                labels: {
+                  'aws-sqs-region': 'eu-west-1',
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_SQS_QUEUE_ARN]:
+                    'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
+                  'backstage.io/managed-by-location':
+                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
+                }),
+                queueArn:
+                  'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
+                visibilityTimeout: '30',
+                delaySeconds: '0',
+                maximumMessageSize: '262144',
+                retentionPeriod: '1209600',
+                approximateNumberOfMessages: '5',
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates queue', async () => {

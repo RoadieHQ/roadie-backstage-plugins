@@ -24,6 +24,8 @@ import {
   ANNOTATION_EBS_VOLUME_ID,
   AWSEBSVolumeProvider,
 } from './AWSEBSVolumeProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -95,6 +97,52 @@ describe('AWSEBSVolumeProvider', () => {
         refresh: jest.fn(),
       };
       const provider = AWSEBSVolumeProvider.fromConfig(config, { logger });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-ebs-volume-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'ebs-volume',
+              },
+              metadata: expect.objectContaining({
+                labels: {
+                  something: 'something--something',
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_EBS_VOLUME_ID]: 'volume1',
+                  'backstage.io/managed-by-location':
+                    'aws-ebs-volume-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-ebs-volume-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/view-url':
+                    'https://eu-west-1.console.aws.amazon.com/ec2/home?region=eu-west-1#VolumeDetails:volumeId=undefined',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it('creates table with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSEBSVolumeProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSEBSVolumeProvider.fromConfig(config, {
+        logger,
+        template,
+      });
       await provider.connect(entityProviderConnection);
       await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
