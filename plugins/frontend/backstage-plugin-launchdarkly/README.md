@@ -42,15 +42,6 @@ In the `packages/app/src/components/catalog/EntityPage.tsx` under `overviewConte
 </EntitySwitch>
 ```
 
-Features:
-
-- Displays flags with status for multiple environments
-- Allows toggling which columns are shown (Name, Key, Description, Tags, Variations)
-- Allows toggling which environments are shown
-- Provides hyperlinks to flags via the flag names
-- Includes flag keys and descriptions
-- Has an expandable section for additional details
-
 ### EntityLaunchdarklyProjectOverviewContent
 
 In the `packages/app/src/components/catalog/EntityPage.tsx` under `serviceEntityPage` add the following:
