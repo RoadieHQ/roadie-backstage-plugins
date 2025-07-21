@@ -1,9 +1,8 @@
 name: Changeset
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [main]
 
 jobs:
   create-release-pr:
@@ -31,3 +30,7 @@ jobs:
           title: Version Packages - plugins
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log diff
+        if: failure()
+        run: git diff
