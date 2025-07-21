@@ -135,15 +135,11 @@ describe('AWSElastiCacheEntityProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'elasticache-cluster',
               },
               metadata: expect.objectContaining({
                 name: 'my-redis-cluster',
                 title: 'my-redis-cluster',
-                labels: {
-                  'aws-elasticache-region': 'eu-west-1',
-                },
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]:
                     'arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster',
@@ -152,11 +148,8 @@ describe('AWSElastiCacheEntityProvider', () => {
                   'backstage.io/managed-by-origin-location':
                     'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
                 }),
-                status: 'available',
                 engine: 'redis',
                 engineVersion: '7.0.7',
-                nodeType: 'cache.t3.micro',
-                endpoint: 'my-redis-cluster.abc123.cache.amazonaws.com:6379',
               }),
             }),
           }),

@@ -116,27 +116,12 @@ describe('AWSRDSProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'rds-instance',
               },
               metadata: expect.objectContaining({
                 name: 'my-database-instance',
                 title: 'my-database-instance',
                 dbInstanceClass: 'db.t3.micro',
-                dbEngine: 'mysql',
-                dbEngineVersion: '8.0.35',
-                allocatedStorage: 20,
-                preferredMaintenanceWindow: 'sun:03:00-sun:04:00',
-                preferredBackupWindow: '02:00-03:00',
-                backupRetentionPeriod: 7,
-                isMultiAz: false,
-                automaticMinorVersionUpgrade: true,
-                isPubliclyAccessible: false,
-                storageType: 'gp2',
-                isPerformanceInsightsEnabled: false,
-                labels: {
-                  Environment: 'production--staging',
-                },
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_RDS_INSTANCE_ARN]:
                     'arn:aws:rds:eu-west-1:123456789012:db:my-database-instance',

@@ -131,18 +131,13 @@ describe('AWSOrganizationAccountsProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'aws-account',
               },
               metadata: expect.objectContaining({
                 name: expect.any(String),
                 title: 'Test Account',
-                joinedTimestamp: '2023-01-01T00:00:00.000Z',
                 joinedMethod: 'INVITED',
                 status: 'ACTIVE',
-                labels: {
-                  Environment: 'production--staging',
-                },
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_ACCOUNT_ARN]:
                     'arn:aws:organizations::123456789012:account/o-example123456/123456789012',

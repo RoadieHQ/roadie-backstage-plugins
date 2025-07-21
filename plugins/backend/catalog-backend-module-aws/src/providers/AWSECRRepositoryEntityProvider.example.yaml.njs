@@ -1,13 +1,13 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ table.TableArn | to_entity_name }}
+  name: {{ repository.repositoryName }}
+  tagImmutability: {{ repository.imageTagMutability }}
+  encryption: {{ repository.encryptionConfiguration.encryptionType }}
+  createdAt: {{ repository.createdAt }}
+  uri: {{ repository.repositoryUri }}
   annotations:
-    amazon.com/dynamo-db-table-arn: {{ table.TableArn }}
-  title: {{ table.TableName }}
-  labels:
-    {% for tag in tags %}
-    {{ tag.Key }}: {{ tag.Value | replace(":", "-") | replace("/", "-") }}
-    {% endfor %}
+    amazonaws.com/ecr-repository-arn: {{ repository.repositoryArn }}
+  title: {{ repository.repositoryName }}
 spec:
-  type: dynamo-db-table
+  type: ecr-repository

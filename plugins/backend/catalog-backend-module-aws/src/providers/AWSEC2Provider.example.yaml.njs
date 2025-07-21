@@ -1,13 +1,10 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ table.TableArn | to_entity_name }}
+  name: {{ instance.InstanceId }}
+  title: {{ instance.InstanceId }}
   annotations:
-    amazon.com/dynamo-db-table-arn: {{ table.TableArn }}
-  title: {{ table.TableName }}
-  labels:
-    {% for tag in tags %}
-    {{ tag.Key }}: {{ tag.Value | replace(":", "-") | replace("/", "-") }}
-    {% endfor %}
+    amazon.com/ec2-instance-id: {{ instance.InstanceId }}
+    backstage.io/view-url: https://eu-west-1.console.aws.amazon.com/ec2/v2/home
 spec:
-  type: dynamo-db-table
+  type: ec2-instance

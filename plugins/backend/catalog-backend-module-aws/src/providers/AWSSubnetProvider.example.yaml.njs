@@ -1,12 +1,16 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ cluster.name | to_entity_name }}
+  name: {{ subnet.SubnetId }}
   annotations:
-    amazon.com/eks-cluster-arn: {{ cluster.arn }}
-    amazon.com/iam-role-arn: {{ cluster.roleArn }}
-    kubernetes.io/auth-provider: aws
-    kubernetes.io/x-k8s-aws-id: {{ cluster.name }}
-  title: {{ accountId }}:{{ region }}:{{ cluster.name }}
+    amazonaws.com/subnet-id: {{ subnet.SubnetId }}
+    backstage.io/view-url: https://{{ region }}.console.aws.amazon.com/vpc/home?region={{ region }}#SubnetDetails:subnetId={{ subnet.SubnetId }}
+  vpcId: {{ subnet.VpcId }}
+  state: {{ subnet.State }}
+  defaultForAz: {{ subnet.DefaultForAz }}
+  cidrBlock: {{ subnet.CidrBlock }}
+  availableIpAddressCount: {{ subnet.AvailableIpAddressCount }}
+  availabilityZone: {{ subnet.AvailabilityZone }}
+  mapPublicIpOnLaunch: {{ subnet.MapPublicIpOnLaunch }}
   labels:
-    some_url: {{ cluster.tags.some_url | replace(":", "-") | replace("/", "-") }}
+    Environment: production--staging

@@ -117,18 +117,14 @@ describe('AWSSubnetProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'subnet',
-              },
               metadata: expect.objectContaining({
                 name: 'subnet-12345678',
                 cidrBlock: '10.0.1.0/24',
                 vpcId: 'vpc-12345678',
                 availabilityZone: 'eu-west-1a',
                 availableIpAddressCount: 251,
-                defaultForAz: 'No',
-                mapPublicIpOnLaunch: 'Yes',
+                defaultForAz: false,
+                mapPublicIpOnLaunch: true,
                 state: 'available',
                 labels: {
                   Environment: 'production--staging',

@@ -103,8 +103,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
 
           let entity: Entity | undefined = this.renderEntity({
             instance,
-            defaultAnnotations,
-          });
+          }, { defaultAnnotations: await defaultAnnotations });
 
           if (!entity) {
             entity = {

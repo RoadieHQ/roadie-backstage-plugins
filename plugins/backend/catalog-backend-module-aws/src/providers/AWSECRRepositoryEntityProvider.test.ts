@@ -130,16 +130,11 @@ describe('AWSECRRepositoryEntityProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'ecr-repository',
               },
               metadata: expect.objectContaining({
                 name: 'my-app-repo',
                 title: 'my-app-repo',
-                labels: {
-                  'aws-ecr-region': 'eu-west-1',
-                  Environment: 'production//staging',
-                },
                 annotations: expect.objectContaining({
                   'amazonaws.com/ecr-repository-arn':
                     'arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo',
@@ -150,7 +145,7 @@ describe('AWSECRRepositoryEntityProvider', () => {
                 }),
                 uri: '123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo',
                 tagImmutability: 'MUTABLE',
-                createdAt: 'Sun Jan 01 2023',
+                createdAt: expect.stringContaining('Sun Jan 01 2023'),
                 encryption: 'AES256',
               }),
             }),

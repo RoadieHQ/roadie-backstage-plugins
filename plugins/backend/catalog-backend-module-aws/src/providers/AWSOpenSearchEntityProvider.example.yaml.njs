@@ -1,12 +1,12 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ cluster.name | to_entity_name }}
+  name: {{ domain.DomainStatus.DomainName }}
   annotations:
-    amazon.com/eks-cluster-arn: {{ cluster.arn }}
-    amazon.com/iam-role-arn: {{ cluster.roleArn }}
-    kubernetes.io/auth-provider: aws
-    kubernetes.io/x-k8s-aws-id: {{ cluster.name }}
-  title: {{ accountId }}:{{ region }}:{{ cluster.name }}
-  labels:
-    some_url: {{ cluster.tags.some_url | replace(":", "-") | replace("/", "-") }}
+    amazon.com/open-search-domain-arn: {{ domain.DomainStatus.ARN }}
+  title: {{ domain.DomainStatus.DomainName }}
+  storageType: EBS-{{ domain.DomainStatus.EBSOptions.VolumeType }}
+  endpoint: {{ domain.DomainStatus.Endpoint }}
+  engineVersion: {{ domain.DomainStatus.EngineVersion }}
+spec:
+  type: opensearch-domain

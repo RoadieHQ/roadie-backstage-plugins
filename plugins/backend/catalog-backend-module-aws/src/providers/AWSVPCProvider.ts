@@ -127,7 +127,7 @@ export class AWSVPCProvider extends AWSEntityProvider {
         }
       }
 
-      let entity = this.renderEntity({ vpc });
+      let entity = this.renderEntity({ vpc }, { defaultAnnotations });
 
       if (!entity) {
         entity = {

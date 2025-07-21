@@ -144,15 +144,11 @@ describe('AWSOpenSearchEntityProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'opensearch-domain',
               },
               metadata: expect.objectContaining({
                 name: 'my-search-domain',
                 title: 'my-search-domain',
-                labels: {
-                  'aws-opensearch-region': 'eu-west-1',
-                },
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_OPEN_SEARCH_ARN]:
                     'arn:aws:es:eu-west-1:123456789012:domain/my-search-domain',

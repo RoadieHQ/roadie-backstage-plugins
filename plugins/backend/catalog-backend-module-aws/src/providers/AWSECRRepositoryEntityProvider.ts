@@ -130,7 +130,8 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
 
         let entity: Entity | undefined = this.renderEntity({
           repository: repo,
-        });
+          tags,
+        }, { defaultAnnotations });
         if (!entity) {
           entity = {
             kind: 'Resource',

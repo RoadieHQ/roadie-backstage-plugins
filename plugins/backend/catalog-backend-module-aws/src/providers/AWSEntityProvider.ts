@@ -86,19 +86,27 @@ export abstract class AWSEntityProvider implements EntityProvider {
           .digest('hex')
           .slice(0, 63);
       });
+      env.addFilter('split', function(str, delimiter) {
+        return str.split(delimiter);
+      });
       this.template = compile(options.template, env);
     }
   }
 
-  protected renderEntity(options: any): Entity | undefined {
+  protected renderEntity(context: any, options?: { defaultAnnotations: Record<string, string>}): Entity | undefined {
     if (this.template) {
-      return yaml.load(
+      const entity = yaml.load(
         this.template.render({
-          ...options,
+          ...context,
           accountId: this.accountId,
           region: this.region,
         }),
       ) as Entity;
+      entity.metadata.annotations = {
+        ...options?.defaultAnnotations || {},
+        ...entity.metadata.annotations,
+      }
+      return entity;
     }
     return undefined;
   }

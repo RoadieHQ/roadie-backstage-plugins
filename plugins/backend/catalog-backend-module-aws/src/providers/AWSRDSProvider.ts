@@ -102,7 +102,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
           const instanceId = dbInstance.DBInstanceIdentifier;
           const instanceArn = dbInstance.DBInstanceArn;
           const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
-          let entity = this.renderEntity({ dbInstance });
+          let entity = this.renderEntity({ dbInstance }, { defaultAnnotations: await defaultAnnotations });
           if (!entity) {
             entity = {
               kind: 'Resource',

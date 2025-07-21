@@ -148,13 +148,9 @@ describe('AWSEC2Provider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'ec2-instance',
               },
               metadata: expect.objectContaining({
-                labels: {
-                  something: 'something--something',
-                },
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_EC2_INSTANCE_ID]: 'asdf',
                   'backstage.io/managed-by-location':

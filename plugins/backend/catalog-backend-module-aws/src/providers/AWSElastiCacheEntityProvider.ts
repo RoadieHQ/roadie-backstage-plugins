@@ -129,7 +129,7 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
           cluster.CacheNodes && cluster.CacheNodes[0]?.Endpoint
             ? `${cluster.CacheNodes[0].Endpoint.Address}:${cluster.CacheNodes[0].Endpoint.Port}`
             : '';
-        let entity: Entity | undefined = this.renderEntity({ cluster, tags });
+        let entity: Entity | undefined = this.renderEntity({ cluster, tags }, { defaultAnnotations });
         if (!entity) {
           entity = {
             kind: 'Resource',

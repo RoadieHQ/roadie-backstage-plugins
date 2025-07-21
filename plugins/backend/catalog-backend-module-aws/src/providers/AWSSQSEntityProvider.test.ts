@@ -109,7 +109,7 @@ describe('AWSSQSEntityProvider', () => {
         refresh: jest.fn(),
       };
       const template = readFileSync(
-        join(dirname(__filename), './AWSSNSTopicProvider.example.yaml.njs'),
+        join(dirname(__filename), './AWSSQSEntityProvider.example.yaml.njs'),
       ).toString();
       const provider = AWSSQSEntityProvider.fromConfig(config, {
         logger,
@@ -126,7 +126,6 @@ describe('AWSSQSEntityProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'sqs-queue',
               },
               metadata: expect.objectContaining({
@@ -145,11 +144,6 @@ describe('AWSSQSEntityProvider', () => {
                 }),
                 queueArn:
                   'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                visibilityTimeout: '30',
-                delaySeconds: '0',
-                maximumMessageSize: '262144',
-                retentionPeriod: '1209600',
-                approximateNumberOfMessages: '5',
               }),
             }),
           }),

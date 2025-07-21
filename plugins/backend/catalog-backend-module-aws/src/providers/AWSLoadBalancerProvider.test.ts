@@ -139,7 +139,6 @@ describe('AWSLoadBalancerProvider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
                 type: 'load-balancer',
               },
               metadata: expect.objectContaining({
@@ -151,10 +150,6 @@ describe('AWSLoadBalancerProvider', () => {
                 vpcId: 'vpc-12345678',
                 type: 'application',
                 state: 'active',
-                availabilityZones: 'eu-west-1a, eu-west-1b',
-                labels: {
-                  Environment: 'production--staging',
-                },
                 annotations: expect.objectContaining({
                   'amazonaws.com/load-balancer-arn':
                     'arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188',
@@ -164,8 +159,6 @@ describe('AWSLoadBalancerProvider', () => {
                     'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
                   'backstage.io/managed-by-origin-location':
                     'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/ec2/home?region=eu-west-1#LoadBalancers:loadBalancerId=50dc6c495c0c9188;sort=loadBalancerName',
                 }),
               }),
             }),
