@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.0.6
 
 ### Patch Changes

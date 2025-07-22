@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.3.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.2.5
 
 ### Patch Changes
