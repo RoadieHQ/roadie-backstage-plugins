@@ -132,7 +132,7 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
             attributes.Attributes?.ApproximateNumberOfMessages || '';
 
           let entity = this.renderEntity(
-            { data: attributes },
+            { data: attributes.Attributes },
             { defaultAnnotations },
           );
 

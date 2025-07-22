@@ -1,11 +1,11 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ data.Attributes.QueueArn | split(":") | last }}
-  title: {{ data.Attributes.QueueArn | split(":") | last }}
-  queueArn: {{ data.Attributes.QueueArn }}
+  name: {{ data.QueueArn | split(":") | last }}
+  title: {{ data.QueueArn | split(":") | last }}
+  queueArn: {{ data.QueueArn }}
   annotations:
-    amazon.com/sqs-queue-arn: {{ data.Attributes.QueueArn }}
+    amazon.com/sqs-queue-arn: {{ data.QueueArn }}
   labels:
     aws-sqs-region: {{ region }}
 spec:
