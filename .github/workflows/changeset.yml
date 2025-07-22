@@ -25,9 +25,6 @@ jobs:
       - name: Use project-pinned Yarn version
         run: yarn set version 4.9.2
 
-      - name: Disable Hardened Mode
-        run: yarn config set enableHardenedMode false
-
       - name: Install Dependencies
         run: yarn install
 
