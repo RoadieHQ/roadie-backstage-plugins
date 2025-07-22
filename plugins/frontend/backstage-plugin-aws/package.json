@@ -9,7 +9,7 @@
     "plugin",
     "aws"
   ],
-  "private": true,
+  "private": false,
   "homepage": "https://roadie.io/backstage/plugins/aws/",
   "bugs": {
     "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
