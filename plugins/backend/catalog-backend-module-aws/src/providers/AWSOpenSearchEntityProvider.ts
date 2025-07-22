@@ -135,7 +135,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
           : 'Instance Storage';
 
         let entity = this.renderEntity(
-          { data: domain },
+          { data: domainStatus },
           { defaultAnnotations },
         );
         if (!entity) {
