@@ -40,7 +40,6 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
 
     const envQueryParams = (envs ?? []).map(env => `env=${env}`).join('&');
 
-    // Get all flags for the project
     const flagsResponse = await fetch(
       `${url}/v2/flags/${projectKey}?limit=100&offset=0&${envQueryParams}`,
     );
@@ -53,7 +52,6 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
 
     const flags = (await flagsResponse.json()).items || [];
 
-    // Get all environments for the project
     const environmentsResponse = await fetch(
       `${url}/v2/projects/${projectKey}`,
     );
@@ -67,24 +65,20 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
     const projectData = await environmentsResponse.json();
     const environments = projectData.environments || {};
 
-    // Create a map of flag keys to flag data
     const flagsMap = new Map();
     flags.forEach((flag: any) => {
       const environmentsData: Record<string, any> = {};
 
       (envs ?? []).forEach(env => {
-        // For each specified environment, create an entry with status and link
         const envData = environments[env];
         const envName = envData?.name || env;
         const link = `https://app.launchdarkly.com/projects/${projectKey}/flags/${flag.key}/targeting?env=${env}&selected-env=${env}`;
 
-        // Get environment-specific flag data from the flag object
         const envFlag = flag.environments?.[env];
         const isOn = envFlag?.on ?? false;
 
         const flagStatus = envData?.[flag.key];
 
-        // Use status from flag-statuses endpoint if available, otherwise fall back to on/off
         let status = isOn ? 'Enabled' : 'Disabled';
         if (flagStatus && flagStatus.status) {
           status = flagStatus.status;
@@ -95,7 +89,6 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
           status,
           link,
           on: isOn,
-          // Include additional status information if available
           ...(flagStatus && {
             lastRequested: flagStatus.lastRequested,
             lastEvaluated: flagStatus.lastEvaluated,
