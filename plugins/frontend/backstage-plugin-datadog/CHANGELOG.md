@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.4.3
 
 ### Patch Changes

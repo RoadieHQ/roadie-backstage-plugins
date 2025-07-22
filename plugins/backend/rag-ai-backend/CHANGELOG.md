@@ -1,5 +1,16 @@
 # @roadiehq/rag-ai-backend
 
+## 2.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/rag-ai-node@0.2.0
+
 ## 2.0.1
 
 ### Patch Changes

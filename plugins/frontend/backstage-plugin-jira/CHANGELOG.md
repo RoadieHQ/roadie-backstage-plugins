@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.11.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.10.0
 
 ### Minor Changes

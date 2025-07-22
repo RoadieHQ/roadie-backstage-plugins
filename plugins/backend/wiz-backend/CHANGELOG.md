@@ -1,5 +1,11 @@
 # @roadiehq/plugin-wiz-backend
 
+## 2.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.0.0
 
 ### Major Changes

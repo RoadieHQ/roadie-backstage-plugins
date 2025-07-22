@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-buildkite
 
+## 2.4.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.3.6
 
 ### Patch Changes

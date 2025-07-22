@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.4.4
 
 ### Patch Changes
