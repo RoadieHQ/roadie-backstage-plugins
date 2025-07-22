@@ -26,7 +26,7 @@ jobs:
         run: yarn set version 4.9.2
 
       - name: Install Dependencies
-        run: yarn install @changesets/cli
+        run: yarn add @changesets/cli
 
       - run: echo 'Base ${{ github.event.pull_request.base.ref }}'
       - run: echo 'Head ${{ github.head_ref }}'
