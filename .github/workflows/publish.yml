@@ -94,7 +94,7 @@ jobs:
       # Publishes current version of packages that are not already present in the registry.
       - name: Run publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
