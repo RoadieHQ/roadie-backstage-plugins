@@ -98,7 +98,7 @@ jobs:
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
-          yarn workspaces foreach -A --topological-dev --no-private npm publish --tolerate-republish
+          yarn workspaces foreach -A --no-private npm publish --tolerate-republish
 
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
       - name: Create a release tag
