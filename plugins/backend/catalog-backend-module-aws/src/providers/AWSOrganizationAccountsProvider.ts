@@ -128,11 +128,18 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
           for await (const listTagsForResourceCommandOutput of tagsResponse) {
             tags = tags.concat(listTagsForResourceCommandOutput.Tags ?? []);
           }
+
+          const tagMap = tags?.reduce((acc, tag) => {
+            if (tag.Key && tag.Value) {
+              acc[tag.Key] = tag.Value;
+            }
+            return acc;
+          }, {} as Record<string, string>);
           annotations[ANNOTATION_AWS_ACCOUNT_ARN] = account.Arn ?? '';
           annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
 
           let entity = this.renderEntity(
-            { data: account, tags },
+            { data: account, tags: tagMap },
             { defaultAnnotations: annotations },
           );
           if (!entity) {

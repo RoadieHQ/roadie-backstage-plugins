@@ -6,8 +6,6 @@ metadata:
     amazon.com/dynamo-db-table-arn: {{ data.TableArn }}
   title: {{ data.TableName }}
   labels:
-    {% for tag in tags %}
-    {{ tag.Key }}: {{ tag.Value | replace(":", "-") | replace("/", "-") }}
-    {% endfor %}
+    something: {{ tags['something'] | replace("/", "-") | replace("/", "-") | replace(":", "-") }}
 spec:
   type: dynamo-db-table

@@ -94,7 +94,10 @@ export abstract class AWSEntityProvider implements EntityProvider {
   }
 
   protected renderEntity(
-    context: any,
+    context: {
+      data: any;
+      tags?: Record<string, string>;
+    },
     options?: { defaultAnnotations: Record<string, string> },
   ): Entity | undefined {
     if (this.template) {

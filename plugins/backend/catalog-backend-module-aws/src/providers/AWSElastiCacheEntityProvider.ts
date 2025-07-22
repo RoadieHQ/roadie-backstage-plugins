@@ -119,6 +119,12 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
         const tags = clusterArn
           ? await elastiCache.listTagsForResource({ ResourceName: clusterArn })
           : undefined;
+        const tagMap = tags?.TagList?.reduce((acc, tag) => {
+          if (tag.Key && tag.Value) {
+            acc[tag.Key] = tag.Value;
+          }
+          return acc;
+        }, {} as Record<string, string>);
 
         // Additional metadata properties
         const clusterStatus = cluster.CacheClusterStatus || '';
@@ -130,7 +136,7 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
             ? `${cluster.CacheNodes[0].Endpoint.Address}:${cluster.CacheNodes[0].Endpoint.Port}`
             : '';
         let entity: Entity | undefined = this.renderEntity(
-          { data: cluster, tags },
+          { data: cluster, tags: tagMap },
           { defaultAnnotations },
         );
         if (!entity) {

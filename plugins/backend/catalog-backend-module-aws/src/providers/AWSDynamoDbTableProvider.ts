@@ -111,11 +111,17 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             });
             const tags = tagsResponse.Tags ?? [];
             const table = tableDescriptionResult.Table;
+            const tagMap = tags.reduce((acc, tag) => {
+              if (tag.Key && tag.Value) {
+                acc[tag.Key] = tag.Value;
+              }
+              return acc;
+            }, {} as Record<string, string>);
 
             if (table && table.TableName && table.TableArn) {
               let entity: Entity | undefined = this.renderEntity(
                 {
-                  tags,
+                  tags: tagMap,
                   data: table,
                 },
                 { defaultAnnotations },
