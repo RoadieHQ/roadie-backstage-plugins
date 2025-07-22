@@ -26,7 +26,7 @@ jobs:
         run: yarn set version 4.9.2
 
       - name: Install Dependencies
-        run: yarn install --immutable --immutable-cache
+        run: yarn install --immutable
 
       - name: Create Release Pull Request
         uses: changesets/action@v1

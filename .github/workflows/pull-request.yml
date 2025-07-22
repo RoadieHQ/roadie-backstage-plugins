@@ -2,7 +2,7 @@ name: CI tests
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main-s]
 
 jobs:
   e2e-tests:
