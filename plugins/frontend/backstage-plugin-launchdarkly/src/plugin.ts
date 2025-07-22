@@ -53,6 +53,18 @@ export const EntityLaunchdarklyContextOverviewCard = launchdarklyPlugin.provide(
   }),
 );
 
+export const EntityLaunchdarklyCard = launchdarklyPlugin.provide(
+  createComponentExtension({
+    name: 'EntityLaunchdarklyCard',
+    component: {
+      lazy: () =>
+        import('./components/EntityLaunchdarklyCard').then(
+          m => m.EntityLaunchdarklyCard,
+        ),
+    },
+  }),
+);
+
 export const EntityLaunchdarklyProjectOverviewContent =
   launchdarklyPlugin.provide(
     createRoutableExtension({
