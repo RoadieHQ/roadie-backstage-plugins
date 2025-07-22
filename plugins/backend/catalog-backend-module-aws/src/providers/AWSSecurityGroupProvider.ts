@@ -145,10 +145,7 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
             return `${protocol}:${portRange} to ${destinations || 'None'}`;
           }).join('; ') || 'None';
 
-        let entity = this.renderEntity(
-          { securityGroup: sg },
-          { defaultAnnotations },
-        );
+        let entity = this.renderEntity({ data: sg }, { defaultAnnotations });
         if (!entity) {
           entity = {
             kind: 'Resource',

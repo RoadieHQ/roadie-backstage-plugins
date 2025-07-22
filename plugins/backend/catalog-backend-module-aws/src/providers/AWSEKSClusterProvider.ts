@@ -171,7 +171,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
           const labels = this.labelsFromTags(cluster.cluster?.tags);
           let entity: Entity | undefined = this.renderEntity({
-            cluster: cluster.cluster,
+            data: cluster.cluster,
           });
           if (!entity) {
             entity = {

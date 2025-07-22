@@ -132,7 +132,7 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
 
       const consoleLink = createElbLink(region, loadBalancerId);
       let entity: Entity | undefined = this.renderEntity(
-        { loadBalancer: lb, tags },
+        { data: lb, tags },
         { defaultAnnotations },
       );
       if (!entity) {

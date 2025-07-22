@@ -102,7 +102,10 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       for (const role of rolePage.Roles || []) {
         if (role.RoleName && role.Arn && role.RoleId) {
           const consoleLink = new ARN(role.Arn).consoleLink;
-          let entity: Entity | undefined = this.renderEntity({ role });
+          let entity: Entity | undefined = this.renderEntity(
+            { data: role },
+            { defaultAnnotations },
+          );
           if (!entity) {
             entity = {
               kind: 'Resource',

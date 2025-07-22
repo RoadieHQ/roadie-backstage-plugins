@@ -105,7 +105,10 @@ export class AWSSubnetProvider extends AWSEntityProvider {
         const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
         const consoleLink = new ARN(arn).consoleLink;
 
-        let entity = this.renderEntity({ subnet }, { defaultAnnotations });
+        let entity = this.renderEntity(
+          { data: subnet },
+          { defaultAnnotations },
+        );
         if (!entity) {
           entity = {
             kind: 'Resource',

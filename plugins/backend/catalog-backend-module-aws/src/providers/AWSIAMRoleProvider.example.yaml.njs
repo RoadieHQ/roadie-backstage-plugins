@@ -1,13 +1,13 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ role.RoleName | to_entity_name }}
+  name: {{ data.RoleName | to_entity_name }}
   annotations:
-    amazon.com/iam-role-arn: {{ role.Arn }}
-  title: {{ role.RoleName }}
+    amazon.com/iam-role-arn: {{ data.Arn }}
+  title: {{ data.RoleName }}
   labels:
-    {% if role.Tags %}
-    {% for tag in role.Tags %}
+    {% if data.Tags %}
+    {% for tag in data.Tags %}
     {{ tag.Key }}: {{ tag.Value | replace(":", "-") | replace("/", "-") }}
     {% endfor %}
     {% endif %}

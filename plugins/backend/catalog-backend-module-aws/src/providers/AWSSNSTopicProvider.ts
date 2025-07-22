@@ -105,7 +105,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
           const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
           let entity = this.renderEntity(
-            { topic },
+            { data: topic },
             { defaultAnnotations: await defaultAnnotations },
           );
           if (!entity) {

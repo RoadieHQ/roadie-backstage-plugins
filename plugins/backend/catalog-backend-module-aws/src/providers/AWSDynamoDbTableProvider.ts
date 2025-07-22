@@ -113,11 +113,13 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             const table = tableDescriptionResult.Table;
 
             if (table && table.TableName && table.TableArn) {
-              let entity: Entity | undefined = this.renderEntity({
-                tags,
-                table,
-                defaultAnnotations,
-              });
+              let entity: Entity | undefined = this.renderEntity(
+                {
+                  tags,
+                  data: table,
+                },
+                { defaultAnnotations },
+              );
 
               if (!entity) {
                 entity = {

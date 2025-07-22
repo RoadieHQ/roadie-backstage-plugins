@@ -1,12 +1,12 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ domain.DomainStatus.DomainName }}
+  name: {{ data.DomainStatus.DomainName }}
   annotations:
-    amazon.com/open-search-domain-arn: {{ domain.DomainStatus.ARN }}
-  title: {{ domain.DomainStatus.DomainName }}
-  storageType: EBS-{{ domain.DomainStatus.EBSOptions.VolumeType }}
-  endpoint: {{ domain.DomainStatus.Endpoint }}
-  engineVersion: {{ domain.DomainStatus.EngineVersion }}
+    amazon.com/open-search-domain-arn: {{ data.DomainStatus.ARN }}
+  title: {{ data.DomainStatus.DomainName }}
+  storageType: EBS-{{ data.DomainStatus.EBSOptions.VolumeType }}
+  endpoint: {{ data.DomainStatus.Endpoint }}
+  engineVersion: {{ data.DomainStatus.EngineVersion }}
 spec:
   type: opensearch-domain

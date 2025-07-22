@@ -106,14 +106,22 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     this.connection = connection;
   }
 
-  private renderEntity(options: any): Entity | undefined {
+  protected renderEntity(
+    context: any,
+    options?: { defaultAnnotations: Record<string, string> },
+  ): Entity | undefined {
     if (this.template) {
-      return yaml.load(
+      const entity = yaml.load(
         this.template.render({
-          ...options,
+          ...context,
           accountId: this.accountId,
         }),
       ) as Entity;
+      entity.metadata.annotations = {
+        ...(options?.defaultAnnotations || {}),
+        ...entity.metadata.annotations,
+      };
+      return entity;
     }
     return undefined;
   }
@@ -169,7 +177,10 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
 
       if (this.template) {
         for (const row of tableRows.Items || []) {
-          const entity = this.renderEntity({ row, defaultAnnotations });
+          const entity = this.renderEntity(
+            { data: row },
+            { defaultAnnotations },
+          );
           if (entity) {
             entities.push(entity);
           }

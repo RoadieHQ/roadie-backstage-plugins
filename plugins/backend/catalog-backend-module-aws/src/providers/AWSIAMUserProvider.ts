@@ -96,7 +96,10 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       for (const user of userPage.Users || []) {
         if (user.UserName && user.Arn && user.UserId) {
           const consoleLink = new ARN(user.Arn).consoleLink;
-          let entity: Entity | undefined = this.renderEntity({ user });
+          let entity: Entity | undefined = this.renderEntity(
+            { data: user },
+            { defaultAnnotations },
+          );
           if (!entity) {
             entity = {
               kind: 'User',

@@ -103,7 +103,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
           const instanceArn = dbInstance.DBInstanceArn;
           const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
           let entity = this.renderEntity(
-            { dbInstance },
+            { data: dbInstance },
             { defaultAnnotations: await defaultAnnotations },
           );
           if (!entity) {

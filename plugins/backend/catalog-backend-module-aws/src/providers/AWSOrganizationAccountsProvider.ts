@@ -132,7 +132,7 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
           annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
 
           let entity = this.renderEntity(
-            { account, tags },
+            { data: account, tags },
             { defaultAnnotations: annotations },
           );
           if (!entity) {

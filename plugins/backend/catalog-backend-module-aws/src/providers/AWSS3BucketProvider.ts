@@ -107,7 +107,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             bucket: bucket.Name,
           });
         }
-        let entity = this.renderEntity({ bucket });
+        let entity = this.renderEntity({ data: bucket });
         if (!entity) {
           entity = {
             kind: 'Resource',

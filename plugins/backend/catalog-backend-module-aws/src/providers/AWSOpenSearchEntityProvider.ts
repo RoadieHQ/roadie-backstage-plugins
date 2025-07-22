@@ -134,7 +134,10 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
           ? `EBS-${domainStatus.EBSOptions.VolumeType}`
           : 'Instance Storage';
 
-        let entity = this.renderEntity({ domain }, { defaultAnnotations });
+        let entity = this.renderEntity(
+          { data: domain },
+          { defaultAnnotations },
+        );
         if (!entity) {
           entity = {
             kind: 'Resource',

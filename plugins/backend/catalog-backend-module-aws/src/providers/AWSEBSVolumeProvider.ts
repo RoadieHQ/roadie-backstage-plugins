@@ -109,10 +109,12 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
         const ebsVolumeId = resourceParts[3];
 
         const consoleLink = createEbsVolumeConsoleLink(region, ebsVolumeId);
-        let entity: Entity | undefined = this.renderEntity({
-          volume,
-          defaultAnnotations,
-        });
+        let entity: Entity | undefined = this.renderEntity(
+          {
+            data: volume,
+          },
+          { defaultAnnotations },
+        );
         if (!entity) {
           entity = {
             kind: 'Resource',

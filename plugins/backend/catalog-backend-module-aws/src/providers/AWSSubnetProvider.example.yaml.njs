@@ -1,16 +1,16 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ subnet.SubnetId }}
+  name: {{ data.SubnetId }}
   annotations:
-    amazonaws.com/subnet-id: {{ subnet.SubnetId }}
-    backstage.io/view-url: https://{{ region }}.console.aws.amazon.com/vpc/home?region={{ region }}#SubnetDetails:subnetId={{ subnet.SubnetId }}
-  vpcId: {{ subnet.VpcId }}
-  state: {{ subnet.State }}
-  defaultForAz: {{ subnet.DefaultForAz }}
-  cidrBlock: {{ subnet.CidrBlock }}
-  availableIpAddressCount: {{ subnet.AvailableIpAddressCount }}
-  availabilityZone: {{ subnet.AvailabilityZone }}
-  mapPublicIpOnLaunch: {{ subnet.MapPublicIpOnLaunch }}
+    amazonaws.com/subnet-id: {{ data.SubnetId }}
+    backstage.io/view-url: https://{{ region }}.console.aws.amazon.com/vpc/home?region={{ region }}#SubnetDetails:subnetId={{ data.SubnetId }}
+  vpcId: {{ data.VpcId }}
+  state: {{ data.State }}
+  defaultForAz: {{ data.DefaultForAz }}
+  cidrBlock: {{ data.CidrBlock }}
+  availableIpAddressCount: {{ data.AvailableIpAddressCount }}
+  availabilityZone: {{ data.AvailabilityZone }}
+  mapPublicIpOnLaunch: {{ data.MapPublicIpOnLaunch }}
   labels:
     Environment: production--staging
