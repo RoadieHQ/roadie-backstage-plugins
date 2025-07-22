@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.1.0
 
 ### Minor Changes

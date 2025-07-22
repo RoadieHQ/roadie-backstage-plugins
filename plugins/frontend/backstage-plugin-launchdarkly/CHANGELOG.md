@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.1.0
+
+### Minor Changes
+
+- 69293fb: Add a new Launchdarkly card displaying environment statuses for each feature flag
+- f215405: Upgrade to 1.40.2
+
 ## 1.0.2
 
 ### Patch Changes

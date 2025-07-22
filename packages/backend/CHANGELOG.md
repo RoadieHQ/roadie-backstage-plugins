@@ -1,5 +1,32 @@
 # backend
 
+## 2.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+- Updated dependencies [b0f3d28]
+  - @roadiehq/scaffolder-backend-module-http-request@5.4.0
+  - @roadiehq/scaffolder-backend-module-utils@3.6.0
+  - @roadiehq/scaffolder-backend-module-aws@2.7.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.2.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.4.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.6.0
+  - @roadiehq/catalog-backend-module-gravatar@1.1.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.2.0
+  - @roadiehq/catalog-backend-module-okta@1.2.0
+  - @roadiehq/catalog-backend-module-aws@5.8.0
+  - @roadiehq/backstage-plugin-aws-auth@0.6.0
+  - @roadiehq/rag-ai-storage-pgvector@2.1.0
+  - @roadiehq/backstage-plugin-aws-backend@1.4.0
+  - @roadiehq/rag-ai-backend@2.1.0
+  - @roadiehq/plugin-wiz-backend@2.1.0
+  - app@1.2.0
+
 ## 2.4.11
 
 ### Patch Changes

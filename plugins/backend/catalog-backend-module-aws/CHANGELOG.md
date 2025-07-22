@@ -1,5 +1,12 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.8.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+- b0f3d28: Adds ability to template entity from AWS entity providers.
+
 ## 5.7.1
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.0.7
 
 ### Patch Changes
