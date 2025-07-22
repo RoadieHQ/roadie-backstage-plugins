@@ -28,6 +28,20 @@ In the `packages/app/src/components/catalog/EntityPage.tsx` under `overviewConte
 </EntitySwitch>
 ```
 
+### EntityLaunchdarklyCard
+
+This component displays LaunchDarkly flags with multiple environments. It allows toggling which columns are shown and provides a more comprehensive view of LaunchDarkly flags. The component expects a prop array of envs to display on the table.
+
+In the `packages/app/src/components/catalog/EntityPage.tsx` under `overviewContent` add the following:
+
+```jsx
+<EntitySwitch>
+  <EntitySwitch.Case if={isLaunchdarklyProjectAvailable}>
+    <EntityLaunchdarklyCard envs={['production', 'dev']} />
+  </EntitySwitch.Case>
+</EntitySwitch>
+```
+
 ### EntityLaunchdarklyProjectOverviewContent
 
 In the `packages/app/src/components/catalog/EntityPage.tsx` under `serviceEntityPage` add the following:
