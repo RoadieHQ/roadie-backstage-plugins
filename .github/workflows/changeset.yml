@@ -1,9 +1,8 @@
 name: Changeset
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [main]
 
 jobs:
   create-release-pr:
@@ -20,8 +19,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use project-pinned Yarn version
+        run: yarn set version 4.9.2
+
       - name: Install Dependencies
-        run: yarn install --immutable
+        run: yarn add @changesets/cli
+
+      - run: echo 'Base ${{ github.event.pull_request.base.ref }}'
+      - run: echo 'Head ${{ github.head_ref }}'
 
       - name: Create Release Pull Request
         uses: changesets/action@v1
@@ -31,3 +39,7 @@ jobs:
           title: Version Packages - plugins
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log diff
+        if: failure()
+        run: git diff
