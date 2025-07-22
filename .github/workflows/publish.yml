@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      needs_release: ${{ steps.release_check.outputs.needs_release }}
+      needs_release: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.release_check.outputs.needs_release }}
 
     strategy:
       matrix:
@@ -34,6 +34,7 @@ jobs:
         run: git fetch origin '${{ github.event.before }}'
 
       - name: Check if release
+        if: github.event_name != 'workflow_dispatch'
         id: release_check
         run: node scripts/check-if-release.js
         env:
