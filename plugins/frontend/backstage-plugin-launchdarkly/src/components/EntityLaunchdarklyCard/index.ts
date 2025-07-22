@@ -13,13 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-export {
-  launchdarklyPlugin,
-  EntityLaunchdarklyOverviewCard,
-  EntityLaunchdarklyContextOverviewCard,
-  EntityLaunchdarklyCard,
-  isLaunchdarklyAvailable,
-  EntityLaunchdarklyProjectOverviewContent,
-  isLaunchdarklyContextAvailable,
-  isLaunchdarklyProjectAvailable,
-} from './plugin';
+export { EntityLaunchdarklyCard } from './EntityLaunchdarklyCard';
+export type { EntityLaunchdarklyCardProps } from './EntityLaunchdarklyCard';
