@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-node
 
+## 0.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 0.1.11
 
 ### Patch Changes

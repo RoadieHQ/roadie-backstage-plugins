@@ -1,5 +1,11 @@
 # @roadiehq/github-auth-utils-react
 
+## 1.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.0.2
 
 ### Patch Changes

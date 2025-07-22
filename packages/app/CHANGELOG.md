@@ -1,5 +1,38 @@
 # app
 
+## 1.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [69293fb]
+- Updated dependencies [f215405]
+  - @roadiehq/backstage-plugin-launchdarkly@1.1.0
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.2.0
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.1.0
+  - @roadiehq/backstage-plugin-github-pull-requests@3.5.0
+  - @roadiehq/backstage-plugin-security-insights@3.2.0
+  - @roadiehq/backstage-plugin-github-insights@3.2.0
+  - @roadiehq/backstage-plugin-aws-lambda@2.3.0
+  - @roadiehq/backstage-plugin-cloudsmith@1.2.0
+  - @roadiehq/backstage-plugin-prometheus@3.1.0
+  - @roadiehq/backstage-plugin-buildkite@2.4.0
+  - @roadiehq/backstage-plugin-travis-ci@2.2.0
+  - @roadiehq/backstage-plugin-home-markdown@2.6.0
+  - @roadiehq/backstage-plugin-shortcut@1.3.0
+  - @roadiehq/backstage-plugin-argo-cd@2.10.0
+  - @roadiehq/backstage-plugin-bugsnag@2.3.0
+  - @roadiehq/backstage-plugin-datadog@2.5.0
+  - @roadiehq/backstage-plugin-iframe@1.5.0
+  - @roadiehq/backstage-plugin-jira@2.11.0
+  - @roadiehq/backstage-plugin-home-rss@1.4.0
+  - @roadiehq/backstage-plugin-aws@1.2.0
+  - @roadiehq/backstage-plugin-wiz@2.1.0
+  - @roadiehq/rag-ai@1.2.0
+
 ## 1.1.13
 
 ### Patch Changes

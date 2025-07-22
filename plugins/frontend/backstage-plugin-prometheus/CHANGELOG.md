@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 3.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 3.0.0
 
 ### Major Changes

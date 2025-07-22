@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.6.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.5.30
 
 ### Patch Changes

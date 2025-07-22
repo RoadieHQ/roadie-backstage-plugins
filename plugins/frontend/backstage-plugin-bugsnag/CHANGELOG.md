@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.3.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.2.13
 
 ### Patch Changes

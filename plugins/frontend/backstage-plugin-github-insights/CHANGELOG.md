@@ -1,5 +1,16 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/github-auth-utils-react@1.1.0
+
 ## 3.1.4
 
 ### Patch Changes
