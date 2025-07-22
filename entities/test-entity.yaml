@@ -17,7 +17,6 @@ metadata:
     bugsnag.com/project-key: RoadieHQTest/Test bugsnag application
     prometheus.io/rule: prometheus_http_requests_total,sum by (handler) (prometheus_http_requests_total),prometheus_http_requests_total|component
     prometheus.io/alert: all
-    launchdarkly.com/context: '{"kind":"tenant","key":"roadie","name":"roadie"}'
     launchdarkly.com/project-key: default
     launchdarkly.com/environment-key: production
 spec:
