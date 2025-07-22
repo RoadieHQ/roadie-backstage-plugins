@@ -98,7 +98,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
           const consoleLink = new ARN(user.Arn).consoleLink;
           let entity: Entity | undefined = this.renderEntity(
             { data: user },
-            { defaultAnnotations },
+            { defaultAnnotations: await defaultAnnotations },
           );
           if (!entity) {
             entity = {
