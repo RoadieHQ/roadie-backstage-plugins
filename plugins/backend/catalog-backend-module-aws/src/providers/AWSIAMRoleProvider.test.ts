@@ -22,6 +22,8 @@ import { createLogger, transports } from 'winston';
 import { AWSIAMRoleProvider } from './AWSIAMRoleProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
@@ -72,6 +74,35 @@ describe('AWSIAMRoleProvider', () => {
             RoleName: 'adsf',
             Arn: 'arn:aws:iam::123456789012:role/asdf',
           } as Partial<Role> as any,
+        ],
+      });
+    });
+
+    it('creates aws users with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSIAMRoleProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSIAMRoleProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                title: 'adsf',
+              }),
+            }),
+          }),
         ],
       });
     });

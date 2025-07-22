@@ -27,6 +27,8 @@ import { createLogger, transports } from 'winston';
 import { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const sns = mockClient(SNS);
 const sts = mockClient(STS);
@@ -83,6 +85,40 @@ describe('AWSSNSTopicProvider', () => {
       });
       sns.on(ListTagsForResourceCommand).resolves({
         Tags: [],
+      });
+    });
+
+    it('creates SNS topic entities with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSSNSTopicProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSSNSTopicProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                name: 'example-topic',
+                title: 'example-topic',
+                annotations: expect.objectContaining({
+                  'backstage.io/view-url':
+                    'https://console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topic/arn:aws:sns:eu-west-1:123456789012:example-topic',
+                }),
+              }),
+            }),
+          }),
+        ],
       });
     });
 

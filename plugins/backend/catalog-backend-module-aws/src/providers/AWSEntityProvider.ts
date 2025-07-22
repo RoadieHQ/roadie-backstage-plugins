@@ -25,6 +25,7 @@ import { STS } from '@aws-sdk/client-sts';
 import {
   ANNOTATION_ORIGIN_LOCATION,
   ANNOTATION_LOCATION,
+  Entity,
 } from '@backstage/catalog-model';
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
 import { CatalogApi } from '@backstage/catalog-client';
@@ -33,6 +34,9 @@ import { ConfigReader } from '@backstage/config';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import { LabelValueMapper, labelsFromTags, Tag } from '../utils/tags';
+import { compile, Environment, Template } from 'nunjucks';
+import crypto from 'crypto';
+import yaml from 'js-yaml';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly useTemporaryCredentials: boolean;
@@ -44,6 +48,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   private credentialsManager: DefaultAwsCredentialsManager;
   private account: AccountConfig;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
+  private template: Template | undefined;
 
   public abstract getProviderName(): string;
   public abstract run(
@@ -54,6 +59,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     account: AccountConfig,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -71,6 +77,44 @@ export abstract class AWSEntityProvider implements EntityProvider {
       new ConfigReader({ aws: { accounts: [account] } }),
     );
     this.labelValueMapper = options.labelValueMapper;
+    if (options.template) {
+      const env = new Environment();
+      env.addFilter('to_entity_name', input => {
+        return crypto
+          .createHash('sha256')
+          .update(input)
+          .digest('hex')
+          .slice(0, 63);
+      });
+      env.addFilter('split', function (str, delimiter) {
+        return str.split(delimiter);
+      });
+      this.template = compile(options.template, env);
+    }
+  }
+
+  protected renderEntity(
+    context: {
+      data: any;
+      tags?: Record<string, string>;
+    },
+    options?: { defaultAnnotations: Record<string, string> },
+  ): Entity | undefined {
+    if (this.template) {
+      const entity = yaml.load(
+        this.template.render({
+          ...context,
+          accountId: this.accountId,
+          region: this.region,
+        }),
+      ) as Entity;
+      entity.metadata.annotations = {
+        ...(options?.defaultAnnotations || {}),
+        ...entity.metadata.annotations,
+      };
+      return entity;
+    }
+    return undefined;
   }
 
   get accountId() {

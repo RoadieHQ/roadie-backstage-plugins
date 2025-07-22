@@ -22,6 +22,8 @@ import { createLogger, transports } from 'winston';
 import { AWSIAMUserProvider } from './AWSIAMUserProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
@@ -76,11 +78,41 @@ describe('AWSIAMUserProvider', () => {
       });
     });
 
+    it('creates aws users with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSIAMUserProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'User',
+              metadata: expect.objectContaining({
+                title: 'adsf',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
     it('creates aws users', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
+
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();

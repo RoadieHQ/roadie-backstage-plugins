@@ -27,6 +27,8 @@ import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSECRRepositoryEntityProvider } from './AWSECRRepositoryEntityProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 // @ts-ignore
 const ecr = mockClient(ECRClient);
@@ -100,6 +102,56 @@ describe('AWSECRRepositoryEntityProvider', () => {
           },
         ],
       } as ListTagsForResourceCommandOutput);
+    });
+
+    it('creates repository with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSECRRepositoryEntityProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-ecr-repo-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                type: 'ecr-repository',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-app-repo',
+                title: 'my-app-repo',
+                annotations: expect.objectContaining({
+                  'amazonaws.com/ecr-repository-arn':
+                    'arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo',
+                  'backstage.io/managed-by-location':
+                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
+                }),
+                uri: '123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo',
+                tagImmutability: 'MUTABLE',
+                createdAt: expect.stringContaining('Sun Jan 01 2023'),
+                encryption: 'AES256',
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates repository', async () => {

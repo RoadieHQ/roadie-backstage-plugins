@@ -16,7 +16,7 @@
 
 import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   ElasticLoadBalancingV2Client,
@@ -48,6 +48,7 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -93,7 +94,7 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing load balancer resources from aws: ${accountId}`,
     );
-    const lbResources: ResourceEntity[] = [];
+    const lbResources: Entity[] = [];
 
     const elbv2 = await this.getElbv2Client(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -130,40 +131,45 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
       const loadBalancerId = resourceParts[3];
 
       const consoleLink = createElbLink(region, loadBalancerId);
-
-      const resource: ResourceEntity = {
-        kind: 'Resource',
-        apiVersion: 'backstage.io/v1beta1',
-        metadata: {
-          annotations: {
-            ...defaultAnnotations,
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_LOAD_BALANCER_ARN]: loadBalancerArn,
-            [ANNOTATION_LOAD_BALANCER_DNS_NAME]: lb.DNSName || 'unknown',
+      let entity: Entity | undefined = this.renderEntity(
+        { data: lb, tags: tagMap },
+        { defaultAnnotations },
+      );
+      if (!entity) {
+        entity = {
+          kind: 'Resource',
+          apiVersion: 'backstage.io/v1beta1',
+          metadata: {
+            annotations: {
+              ...defaultAnnotations,
+              [ANNOTATION_VIEW_URL]: consoleLink,
+              [ANNOTATION_LOAD_BALANCER_ARN]: loadBalancerArn,
+              [ANNOTATION_LOAD_BALANCER_DNS_NAME]: lb.DNSName || 'unknown',
+            },
+            labels: this.labelsFromTags(tags),
+            name:
+              lb.LoadBalancerName ||
+              loadBalancerArn.split('/').pop() ||
+              'unknown',
+            title: tagMap.Name || lb.LoadBalancerName,
+            dnsName: lb.DNSName,
+            scheme: lb.Scheme,
+            vpcId: lb.VpcId,
+            type: lb.Type,
+            state: lb.State?.Code,
+            availabilityZones: lb.AvailabilityZones?.map(
+              az => az.ZoneName,
+            ).join(', '),
           },
-          labels: this.labelsFromTags(tags),
-          name:
-            lb.LoadBalancerName ||
-            loadBalancerArn.split('/').pop() ||
-            'unknown',
-          title: tagMap.Name || lb.LoadBalancerName,
-          dnsName: lb.DNSName,
-          scheme: lb.Scheme,
-          vpcId: lb.VpcId,
-          type: lb.Type,
-          state: lb.State?.Code,
-          availabilityZones: lb.AvailabilityZones?.map(az => az.ZoneName).join(
-            ', ',
-          ),
-        },
-        spec: {
-          owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-          ...relationshipsFromTags(tags),
-          type: 'load-balancer',
-        },
-      };
+          spec: {
+            owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+            ...relationshipsFromTags(tags),
+            type: 'load-balancer',
+          },
+        };
+      }
 
-      lbResources.push(resource);
+      lbResources.push(entity);
     }
 
     await this.connection.applyMutation({

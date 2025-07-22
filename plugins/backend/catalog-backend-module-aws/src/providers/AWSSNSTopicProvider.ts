@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { SNS, paginateListTopics } from '@aws-sdk/client-sns';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -39,6 +39,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -80,7 +81,7 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing SNS topic resources from AWS: ${accountId}`);
-    const topicResources: ResourceEntity[] = [];
+    const entities: Entity[] = [];
 
     const defaultAnnotations =
       this.buildDefaultAnnotations(dynamicAccountConfig);
@@ -103,41 +104,47 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
           const tags = tagsResponse.Tags ?? [];
           const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
           const consoleLink = new ARN(topic.TopicArn).consoleLink;
-          const topicEntity: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1alpha1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_AWS_SNS_TOPIC_ARN]: topic.TopicArn,
-                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+          let entity = this.renderEntity(
+            { data: topic },
+            { defaultAnnotations: await defaultAnnotations },
+          );
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1alpha1',
+              metadata: {
+                annotations: {
+                  ...(await defaultAnnotations),
+                  [ANNOTATION_AWS_SNS_TOPIC_ARN]: topic.TopicArn,
+                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+                },
+                name: topicName,
+                title: topicName,
+                labels: this.labelsFromTags(tags),
               },
-              name: topicName,
-              title: topicName,
-              labels: this.labelsFromTags(tags),
-            },
-            spec: {
-              type: 'aws-sns-topic',
-              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(tags),
-            },
-          };
+              spec: {
+                type: 'aws-sns-topic',
+                owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+                ...relationshipsFromTags(tags),
+              },
+            };
+          }
 
-          topicResources.push(topicEntity);
+          entities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: topicResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${topicResources.length} SNS topic resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} SNS topic resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

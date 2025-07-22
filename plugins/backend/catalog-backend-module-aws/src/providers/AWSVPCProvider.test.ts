@@ -28,6 +28,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSVPCProvider } from './AWSVPCProvider';
 import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -114,6 +116,46 @@ describe('AWSVPCProvider', () => {
         ],
         $metadata: {},
       } as DescribeDhcpOptionsCommandOutput);
+    });
+
+    it('creates VPC with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSVPCProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSVPCProvider.fromConfig(config, { logger, template });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-vpc-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                type: 'vpc',
+              },
+              metadata: expect.objectContaining({
+                name: 'vpc-12345678',
+                title: 'vpc-12345678',
+                state: 'available',
+                annotations: expect.objectContaining({
+                  'amazonaws.com/vpc-id': 'vpc-12345678',
+                  'backstage.io/managed-by-location':
+                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates VPC', async () => {

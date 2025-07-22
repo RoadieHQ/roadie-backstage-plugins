@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import { ElastiCache } from '@aws-sdk/client-elasticache';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -39,6 +39,7 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -99,7 +100,7 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing ElastiCache cluster resources from AWS: ${accountId}`,
     );
-    const elasticacheResources: ResourceEntity[] = [];
+    const elasticacheResources: Entity[] = [];
 
     const elastiCache = await this.getElastiCacheClient(dynamicAccountConfig);
 
@@ -118,6 +119,12 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
         const tags = clusterArn
           ? await elastiCache.listTagsForResource({ ResourceName: clusterArn })
           : undefined;
+        const tagMap = tags?.TagList?.reduce((acc, tag) => {
+          if (tag.Key && tag.Value) {
+            acc[tag.Key] = tag.Value;
+          }
+          return acc;
+        }, {} as Record<string, string>);
 
         // Additional metadata properties
         const clusterStatus = cluster.CacheClusterStatus || '';
@@ -128,34 +135,39 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
           cluster.CacheNodes && cluster.CacheNodes[0]?.Endpoint
             ? `${cluster.CacheNodes[0].Endpoint.Address}:${cluster.CacheNodes[0].Endpoint.Port}`
             : '';
-
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            name: clusterName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-            title: clusterName,
-            labels: {
-              'aws-elasticache-region': this.region,
+        let entity: Entity | undefined = this.renderEntity(
+          { data: cluster, tags: tagMap },
+          { defaultAnnotations },
+        );
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              name: clusterName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
+              title: clusterName,
+              labels: {
+                'aws-elasticache-region': this.region,
+              },
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]: clusterArn ?? '',
+              },
+              status: clusterStatus,
+              engine,
+              engineVersion,
+              nodeType,
+              endpoint,
             },
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]: clusterArn ?? '',
+            spec: {
+              owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
+              ...relationshipsFromTags(tags?.TagList || []),
+              type: this.elasticacheTypeValue,
             },
-            status: clusterStatus,
-            engine,
-            engineVersion,
-            nodeType,
-            endpoint,
-          },
-          spec: {
-            owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
-            ...relationshipsFromTags(tags?.TagList || []),
-            type: this.elasticacheTypeValue,
-          },
-        };
+          };
+        }
 
-        elasticacheResources.push(resource);
+        elasticacheResources.push(entity);
       }
     }
 

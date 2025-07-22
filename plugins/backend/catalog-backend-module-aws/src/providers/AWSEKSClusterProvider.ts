@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -51,6 +51,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -75,6 +76,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     account: AccountConfig,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -111,7 +113,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing EKS cluster resources from AWS: ${accountId}`);
-    const eksResources: ResourceEntity[] = [];
+    const eksEntities: Entity[] = [];
 
     const eks = await this.getEks(dynamicAccountConfig);
 
@@ -166,42 +168,49 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
           }
 
           annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
-          const resource: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations,
-              name: arnToName(name),
-              title: `${accountId}:${this.region}:${clusterName}`,
-              labels: this.labelsFromTags(cluster.cluster?.tags),
-            },
 
-            spec: {
-              owner: ownerFromTags(
-                cluster.cluster?.tags,
-                this.getOwnerTag(),
-                groups,
-              ),
-              ...relationshipsFromTags(cluster.cluster?.tags),
-              type: this.clusterTypeValue,
-            },
-          };
+          const labels = this.labelsFromTags(cluster.cluster?.tags);
+          let entity: Entity | undefined = this.renderEntity({
+            data: cluster.cluster,
+          });
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations,
+                name: arnToName(name),
+                title: `${accountId}:${this.region}:${clusterName}`,
+                labels,
+              },
 
-          eksResources.push(resource);
+              spec: {
+                owner: ownerFromTags(
+                  cluster.cluster?.tags,
+                  this.getOwnerTag(),
+                  groups,
+                ),
+                ...relationshipsFromTags(cluster.cluster?.tags),
+                type: this.clusterTypeValue,
+              },
+            };
+          }
+
+          eksEntities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: eksResources.map(entity => ({
+      entities: eksEntities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${eksResources.length} EKS cluster resources from AWS: ${accountId}`,
+      `Finished providing ${eksEntities.length} EKS cluster resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

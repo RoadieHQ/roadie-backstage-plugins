@@ -16,7 +16,7 @@
 
 import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
@@ -41,6 +41,7 @@ export class AWSSubnetProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -84,7 +85,7 @@ export class AWSSubnetProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing subnet resources from aws: ${accountId}`);
-    const subnetResources: ResourceEntity[] = [];
+    const entities: Entity[] = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -104,33 +105,39 @@ export class AWSSubnetProvider extends AWSEntityProvider {
         const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
         const consoleLink = new ARN(arn).consoleLink;
 
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_VIEW_URL]: consoleLink,
-              [ANNOTATION_SUBNET_ID]: subnetId,
+        let entity = this.renderEntity(
+          { data: subnet },
+          { defaultAnnotations },
+        );
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_VIEW_URL]: consoleLink,
+                [ANNOTATION_SUBNET_ID]: subnetId,
+              },
+              labels: this.labelsFromTags(subnet.Tags),
+              name: subnetId,
+              cidrBlock: subnet.CidrBlock,
+              vpcId: subnet.VpcId,
+              availabilityZone: subnet.AvailabilityZone,
+              availableIpAddressCount: subnet.AvailableIpAddressCount,
+              defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
+              mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
+              state: subnet.State,
             },
-            labels: this.labelsFromTags(subnet.Tags),
-            name: subnetId,
-            cidrBlock: subnet.CidrBlock,
-            vpcId: subnet.VpcId,
-            availabilityZone: subnet.AvailabilityZone,
-            availableIpAddressCount: subnet.AvailableIpAddressCount,
-            defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
-            mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
-            state: subnet.State,
-          },
-          spec: {
-            owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
-            ...relationshipsFromTags(subnet.Tags),
-            type: 'subnet',
-          },
-        };
+            spec: {
+              owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(subnet.Tags),
+              type: 'subnet',
+            },
+          };
+        }
 
-        subnetResources.push(resource);
+        entities.push(entity);
       }
 
       nextToken = subnets.NextToken;
@@ -138,14 +145,14 @@ export class AWSSubnetProvider extends AWSEntityProvider {
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: subnetResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${subnetResources.length} Subnet resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} Subnet resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { S3, Tag } from '@aws-sdk/client-s3';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -40,6 +40,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -82,7 +83,7 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing S3 bucket resources from AWS: ${accountId}`);
-    const s3Resources: ResourceEntity[] = [];
+    const s3Entities: Entity[] = [];
 
     const s3 = await this.getS3(dynamicAccountConfig);
 
@@ -106,40 +107,43 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             bucket: bucket.Name,
           });
         }
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...(await defaultAnnotations),
-              [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
-              [ANNOTATION_VIEW_URL]: consoleLink,
+        let entity = this.renderEntity({ data: bucket });
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations: {
+                ...(await defaultAnnotations),
+                [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
+                [ANNOTATION_VIEW_URL]: consoleLink,
+              },
+              name: arnToName(bucketArn),
+              title: bucket.Name,
+              labels: this.labelsFromTags(tags),
             },
-            name: arnToName(bucketArn),
-            title: bucket.Name,
-            labels: this.labelsFromTags(tags),
-          },
-          spec: {
-            owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-            ...relationshipsFromTags(tags),
-            type: 's3-bucket',
-          },
-        };
+            spec: {
+              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(tags),
+              type: 's3-bucket',
+            },
+          };
+        }
 
-        s3Resources.push(resource);
+        s3Entities.push(entity);
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: s3Resources.map(entity => ({
+      entities: s3Entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${s3Resources.length} S3 bucket resources from AWS: ${accountId}`,
+      `Finished providing ${s3Entities.length} S3 bucket resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

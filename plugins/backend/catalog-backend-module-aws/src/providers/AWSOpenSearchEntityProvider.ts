@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ResourceEntity } from '@backstage/catalog-model';
+import { Entity } from '@backstage/catalog-model';
 import { OpenSearch } from '@aws-sdk/client-opensearch';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -40,6 +40,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -63,6 +64,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
     account: AccountConfig,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -100,7 +102,7 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing OpenSearch domain resources from AWS: ${accountId}`,
     );
-    const opensearchResources: ResourceEntity[] = [];
+    const opensearchEntities: Entity[] = [];
 
     const openSearchClient = await this.getOpenSearchClient(
       dynamicAccountConfig,
@@ -114,14 +116,13 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
     const domainList = await openSearchClient.listDomainNames();
 
     if (domainList.DomainNames) {
-      for (const domain of domainList.DomainNames) {
-        const domainName = domain.DomainName || 'unknown';
-
-        const domainDetails = await openSearchClient.describeDomain({
+      for (const {
+        DomainName: domainName = 'unknown',
+      } of domainList.DomainNames) {
+        const domain = await openSearchClient.describeDomain({
           DomainName: domainName,
         });
-
-        const domainStatus = domainDetails.DomainStatus;
+        const domainStatus = domain.DomainStatus;
         const domainArn = domainStatus?.ARN;
         const tags = domainArn
           ? await openSearchClient.listTags({ ARN: domainArn })
@@ -133,44 +134,50 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
           ? `EBS-${domainStatus.EBSOptions.VolumeType}`
           : 'Instance Storage';
 
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            name: domainName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-            title: domainName,
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_AWS_OPEN_SEARCH_ARN]: domainArn ?? '',
+        let entity = this.renderEntity(
+          { data: domain },
+          { defaultAnnotations },
+        );
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              name: domainName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
+              title: domainName,
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_AWS_OPEN_SEARCH_ARN]: domainArn ?? '',
+              },
+              labels: {
+                'aws-opensearch-region': this.region,
+              },
+              endpoint,
+              engineVersion,
+              storageType,
             },
-            labels: {
-              'aws-opensearch-region': this.region,
+            spec: {
+              owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
+              ...relationshipsFromTags(tags?.TagList || []),
+              type: this.opensearchTypeValue,
             },
-            endpoint,
-            engineVersion,
-            storageType,
-          },
-          spec: {
-            owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
-            ...relationshipsFromTags(tags?.TagList || []),
-            type: this.opensearchTypeValue,
-          },
-        };
+          };
+        }
 
-        opensearchResources.push(resource);
+        opensearchEntities.push(entity);
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: opensearchResources.map(entity => ({
+      entities: opensearchEntities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${opensearchResources.length} OpenSearch domain resources from AWS: ${accountId}`,
+      `Finished providing ${opensearchEntities.length} OpenSearch domain resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

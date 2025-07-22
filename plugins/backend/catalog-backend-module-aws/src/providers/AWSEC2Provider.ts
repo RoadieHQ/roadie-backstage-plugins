@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2 } from '@aws-sdk/client-ec2';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -39,6 +39,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -82,7 +83,7 @@ export class AWSEC2Provider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing ec2 resources from aws: ${accountId}`);
-    const ec2Resources: ResourceEntity[] = [];
+    const ec2Resources: Entity[] = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
 
@@ -99,40 +100,50 @@ export class AWSEC2Provider extends AWSEntityProvider {
           const instanceId = instance.InstanceId;
           const arn = `arn:aws:ec2:${region}:${accountId}:instance/${instanceId}`;
           const consoleLink = new ARN(arn).consoleLink;
-          const resource: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
-              },
-              labels: this.labelsFromTags(instance.Tags),
-              name:
-                instanceId ??
-                `${reservation.ReservationId}-instance-${instance.InstanceId}`,
-              title:
-                instance?.Tags?.find(
-                  tag => tag.Key === 'Name' || tag.Key === 'name',
-                )?.Value ?? undefined,
-              instancePlatform: instance.Platform,
-              instanceType: instance.InstanceType,
-              monitoringState: instance.Monitoring?.State,
-              instancePlacement: instance.Placement?.AvailabilityZone,
-              amountOfBlockDevices: instance.BlockDeviceMappings?.length ?? 0,
-              instanceCpuCores: instance.CpuOptions?.CoreCount,
-              instanceCpuThreadsPerCode: instance.CpuOptions?.ThreadsPerCore,
-              reservationId: reservation.ReservationId,
-            },
-            spec: {
-              owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(instance.Tags),
-              type: 'ec2-instance',
-            },
-          };
 
-          ec2Resources.push(resource);
+          let entity: Entity | undefined = this.renderEntity(
+            {
+              data: instance,
+            },
+            { defaultAnnotations: await defaultAnnotations },
+          );
+
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations: {
+                  ...(await defaultAnnotations),
+                  [ANNOTATION_VIEW_URL]: consoleLink,
+                  [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
+                },
+                labels: this.labelsFromTags(instance.Tags),
+                name:
+                  instanceId ??
+                  `${reservation.ReservationId}-instance-${instance.InstanceId}`,
+                title:
+                  instance?.Tags?.find(
+                    tag => tag.Key === 'Name' || tag.Key === 'name',
+                  )?.Value ?? undefined,
+                instancePlatform: instance.Platform,
+                instanceType: instance.InstanceType,
+                monitoringState: instance.Monitoring?.State,
+                instancePlacement: instance.Placement?.AvailabilityZone,
+                amountOfBlockDevices: instance.BlockDeviceMappings?.length ?? 0,
+                instanceCpuCores: instance.CpuOptions?.CoreCount,
+                instanceCpuThreadsPerCode: instance.CpuOptions?.ThreadsPerCore,
+                reservationId: reservation.ReservationId,
+              },
+              spec: {
+                owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
+                ...relationshipsFromTags(instance.Tags),
+                type: 'ec2-instance',
+              },
+            };
+          }
+
+          ec2Resources.push(entity);
         }
       }
     }

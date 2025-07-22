@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
 import type { Logger } from 'winston';
 import { Config } from '@backstage/config';
@@ -39,6 +39,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       useTemporaryCredentials?: boolean;
@@ -81,7 +82,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
 
     const groups = await this.getGroups();
     this.logger.info(`Providing RDS resources from AWS: ${accountId}`);
-    const rdsResources: ResourceEntity[] = [];
+    const rdsEntities: Entity[] = [];
 
     const rdsClient = await this.getRdsClient(dynamicAccountConfig);
 
@@ -101,51 +102,59 @@ export class AWSRDSProvider extends AWSEntityProvider {
           const instanceId = dbInstance.DBInstanceIdentifier;
           const instanceArn = dbInstance.DBInstanceArn;
           const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
-          const resource: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
+          let entity = this.renderEntity(
+            { data: dbInstance },
+            { defaultAnnotations: await defaultAnnotations },
+          );
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations: {
+                  ...(await defaultAnnotations),
+                  [ANNOTATION_VIEW_URL]: consoleLink,
+                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
+                },
+                labels: this.labelsFromTags(dbInstance.TagList),
+                name: instanceId.substring(0, 62),
+                title: instanceId,
+                dbInstanceClass: dbInstance.DBInstanceClass,
+                dbEngine: dbInstance.Engine,
+                dbEngineVersion: dbInstance.EngineVersion,
+                allocatedStorage: dbInstance.AllocatedStorage,
+                preferredMaintenanceWindow:
+                  dbInstance.PreferredMaintenanceWindow,
+                preferredBackupWindow: dbInstance.PreferredBackupWindow,
+                backupRetentionPeriod: dbInstance.BackupRetentionPeriod,
+                isMultiAz: dbInstance.MultiAZ,
+                automaticMinorVersionUpgrade:
+                  dbInstance.AutoMinorVersionUpgrade,
+                isPubliclyAccessible: dbInstance.PubliclyAccessible,
+                storageType: dbInstance.StorageType,
+                isPerformanceInsightsEnabled:
+                  dbInstance.PerformanceInsightsEnabled,
               },
-              labels: this.labelsFromTags(dbInstance.TagList),
-              name: instanceId.substring(0, 62),
-              title: instanceId,
-              dbInstanceClass: dbInstance.DBInstanceClass,
-              dbEngine: dbInstance.Engine,
-              dbEngineVersion: dbInstance.EngineVersion,
-              allocatedStorage: dbInstance.AllocatedStorage,
-              preferredMaintenanceWindow: dbInstance.PreferredMaintenanceWindow,
-              preferredBackupWindow: dbInstance.PreferredBackupWindow,
-              backupRetentionPeriod: dbInstance.BackupRetentionPeriod,
-              isMultiAz: dbInstance.MultiAZ,
-              automaticMinorVersionUpgrade: dbInstance.AutoMinorVersionUpgrade,
-              isPubliclyAccessible: dbInstance.PubliclyAccessible,
-              storageType: dbInstance.StorageType,
-              isPerformanceInsightsEnabled:
-                dbInstance.PerformanceInsightsEnabled,
-            },
-            spec: {
-              owner: ownerFromTags(
-                dbInstance.TagList,
-                this.getOwnerTag(),
-                groups,
-              ),
-              ...relationshipsFromTags(dbInstance.TagList),
-              type: 'rds-instance',
-            },
-          };
+              spec: {
+                owner: ownerFromTags(
+                  dbInstance.TagList,
+                  this.getOwnerTag(),
+                  groups,
+                ),
+                ...relationshipsFromTags(dbInstance.TagList),
+                type: 'rds-instance',
+              },
+            };
+          }
 
-          rdsResources.push(resource);
+          rdsEntities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: rdsResources.map(entity => ({
+      entities: rdsEntities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

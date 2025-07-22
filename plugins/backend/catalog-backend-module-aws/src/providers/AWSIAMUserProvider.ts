@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, UserEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -36,6 +36,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -77,7 +78,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
 
     const { accountId } = this.getParsedConfig(dynamicAccountConfig);
     this.logger.info(`Providing IAM user resources from AWS: ${accountId}`);
-    const userResources: UserEntity[] = [];
+    const userResources: Entity[] = [];
 
     const defaultAnnotations =
       this.buildDefaultAnnotations(dynamicAccountConfig);
@@ -95,29 +96,35 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
       for (const user of userPage.Users || []) {
         if (user.UserName && user.Arn && user.UserId) {
           const consoleLink = new ARN(user.Arn).consoleLink;
-          const userEntity: UserEntity = {
-            kind: 'User',
-            apiVersion: 'backstage.io/v1alpha1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
-                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+          let entity: Entity | undefined = this.renderEntity(
+            { data: user },
+            { defaultAnnotations: await defaultAnnotations },
+          );
+          if (!entity) {
+            entity = {
+              kind: 'User',
+              apiVersion: 'backstage.io/v1alpha1',
+              metadata: {
+                annotations: {
+                  ...(await defaultAnnotations),
+                  [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
+                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+                },
+                name: arnToName(user.Arn),
+                title: user.UserName,
+                labels: this.labelsFromTags(user.Tags),
               },
-              name: arnToName(user.Arn),
-              title: user.UserName,
-              labels: this.labelsFromTags(user.Tags),
-            },
-            spec: {
-              profile: {
-                displayName: user.Arn,
-                email: user.UserName,
+              spec: {
+                profile: {
+                  displayName: user.Arn,
+                  email: user.UserName,
+                },
+                memberOf: [],
               },
-              memberOf: [],
-            },
-          };
+            };
+          }
 
-          userResources.push(userEntity);
+          userResources.push(entity);
         }
       }
     }

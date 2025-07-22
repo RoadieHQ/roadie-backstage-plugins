@@ -26,6 +26,8 @@ import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const lambda = mockClient(Lambda);
 const sts = mockClient(STS);
@@ -100,11 +102,55 @@ describe('AWSLambdaFunctionProvider', () => {
       });
     });
 
+    it('creates aws functions with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSLambdaFunctionProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                annotations: {
+                  'amazon.com/lambda-function-arn':
+                    'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
+                  'backstage.io/managed-by-location':
+                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/view-url':
+                    'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
+                },
+                title: 'my-function',
+                name: 'bc6fa48d05a0a464c5e2a5214985bd957578cd50314fc6076cef1845fadb3c8',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
     it('creates aws functions', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
+
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();

@@ -16,7 +16,7 @@
 
 import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
@@ -43,6 +43,7 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -86,7 +87,7 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing EBS volume resources from aws: ${accountId}`);
-    const ebsResources: ResourceEntity[] = [];
+    const ebsResources: Entity[] = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -108,38 +109,45 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
         const ebsVolumeId = resourceParts[3];
 
         const consoleLink = createEbsVolumeConsoleLink(region, ebsVolumeId);
-
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_VIEW_URL]: consoleLink,
-              [ANNOTATION_EBS_VOLUME_ID]: volumeId,
+        let entity: Entity | undefined = this.renderEntity(
+          {
+            data: volume,
+          },
+          { defaultAnnotations },
+        );
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_VIEW_URL]: consoleLink,
+                [ANNOTATION_EBS_VOLUME_ID]: volumeId,
+              },
+              labels: this.labelsFromTags(volume.Tags),
+              name: volumeId,
+              title:
+                volume.Tags?.find(tag => tag.Key === 'Name')?.Value || volumeId,
+              size: volume.Size,
+              volumeType: volume.VolumeType,
+              availabilityZone: volume.AvailabilityZone,
+              state: volume.State,
+              encrypted: volume.Encrypted ? 'Yes' : 'No',
+              attachedInstanceIds: volume.Attachments?.map(
+                a => a.InstanceId,
+              ).join(', '),
+              createTime: volume.CreateTime?.toISOString(),
             },
-            labels: this.labelsFromTags(volume.Tags),
-            name: volumeId,
-            title:
-              volume.Tags?.find(tag => tag.Key === 'Name')?.Value || volumeId,
-            size: volume.Size,
-            volumeType: volume.VolumeType,
-            availabilityZone: volume.AvailabilityZone,
-            state: volume.State,
-            encrypted: volume.Encrypted ? 'Yes' : 'No',
-            attachedInstanceIds: volume.Attachments?.map(
-              a => a.InstanceId,
-            ).join(', '),
-            createTime: volume.CreateTime?.toISOString(),
-          },
-          spec: {
-            owner: ownerFromTags(volume.Tags, this.getOwnerTag(), groups),
-            ...relationshipsFromTags(volume.Tags),
-            type: 'ebs-volume',
-          },
-        };
+            spec: {
+              owner: ownerFromTags(volume.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(volume.Tags),
+              type: 'ebs-volume',
+            },
+          };
+        }
 
-        ebsResources.push(resource);
+        ebsResources.push(entity);
       }
 
       nextToken = volumes.NextToken;

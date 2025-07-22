@@ -16,7 +16,7 @@
 
 import { CatalogApi } from '@backstage/catalog-client';
 import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
@@ -41,6 +41,7 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -86,7 +87,7 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
     this.logger.info(
       `Providing security group resources from aws: ${accountId}`,
     );
-    const sgResources: ResourceEntity[] = [];
+    const entities: Entity[] = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
     const defaultAnnotations = await this.buildDefaultAnnotations(
@@ -144,35 +145,38 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
             return `${protocol}:${portRange} to ${destinations || 'None'}`;
           }).join('; ') || 'None';
 
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_VIEW_URL]: consoleLink,
-              [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId,
+        let entity = this.renderEntity({ data: sg }, { defaultAnnotations });
+        if (!entity) {
+          entity = {
+            kind: 'Resource',
+            apiVersion: 'backstage.io/v1beta1',
+            metadata: {
+              annotations: {
+                ...defaultAnnotations,
+                [ANNOTATION_VIEW_URL]: consoleLink,
+                [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId,
+              },
+              labels: this.labelsFromTags(sg.Tags),
+              name: securityGroupId,
+              title:
+                sg.Tags?.find(tag => tag.Key === 'Name')?.Value ||
+                sg.GroupName ||
+                securityGroupId,
+              description: sg.Description,
+              vpcId: sg.VpcId,
+              groupName: sg.GroupName,
+              ingressRules: ingressRules,
+              egressRules: egressRules,
             },
-            labels: this.labelsFromTags(sg.Tags),
-            name: securityGroupId,
-            title:
-              sg.Tags?.find(tag => tag.Key === 'Name')?.Value ||
-              sg.GroupName ||
-              securityGroupId,
-            description: sg.Description,
-            vpcId: sg.VpcId,
-            groupName: sg.GroupName,
-            ingressRules: ingressRules,
-            egressRules: egressRules,
-          },
-          spec: {
-            owner: ownerFromTags(sg.Tags, this.getOwnerTag(), groups),
-            ...relationshipsFromTags(sg.Tags),
-            type: 'security-group',
-          },
-        };
+            spec: {
+              owner: ownerFromTags(sg.Tags, this.getOwnerTag(), groups),
+              ...relationshipsFromTags(sg.Tags),
+              type: 'security-group',
+            },
+          };
+        }
 
-        sgResources.push(resource);
+        entities.push(entity);
       }
 
       nextToken = securityGroups.NextToken;
@@ -180,14 +184,14 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: sgResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${sgResources.length} Security Group resources from AWS: ${accountId} (processed ${pageCount} pages)`,
+      `Finished providing ${entities.length} Security Group resources from AWS: ${accountId} (processed ${pageCount} pages)`,
       { run_duration: duration(startTimestamp) },
     );
   }

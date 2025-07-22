@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { IAM, paginateListRoles } from '@aws-sdk/client-iam';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -40,6 +40,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -83,7 +84,7 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
     const groups = await this.getGroups();
 
     this.logger.info(`Providing IAM role resources from AWS: ${accountId}`);
-    const roleResources: ResourceEntity[] = [];
+    const roleResources: Entity[] = [];
 
     const defaultAnnotations =
       this.buildDefaultAnnotations(dynamicAccountConfig);
@@ -101,27 +102,33 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       for (const role of rolePage.Roles || []) {
         if (role.RoleName && role.Arn && role.RoleId) {
           const consoleLink = new ARN(role.Arn).consoleLink;
-          const roleEntity: ResourceEntity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1alpha1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_AWS_IAM_ROLE_ARN]: role.Arn,
-                [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+          let entity: Entity | undefined = this.renderEntity(
+            { data: role },
+            { defaultAnnotations: await defaultAnnotations },
+          );
+          if (!entity) {
+            entity = {
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1alpha1',
+              metadata: {
+                annotations: {
+                  ...(await defaultAnnotations),
+                  [ANNOTATION_AWS_IAM_ROLE_ARN]: role.Arn,
+                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+                },
+                name: arnToName(role.Arn),
+                title: role.RoleName,
+                labels: this.labelsFromTags(role.Tags),
               },
-              name: arnToName(role.Arn),
-              title: role.RoleName,
-              labels: this.labelsFromTags(role.Tags),
-            },
-            spec: {
-              type: 'aws-role',
-              owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(role.Tags),
-            },
-          };
+              spec: {
+                type: 'aws-role',
+                owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
+                ...relationshipsFromTags(role.Tags),
+              },
+            };
+          }
 
-          roleResources.push(roleEntity);
+          roleResources.push(entity);
         }
       }
     }

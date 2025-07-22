@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, ResourceEntity } from '@backstage/catalog-model';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
 import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -43,6 +43,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
     config: Config,
     options: {
       logger: Logger | LoggerService;
+      template?: string;
       catalogApi?: CatalogApi;
       providerId?: string;
       ownerTag?: string;
@@ -89,7 +90,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       `Providing lambda function resources from AWS: ${accountId}`,
     );
 
-    const lambdaComponents: ResourceEntity[] = [];
+    const lambdaComponents: Entity[] = [];
 
     const lambda = await this.getLambda(dynamicAccountConfig);
 
@@ -136,27 +137,37 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             )}`,
           );
 
-          lambdaComponents.push({
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations,
-              name: arnToName(lambdaFunction.FunctionArn),
-              title: lambdaFunction.FunctionName,
-              description: lambdaFunction.Description,
-              runtime: lambdaFunction.Runtime,
-              memorySize: lambdaFunction.MemorySize,
-              ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
-              timeout: lambdaFunction.Timeout,
-              architectures: lambdaFunction.Architectures,
-              labels: this.labelsFromTags(tags),
+          const entity: Entity | undefined = this.renderEntity(
+            {
+              data: lambdaFunction,
             },
-            spec: {
-              owner: owner,
-              ...relationships,
-              type: 'lambda-function',
-            },
-          });
+            { defaultAnnotations: await defaultAnnotations },
+          );
+          if (entity) {
+            lambdaComponents.push(entity);
+          } else {
+            lambdaComponents.push({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              metadata: {
+                annotations,
+                name: arnToName(lambdaFunction.FunctionArn),
+                title: lambdaFunction.FunctionName,
+                description: lambdaFunction.Description,
+                runtime: lambdaFunction.Runtime,
+                memorySize: lambdaFunction.MemorySize,
+                ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
+                timeout: lambdaFunction.Timeout,
+                architectures: lambdaFunction.Architectures,
+                labels: this.labelsFromTags(tags),
+              },
+              spec: {
+                owner: owner,
+                ...relationships,
+                type: 'lambda-function',
+              },
+            });
+          }
         }
       }
     }

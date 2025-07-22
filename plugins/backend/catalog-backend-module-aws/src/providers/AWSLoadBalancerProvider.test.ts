@@ -27,6 +27,8 @@ import { createLogger, transports } from 'winston';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);
 const sts = mockClient(STS as any);
@@ -112,6 +114,57 @@ describe('AWSLoadBalancerProvider', () => {
         ],
         $metadata: {},
       } as DescribeTagsCommandOutput);
+    });
+
+    it('creates load balancer with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSLoadBalancerProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSLoadBalancerProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-load-balancer-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                type: 'load-balancer',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-load-balancer',
+                title: 'my-load-balancer',
+                dnsName:
+                  'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
+                scheme: 'internet-facing',
+                vpcId: 'vpc-12345678',
+                type: 'application',
+                state: 'active',
+                annotations: expect.objectContaining({
+                  'amazonaws.com/load-balancer-arn':
+                    'arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188',
+                  'amazonaws.com/load-balancer-dns-name':
+                    'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
+                  'backstage.io/managed-by-location':
+                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates load balancer', async () => {

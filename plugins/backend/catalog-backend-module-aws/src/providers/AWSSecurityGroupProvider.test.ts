@@ -26,6 +26,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
 import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -107,6 +109,63 @@ describe('AWSSecurityGroupProvider', () => {
         ],
         $metadata: {},
       } as DescribeSecurityGroupsCommandOutput);
+    });
+
+    it('creates security group with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSSecurityGroupProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-security-group-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'security-group',
+              },
+              metadata: expect.objectContaining({
+                name: 'sg-12345678',
+                title: 'my-security-group',
+                description: 'My test security group',
+                vpcId: 'vpc-12345678',
+                groupName: 'my-security-group',
+                ingressRules: 'tcp:80 from 0.0.0.0/0; tcp:443 from sg-87654321',
+                egressRules: 'All:All to 0.0.0.0/0',
+                labels: {
+                  Environment: 'production--staging',
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_VIEW_URL]: expect.stringContaining(
+                    'console.aws.amazon.com',
+                  ),
+                  'amazonaws.com/security-group-id': 'sg-12345678',
+                  'backstage.io/managed-by-location':
+                    'aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
     });
 
     it('creates security group', async () => {

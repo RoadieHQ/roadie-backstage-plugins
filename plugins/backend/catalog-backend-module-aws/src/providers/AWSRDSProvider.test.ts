@@ -22,6 +22,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSRDSProvider } from './AWSRDSProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const rds = mockClient(RDS);
 const sts = mockClient(STS);
@@ -90,6 +92,49 @@ describe('AWSRDSProvider', () => {
               },
             ],
           },
+        ],
+      });
+    });
+
+    it('creates DB instance with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(dirname(__filename), './AWSRDSProvider.example.yaml.njs'),
+      ).toString();
+      const provider = AWSRDSProvider.fromConfig(config, { logger, template });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-rds-provider-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                type: 'rds-instance',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-database-instance',
+                title: 'my-database-instance',
+                dbInstanceClass: 'db.t3.micro',
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]:
+                    'arn:aws:rds:eu-west-1:123456789012:db:my-database-instance',
+                  'backstage.io/managed-by-location':
+                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/view-url':
+                    'https://console.aws.amazon.com/rds/home?region=eu-west-1#database:id=my-database-instance',
+                }),
+              }),
+            }),
+          }),
         ],
       });
     });

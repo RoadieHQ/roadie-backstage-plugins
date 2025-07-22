@@ -30,6 +30,8 @@ import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 // @ts-ignore
 const opensearch = mockClient(OpenSearch);
@@ -116,6 +118,55 @@ describe('AWSOpenSearchEntityProvider', () => {
       } as ListTagsCommandOutput);
     });
 
+    it('creates domain with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSOpenSearchEntityProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-opensearch-domain-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                type: 'opensearch-domain',
+              },
+              metadata: expect.objectContaining({
+                name: 'my-search-domain',
+                title: 'my-search-domain',
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_OPEN_SEARCH_ARN]:
+                    'arn:aws:es:eu-west-1:123456789012:domain/my-search-domain',
+                  'backstage.io/managed-by-location':
+                    'aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1',
+                }),
+                endpoint:
+                  'search-my-search-domain-abc123.eu-west-1.es.amazonaws.com',
+                engineVersion: 'OpenSearch_2.3',
+                storageType: 'EBS-gp3',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
     it('creates domain', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),

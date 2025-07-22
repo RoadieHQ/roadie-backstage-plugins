@@ -17,6 +17,8 @@
 import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
 import { ConfigReader } from '@backstage/config';
 import { createLogger } from 'winston';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 const validConfig = {
   accountId: '123456789012',
@@ -65,6 +67,28 @@ describe('AWSDynamoDbTableDataProvider', () => {
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
         logger: createLogger(),
+      });
+    };
+    expect(testWrapper).not.toThrow();
+  });
+
+  it('should not blow up on correct configs using template', () => {
+    const config = ConfigReader.fromConfigs([
+      {
+        context: 'unit-test',
+        data: validConfig,
+      },
+    ]);
+    const template = readFileSync(
+      join(
+        dirname(__filename),
+        './AWSDynamoDbTableDataProvider.example.yaml.njs',
+      ),
+    ).toString();
+    const testWrapper = () => {
+      AWSDynamoDbTableDataProvider.fromConfig(config, {
+        logger: createLogger(),
+        template,
       });
     };
     expect(testWrapper).not.toThrow();
