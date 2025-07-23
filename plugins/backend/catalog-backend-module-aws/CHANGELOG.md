@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.8.1
+
+### Patch Changes
+
+- 6b542e1: Fix how the openseach domain template variable is provided.
+
 ## 5.8.0
 
 ### Minor Changes
