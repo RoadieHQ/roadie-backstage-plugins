@@ -14,6 +14,11 @@
     "./group-provider-factory": "./src/group-entity-provider.ts",
     "./org-provider-factory": "./src/org-entity-provider.ts"
   },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
   "typesVersions": {
     "*": {
       "package.json": [
