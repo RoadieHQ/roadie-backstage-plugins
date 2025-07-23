@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.2.1
+
+### Patch Changes
+
+- 4c8ae83: Fixes the publish config to release an actual version
+
 ## 1.2.0
 
 ### Minor Changes
