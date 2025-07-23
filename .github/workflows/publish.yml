@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      needs_release: ${{ steps.release_check.outputs.needs_release }}
+      needs_release: ${{ github.event_name == 'workflow_dispatch' && 'true' || steps.release_check.outputs.needs_release }}
 
     strategy:
       matrix:
@@ -28,12 +28,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Fetch previous commit for release check
         run: git fetch origin '${{ github.event.before }}'
 
       - name: Check if release
+        if: github.event_name != 'workflow_dispatch'
         id: release_check
         run: node scripts/check-if-release.js
         env:
@@ -82,7 +87,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org
 
-      - run: yarn install --immutable
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: build type declarations
         run: yarn tsc
@@ -90,14 +98,19 @@ jobs:
       - name: build packages
         run: yarn backstage-cli repo build
 
-      # Publishes current version of packages that are not already present in the registry.
+      # Publishes current version of packages that are not already present in the registry..
       - name: Run publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
-          yarn workspaces foreach -A --topological-dev --no-private npm publish --tolerate-republish
+
+          yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
+          yarn config set npmScopes.roadiehq.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.roadiehq.npmAlwaysAuth true
+
+          yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
 
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
       - name: Create a release tag
