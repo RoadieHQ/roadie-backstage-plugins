@@ -28,7 +28,11 @@ jobs:
           cache: yarn
           node-version: ${{ matrix.node-version }}
 
-      - run: yarn install
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
+
       - run: yarn lint
       - run: yarn tsc
       - run: yarn test

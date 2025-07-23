@@ -33,7 +33,9 @@ jobs:
         run: node --version
 
       - name: Install dependencies
-        run: yarn install
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Run tsc
         run: yarn tsc
@@ -71,7 +73,6 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18
           - 20
           - 22
 
@@ -90,7 +91,9 @@ jobs:
         run: node --version
 
       - name: Install dependencies
-        run: yarn install
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Lint
         run: yarn lint
