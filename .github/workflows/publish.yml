@@ -98,7 +98,7 @@ jobs:
       - name: build packages
         run: yarn backstage-cli repo build
 
-      # Publishes current version of packages that are not already present in the registry.
+      # Publishes current version of packages that are not already present in the registry..
       - name: Run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
