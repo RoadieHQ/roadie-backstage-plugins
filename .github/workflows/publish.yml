@@ -106,14 +106,11 @@ jobs:
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
 
-          # echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
-          # echo "always-auth = true" >> .npmrc
-
           yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
           yarn config set npmScopes.roadiehq.npmRegistryServer "https://registry.npmjs.org"
           yarn config set npmScopes.roadiehq.npmAlwaysAuth true
 
-          yarn workspaces foreach -A --no-private npm publish --tolerate-republish
+          yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
 
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
       - name: Create a release tag
