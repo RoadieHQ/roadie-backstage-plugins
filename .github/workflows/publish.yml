@@ -98,6 +98,7 @@ jobs:
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           yarn workspaces foreach -A --no-private npm publish --tolerate-republish
 
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
