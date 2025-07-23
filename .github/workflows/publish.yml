@@ -28,7 +28,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
+
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: Fetch previous commit for release check
         run: git fetch origin '${{ github.event.before }}'
@@ -83,7 +87,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org
 
-      - run: yarn install --immutable
+      - name: Install dependencies
+        uses: backstage/actions/yarn-install@v0.5.9
+        with:
+          cache-prefix: ${{ runner.os }}-v${{ matrix.node-version }}
 
       - name: build type declarations
         run: yarn tsc
@@ -98,7 +105,10 @@ jobs:
         run: |
           git config --global user.email "bot@roadie.io"
           git config --global user.name "roadie-bot"
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> .npmrc
+          echo "always-auth = true" >> .npmrc
+          cat .npmrc
+
           yarn workspaces foreach -A --no-private npm publish --tolerate-republish
 
       # Creates the next available tag with format "release-<year>-<month>-<day>[.<n>]"
