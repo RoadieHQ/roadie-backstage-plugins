@@ -103,12 +103,7 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
         const volumeId = volume.VolumeId;
         if (!volumeId) continue;
 
-        const arn = `arn:aws:ec2:${region}:${accountId}:volume/${volumeId}`;
-        const arnParts = arn.split(':');
-        const resourceParts = arnParts[5].split('/');
-        const ebsVolumeId = resourceParts[3];
-
-        const consoleLink = createEbsVolumeConsoleLink(region, ebsVolumeId);
+        const consoleLink = createEbsVolumeConsoleLink(region, volumeId);
         let entity: Entity | undefined = this.renderEntity(
           {
             data: volume,
