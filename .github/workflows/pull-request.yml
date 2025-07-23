@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  cancel-in-progress: true
+
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
