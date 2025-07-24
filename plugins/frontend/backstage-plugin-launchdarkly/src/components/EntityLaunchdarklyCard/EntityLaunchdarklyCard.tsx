@@ -33,6 +33,7 @@ import {
   useLaunchdarklyMultiEnvironmentFlags,
 } from '../../hooks/useLaunchdarklyMultiEnvironmentFlags';
 import { FlagDetailsPanel } from '../EntityLaunchdarklyContextOverviewCard/FlagDetailsPanel';
+import { useMemo } from 'react';
 
 const useStyles = makeStyles(theme => ({
   settingsButton: {
@@ -95,18 +96,7 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
     loading,
   } = useLaunchdarklyMultiEnvironmentFlags(entity, envs);
 
-  // Check if the required annotation is present
-  if (!entity.metadata?.annotations?.[LAUNCHDARKLY_PROJECT_KEY_ANNOTATION]) {
-    return (
-      <MissingAnnotationEmptyState
-        annotation={LAUNCHDARKLY_PROJECT_KEY_ANNOTATION}
-        readMoreUrl="https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-launchdarkly/README.md"
-      />
-    );
-  }
-
-  // Create dynamic columns based on visible environments
-  const createDynamicColumns = (): TableColumn<MultiEnvironmentFlag>[] => {
+  const tableColumns: TableColumn<MultiEnvironmentFlag>[] = useMemo(() => {
     const baseColumns: TableColumn<MultiEnvironmentFlag>[] = [
       {
         title: 'Name',
@@ -159,30 +149,38 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
     ];
 
     const environmentColumns: TableColumn<MultiEnvironmentFlag>[] = [];
-    if (flags && flags.length > 0) {
-      envs.forEach(envKey => {
-        environmentColumns.push({
-          title: envKey,
-          render: row => {
-            const envData = row.environments[envKey];
-            if (!envData) return 'N/A';
+    envs.forEach(envKey => {
+      environmentColumns.push({
+        title: envKey,
+        render: row => {
+          const envData = row.environments[envKey];
+          if (!envData) return 'N/A';
 
-            return (
-              <span
-                className={
-                  envData.on ? classes.statusEnabled : classes.statusDisabled
-                }
-              >
-                {envData.status}
-              </span>
-            );
-          },
-        });
+          return (
+            <span
+              className={
+                envData.on ? classes.statusEnabled : classes.statusDisabled
+              }
+            >
+              {envData.status}
+            </span>
+          );
+        },
       });
-    }
+    });
 
     return [...baseColumns, ...environmentColumns];
-  };
+  }, [envs, classes]);
+
+  // Check if the required annotation is present
+  if (!entity.metadata?.annotations?.[LAUNCHDARKLY_PROJECT_KEY_ANNOTATION]) {
+    return (
+      <MissingAnnotationEmptyState
+        annotation={LAUNCHDARKLY_PROJECT_KEY_ANNOTATION}
+        readMoreUrl="https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/frontend/backstage-plugin-launchdarkly/README.md"
+      />
+    );
+  }
 
   if (loading) {
     return <Progress />;
@@ -194,7 +192,7 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
 
   return (
     <Table
-      columns={createDynamicColumns()}
+      columns={tableColumns}
       title={<TableHeader title={title} />}
       data={flags || []}
       detailPanel={({ rowData }) => (
