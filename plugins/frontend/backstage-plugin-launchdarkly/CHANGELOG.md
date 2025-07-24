@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.1.1
+
+### Patch Changes
+
+- b42dd5f: Modify details panel to be self-contained to limit unnecessary rerenders
+
 ## 1.1.0
 
 ### Minor Changes
