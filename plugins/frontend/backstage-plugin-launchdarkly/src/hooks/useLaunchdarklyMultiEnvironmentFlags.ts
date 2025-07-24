@@ -1,6 +1,9 @@
 import { Entity } from '@backstage/catalog-model';
 import { useAsync } from 'react-use';
-import { LAUNCHDARKLY_PROJECT_KEY_ANNOTATION } from '../constants';
+import {
+  LAUNCHDARKLY_FILTER_QUERY_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
+} from '../constants';
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 
 export type MultiEnvironmentFlag = {
@@ -36,12 +39,17 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
       entity.metadata.annotations?.[LAUNCHDARKLY_PROJECT_KEY_ANNOTATION] ||
       'default';
 
+    const query =
+      entity.metadata.annotations?.[LAUNCHDARKLY_FILTER_QUERY_ANNOTATION];
+
     const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
 
     const envQueryParams = (envs ?? []).map(env => `env=${env}`).join('&');
 
     const flagsResponse = await fetch(
-      `${url}/v2/flags/${projectKey}?limit=100&offset=0&${envQueryParams}`,
+      `${url}/v2/flags/${projectKey}?limit=100&offset=0&${envQueryParams}${
+        query ? `&filter=${query}` : ''
+      }`,
     );
 
     if (!flagsResponse.ok) {
