@@ -170,9 +170,12 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
           annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
 
           const labels = this.labelsFromTags(cluster.cluster?.tags);
-          let entity: Entity | undefined = this.renderEntity({
-            data: cluster.cluster,
-          });
+          let entity: Entity | undefined = this.renderEntity(
+            {
+              data: cluster.cluster,
+            },
+            { defaultAnnotations: await defaultAnnotations },
+          );
           if (!entity) {
             entity = {
               kind: 'Resource',

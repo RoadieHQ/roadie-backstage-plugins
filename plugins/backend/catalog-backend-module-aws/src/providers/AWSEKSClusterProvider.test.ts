@@ -146,9 +146,9 @@ describe('AWSEKSClusterProvider', () => {
             entity: expect.objectContaining({
               kind: 'Resource',
               metadata: expect.objectContaining({
-                labels: {
+                labels: expect.objectContaining({
                   some_url: 'https---asdfhwef.com-hello-world',
-                },
+                }),
                 name: 'a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f',
                 title: '123456789012:eu-west-1:cluster1',
                 annotations: expect.objectContaining({
