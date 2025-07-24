@@ -35,7 +35,6 @@ import {
   ContextFlag,
   useLaunchdarklyContextFlags,
 } from '../../hooks/useLaunchdarklyContextFlags';
-import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { FlagDetailsPanel } from './FlagDetailsPanel';
 import { ValueRenderer } from './FlagVariationValueRenderer';
 
@@ -133,7 +132,6 @@ export const EntityLaunchdarklyContextOverviewCard = (
 ) => {
   const { title, enableSearch = false } = props;
   const { entity } = useEntity();
-  const discoveryApi = useApi(discoveryApiRef);
 
   const unsetAnnotations = difference(
     [
@@ -169,11 +167,7 @@ export const EntityLaunchdarklyContextOverviewCard = (
       data={value ?? []}
       detailPanel={({ rowData }) => (
         <ErrorBoundary>
-          <FlagDetailsPanel
-            flag={rowData}
-            discoveryApi={discoveryApi}
-            entity={entity}
-          />
+          <FlagDetailsPanel flag={rowData} />
         </ErrorBoundary>
       )}
       options={{
