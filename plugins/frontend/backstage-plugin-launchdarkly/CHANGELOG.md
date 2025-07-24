@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.1.2
+
+### Patch Changes
+
+- 92443a3: Wrap column configuration in memo to prevent rerenders
+
 ## 1.1.1
 
 ### Patch Changes
