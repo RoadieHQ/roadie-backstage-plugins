@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.8.2
+
+### Patch Changes
+
+- c3a96f6: Add default annotations to the eks cluster resource.
+
 ## 5.8.1
 
 ### Patch Changes
