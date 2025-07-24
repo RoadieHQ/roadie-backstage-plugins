@@ -27,7 +27,6 @@ import {
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 import {
   MultiEnvironmentFlag,
@@ -88,7 +87,6 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
   const { title, enableSearch = false, envs = ['production'] } = props;
   const classes = useStyles();
   const { entity } = useEntity();
-  const discoveryApi = useApi(discoveryApiRef);
 
   // Fetch flags data
   const {
@@ -213,8 +211,6 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
               tags: rowData.tags,
               maintainer: rowData.maintainer,
             }}
-            discoveryApi={discoveryApi}
-            entity={entity}
           />
         </ErrorBoundary>
       )}

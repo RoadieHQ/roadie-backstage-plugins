@@ -17,8 +17,7 @@ import { FC } from 'react';
 import { Progress } from '@backstage/core-components';
 import { LAUNCHDARKLY_PROJECT_KEY_ANNOTATION } from '../../constants';
 import { ContextFlag } from '../../hooks/useLaunchdarklyContextFlags';
-import { Entity } from '@backstage/catalog-model';
-import { DiscoveryApi } from '@backstage/core-plugin-api';
+import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
 import { useAsync } from 'react-use';
 import {
   Box,
@@ -28,11 +27,10 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
+import { useEntity } from '@backstage/plugin-catalog-react';
 
 interface FlagDetailsPanelProps {
   flag: ContextFlag;
-  entity: Entity;
-  discoveryApi: DiscoveryApi;
 }
 
 const StatusChip = ({
@@ -135,11 +133,9 @@ const formatLastModified = (timestamp: number) => {
   return new Date(timestamp).toLocaleString();
 };
 
-export const FlagDetailsPanel: FC<FlagDetailsPanelProps> = ({
-  flag,
-  entity,
-  discoveryApi,
-}) => {
+export const FlagDetailsPanel: FC<FlagDetailsPanelProps> = ({ flag }) => {
+  const { entity } = useEntity();
+  const discoveryApi = useApi(discoveryApiRef);
   const { value: flagDetails, loading } = useAsync(async () => {
     try {
       const projectKey =
