@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.1.3
+
+### Patch Changes
+
+- 5dbdfea: Add support for filter annotation to LD Card
+
 ## 1.1.2
 
 ### Patch Changes
