@@ -28,6 +28,9 @@ export type MultiEnvironmentFlag = {
   >;
 };
 
+// LaunchDarkly API allows maximum of 3 environments per request
+const MAX_ENVIRONMENTS_PER_REQUEST = 3;
+
 export const useLaunchdarklyMultiEnvironmentFlags = (
   entity: Entity,
   envs?: string[],
@@ -44,22 +47,43 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
 
     const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
 
-    const envQueryParams = (envs ?? []).map(env => `env=${env}`).join('&');
+    const environments = envs ?? [];
 
-    const flagsResponse = await fetch(
-      `${url}/v2/flags/${projectKey}?limit=100&offset=0&${envQueryParams}${
-        query ? `&filter=${query}` : ''
-      }`,
-    );
-
-    if (!flagsResponse.ok) {
-      throw new Error(
-        `Failed to retrieve LaunchDarkly flags for project ${projectKey}: ${flagsResponse.statusText}`,
+    // Split environments into batches of maximum 3
+    const environmentBatches = [];
+    for (
+      let i = 0;
+      i < environments.length;
+      i += MAX_ENVIRONMENTS_PER_REQUEST
+    ) {
+      environmentBatches.push(
+        environments.slice(i, i + MAX_ENVIRONMENTS_PER_REQUEST),
       );
     }
 
-    const flags = (await flagsResponse.json()).items || [];
+    // Fetch flags for each batch of environments
+    const flagsBatches = await Promise.all(
+      environmentBatches.map(async envBatch => {
+        const envQueryParams = envBatch.map(env => `env=${env}`).join('&');
 
+        const flagsResponse = await fetch(
+          `${url}/v2/flags/${projectKey}?limit=100&offset=0&${envQueryParams}${
+            query ? `&filter=${query}` : ''
+          }`,
+        );
+
+        if (!flagsResponse.ok) {
+          throw new Error(
+            `Failed to retrieve LaunchDarkly flags for project ${projectKey}: ${flagsResponse.statusText}`,
+          );
+        }
+
+        const flags = (await flagsResponse.json()).items || [];
+        return { flags, environments: envBatch };
+      }),
+    );
+
+    // Get environments data once
     const environmentsResponse = await fetch(
       `${url}/v2/projects/${projectKey}`,
     );
@@ -71,48 +95,54 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
     }
 
     const projectData = await environmentsResponse.json();
-    const environments = projectData.environments || {};
+    const environmentsData = projectData.environments || {};
 
+    // Merge flags from all batches
     const flagsMap = new Map();
-    flags.forEach((flag: any) => {
-      const environmentsData: Record<string, any> = {};
 
-      (envs ?? []).forEach(env => {
-        const envData = environments[env];
-        const envName = envData?.name || env;
-        const link = `https://app.launchdarkly.com/projects/${projectKey}/flags/${flag.key}/targeting?env=${env}&selected-env=${env}`;
-
-        const envFlag = flag.environments?.[env];
-        const isOn = envFlag?.on ?? false;
-
-        const flagStatus = envData?.[flag.key];
-
-        let status = isOn ? 'Enabled' : 'Disabled';
-        if (flagStatus && flagStatus.status) {
-          status = flagStatus.status;
-        }
-
-        environmentsData[env] = {
-          name: envName,
-          status,
-          link,
-          on: isOn,
-          ...(flagStatus && {
-            lastRequested: flagStatus.lastRequested,
-            lastEvaluated: flagStatus.lastEvaluated,
-            evaluationCount: flagStatus.evaluationCount,
-          }),
+    flagsBatches.forEach(({ flags, environments: batchEnvs }) => {
+      flags.forEach((flag: any) => {
+        // Get existing flag data or create new entry
+        const existingFlag = flagsMap.get(flag.key) || {
+          name: flag.name,
+          key: flag.key,
+          description: flag.description,
+          tags: flag.tags,
+          maintainer: flag._maintainer?.email,
+          variations: flag.variations,
+          environments: {},
         };
-      });
 
-      flagsMap.set(flag.key, {
-        name: flag.name,
-        key: flag.key,
-        description: flag.description,
-        tags: flag.tags,
-        maintainer: flag._maintainer?.email,
-        variations: flag.variations,
-        environments: environmentsData,
+        // Add environment data for this batch
+        batchEnvs.forEach(env => {
+          const envData = environmentsData[env];
+          const envName = envData?.name || env;
+          const link = `https://app.launchdarkly.com/projects/${projectKey}/flags/${flag.key}/targeting?env=${env}&selected-env=${env}`;
+
+          const envFlag = flag.environments?.[env];
+          const isOn = envFlag?.on ?? false;
+
+          const flagStatus = envData?.[flag.key];
+
+          let status = isOn ? 'Enabled' : 'Disabled';
+          if (flagStatus && flagStatus.status) {
+            status = flagStatus.status;
+          }
+
+          existingFlag.environments[env] = {
+            name: envName,
+            status,
+            link,
+            on: isOn,
+            ...(flagStatus && {
+              lastRequested: flagStatus.lastRequested,
+              lastEvaluated: flagStatus.lastEvaluated,
+              evaluationCount: flagStatus.evaluationCount,
+            }),
+          };
+        });
+
+        flagsMap.set(flag.key, existingFlag);
       });
     });
 
