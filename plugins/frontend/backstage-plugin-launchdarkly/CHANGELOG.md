@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.2.0
+
+### Minor Changes
+
+- e9907b0: Allow retrieval of more than API limit 3 envs for launchdarkly, add option to hide desc or labels
+
 ## 1.1.3
 
 ### Patch Changes
