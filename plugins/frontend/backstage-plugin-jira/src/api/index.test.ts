@@ -57,7 +57,7 @@ describe('JiraAPI', () => {
     expect(strategyFactorySpy).toHaveBeenCalledWith('cloud', options);
   });
 
-  it('should default to cloud strategy when product cloud is configured', () => {
+  it('should use cloud strategy when product cloud is configured', () => {
     const configApi = mockApis.config({ data: { jira: { product: 'cloud' } } });
 
     const options = {
@@ -70,7 +70,7 @@ describe('JiraAPI', () => {
     expect(strategyFactorySpy).toHaveBeenCalledWith('cloud', options);
   });
 
-  it('should default to cloud strategy when product data center is configured', () => {
+  it('should use data center strategy when product data center is configured', () => {
     const configApi = mockApis.config({
       data: { jira: { product: 'datacenter' } },
     });
