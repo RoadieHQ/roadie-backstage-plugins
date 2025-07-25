@@ -69,6 +69,8 @@ export type EntityLaunchdarklyCardProps = {
   title?: string;
   enableSearch?: boolean;
   envs?: string[];
+  showDescription?: boolean;
+  showLabels?: boolean;
 };
 
 const TableHeader = ({ title }: { title?: string }) => {
@@ -85,7 +87,13 @@ const TableHeader = ({ title }: { title?: string }) => {
 };
 
 export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
-  const { title, enableSearch = false, envs = ['production'] } = props;
+  const {
+    title,
+    enableSearch = false,
+    envs = ['production'],
+    showDescription = true,
+    showLabels = true,
+  } = props;
   const classes = useStyles();
   const { entity } = useEntity();
 
@@ -101,7 +109,7 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
       {
         title: 'Name',
         field: 'name',
-        render: row => (
+        render: (row: MultiEnvironmentFlag) => (
           <Link
             to={Object.values(row.environments)[0]?.link || '#'}
             target="_blank"
@@ -114,39 +122,43 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
         title: 'Key',
         field: 'key',
       },
-      {
-        title: 'Description',
-        field: 'description',
-        render: row => (
-          <span style={{ fontSize: '0.875rem' }}>
-            {row.description || 'No description'}
-          </span>
-        ),
-      },
-      {
-        title: 'Labels',
-        field: 'tags',
-        render: row => {
-          if (!row.tags || row.tags.length === 0) {
-            return <span className={classes.noTags}>No labels</span>;
+      showDescription
+        ? {
+            title: 'Description',
+            field: 'description',
+            render: (row: MultiEnvironmentFlag) => (
+              <span style={{ fontSize: '0.875rem' }}>
+                {row.description || 'No description'}
+              </span>
+            ),
           }
-          return (
-            <div className={classes.tagContainer}>
-              {row.tags.map((tag, index) => (
-                <Chip
-                  key={index}
-                  label={tag}
-                  size="small"
-                  variant="outlined"
-                  className={classes.tagChip}
-                  color="primary"
-                />
-              ))}
-            </div>
-          );
-        },
-      },
-    ];
+        : undefined,
+      showLabels
+        ? {
+            title: 'Labels',
+            field: 'tags',
+            render: (row: MultiEnvironmentFlag) => {
+              if (!row.tags || row.tags.length === 0) {
+                return <span className={classes.noTags}>No labels</span>;
+              }
+              return (
+                <div className={classes.tagContainer}>
+                  {row.tags.map((tag, index) => (
+                    <Chip
+                      key={index}
+                      label={tag}
+                      size="small"
+                      variant="outlined"
+                      className={classes.tagChip}
+                      color="primary"
+                    />
+                  ))}
+                </div>
+              );
+            },
+          }
+        : undefined,
+    ].filter(Boolean) as TableColumn<MultiEnvironmentFlag>[];
 
     const environmentColumns: TableColumn<MultiEnvironmentFlag>[] = [];
     envs.forEach(envKey => {
@@ -170,7 +182,7 @@ export const EntityLaunchdarklyCard = (props: EntityLaunchdarklyCardProps) => {
     });
 
     return [...baseColumns, ...environmentColumns];
-  }, [envs, classes]);
+  }, [showDescription, showLabels, envs, classes]);
 
   // Check if the required annotation is present
   if (!entity.metadata?.annotations?.[LAUNCHDARKLY_PROJECT_KEY_ANNOTATION]) {
