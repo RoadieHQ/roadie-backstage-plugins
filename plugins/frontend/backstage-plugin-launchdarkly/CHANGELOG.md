@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.3.0
+
+### Minor Changes
+
+- 0bcd42b: Add a new annotation for more complex LaunchDarkly filtering.
+
 ## 1.2.0
 
 ### Minor Changes
