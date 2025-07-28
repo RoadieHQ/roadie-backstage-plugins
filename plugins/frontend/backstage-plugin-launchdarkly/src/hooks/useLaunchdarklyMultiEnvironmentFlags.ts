@@ -1,6 +1,7 @@
 import { Entity } from '@backstage/catalog-model';
 import { useAsync } from 'react-use';
 import {
+  LAUNCHDARKLY_FILTER_ANNOTATION,
   LAUNCHDARKLY_FILTER_QUERY_ANNOTATION,
   LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
 } from '../constants';
@@ -43,6 +44,7 @@ export const useLaunchdarklyMultiEnvironmentFlags = (
       'default';
 
     const query =
+      entity.metadata.annotations?.[LAUNCHDARKLY_FILTER_ANNOTATION] ||
       entity.metadata.annotations?.[LAUNCHDARKLY_FILTER_QUERY_ANNOTATION];
 
     const url = `${await discovery.getBaseUrl('proxy')}/launchdarkly/api`;
