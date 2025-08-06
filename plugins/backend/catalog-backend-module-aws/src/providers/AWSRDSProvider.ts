@@ -161,7 +161,7 @@ export class AWSRDSProvider extends AWSEntityProvider {
     });
 
     this.logger.info(
-      `Finished providing RDS resources from AWS: ${accountId}`,
+      `Finished providing ${rdsEntities.length} RDS resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }
