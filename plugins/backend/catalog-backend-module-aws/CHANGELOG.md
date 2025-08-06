@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.8.3
+
+### Patch Changes
+
+- a1075c2: Add count of entities for IAM and RDS providers.
+
 ## 5.8.2
 
 ### Patch Changes
