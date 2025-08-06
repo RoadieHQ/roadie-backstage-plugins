@@ -138,7 +138,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     });
 
     this.logger.info(
-      `Finished providing IAM user resources from AWS: ${accountId}`,
+      `Finished providing ${userResources.length} IAM user resources from AWS: ${accountId}`,
       {
         run_duration: duration(startTimestamp),
       },
