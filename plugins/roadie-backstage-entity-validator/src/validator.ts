@@ -16,21 +16,22 @@ import {
   resourceEntityV1alpha1Validator,
   entityKindSchemaValidator,
   makeValidator,
+  Entity,
 } from '@backstage/catalog-model';
 import { templateEntityV1beta3Validator } from '@backstage/plugin-scaffolder-common';
 import annotationSchema from './schemas/annotations.schema.json';
 import repositorySchema from './schemas/repository.schema.json';
 import productSchema from './schemas/product.schema.json';
-import Ajv from 'ajv';
+import Ajv, { ValidateFunction } from 'ajv';
 import ajvFormats from 'ajv-formats';
 import { relativeSpaceValidation } from './relativeSpaceValidation';
 
 const ajv = new Ajv({ verbose: true });
 ajvFormats(ajv);
 
-function ajvCompiledJsonSchemaValidator(schema) {
+function ajvCompiledJsonSchemaValidator(schema: any) {
   return {
-    async check(data) {
+    async check(data: any) {
       return entityKindSchemaValidator(schema)(data) === data;
     },
   };
@@ -50,7 +51,7 @@ const VALIDATORS = {
   product: ajvCompiledJsonSchemaValidator(productSchema),
 };
 
-function modifyPlaceholders(obj) {
+function modifyPlaceholders(obj: any) {
   for (const k in obj) {
     if (typeof obj[k] === 'object') {
       try {
@@ -69,14 +70,14 @@ function modifyPlaceholders(obj) {
 }
 
 export const validate = async (
-  fileContents,
-  verbose = true,
-  customAnnotationSchemaLocation = '',
+  fileContents: string,
+  verbose: boolean = true,
+  customAnnotationSchemaLocation: string = '',
 ) => {
-  let validator;
+  let validator: ValidateFunction | undefined;
 
   const overrides = {
-    isValidEntityName(value) {
+    isValidEntityName(value: string) {
       return (
         typeof value === 'string' &&
         value.length >= 1 &&
@@ -84,24 +85,24 @@ export const validate = async (
         /^([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$/.test(value)
       );
     },
-    isValidLabelValue(value) {
+    isValidLabelValue(value: string) {
       return typeof value === 'string';
     },
-    isValidTag(value) {
+    isValidTag(value: string) {
       return (
         typeof value === 'string' && value.length >= 1 && value.length <= 63
       );
     },
   };
 
-  const validateAnnotations = (entity, idx) => {
+  const validateAnnotations = (entity: any, idx: number) => {
     if (!validator) {
       if (customAnnotationSchemaLocation) {
         console.log(
           `Using validation schema from ${customAnnotationSchemaLocation}...`,
         );
         const customAnnotationSchema = JSON.parse(
-          fs.readFileSync(customAnnotationSchemaLocation),
+          fs.readFileSync(customAnnotationSchemaLocation, 'utf8'),
         );
         validator = ajv.getSchema(customAnnotationSchema.$id);
 
@@ -133,7 +134,7 @@ export const validate = async (
   };
 
   try {
-    const data = yaml.loadAll(fileContents, { schema: yaml.CORE_SCHEMA });
+    const data = yaml.loadAll(fileContents, null, { schema: yaml.CORE_SCHEMA });
     data.forEach(it => {
       modifyPlaceholders(it);
     });
@@ -145,11 +146,11 @@ export const validate = async (
     ]);
     const responses = await Promise.all(
       data.map(it => {
-        return entityPolicies.enforce(it);
+        return entityPolicies.enforce(it as Entity);
       }),
     );
-    const validateEntityKind = async entity => {
-      const results = {};
+    const validateEntityKind = async (entity: any) => {
+      const results: Record<string, boolean> = {};
       for (const v of Object.entries(VALIDATORS)) {
         const result = await v[1].check(entity);
         results[v[0]] = result;
@@ -159,7 +160,7 @@ export const validate = async (
       }
       return results;
     };
-    const validateEntities = async entities => {
+    const validateEntities = async (entities: any[]) => {
       const results = await Promise.all(entities.map(validateEntityKind));
       return Object.values(results[0]).filter(r => r === false).length > 0;
     };
@@ -175,14 +176,14 @@ export const validate = async (
 
     return responses.filter(e => e !== undefined);
   } catch (e) {
-    throw new Error(e);
+    throw new Error(`Error: ${e instanceof Error ? e.message : String(e)}`);
   }
 };
 
 export const validateFromFile = async (
-  filepath,
-  verbose = true,
-  customAnnotationSchemaLocation = '',
+  filepath: string,
+  verbose: boolean = true,
+  customAnnotationSchemaLocation: string = '',
 ) => {
   const fileContents = fs.readFileSync(filepath, 'utf8');
   if (verbose) {

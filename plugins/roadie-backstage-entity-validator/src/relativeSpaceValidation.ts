@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 
-const fileExists = filePath => {
+const fileExists = (filePath: string) => {
   let flag = true;
   try {
     fs.accessSync(filePath, fs.constants.F_OK);
@@ -12,7 +12,7 @@ const fileExists = filePath => {
   return flag;
 };
 
-const validateTechDocs = async (data, filePath) => {
+const validateTechDocs = async (data: any, filePath: string) => {
   if (
     !data?.metadata?.annotations ||
     !data?.metadata?.annotations['backstage.io/techdocs-ref']
@@ -39,7 +39,7 @@ const validateTechDocs = async (data, filePath) => {
     'mkdocs.yml',
   );
 
-  if (!fileExists(mkdocsYamlPath) & !fileExists(mkdocsYmlPath)) {
+  if (!fileExists(mkdocsYamlPath) && !fileExists(mkdocsYmlPath)) {
     throw new Error(
       `Techdocs annotation specifies "dir" but file under ${mkdocsYamlPath}|${mkdocsYmlPath} not found`,
     );
@@ -48,12 +48,12 @@ const validateTechDocs = async (data, filePath) => {
 };
 
 export const relativeSpaceValidation = async (
-  fileContents,
-  filePath,
-  verbose,
+  fileContents: string,
+  filePath: string,
+  verbose: boolean,
 ) => {
   try {
-    const data = yaml.loadAll(fileContents, { schema: yaml.CORE_SCHEMA });
+    const data = yaml.loadAll(fileContents, null, { schema: yaml.CORE_SCHEMA });
     if (verbose) {
       console.log('Validating locally dependant catalog contents');
     }
@@ -63,6 +63,6 @@ export const relativeSpaceValidation = async (
       }),
     );
   } catch (e) {
-    throw new Error(e);
+    throw new Error(`Error: ${e instanceof Error ? e.message : String(e)}`);
   }
 };

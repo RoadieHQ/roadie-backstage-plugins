@@ -5,8 +5,6 @@
     "plugins/**/src",
     "plugins/**/dev",
     "plugins/**/migrations",
-    "utils/**/src",
-    "utils/**/dev",
     "packages/app/cypress/types.d.ts",
     "packages/app/cypress/integration/*",
     "packages/app/cypress/plugins/*"

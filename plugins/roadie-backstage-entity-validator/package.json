@@ -22,8 +22,11 @@
   "backstage": {
     "role": "node-library"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
+    "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
