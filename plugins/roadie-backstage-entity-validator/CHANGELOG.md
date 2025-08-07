@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.7.1
+
+### Patch Changes
+
+- edbd979: Publish dist folder
+
 ## 2.7.0
 
 ### Minor Changes
