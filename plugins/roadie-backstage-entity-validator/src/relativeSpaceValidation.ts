@@ -63,10 +63,6 @@ export const relativeSpaceValidation = async (
       }),
     );
   } catch (e) {
-    throw new Error(
-      `Error validating relative space: ${
-        e instanceof Error ? e.message : String(e)
-      }`,
-    );
+    throw new Error(`Error: ${e instanceof Error ? e.message : String(e)}`);
   }
 };

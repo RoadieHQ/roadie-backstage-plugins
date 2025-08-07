@@ -176,11 +176,7 @@ export const validate = async (
 
     return responses.filter(e => e !== undefined);
   } catch (e) {
-    throw new Error(
-      `Error validating entity schema: ${
-        e instanceof Error ? e.message : String(e)
-      }`,
-    );
+    throw new Error(`Error: ${e instanceof Error ? e.message : String(e)}`);
   }
 };
 
