@@ -23,8 +23,7 @@
     "role": "node-library"
   },
   "files": [
-    "dist",
-    "config.d.ts"
+    "dist"
   ],
   "scripts": {
     "build": "backstage-cli package build",
