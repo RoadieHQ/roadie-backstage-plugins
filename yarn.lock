@@ -15475,9 +15475,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/roadie-backstage-entity-validator@workspace:utils/roadie-backstage-entity-validator":
+"@roadiehq/roadie-backstage-entity-validator@workspace:plugins/roadie-backstage-entity-validator":
   version: 0.0.0-use.local
-  resolution: "@roadiehq/roadie-backstage-entity-validator@workspace:utils/roadie-backstage-entity-validator"
+  resolution: "@roadiehq/roadie-backstage-entity-validator@workspace:plugins/roadie-backstage-entity-validator"
   dependencies:
     "@actions/core": "npm:^1.10.0"
     "@backstage/catalog-model": "backstage:^"
