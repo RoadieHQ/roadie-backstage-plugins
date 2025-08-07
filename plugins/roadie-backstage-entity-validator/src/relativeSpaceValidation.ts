@@ -63,6 +63,10 @@ export const relativeSpaceValidation = async (
       }),
     );
   } catch (e) {
-    throw new Error(`Failed to validate file: ${filePath}`);
+    throw new Error(
+      `Error validating relative space: ${
+        e instanceof Error ? e.message : String(e)
+      }`,
+    );
   }
 };
