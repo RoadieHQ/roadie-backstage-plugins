@@ -237,6 +237,7 @@ export class ArgoService implements ArgoServiceApi {
     }
 
     if (oidcConfig?.provider === 'azure' && oidcConfig.providerConfigKey) {
+
       const azureCredentials = this.config.get<AzureConfig>(
         oidcConfig.providerConfigKey,
       );
@@ -245,6 +246,9 @@ export class ArgoService implements ArgoServiceApi {
         `${azureCredentials.loginUrl}/${azureCredentials.tenantId}/oauth2/v2.0/token`,
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
           body: new URLSearchParams({
             grant_type: 'client_credentials',
             client_id: azureCredentials.clientId,
