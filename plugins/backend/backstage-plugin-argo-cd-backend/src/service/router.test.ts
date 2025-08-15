@@ -439,4 +439,53 @@ describe('router', () => {
       expect(resp.status).toBe(500);
     });
   });
+
+  it('should allow OIDC-only ArgoCD config (no username/password)', async () => {
+    // Simulate OIDC config only, no username/password
+    const oidcConfig = {
+      argocd: {
+        oidcConfig: {
+          provider: 'azure',
+          providerConfigKey: 'azurecred',
+        },
+        appLocatorMethods: [
+          {
+            type: 'config',
+            instances: [
+              {
+                name: 'argoInstanceOIDC',
+                url: 'https://argo-oidc.example.com',
+              },
+            ],
+          },
+        ],
+      },
+      azurecred: {
+        tenantId: 'tenant',
+        clientId: 'client',
+        clientSecret: 'secret',
+        loginUrl: 'https://login.microsoftonline.com',
+      },
+    };
+    const oidcConfigReader = ConfigReader.fromConfigs([
+      { context: '', data: oidcConfig },
+    ]);
+    const router = await createRouter({
+      config: oidcConfigReader,
+      logger,
+      argocdService: ArgoService as unknown as ArgoServiceApi,
+    });
+    const oidcApp = express().use(router);
+    // Simulate ArgoService OIDC token logic
+    mockGetArgoInstanceArray.mockReturnValue([
+      {
+        name: 'argoInstanceOIDC',
+        url: 'https://argo-oidc.example.com',
+      },
+    ]);
+    mockGetArgoToken.mockReturnValue('oidc-token');
+    const response = await request(oidcApp).get('/argoInstance/argoInstanceOIDC/applications');
+    expect(mockGetArgoToken).toHaveBeenCalled();
+    expect(response.status).toBe(200);
+  });
 });
