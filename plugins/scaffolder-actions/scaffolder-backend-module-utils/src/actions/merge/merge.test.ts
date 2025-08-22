@@ -155,6 +155,39 @@ describe('roadiehq:utils:json:merge', () => {
     });
   });
 
+  it('should merge and replace arrays if configured', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json':
+          '{ "scripts": { "lsltr": "ls -ltr" }, "array": ["first item", "second item"] }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+          array: ['third item'],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+      array: ['third item'],
+    });
+  });
+
   it('should put path on the output property', async () => {
     const ctx = {
       ...mockContext,
