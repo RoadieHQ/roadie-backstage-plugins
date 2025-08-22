@@ -31,6 +31,13 @@ function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
   return undefined;
 }
 
+function replaceArrayCustomiser(objValue: string | any[], srcValue: any) {
+  if (isArray(objValue) && !isNull(objValue)) {
+    return srcValue;
+  }
+  return undefined;
+}
+
 const existPathInObject = (object: any, path: string, value: string) => {
   const keys = path.split('.');
   if (typeof object !== 'object') {
@@ -66,7 +73,7 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
           z
             .boolean()
             .describe(
-              'Where a value is an array the merge function should concatenate the provided array value with the target array',
+              'When true, arrays will be concatenated. When false or undefined, arrays will be replaced entirely.',
             )
             .optional(),
         matchFileIndent: z =>
@@ -122,7 +129,9 @@ export function createMergeJSONAction({ actionId }: { actionId?: string }) {
           mergeWith(
             existingContent,
             content,
-            ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+            ctx.input.mergeArrays
+              ? mergeArrayCustomiser
+              : replaceArrayCustomiser,
           ),
           null,
           fileIndent,
@@ -151,7 +160,7 @@ export function createMergeAction() {
           z
             .boolean()
             .describe(
-              'Where a value is an array the merge function should concatenate the provided array value with the target array',
+              'When true, arrays will be concatenated. When false or undefined, arrays will be replaced entirely.',
             )
             .optional(),
         preserveYamlComments: z =>
@@ -208,7 +217,9 @@ export function createMergeAction() {
             mergeWith(
               YAML.parse(originalContent),
               newContent,
-              ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+              ctx.input.mergeArrays
+                ? mergeArrayCustomiser
+                : replaceArrayCustomiser,
             ),
             null,
             2,
@@ -265,7 +276,7 @@ function mergeDocumentsRemovingComments(
       mergeWith(
         documents[0].toJSON(),
         newContent,
-        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
       ),
     ];
   }
@@ -288,7 +299,7 @@ function mergeDocumentsRemovingComments(
       return mergeWith(
         document.toJSON(),
         newContent,
-        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
       );
     }
     return document.toJSON();
@@ -353,7 +364,7 @@ function mergeYawn(
   yawn.json = mergeWith(
     parsedOriginal,
     newContent,
-    mergeArrays ? mergeArrayCustomiser : undefined,
+    mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
   );
   return yawn;
 }
