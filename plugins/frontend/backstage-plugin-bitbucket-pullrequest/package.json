@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-bitbucket-pullrequest",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "deprecated": "This package has been deprecated in favor of @backstage-community/plugin-bitbucket-pull-requests. See README for migration instructions.",
   "main": "src/index.ts",
   "types": "src/index.ts",
