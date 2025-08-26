@@ -175,7 +175,7 @@ Even though you can use Bearer token please keep in mind that Activity stream fe
 ## Add Homepage components to your home page
 
 The `HomePageMyJiraTicketsCard` component displays the Open and In Progress JIRA tickets that are assigned to the provided `userId`.
-![HomePageMyJiraTicketsCard](./docs/my-jira-tickets-card.png)
+![HomePageMyJiraTicketsCard](./docs/my-jira-tickets-card.jpg)
 
 To add the component to your Homepage:
 
