@@ -70,10 +70,10 @@
     "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@backstage/cli": "^0.33.1",
-    "@backstage/core-app-api": "^1.18.0",
-    "@backstage/dev-utils": "^1.1.12",
-    "@backstage/test-utils": "^1.7.10",
+    "@backstage/cli": "backstage:^",
+    "@backstage/core-app-api": "backstage:^",
+    "@backstage/dev-utils": "backstage:^",
+    "@backstage/test-utils": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.0.0",
