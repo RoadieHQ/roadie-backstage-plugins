@@ -21,16 +21,18 @@ import {
   FetchApi,
 } from '@backstage/core-plugin-api';
 import {
+  Status,
+  TicketSummary,
+  User,
+  UserSummary,
+  PullRequest,
   IssuesCounter,
   IssueType,
   Project,
-  Status,
-  UserSummary,
-  User,
-  TicketSummary,
 } from '../types';
 import { JiraProductStrategy } from './strategies/base';
 import { JiraProductStrategyFactory } from './strategies';
+import { ErrorApi } from '@backstage/core-plugin-api';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
   id: 'plugin.jira.service',
@@ -44,6 +46,7 @@ type Options = {
   discoveryApi: DiscoveryApi;
   configApi: ConfigApi;
   fetchApi: FetchApi;
+  errorApi?: ErrorApi;
 };
 
 export class JiraAPI {
@@ -53,6 +56,7 @@ export class JiraAPI {
   private readonly strategy: JiraProductStrategy;
   private readonly confluenceActivityFilter: string | undefined;
   private readonly fetchApi: FetchApi;
+  private readonly errorApi?: ErrorApi;
 
   constructor(options: Options) {
     this.discoveryApi = options.discoveryApi;
@@ -74,6 +78,15 @@ export class JiraAPI {
     );
 
     this.fetchApi = options.fetchApi;
+    this.errorApi = options.errorApi;
+  }
+  
+  // Helper method to log errors in a consistent way
+  private logError(message: string, error: Error): void {
+    // Use errorApi if available, otherwise errors are silently handled
+    if (this.errorApi) {
+      this.errorApi.post(new Error(`${message}: ${error.message}`));
+    }
   }
 
   private getDomainFromApiUrl(apiUrl: string): string {
@@ -261,6 +274,56 @@ export class JiraAPI {
     ];
   }
 
+  // Fetch detailed issue information including changelog and comments
+  async getIssueDetails(issueKey: string) {
+    const { apiUrl } = await this.getUrls();
+
+    const request = await this.fetchApi.fetch(
+      `${apiUrl}issue/${issueKey}?expand=changelog`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (!request.ok) {
+      throw new Error(
+        `Failed to fetch issue details, status ${request.status}: ${request.statusText}`,
+      );
+    }
+
+    return await request.json();
+  }
+  
+  // Fetch pull request information linked to a Jira issue
+  async getLinkedPullRequests(issueId: string) {
+    const { baseUrl } = await this.getUrls();
+    
+    try {
+      const request = await this.fetchApi.fetch(
+        `${baseUrl}/rest/dev-status/1.0/issue/detail?issueId=${issueId}&applicationType=stash&dataType=pullrequest`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!request.ok) {
+        throw new Error(
+          `Failed to fetch linked PRs, status ${request.status}: ${request.statusText}`,
+        );
+      }
+
+      const response = await request.json();
+      return response.detail?.[0]?.pullRequests || [];
+    } catch (error) {
+      this.logError(`Error fetching linked PRs for ${issueId}`, error as Error);
+      return [];
+    }
+  }
+
   async getUserDetails(userId: string) {
     const { apiUrl } = await this.getUrls();
 
@@ -279,15 +342,70 @@ export class JiraAPI {
     }
     const user = (await request.json()) as User;
 
-    let tickets: TicketSummary[] = [];
-
     const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
 
     const foundIssues = await this.strategy.pagedIssuesRequest(apiUrl, jql);
 
-    tickets = foundIssues.map(index => {
+    // Process all tickets in parallel to improve loading time
+    const enhancedTickets: TicketSummary[] = await Promise.all(foundIssues.map(async (index) => {
+      let lastComment = '';
+      let assignedDate = '';
+      let linkedPullRequests: PullRequest[] = [];
+
+      // Try to fetch detailed information including comments and changelog
+      try {
+        const details = await this.getIssueDetails(index.key);
+
+        // Get the latest comment if available
+        if (details.fields?.comment?.comments?.length > 0) {
+          const comments = details.fields.comment.comments;
+          lastComment = comments[comments.length - 1].body;
+        }
+
+        // Get the assignment date from changelog if available
+        if (details.changelog?.histories?.length > 0) {
+          const assignmentHistory = details.changelog.histories
+            .filter((h: { items: any[] }) => h.items.some((i: { field: string; to: string }) => 
+              i.field === 'assignee' && i.to === userId
+            ))
+            .sort((a: { created: string }, b: { created: string }) => 
+              new Date(b.created).getTime() - new Date(a.created).getTime()
+            );
+          
+          if (assignmentHistory.length > 0) {
+            assignedDate = new Date(assignmentHistory[0].created).toLocaleDateString();
+          }
+        }
+        
+        // Get linked pull requests if issue ID is available
+        if (index.id) {
+          try {
+            const prs = await this.getLinkedPullRequests(index.id);
+            linkedPullRequests = prs.map((pr: any) => ({
+              id: pr.id,
+              name: pr.name,
+              url: pr.url,
+              status: pr.status,
+              lastUpdate: pr.lastUpdate,
+              author: pr.author ? {
+                name: pr.author.name,
+                avatar: pr.author.avatar,
+              } : undefined,
+            }));
+          } catch (prError) {
+            // Continue silently as this is a non-critical error that shouldn't block ticket display
+            this.logError(`Error fetching PRs for ${index.key}`, prError as Error);
+          }
+        }
+      } catch (error) {
+        // Silently continue if we can't get detailed info for a ticket
+        // Non-critical error that shouldn't block overall functionality
+        this.logError(`Error fetching details for ${index.key}`, error as Error);
+      }
+
       return {
         key: index.key,
+        id: index.id,
         parent: index?.fields?.parent?.key,
         summary: index?.fields?.summary,
         assignee: {
@@ -299,8 +417,11 @@ export class JiraAPI {
         priority: index?.fields?.priority,
         created: index?.fields?.created,
         updated: index?.fields?.updated,
+        lastComment,
+        assignedDate,
+        linkedPullRequests,
       };
-    });
+    }));
 
     return {
       user: {
@@ -308,7 +429,7 @@ export class JiraAPI {
         avatarUrl: user.avatarUrls['48x48'],
         url: this.getDomainFromApiUrl(user.self),
       } as UserSummary,
-      tickets,
+      tickets: enhancedTickets,
     };
   }
 

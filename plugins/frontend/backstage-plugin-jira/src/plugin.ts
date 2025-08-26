@@ -45,6 +45,11 @@ export const jiraPlugin = createPlugin({
       },
     }),
   ],
+  featureFlags: [
+    { 
+      name: 'jira-show-linked-prs', 
+    },
+  ],
 });
 
 export const EntityJiraOverviewCard = jiraPlugin.provide(
@@ -84,7 +89,6 @@ export const EntityJiraQueryCard = jiraPlugin.provide(
 export const HomePageMyJiraTicketsCard = jiraPlugin.provide(
   createCardExtension<{ userId: string }>({
     name: 'My Jira Tickets',
-    title: 'My Jira Tickets',
     components: () => import('./components/Home/MyJiraTicketsCard'),
     description: 'My Jira tickets Card',
   }),

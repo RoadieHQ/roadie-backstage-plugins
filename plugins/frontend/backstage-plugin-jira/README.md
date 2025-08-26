@@ -21,6 +21,23 @@ Home Page components:
 - HomePageMyJiraTicketsCard
   - Show my assigned JIRA tickets
 
+## Feature Flags
+
+This plugin supports the following feature flags:
+
+- `jira-show-linked-prs`: Controls the visibility of linked pull requests column in the Jira tickets table
+  - **Default**: Disabled
+  - **Use case**: Enable this feature flag when using Jira Data Center, which supports the linked PRs API
+  - **Note**: This feature is not available for Jira Cloud instances due to API limitations. If enabled with Jira Cloud, the column will still appear but will only show dashes ('-') since no PR data is available
+
+To toggle this feature flag:
+
+1. Go to the Backstage Settings page
+2. Select the "Feature Flags" tab
+3. Find the `jira-show-linked-prs` toggle and enable/disable it as needed
+4. Refresh the page for changes to take effect
+5. Navigate to the Home page to see the Jira tickets with/without the linked PRs column
+
 ## Annotations
 
 - jira/component: A jira component name
