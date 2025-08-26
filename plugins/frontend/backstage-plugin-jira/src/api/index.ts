@@ -80,7 +80,7 @@ export class JiraAPI {
     this.fetchApi = options.fetchApi;
     this.errorApi = options.errorApi;
   }
-  
+
   // Helper method to log errors in a consistent way
   private logError(message: string, error: Error): void {
     // Use errorApi if available, otherwise errors are silently handled
@@ -295,11 +295,11 @@ export class JiraAPI {
 
     return await request.json();
   }
-  
+
   // Fetch pull request information linked to a Jira issue
   async getLinkedPullRequests(issueId: string) {
     const { baseUrl } = await this.getUrls();
-    
+
     try {
       const request = await this.fetchApi.fetch(
         `${baseUrl}/rest/dev-status/1.0/issue/detail?issueId=${issueId}&applicationType=stash&dataType=pullrequest`,
@@ -371,12 +371,12 @@ export class JiraAPI {
             .sort((a: { created: string }, b: { created: string }) => 
               new Date(b.created).getTime() - new Date(a.created).getTime()
             );
-          
+
           if (assignmentHistory.length > 0) {
             assignedDate = new Date(assignmentHistory[0].created).toLocaleDateString();
           }
         }
-        
+
         // Get linked pull requests if issue ID is available
         if (index.id) {
           try {

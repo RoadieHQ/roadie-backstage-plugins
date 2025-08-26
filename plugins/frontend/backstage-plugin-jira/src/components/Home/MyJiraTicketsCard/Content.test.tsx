@@ -289,7 +289,7 @@ describe('MyJiraTicketsCard', () => {
     const tables = screen.getAllByRole('table');
     // const tables = await screen.findAllByRole('table');
     expect(tables.length).toBeGreaterThan(0);
-    
+
     // We'll use the first table found
     const table = tables[0];
     const rowLinks = within(table).getAllByRole('link');
@@ -388,7 +388,7 @@ describe('MyJiraTicketsCard', () => {
       ),
     );
 
-    const { container } = render(
+    render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
           <Content userId="user1" />
@@ -399,49 +399,47 @@ describe('MyJiraTicketsCard', () => {
 
     // Wait for content to load first
     await screen.findByText('10003');
-    
+
     // Find the table - using getAllByRole since Material Table might create multiple tables
     const tables = screen.getAllByRole('table');
     expect(tables.length).toBeGreaterThan(0);
-    
+
     // We'll use the first table found
     const table = tables[0];
-    
+
     // Find all links within the table
     const rowLinks = within(table).getAllByRole('link');
     const ticketLink = rowLinks.find(link => 
       link.getAttribute('href') === 'https://backstage-test.atlassian.net/browse/10003'
     );
     expect(ticketLink).toBeInTheDocument();
-    
+
     // Wait for table to fully load and render fully
     // First, we get the Linked PRs column header
     const linkedPRsHeader = await screen.findByRole('columnheader', { name: /linked pr\(s\)/i });
     expect(linkedPRsHeader).toBeInTheDocument();
-    
+
     // Give time for all content to render
     await new Promise(resolve => setTimeout(resolve, 200));
-    
-    // Look for cells with numeric content in them (PR count)
-    const cells = screen.getAllByRole('cell');
+
     // Find a cell that has a text content of '1' (the PR count)
     const prCountSpan = await screen.findByText('1');
-    
+
     // Make sure we found the element
     expect(prCountSpan).not.toBeUndefined();
     expect(prCountSpan).toBeInTheDocument();
-    
+
     // Click on PR count
     if (prCountSpan) {
       await userEvent.click(prCountSpan);
     }
-    
+
     // Check that dialog appears - find the dialog title which includes the ticket ID
     const dialogTitle = await screen.findByRole('heading', {
       name: /Linked Pull Requests for/i,
     });
     expect(dialogTitle).toBeInTheDocument();
-    
+
     // Check dialog content (we need to wait for the dialog content to appear)
     await expect(screen.findByText('PR-123')).resolves.toBeInTheDocument();
     await expect(screen.findByText('OPEN')).resolves.toBeInTheDocument();
@@ -508,19 +506,19 @@ describe('MyJiraTicketsCard', () => {
 
     // Wait for tickets to load
     await screen.findByText('KEY-1');
-    
+
     // Wait for the tickets title to load with correct count
     await screen.findByText(/My Tickets \(15\)/i);
-    
+
     // Verify we can see the first page of tickets
     expect(screen.getByText('KEY-1')).toBeInTheDocument();
     expect(screen.getByText('KEY-10')).toBeInTheDocument();
-    
+
     // Check pagination info exists (using findAllByText since Material Table can render multiple elements with the same text)
     const paginationElements = await screen.findAllByText(/1-10 of 15/);
     expect(paginationElements.length).toBeGreaterThan(0);
     expect(paginationElements[0]).toBeInTheDocument();
-    
+
     // Verify that tickets from the second page are not visible
     expect(screen.queryByText('KEY-11')).not.toBeInTheDocument();
     expect(screen.queryByText('KEY-15')).not.toBeInTheDocument();
@@ -580,7 +578,7 @@ describe('MyJiraTicketsCard', () => {
 
     // Wait a moment for all content to render fully
     await new Promise(resolve => setTimeout(resolve, 200));
-    
+
     // Find the Material Table's search input by its placeholder text 'Filter'
     const searchInput = await screen.findByPlaceholderText('Search tickets');
     expect(searchInput).toBeInTheDocument();
@@ -599,7 +597,7 @@ describe('MyJiraTicketsCard', () => {
 
     // Clear the search input
     await user.clear(searchInput);
-    
+
     // Allow time for filtering to reset
     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -607,12 +605,11 @@ describe('MyJiraTicketsCard', () => {
       expect(screen.getByText('TICKET-1')).toBeInTheDocument();
       expect(screen.getByText('TICKET-2')).toBeInTheDocument();
     });
-    
+
     // Verify the search clear button is present
     const clearButton = screen.getByLabelText('Clear Search');
     expect(clearButton).toBeInTheDocument();
   }, 10000);
-
 
   it('should hide linked PRs column when feature flag is disabled', async () => {
     // Mock the feature flag to return false for the linked PRs feature
@@ -645,11 +642,11 @@ describe('MyJiraTicketsCard', () => {
     );
 
     await waitForElementToBeRemoved(() => screen.queryByTestId('progress'));
-    
+
     // Wait for the table to load
     const tables = await screen.findAllByRole('table');
     expect(tables.length).toBeGreaterThan(0);
-    
+
     // Look for basic columns that should always be visible
     await waitFor(() => {
       expect(screen.getByText(/Issue Key/i)).toBeInTheDocument();
@@ -660,11 +657,11 @@ describe('MyJiraTicketsCard', () => {
 
     // Verify that the Linked PRs column is NOT visible
     expect(screen.queryByText(/Linked PR(S)/i)).not.toBeInTheDocument();
-    
+
     // Make sure clicking on a ticket doesn't open the PR dialog
     const ticketLink = await screen.findByText('10003');
     userEvent.click(ticketLink);
-    
+
     // Verify PR dialog doesn't appear
     await new Promise(resolve => setTimeout(resolve, 200));
     expect(screen.queryByText(/Linked Pull Requests for/i)).not.toBeInTheDocument();

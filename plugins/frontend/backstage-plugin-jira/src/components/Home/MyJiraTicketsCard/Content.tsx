@@ -188,7 +188,7 @@ const LinkedPRsDialog = ({ open, ticket, onClose }: LinkedPRsDialogProps) => {
 
 
 // Helper function to format ticket data for display
-const formatTicketsForDisplay = (tickets: TicketSummary[], user: UserSummary): EnhancedTicket[] => {
+const formatTicketsForDisplay = (tickets: TicketSummary[]): EnhancedTicket[] => {
   return tickets.map(ticket => {
     // Here we enhance the ticket with additional data for our UI
     return {
@@ -460,7 +460,7 @@ export const Content = (props: MyJiraTicketsCardProps) => {
   }
 
   // Process tickets to add the additional fields needed for our UI
-  const enhancedTickets = formatTicketsForDisplay(tickets, user);
+  const enhancedTickets = formatTicketsForDisplay(tickets);
 
   return (
     <TicketCard>

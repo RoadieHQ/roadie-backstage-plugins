@@ -35,17 +35,17 @@ describe('JiraAPI', () => {
   // Create a simple custom ErrorApi mock that doesn't throw validation errors
   class SimpleErrorApiMock implements ErrorApi {
     private errors: Array<{message: string}> = [];
-  
+
     post(error: Error): void {
       this.errors.push(error);
     }
-  
+
     error$: any = { subscribe: () => ({ unsubscribe: () => {} }) };
-  
+
     getErrors(): Array<{message: string}> {
       return this.errors;
     }
-  
+
     clearErrors(): void {
       this.errors = [];
     }
@@ -192,7 +192,7 @@ describe('JiraAPI', () => {
       );
 
       const result = await jiraApi.getStatuses('TEST');
-      
+
       expect(result).toContain('To Do');
       expect(result).toContain('In Progress');
       expect(result).toContain('Review');
@@ -281,7 +281,7 @@ describe('JiraAPI', () => {
       );
 
       const result = await jiraApi.getIssueDetails('TEST-123');
-      
+
       expect(result).toEqual(mockIssueDetails);
       expect(result.changelog).toBeDefined();
       expect(result.fields.comment.comments).toHaveLength(2);
@@ -318,7 +318,7 @@ describe('JiraAPI', () => {
       JiraCloudStrategy.prototype,
       'pagedIssuesRequest',
     );
-    
+
     const getIssueDetailsSpy = jest.spyOn(
       JiraAPI.prototype,
       'getIssueDetails',
@@ -393,7 +393,7 @@ describe('JiraAPI', () => {
         expect.stringContaining(userId),
       );
     });
-    
+
     it('should handle errors from getIssueDetails and log them via ErrorApi', async () => {
       const userId = 'test-user';
       const mockIssue = {
@@ -413,28 +413,28 @@ describe('JiraAPI', () => {
           updated: '2025-08-26T11:00:00.000Z'
         }
       };
-      
+
       // Mock the pagedIssuesRequest to return our test issue
       pagedIssuesRequestSpy.mockResolvedValue([mockIssue]);
-      
+
       // Make getIssueDetails throw an error
       getIssueDetailsSpy.mockRejectedValue(new Error('Failed to fetch issue details'));
-      
+
       // Mock getLinkedPullRequests to return empty array to isolate this test
       getLinkedPullRequestsSpy.mockResolvedValue([]);
-      
+
       const result = await jiraApi.getUserDetails(userId);
-      
+
       // Verify we still got ticket data despite the getIssueDetails error
       expect(result.tickets).toHaveLength(1);
       expect(result.tickets[0].key).toBe('TEST-123');
-      
+
       // Verify error was logged via ErrorApi
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
       expect(errors[0].message).toContain('Error fetching details for TEST-123');
     });
-    
+
     it('should handle errors from getLinkedPullRequests and log them via ErrorApi', async () => {
       const userId = 'test-user';
       const mockIssue = {
@@ -454,10 +454,10 @@ describe('JiraAPI', () => {
           updated: '2025-08-25T16:00:00.000Z'
         }
       };
-      
+
       // Mock the pagedIssuesRequest to return our test issue
       pagedIssuesRequestSpy.mockResolvedValue([mockIssue]);
-      
+
       // Mock getIssueDetails to return basic data
       getIssueDetailsSpy.mockResolvedValue({
         fields: {
@@ -472,18 +472,18 @@ describe('JiraAPI', () => {
           }]
         }
       });
-      
+
       // Make getLinkedPullRequests throw an error
       getLinkedPullRequestsSpy.mockRejectedValue(new Error('Failed to fetch pull requests'));
-      
+
       const result = await jiraApi.getUserDetails(userId);
-      
+
       // Verify we still got ticket data with details but no PRs
       expect(result.tickets).toHaveLength(1);
       expect(result.tickets[0].key).toBe('TEST-456');
       expect(result.tickets[0].lastComment).toBe('Test comment');
       expect(result.tickets[0].linkedPullRequests).toEqual([]);
-      
+
       // Verify error was logged via ErrorApi
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
@@ -498,14 +498,14 @@ describe('JiraAPI', () => {
       fetchApi,
       errorApi,
     });
-    
+
     beforeEach(() => {
       jest.clearAllMocks();
       errorApi.clearErrors();
       // Make sure we restore all mocks to prevent interference between tests
       jest.restoreAllMocks();
     });
-    
+
     it('should return linked pull requests when found', async () => {
       // Define mock PR data that matches the structure expected by the function
       const mockPullRequests = [
@@ -528,10 +528,10 @@ describe('JiraAPI', () => {
           lastUpdated: '2025-08-26T08:45:00.000Z',
         },
       ];
-      
+
       // Reset all handlers to prevent interference
       worker.resetHandlers();
-      
+
       worker.use(
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/dev-status/1.0/issue/detail',
@@ -540,7 +540,7 @@ describe('JiraAPI', () => {
             const issueId = req.url.searchParams.get('issueId');
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
-            
+
             if (issueId === 'TICKET-123' && applicationType === 'stash' && dataType === 'pullrequest') {
               return res(
                 ctx.status(200),
@@ -559,10 +559,10 @@ describe('JiraAPI', () => {
       );
 
       const result = await jiraApi.getLinkedPullRequests('TICKET-123');
-      
+
       // Verify we get back the mock pull requests
       expect(result).toEqual(mockPullRequests);
-      
+
       // Verify no errors were logged
       const errors = errorApi.getErrors();
       expect(errors.length).toBe(0);
@@ -571,9 +571,9 @@ describe('JiraAPI', () => {
     it('should handle empty pull requests response', async () => {
       // Clear previous errors
       errorApi.clearErrors();
-      
+
       worker.resetHandlers();
-      
+
       worker.use(
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/dev-status/1.0/issue/detail',
@@ -582,7 +582,7 @@ describe('JiraAPI', () => {
             const issueId = req.url.searchParams.get('issueId');
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
-            
+
             if (issueId === 'NO-PR-123' && applicationType === 'stash' && dataType === 'pullrequest') {
               return res(
                 ctx.status(200),
@@ -598,7 +598,7 @@ describe('JiraAPI', () => {
 
       const result = await jiraApi.getLinkedPullRequests('NO-PR-123');
       expect(result).toEqual([]);
-      
+
       // No error should be posted to errorApi
       const errors = errorApi.getErrors();
       expect(errors.length).toBe(0);
@@ -607,9 +607,9 @@ describe('JiraAPI', () => {
     it('should handle API errors and log via ErrorApi', async () => {
       // Clear previous errors
       errorApi.clearErrors();
-      
+
       worker.resetHandlers();
-      
+
       worker.use(
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/dev-status/1.0/issue/detail',
@@ -617,7 +617,7 @@ describe('JiraAPI', () => {
             const issueId = req.url.searchParams.get('issueId');
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
-            
+
             if (issueId === 'ERROR-123' && applicationType === 'stash' && dataType === 'pullrequest') {
               return res(ctx.status(500), ctx.json({ error: 'Server error' }));
             }
@@ -627,10 +627,10 @@ describe('JiraAPI', () => {
       );
 
       const result = await jiraApi.getLinkedPullRequests('ERROR-123');
-      
+
       // Verify the result is empty array
       expect(result).toEqual([]);
-      
+
       // Verify ErrorApi was called with the proper error message
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
@@ -641,9 +641,9 @@ describe('JiraAPI', () => {
     it('should handle malformed response', async () => {
       // Clear previous errors
       errorApi.clearErrors();
-      
+
       worker.resetHandlers();
-      
+
       worker.use(
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/dev-status/1.0/issue/detail',
@@ -668,13 +668,13 @@ describe('JiraAPI', () => {
 
       const result = await jiraApi.getLinkedPullRequests('MALFORMED-123');
       expect(result).toEqual([]);
-      
+
       // No error should be posted since this is not an error response
       // Just missing data which is handled gracefully
       const errors = errorApi.getErrors();
       expect(errors.length).toBe(0);
     });
-    
+
     it('should handle errors gracefully without ErrorApi', async () => {
       // Create a JiraAPI instance without ErrorApi
       const jiraApiNoErrorApi = new JiraAPI({
@@ -683,9 +683,9 @@ describe('JiraAPI', () => {
         fetchApi,
         // No errorApi provided
       });
-      
+
       worker.resetHandlers();
-      
+
       worker.use(
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/dev-status/1.0/issue/detail',
@@ -701,13 +701,13 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // This should not throw an error, just return an empty array
       const result = await jiraApiNoErrorApi.getLinkedPullRequests('NO-ERROR-API-123');
       expect(result).toEqual([]);
     });
   });
-  
+
   describe('getProjectDetails', () => {
     const jiraApi = new JiraAPI({
       discoveryApi,
@@ -718,7 +718,7 @@ describe('JiraAPI', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
-    
+
     it('should return project details and issues', async () => {
       // Mock the project response
       const mockProject = {
@@ -748,7 +748,7 @@ describe('JiraAPI', () => {
           }
         ],
       };
-      
+
       // Mock issues response
       const mockFoundIssues = [
         {
@@ -788,7 +788,7 @@ describe('JiraAPI', () => {
           },
         },
       ];
-      
+
       // Set up MSW handler for the project API endpoint
       worker.use(
         rest.get(
@@ -801,12 +801,12 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // Mock the getIssuesPaged method
       const getIssuesPagedSpy = jest
         .spyOn(jiraApi as any, 'getIssuesPaged')
         .mockResolvedValue(mockFoundIssues);
-      
+
       // Execute the test
       const result = await jiraApi.getProjectDetails(
         'TEST',
@@ -814,13 +814,13 @@ describe('JiraAPI', () => {
         'ui',
         ['In Progress', 'To Do'],
       );
-      
+
       // Verify the result structure
       expect(result).toHaveProperty('project');
       expect(result).toHaveProperty('issues');
       expect(result).toHaveProperty('ticketIds');
       expect(result).toHaveProperty('tickets');
-      
+
       // Verify project details
       expect(result.project).toEqual({
         name: 'Test Project',
@@ -828,7 +828,7 @@ describe('JiraAPI', () => {
         type: 'software',
         url: expect.any(String),
       });
-      
+
       // Verify issue counters - should not include Sub-task
       expect(result.issues).toHaveLength(2);
       expect(result.issues[0]).toEqual({
@@ -836,10 +836,10 @@ describe('JiraAPI', () => {
         iconUrl: 'http://example.com/bug-icon.png',
         total: 1,
       });
-      
+
       // Verify ticket IDs
       expect(result.ticketIds).toEqual(['TEST-1', 'TEST-2']);
-      
+
       // Verify tickets structure
       expect(result.tickets).toHaveLength(2);
       expect(result.tickets[0]).toEqual({
@@ -854,7 +854,7 @@ describe('JiraAPI', () => {
         created: '2025-08-01T10:00:00.000Z',
         updated: '2025-08-05T15:00:00.000Z',
       });
-      
+
       // Verify method calls
       expect(getIssuesPagedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -865,7 +865,7 @@ describe('JiraAPI', () => {
         }),
       );
     });
-    
+
     it('should handle errors when fetching project details', async () => {
       // Set up MSW handler to simulate a 404 error
       worker.use(
@@ -879,14 +879,14 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // Verify that the API throws an error
       await expect(
         jiraApi.getProjectDetails('INVALID', 'component', 'label', [])
       ).rejects.toThrow('failed to fetch data');
     });
   });
-  
+
   describe('getActivityStream', () => {
     const jiraApi = new JiraAPI({
       discoveryApi,
@@ -897,10 +897,10 @@ describe('JiraAPI', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
-    
+
     it('should return activity stream for a project', async () => {
       const mockActivityStreamResponse = '<feed>Activity stream data</feed>';
-      
+
       // Set up MSW handler for the activity stream endpoint
       worker.use(
         rest.get(
@@ -908,12 +908,12 @@ describe('JiraAPI', () => {
           (req, res, ctx) => {
             const maxResults = req.url.searchParams.get('maxResults');
             const streamsParams = req.url.searchParams.getAll('streams');
-            
+
             // Verify request parameters
             expect(maxResults).toBe('10');
             expect(streamsParams).toContain('key IS TEST');
             expect(streamsParams).toContain('issue-key IS TEST-1 TEST-2');
-            
+
             return res(
               ctx.status(200),
               ctx.text(mockActivityStreamResponse)
@@ -921,7 +921,7 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // Execute the test
       const result = await jiraApi.getActivityStream(
         10,
@@ -931,14 +931,14 @@ describe('JiraAPI', () => {
         'ui',
         false,
       );
-      
+
       // Verify result
       expect(result).toBe(mockActivityStreamResponse);
     });
-    
+
     it('should use bearer auth when requested', async () => {
       const mockActivityStreamResponse = '<feed>Activity stream data with bearer auth</feed>';
-      
+
       // Set up MSW handler to check bearer auth
       worker.use(
         rest.get(
@@ -947,7 +947,7 @@ describe('JiraAPI', () => {
             const url = req.url.toString();
             // Verify this doesn't contain os_authType=basic for bearer auth
             expect(url).not.toContain('os_authType=basic');
-            
+
             return res(
               ctx.status(200),
               ctx.text(mockActivityStreamResponse)
@@ -955,7 +955,7 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // Execute the test with bearer auth
       const result = await jiraApi.getActivityStream(
         5,
@@ -965,11 +965,11 @@ describe('JiraAPI', () => {
         undefined,
         true, // use bearer auth
       );
-      
+
       // Verify result
       expect(result).toBe(mockActivityStreamResponse);
     });
-    
+
     it('should handle errors when fetching activity stream', async () => {
       // Set up MSW handler to simulate a server error for this specific test
       worker.resetHandlers();
@@ -985,12 +985,12 @@ describe('JiraAPI', () => {
           },
         ),
       );
-      
+
       // Verify that the API throws an error
       await expect(
         jiraApi.getActivityStream(10, 'ERROR', undefined, undefined, undefined, false)
       ).rejects.toThrow('failed to fetch data');
-      
+
       // Reset handlers for other tests - no need to add any specific handlers
       // as registerMswTestHooks() resets the handlers between tests
       worker.resetHandlers();
