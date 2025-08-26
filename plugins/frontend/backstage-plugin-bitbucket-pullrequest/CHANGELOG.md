@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.1.1
+
+### Patch Changes
+
+- 4c4f7a1: Deprecate plugin to move to the "backstage/community-plugins" repo
+
 ## 2.1.0
 
 ### Minor Changes
