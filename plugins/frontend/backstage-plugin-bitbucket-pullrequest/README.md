@@ -1,4 +1,35 @@
-# Bitbucket PullRequest Plugin for Backstage
+# ⚠️ Deprecated: Bitbucket PullRequest Plugin for Backstage
+
+> **This plugin is deprecated in favor of the Backstage Community plugin: `@backstage-community/plugin-bitbucket-pull-requests`**
+
+## Migration Guide
+
+To migrate from `@roadiehq/backstage-plugin-bitbucket-pullrequest` to `@backstage-community/plugin-bitbucket-pull-requests`:
+
+1. Uninstall the Roadie plugin:
+
+   ```bash
+   yarn remove @roadiehq/backstage-plugin-bitbucket-pullrequest
+   ```
+
+2. Install the Backstage Community plugin:
+
+   ```bash
+   yarn add @backstage-community/plugin-bitbucket-pull-requests
+   ```
+
+3. Update your imports in `packages/app/src/components/catalog/EntityPage.tsx`:
+
+   ```diff
+   - import { EntityBitbucketPullRequestsContent } from '@roadiehq/backstage-plugin-bitbucket-pullrequest';
+   + import { EntityBitbucketPullRequestsContent } from '@backstage-community/plugin-bitbucket-pull-requests';
+   ```
+
+   No other changes are needed.
+
+---
+
+## (Legacy) Bitbucket PullRequest Plugin for Backstage
 
 ![list of pull requests in the Bitbucket repo](./docs/bitbucketprimg.png)
 
@@ -72,4 +103,4 @@ metadata:
 
 ---
 
-Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
+Roadie gives you a hassle-free, fully customizable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
