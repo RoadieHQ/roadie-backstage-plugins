@@ -378,9 +378,10 @@ export class JiraAPI {
               );
 
             if (assignmentHistory.length > 0) {
-              assignedDate = new Date(
-                assignmentHistory[0].created,
-              ).toLocaleDateString();
+              const date = new Date(assignmentHistory[0].created);
+              assignedDate = `${date.getFullYear()}-${String(
+                date.getMonth() + 1,
+              ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
             }
           }
 
