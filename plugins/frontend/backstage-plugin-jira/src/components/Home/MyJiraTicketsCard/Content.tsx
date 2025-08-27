@@ -108,21 +108,22 @@ type LinkedPRsDialogProps = {
 const LinkedPRsDialog = ({ open, ticket, onClose }: LinkedPRsDialogProps) => {
   const classes = useStyles();
   const pullRequests = ticket.linkedPullRequests || [];
-  
+
   const getStatusClassName = (status: string) => {
     const statusLower = status.toLowerCase();
     if (statusLower.includes('open')) return 'open';
     if (statusLower.includes('merged')) return 'merged';
-    if (statusLower.includes('declined') || statusLower.includes('rejected')) return 'declined';
+    if (statusLower.includes('declined') || statusLower.includes('rejected'))
+      return 'declined';
     return '';
   };
-  
+
   // Define columns for the Backstage Table component in the dialog
   const columns: TableColumn<any>[] = [
     {
       title: 'Name',
       field: 'name',
-      render: (row) => (
+      render: row => (
         <Link to={row.url} target="_blank">
           {row.name}
         </Link>
@@ -131,7 +132,7 @@ const LinkedPRsDialog = ({ open, ticket, onClose }: LinkedPRsDialogProps) => {
     {
       title: 'Status',
       field: 'status',
-      render: (row) => (
+      render: row => (
         <Chip
           label={row.status}
           size="small"
@@ -142,44 +143,48 @@ const LinkedPRsDialog = ({ open, ticket, onClose }: LinkedPRsDialogProps) => {
     {
       title: 'Author',
       field: 'author',
-      render: (row) => row.author?.name || 'Unknown',
+      render: row => row.author?.name || 'Unknown',
     },
     {
       title: 'Last Updated',
       field: 'lastUpdate',
-      render: (row) => new Date(row.lastUpdate).toLocaleString(),
+      render: row => new Date(row.lastUpdate).toLocaleString(),
     },
   ];
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
-
-      <DialogTitle style={{ paddingBottom: 8 }} >
+      <DialogTitle style={{ paddingBottom: 8 }}>
         Linked Pull Requests for {ticket.key} - {ticket.summary}
       </DialogTitle>
-      <DialogContent className={classes.prDialogContent} style={{ padding: '8px 24px 0' }}>
+      <DialogContent
+        className={classes.prDialogContent}
+        style={{ padding: '8px 24px 0' }}
+      >
         {pullRequests.length > 0 ? (
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Table
-            options={{
-              paging: false,
-              padding: 'dense',
-              search: false,
-              header: true,
-              toolbar: false,
-              headerStyle: {
-                fontWeight: 'bold',
-                textTransform: 'uppercase',
-                fontSize: '0.75rem',
-              },
-              tableLayout: 'fixed',
-            }}
-            data={pullRequests}
-            columns={columns}
-          />
+              options={{
+                paging: false,
+                padding: 'dense',
+                search: false,
+                header: true,
+                toolbar: false,
+                headerStyle: {
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  fontSize: '0.75rem',
+                },
+                tableLayout: 'fixed',
+              }}
+              data={pullRequests}
+              columns={columns}
+            />
           </div>
         ) : (
-          <Typography variant="body2">No pull requests linked to this ticket.</Typography>
+          <Typography variant="body2">
+            No pull requests linked to this ticket.
+          </Typography>
         )}
       </DialogContent>
       <DialogActions>
@@ -191,16 +196,18 @@ const LinkedPRsDialog = ({ open, ticket, onClose }: LinkedPRsDialogProps) => {
   );
 };
 
-
-
 // Helper function to format ticket data for display
-const formatTicketsForDisplay = (tickets: TicketSummary[]): EnhancedTicket[] => {
+const formatTicketsForDisplay = (
+  tickets: TicketSummary[],
+): EnhancedTicket[] => {
   return tickets.map(ticket => {
     // Here we enhance the ticket with additional data for our UI
     return {
       ...ticket,
       // Use actual linked PRs data if available, otherwise show '0'
-      linkedPRs: ticket.linkedPullRequests?.length ? ticket.linkedPullRequests.length.toString() : '0',
+      linkedPRs: ticket.linkedPullRequests?.length
+        ? ticket.linkedPullRequests.length.toString()
+        : '0',
       // Use real comment data if available, otherwise empty string
       lastComment: ticket.lastComment || '',
       // Use real assigned date if available, otherwise empty string
@@ -210,11 +217,19 @@ const formatTicketsForDisplay = (tickets: TicketSummary[]): EnhancedTicket[] => 
 };
 
 // Enhanced JiraTicketsTable component that shows tickets using Backstage's Table component
-const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: EnhancedTicket[] }) => {
+const JiraTicketsTable = ({
+  user,
+  tickets,
+}: {
+  user: UserSummary;
+  tickets: EnhancedTicket[];
+}) => {
   const classes = useStyles();
-  const [selectedTicket, setSelectedTicket] = useState<TicketSummary | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<TicketSummary | null>(
+    null,
+  );
   const [prDialogOpen, setPrDialogOpen] = useState<boolean>(false);
-  
+
   // Use the shared hook to check if linked PRs should be shown
   const showLinkedPRs = useShowLinkedPRs();
 
@@ -230,9 +245,14 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
   }, []);
 
   // Function to truncate text to a specific length
-  const truncateText = (text: string | undefined, maxLength: number): string => {
+  const truncateText = (
+    text: string | undefined,
+    maxLength: number,
+  ): string => {
     if (!text) return '';
-    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+    return text.length > maxLength
+      ? `${text.substring(0, maxLength)}...`
+      : text;
   };
 
   // Define base columns for the Backstage Table component
@@ -242,10 +262,7 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
       field: 'key',
       width: '120px',
       render: row => (
-        <Link
-          to={`${user?.url}/browse/${row.key}`}
-          target="_blank"
-        >
+        <Link to={`${user?.url}/browse/${row.key}`} target="_blank">
           <Typography
             variant="body2"
             component="span"
@@ -302,7 +319,7 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
       render: row => {
         const commentText = row.lastComment || 'No comments';
         return commentText !== 'No comments' ? (
-          <Tooltip 
+          <Tooltip
             title={commentText}
             enterDelay={0}
             enterNextDelay={0}
@@ -355,28 +372,30 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
     render: row => {
       const prCount = parseInt(row.linkedPRs, 10);
       return prCount > 0 ? (
-        <span 
+        <span
           className={classes.prCount}
           onClick={() => handleOpenPrDialog(row)}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === 'Enter' || e.key === ' ') {
               handleOpenPrDialog(row);
             }
           }}
-          aria-label={`View ${prCount} linked pull request${prCount > 1 ? 's' : ''}`}
+          aria-label={`View ${prCount} linked pull request${
+            prCount > 1 ? 's' : ''
+          }`}
         >
           {row.linkedPRs}
         </span>
       ) : (
         <span>-</span>
       );
-    }
+    },
   };
-  
+
   // Create final columns array with or without the Linked PRs column
-  const columns = showLinkedPRs 
+  const columns = showLinkedPRs
     ? [...baseColumns.slice(0, 3), linkedPRsColumn, ...baseColumns.slice(3)]
     : baseColumns;
 
@@ -415,9 +434,9 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
 
       {/* Only show the PR dialog if the feature flag is enabled */}
       {showLinkedPRs && selectedTicket && (
-        <LinkedPRsDialog 
+        <LinkedPRsDialog
           ticket={selectedTicket}
-          open={prDialogOpen} 
+          open={prDialogOpen}
           onClose={handleClosePrDialog}
         />
       )}
@@ -428,10 +447,18 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
 export const Content = (props: MyJiraTicketsCardProps) => {
   const { userId } = props;
   const showLinkedPRs = useShowLinkedPRs();
-  const { user, loading, error, tickets } = useUserInfo(userId, { showLinkedPRs });
+  const { user, loading, error, tickets } = useUserInfo(userId, {
+    showLinkedPRs,
+  });
 
   // Helper component to simplify the repeated InfoCard pattern
-  const TicketCard = ({ title, children }: { title?: string; children: React.ReactNode }) => (
+  const TicketCard = ({
+    title,
+    children,
+  }: {
+    title?: string;
+    children: React.ReactNode;
+  }) => (
     <div style={{ margin: '-20px' }}>
       <InfoCard noPadding title={title}>
         {children}
@@ -444,7 +471,9 @@ export const Content = (props: MyJiraTicketsCardProps) => {
   if (error) {
     return (
       <TicketCard title="My Tickets">
-        <Typography color="error" style={{ padding: '16px' }}>Error loading jira tickets: {error?.message}</Typography>
+        <Typography color="error" style={{ padding: '16px' }}>
+          Error loading jira tickets: {error?.message}
+        </Typography>
       </TicketCard>
     );
   }

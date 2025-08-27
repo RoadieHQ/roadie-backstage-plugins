@@ -25,7 +25,13 @@ import {
 // We don't need to import act as we're using screen.findBy... for async updates
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { userResponseStub, searchResponseStub } from '../../../responseStubs';
-import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { Content } from './Content';
 import { JiraAPI, jiraApiRef } from '../../../api';
@@ -42,9 +48,7 @@ const enhancedSearchResponse = {
     fields: {
       ...issue.fields,
       comment: {
-        comments: [
-          { body: 'This is the most recent comment for this ticket' },
-        ],
+        comments: [{ body: 'This is the most recent comment for this ticket' }],
       },
     },
     changelog: {
@@ -74,7 +78,7 @@ const configApi = new ConfigReader({});
 
 // Create a mock feature flags API with the linked PRs feature enabled by default
 const mockFeatureFlagsApi = {
-  isActive: jest.fn().mockImplementation((flagName) => {
+  isActive: jest.fn().mockImplementation(flagName => {
     // Enable the feature flag by default in tests
     return flagName === 'jira-show-linked-prs' ? true : false;
   }),
@@ -94,7 +98,7 @@ describe('MyJiraTicketsCard', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     // Reset the feature flag mock to enable linked PRs by default
-    mockFeatureFlagsApi.isActive.mockImplementation((flagName) => {
+    mockFeatureFlagsApi.isActive.mockImplementation(flagName => {
       return flagName === 'jira-show-linked-prs' ? true : false;
     });
   });
@@ -123,11 +127,13 @@ describe('MyJiraTicketsCard', () => {
     );
 
     // Find the exact error message
-    const errorElement = await screen.findByText((content) => {
+    const errorElement = await screen.findByText(content => {
       return content.startsWith('Error loading jira tickets:');
     });
     expect(errorElement).toBeInTheDocument();
-    expect(errorElement.textContent).toMatch(/Error loading jira tickets: failed to fetch data, status 404: Not Found/);
+    expect(errorElement.textContent).toMatch(
+      /Error loading jira tickets: failed to fetch data, status 404: Not Found/,
+    );
   });
 
   it('should display no tickets found', async () => {
@@ -293,8 +299,10 @@ describe('MyJiraTicketsCard', () => {
     // We'll use the first table found
     const table = tables[0];
     const rowLinks = within(table).getAllByRole('link');
-    const ticketLink = rowLinks.find(link => 
-      link.getAttribute('href') === 'https://backstage-test.atlassian.net/browse/10003'
+    const ticketLink = rowLinks.find(
+      link =>
+        link.getAttribute('href') ===
+        'https://backstage-test.atlassian.net/browse/10003',
     );
     expect(ticketLink).toBeInTheDocument();
 
@@ -303,25 +311,36 @@ describe('MyJiraTicketsCard', () => {
       expect(screen.getByText('My Tickets (1)')).toBeInTheDocument();
     });
 
-    const headers = ['Issue Key', 'Summary', 'Status', 'Linked PR(S)', 'Last Comment', 'Assigned Date'];
+    const headers = [
+      'Issue Key',
+      'Summary',
+      'Status',
+      'Linked PR(S)',
+      'Last Comment',
+      'Assigned Date',
+    ];
 
     for (const header of headers) {
       await waitFor(() => {
         const el = screen.getByText((content, element) => {
-          return !!element && content.toLowerCase().includes(header.toLowerCase());
+          return (
+            !!element && content.toLowerCase().includes(header.toLowerCase())
+          );
         });
         expect(el).toBeInTheDocument();
       });
     }
 
     // Check for truncated comment with tooltip
-    const commentElement = await screen.findByText('This is the most recent comment for this ticket');
+    const commentElement = await screen.findByText(
+      'This is the most recent comment for this ticket',
+    );
     expect(commentElement).toBeInTheDocument();
   });
 
   it('should display PR dialog when clicking on PR count with feature flag enabled', async () => {
     // Explicitly enable the feature flag for this test
-    mockFeatureFlagsApi.isActive.mockImplementation((flagName) => {
+    mockFeatureFlagsApi.isActive.mockImplementation(flagName => {
       return flagName === 'jira-show-linked-prs' ? true : false;
     });
     worker.use(
@@ -409,14 +428,18 @@ describe('MyJiraTicketsCard', () => {
 
     // Find all links within the table
     const rowLinks = within(table).getAllByRole('link');
-    const ticketLink = rowLinks.find(link => 
-      link.getAttribute('href') === 'https://backstage-test.atlassian.net/browse/10003'
+    const ticketLink = rowLinks.find(
+      link =>
+        link.getAttribute('href') ===
+        'https://backstage-test.atlassian.net/browse/10003',
     );
     expect(ticketLink).toBeInTheDocument();
 
     // Wait for table to fully load and render fully
     // First, we get the Linked PRs column header
-    const linkedPRsHeader = await screen.findByRole('columnheader', { name: /linked pr\(s\)/i });
+    const linkedPRsHeader = await screen.findByRole('columnheader', {
+      name: /linked pr\(s\)/i,
+    });
     expect(linkedPRsHeader).toBeInTheDocument();
 
     // Give time for all content to render
@@ -456,7 +479,9 @@ describe('MyJiraTicketsCard', () => {
           ...issue,
           key: `KEY-${i + 1}`,
           id: `issue-${i + 1}`,
-          self: `https://backstage-test.atlassian.net/rest/api/2/issue/issue-${i + 1}`,
+          self: `https://backstage-test.atlassian.net/rest/api/2/issue/issue-${
+            i + 1
+          }`,
         })),
     };
 
@@ -567,8 +592,8 @@ describe('MyJiraTicketsCard', () => {
     render(
       wrapInTestApp(
         <TestApiProvider apis={apis}>
-          <Content userId='user' />
-        </TestApiProvider>
+          <Content userId="user" />
+        </TestApiProvider>,
       ),
     );
 
@@ -613,7 +638,7 @@ describe('MyJiraTicketsCard', () => {
 
   it('should hide linked PRs column when feature flag is disabled', async () => {
     // Mock the feature flag to return false for the linked PRs feature
-    mockFeatureFlagsApi.isActive.mockImplementation((flagName) => {
+    mockFeatureFlagsApi.isActive.mockImplementation(flagName => {
       return flagName === 'jira-show-linked-prs' ? false : false;
     });
 
@@ -664,6 +689,8 @@ describe('MyJiraTicketsCard', () => {
 
     // Verify PR dialog doesn't appear
     await new Promise(resolve => setTimeout(resolve, 200));
-    expect(screen.queryByText(/Linked Pull Requests for/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/Linked Pull Requests for/i),
+    ).not.toBeInTheDocument();
   });
 });

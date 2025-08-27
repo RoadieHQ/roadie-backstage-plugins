@@ -16,7 +16,11 @@
 
 /* eslint-disable no-new */
 
-import { MockFetchApi, mockApis, registerMswTestHooks } from '@backstage/test-utils';
+import {
+  MockFetchApi,
+  mockApis,
+  registerMswTestHooks,
+} from '@backstage/test-utils';
 import { JiraAPI } from './index';
 import { JiraProductStrategyFactory } from './strategies';
 import { JiraCloudStrategy } from './strategies/cloud';
@@ -34,7 +38,7 @@ describe('JiraAPI', () => {
 
   // Create a simple custom ErrorApi mock that doesn't throw validation errors
   class SimpleErrorApiMock implements ErrorApi {
-    private errors: Array<{message: string}> = [];
+    private errors: Array<{ message: string }> = [];
 
     post(error: Error): void {
       this.errors.push(error);
@@ -42,7 +46,7 @@ describe('JiraAPI', () => {
 
     error$: any = { subscribe: () => ({ unsubscribe: () => {} }) };
 
-    getErrors(): Array<{message: string}> {
+    getErrors(): Array<{ message: string }> {
       return this.errors;
     }
 
@@ -153,20 +157,20 @@ describe('JiraAPI', () => {
                   id: '1',
                   name: 'Bug',
                   statuses: [
-                    { 
-                      id: '10000', 
+                    {
+                      id: '10000',
                       name: 'To Do',
-                      statusCategory: { name: 'To Do' } 
+                      statusCategory: { name: 'To Do' },
                     },
-                    { 
-                      id: '10001', 
+                    {
+                      id: '10001',
                       name: 'In Progress',
-                      statusCategory: { name: 'In Progress' }
+                      statusCategory: { name: 'In Progress' },
                     },
-                    { 
-                      id: '10002', 
+                    {
+                      id: '10002',
                       name: 'Done',
-                      statusCategory: { name: 'Done' }
+                      statusCategory: { name: 'Done' },
                     },
                   ],
                 },
@@ -174,15 +178,15 @@ describe('JiraAPI', () => {
                   id: '2',
                   name: 'Task',
                   statuses: [
-                    { 
-                      id: '10003', 
+                    {
+                      id: '10003',
                       name: 'To Do',
-                      statusCategory: { name: 'To Do' } 
+                      statusCategory: { name: 'To Do' },
                     },
-                    { 
-                      id: '10004', 
+                    {
+                      id: '10004',
                       name: 'Review',
-                      statusCategory: { name: 'In Progress' }
+                      statusCategory: { name: 'In Progress' },
                     },
                   ],
                 },
@@ -204,15 +208,12 @@ describe('JiraAPI', () => {
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/api/latest/project/ERROR/statuses',
           (_, res, ctx) =>
-            res(
-              ctx.status(404),
-              ctx.json({ error: 'Project not found' }),
-            ),
+            res(ctx.status(404), ctx.json({ error: 'Project not found' })),
         ),
       );
 
       await expect(jiraApi.getStatuses('ERROR')).rejects.toThrow(
-        'failed to fetch data, status 404'
+        'failed to fetch data, status 404',
       );
     });
   });
@@ -236,26 +237,26 @@ describe('JiraAPI', () => {
           summary: 'Test Issue',
           status: {
             name: 'In Progress',
-            statusCategory: { name: 'In Progress' }
+            statusCategory: { name: 'In Progress' },
           },
           comment: {
             comments: [
-              { 
+              {
                 body: 'First comment',
-                created: '2025-08-01T10:00:00.000Z'
+                created: '2025-08-01T10:00:00.000Z',
               },
               {
                 body: 'Latest comment',
-                created: '2025-08-05T15:30:00.000Z'
-              }
-            ]
+                created: '2025-08-05T15:30:00.000Z',
+              },
+            ],
           },
           created: '2025-07-15T09:00:00.000Z',
           updated: '2025-08-05T15:30:00.000Z',
           assignee: {
             displayName: 'Test User',
-            avatarUrls: { '48x48': 'http://example.com/avatar.png' }
-          }
+            avatarUrls: { '48x48': 'http://example.com/avatar.png' },
+          },
         },
         changelog: {
           histories: [
@@ -265,12 +266,12 @@ describe('JiraAPI', () => {
                 {
                   field: 'assignee',
                   fromString: null,
-                  toString: 'Test User'
-                }
-              ]
-            }
-          ]
-        }
+                  toString: 'Test User',
+                },
+              ],
+            },
+          ],
+        },
       };
 
       worker.use(
@@ -300,7 +301,7 @@ describe('JiraAPI', () => {
       );
 
       await expect(jiraApi.getIssueDetails('NOTFOUND-1')).rejects.toThrow(
-        'Failed to fetch issue details'
+        'Failed to fetch issue details',
       );
     });
   });
@@ -319,10 +320,7 @@ describe('JiraAPI', () => {
       'pagedIssuesRequest',
     );
 
-    const getIssueDetailsSpy = jest.spyOn(
-      JiraAPI.prototype,
-      'getIssueDetails',
-    );
+    const getIssueDetailsSpy = jest.spyOn(JiraAPI.prototype, 'getIssueDetails');
 
     const getLinkedPullRequestsSpy = jest.spyOn(
       JiraAPI.prototype,
@@ -365,17 +363,26 @@ describe('JiraAPI', () => {
                     self: 'http://example.com/jira/rest/api/2/issue/12345',
                     fields: {
                       summary: 'Test issue',
-                      status: { name: 'In Progress', iconUrl: 'http://example.com/status-icon.png' },
-                      issuetype: { name: 'Task', iconUrl: 'http://example.com/task-icon.png' },
-                      priority: { name: 'Medium', iconUrl: 'http://example.com/priority-icon.png' },
+                      status: {
+                        name: 'In Progress',
+                        iconUrl: 'http://example.com/status-icon.png',
+                      },
+                      issuetype: {
+                        name: 'Task',
+                        iconUrl: 'http://example.com/task-icon.png',
+                      },
+                      priority: {
+                        name: 'Medium',
+                        iconUrl: 'http://example.com/priority-icon.png',
+                      },
                       created: '2025-08-25T10:00:00.000Z',
-                      updated: '2025-08-26T11:00:00.000Z'
-                    }
-                  }
+                      updated: '2025-08-26T11:00:00.000Z',
+                    },
+                  },
                 ],
                 startAt: 0,
                 maxResults: 50,
-                total: 1
+                total: 1,
               }),
             ),
         ),
@@ -404,21 +411,32 @@ describe('JiraAPI', () => {
           summary: 'Test Issue',
           assignee: {
             displayName: 'Test User',
-            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' }
+            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' },
           },
-          status: { name: 'In Progress', iconUrl: 'http://example.com/in-progress-icon.png' },
-          issuetype: { name: 'Task', iconUrl: 'http://example.com/task-icon.png' },
-          priority: { name: 'Medium', iconUrl: 'http://example.com/medium-priority-icon.png' },
+          status: {
+            name: 'In Progress',
+            iconUrl: 'http://example.com/in-progress-icon.png',
+          },
+          issuetype: {
+            name: 'Task',
+            iconUrl: 'http://example.com/task-icon.png',
+          },
+          priority: {
+            name: 'Medium',
+            iconUrl: 'http://example.com/medium-priority-icon.png',
+          },
           created: '2025-08-25T10:00:00.000Z',
-          updated: '2025-08-26T11:00:00.000Z'
-        }
+          updated: '2025-08-26T11:00:00.000Z',
+        },
       };
 
       // Mock the pagedIssuesRequest to return our test issue
       pagedIssuesRequestSpy.mockResolvedValue([mockIssue]);
 
       // Make getIssueDetails throw an error
-      getIssueDetailsSpy.mockRejectedValue(new Error('Failed to fetch issue details'));
+      getIssueDetailsSpy.mockRejectedValue(
+        new Error('Failed to fetch issue details'),
+      );
 
       // Mock getLinkedPullRequests to return empty array to isolate this test
       getLinkedPullRequestsSpy.mockResolvedValue([]);
@@ -432,7 +450,9 @@ describe('JiraAPI', () => {
       // Verify error was logged via ErrorApi
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors[0].message).toContain('Error fetching details for TEST-123');
+      expect(errors[0].message).toContain(
+        'Error fetching details for TEST-123',
+      );
     });
 
     it('should handle errors from getLinkedPullRequests and log them via ErrorApi', async () => {
@@ -445,14 +465,23 @@ describe('JiraAPI', () => {
           summary: 'Another Test Issue',
           assignee: {
             displayName: 'Test User',
-            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' }
+            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' },
           },
-          status: { name: 'To Do', iconUrl: 'http://example.com/todo-icon.png' },
-          issuetype: { name: 'Bug', iconUrl: 'http://example.com/bug-icon.png' },
-          priority: { name: 'High', iconUrl: 'http://example.com/high-priority-icon.png' },
+          status: {
+            name: 'To Do',
+            iconUrl: 'http://example.com/todo-icon.png',
+          },
+          issuetype: {
+            name: 'Bug',
+            iconUrl: 'http://example.com/bug-icon.png',
+          },
+          priority: {
+            name: 'High',
+            iconUrl: 'http://example.com/high-priority-icon.png',
+          },
           created: '2025-08-24T09:00:00.000Z',
-          updated: '2025-08-25T16:00:00.000Z'
-        }
+          updated: '2025-08-25T16:00:00.000Z',
+        },
       };
 
       // Mock the pagedIssuesRequest to return our test issue
@@ -462,19 +491,23 @@ describe('JiraAPI', () => {
       getIssueDetailsSpy.mockResolvedValue({
         fields: {
           comment: {
-            comments: [{ body: 'Test comment' }]
-          }
+            comments: [{ body: 'Test comment' }],
+          },
         },
         changelog: {
-          histories: [{
-            created: '2025-08-24T10:00:00.000Z',
-            items: [{ field: 'assignee', to: userId }]
-          }]
-        }
+          histories: [
+            {
+              created: '2025-08-24T10:00:00.000Z',
+              items: [{ field: 'assignee', to: userId }],
+            },
+          ],
+        },
       });
 
       // Make getLinkedPullRequests throw an error
-      getLinkedPullRequestsSpy.mockRejectedValue(new Error('Failed to fetch pull requests'));
+      getLinkedPullRequestsSpy.mockRejectedValue(
+        new Error('Failed to fetch pull requests'),
+      );
 
       const result = await jiraApi.getUserDetails(userId, true);
 
@@ -487,7 +520,9 @@ describe('JiraAPI', () => {
       // Verify error was logged via ErrorApi
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors.some(e => e.message.includes('Error fetching PRs for TEST-456'))).toBe(true);
+      expect(
+        errors.some(e => e.message.includes('Error fetching PRs for TEST-456')),
+      ).toBe(true);
     });
 
     it('should skip fetching linked pull requests when fetchLinkedPRs is false', async () => {
@@ -500,14 +535,23 @@ describe('JiraAPI', () => {
           summary: 'Skip PR Fetching Test',
           assignee: {
             displayName: 'Test User',
-            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' }
+            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' },
           },
-          status: { name: 'In Review', iconUrl: 'http://example.com/review-icon.png' },
-          issuetype: { name: 'Story', iconUrl: 'http://example.com/story-icon.png' },
-          priority: { name: 'Low', iconUrl: 'http://example.com/low-priority-icon.png' },
+          status: {
+            name: 'In Review',
+            iconUrl: 'http://example.com/review-icon.png',
+          },
+          issuetype: {
+            name: 'Story',
+            iconUrl: 'http://example.com/story-icon.png',
+          },
+          priority: {
+            name: 'Low',
+            iconUrl: 'http://example.com/low-priority-icon.png',
+          },
           created: '2025-08-23T14:00:00.000Z',
-          updated: '2025-08-24T16:30:00.000Z'
-        }
+          updated: '2025-08-24T16:30:00.000Z',
+        },
       };
 
       // Mock the pagedIssuesRequest to return our test issue
@@ -517,15 +561,17 @@ describe('JiraAPI', () => {
       getIssueDetailsSpy.mockResolvedValue({
         fields: {
           comment: {
-            comments: [{ body: 'Test comment for PR skipping' }]
-          }
+            comments: [{ body: 'Test comment for PR skipping' }],
+          },
         },
         changelog: {
-          histories: [{
-            created: '2025-08-23T15:00:00.000Z',
-            items: [{ field: 'assignee', to: userId }]
-          }]
-        }
+          histories: [
+            {
+              created: '2025-08-23T15:00:00.000Z',
+              items: [{ field: 'assignee', to: userId }],
+            },
+          ],
+        },
       });
 
       // Create a spy to track if getLinkedPullRequests is called
@@ -538,11 +584,13 @@ describe('JiraAPI', () => {
       // Verify we got the ticket data
       expect(result.tickets).toHaveLength(1);
       expect(result.tickets[0].key).toBe('TEST-789');
-      expect(result.tickets[0].lastComment).toBe('Test comment for PR skipping');
-      
+      expect(result.tickets[0].lastComment).toBe(
+        'Test comment for PR skipping',
+      );
+
       // Verify linkedPullRequests is an empty array
       expect(result.tickets[0].linkedPullRequests).toEqual([]);
-      
+
       // Most importantly, verify getLinkedPullRequests was NOT called
       expect(linkedPRsSpy).not.toHaveBeenCalled();
     });
@@ -598,7 +646,11 @@ describe('JiraAPI', () => {
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
 
-            if (issueId === 'TICKET-123' && applicationType === 'stash' && dataType === 'pullrequest') {
+            if (
+              issueId === 'TICKET-123' &&
+              applicationType === 'stash' &&
+              dataType === 'pullrequest'
+            ) {
               return res(
                 ctx.status(200),
                 ctx.json({
@@ -640,7 +692,11 @@ describe('JiraAPI', () => {
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
 
-            if (issueId === 'NO-PR-123' && applicationType === 'stash' && dataType === 'pullrequest') {
+            if (
+              issueId === 'NO-PR-123' &&
+              applicationType === 'stash' &&
+              dataType === 'pullrequest'
+            ) {
               return res(
                 ctx.status(200),
                 ctx.json({
@@ -675,7 +731,11 @@ describe('JiraAPI', () => {
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
 
-            if (issueId === 'ERROR-123' && applicationType === 'stash' && dataType === 'pullrequest') {
+            if (
+              issueId === 'ERROR-123' &&
+              applicationType === 'stash' &&
+              dataType === 'pullrequest'
+            ) {
               return res(ctx.status(500), ctx.json({ error: 'Server error' }));
             }
             return res(ctx.status(404));
@@ -692,7 +752,9 @@ describe('JiraAPI', () => {
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
       // Check the error message
-      expect(errors[0].message).toContain('Error fetching linked PRs for ERROR-123');
+      expect(errors[0].message).toContain(
+        'Error fetching linked PRs for ERROR-123',
+      );
     });
 
     it('should handle malformed response', async () => {
@@ -708,8 +770,12 @@ describe('JiraAPI', () => {
             const issueId = req.url.searchParams.get('issueId');
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
-            
-            if (issueId === 'MALFORMED-123' && applicationType === 'stash' && dataType === 'pullrequest') {
+
+            if (
+              issueId === 'MALFORMED-123' &&
+              applicationType === 'stash' &&
+              dataType === 'pullrequest'
+            ) {
               return res(
                 ctx.status(200),
                 ctx.json({
@@ -750,8 +816,12 @@ describe('JiraAPI', () => {
             const issueId = req.url.searchParams.get('issueId');
             const applicationType = req.url.searchParams.get('applicationType');
             const dataType = req.url.searchParams.get('dataType');
-            
-            if (issueId === 'ERROR-123' && applicationType === 'stash' && dataType === 'pullrequest') {
+
+            if (
+              issueId === 'ERROR-123' &&
+              applicationType === 'stash' &&
+              dataType === 'pullrequest'
+            ) {
               return res(ctx.status(500), ctx.json({ error: 'Server error' }));
             }
             return res(ctx.status(404));
@@ -760,7 +830,9 @@ describe('JiraAPI', () => {
       );
 
       // This should not throw an error, just return an empty array
-      const result = await jiraApiNoErrorApi.getLinkedPullRequests('NO-ERROR-API-123');
+      const result = await jiraApiNoErrorApi.getLinkedPullRequests(
+        'NO-ERROR-API-123',
+      );
       expect(result).toEqual([]);
     });
   });
@@ -802,7 +874,7 @@ describe('JiraAPI', () => {
             id: '3',
             name: 'Sub-task',
             iconUrl: 'http://example.com/subtask-icon.png',
-          }
+          },
         ],
       };
 
@@ -839,7 +911,10 @@ describe('JiraAPI', () => {
               avatarUrls: { '48x48': 'http://example.com/user2.png' },
             },
             status: { name: 'To Do' },
-            priority: { name: 'Medium', iconUrl: 'http://example.com/medium.png' },
+            priority: {
+              name: 'Medium',
+              iconUrl: 'http://example.com/medium.png',
+            },
             created: '2025-08-02T09:00:00.000Z',
             updated: '2025-08-03T14:00:00.000Z',
           },
@@ -851,10 +926,7 @@ describe('JiraAPI', () => {
         rest.get(
           'http://example.com/api/proxy/jira/api/rest/api/latest/project/TEST',
           (_, res, ctx) => {
-            return res(
-              ctx.status(200),
-              ctx.json(mockProject)
-            );
+            return res(ctx.status(200), ctx.json(mockProject));
           },
         ),
       );
@@ -865,12 +937,10 @@ describe('JiraAPI', () => {
         .mockResolvedValue(mockFoundIssues);
 
       // Execute the test
-      const result = await jiraApi.getProjectDetails(
-        'TEST',
-        'frontend',
-        'ui',
-        ['In Progress', 'To Do'],
-      );
+      const result = await jiraApi.getProjectDetails('TEST', 'frontend', 'ui', [
+        'In Progress',
+        'To Do',
+      ]);
 
       // Verify the result structure
       expect(result).toHaveProperty('project');
@@ -931,7 +1001,7 @@ describe('JiraAPI', () => {
           (_, res, ctx) => {
             return res(
               ctx.status(404),
-              ctx.json({ error: 'Project Not Found' })
+              ctx.json({ error: 'Project Not Found' }),
             );
           },
         ),
@@ -939,7 +1009,7 @@ describe('JiraAPI', () => {
 
       // Verify that the API throws an error
       await expect(
-        jiraApi.getProjectDetails('INVALID', 'component', 'label', [])
+        jiraApi.getProjectDetails('INVALID', 'component', 'label', []),
       ).rejects.toThrow('failed to fetch data');
     });
   });
@@ -971,10 +1041,7 @@ describe('JiraAPI', () => {
             expect(streamsParams).toContain('key IS TEST');
             expect(streamsParams).toContain('issue-key IS TEST-1 TEST-2');
 
-            return res(
-              ctx.status(200),
-              ctx.text(mockActivityStreamResponse)
-            );
+            return res(ctx.status(200), ctx.text(mockActivityStreamResponse));
           },
         ),
       );
@@ -994,7 +1061,8 @@ describe('JiraAPI', () => {
     });
 
     it('should use bearer auth when requested', async () => {
-      const mockActivityStreamResponse = '<feed>Activity stream data with bearer auth</feed>';
+      const mockActivityStreamResponse =
+        '<feed>Activity stream data with bearer auth</feed>';
 
       // Set up MSW handler to check bearer auth
       worker.use(
@@ -1005,10 +1073,7 @@ describe('JiraAPI', () => {
             // Verify this doesn't contain os_authType=basic for bearer auth
             expect(url).not.toContain('os_authType=basic');
 
-            return res(
-              ctx.status(200),
-              ctx.text(mockActivityStreamResponse)
-            );
+            return res(ctx.status(200), ctx.text(mockActivityStreamResponse));
           },
         ),
       );
@@ -1035,17 +1100,21 @@ describe('JiraAPI', () => {
           'http://example.com/api/proxy/jira/api/activity',
           (_, res, ctx) => {
             // Return error status regardless of parameters for this test
-            return res(
-              ctx.status(500),
-              ctx.text('Internal Server Error')
-            );
+            return res(ctx.status(500), ctx.text('Internal Server Error'));
           },
         ),
       );
 
       // Verify that the API throws an error
       await expect(
-        jiraApi.getActivityStream(10, 'ERROR', undefined, undefined, undefined, false)
+        jiraApi.getActivityStream(
+          10,
+          'ERROR',
+          undefined,
+          undefined,
+          undefined,
+          false,
+        ),
       ).rejects.toThrow('failed to fetch data');
 
       // Reset handlers for other tests - no need to add any specific handlers

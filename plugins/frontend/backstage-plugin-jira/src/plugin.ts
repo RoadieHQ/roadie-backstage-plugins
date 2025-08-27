@@ -46,8 +46,8 @@ export const jiraPlugin = createPlugin({
     }),
   ],
   featureFlags: [
-    { 
-      name: 'jira-show-linked-prs', 
+    {
+      name: 'jira-show-linked-prs',
     },
   ],
 });

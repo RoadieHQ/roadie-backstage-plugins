@@ -347,81 +347,97 @@ export class JiraAPI {
     const foundIssues = await this.strategy.pagedIssuesRequest(apiUrl, jql);
 
     // Process all tickets in parallel to improve loading time
-    const enhancedTickets: TicketSummary[] = await Promise.all(foundIssues.map(async (index) => {
-      let lastComment = '';
-      let assignedDate = '';
-      let linkedPullRequests: PullRequest[] = [];
+    const enhancedTickets: TicketSummary[] = await Promise.all(
+      foundIssues.map(async index => {
+        let lastComment = '';
+        let assignedDate = '';
+        let linkedPullRequests: PullRequest[] = [];
 
-      // Try to fetch detailed information including comments and changelog
-      try {
-        const details = await this.getIssueDetails(index.key);
+        // Try to fetch detailed information including comments and changelog
+        try {
+          const details = await this.getIssueDetails(index.key);
 
-        // Get the latest comment if available
-        if (details.fields?.comment?.comments?.length > 0) {
-          const comments = details.fields.comment.comments;
-          lastComment = comments[comments.length - 1].body;
-        }
-
-        // Get the assignment date from changelog if available
-        if (details.changelog?.histories?.length > 0) {
-          const assignmentHistory = details.changelog.histories
-            .filter((h: { items: any[] }) => h.items.some((i: { field: string; to: string }) => 
-              i.field === 'assignee' && i.to === userId
-            ))
-            .sort((a: { created: string }, b: { created: string }) => 
-              new Date(b.created).getTime() - new Date(a.created).getTime()
-            );
-
-          if (assignmentHistory.length > 0) {
-            assignedDate = new Date(assignmentHistory[0].created).toLocaleDateString();
+          // Get the latest comment if available
+          if (details.fields?.comment?.comments?.length > 0) {
+            const comments = details.fields.comment.comments;
+            lastComment = comments[comments.length - 1].body;
           }
-        }
 
-        // Get linked pull requests if issue ID is available and fetchLinkedPRs is enabled
-        if (index.id && fetchLinkedPRs) {
-          try {
-            const prs = await this.getLinkedPullRequests(index.id);
-            linkedPullRequests = prs.map((pr: any) => ({
-              id: pr.id,
-              name: pr.name,
-              url: pr.url,
-              status: pr.status,
-              lastUpdate: pr.lastUpdate,
-              author: pr.author ? {
-                name: pr.author.name,
-                avatar: pr.author.avatar,
-              } : undefined,
-            }));
-          } catch (prError) {
-            // Continue silently as this is a non-critical error that shouldn't block ticket display
-            this.logError(`Error fetching PRs for ${index.key}`, prError as Error);
+          // Get the assignment date from changelog if available
+          if (details.changelog?.histories?.length > 0) {
+            const assignmentHistory = details.changelog.histories
+              .filter((h: { items: any[] }) =>
+                h.items.some(
+                  (i: { field: string; to: string }) =>
+                    i.field === 'assignee' && i.to === userId,
+                ),
+              )
+              .sort(
+                (a: { created: string }, b: { created: string }) =>
+                  new Date(b.created).getTime() - new Date(a.created).getTime(),
+              );
+
+            if (assignmentHistory.length > 0) {
+              assignedDate = new Date(
+                assignmentHistory[0].created,
+              ).toLocaleDateString();
+            }
           }
-        }
-      } catch (error) {
-        // Silently continue if we can't get detailed info for a ticket
-        // Non-critical error that shouldn't block overall functionality
-        this.logError(`Error fetching details for ${index.key}`, error as Error);
-      }
 
-      return {
-        key: index.key,
-        id: index.id,
-        parent: index?.fields?.parent?.key,
-        summary: index?.fields?.summary,
-        assignee: {
-          displayName: index?.fields?.assignee?.displayName,
-          avatarUrl: index?.fields?.assignee?.avatarUrls['48x48'],
-        },
-        status: index?.fields?.status,
-        issuetype: index?.fields?.issuetype,
-        priority: index?.fields?.priority,
-        created: index?.fields?.created,
-        updated: index?.fields?.updated,
-        lastComment,
-        assignedDate,
-        linkedPullRequests,
-      };
-    }));
+          // Get linked pull requests if issue ID is available and fetchLinkedPRs is enabled
+          if (index.id && fetchLinkedPRs) {
+            try {
+              const prs = await this.getLinkedPullRequests(index.id);
+              linkedPullRequests = prs.map((pr: any) => ({
+                id: pr.id,
+                name: pr.name,
+                url: pr.url,
+                status: pr.status,
+                lastUpdate: pr.lastUpdate,
+                author: pr.author
+                  ? {
+                      name: pr.author.name,
+                      avatar: pr.author.avatar,
+                    }
+                  : undefined,
+              }));
+            } catch (prError) {
+              // Continue silently as this is a non-critical error that shouldn't block ticket display
+              this.logError(
+                `Error fetching PRs for ${index.key}`,
+                prError as Error,
+              );
+            }
+          }
+        } catch (error) {
+          // Silently continue if we can't get detailed info for a ticket
+          // Non-critical error that shouldn't block overall functionality
+          this.logError(
+            `Error fetching details for ${index.key}`,
+            error as Error,
+          );
+        }
+
+        return {
+          key: index.key,
+          id: index.id,
+          parent: index?.fields?.parent?.key,
+          summary: index?.fields?.summary,
+          assignee: {
+            displayName: index?.fields?.assignee?.displayName,
+            avatarUrl: index?.fields?.assignee?.avatarUrls['48x48'],
+          },
+          status: index?.fields?.status,
+          issuetype: index?.fields?.issuetype,
+          priority: index?.fields?.priority,
+          created: index?.fields?.created,
+          updated: index?.fields?.updated,
+          lastComment,
+          assignedDate,
+          linkedPullRequests,
+        };
+      }),
+    );
 
     return {
       user: {
