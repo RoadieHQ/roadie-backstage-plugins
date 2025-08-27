@@ -56,6 +56,10 @@ const withRevisionDetails = async (
   url: string,
   row: any,
 ): Promise<ArgoCDHistoryTableRow> => {
+  if (row.sources) {
+    row.source = row.sources[0];
+    row.revision = row.revisions[0];
+  }
   if (isHelmChart(row)) {
     row.revisionDetails = { author: 'n/a', message: 'n/a', date: 'n/a' };
     return row;
