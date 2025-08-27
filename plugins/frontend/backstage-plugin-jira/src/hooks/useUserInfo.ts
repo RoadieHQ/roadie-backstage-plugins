@@ -20,16 +20,18 @@ import { useAsyncFn } from 'react-use';
 import { handleError } from './utils';
 import { jiraApiRef } from '../api';
 
-export const useUserInfo = (userId: string) => {
+export const useUserInfo = (userId: string, options: { showLinkedPRs?: boolean } = {}) => {
   const api = useApi(jiraApiRef);
+  const { showLinkedPRs = true } = options;
+  
   const getUserDetails = useCallback(async () => {
     try {
       setTimeout(() => (document.activeElement as HTMLElement).blur(), 0);
-      return await api.getUserDetails(userId);
+      return await api.getUserDetails(userId, showLinkedPRs);
     } catch (err: any) {
       return handleError(err);
     }
-  }, [api, userId]);
+  }, [api, userId, showLinkedPRs]);
 
   const [state, fetchUserInfo] = useAsyncFn(() => getUserDetails(), [userId]);
 

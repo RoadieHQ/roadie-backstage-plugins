@@ -386,7 +386,7 @@ describe('JiraAPI', () => {
       const userId = 'foo';
 
       pagedIssuesRequestSpy.mockResolvedValue([]);
-      await jiraApi.getUserDetails(userId);
+      await jiraApi.getUserDetails(userId, true);
 
       expect(pagedIssuesRequestSpy).toHaveBeenCalledWith(
         expect.any(String),
@@ -423,7 +423,7 @@ describe('JiraAPI', () => {
       // Mock getLinkedPullRequests to return empty array to isolate this test
       getLinkedPullRequestsSpy.mockResolvedValue([]);
 
-      const result = await jiraApi.getUserDetails(userId);
+      const result = await jiraApi.getUserDetails(userId, true);
 
       // Verify we still got ticket data despite the getIssueDetails error
       expect(result.tickets).toHaveLength(1);
@@ -476,7 +476,7 @@ describe('JiraAPI', () => {
       // Make getLinkedPullRequests throw an error
       getLinkedPullRequestsSpy.mockRejectedValue(new Error('Failed to fetch pull requests'));
 
-      const result = await jiraApi.getUserDetails(userId);
+      const result = await jiraApi.getUserDetails(userId, true);
 
       // Verify we still got ticket data with details but no PRs
       expect(result.tickets).toHaveLength(1);
@@ -488,6 +488,63 @@ describe('JiraAPI', () => {
       const errors = errorApi.getErrors();
       expect(errors.length).toBeGreaterThan(0);
       expect(errors.some(e => e.message.includes('Error fetching PRs for TEST-456'))).toBe(true);
+    });
+
+    it('should skip fetching linked pull requests when fetchLinkedPRs is false', async () => {
+      const userId = 'test-user';
+      const mockIssue = {
+        key: 'TEST-789',
+        id: '98765',
+        self: 'http://example.com/jira/rest/api/2/issue/98765',
+        fields: {
+          summary: 'Skip PR Fetching Test',
+          assignee: {
+            displayName: 'Test User',
+            avatarUrls: { '48x48': 'http://example.com/avatar.jpg' }
+          },
+          status: { name: 'In Review', iconUrl: 'http://example.com/review-icon.png' },
+          issuetype: { name: 'Story', iconUrl: 'http://example.com/story-icon.png' },
+          priority: { name: 'Low', iconUrl: 'http://example.com/low-priority-icon.png' },
+          created: '2025-08-23T14:00:00.000Z',
+          updated: '2025-08-24T16:30:00.000Z'
+        }
+      };
+
+      // Mock the pagedIssuesRequest to return our test issue
+      pagedIssuesRequestSpy.mockResolvedValue([mockIssue]);
+
+      // Mock getIssueDetails to return basic data
+      getIssueDetailsSpy.mockResolvedValue({
+        fields: {
+          comment: {
+            comments: [{ body: 'Test comment for PR skipping' }]
+          }
+        },
+        changelog: {
+          histories: [{
+            created: '2025-08-23T15:00:00.000Z',
+            items: [{ field: 'assignee', to: userId }]
+          }]
+        }
+      });
+
+      // Create a spy to track if getLinkedPullRequests is called
+      const linkedPRsSpy = jest.fn();
+      getLinkedPullRequestsSpy.mockImplementation(linkedPRsSpy);
+
+      // Call getUserDetails with fetchLinkedPRs explicitly set to false
+      const result = await jiraApi.getUserDetails(userId, false);
+
+      // Verify we got the ticket data
+      expect(result.tickets).toHaveLength(1);
+      expect(result.tickets[0].key).toBe('TEST-789');
+      expect(result.tickets[0].lastComment).toBe('Test comment for PR skipping');
+      
+      // Verify linkedPullRequests is an empty array
+      expect(result.tickets[0].linkedPullRequests).toEqual([]);
+      
+      // Most importantly, verify getLinkedPullRequests was NOT called
+      expect(linkedPRsSpy).not.toHaveBeenCalled();
     });
   });
 

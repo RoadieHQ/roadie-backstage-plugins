@@ -324,7 +324,7 @@ export class JiraAPI {
     }
   }
 
-  async getUserDetails(userId: string) {
+  async getUserDetails(userId: string, fetchLinkedPRs: boolean) {
     const { apiUrl } = await this.getUrls();
 
     const request = await this.fetchApi.fetch(
@@ -377,8 +377,8 @@ export class JiraAPI {
           }
         }
 
-        // Get linked pull requests if issue ID is available
-        if (index.id) {
+        // Get linked pull requests if issue ID is available and fetchLinkedPRs is enabled
+        if (index.id && fetchLinkedPRs) {
           try {
             const prs = await this.getLinkedPullRequests(index.id);
             linkedPullRequests = prs.map((pr: any) => ({

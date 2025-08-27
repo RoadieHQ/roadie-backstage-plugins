@@ -37,6 +37,12 @@ import { useApi, featureFlagsApiRef } from '@backstage/core-plugin-api';
 import { useUserInfo } from '../../../hooks';
 import { TicketSummary, UserSummary } from '../../../types';
 
+// Custom hook to check if linked PRs should be shown
+const useShowLinkedPRs = () => {
+  const featureFlagsApi = useApi(featureFlagsApiRef);
+  return featureFlagsApi.isActive('jira-show-linked-prs');
+};
+
 const useStyles = makeStyles(theme => ({
   statusChip: {
     fontWeight: 'bold',
@@ -209,9 +215,8 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
   const [selectedTicket, setSelectedTicket] = useState<TicketSummary | null>(null);
   const [prDialogOpen, setPrDialogOpen] = useState<boolean>(false);
   
-  // Get feature flags API to check if linked PRs should be shown
-  const featureFlagsApi = useApi(featureFlagsApiRef);
-  const showLinkedPRs = featureFlagsApi.isActive('jira-show-linked-prs');
+  // Use the shared hook to check if linked PRs should be shown
+  const showLinkedPRs = useShowLinkedPRs();
 
   // Handle opening the PR dialog
   const handleOpenPrDialog = useCallback((ticket: TicketSummary) => {
@@ -422,7 +427,8 @@ const JiraTicketsTable = ({ user, tickets }: { user: UserSummary, tickets: Enhan
 
 export const Content = (props: MyJiraTicketsCardProps) => {
   const { userId } = props;
-  const { user, loading, error, tickets } = useUserInfo(userId);
+  const showLinkedPRs = useShowLinkedPRs();
+  const { user, loading, error, tickets } = useUserInfo(userId, { showLinkedPRs });
 
   // Helper component to simplify the repeated InfoCard pattern
   const TicketCard = ({ title, children }: { title?: string; children: React.ReactNode }) => (
