@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.12.0
+
+### Minor Changes
+
+- 84c3ecc: revamp the jira plugin home page card
+
 ## 2.11.0
 
 ### Minor Changes

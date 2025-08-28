@@ -120,6 +120,7 @@ export type Status = {
 
 export type Ticket = {
   key: string;
+  id?: string;
   self: string;
   fields?: {
     issuetype: {
@@ -150,8 +151,21 @@ export type Ticket = {
   };
 };
 
+export type PullRequest = {
+  id: string;
+  name: string;
+  url: string;
+  status: string;
+  lastUpdate: string;
+  author?: {
+    name: string;
+    avatar?: string;
+  };
+};
+
 export type TicketSummary = {
   key: string;
+  id?: string; // Issue ID needed for linked PR lookup
   parent?: string;
   summary?: string;
   assignee?: {
@@ -172,6 +186,9 @@ export type TicketSummary = {
   };
   created?: string;
   updated?: string;
+  lastComment?: string;
+  assignedDate?: string;
+  linkedPullRequests?: PullRequest[];
 };
 
 export type User = {
