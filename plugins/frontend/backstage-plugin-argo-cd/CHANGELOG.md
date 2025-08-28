@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.11.0
+
+### Minor Changes
+
+- 87f697c: Added support for ArgoCD applications that use multiple sources (by using the first)
+
 ## 2.10.0
 
 ### Minor Changes
