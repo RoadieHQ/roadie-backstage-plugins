@@ -18,8 +18,10 @@ import {
   ConfigApi,
   createApiRef,
   DiscoveryApi,
+  ErrorApi,
   FetchApi,
 } from '@backstage/core-plugin-api';
+import { DateTime } from 'luxon';
 import {
   Status,
   TicketSummary,
@@ -32,7 +34,6 @@ import {
 } from '../types';
 import { JiraProductStrategy } from './strategies/base';
 import { JiraProductStrategyFactory } from './strategies';
-import { ErrorApi } from '@backstage/core-plugin-api';
 
 export const jiraApiRef = createApiRef<JiraAPI>({
   id: 'plugin.jira.service',
@@ -342,7 +343,7 @@ export class JiraAPI {
     }
     const user = (await request.json()) as User;
 
-    const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress")`;
+    const jql = `assignee = "${userId}" AND statusCategory in ("To Do", "In Progress") ORDER BY updated desc`;
 
     const foundIssues = await this.strategy.pagedIssuesRequest(apiUrl, jql);
 
@@ -351,6 +352,7 @@ export class JiraAPI {
       foundIssues.map(async index => {
         let lastComment = '';
         let assignedDate = '';
+        let assignedRelativeTime = '';
         let linkedPullRequests: PullRequest[] = [];
 
         // Try to fetch detailed information including comments and changelog
@@ -378,10 +380,15 @@ export class JiraAPI {
               );
 
             if (assignmentHistory.length > 0) {
-              const date = new Date(assignmentHistory[0].created);
-              assignedDate = `${date.getFullYear()}-${String(
-                date.getMonth() + 1,
-              ).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+              // Store the exact date for tooltip display
+              assignedDate = new Date(
+                assignmentHistory[0].created,
+              ).toLocaleDateString();
+
+              // Add relative time format using Luxon
+              assignedRelativeTime =
+                DateTime.fromISO(assignmentHistory[0].created).toRelative() ||
+                '';
             }
           }
 
@@ -435,6 +442,7 @@ export class JiraAPI {
           updated: index?.fields?.updated,
           lastComment,
           assignedDate,
+          assignedRelativeTime,
           linkedPullRequests,
         };
       }),

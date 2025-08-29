@@ -96,6 +96,7 @@ interface EnhancedTicket extends TicketSummary {
   linkedPRs: string;
   lastComment: string;
   assignedDate: string;
+  assignedRelativeTime: string;
 }
 
 // Component to display linked pull requests in a dialog
@@ -212,6 +213,8 @@ const formatTicketsForDisplay = (
       lastComment: ticket.lastComment || '',
       // Use real assigned date if available, otherwise empty string
       assignedDate: ticket.assignedDate || '',
+      // Use relative time format for display if available
+      assignedRelativeTime: ticket.assignedRelativeTime || '',
     };
   });
 };
@@ -342,13 +345,21 @@ const JiraTicketsTable = ({
       },
     },
     {
-      title: 'Assigned Date',
-      field: 'assignedDate',
+      title: 'Assigned',
+      field: 'assignedRelativeTime',
       width: '120px',
       render: row => (
-        <Typography variant="body2" color="textSecondary">
-          {row.assignedDate}
-        </Typography>
+        <Tooltip
+          title={row.assignedDate}
+          enterDelay={0}
+          enterNextDelay={0}
+          arrow
+          placement="top"
+        >
+          <Typography variant="body2" color="textSecondary">
+            {row.assignedRelativeTime}
+          </Typography>
+        </Tooltip>
       ),
     },
   ];
