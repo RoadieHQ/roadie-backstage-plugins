@@ -15549,7 +15549,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/scaffolder-backend-module-utils@npm:^3.6.0, @roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils":
+"@roadiehq/scaffolder-backend-module-utils@npm:^4.0.0, @roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils":
   version: 0.0.0-use.local
   resolution: "@roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils"
   dependencies:
@@ -21608,7 +21608,7 @@ __metadata:
     "@roadiehq/rag-ai-storage-pgvector": "npm:^2.1.0"
     "@roadiehq/scaffolder-backend-module-aws": "npm:^2.7.0"
     "@roadiehq/scaffolder-backend-module-http-request": "npm:^5.4.0"
-    "@roadiehq/scaffolder-backend-module-utils": "npm:^3.6.0"
+    "@roadiehq/scaffolder-backend-module-utils": "npm:^4.0.0"
     "@types/dockerode": "npm:^3.3.0"
     "@types/express": "npm:^4.17.6"
     "@types/express-serve-static-core": "npm:^4.17.5"
