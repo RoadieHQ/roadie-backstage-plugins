@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.13.0
+
+### Minor Changes
+
+- 6e0f627: use global date format
+
 ## 2.12.0
 
 ### Minor Changes

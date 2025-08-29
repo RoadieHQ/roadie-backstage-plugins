@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.0.0
+
+### Major Changes
+
+- f358485: Fix merge to replace entire array when mergeArrays is false or undefined
+
 ## 3.6.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "dist/index.cjs.js",
   "types": "src/index.ts",
   "private": true,
@@ -61,7 +61,7 @@
     "@roadiehq/rag-ai-storage-pgvector": "^2.1.0",
     "@roadiehq/scaffolder-backend-module-aws": "^2.7.0",
     "@roadiehq/scaffolder-backend-module-http-request": "^5.4.0",
-    "@roadiehq/scaffolder-backend-module-utils": "^3.6.0",
+    "@roadiehq/scaffolder-backend-module-utils": "^4.0.0",
     "app": "^1.2.0",
     "better-sqlite3": "^11.9.1",
     "dockerode": "^3.3.0",
