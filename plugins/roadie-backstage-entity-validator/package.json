@@ -16,7 +16,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "main": "dist/index.cjs.js",
     "types": "types.d.ts"
   },
   "backstage": {
