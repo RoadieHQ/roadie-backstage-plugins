@@ -28,11 +28,13 @@
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test",
+    "test": "backstage-cli package test && node -e \"if (process.env.CI === 'true') require('child_process').execSync('yarn test:build', {stdio: 'inherit'})\"",
     "diff": "backstage-cli plugin:diff",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "tsc": "tsc",
+    "clean": "backstage-cli clean",
+    "test:build": "./test.sh"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
@@ -47,7 +49,8 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
-    "@vercel/ncc": "^0.38.0"
+    "@vercel/ncc": "^0.38.0",
+    "typescript": "^5.5.4"
   },
   "keywords": [
     "backstage",

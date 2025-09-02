@@ -15492,6 +15492,7 @@ __metadata:
     js-yaml: "npm:^4.1.0"
     memfs: "npm:^4.7.7"
     minimist: "npm:^1.2.5"
+    typescript: "npm:^5.5.4"
   languageName: unknown
   linkType: soft
 
