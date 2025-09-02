@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.7.2
+
+### Patch Changes
+
+- 7ccb238: Modify bin path to point to the correct built filename
+
 ## 2.7.1
 
 ### Patch Changes
