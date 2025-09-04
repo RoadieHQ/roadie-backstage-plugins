@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.7.3
+
+### Patch Changes
+
+- 4e35f14: Release entity validator with correct bin path to index file
+
 ## 2.7.2
 
 ### Patch Changes
