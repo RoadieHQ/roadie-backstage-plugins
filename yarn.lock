@@ -8552,25 +8552,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder-common@npm:^1.7.0":
-  version: 1.7.0
-  resolution: "@backstage/plugin-scaffolder-common@npm:1.7.0"
-  dependencies:
-    "@backstage/catalog-model": "npm:^1.7.5"
-    "@backstage/errors": "npm:^1.2.7"
-    "@backstage/integration": "npm:^1.17.1"
-    "@backstage/plugin-permission-common": "npm:^0.9.1"
-    "@backstage/types": "npm:^1.2.1"
-    "@microsoft/fetch-event-source": "npm:^2.0.1"
-    "@types/json-schema": "npm:^7.0.9"
-    cross-fetch: "npm:^4.0.0"
-    json-schema: "npm:^0.4.0"
-    uri-template: "npm:^2.0.0"
-    zen-observable: "npm:^0.10.0"
-  checksum: 10/52b667b52585ecc013bcc5c3803bd3d895996af7c055722e60cefdd8ddd0ce91999a977154975aea5dd479d6fc13e9e1909ace0b0e6594002b9221380f7bee29
-  languageName: node
-  linkType: hard
-
 "@backstage/plugin-scaffolder-node@backstage:^::backstage=1.40.2&npm=0.9.0, @backstage/plugin-scaffolder-node@npm:^0.9.0":
   version: 0.9.0
   resolution: "@backstage/plugin-scaffolder-node@npm:0.9.0"
@@ -15836,7 +15817,7 @@ __metadata:
     "@actions/core": "npm:^1.10.0"
     "@backstage/catalog-model": "npm:^1.7.5"
     "@backstage/cli": "npm:^0.34.1"
-    "@backstage/plugin-scaffolder-common": "npm:^1.7.0"
+    "@backstage/plugin-scaffolder-common": "npm:^1.6.0"
     "@vercel/ncc": "npm:^0.38.0"
     ajv: "npm:^8.4.0"
     ajv-formats: "npm:^2.1.0"
