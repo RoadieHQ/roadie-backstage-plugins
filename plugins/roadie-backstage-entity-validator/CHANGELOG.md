@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.7.4
+
+### Patch Changes
+
+- 04df71d: Use version number for the validator instead of relying to Backstage tooling
+
 ## 2.7.3
 
 ### Patch Changes
