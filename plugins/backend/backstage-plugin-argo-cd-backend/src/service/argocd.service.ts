@@ -39,6 +39,7 @@ import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 
+
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
 
@@ -106,7 +107,8 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const urlBuilder = new URL(
-      `${baseUrl}/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`,
+      `/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`,
+      baseUrl
     );
 
     if (options.namespace) {
@@ -194,7 +196,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      `${baseUrl}/api/v1/projects/${projectName}`,
+      new URL(`/api/v1/projects/${projectName}`, baseUrl).toString(),
       requestOptions,
     );
     const data = await resp.json();
@@ -216,7 +218,7 @@ export class ArgoService implements ArgoServiceApi {
     if (token) return token;
 
     if ((username && password) || (this.username && this.password)) {
-      const resp = await fetch(`${url}/api/v1/session`, {
+      const resp = await fetch(new URL('/api/v1/session', url).toString(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -307,7 +309,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      `${baseUrl}/api/v1/applications${urlSuffix}`,
+      new URL(`/api/v1/applications${urlSuffix}`, baseUrl).toString(),
       requestOptions,
     );
 
@@ -396,7 +398,7 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
 
-    const resp = await fetch(`${baseUrl}/api/v1/projects`, options);
+    const resp = await fetch(new URL('/api/v1/projects', baseUrl).toString(), options);
     const responseData = await resp.json();
     if (resp.status === 403) {
       throw new Error(responseData.message);
@@ -440,7 +442,7 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
     const resp = await fetch(
-      `${baseUrl}/api/v1/projects/${projectName}`,
+      new URL(`/api/v1/projects/${projectName}`, baseUrl).toString(),
       options,
     );
     const responseData = await resp.json();
@@ -533,7 +535,7 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
 
-    const resp = await fetch(`${baseUrl}/api/v1/applications`, options);
+    const resp = await fetch(new URL('/api/v1/applications', baseUrl).toString(), options);
     const respData = await resp.json();
     if (!resp.ok) {
       throw new Error(`Error creating argo app: ${respData.message}`);
@@ -663,7 +665,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      `${baseUrl}/api/v1/applications/${appName}`,
+     new URL(`/api/v1/applications/${appName}`, baseUrl).toString(),
       options,
     );
     const respData = await resp.json();
@@ -693,11 +695,11 @@ export class ArgoService implements ArgoServiceApi {
     let statusText: string = '';
     try {
       const response = (await fetch(
-        `${baseUrl}/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
+        new URL(`/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
           {
             cascade: 'true',
           },
-        )}`,
+        )}`, baseUrl).toString(),
         options,
       )) as DeleteArgoAppFetchResponse;
       statusText = response.statusText;

@@ -67,8 +67,8 @@ const getConfig = (options: {
             type: 'config',
             instances: [
               {
-                name: 'argoInstance1',
-                url: 'https://argoInstance1.com',
+                name: 'argoinstance1',
+                url: 'https://argoinstance1.com',
                 ...instanceCredentials,
               },
             ],
@@ -101,6 +101,7 @@ describe('ArgoCD service', () => {
     mocked(timer).mockResolvedValue(0);
     jest.clearAllMocks();
     jest.restoreAllMocks();
+    // fetchMock.resetMocks();
   });
 
   describe('getRevisionData', () => {
@@ -114,10 +115,47 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.getRevisionData(
-        'https://argoInstance1.com',
+        'https://argoinstance1.com',
         { name: 'testApp' },
         'testToken',
         '15db63ac922a920f388bd841912838ae4d126317',
+      );
+
+      expect(resp).toStrictEqual({
+        author: 'testuser',
+        date: '2023-03-20T18:44:10Z',
+        message: 'Update README.md',
+      });
+    });
+
+    it('should get revision data when the Argo CD instance is configured with a trailing slash', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          author: 'testuser',
+          date: '2023-03-20T18:44:10Z',
+          message: 'Update README.md',
+        }),
+      );
+
+      const name = 'testApp'
+      const token = 'testToken'
+      const revisionId = '15db63ac922a920f388bd841912838ae4d126317'
+
+      const resp = await argoService.getRevisionData(
+        'https://argoinstance1.com/',
+        { name },
+        token,
+        revisionId,
+      );
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringMatching(`https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`),
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        }),
       );
 
       expect(resp).toStrictEqual({
@@ -132,7 +170,7 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoService.getRevisionData(
-          'https://argoInstance1.com',
+          'https://argoinstance1.com',
           { name: 'testApp' },
           'testToken',
           '15db63ac922a920f388bd841912838ae4d126317',
@@ -162,8 +200,8 @@ describe('ArgoCD service', () => {
         }),
       );
       const resp = await argoService.getArgoAppData(
-        'https://argoInstance1.com',
-        'argoInstance1',
+        'https://argoinstance1.com',
+        'argoinstance1',
         'testToken',
       );
 
@@ -174,7 +212,7 @@ describe('ArgoCD service', () => {
               name: 'testAppName',
               namespace: 'testNamespace',
               instance: {
-                name: 'argoInstance1',
+                name: 'argoinstance1',
               },
             },
           },
@@ -183,7 +221,7 @@ describe('ArgoCD service', () => {
               name: 'testAppName2',
               namespace: 'testNamespace2',
               instance: {
-                name: 'argoInstance1',
+                name: 'argoinstance1',
               },
             },
           },
@@ -202,14 +240,14 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.getArgoAppData(
-        'https://argoInstance1.com',
-        'argoInstance1',
+        'https://argoinstance1.com',
+        'argoinstance1',
         'testToken',
         { name: 'testApp' },
       );
 
       expect(resp).toStrictEqual({
-        instance: 'argoInstance1',
+        instance: 'argoinstance1',
         metadata: {
           name: 'testAppName',
           namespace: 'testNamespace',
@@ -222,8 +260,8 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoService.getArgoAppData(
-          'https://argoInstance1.com',
-          'argoInstance1',
+          'https://argoinstance1.com',
+          'argoinstance1',
           'testToken',
           { name: 'testApp' },
         ),
@@ -251,8 +289,8 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.getArgoAppData(
-        'https://argoInstance1.com',
-        'argoInstance1',
+        'https://argoinstance1.com',
+        'argoinstance1',
         'testToken',
         { selector: 'service=testApp' },
       );
@@ -262,7 +300,7 @@ describe('ArgoCD service', () => {
           {
             metadata: {
               instance: {
-                name: 'argoInstance1',
+                name: 'argoinstance1',
               },
               name: 'testApp-prod',
               namespace: 'argocd',
@@ -271,7 +309,7 @@ describe('ArgoCD service', () => {
           {
             metadata: {
               instance: {
-                name: 'argoInstance1',
+                name: 'argoinstance1',
               },
               name: 'testApp-staging',
               namespace: 'argocd',
@@ -291,7 +329,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'testToken',
         projectName: 'testProject',
         namespace: 'test-namespace',
@@ -311,7 +349,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'testToken',
         projectName: 'testProject',
         namespace: 'test-namespace',
@@ -337,7 +375,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'testToken',
         projectName: 'testProject',
         namespace: 'test-namespace',
@@ -371,7 +409,7 @@ describe('ArgoCD service', () => {
       );
 
       await service.createArgoProject({
-        baseUrl: 'baseUrl',
+        baseUrl: 'http://baseurl.com',
         argoToken: 'token',
         projectName: 'projectName',
         namespace: 'namespace',
@@ -379,7 +417,7 @@ describe('ArgoCD service', () => {
       });
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.any(String),
+        expect.stringContaining('http://baseurl.com'),
         expect.objectContaining({
           body: expect.stringContaining(
             '{"metadata":{"name":"projectName","finalizers":["resources-finalizer.argocd.argoproj.io"]}',
@@ -398,7 +436,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoApplication({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'testToken',
         appName: 'testProject',
         projectName: 'testProject',
@@ -423,7 +461,7 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoService.createArgoApplication({
-          baseUrl: 'https://argoInstance1.com',
+          baseUrl: 'https://argoinstance1.com',
           argoToken: 'testToken',
           appName: 'testProject',
           projectName: 'testProject',
@@ -449,7 +487,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoApplication({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'testToken',
         appName: 'testProject',
         projectName: 'testProject',
@@ -485,7 +523,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.createArgoResources({
-        argoInstance: 'argoInstance1',
+        argoInstance: 'argoinstance1',
         appName: 'testApp',
         projectName: 'testProject',
         namespace: 'testNamespace',
@@ -509,7 +547,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = argoService.createArgoResources({
-        argoInstance: 'argoInstance1',
+        argoInstance: 'argoinstance1',
         appName: 'testApp',
         projectName: 'testProject',
         namespace: 'testNamespace',
@@ -528,7 +566,7 @@ describe('ArgoCD service', () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
 
       const resp = await argoService.deleteProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoProjectName: 'testApp',
         argoToken: 'testToken',
       });
@@ -539,7 +577,7 @@ describe('ArgoCD service', () => {
     it('should delete project with json content type header', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
       await argoService.deleteProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoProjectName: 'testApp',
         argoToken: 'testToken',
       });
@@ -561,7 +599,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.deleteProject({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoProjectName: 'testApp',
         argoToken: 'testToken',
       });
@@ -579,7 +617,7 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoService.deleteProject({
-          baseUrl: 'https://argoInstance1.com',
+          baseUrl: 'https://argoinstance1.com',
           argoProjectName: 'testApp',
           argoToken: 'testToken',
         }),
@@ -596,7 +634,7 @@ describe('ArgoCD service', () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
 
       const resp = await argoService.deleteApp({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoApplicationName: 'testApp',
         argoToken: 'testToken',
       });
@@ -607,7 +645,7 @@ describe('ArgoCD service', () => {
     it('should delete app with json content type header', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
       await argoService.deleteApp({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoApplicationName: 'testApp',
         argoToken: 'testToken',
       });
@@ -630,7 +668,7 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoService.deleteApp({
-          baseUrl: 'https://argoInstance1.com',
+          baseUrl: 'https://argoinstance1.com',
           argoApplicationName: 'testApp',
           argoToken: 'testToken',
         }),
@@ -651,7 +689,7 @@ describe('ArgoCD service', () => {
       );
 
       const resp = await argoService.deleteApp({
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoApplicationName: 'testApp',
         argoToken: 'testToken',
       });
@@ -673,7 +711,7 @@ describe('ArgoCD service', () => {
       const resp = await argoService.syncArgoApp({
         argoInstance: {
           name: 'testApp',
-          url: 'https://argoInstance1.com',
+          url: 'https://argoinstance1.com',
           appName: ['testApp'],
         },
         argoToken: 'testToken',
@@ -692,7 +730,7 @@ describe('ArgoCD service', () => {
       const resp = await argoService.syncArgoApp({
         argoInstance: {
           name: 'testApp',
-          url: 'https://argoInstance1.com',
+          url: 'https://argoinstance1.com',
           appName: ['testApp'],
         },
         argoToken: 'testToken',
@@ -711,7 +749,7 @@ describe('ArgoCD service', () => {
       const resp = await argoService.syncArgoApp({
         argoInstance: {
           name: 'testApp',
-          url: 'https://argoInstance1.com',
+          url: 'https://argoinstance1.com',
           appName: ['testApp'],
         },
         argoToken: 'testToken',
@@ -730,7 +768,7 @@ describe('ArgoCD service', () => {
       const resp = await argoService.syncArgoApp({
         argoInstance: {
           name: 'testApp',
-          url: 'https://argoInstance1.com',
+          url: 'https://argoinstance1.com',
           appName: ['testApp'],
         },
         argoToken: 'testToken',
@@ -782,7 +820,7 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual([
         [
           {
-            message: 'Re-synced testAppName on argoInstance1',
+            message: 'Re-synced testAppName on argoinstance1',
             status: 'Success',
           },
         ],
@@ -844,7 +882,7 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual([
         [
           {
-            message: 'Failed to resync testAppName on argoInstance1',
+            message: 'Failed to resync testAppName on argoinstance1',
             status: 'Failure',
           },
         ],
@@ -883,7 +921,7 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual([
         [
           {
-            message: 'Re-synced testAppName on argoInstance1',
+            message: 'Re-synced testAppName on argoinstance1',
             status: 'Success',
           },
         ],
@@ -923,7 +961,7 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual([
         [
           {
-            message: 'Failed to resync testAppName on argoInstance1',
+            message: 'Failed to resync testAppName on argoinstance1',
             status: 'Failure',
           },
         ],
@@ -1006,7 +1044,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toStrictEqual({
@@ -1041,7 +1079,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(getArgoApplicationInfoMock).not.toHaveBeenCalled();
@@ -1081,7 +1119,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(deleteProjectMock).not.toHaveBeenCalled();
@@ -1121,7 +1159,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(deleteProjectMock).not.toHaveBeenCalled();
@@ -1160,7 +1198,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toStrictEqual({
@@ -1201,7 +1239,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toStrictEqual({
@@ -1249,7 +1287,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
         terminateOperation: true,
       });
 
@@ -1289,7 +1327,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
         terminateOperation: true,
       });
 
@@ -1324,7 +1362,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
         terminateOperation: true,
       });
 
@@ -1373,7 +1411,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toEqual(
@@ -1413,7 +1451,7 @@ describe('ArgoCD service', () => {
 
       await argoServiceWaitCycles.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(getArgoApplicationInfoMock).toHaveBeenCalledTimes(2);
@@ -1440,7 +1478,7 @@ describe('ArgoCD service', () => {
 
       await argoServiceWaitCycles.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(getArgoApplicationInfoMock).toHaveBeenCalledTimes(3);
@@ -1467,7 +1505,7 @@ describe('ArgoCD service', () => {
 
       await argoServiceWaitInterval.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(getArgoApplicationInfoMock).toHaveBeenCalledTimes(2);
@@ -1499,7 +1537,7 @@ describe('ArgoCD service', () => {
 
       await argoServiceWaitInterval.deleteAppandProject({
         argoAppName: 'testApp',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(getArgoApplicationInfoMock).toHaveBeenCalledTimes(2);
@@ -1524,8 +1562,8 @@ describe('ArgoCD service', () => {
 
       expect(resp).toStrictEqual([
         {
-          name: 'argoInstance1',
-          url: 'https://argoInstance1.com',
+          name: 'argoinstance1',
+          url: 'https://argoinstance1.com',
           appName: ['testApp-nonprod'],
         },
       ]);
@@ -1560,8 +1598,8 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual([
         {
           appName: ['testApp-nonprod'],
-          name: 'argoInstance1',
-          url: 'https://argoInstance1.com',
+          name: 'argoinstance1',
+          url: 'https://argoinstance1.com',
         },
       ]);
     });
@@ -1584,14 +1622,14 @@ describe('ArgoCD service', () => {
       });
 
       expect(loggerMock.error).toHaveBeenCalledWith(
-        'Error getting token from Argo Instance argoInstance1: FetchError',
+        'Error getting token from Argo Instance argoinstance1: FetchError',
       );
     });
   });
 
   describe('updateArgoProjectAndApp', () => {
     const data: UpdateArgoProjectAndAppProps = {
-      instanceConfig: { name: 'argoInstanceName', url: 'url' },
+      instanceConfig: { name: 'argoInstanceName', url: 'http://argoinstance.com' },
       argoToken: 'argoToken',
       appName: 'appName',
       projectName: 'projectName',
@@ -1740,7 +1778,7 @@ describe('ArgoCD service', () => {
   describe('getArgoProject', () => {
     const projectData = { metadata: { resourceVersion: 'resourceVersion' } };
     const argoProjectReq = {
-      baseUrl: 'baseUrl',
+      baseUrl: 'http://baseurl.com',
       argoToken: 'token',
       projectName: 'projectName',
     };
@@ -1774,7 +1812,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.getArgoApplicationInfo({
         argoApplicationName: 'application',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toEqual(
@@ -1785,7 +1823,7 @@ describe('ArgoCD service', () => {
       );
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(
-        'https://argoInstance1.com/api/v1/applications/application',
+        'https://argoinstance1.com/api/v1/applications/application',
         expect.objectContaining({
           headers: {
             Authorization: 'Bearer token',
@@ -1806,7 +1844,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.getArgoApplicationInfo({
         argoApplicationName: 'application',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toEqual(
@@ -1835,7 +1873,7 @@ describe('ArgoCD service', () => {
       await expect(
         argoServiceForNoToken.getArgoApplicationInfo({
           argoApplicationName: 'application',
-          argoInstanceName: 'argoInstance1',
+          argoInstanceName: 'argoinstance1',
         }),
       ).rejects.toEqual('Unauthorized');
 
@@ -1848,7 +1886,7 @@ describe('ArgoCD service', () => {
       await expect(
         argoService.getArgoApplicationInfo({
           argoApplicationName: 'application',
-          argoInstanceName: 'argoInstance1',
+          argoInstanceName: 'argoinstance1',
         }),
       ).rejects.toThrow(/invalid json/i);
     });
@@ -1862,7 +1900,7 @@ describe('ArgoCD service', () => {
 
       const response = await argoService.getArgoApplicationInfo({
         argoApplicationName: 'application',
-        baseUrl: 'https://argoInstance1.com',
+        baseUrl: 'https://argoinstance1.com',
         argoToken: 'token',
       });
 
@@ -1909,7 +1947,7 @@ describe('ArgoCD service', () => {
       );
 
       await service.createArgoProject({
-        baseUrl: 'baseUrl',
+        baseUrl: 'http://baseurl.com',
         argoToken: 'token',
         projectName: 'projectName',
         namespace: 'namespace',
@@ -1967,7 +2005,7 @@ describe('ArgoCD service', () => {
       );
 
       await service.createArgoProject({
-        baseUrl: 'baseUrl',
+        baseUrl: 'http://baseurl.com',
         argoToken: 'token',
         projectName: 'projectName',
         namespace: 'namespace',
@@ -2019,7 +2057,7 @@ describe('ArgoCD service', () => {
       );
 
       await service.createArgoProject({
-        baseUrl: 'baseUrl',
+        baseUrl: 'http://baseurl.com',
         argoToken: 'token',
         projectName: 'projectName',
         namespace: 'namespace',
@@ -2046,13 +2084,13 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.terminateArgoAppOperation({
         argoAppName: 'application',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(
-        'https://argoInstance1.com/api/v1/applications/application/operation',
+        'https://argoinstance1.com/api/v1/applications/application/operation',
         expect.objectContaining({
           headers: {
             Authorization: 'Bearer token',
@@ -2067,14 +2105,14 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.terminateArgoAppOperation({
         argoAppName: 'application',
-        baseUrl: 'https://passedArgoInstance1.com',
+        baseUrl: 'https://passedArgoinstance1.com',
         argoToken: 'passedToken',
       });
 
       expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock).toHaveBeenCalledWith(
-        'https://passedArgoInstance1.com/api/v1/applications/application/operation',
+        'https://passedArgoinstance1.com/api/v1/applications/application/operation',
         expect.objectContaining({
           headers: {
             Authorization: 'Bearer passedToken',
@@ -2096,7 +2134,7 @@ describe('ArgoCD service', () => {
 
       const resp = await argoService.terminateArgoAppOperation({
         argoAppName: 'application',
-        argoInstanceName: 'argoInstance1',
+        argoInstanceName: 'argoinstance1',
       });
 
       expect(resp).toEqual(
@@ -2116,7 +2154,7 @@ describe('ArgoCD service', () => {
       await expect(
         argoServiceForNoToken.terminateArgoAppOperation({
           argoAppName: 'application',
-          argoInstanceName: 'argoInstance1',
+          argoInstanceName: 'argoinstance1',
         }),
       ).rejects.toEqual('Unauthorized');
 
@@ -2148,7 +2186,7 @@ describe('ArgoCD service', () => {
       await expect(
         argoService.terminateArgoAppOperation({
           argoAppName: 'application',
-          argoInstanceName: 'argoInstance1',
+          argoInstanceName: 'argoinstance1',
         }),
       ).rejects.toThrow(/invalid json/i);
     });
