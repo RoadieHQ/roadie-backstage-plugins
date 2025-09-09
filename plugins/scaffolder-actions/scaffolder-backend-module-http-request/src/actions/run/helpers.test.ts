@@ -20,9 +20,7 @@ import {
   getPluginId,
 } from './helpers';
 import { HttpOptions } from './types';
-import { getRootLogger } from '@backstage/backend-common';
-import { Writable } from 'stream';
-import * as winston from 'winston';
+import { mockServices } from '@backstage/backend-test-utils';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 const mockBaseUrl = 'http://backstage.tests/api';
@@ -44,16 +42,7 @@ const options: HttpOptions = {
   headers: {},
 };
 
-// We add a transport to the winston logger so that we can assert the log contents using the stream below
-let logOutput = '';
-const logStream = new Writable();
-logStream._write = (chunk, _encoding, next) => {
-  logOutput = logOutput += chunk.toString();
-  next();
-};
-const streamTransport = new winston.transports.Stream({ stream: logStream });
-const logger = getRootLogger();
-logger.add(streamTransport);
+const logger = mockServices.logger.mock();
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -183,11 +172,8 @@ describe('http', () => {
             'Unable to complete request',
           );
 
-          const logEvents = logOutput.trim().split('\n');
-          expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+          expect(logger.error).toHaveBeenCalledWith(
+            expect.stringContaining(`"error":"bad request"`),
           );
         });
         it('returns response without headers if continueOnBadResponse', async () => {
@@ -208,11 +194,8 @@ describe('http', () => {
           expect(await response.body).toEqual({ error: 'bad request' });
           expect(await response.headers).toMatchObject({});
 
-          const logEvents = logOutput.trim().split('\n');
-          expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+          expect(logger.error).toHaveBeenCalledWith(
+            expect.stringContaining(`"error":"bad request"`),
           );
         });
       });

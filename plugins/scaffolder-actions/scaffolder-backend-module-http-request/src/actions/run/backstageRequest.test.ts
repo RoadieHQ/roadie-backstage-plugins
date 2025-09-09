@@ -15,7 +15,7 @@
  */
 import { createHttpBackstageAction } from './backstageRequest';
 import os from 'os'; // eslint-disable-line
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -28,8 +28,7 @@ jest.mock('./helpers', () => ({
 describe('http:backstage:request', () => {
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
-  const logger = getVoidLogger();
-  const loggerSpy = jest.spyOn(logger, 'info');
+  const logger = mockServices.logger.mock();
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
   beforeEach(() => {
@@ -383,8 +382,8 @@ describe('http:backstage:request', () => {
             method: 'GET',
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
-        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(logger.info).toHaveBeenCalledTimes(1);
+        expect(logger.info.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
@@ -414,8 +413,8 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
-        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(logger.info).toHaveBeenCalledTimes(1);
+        expect(logger.info.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
@@ -453,8 +452,8 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(1);
-        expect(loggerSpy.mock.calls[0]).toContain(expectedLog);
+        expect(logger.info).toHaveBeenCalledTimes(1);
+        expect(logger.info.mock.calls[0]).toContain(expectedLog);
         expect(http).toHaveBeenCalledWith(
           {
             url: 'http://backstage.tests/api/proxy/foo',
@@ -482,8 +481,8 @@ describe('http:backstage:request', () => {
             logRequestPath: false,
           },
         });
-        expect(loggerSpy).toHaveBeenCalledTimes(2);
-        expect(loggerSpy.mock.calls[1]).toContain(expectedLog);
+        expect(logger.info).toHaveBeenCalledTimes(2);
+        expect(logger.info.mock.calls[1]).toContain(expectedLog);
         expect(http).not.toHaveBeenCalled();
       });
     });
