@@ -61,7 +61,7 @@
     "zod": "^3.19.1"
   },
   "devDependencies": {
-    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@types/adm-zip": "^0.4.34",

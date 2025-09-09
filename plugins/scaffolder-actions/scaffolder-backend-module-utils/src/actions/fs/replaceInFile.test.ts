@@ -17,12 +17,12 @@ import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import { createReplaceInFileAction } from './replaceInFile';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:fs:replace', () => {
   afterEach(() => mock.restore());
   const mockContext = {
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

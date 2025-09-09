@@ -52,7 +52,7 @@
     "cross-fetch": "^4.0.0"
   },
   "devDependencies": {
-    "@backstage/backend-common": "^0.25.0",
+    "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@backstage/core-app-api": "backstage:^",
     "winston": "^3.2.1"

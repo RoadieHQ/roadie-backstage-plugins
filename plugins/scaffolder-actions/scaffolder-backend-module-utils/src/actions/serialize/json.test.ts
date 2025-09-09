@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { PassThrough } from 'stream';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { createSerializeJsonAction } from './json';
 
 describe('roadiehq:utils:serialize:json', () => {
@@ -22,7 +22,7 @@ describe('roadiehq:utils:serialize:json', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

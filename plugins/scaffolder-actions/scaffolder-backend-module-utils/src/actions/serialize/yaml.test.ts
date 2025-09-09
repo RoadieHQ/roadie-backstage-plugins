@@ -16,14 +16,14 @@
 import { PassThrough } from 'stream';
 import { createSerializeYamlAction } from './yaml';
 import YAML from 'yaml';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:serialize:yaml', () => {
   const mockContext = {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
