@@ -21,9 +21,22 @@
     "directory": "plugins/frontend/backstage-plugin-github-insights"
   },
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.esm.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "alpha": [
+        "src/alpha.ts"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "backstage": {
     "role": "frontend-plugin",
@@ -36,7 +49,7 @@
   "scripts": {
     "build": "backstage-cli package build",
     "tsc": "tsc",
-    "start": "backstage-cli package start",
+    "start": "backstage-cli package start --config ./dev/app-config.yaml",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test",
     "diff": "backstage-cli plugin:diff",
@@ -46,8 +59,10 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "backstage:^",
+    "@backstage/core-compat-api": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/frontend-plugin-api": "backstage:^",
     "@backstage/integration": "backstage:^",
     "@backstage/integration-react": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",
@@ -60,6 +75,7 @@
     "@roadiehq/github-auth-utils-react": "^1.1.0",
     "git-url-parse": "^14.0.0",
     "immer": "9.0.7",
+    "msw": "^1.0.1",
     "react-use": "^17.2.4",
     "zustand": "3.6.9"
   },
@@ -72,15 +88,21 @@
     "@backstage/cli": "backstage:^",
     "@backstage/core-app-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
+    "@backstage/frontend-defaults": "backstage:^",
+    "@backstage/plugin-catalog": "backstage:^",
     "@backstage/test-utils": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@types/git-url-parse": "^9.0.1",
     "cross-fetch": "^3.1.4",
-    "msw": "^1.0.1",
     "react-test-renderer": "^16.14.0"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }

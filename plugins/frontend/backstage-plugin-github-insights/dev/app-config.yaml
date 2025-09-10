@@ -1,0 +1,15 @@
+app:
+  title: Backstage Example App
+  baseUrl: http://localhost:3000
+  extensions:
+    - 'page:catalog':
+        config:
+          path: '/'
+    - 'entity-card:catalog/has-subcomponents': false
+    - 'entity-card:catalog/depends-on-components': false
+    - 'entity-card:catalog/depends-on-resources': false
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007

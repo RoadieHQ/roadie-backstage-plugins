@@ -145,3 +145,91 @@ import { EntityGithubInsightsEnvironmentsCard } from '@roadiehq/backstage-plugin
 ---
 
 Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
+
+# New Frontend System
+
+Follow these steps to detect and configure the GitHub Insights plugin if you'd like to use it in an application that supports the new Backstage frontend system.
+
+### Package Detection
+
+Once you installed the `@roadiehq/backstage-plugin-github-insights` package using your preferred package manager, you have to choose how the package should be detected by the Backstage frontend app. The package can be automatically discovered when the feature discovery config is set, or it can be manually enabled via code (for more granular package customization cases).
+
+<table>
+  <tr>
+    <td>Via config</td>
+    <td>Via code</td>
+  </tr>
+  <tr>
+    <td>
+      <pre lang="yaml">
+        <code>
+# app-config.yaml
+  app:
+    # Enable package discovery for all plugins
+    packages: 'all'
+  ---
+  app:
+    # Enable package discovery only for GitHub Insights
+    packages:
+      include:
+        - '@roadiehq/backstage-plugin-github-insights'
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre lang="javascript">
+       <code>
+// packages/app/src/App.tsx
+import { createApp } from '@backstage/frontend-defaults';
+import githubInsightsPlugin from '@roadiehq/backstage-plugin-github-insights/alpha';
+//...
+const app = createApp({
+  // ...
+  features: [
+    //...
+    githubInsights,
+  ],
+});
+
+//...
+</code>
+
+</pre>
+</td>
+
+  </tr>
+</table>
+
+### Extensions Configuration
+
+Currently, the plugin installs 8 extensions: 1 api, 6 entity page cards (readme, compliance, releases, contributors, languages and environments) and 1 entity page content (also known as entity page tab), see below examples of how to configure the available extensions.
+
+```yml
+# app-config.yaml
+app:
+  extensions:
+    # Example disabling the "readme" entity card
+    - 'entity-card:github-insights/readme': false
+    # Example customizing the "readme" entity card
+    - 'entity-card:github-insights/readme':
+        config:
+          title: Documentation
+          maxHeight: 100
+    # Example disabling the "compliance" entity card
+    - 'entity-card:github-insights/compliance': false
+    # Example disabling the "releases" entity card
+    - 'entity-card:github-insights/releases': false
+    # Example disabling the "contributors" entity card
+    - 'entity-card:github-insights/contributors': false
+    # Example disabling the "languages" entity card
+    - 'entity-card:github-insights/languages': false
+    # Example disabling the "environments" entity card
+    - 'entity-card:github-insights/environments': false
+    # Example disabling the GitHub Insights entity content
+    - 'entity-content:github-insights': false
+    # Example customizing the GitHub Insights entity content
+    - 'entity-content:github-insights':
+        config:
+          path: '/code-insights'
+          title: 'Code Insights'
+```
