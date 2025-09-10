@@ -1,5 +1,23 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.7.4
+
+### Patch Changes
+
+- 04df71d: Use version number for the validator instead of relying to Backstage tooling
+
+## 2.7.3
+
+### Patch Changes
+
+- 4e35f14: Release entity validator with correct bin path to index file
+
+## 2.7.2
+
+### Patch Changes
+
+- 7ccb238: Modify bin path to point to the correct built filename
+
 ## 2.7.1
 
 ### Patch Changes

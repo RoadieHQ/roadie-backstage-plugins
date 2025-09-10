@@ -188,6 +188,7 @@ export type TicketSummary = {
   updated?: string;
   lastComment?: string;
   assignedDate?: string;
+  assignedRelativeTime?: string;
   linkedPullRequests?: PullRequest[];
 };
 

@@ -1,5 +1,12 @@
 # backend
 
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [f358485]
+  - @roadiehq/scaffolder-backend-module-utils@4.0.0
+
 ## 2.5.0
 
 ### Minor Changes

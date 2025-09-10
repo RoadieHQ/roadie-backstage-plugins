@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/roadie-backstage-entity-validator",
-  "version": "2.7.1",
+  "version": "2.7.4",
   "author": "RoadieHQ",
   "description": "Backstage entity validator library",
   "main": "src/index.js",
@@ -16,7 +16,7 @@
   },
   "publishConfig": {
     "access": "public",
-    "main": "dist/index.js",
+    "main": "dist/index.cjs.js",
     "types": "types.d.ts"
   },
   "backstage": {
@@ -28,16 +28,18 @@
   "scripts": {
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
-    "test": "backstage-cli package test",
+    "test": "backstage-cli package test && node -e \"if (process.env.CI === 'true') require('child_process').execSync('yarn test:build', {stdio: 'inherit'})\"",
     "diff": "backstage-cli plugin:diff",
     "prepack": "backstage-cli package prepack",
     "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "tsc": "tsc",
+    "clean": "backstage-cli clean",
+    "test:build": "./test.sh"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@backstage/catalog-model": "backstage:^",
-    "@backstage/plugin-scaffolder-common": "backstage:^",
+    "@backstage/catalog-model": "^1.7.5",
+    "@backstage/plugin-scaffolder-common": "^1.6.0",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
     "glob": "^7.1.7",
@@ -46,8 +48,9 @@
     "minimist": "^1.2.5"
   },
   "devDependencies": {
-    "@backstage/cli": "backstage:^",
-    "@vercel/ncc": "^0.38.0"
+    "@backstage/cli": "^0.33.1",
+    "@vercel/ncc": "^0.38.0",
+    "typescript": "^5.5.4"
   },
   "keywords": [
     "backstage",

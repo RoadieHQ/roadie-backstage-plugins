@@ -64,7 +64,7 @@ async function main() {
     .split('\n')
     .filter(path =>
       path.match(
-        /^(packages|plugins\/backend|plugins\/frontend|plugins\/scaffolder-actions|plugins\/scaffolder-field-extensions|utils|plugins\/home)\/[^/]+\/package\.json$/,
+        /^(packages|plugins\/backend|plugins\/frontend|plugins\/scaffolder-actions|plugins\/scaffolder-field-extensions|utils|plugins\/home|plugins\/roadie-backstage-entity-validator)\/[^/]+\/package\.json$/,
       ),
     );
 

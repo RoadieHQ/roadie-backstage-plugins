@@ -317,7 +317,7 @@ describe('MyJiraTicketsCard', () => {
       'Status',
       'Linked PR(S)',
       'Last Comment',
-      'Assigned Date',
+      'Assigned',
     ];
 
     for (const header of headers) {
