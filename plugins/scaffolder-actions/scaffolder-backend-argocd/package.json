@@ -11,7 +11,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "scaffolder-backend-argocd",
+    "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "exports": {

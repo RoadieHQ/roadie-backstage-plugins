@@ -31,7 +31,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "catalog-backend-module-okta",
+    "pluginId": "catalog",
     "pluginPackage": "@backstage/plugin-catalog-backend"
   },
   "homepage": "https://roadie.io",
