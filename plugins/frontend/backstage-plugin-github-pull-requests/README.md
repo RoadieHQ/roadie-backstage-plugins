@@ -162,6 +162,82 @@ export const HomePage = () => {
 - Show basic statistics widget about pull requests for your repository.
 - Possibility to add a variable on the backstage configuration of a catalog entity allowing to add a default search filter on github pull requests
 
+# New Frontend System
+
+Follow these steps to detect and configure the GitHub Pull Requests plugin if you'd like to use it in an application that supports the new Backstage frontend system.
+
+## Package Detection
+
+Once you install the `@roadiehq/backstage-plugin-github-pull-requests` package using your preferred package manager, you have to choose how the package should be detected by the app. The package can be automatically discovered when the feature discovery config is set, or it can be manually enabled via code (for more granular package customization cases).
+
+<table>
+  <tr>
+    <td>Via config</td>
+    <td>Via code</td>
+  </tr>
+  <tr>
+    <td>
+      <pre lang="yaml">
+        <code>
+# app-config.yaml
+  app:
+    # Enable package discovery for all plugins
+    packages: 'all'
+  ---
+  app:
+    # Enable package discovery only for GitHub Pull Requests
+    packages:
+      include:
+        - '@roadiehq/backstage-plugin-github-pull-requests'
+        </code>
+      </pre>
+    </td>
+    <td>
+      <pre lang="javascript">
+       <code>
+// packages/app/src/App.tsx
+import { createApp } from '@backstage/frontend-defaults';
+import githubPullRequestsPlugin from '@roadiehq/backstage-plugin-github-pull-requests/alpha';
+//...
+const app = createApp({
+  // ...
+  features: [
+    //...
+    githubPullRequestsPlugin,
+  ],
+});
+
+//...
+</code>
+</pre>
+</td>
+
+  </tr>
+</table>
+
+### Extensions Configuration
+
+Currently, the plugin installs 3 extensions: one api, one entity page card and one entity page content (also known as entity page tab), see below examples of how to configure the available extensions.
+
+```yml
+# app-config.yaml
+app:
+  extensions:
+    # Example disabling the GitHub Pull Requests entity card
+    - 'entity-card:github-pull-requests': false
+    # Example customizing the GitHub Pull Requests entity card
+    - 'entity-card:github-pull-requests':
+        config:
+          variant: 'gridItem' # or flex / fullHeight
+    # Example disabling the GitHub Pull Requests  entity content
+    - 'entity-content:github-pull-requests': false
+    # Example customizing the GitHub Pull Requests  entity content
+    - 'entity-content:github-pull-requests':
+        config:
+          path: '/pull-requests'
+          title: 'Pull Requests'
+```
+
 ## Links
 
 - [Backstage](https://backstage.io)

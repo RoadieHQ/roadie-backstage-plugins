@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { createDevApp } from '@backstage/dev-utils';
-import { githubPullRequestsPlugin } from '../src/plugin';
+import { catalogApiMock } from '@backstage/plugin-catalog-react/testUtils';
+import { entityMock } from '../src/mocks/mocks';
 
-createDevApp().registerPlugin(githubPullRequestsPlugin).render();
+export const catalogApi = catalogApiMock({
+  entities: [entityMock],
+});
