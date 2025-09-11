@@ -8,7 +8,7 @@
     "access": "public"
   },
   "backstage": {
-    "role": "backend-plugin-module",
+    "role": "backend",
     "pluginId": "scaffolder-backend-module-utils",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },

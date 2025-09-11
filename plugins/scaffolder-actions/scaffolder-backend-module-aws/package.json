@@ -9,7 +9,7 @@
   },
   "backstage": {
     "role": "backend-plugin-module",
-    "pluginId": "scaffolder-backend-module-aws",
+    "pluginId": "scaffolder",
     "pluginPackage": "@backstage/plugin-scaffolder-backend"
   },
   "repository": {
