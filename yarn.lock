@@ -6143,7 +6143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/frontend-defaults@npm:^0.3.1":
+"@backstage/frontend-defaults@backstage:^::backstage=1.43.3&npm=0.3.1, @backstage/frontend-defaults@npm:^0.3.1":
   version: 0.3.1
   resolution: "@backstage/frontend-defaults@npm:0.3.1"
   dependencies:
@@ -13629,11 +13629,15 @@ __metadata:
     "@backstage/catalog-model": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/core-app-api": "backstage:^"
+    "@backstage/core-compat-api": "backstage:^"
     "@backstage/core-components": "backstage:^"
     "@backstage/core-plugin-api": "backstage:^"
     "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-defaults": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/integration": "backstage:^"
     "@backstage/integration-react": "backstage:^"
+    "@backstage/plugin-catalog": "backstage:^"
     "@backstage/plugin-catalog-react": "backstage:^"
     "@backstage/plugin-home-react": "backstage:^"
     "@backstage/test-utils": "backstage:^"

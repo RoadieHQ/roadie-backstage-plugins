@@ -21,9 +21,22 @@
     "directory": "plugins/frontend/backstage-plugin-github-pull-requests"
   },
   "publishConfig": {
-    "access": "public",
-    "main": "dist/index.esm.js",
-    "types": "dist/index.d.ts"
+    "access": "public"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "alpha": [
+        "src/alpha.ts"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
   },
   "backstage": {
     "role": "frontend-plugin",
@@ -35,7 +48,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "backstage-cli package build",
-    "start": "backstage-cli package start",
+    "start": "backstage-cli package start --config ./dev/app-config.yaml",
     "tsc": "tsc",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test",
@@ -46,8 +59,10 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "backstage:^",
+    "@backstage/core-compat-api": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/frontend-plugin-api": "backstage:^",
     "@backstage/integration": "backstage:^",
     "@backstage/integration-react": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",
@@ -73,6 +88,8 @@
     "@backstage/cli": "backstage:^",
     "@backstage/core-app-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
+    "@backstage/frontend-defaults": "backstage:^",
+    "@backstage/plugin-catalog": "backstage:^",
     "@backstage/test-utils": "backstage:^",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
@@ -85,5 +102,10 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
 }
