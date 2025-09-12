@@ -89,6 +89,7 @@
     "@backstage/core-app-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
     "@backstage/frontend-defaults": "backstage:^",
+    "@backstage/plugin-app": "backstage:^",
     "@backstage/plugin-catalog": "backstage:^",
     "@backstage/test-utils": "backstage:^",
     "@rollup/plugin-commonjs": "^24.0.1",

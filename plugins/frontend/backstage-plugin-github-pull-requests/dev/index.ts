@@ -18,10 +18,7 @@ import { setupWorker } from 'msw';
 import ReactDOM from 'react-dom/client';
 
 import { createApp } from '@backstage/frontend-defaults';
-import {
-  ApiBlueprint,
-  createFrontendModule,
-} from '@backstage/frontend-plugin-api';
+import appPlugin from '@backstage/plugin-app';
 import catalogPlugin from '@backstage/plugin-catalog/alpha';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { scmAuthApiRef } from '@backstage/integration-react';
@@ -36,11 +33,9 @@ const worker = setupWorker();
 worker.use(...handlers);
 await worker.start();
 
-const appPluginOverrides = createFrontendModule({
-  pluginId: 'app',
+const appPluginOverrides = appPlugin.withOverrides({
   extensions: [
-    ApiBlueprint.make({
-      name: 'scm-auth',
+    appPlugin.getExtension('api:app/scm-auth').override({
       params: defineParams =>
         defineParams({
           api: scmAuthApiRef,
