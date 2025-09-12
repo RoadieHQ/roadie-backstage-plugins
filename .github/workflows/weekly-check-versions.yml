@@ -23,6 +23,8 @@ jobs:
         run: |
           yarn install
           yarn backstage-cli versions:bump
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
