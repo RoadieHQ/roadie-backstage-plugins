@@ -25,7 +25,7 @@ export const githubInsightsComplianceEntityCard = EntityCardBlueprint.make({
   params: {
     filter: { kind: 'component' },
     async loader() {
-      const { ComplianceCard } = await import('../components/Widgets/index');
+      const { ComplianceCard } = await import('../components/Widgets');
       return compatWrapper(<ComplianceCard />);
     },
   },
@@ -39,7 +39,7 @@ export const githubInsightsContributorsEntityCard = EntityCardBlueprint.make({
   params: {
     filter: { kind: 'component' },
     async loader() {
-      const { ContributorsCard } = await import('../components/Widgets/index');
+      const { ContributorsCard } = await import('../components/Widgets');
       return compatWrapper(<ContributorsCard />);
     },
   },
@@ -53,7 +53,7 @@ export const githubInsightsLanguagesEntityCard = EntityCardBlueprint.make({
   params: {
     filter: { kind: 'component' },
     async loader() {
-      const { LanguagesCard } = await import('../components/Widgets/index');
+      const { LanguagesCard } = await import('../components/Widgets');
       return compatWrapper(<LanguagesCard />);
     },
   },
@@ -76,7 +76,7 @@ export const githubInsightsReadmeEntityCard =
       return originalFactory({
         filter: { kind: 'component' },
         async loader() {
-          const { ReadMeCard } = await import('../components/Widgets/index');
+          const { ReadMeCard } = await import('../components/Widgets');
           return compatWrapper(
             <ReadMeCard title={title} maxHeight={maxHeight} />,
           );
@@ -93,7 +93,7 @@ export const githubInsightsReleasesEntityCard = EntityCardBlueprint.make({
   params: {
     filter: { kind: 'component' },
     async loader() {
-      const { ReleasesCard } = await import('../components/Widgets/index');
+      const { ReleasesCard } = await import('../components/Widgets');
       return compatWrapper(<ReleasesCard />);
     },
   },
@@ -107,7 +107,7 @@ export const githubInsightsEnvironmentsEntityCard = EntityCardBlueprint.make({
   params: {
     filter: { kind: 'component' },
     async loader() {
-      const { EnvironmentsCard } = await import('../components/Widgets/index');
+      const { EnvironmentsCard } = await import('../components/Widgets');
       return compatWrapper(<EnvironmentsCard />);
     },
   },

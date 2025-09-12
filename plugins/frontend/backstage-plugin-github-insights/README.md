@@ -187,7 +187,7 @@ const app = createApp({
   // ...
   features: [
     //...
-    githubInsights,
+    githubInsightsPlugin,
   ],
 });
 
