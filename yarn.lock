@@ -6382,7 +6382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-app@npm:^0.3.0":
+"@backstage/plugin-app@backstage:^::backstage=1.43.3&npm=0.3.0, @backstage/plugin-app@npm:^0.3.0":
   version: 0.3.0
   resolution: "@backstage/plugin-app@npm:0.3.0"
   dependencies:
@@ -13599,6 +13599,7 @@ __metadata:
     "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/integration": "backstage:^"
     "@backstage/integration-react": "backstage:^"
+    "@backstage/plugin-app": "backstage:^"
     "@backstage/plugin-catalog": "backstage:^"
     "@backstage/plugin-catalog-react": "backstage:^"
     "@backstage/test-utils": "backstage:^"
