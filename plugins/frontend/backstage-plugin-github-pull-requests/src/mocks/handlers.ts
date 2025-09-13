@@ -25,6 +25,7 @@ import {
   yourOpenDraftPullRequests,
   closedPullsRequestMock,
   backstagePluginArgoCdMocks,
+  backstagePluginArgoCdCommitMocks,
   groupAssignedReviewsMock,
 } from './mocks';
 
@@ -65,6 +66,15 @@ export const handlers = [
     (req, res, ctx) => {
       const { pullRequestId } = req.params as { pullRequestId: string };
       return res(ctx.json(backstagePluginArgoCdMocks[pullRequestId]));
+    },
+  ),
+  rest.get(
+    'https://api.github.com/repos/RoadieHQ/backstage-plugin-argo-cd/pulls/:pullRequestId/commits',
+    (req, res, ctx) => {
+      const { pullRequestId } = req.params as { pullRequestId: string };
+      return res(
+        ctx.json(backstagePluginArgoCdCommitMocks[pullRequestId] ?? []),
+      );
     },
   ),
 ];
