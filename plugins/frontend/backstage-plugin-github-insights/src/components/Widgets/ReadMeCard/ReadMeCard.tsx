@@ -16,7 +16,7 @@
 
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import { useEntity } from '@backstage/plugin-catalog-react';
-import { MarkdownContent } from '../index';
+import MarkdownContent from '../MarkdownContent';
 import { InfoCard } from '@backstage/core-components';
 import { makeStyles } from '@material-ui/core';
 import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScmIntegration';
