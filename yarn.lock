@@ -14898,7 +14898,6 @@ __metadata:
     "@types/lodash": "npm:^4.17.16"
     "@types/sanitize-html": "npm:^1.27.1"
     "@types/uuid": "npm:^8.3.0"
-    axios: "npm:^1.0.0"
     cross-fetch: "npm:^3.1.5"
     html-react-parser: "npm:^0.14.1"
     lodash: "npm:^4.17.21"

@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.7.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
 ## 1.7.0
 
 ### Minor Changes
