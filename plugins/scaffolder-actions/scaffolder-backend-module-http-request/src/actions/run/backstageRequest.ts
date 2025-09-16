@@ -132,7 +132,7 @@ export function createHttpBackstageAction(options: {
         inputHeaders.find(
           kv =>
             kv[0].toLowerCase() === 'content-type' &&
-            kv[1].toLowerCase() === 'application/json',
+            kv[1].toLowerCase().includes('json'),
         )
       ) {
         inputBody = JSON.stringify(input.body);
