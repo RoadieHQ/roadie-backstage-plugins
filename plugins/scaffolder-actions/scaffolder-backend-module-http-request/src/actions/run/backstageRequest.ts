@@ -123,12 +123,17 @@ export function createHttpBackstageAction(options: {
 
       let inputBody: Body = undefined;
 
+      const inputHeaders: [string, any][] | undefined =
+        input.headers && Object.entries(input.headers);
       if (
         input.body &&
         typeof input.body !== 'string' &&
-        input.headers &&
-        input.headers['content-type'] &&
-        input.headers['content-type'].includes('application/json')
+        inputHeaders &&
+        inputHeaders.find(
+          kv =>
+            kv[0].toLowerCase() === 'content-type' &&
+            kv[1].toLowerCase() === 'application/json',
+        )
       ) {
         inputBody = JSON.stringify(input.body);
       } else {

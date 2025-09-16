@@ -234,6 +234,40 @@ describe('http:backstage:request', () => {
           false,
         );
       });
+      it('should create a request and pass body parameter regardless of the header casing', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([
+              {
+                name: 'test',
+              },
+            ]),
+          },
+        });
+        expect(http).toHaveBeenCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: '[{"name":"test"}]',
+          },
+          logger,
+          false,
+        );
+      });
     });
 
     describe('with authorization header', () => {
