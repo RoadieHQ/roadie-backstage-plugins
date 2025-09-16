@@ -15,12 +15,6 @@ export const argocdServiceRef = createServiceRef<ArgoServiceApi>({
         config: coreServices.rootConfig,
         logger: coreServices.logger,
       },
-      async factory({ config, logger }) {
-        const argoUserName =
-          config.getOptionalString('argocd.username') ?? 'argocdUsername';
-        const argoPassword =
-          config.getOptionalString('argocd.password') ?? 'argocdPassword';
-        return new ArgoService(argoUserName, argoPassword, config, logger);
-      },
+      factory: deps => ArgoService.fromConfig(deps),
     }),
 });
