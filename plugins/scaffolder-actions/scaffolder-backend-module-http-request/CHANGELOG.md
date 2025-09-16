@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.4.2
+
+### Patch Changes
+
+- 7df343e: Fix casing bug in automatic json serialisation
+
 ## 5.4.1
 
 ### Patch Changes
