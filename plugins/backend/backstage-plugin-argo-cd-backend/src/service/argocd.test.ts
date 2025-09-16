@@ -101,7 +101,7 @@ describe('ArgoCD service', () => {
     mocked(timer).mockResolvedValue(0);
     jest.clearAllMocks();
     jest.restoreAllMocks();
-    // fetchMock.resetMocks();
+    fetchMock.resetMocks();
   });
 
   describe('getRevisionData', () => {
@@ -129,13 +129,13 @@ describe('ArgoCD service', () => {
     });
 
     it('should get revision data when the Argo CD instance is configured with a trailing slash', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          author: 'testuser',
-          date: '2023-03-20T18:44:10Z',
-          message: 'Update README.md',
-        }),
-      );
+      const expectedResp = {
+        author: 'testuser',
+        date: '2023-03-20T18:44:10Z',
+        message: 'Update README.md',
+      }
+      
+      fetchMock.mockResponseOnce(JSON.stringify(expectedResp));
 
       const name = 'testApp'
       const token = 'testToken'
@@ -158,11 +158,7 @@ describe('ArgoCD service', () => {
         }),
       );
 
-      expect(resp).toStrictEqual({
-        author: 'testuser',
-        date: '2023-03-20T18:44:10Z',
-        message: 'Update README.md',
-      });
+      expect(resp).toStrictEqual(expectedResp);
     });
 
     it('should fail to get revision data', async () => {
