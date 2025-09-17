@@ -1,5 +1,5 @@
 import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
-import { isDatadogGraphAvailable } from '../plugin';
+import { DATADOG_ANNOTATION_GRAPH_TOKEN } from '../components/useDatadogAppData';
 
 /**
  * @alpha
@@ -7,7 +7,11 @@ import { isDatadogGraphAvailable } from '../plugin';
 export const entityDatadogGraphCard = EntityCardBlueprint.make({
   name: 'datadog-graph',
   params: {
-    filter: isDatadogGraphAvailable,
+    filter: {
+      [`metadata.annotations.${DATADOG_ANNOTATION_GRAPH_TOKEN}`]: {
+        $exists: true,
+      },
+    },
     loader: () =>
       import('../components/GraphWidget').then(m => <m.GraphWidget />),
   },

@@ -14,7 +14,7 @@ import {
  * @alpha
  */
 const plugin: FrontendPlugin = createFrontendPlugin({
-  id: 'datadog',
+  pluginId: 'datadog',
   // bind all the extensions to the plugin
   extensions: [datadogApi, entityDatadogContent, entityDatadogGraphCard],
   // convert old route refs to the new system

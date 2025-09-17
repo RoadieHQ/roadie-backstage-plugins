@@ -3,7 +3,8 @@ import {
   convertLegacyRouteRef,
 } from '@backstage/core-compat-api';
 import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha';
-import { entityContentRouteRef, isDatadogDashboardAvailable } from '../plugin';
+import { entityContentRouteRef } from '../plugin';
+import { DATADOG_ANNOTATION_DASHBOARD_URL } from '../components/useDatadogAppData';
 
 /**
  * @alpha
@@ -11,9 +12,13 @@ import { entityContentRouteRef, isDatadogDashboardAvailable } from '../plugin';
 export const entityDatadogContent = EntityContentBlueprint.make({
   name: 'entity',
   params: {
-    defaultPath: '/datadog',
-    defaultTitle: 'Datadog',
-    filter: isDatadogDashboardAvailable,
+    path: '/datadog',
+    title: 'Datadog',
+    filter: {
+      [`metadata.annotations.${DATADOG_ANNOTATION_DASHBOARD_URL}`]: {
+        $exists: true,
+      },
+    },
     routeRef: convertLegacyRouteRef(entityContentRouteRef),
     loader: () => import('../Router').then(m => compatWrapper(<m.Router />)),
   },
