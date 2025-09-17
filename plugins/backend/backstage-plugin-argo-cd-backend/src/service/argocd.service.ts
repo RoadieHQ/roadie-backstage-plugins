@@ -39,7 +39,6 @@ import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 
-
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
 
@@ -108,7 +107,7 @@ export class ArgoService implements ArgoServiceApi {
 
     const urlBuilder = new URL(
       `/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`,
-      baseUrl
+      baseUrl,
     );
 
     if (options.namespace) {
@@ -398,7 +397,10 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
 
-    const resp = await fetch(new URL('/api/v1/projects', baseUrl).toString(), options);
+    const resp = await fetch(
+      new URL('/api/v1/projects', baseUrl).toString(),
+      options,
+    );
     const responseData = await resp.json();
     if (resp.status === 403) {
       throw new Error(responseData.message);
@@ -535,7 +537,10 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
 
-    const resp = await fetch(new URL('/api/v1/applications', baseUrl).toString(), options);
+    const resp = await fetch(
+      new URL('/api/v1/applications', baseUrl).toString(),
+      options,
+    );
     const respData = await resp.json();
     if (!resp.ok) {
       throw new Error(`Error creating argo app: ${respData.message}`);
@@ -665,7 +670,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-     new URL(`/api/v1/applications/${appName}`, baseUrl).toString(),
+      new URL(`/api/v1/applications/${appName}`, baseUrl).toString(),
       options,
     );
     const respData = await resp.json();
@@ -695,11 +700,12 @@ export class ArgoService implements ArgoServiceApi {
     let statusText: string = '';
     try {
       const response = (await fetch(
-        new URL(`/api/v1/applications/${argoApplicationName}?${new URLSearchParams(
-          {
+        new URL(
+          `/api/v1/applications/${argoApplicationName}?${new URLSearchParams({
             cascade: 'true',
-          },
-        )}`, baseUrl).toString(),
+          })}`,
+          baseUrl,
+        ).toString(),
         options,
       )) as DeleteArgoAppFetchResponse;
       statusText = response.statusText;

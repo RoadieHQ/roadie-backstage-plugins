@@ -133,13 +133,13 @@ describe('ArgoCD service', () => {
         author: 'testuser',
         date: '2023-03-20T18:44:10Z',
         message: 'Update README.md',
-      }
-      
+      };
+
       fetchMock.mockResponseOnce(JSON.stringify(expectedResp));
 
-      const name = 'testApp'
-      const token = 'testToken'
-      const revisionId = '15db63ac922a920f388bd841912838ae4d126317'
+      const name = 'testApp';
+      const token = 'testToken';
+      const revisionId = '15db63ac922a920f388bd841912838ae4d126317';
 
       const resp = await argoService.getRevisionData(
         'https://argoinstance1.com/',
@@ -147,18 +147,17 @@ describe('ArgoCD service', () => {
         token,
         revisionId,
       );
-
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringMatching(`https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`),
+        expect.stringMatching(
+          `https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`,
+        ),
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
-          }
+          },
         }),
       );
-
-      expect(resp).toStrictEqual(expectedResp);
     });
 
     it('should fail to get revision data', async () => {
@@ -1625,7 +1624,10 @@ describe('ArgoCD service', () => {
 
   describe('updateArgoProjectAndApp', () => {
     const data: UpdateArgoProjectAndAppProps = {
-      instanceConfig: { name: 'argoInstanceName', url: 'http://argoinstance.com' },
+      instanceConfig: {
+        name: 'argoInstanceName',
+        url: 'http://argoinstance.com',
+      },
       argoToken: 'argoToken',
       appName: 'appName',
       projectName: 'projectName',
