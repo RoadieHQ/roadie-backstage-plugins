@@ -147,6 +147,7 @@ describe('ArgoCD service', () => {
         token,
         revisionId,
       );
+
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringMatching(
           `https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`,
@@ -158,6 +159,8 @@ describe('ArgoCD service', () => {
           },
         }),
       );
+
+      expect(resp).toStrictEqual(expectedResp);
     });
 
     it('should fail to get revision data', async () => {
