@@ -14659,7 +14659,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.4.0, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.4.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
+"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.4.1, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.4.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend"
   dependencies:
@@ -21737,7 +21737,7 @@ __metadata:
     "@langchain/core": "npm:^0.2.27"
     "@langchain/openai": "npm:^0.2.7"
     "@octokit/rest": "npm:^19.0.3"
-    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.4.0"
+    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.4.1"
     "@roadiehq/backstage-plugin-aws-auth": "npm:^0.6.0"
     "@roadiehq/backstage-plugin-aws-backend": "npm:^1.4.0"
     "@roadiehq/catalog-backend-module-aws": "npm:^5.8.0"
