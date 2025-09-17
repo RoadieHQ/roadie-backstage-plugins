@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.0.3
+
+### Patch Changes
+
+- 2704797: Revert role back to "backend-plugin-module"
+
 ## 4.0.2
 
 ### Patch Changes
