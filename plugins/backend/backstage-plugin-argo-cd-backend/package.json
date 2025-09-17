@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@backstage/backend-defaults": "backstage:^",
+    "@backstage/backend-test-utils": "^1.8.0",
     "@backstage/cli": "backstage:^",
     "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",

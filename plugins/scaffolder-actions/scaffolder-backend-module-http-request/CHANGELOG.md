@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.4.2
+
+### Patch Changes
+
+- 7df343e: Fix casing bug in automatic json serialisation
+
+## 5.4.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
 ## 5.4.0
 
 ### Minor Changes

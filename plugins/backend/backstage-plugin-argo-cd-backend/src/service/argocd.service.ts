@@ -38,6 +38,8 @@ import {
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
+const DEFAULT_PASSWORD = 'argocdPassword';
+const DEFAULT_USERNAME = 'argocdUsername';
 
 export class ArgoService implements ArgoServiceApi {
   instanceConfigs: InstanceConfig[];
@@ -63,6 +65,21 @@ export class ArgoService implements ArgoServiceApi {
         username: instance.getOptionalString('username'),
         password: instance.getOptionalString('password'),
       }));
+  }
+
+  static fromConfig({
+    config,
+    logger,
+  }: {
+    config: Config;
+    logger: LoggerService;
+  }) {
+    const argoUserName =
+      config.getOptionalString('argocd.username') ?? DEFAULT_USERNAME;
+    const argoPassword =
+      config.getOptionalString('argocd.password') ?? DEFAULT_PASSWORD;
+
+    return new ArgoService(argoUserName, argoPassword, config, logger);
   }
 
   getArgoInstanceArray(): InstanceConfig[] {

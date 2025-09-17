@@ -1,4 +1,5 @@
 import { Config, ConfigReader } from '@backstage/config';
+import { mockServices } from '@backstage/backend-test-utils';
 import { ArgoService } from './argocd.service';
 import {
   argocdCreateApplicationResp,
@@ -6,25 +7,19 @@ import {
 } from './argocdTestResponses';
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   OIDCConfig,
   ResourceItem,
   UpdateArgoProjectAndAppProps,
 } from './types';
 import { mocked } from 'jest-mock';
-import { createLogger } from 'winston';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services', () => ({
   timer: jest.fn(),
 }));
-const loggerMock = {
-  error: jest.fn(),
-  info: jest.fn(),
-} as unknown as LoggerService;
 
-const getConfig = (options: {
+type GetConfigOptions = {
   clusterResourceBlacklist?: ResourceItem[];
   clusterResourceWhitelist?: ResourceItem[];
   namespaceResourceBlacklist?: ResourceItem[];
@@ -38,7 +33,9 @@ const getConfig = (options: {
     username?: string;
     password?: string;
   };
-}): Config => {
+};
+
+const getConfig = (options: GetConfigOptions): Config => {
   const {
     clusterResourceBlacklist,
     clusterResourceWhitelist,
@@ -83,19 +80,20 @@ const getConfig = (options: {
 };
 
 describe('ArgoCD service', () => {
-  const argoService = new ArgoService(
-    'testusername',
-    'testpassword',
-    getConfig({ instanceCredentials: { token: 'token' } }),
-    loggerMock,
-  );
+  const logger = mockServices.logger.mock();
+  const createService = (config: GetConfigOptions) =>
+    ArgoService.fromConfig({
+      config: getConfig(config),
+      logger,
+    });
 
-  const argoServiceForNoToken = new ArgoService(
-    'testusername',
-    'testpassword',
-    getConfig({ instanceCredentials: { username: 'user', password: 'pass' } }),
-    loggerMock,
-  );
+  const argoService = createService({
+    instanceCredentials: { token: 'token' },
+  });
+
+  const argoServiceForNoToken = createService({
+    instanceCredentials: { username: 'user', password: 'pass' },
+  });
 
   beforeEach(() => {
     mocked(timer).mockResolvedValue(0);
@@ -397,14 +395,9 @@ describe('ArgoCD service', () => {
           argocdCreateProjectResp,
         }),
       );
-      const service = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({
-          instanceCredentials: { token: 'token' },
-        }),
-        loggerMock,
-      );
+      const service = createService({
+        instanceCredentials: { token: 'token' },
+      });
 
       await service.createArgoProject({
         baseUrl: 'http://baseurl.com',
@@ -528,7 +521,7 @@ describe('ArgoCD service', () => {
         sourceRepo: 'https://github.com/backstage/backstage',
         sourcePath: 'kubernetes/nonproduction',
         labelValue: 'backstageId',
-        logger: createLogger(),
+        logger,
       });
 
       expect(resp).toStrictEqual(true);
@@ -552,7 +545,7 @@ describe('ArgoCD service', () => {
         sourceRepo: 'https://github.com/backstage/backstage',
         sourcePath: 'kubernetes/nonproduction',
         labelValue: 'backstageId',
-        logger: createLogger(),
+        logger,
       });
 
       await expect(resp).rejects.toThrow();
@@ -621,7 +614,7 @@ describe('ArgoCD service', () => {
         }),
       ).rejects.toThrow(/invalid json/i);
 
-      expect(loggerMock.error).toHaveBeenCalledWith(
+      expect(logger.error).toHaveBeenCalledWith(
         expect.stringMatching(/more detailed error/i),
       );
     });
@@ -672,7 +665,7 @@ describe('ArgoCD service', () => {
         }),
       ).rejects.toThrow(/invalid json/i);
 
-      expect(loggerMock.error).toHaveBeenCalledWith(
+      expect(logger.error).toHaveBeenCalledWith(
         expect.stringMatching(/more detailed error/i),
       );
     });
@@ -1430,12 +1423,10 @@ describe('ArgoCD service', () => {
     });
 
     it('checks if app is deleted for two cycles', async () => {
-      const argoServiceWaitCycles = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({ instanceCredentials: { token: 'token' }, waitCycles: 2 }),
-        loggerMock,
-      );
+      const argoServiceWaitCycles = createService({
+        instanceCredentials: { token: 'token' },
+        waitCycles: 2,
+      });
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
 
       getArgoApplicationInfoMock.mockResolvedValue({
@@ -1457,12 +1448,10 @@ describe('ArgoCD service', () => {
     });
 
     it('checks if app is deleted for more than 2 cycles', async () => {
-      const argoServiceWaitCycles = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({ instanceCredentials: { token: 'token' }, waitCycles: 3 }),
-        loggerMock,
-      );
+      const argoServiceWaitCycles = createService({
+        instanceCredentials: { token: 'token' },
+        waitCycles: 3,
+      });
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
 
       getArgoApplicationInfoMock.mockResolvedValue({
@@ -1484,12 +1473,10 @@ describe('ArgoCD service', () => {
     });
 
     it('waits the default amount of time when no interval time is provided', async () => {
-      const argoServiceWaitInterval = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({ instanceCredentials: { token: 'token' }, waitCycles: 2 }),
-        loggerMock,
-      );
+      const argoServiceWaitInterval = createService({
+        instanceCredentials: { token: 'token' },
+        waitCycles: 2,
+      });
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
 
       getArgoApplicationInfoMock.mockResolvedValue({
@@ -1512,16 +1499,11 @@ describe('ArgoCD service', () => {
     });
 
     it('waits the given amount of time configured when looping to check if application has been deleted', async () => {
-      const argoServiceWaitInterval = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({
-          instanceCredentials: { token: 'token' },
-          waitCycles: 2,
-          waitInterval: 2000,
-        }),
-        loggerMock,
-      );
+      const argoServiceWaitInterval = createService({
+        instanceCredentials: { token: 'token' },
+        waitCycles: 2,
+        waitInterval: 2000,
+      });
       deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
 
       getArgoApplicationInfoMock.mockResolvedValue({
@@ -1920,32 +1902,27 @@ describe('ArgoCD service', () => {
     });
 
     it('should include cluster and namespace white and black list if provided in the config', async () => {
-      const service = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({
-          instanceCredentials: { token: 'token' },
-          clusterResourceWhitelist: [
-            { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
-          ],
-          clusterResourceBlacklist: [
-            { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
-          ],
-          namespaceResourceWhitelist: [
-            {
-              kind: 'namespaceWhitelistKind',
-              group: 'namespaceWhitelistGroup',
-            },
-          ],
-          namespaceResourceBlacklist: [
-            {
-              kind: 'namespaceBlacklistKind',
-              group: 'namespaceBlacklistGroup',
-            },
-          ],
-        }),
-        loggerMock,
-      );
+      const service = createService({
+        instanceCredentials: { token: 'token' },
+        clusterResourceWhitelist: [
+          { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
+        ],
+        clusterResourceBlacklist: [
+          { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
+        ],
+        namespaceResourceWhitelist: [
+          {
+            kind: 'namespaceWhitelistKind',
+            group: 'namespaceWhitelistGroup',
+          },
+        ],
+        namespaceResourceBlacklist: [
+          {
+            kind: 'namespaceBlacklistKind',
+            group: 'namespaceBlacklistGroup',
+          },
+        ],
+      });
 
       await service.createArgoProject({
         baseUrl: 'http://baseurl.com',
@@ -1990,20 +1967,15 @@ describe('ArgoCD service', () => {
     });
 
     it('should not include namespace white or black lists', async () => {
-      const service = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({
-          instanceCredentials: { token: 'token' },
-          clusterResourceWhitelist: [
-            { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
-          ],
-          clusterResourceBlacklist: [
-            { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
-          ],
-        }),
-        loggerMock,
-      );
+      const service = createService({
+        instanceCredentials: { token: 'token' },
+        clusterResourceWhitelist: [
+          { kind: 'clusterWhitelistKind', group: 'clusterWhitelistGroup' },
+        ],
+        clusterResourceBlacklist: [
+          { kind: 'clusterBlacklistKind', group: 'clusterBlacklistGroup' },
+        ],
+      });
 
       await service.createArgoProject({
         baseUrl: 'http://baseurl.com',
@@ -2048,14 +2020,9 @@ describe('ArgoCD service', () => {
     });
 
     it('should not include any black or white lists', async () => {
-      const service = new ArgoService(
-        'testusername',
-        'testpassword',
-        getConfig({
-          instanceCredentials: { token: 'token' },
-        }),
-        loggerMock,
-      );
+      const service = createService({
+        instanceCredentials: { token: 'token' },
+      });
 
       await service.createArgoProject({
         baseUrl: 'http://baseurl.com',
@@ -2195,8 +2162,9 @@ describe('ArgoCD service', () => {
 
   describe('getArgoToken', () => {
     it('uses token from argo instance when only token provided', async () => {
-      const argoConfig = getConfig({ instanceCredentials: { token: 'token' } });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = createService({
+        instanceCredentials: { token: 'token' },
+      });
 
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2207,14 +2175,13 @@ describe('ArgoCD service', () => {
     });
 
     it('prioritizes token from argo instance when token, username, and password provided', async () => {
-      const argoConfig = getConfig({
+      const argoCdService = createService({
         instanceCredentials: {
           token: 'token',
           username: 'username',
           password: 'password',
         },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
 
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2225,10 +2192,9 @@ describe('ArgoCD service', () => {
     });
 
     it('retrieves argo token using instance level username and password when upper level username and password is not provided', async () => {
-      const argoConfig = getConfig({
+      const argoCdService = createService({
         instanceCredentials: { username: 'username', password: 'password' },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
 
       const token = await argoCdService.getArgoToken(
@@ -2251,7 +2217,7 @@ describe('ArgoCD service', () => {
         'upper-level-username',
         'upper-level-password',
         argoConfig,
-        loggerMock,
+        logger,
       );
 
       const token = await argoCdService.getArgoToken(
@@ -2270,7 +2236,7 @@ describe('ArgoCD service', () => {
         'upper-level-username',
         'upper-level-password',
         argoConfig,
-        loggerMock,
+        logger,
       );
 
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
@@ -2295,7 +2261,7 @@ describe('ArgoCD service', () => {
         'upper-level-username',
         'upper-level-password',
         argoConfig,
-        loggerMock,
+        logger,
       );
 
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
@@ -2328,7 +2294,7 @@ describe('ArgoCD service', () => {
         otherRootConfigs: { azure: azureConfig },
         oidcConfig: { provider: 'azure', providerConfigKey: 'azure' },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = new ArgoService('', '', argoConfig, logger);
 
       fetchMock.mockResponseOnce(
         JSON.stringify({ access_token: 'azure_token' }),
@@ -2364,7 +2330,7 @@ describe('ArgoCD service', () => {
         otherRootConfigs: { azure: azureConfig },
         oidcConfig: { provider: 'azure', providerConfigKey: 'azure' },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = new ArgoService('', '', argoConfig, logger);
 
       fetchMock.mockResponseOnce(
         JSON.stringify({
@@ -2396,7 +2362,10 @@ describe('ArgoCD service', () => {
         oidcConfig: { provider: 'azure', providerConfigKey: 'azure' },
         instanceCredentials: { token: 'token' },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = ArgoService.fromConfig({
+        config: argoConfig,
+        logger,
+      });
 
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2418,7 +2387,10 @@ describe('ArgoCD service', () => {
         oidcConfig: { provider: 'azure', providerConfigKey: 'azure' },
         instanceCredentials: { username: 'username', password: 'password' },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = ArgoService.fromConfig({
+        config: argoConfig,
+        logger,
+      });
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
       const token = await argoCdService.getArgoToken(
         argoCdService.instanceConfigs[0],
@@ -2449,7 +2421,7 @@ describe('ArgoCD service', () => {
         'upper-level-username',
         'upper-level-password',
         argoConfig,
-        loggerMock,
+        logger,
       );
       fetchMock.mockResponseOnce(JSON.stringify({ token: 'token' }));
       const token = await argoCdService.getArgoToken(
@@ -2471,7 +2443,7 @@ describe('ArgoCD service', () => {
 
     it('throws when upper level username and password, argoInstanceConfig, and azureCredentials are undefined', async () => {
       const argoConfig = getConfig({});
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = new ArgoService('', '', argoConfig, logger);
       await expect(
         argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
       ).rejects.toThrow('Missing credentials in config for Argo Instance.');
@@ -2490,12 +2462,7 @@ describe('ArgoCD service', () => {
       });
       const getSpy = jest.spyOn(argoConfigAzure, 'get');
       fetchMock.mockResponse(JSON.stringify({ token: 'token' }));
-      const argoCdService = new ArgoService(
-        '',
-        '',
-        argoConfigAzure,
-        loggerMock,
-      );
+      const argoCdService = new ArgoService('', '', argoConfigAzure, logger);
       await argoCdService.getArgoToken(argoCdService.instanceConfigs[0]);
 
       expect(getSpy).toHaveBeenCalledWith('azure');
@@ -2509,7 +2476,7 @@ describe('ArgoCD service', () => {
         '',
         '',
         argoConfigNotAzure,
-        loggerMock,
+        logger,
       );
       await argoCdServiceNotAzure.getArgoToken(
         argoCdServiceNotAzure.instanceConfigs[0],
@@ -2528,9 +2495,9 @@ describe('ArgoCD service', () => {
       const providerConfigKey = 'notHere';
       const argoConfig = getConfig({
         otherRootConfigs: { here: azureConfig },
-        oidcConfig: { provider: 'azure', providerConfigKey: providerConfigKey },
+        oidcConfig: { provider: 'azure', providerConfigKey },
       });
-      const argoCdService = new ArgoService('', '', argoConfig, loggerMock);
+      const argoCdService = new ArgoService('', '', argoConfig, logger);
       const getSpy = jest.spyOn(argoConfig, 'get');
 
       await expect(
