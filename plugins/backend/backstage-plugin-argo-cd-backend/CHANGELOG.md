@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.4.1
+
+### Patch Changes
+
+- 71a59f7: added `fromConfig` static constructor method
+
 ## 4.4.0
 
 ### Minor Changes
