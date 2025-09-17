@@ -1601,7 +1601,7 @@ describe('ArgoCD service', () => {
         selector: 'name=testApp-nonprod',
       });
 
-      expect(loggerMock.error).toHaveBeenCalledWith(
+      expect(logger.error).toHaveBeenCalledWith(
         'Error getting token from Argo Instance argoinstance1: FetchError',
       );
     });
