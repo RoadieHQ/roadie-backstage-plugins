@@ -1,3 +1,5 @@
+import { mockServices } from '@backstage/backend-test-utils';
+
 import { createRouter } from './router';
 import express, { Express } from 'express';
 import { ConfigReader } from '@backstage/config';
@@ -6,7 +8,6 @@ import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'jest-mock';
 import { ArgoServiceApi } from './types';
-import { createLogger } from 'winston';
 
 const mockDeleteApp = jest.fn();
 const mockDeleteProject = jest.fn();
@@ -36,7 +37,7 @@ const ArgoService = {
 };
 jest.mock('./timer.services');
 
-const logger = createLogger();
+const logger = mockServices.logger.mock();
 const config = ConfigReader.fromConfigs([
   {
     context: '',
