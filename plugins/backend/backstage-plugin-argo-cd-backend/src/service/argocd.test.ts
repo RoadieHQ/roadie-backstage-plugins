@@ -103,30 +103,10 @@ describe('ArgoCD service', () => {
   });
 
   describe('getRevisionData', () => {
-    it('should get revision data', async () => {
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          author: 'testuser',
-          date: '2023-03-20T18:44:10Z',
-          message: 'Update README.md',
-        }),
-      );
-
-      const resp = await argoService.getRevisionData(
-        'https://argoinstance1.com',
-        { name: 'testApp' },
-        'testToken',
-        '15db63ac922a920f388bd841912838ae4d126317',
-      );
-
-      expect(resp).toStrictEqual({
-        author: 'testuser',
-        date: '2023-03-20T18:44:10Z',
-        message: 'Update README.md',
-      });
-    });
-
-    it('should get revision data when the Argo CD instance is configured with a trailing slash', async () => {
+    it.each([
+      'https://argoinstance1.com',
+      'https://argoinstance1.com/'
+    ])('should get revision data and handle trailing slashes in urls', async (url) => {
       const expectedResp = {
         author: 'testuser',
         date: '2023-03-20T18:44:10Z',
@@ -140,7 +120,7 @@ describe('ArgoCD service', () => {
       const revisionId = '15db63ac922a920f388bd841912838ae4d126317';
 
       const resp = await argoService.getRevisionData(
-        'https://argoinstance1.com/',
+        url,
         { name },
         token,
         revisionId,
