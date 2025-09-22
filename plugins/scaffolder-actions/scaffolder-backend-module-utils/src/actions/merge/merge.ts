@@ -234,13 +234,26 @@ export function createMergeAction() {
                 ? YAML.parse(ctx.input.content)
                 : ctx.input.content; // This supports the case where dynamic keys are required
             if (ctx.input.preserveYamlComments) {
-              mergedContent = mergeContentPreserveComments(
-                originalContent,
-                newContent,
-                ctx,
-              )
-                .map(doc => YAML.stringify(doc, ctx.input.options))
-                .join('---\n');
+              try {
+                mergedContent = mergeContentPreserveComments(
+                  originalContent,
+                  newContent,
+                  ctx,
+                )
+                  .map(doc => YAML.stringify(doc, ctx.input.options))
+                  .join('---\n');
+              } catch (error: any) {
+                ctx.logger.warn(
+                  `Failed to preserve YAML comments due to parsing error: ${error.message}. Falling back to merge without comment preservation.`,
+                );
+                mergedContent = mergeDocumentsRemovingComments(
+                  originalContent,
+                  newContent,
+                  ctx,
+                )
+                  .map(doc => YAML.stringify(doc, ctx.input.options))
+                  .join('---\n');
+              }
             } else {
               mergedContent = mergeDocumentsRemovingComments(
                 originalContent,

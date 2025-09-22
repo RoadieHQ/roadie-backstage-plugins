@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.0.2
+
+### Patch Changes
+
+- d8cedb1: Fix utils:merge action bug on merging empty arrays with preserveComments
+
 ## 4.0.1
 
 ### Patch Changes

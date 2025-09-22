@@ -804,4 +804,52 @@ name: Document 3
       'Multiple documents found in the input content. Please provide a key and value to use to find the document to merge into.',
     );
   });
+
+  it('should handle merging into existing empty arrays with comment preservation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `# Kustomization file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Empty patches array
+patches: []
+resources:
+  - deployment.yaml
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        mergeArrays: true,
+        preserveYamlComments: true,
+        content: {
+          patches: [
+            {
+              patch: [
+                {
+                  op: 'replace',
+                  path: '/apiVersion',
+                  value: 'autoscaling/v2beta2',
+                },
+              ],
+              target: {
+                name: 'test-app',
+                kind: 'HorizontalPodAutoscaler',
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    const parsed = YAML.parse(file);
+    expect(parsed.patches).toHaveLength(1);
+    expect(parsed.patches[0].target.name).toBe('test-app');
+  });
 });
