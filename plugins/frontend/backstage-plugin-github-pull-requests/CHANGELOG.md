@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.5.1
+
+### Patch Changes
+
+- c21c5f6: Remove use of API to retrieve slug of the repository url.
+
 ## 3.5.0
 
 ### Minor Changes
