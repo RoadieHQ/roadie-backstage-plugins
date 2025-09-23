@@ -122,10 +122,10 @@ const PullRequestItem = (props: PullRequestItemProps) => {
               underline="none"
               href={pr.htmlUrl}
             >
-              {new URL(pr.htmlUrl).pathname
+              {new URL(pr.repositoryUrl).pathname
                 .split('/')
                 .filter(Boolean)
-                .slice(0, 2)
+                .slice(1, 3)
                 .join('/')}
             </Link>
             <Link
