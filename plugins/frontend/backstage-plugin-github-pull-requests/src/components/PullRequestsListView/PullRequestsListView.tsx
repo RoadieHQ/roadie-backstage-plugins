@@ -17,12 +17,7 @@ import { Box, Grid, Link } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useGithubRepositoryData } from '../useGithubRepositoryData';
-import {
-  GithubSearchPullRequestsDataItem,
-  GithubRepositoryData,
-} from '../../types';
-import Alert from '@material-ui/lab/Alert';
+import { GithubSearchPullRequestsDataItem } from '../../types';
 
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -111,18 +106,6 @@ type PullRequestItemProps = {
 const PullRequestItem = (props: PullRequestItemProps) => {
   const { pr } = props;
   const classes = useStyles();
-  const {
-    value: repoData,
-    error,
-    loading,
-  }: {
-    value?: GithubRepositoryData;
-    error?: Error;
-    loading: boolean;
-  } = useGithubRepositoryData(pr.repositoryUrl);
-
-  if (loading) return <SkeletonPullRequestItem />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (
     <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
@@ -131,34 +114,30 @@ const PullRequestItem = (props: PullRequestItemProps) => {
       </Grid>
       <Grid item xs={10} className={classes.middleColumn}>
         <Typography variant="body1" noWrap className={classes.title}>
-          {loading ? (
-            <Skeleton variant="text" />
-          ) : (
-            <>
-              {repoData ? (
-                <Link
-                  className={`${classes.secondaryText} ${classes.link}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  underline="none"
-                  href={repoData.htmlUrl}
-                >
-                  {repoData.fullName}
-                </Link>
-              ) : (
-                <></>
-              )}
-              <Link
-                className={classes.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="none"
-                href={pr.pullRequest.htmlUrl}
-              >
-                {pr.title}
-              </Link>
-            </>
-          )}
+          <>
+            <Link
+              className={`${classes.secondaryText} ${classes.link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={pr.htmlUrl}
+            >
+              {new URL(pr.repositoryUrl).pathname
+                .split('/')
+                .filter(Boolean)
+                .slice(1, 3)
+                .join('/')}
+            </Link>
+            <Link
+              className={classes.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={pr.pullRequest.htmlUrl}
+            >
+              {pr.title}
+            </Link>
+          </>
         </Typography>
         <Typography variant="caption" className={classes.secondaryText}>
           #{pr.number} opened by{' '}
