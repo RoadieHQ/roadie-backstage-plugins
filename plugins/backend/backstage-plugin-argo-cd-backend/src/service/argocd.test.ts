@@ -103,43 +103,43 @@ describe('ArgoCD service', () => {
   });
 
   describe('getRevisionData', () => {
-    it.each([
-      'https://argoinstance1.com',
-      'https://argoinstance1.com/'
-    ])('should get revision data and handle trailing slashes in urls', async (url) => {
-      const expectedResp = {
-        author: 'testuser',
-        date: '2023-03-20T18:44:10Z',
-        message: 'Update README.md',
-      };
+    it.each(['https://argoinstance1.com', 'https://argoinstance1.com/'])(
+      'should get revision data and handle trailing slashes in urls',
+      async url => {
+        const expectedResp = {
+          author: 'testuser',
+          date: '2023-03-20T18:44:10Z',
+          message: 'Update README.md',
+        };
 
-      fetchMock.mockResponseOnce(JSON.stringify(expectedResp));
+        fetchMock.mockResponseOnce(JSON.stringify(expectedResp));
 
-      const name = 'testApp';
-      const token = 'testToken';
-      const revisionId = '15db63ac922a920f388bd841912838ae4d126317';
+        const name = 'testApp';
+        const token = 'testToken';
+        const revisionId = '15db63ac922a920f388bd841912838ae4d126317';
 
-      const resp = await argoService.getRevisionData(
-        url,
-        { name },
-        token,
-        revisionId,
-      );
+        const resp = await argoService.getRevisionData(
+          url,
+          { name },
+          token,
+          revisionId,
+        );
 
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringMatching(
-          `https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`,
-        ),
-        expect.objectContaining({
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }),
-      );
+        expect(fetchMock).toHaveBeenCalledWith(
+          expect.stringMatching(
+            `https://argoinstance1.com/api/v1/applications/${name}/revisions/${revisionId}/metadata`,
+          ),
+          expect.objectContaining({
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        );
 
-      expect(resp).toStrictEqual(expectedResp);
-    });
+        expect(resp).toStrictEqual(expectedResp);
+      },
+    );
 
     it('should fail to get revision data', async () => {
       fetchMock.mockRejectOnce(new Error());
