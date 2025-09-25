@@ -491,6 +491,57 @@ scripts:
     });
   });
 
+  it('should respect noArrayIndent option when merging YAML files', async () => {
+    const originalYaml = `apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../blah/blah
+
+images:
+- name: blahblahblah.ecr.eu-central-1.amazonaws.com/blah/blah
+  newTag: blahblahblah
+
+components:
+- ../../../../blah/blah/blah
+- ../../../blah/blah/blah`;
+
+    mock({
+      'fake-tmp-dir': {
+        'kustomization.yaml': originalYaml,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'kustomization.yaml',
+        options: {
+          indentSeq: false,
+        },
+        content: {
+          components: ['../../../blah/blah/new-component'],
+        },
+        mergeArrays: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/kustomization.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/kustomization.yaml', 'utf-8');
+
+    // With noArrayIndent: true, arrays should not be indented
+    expect(file).toContain('resources:\n- ../../blah/blah');
+    expect(file).toContain('images:\n- name: blahblahblah.ecr.eu-central-1.amazonaws.com/blah/blah');
+    expect(file).toContain('components:\n- ../../../../blah/blah/blah');
+    expect(file).toContain('- ../../../blah/blah/new-component');
+
+    // Arrays should not be indented (should not contain '  - ')
+    expect(file).not.toContain('resources:\n  - ../../blah/blah');
+    expect(file).not.toContain('images:\n  - name:');
+    expect(file).not.toContain('components:\n  - ../../../../blah/blah/blah');
+  });
+
   it('can pass options to YAML.stringify', async () => {
     mock({
       'fake-tmp-dir': {

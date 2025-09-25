@@ -586,7 +586,7 @@ spec:
 - useDocumentIncludingField: If multiple documents are present in the YAML file, it will merge the content into the document that includes the specified field.
 - options: YAML stringify options to customize the output format.
   - indent: (default: 2) - indentation width to use (in spaces).
-  - noArrayIndent: (default: false) - when true, will not add an indentation level to array elements.
+  - indentSeq: (default: true) - when false, will not add an indentation level to array elements.
   - skipInvalid: (default: false) - do not throw on invalid types (like function in the safe schema) and skip pairs and single values with such types.
   - flowLevel: (default: -1) - specifies level of nesting, when to switch from block to flow style for collections. -1 means block style everywhere.
   - sortKeys: (default: false) - if true, sort keys when dumping YAML. If a function, use the function to sort the keys.
