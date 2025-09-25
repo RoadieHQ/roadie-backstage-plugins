@@ -501,7 +501,6 @@ resources:
 images:
 - name: blahblahblah.ecr.eu-central-1.amazonaws.com/blah/blah
   newTag: blahblahblah
-
 components:
 - ../../../../blah/blah/blah
 - ../../../blah/blah/blah`;
@@ -532,7 +531,9 @@ components:
 
     // With noArrayIndent: true, arrays should not be indented
     expect(file).toContain('resources:\n- ../../blah/blah');
-    expect(file).toContain('images:\n- name: blahblahblah.ecr.eu-central-1.amazonaws.com/blah/blah');
+    expect(file).toContain(
+      'images:\n- name: blahblahblah.ecr.eu-central-1.amazonaws.com/blah/blah',
+    );
     expect(file).toContain('components:\n- ../../../../blah/blah/blah');
     expect(file).toContain('- ../../../blah/blah/new-component');
 
