@@ -16,6 +16,7 @@
 
 import { useState } from 'react';
 import {
+  ErrorPanel,
   InfoCard,
   InfoCardVariants,
   MissingAnnotationEmptyState,
@@ -63,20 +64,17 @@ type Props = {
   variant?: InfoCardVariants;
 };
 
-const StatsCard = (props: Props) => {
+const StatsCardContent = () => {
   const { entity } = useEntity();
-  const classes = useStyles();
   const [pageSize, setPageSize] = useState<number>(20);
   const projectName = isGithubSlugSet(entity);
   const [owner, repo] = (projectName ?? '/').split('/');
-  const [{ statsData, loading: loadingStatistics }] = usePullRequestsStatistics(
-    {
-      owner,
-      repo,
-      pageSize,
-      state: 'closed',
-    },
-  );
+  const [{ statsData, loading, error }] = usePullRequestsStatistics({
+    owner,
+    repo,
+    pageSize,
+    state: 'closed',
+  });
 
   const metadata = {
     'average time of PR until merge': statsData?.avgTimeUntilMerge,
@@ -97,38 +95,37 @@ const StatsCard = (props: Props) => {
     'average coding time of PR': `${statsData?.avgCodingTime}`,
   };
 
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  if (error) {
+    return <ErrorPanel error={error} />;
+  }
+
   return (
-    <InfoCard
-      title="GitHub Pull Requests Statistics"
-      className={classes.infoCard}
-      variant={props.variant}
-    >
-      {loadingStatistics ? (
-        <CircularProgress />
-      ) : (
-        <Box position="relative">
-          <StructuredMetadataTable metadata={metadata} />
-          <Box display="flex" justifyContent="flex-end">
-            <FormControl>
-              <Select
-                value={pageSize}
-                onChange={event => setPageSize(Number(event.target.value))}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-              </Select>
-              <FormHelperText>Number of PRs</FormHelperText>
-            </FormControl>
-          </Box>
-        </Box>
-      )}
-    </InfoCard>
+    <Box position="relative">
+      <StructuredMetadataTable metadata={metadata} />
+      <Box display="flex" justifyContent="flex-end">
+        <FormControl>
+          <Select
+            value={pageSize}
+            onChange={event => setPageSize(Number(event.target.value))}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={50}>50</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+          </Select>
+          <FormHelperText>Number of PRs</FormHelperText>
+        </FormControl>
+      </Box>
+    </Box>
   );
 };
 
 const PullRequestsStatsCard = (props: Props) => {
+  const classes = useStyles();
   const { entity } = useEntity();
   const hostname = getHostname(entity);
   const projectName = isGithubSlugSet(entity);
@@ -144,7 +141,13 @@ const PullRequestsStatsCard = (props: Props) => {
       title="GitHub Pull Requests Statistics"
       hostname={hostname}
     >
-      <StatsCard {...props} />
+      <InfoCard
+        title="GitHub Pull Requests Statistics"
+        className={classes.infoCard}
+        variant={props.variant}
+      >
+        <StatsCardContent />
+      </InfoCard>
     </GitHubAuthorizationWrapper>
   );
 };

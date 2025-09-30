@@ -15,21 +15,26 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { AnyApiRef, ConfigApi, configApiRef } from '@backstage/core-plugin-api';
 import {
+  AnyApiRef,
+  ConfigApi,
+  configApiRef,
+  errorApiRef,
+} from '@backstage/core-plugin-api';
+import { translationApiRef } from '@backstage/core-plugin-api/alpha';
+import { ScmAuthApi, scmAuthApiRef } from '@backstage/integration-react';
+import {
+  mockApis,
   setupRequestMockHandlers,
   TestApiProvider,
 } from '@backstage/test-utils';
 import { setupServer } from 'msw/node';
 import { githubPullRequestsApiRef } from '../..';
-import { GithubPullRequestsClient } from '../../api';
 import { entityMock } from '../../mocks/mocks';
 import PullRequestsStatsCard from './PullRequestsStatsCard';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { handlers } from '../../mocks/handlers';
-import { ScmAuthApi, scmAuthApiRef } from '@backstage/integration-react';
-import { ConfigReader } from '@backstage/core-app-api';
-import { defaultIntegrationsConfig } from '../../mocks/scmIntegrationsApiMock';
+import { GithubPullRequestsApiMock } from '../../mocks/githubPullRequestsApiMock';
 
 const mockScmAuth = {
   getCredentials: async () => ({ token: 'test-token', headers: {} }),
@@ -46,21 +51,14 @@ const config = {
   },
 } as ConfigApi;
 
+const errorApiMock = { post: jest.fn(), error$: jest.fn() };
+
 const apis: [AnyApiRef, Partial<unknown>][] = [
   [configApiRef, config],
+  [errorApiRef, errorApiMock],
   [scmAuthApiRef, mockScmAuth],
-  [
-    githubPullRequestsApiRef,
-    new GithubPullRequestsClient({
-      configApi: ConfigReader.fromConfigs([
-        {
-          context: 'unit-test',
-          data: defaultIntegrationsConfig,
-        },
-      ]),
-      scmAuthApi: mockScmAuth,
-    }),
-  ],
+  [githubPullRequestsApiRef, new GithubPullRequestsApiMock()],
+  [translationApiRef, mockApis.translation()],
 ];
 
 describe('PullRequestsCard', () => {
