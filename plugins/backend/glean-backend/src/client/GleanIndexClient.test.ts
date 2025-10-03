@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
@@ -95,7 +95,7 @@ describe('GleanIndexClient', () => {
       catalogApi,
       config,
       discoveryApi,
-      logger: getVoidLogger(),
+      logger: mockServices.logger.mock(),
     });
   });
 
@@ -114,7 +114,7 @@ describe('GleanIndexClient', () => {
           catalogApi,
           config,
           discoveryApi,
-          logger: getVoidLogger(),
+          logger: mockServices.logger.mock(),
         }),
       ).toBeInstanceOf(GleanIndexClient);
     });
