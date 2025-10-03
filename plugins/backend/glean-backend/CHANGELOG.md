@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-glean-backend
 
+## 1.0.2
+
+### Patch Changes
+
+- 8ec6de3: Remove backend-common dependency.
+
 ## 1.0.1
 
 ### Patch Changes
