@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getVoidLogger } from '@backstage/backend-common';
 import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { TechDocsMetadata } from '@backstage/plugin-techdocs-node';
@@ -23,6 +22,7 @@ import { TechDocsClient } from './TechDocsClient';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
 import { CatalogApi } from '@backstage/catalog-client';
 import { AuthService } from '@backstage/backend-plugin-api';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('TechDocsClient', () => {
   let techDocsClient: TechDocsClient;
@@ -82,7 +82,7 @@ describe('TechDocsClient', () => {
       catalogApi,
       config,
       discoveryApi,
-      logger: getVoidLogger(),
+      logger: mockServices.logger.mock(),
     });
   });
 
@@ -100,7 +100,7 @@ describe('TechDocsClient', () => {
           auth,
           catalogApi,
           config,
-          logger: getVoidLogger(),
+          logger: mockServices.logger.mock(),
           discoveryApi,
         }),
       ).toBeInstanceOf(TechDocsClient);
