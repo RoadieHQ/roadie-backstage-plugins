@@ -10,11 +10,9 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin",
-    "pluginId": "plugin-scaffolder-frontend-module-http-request-field",
-    "pluginPackages": [
-      "@roadiehq/plugin-scaffolder-frontend-module-http-request-field"
-    ]
+    "role": "frontend-plugin-module",
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder"
   },
   "repository": {
     "type": "git",
