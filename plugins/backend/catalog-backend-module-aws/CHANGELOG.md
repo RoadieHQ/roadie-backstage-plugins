@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.9.0
+
+### Minor Changes
+
+- 079596d: Use default annotations for entity in the S3 bucket entity provider.
+
 ## 5.8.3
 
 ### Patch Changes
