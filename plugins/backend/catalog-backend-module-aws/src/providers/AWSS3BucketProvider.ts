@@ -107,9 +107,8 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             bucket: bucket.Name,
           });
         }
-        const annotations: { [name: string]: string } = {
-          ...(await defaultAnnotations),
-        };
+        const annotations: { [name: string]: string } =
+          await defaultAnnotations;
 
         let entity = this.renderEntity(
           { data: bucket },
