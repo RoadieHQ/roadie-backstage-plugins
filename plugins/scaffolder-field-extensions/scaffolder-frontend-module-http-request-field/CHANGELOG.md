@@ -1,5 +1,11 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.2.1
+
+### Patch Changes
+
+- 33ac44d: Add NFS metadata to package.json
+
 ## 2.2.0
 
 ### Minor Changes
