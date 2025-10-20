@@ -40,7 +40,7 @@ function replaceArrayCustomiser(objValue: string | any[], srcValue: any) {
 
 const existPathInObject = (object: any, path: string, value: string) => {
   const keys = path.split('.');
-  if (typeof object !== 'object') {
+  if (object === null || typeof object !== 'object') {
     return false;
   }
 
