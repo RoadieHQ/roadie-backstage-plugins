@@ -70,7 +70,7 @@ export class SecondaryRateLimitHandler {
               );
 
               if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, backoffDelay));
+                await new Promise(res => setTimeout(res, backoffDelay));
                 continue;
               }
             } else if (this.isPrimaryRateLimit(error)) {
