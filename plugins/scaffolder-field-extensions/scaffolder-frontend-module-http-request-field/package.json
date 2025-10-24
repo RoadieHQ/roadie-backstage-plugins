@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/plugin-scaffolder-frontend-module-http-request-field",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -10,11 +10,9 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "frontend-plugin",
-    "pluginId": "plugin-scaffolder-frontend-module-http-request-field",
-    "pluginPackages": [
-      "@roadiehq/plugin-scaffolder-frontend-module-http-request-field"
-    ]
+    "role": "frontend-plugin-module",
+    "pluginId": "scaffolder",
+    "pluginPackage": "@backstage/plugin-scaffolder"
   },
   "repository": {
     "type": "git",

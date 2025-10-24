@@ -126,7 +126,11 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
         repo: repo,
         pull_number: number,
       });
-      const firstCommit = commits[0];
+      if (commits.length === 0) {
+      return {
+        firstCommitDate: null,
+      };
+    }const firstCommit = commits[0];
       return {
         firstCommitDate: new Date(firstCommit.commit.author!.date!),
       };

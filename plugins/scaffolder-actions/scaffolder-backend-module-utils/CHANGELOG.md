@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.0.4
+
+### Patch Changes
+
+- 3ff52f3: Add null check to ignore block comments in yaml merges
+
 ## 4.0.3
 
 ### Patch Changes

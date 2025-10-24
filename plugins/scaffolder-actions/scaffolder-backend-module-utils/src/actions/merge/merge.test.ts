@@ -852,4 +852,96 @@ resources:
     expect(parsed.patches).toHaveLength(1);
     expect(parsed.patches[0].target.name).toBe('test-app');
   });
+
+  it('should not break if the yaml file has a block comment at the top', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+#
+# A block comment
+#
+scripts:
+  lsltr: ls -ltr
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain(`#
+# A block comment
+#`);
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
+  it('should not break if the yaml file has a block comment at the top of a document in a multi-document file', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+---
+id: 1
+name: Document 1
+---
+#
+# A block comment
+#
+id: 2
+scripts:
+  lsltr: ls -ltr
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: YAML.stringify({
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        }),
+        useDocumentIncludingField: {
+          key: 'id',
+          value: '2',
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain(`#
+# A block comment
+#`);
+    const documents = YAML.parseAllDocuments(file);
+    expect(documents[0].toJSON()).toEqual({
+      id: 1,
+      name: 'Document 1',
+    });
+    expect(documents[1].toJSON()).toEqual({
+      id: 2,
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+    });
+  });
 });

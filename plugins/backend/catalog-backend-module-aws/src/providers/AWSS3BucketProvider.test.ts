@@ -75,6 +75,9 @@ describe('AWSS3BucketProvider', () => {
           },
         ],
       });
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '123456789012',
+      });
     });
 
     it('creates aws buckets with a template', async () => {
@@ -97,8 +100,20 @@ describe('AWSS3BucketProvider', () => {
           expect.objectContaining({
             entity: expect.objectContaining({
               kind: 'Resource',
+              spec: {
+                type: 's3-bucket',
+                owner: 'unknown',
+              },
               metadata: expect.objectContaining({
                 title: 'my-bucket',
+                annotations: expect.objectContaining({
+                  'amazon.com/account-id': '123456789012',
+                  'amazonaws.com/s3-bucket-arn': 'arn:aws:s3:::my-bucket',
+                  'backstage.io/managed-by-location':
+                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
+                }),
               }),
             }),
           }),
@@ -122,6 +137,14 @@ describe('AWSS3BucketProvider', () => {
               kind: 'Resource',
               metadata: expect.objectContaining({
                 title: 'my-bucket',
+                annotations: expect.objectContaining({
+                  'amazon.com/account-id': '123456789012',
+                  'amazon.com/s3-bucket-arn': 'arn:aws:s3:::my-bucket',
+                  'backstage.io/managed-by-location':
+                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
+                  'backstage.io/managed-by-origin-location':
+                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
+                }),
               }),
             }),
           }),
