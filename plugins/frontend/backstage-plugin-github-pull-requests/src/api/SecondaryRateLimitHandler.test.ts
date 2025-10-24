@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2025 Larder Software Limited
  *
@@ -63,7 +62,8 @@ describe('SecondaryRateLimitHandler', () => {
         },
       };
 
-      const mockRequest = jest.fn()
+      const mockRequest = jest
+        .fn()
         .mockRejectedValueOnce(secondaryRateLimitError)
         .mockResolvedValue('success');
 
@@ -73,7 +73,7 @@ describe('SecondaryRateLimitHandler', () => {
       expect(mockRequest).toHaveBeenCalledTimes(2);
       // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
-        'Secondary rate limit hit (attempt 1/6)'
+        'Secondary rate limit hit (attempt 1/6)',
       );
     });
 
@@ -89,7 +89,8 @@ describe('SecondaryRateLimitHandler', () => {
         },
       };
 
-      const mockRequest = jest.fn()
+      const mockRequest = jest
+        .fn()
         .mockRejectedValueOnce(primaryRateLimitError)
         .mockResolvedValue('success');
 
@@ -99,7 +100,7 @@ describe('SecondaryRateLimitHandler', () => {
       expect(mockRequest).toHaveBeenCalledTimes(2);
       // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
-        expect.stringContaining('Primary rate limit hit, waiting')
+        expect.stringContaining('Primary rate limit hit, waiting'),
       );
     });
 
@@ -115,7 +116,8 @@ describe('SecondaryRateLimitHandler', () => {
         },
       };
 
-      const mockRequest = jest.fn()
+      const mockRequest = jest
+        .fn()
         .mockRejectedValueOnce(secondaryRateLimitError)
         .mockResolvedValue('success');
 
@@ -148,7 +150,9 @@ describe('SecondaryRateLimitHandler', () => {
       const genericError = new Error('Generic API error');
       const mockRequest = jest.fn().mockRejectedValue(genericError);
 
-      await expect(handler.executeWithBackoff(mockRequest)).rejects.toEqual(genericError);
+      await expect(handler.executeWithBackoff(mockRequest)).rejects.toEqual(
+        genericError,
+      );
       expect(mockRequest).toHaveBeenCalledTimes(1);
     });
 
@@ -163,7 +167,9 @@ describe('SecondaryRateLimitHandler', () => {
 
       const mockRequest = jest.fn().mockRejectedValue(secondaryRateLimitError);
 
-      await expect(handler.executeWithBackoff(mockRequest, 1)).rejects.toEqual(secondaryRateLimitError);
+      await expect(handler.executeWithBackoff(mockRequest, 1)).rejects.toEqual(
+        secondaryRateLimitError,
+      );
       expect(mockRequest).toHaveBeenCalledTimes(2); // Initial + 1 retry
     });
 
@@ -177,7 +183,8 @@ describe('SecondaryRateLimitHandler', () => {
       };
 
       // First request fails then succeeds - should reset backoff
-      const mockRequest1 = jest.fn()
+      const mockRequest1 = jest
+        .fn()
         .mockRejectedValueOnce(secondaryRateLimitError)
         .mockResolvedValue('success1');
 
@@ -420,8 +427,9 @@ describe('SecondaryRateLimitHandler', () => {
       const error = new Error('Processing error');
       const mockRequest = jest.fn().mockRejectedValue(error);
 
-      await expect(handler.executeWithBackoff(mockRequest)).rejects.toEqual(error);
+      await expect(handler.executeWithBackoff(mockRequest)).rejects.toEqual(
+        error,
+      );
     });
   });
-
 });

@@ -30,7 +30,10 @@ export class SecondaryRateLimitHandler {
     return this.instance;
   }
 
-  async executeWithBackoff<T>(request: () => Promise<T>, maxRetries = 5): Promise<T> {
+  async executeWithBackoff<T>(
+    request: () => Promise<T>,
+    maxRetries = 5,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       this.requestQueue.push(async () => {
         let lastError: Error | null = null;
@@ -53,20 +56,23 @@ export class SecondaryRateLimitHandler {
             this.backoffMultiplier = 1;
             resolve(result);
             return;
-
           } catch (error: any) {
             lastError = error;
 
             if (this.isSecondaryRateLimit(error)) {
               // eslint-disable-next-line no-console
-              console.warn(`Secondary rate limit hit (attempt ${attempt + 1}/${maxRetries + 1})`);
+              console.warn(
+                `Secondary rate limit hit (attempt ${attempt + 1}/${
+                  maxRetries + 1
+                })`,
+              );
 
               const retryAfter = this.extractRetryAfter(error);
-              const backoffDelay = retryAfter || (Math.pow(2, attempt) * 1000);
+              const backoffDelay = retryAfter || Math.pow(2, attempt) * 1000;
 
               this.backoffMultiplier = Math.min(
                 this.backoffMultiplier * 2,
-                this.maxBackoff / this.minDelay
+                this.maxBackoff / this.minDelay,
               );
 
               if (attempt < maxRetries) {
@@ -79,7 +85,9 @@ export class SecondaryRateLimitHandler {
               if (resetTime && attempt < maxRetries) {
                 const waitTime = resetTime - Date.now() + 1000; // Some buffer time
                 // eslint-disable-next-line no-console
-                console.warn(`Primary rate limit hit, waiting ${waitTime}ms until reset`);
+                console.warn(
+                  `Primary rate limit hit, waiting ${waitTime}ms until reset`,
+                );
                 await new Promise(res => setTimeout(res, waitTime));
                 continue;
               }
@@ -90,7 +98,9 @@ export class SecondaryRateLimitHandler {
           }
         }
 
-        reject(lastError || new Error('Unknown error during request execution'));
+        reject(
+          lastError || new Error('Unknown error during request execution'),
+        );
       });
 
       this.processQueue();
@@ -107,13 +117,11 @@ export class SecondaryRateLimitHandler {
     // GitHub secondary rate limit indicators
     return (
       status === 403 &&
-      (
-        message.includes('secondary rate limit') ||
+      (message.includes('secondary rate limit') ||
         body.includes('secondary rate limit') ||
         body.includes('abuse detection') ||
         body.includes('too many requests') ||
-        error.response?.headers?.['x-ratelimit-remaining'] !== '0'
-      )
+        error.response?.headers?.['x-ratelimit-remaining'] !== '0')
     );
   }
 
