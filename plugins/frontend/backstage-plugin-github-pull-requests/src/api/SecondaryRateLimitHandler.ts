@@ -43,7 +43,7 @@ export class SecondaryRateLimitHandler {
             const waitTime = Math.max(0, currentDelay - timeSinceLastRequest);
 
             if (waitTime > 0) {
-              await new Promise(resolve => setTimeout(resolve, waitTime));
+              await new Promise(res => setTimeout(res, waitTime));
             }
 
             this.lastRequestTime = Date.now();
@@ -58,6 +58,7 @@ export class SecondaryRateLimitHandler {
             lastError = error;
 
             if (this.isSecondaryRateLimit(error)) {
+              // eslint-disable-next-line no-console
               console.warn(`Secondary rate limit hit (attempt ${attempt + 1}/${maxRetries + 1})`);
 
               const retryAfter = this.extractRetryAfter(error);
@@ -69,7 +70,6 @@ export class SecondaryRateLimitHandler {
               );
 
               if (attempt < maxRetries) {
-                console.log(`Waiting ${backoffDelay}ms before retry...`);
                 await new Promise(resolve => setTimeout(resolve, backoffDelay));
                 continue;
               }
@@ -78,8 +78,9 @@ export class SecondaryRateLimitHandler {
               const resetTime = this.extractRateLimitReset(error);
               if (resetTime && attempt < maxRetries) {
                 const waitTime = resetTime - Date.now() + 1000; // Some buffer time
+                // eslint-disable-next-line no-console
                 console.warn(`Primary rate limit hit, waiting ${waitTime}ms until reset`);
-                await new Promise(resolve => setTimeout(resolve, waitTime));
+                await new Promise(res => setTimeout(res, waitTime));
                 continue;
               }
             }

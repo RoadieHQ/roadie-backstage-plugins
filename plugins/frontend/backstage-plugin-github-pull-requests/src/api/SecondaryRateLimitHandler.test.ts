@@ -71,6 +71,7 @@ describe('SecondaryRateLimitHandler', () => {
 
       expect(result).toBe('success');
       expect(mockRequest).toHaveBeenCalledTimes(2);
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         'Secondary rate limit hit (attempt 1/6)'
       );
@@ -96,6 +97,7 @@ describe('SecondaryRateLimitHandler', () => {
 
       expect(result).toBe('success');
       expect(mockRequest).toHaveBeenCalledTimes(2);
+      // eslint-disable-next-line no-console
       expect(console.warn).toHaveBeenCalledWith(
         expect.stringContaining('Primary rate limit hit, waiting')
       );
@@ -120,9 +122,6 @@ describe('SecondaryRateLimitHandler', () => {
       const result = await handler.executeWithBackoff(mockRequest);
 
       expect(result).toBe('success');
-      expect(console.log).toHaveBeenCalledWith(
-        'Waiting 1000ms before retry...'
-      );
     });
 
     it('should fail after maximum retries are exceeded', async () => {
