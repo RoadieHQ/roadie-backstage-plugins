@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,12 @@ import {
 import { ConfigApi } from '@backstage/core-plugin-api';
 import { ScmAuthApi } from '@backstage/integration-react';
 import { DateTime } from 'luxon';
+import { SecondaryRateLimitHandler } from './SecondaryRateLimitHandler';
 
 export class GithubPullRequestsClient implements GithubPullRequestsApi {
   private readonly configApi: ConfigApi;
   private readonly scmAuthApi: ScmAuthApi;
+  private readonly rateLimitHandler = SecondaryRateLimitHandler.getInstance();
 
   constructor(options: { configApi: ConfigApi; scmAuthApi: ScmAuthApi }) {
     this.configApi = options.configApi;
@@ -71,17 +73,20 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
   }): Promise<{
     pullRequestsData: SearchPullRequestsResponseData;
   }> {
-    const octokit = await this.getOctokit(hostname);
-    const pullRequestResponse = await octokit.search.issuesAndPullRequests({
-      q: `${search} in:title type:pr repo:${owner}/${repo}`,
-      per_page: pageSize,
-      page,
+    return this.rateLimitHandler.executeWithBackoff(async () => {
+      const octokit = await this.getOctokit(hostname);
+      const pullRequestResponse = await octokit.search.issuesAndPullRequests({
+        q: `${search} in:title type:pr repo:${owner}/${repo}`,
+        per_page: pageSize,
+        page,
+      });
+      return {
+        pullRequestsData:
+          pullRequestResponse.data as any as SearchPullRequestsResponseData,
+      };
     });
-    return {
-      pullRequestsData:
-        pullRequestResponse.data as any as SearchPullRequestsResponseData,
-    };
   }
+
   async getRepositoryData({
     hostname,
     url,
@@ -89,16 +94,18 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     hostname?: string;
     url: string;
   }): Promise<GithubRepositoryData> {
-    const octokit = await this.getOctokit(hostname);
-    const response = await octokit.request({ url: url });
+    return this.rateLimitHandler.executeWithBackoff(async () => {
+      const octokit = await this.getOctokit(hostname);
+      const response = await octokit.request({ url: url });
 
-    return {
-      htmlUrl: response.data.html_url,
-      fullName: response.data.full_name,
-      additions: response.data.additions,
-      deletions: response.data.deletions,
-      changedFiles: response.data.changed_files,
-    };
+      return {
+        htmlUrl: response.data.html_url,
+        fullName: response.data.full_name,
+        additions: response.data.additions,
+        deletions: response.data.deletions,
+        changedFiles: response.data.changed_files,
+      };
+    });
   }
 
   async getCommitDetailsData({
@@ -112,16 +119,18 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     repo: string;
     number: number;
   }): Promise<GithubFirstCommitDate> {
-    const octokit = await this.getOctokit(hostname);
-    const { data: commits } = await octokit.pulls.listCommits({
-      owner: owner,
-      repo: repo,
-      pull_number: number,
+    return this.rateLimitHandler.executeWithBackoff(async () => {
+      const octokit = await this.getOctokit(hostname);
+      const { data: commits } = await octokit.pulls.listCommits({
+        owner: owner,
+        repo: repo,
+        pull_number: number,
+      });
+      const firstCommit = commits[0];
+      return {
+        firstCommitDate: new Date(firstCommit.commit.author!.date!),
+      };
     });
-    const firstCommit = commits[0];
-    return {
-      firstCommitDate: new Date(firstCommit.commit.author!.date!),
-    };
   }
 
   async searchPullRequest({
@@ -131,31 +140,33 @@ export class GithubPullRequestsClient implements GithubPullRequestsApi {
     query: string;
     hostname?: string;
   }): Promise<GithubSearchPullRequestsDataItem[]> {
-    const octokit = await this.getOctokit(hostname);
-    const pullRequestResponse: GetSearchPullRequestsResponseType =
-      await octokit.search.issuesAndPullRequests({
-        q: query,
-        per_page: 100,
-        page: 1,
-      });
-    return pullRequestResponse.data.items.map(pr => ({
-      id: pr.id,
-      state: pr.state,
-      draft: pr.draft ?? false,
-      merged: pr.pull_request?.merged_at ?? undefined,
-      repositoryUrl: pr.repository_url,
-      pullRequest: {
-        htmlUrl: pr.pull_request?.html_url || undefined,
-        created_at: DateTime.fromISO(pr.created_at).toRelative() || undefined,
-      },
-      title: pr.title,
-      number: pr.number,
-      user: {
-        login: pr.user?.login,
-        htmlUrl: pr.user?.html_url,
-      },
-      comments: pr.comments,
-      htmlUrl: pr.html_url,
-    }));
+    return this.rateLimitHandler.executeWithBackoff(async () => {
+      const octokit = await this.getOctokit(hostname);
+      const pullRequestResponse: GetSearchPullRequestsResponseType =
+        await octokit.search.issuesAndPullRequests({
+          q: query,
+          per_page: 100,
+          page: 1,
+        });
+      return pullRequestResponse.data.items.map(pr => ({
+        id: pr.id,
+        state: pr.state,
+        draft: pr.draft ?? false,
+        merged: pr.pull_request?.merged_at ?? undefined,
+        repositoryUrl: pr.repository_url,
+        pullRequest: {
+          htmlUrl: pr.pull_request?.html_url || undefined,
+          created_at: DateTime.fromISO(pr.created_at).toRelative() || undefined,
+        },
+        title: pr.title,
+        number: pr.number,
+        user: {
+          login: pr.user?.login,
+          htmlUrl: pr.user?.html_url,
+        },
+        comments: pr.comments,
+        htmlUrl: pr.html_url,
+      }));
+    });
   }
 }
