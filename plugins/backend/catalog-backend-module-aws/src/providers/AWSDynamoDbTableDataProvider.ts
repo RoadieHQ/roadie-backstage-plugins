@@ -37,7 +37,7 @@ import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
-import { ValueMapping } from '../types';
+import { AWSEntityProviderConfig, ValueMapping } from '../types';
 import { compile, Environment, Template } from 'nunjucks';
 import crypto from 'crypto';
 import yaml from 'js-yaml';
@@ -63,7 +63,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
 
   static fromConfig(
     config: Config,
-    options: { logger: Logger | LoggerService; template?: string },
+    options: Pick<AWSEntityProviderConfig, 'logger' | 'template'>,
   ) {
     return new AWSDynamoDbTableDataProvider(
       config.getString('accountId'),

@@ -70,10 +70,12 @@
     "nunjucks": "^3.2.4"
   },
   "devDependencies": {
+    "@aws-sdk/types": "^3.696.0",
     "@backstage/cli": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@types/link2aws": "^1.0.0",
     "@types/lodash": "^4.14.151",
+    "@types/nunjucks": "^3.2.6",
     "aws-sdk-client-mock": "^4.1.0",
     "winston": "^3.2.1"
   },

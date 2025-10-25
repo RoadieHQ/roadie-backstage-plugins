@@ -16,15 +16,10 @@
 
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { CatalogApi } from '@backstage/catalog-client';
-import { LabelValueMapper } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
@@ -32,30 +27,6 @@ import { duration } from '../utils/timer';
  * Provides entities from AWS IAM User service.
  */
 export class AWSIAMUserProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSIAMUserProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-iam-user-${this.providerId ?? 0}`;
   }
@@ -139,9 +110,7 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${userResources.length} IAM user resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      { run_duration: duration(startTimestamp) },
     );
   }
 }

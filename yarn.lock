@@ -4377,13 +4377,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-sdk/types@npm:^3.222.0, @aws-sdk/types@npm:^3.347.0, @aws-sdk/types@npm:^3.468.0, @aws-sdk/types@npm:^3.76.0":
-  version: 3.840.0
-  resolution: "@aws-sdk/types@npm:3.840.0"
+"@aws-sdk/types@npm:^3.222.0, @aws-sdk/types@npm:^3.347.0, @aws-sdk/types@npm:^3.468.0, @aws-sdk/types@npm:^3.696.0, @aws-sdk/types@npm:^3.76.0":
+  version: 3.922.0
+  resolution: "@aws-sdk/types@npm:3.922.0"
   dependencies:
-    "@smithy/types": "npm:^4.3.1"
+    "@smithy/types": "npm:^4.8.1"
     tslib: "npm:^2.6.2"
-  checksum: 10/2286b02f09d63caad1f7509839cfe7dc8f3d212f377037f7a37b663ee3f8d2d5aa9a8ed99ac599332c81dc72ff7a83eec3a76755e420ac9f1c81d6c40b8b7220
+  checksum: 10/1ed9b69a8d769df6f592df5877c694fa19a7fb00addb019c99349e1f9308f1131d1b3cc4fbdddaa9c8c55e81da29ee71dccb8148fcc5afbd5003c9859e445ad4
   languageName: node
   linkType: hard
 
@@ -16000,6 +16000,7 @@ __metadata:
     "@aws-sdk/client-sts": "npm:^3.696.0"
     "@aws-sdk/credential-providers": "npm:^3.696.0"
     "@aws-sdk/lib-dynamodb": "npm:^3.696.0"
+    "@aws-sdk/types": "npm:^3.696.0"
     "@aws-sdk/util-arn-parser": "npm:^3.696.0"
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/catalog-client": "backstage:^"
@@ -16013,6 +16014,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.0.0"
     "@types/link2aws": "npm:^1.0.0"
     "@types/lodash": "npm:^4.14.151"
+    "@types/nunjucks": "npm:^3.2.6"
     aws-sdk-client-mock: "npm:^4.1.0"
     js-yaml: "npm:^4.1.0"
     link2aws: "npm:^1.0.18"
@@ -17840,12 +17842,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@smithy/types@npm:^4.2.0, @smithy/types@npm:^4.3.1":
+"@smithy/types@npm:^4.2.0":
   version: 4.3.1
   resolution: "@smithy/types@npm:4.3.1"
   dependencies:
     tslib: "npm:^2.6.2"
   checksum: 10/0708b5d66d5a3864816dbd1a0984ce46a7d82e80934a5f08dc5fddd8c7bbfbd3af974acbea7122cf9ad743403459b43b0113c419fae7528cce596432ec5a97ad
+  languageName: node
+  linkType: hard
+
+"@smithy/types@npm:^4.8.1":
+  version: 4.8.1
+  resolution: "@smithy/types@npm:4.8.1"
+  dependencies:
+    tslib: "npm:^2.6.2"
+  checksum: 10/d77c9becf39279631b83e403dc910b802b9141913b4c9514b8a310edd8651b170a27dc2893a83f1c3309671b4bf0d5dc429f7013f38490740b3cc9c43d27864a
   languageName: node
   linkType: hard
 
@@ -20314,7 +20325,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/nunjucks@npm:^3.2.3":
+"@types/nunjucks@npm:^3.2.3, @types/nunjucks@npm:^3.2.6":
   version: 3.2.6
   resolution: "@types/nunjucks@npm:3.2.6"
   checksum: 10/6b77fd2e5e3a63f82149779ae83e6ade7f70779c63b9bdab9fdd52c388db4b442c8b5993f62917a9564fc5e5690784ea5558513c629bee5b8cf6b8e6d8eeac38

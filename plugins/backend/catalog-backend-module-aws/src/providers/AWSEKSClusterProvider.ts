@@ -16,8 +16,6 @@
 
 import { Entity } from '@backstage/catalog-model';
 import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
@@ -33,12 +31,10 @@ import {
 } from '@backstage/plugin-kubernetes-common';
 import { arnToName } from '../utils/arnToName';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
 /**
@@ -49,14 +45,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
   static fromConfig(
     config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {
@@ -74,14 +63,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
   constructor(
     account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {

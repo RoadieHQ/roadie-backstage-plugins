@@ -15,17 +15,12 @@
  */
 import { Entity } from '@backstage/catalog-model';
 import { SQS, paginateListQueues } from '@aws-sdk/client-sqs';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
 
@@ -35,42 +30,7 @@ import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
 export class AWSSQSEntityProvider extends AWSEntityProvider {
   private readonly queueTypeValue: string;
 
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSSQSEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
-  constructor(
-    account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
+  constructor(account: AccountConfig, options: AWSEntityProviderConfig) {
     super(account, options);
     this.queueTypeValue = 'sqs-queue';
   }

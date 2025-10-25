@@ -15,19 +15,14 @@
  */
 
 import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
-import { Config } from '@backstage/config';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { Entity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
@@ -35,30 +30,6 @@ import { duration } from '../utils/timer';
  * Provides entities from AWS DynamoDB service.
  */
 export class AWSDynamoDbTableProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleArn = config.getOptionalString('roleArn');
-    const roleName = config.getString('roleName');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSDynamoDbTableProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-dynamo-db-table-${this.providerId ?? 0}`;
   }

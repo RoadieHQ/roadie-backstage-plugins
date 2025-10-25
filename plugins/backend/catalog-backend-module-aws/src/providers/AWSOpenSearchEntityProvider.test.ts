@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import {
-  OpenSearch,
-  ListDomainNamesCommand,
-  DescribeDomainCommand,
-  ListTagsCommand,
-  ListDomainNamesCommandOutput,
-  DescribeDomainCommandOutput,
-  ListTagsCommandOutput,
-} from '@aws-sdk/client-opensearch';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
-import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import {
+  DescribeDomainCommand,
+  DescribeDomainCommandOutput,
+  ListDomainNamesCommand,
+  ListDomainNamesCommandOutput,
+  ListTagsCommand,
+  ListTagsCommandOutput,
+  OpenSearch,
+} from '@aws-sdk/client-opensearch';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+
+import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
 
 // @ts-ignore
 const opensearch = mockClient(OpenSearch);
@@ -47,9 +51,15 @@ describe('AWSOpenSearchEntityProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there are no domains', () => {
@@ -67,9 +77,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       };
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -132,9 +142,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -174,9 +184,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       };
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -257,9 +267,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       };
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -337,9 +347,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       };
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -417,9 +427,9 @@ describe('AWSOpenSearchEntityProvider', () => {
       };
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

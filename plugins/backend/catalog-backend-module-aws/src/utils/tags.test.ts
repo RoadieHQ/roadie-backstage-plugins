@@ -38,6 +38,7 @@ describe('labelsFromTags and ownerFromTags', () => {
       const result = labelsFromTags(tags);
       expect(result).toEqual({ tag_one: 'value1', tag_two: 'value2' });
     });
+
     it('should ignore entries without keys or values in an array of tags', () => {
       const tags = [{ Key: 'tag:one' }, { Value: 'value2' }, {}];
       const result = labelsFromTags(tags);
@@ -74,6 +75,34 @@ describe('labelsFromTags and ownerFromTags', () => {
       ];
       const result = labelsFromTags(tags);
       expect(result).toEqual({ tag_one_two: 'https---blha.com-blahblah' });
+      expect(
+        KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
+      ).toBe(true);
+    });
+
+    it('should convert tags with characters not compatible with `name` into valid labels', () => {
+      const tags = [
+        { Key: 'Tb<Pt t,4%I', Value: '#K]:_W#T9G' },
+        { Key: ';aI/Si=5Ex', Value: '{_toD) ]TB5' },
+        { Key: 'FL:<KqW;:K', Value: '43P)MBbfaa' }
+      ];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({
+        Tb_Pt_t_4_I: 'K--_W-T9G',
+        'aI-Si_5Ex': 'toD---TB5',
+        FL__KqW__K: '43P-MBbfaa'
+      });
+      Object.values(result).forEach(value => {
+        expect(
+          KubernetesValidatorFunctions.isValidLabelValue(value),
+        ).toBe(true);
+      });
+    });
+
+    it('should convert tags with spaces into valid labels', () => {
+      const tags = [{ Key: 'tag one two', Value: 'value one two' }];
+      const result = labelsFromTags(tags);
+      expect(result).toEqual({ tag_one_two: 'value-one-two' });
       expect(
         KubernetesValidatorFunctions.isValidLabelValue(result.tag_one_two),
       ).toBe(true);
