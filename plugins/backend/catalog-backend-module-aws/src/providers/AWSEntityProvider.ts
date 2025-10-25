@@ -14,29 +14,40 @@
  * limitations under the License.
  */
 
+import crypto from 'crypto';
+
+import { STS } from '@aws-sdk/client-sts';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+import type { AwsCredentialIdentityProvider } from '@aws-sdk/types';
+import { parse as parseArn } from '@aws-sdk/util-arn-parser';
+import {
+  LoggerService,
+  SchedulerServiceTaskRunner,
+} from '@backstage/backend-plugin-api';
+import { CatalogApi } from '@backstage/catalog-client';
+import {
+  ANNOTATION_LOCATION,
+  ANNOTATION_ORIGIN_LOCATION,
+  Entity,
+} from '@backstage/catalog-model';
+import { Config } from '@backstage/config';
+import { ConfigReader } from '@backstage/config';
+import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { AccountConfig, DynamicAccountConfig } from '../types';
-import { STS } from '@aws-sdk/client-sts';
-import {
-  ANNOTATION_ORIGIN_LOCATION,
-  ANNOTATION_LOCATION,
-  Entity,
-} from '@backstage/catalog-model';
-import { ANNOTATION_ACCOUNT_ID } from '../annotations';
-import { CatalogApi } from '@backstage/catalog-client';
-import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
-import { ConfigReader } from '@backstage/config';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { parse as parseArn } from '@aws-sdk/util-arn-parser';
-import { LabelValueMapper, labelsFromTags, Tag } from '../utils/tags';
-import { compile, Environment, Template } from 'nunjucks';
-import crypto from 'crypto';
 import yaml from 'js-yaml';
+import { compile, Environment, Template } from 'nunjucks';
+import type { Logger } from 'winston';
+
+import { ANNOTATION_ACCOUNT_ID } from '../annotations';
+import {
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
+import { labelsFromTags, LabelValueMapper, Tag } from '../utils/tags';
 
 export abstract class AWSEntityProvider implements EntityProvider {
   protected readonly useTemporaryCredentials: boolean;
@@ -48,6 +59,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   private credentialsManager: DefaultAwsCredentialsManager;
   private account: AccountConfig;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
+  protected readonly taskRunner: SchedulerServiceTaskRunner;
   private template: Template | undefined;
 
   public abstract getProviderName(): string;
@@ -57,15 +69,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   protected constructor(
     account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
+    options: AWSEntityProviderConfig,
   ) {
     this.logger = options.logger;
     this.providerId = options.providerId;
@@ -73,6 +77,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     this.catalogApi = options.catalogApi;
     this.account = account;
     this.useTemporaryCredentials = !!options.useTemporaryCredentials;
+    this.taskRunner = options.taskRunner;
     this.credentialsManager = DefaultAwsCredentialsManager.fromConfig(
       new ConfigReader({ aws: { accounts: [account] } }),
     );
@@ -86,11 +91,32 @@ export abstract class AWSEntityProvider implements EntityProvider {
           .digest('hex')
           .slice(0, 63);
       });
-      env.addFilter('split', function (str, delimiter) {
+      env.addFilter('split', function splitFilter(str, delimiter) {
         return str.split(delimiter);
       });
       this.template = compile(options.template, env);
     }
+  }
+
+  /**
+   * Note: The generic here is a work-around to allow `new this()` in static methods on an abstract class.
+   * See: https://stackoverflow.com/a/49566763/652728
+   */
+  static fromConfig<T = AWSEntityProvider>(
+    this: { new (account: AccountConfig, options: AWSEntityProviderConfig): T },
+    config: Config,
+    options: AWSEntityProviderConfig,
+  ) {
+    const accountId = config.getString('accountId');
+    const roleName = config.getString('roleName');
+    const roleArn = config.getOptionalString('roleArn');
+    const externalId = config.getOptionalString('externalId');
+    const region = config.getString('region');
+
+    return new this(
+      { accountId, roleName, roleArn, externalId, region },
+      options,
+    );
   }
 
   protected renderEntity(
@@ -160,7 +186,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
     };
   }
 
-  protected async getCredentialsProvider() {
+  protected async getCredentialsProvider(): Promise<AwsCredentialIdentityProvider> {
     const awsCredentialProvider =
       await this.credentialsManager.getCredentialProvider({
         accountId: this.accountId,
@@ -186,6 +212,12 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   public async connect(connection: EntityProviderConnection): Promise<void> {
     this.connection = connection;
+    await this.taskRunner.run({
+      id: this.getProviderName(),
+      fn: async (dynamicAccountConfig?: DynamicAccountConfig) => {
+        await this.run(dynamicAccountConfig);
+      },
+    });
   }
 
   protected async buildDefaultAnnotations(

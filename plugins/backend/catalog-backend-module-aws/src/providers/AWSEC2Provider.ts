@@ -16,18 +16,13 @@
 
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2 } from '@aws-sdk/client-ec2';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
@@ -35,30 +30,6 @@ import { duration } from '../utils/timer';
  * Provides entities from AWS Elastic Compute Cloud.
  */
 export class AWSEC2Provider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSEC2Provider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-ec2-provider-${this.providerId ?? 0}`;
   }

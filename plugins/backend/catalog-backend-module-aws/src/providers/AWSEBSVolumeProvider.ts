@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-import { CatalogApi } from '@backstage/catalog-client';
-import { Config } from '@backstage/config';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import type { Logger } from 'winston';
 import { EC2 } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
@@ -39,30 +34,6 @@ const createEbsVolumeConsoleLink = (region: string, volumeId: string): string =>
  * Provides entities from AWS Elastic Block Store volumes.
  */
 export class AWSEBSVolumeProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSEBSVolumeProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-ebs-volume-provider-${this.providerId ?? 0}`;
   }

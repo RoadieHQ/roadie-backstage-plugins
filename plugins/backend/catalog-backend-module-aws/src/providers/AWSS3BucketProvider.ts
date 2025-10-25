@@ -16,19 +16,14 @@
 
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { S3, Tag } from '@aws-sdk/client-s3';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
 import {
-  LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
 } from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
@@ -36,30 +31,6 @@ import { duration } from '../utils/timer';
  * Provides entities from AWS S3 Bucket service.
  */
 export class AWSS3BucketProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSS3BucketProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-s3-bucket-${this.providerId ?? 0}`;
   }
