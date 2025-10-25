@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+
 import {
-  OrganizationsClient,
   ListAccountsCommand,
-  ListTagsForResourceCommand,
   ListAccountsCommandOutput,
+  ListTagsForResourceCommand,
   ListTagsForResourceCommandOutput,
+  OrganizationsClient,
 } from '@aws-sdk/client-organizations';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+
+import { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
 
 const organizations = mockClient(OrganizationsClient);
 const sts = mockClient(STS);
@@ -47,9 +51,15 @@ describe('AWSOrganizationAccountsProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'us-east-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there are no accounts', () => {
@@ -67,9 +77,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       };
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -119,9 +129,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -161,9 +171,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       };
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -241,9 +251,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       };
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -263,7 +273,7 @@ describe('AWSOrganizationAccountsProvider', () => {
                 joinedMethod: 'INVITED',
                 status: 'ACTIVE',
                 labels: {
-                  Name: 'My Custom Account',
+                  Name: 'My-Custom-Account',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({
@@ -318,10 +328,10 @@ describe('AWSOrganizationAccountsProvider', () => {
       };
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

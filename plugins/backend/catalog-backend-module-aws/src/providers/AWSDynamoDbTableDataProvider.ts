@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
+import crypto from 'crypto';
+
+import { DynamoDB, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { STS } from '@aws-sdk/client-sts';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { LoggerService } from '@backstage/backend-plugin-api';
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
   Entity,
 } from '@backstage/catalog-model';
+import { Config } from '@backstage/config';
 import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { STS } from '@aws-sdk/client-sts';
-import { Config } from '@backstage/config';
-
-import { DynamoDB, DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import yaml from 'js-yaml';
 import { merge } from 'lodash';
-import { mapColumnsToEntityValues } from '../utils/columnMapper';
+import { compile, Environment, Template } from 'nunjucks';
 import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
+
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
-import { ValueMapping } from '../types';
-import { compile, Environment, Template } from 'nunjucks';
-import crypto from 'crypto';
-import yaml from 'js-yaml';
+import { AWSEntityProviderConfig, ValueMapping } from '../types';
+import { mapColumnsToEntityValues } from '../utils/columnMapper';
 
 type DdbTableDataConfigOptions = {
   entityKind?: string;
@@ -63,9 +64,9 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
 
   static fromConfig(
     config: Config,
-    options: { logger: Logger | LoggerService; template?: string },
+    options: Pick<AWSEntityProviderConfig, 'logger' | 'template'>,
   ) {
-    return new AWSDynamoDbTableDataProvider(
+    return new this(
       config.getString('accountId'),
       config.getString('roleName'),
       config.get<DdbTableDataConfigOptions>('dynamodbTableData'),

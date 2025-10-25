@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
 import { OpenSearch } from '@aws-sdk/client-opensearch';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
-import { duration } from '../utils/timer';
+import { Entity } from '@backstage/catalog-model';
+
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+import {
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
+import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS OpenSearch service.
@@ -36,40 +34,9 @@ import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
 export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
   private readonly opensearchTypeValue: string;
 
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSOpenSearchEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   constructor(
     account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-    },
+    options: Omit<AWSEntityProviderConfig, 'labelValueMapper'>,
   ) {
     super(account, options);
     this.opensearchTypeValue = 'opensearch-domain';
@@ -178,7 +145,9 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${opensearchEntities.length} OpenSearch domain resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-import { CatalogApi } from '@backstage/catalog-client';
-import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import {
-  ElasticLoadBalancingV2Client,
   DescribeLoadBalancersCommand,
   DescribeTagsCommand,
+  ElasticLoadBalancingV2Client,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+
 import { DynamicAccountConfig } from '../types';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
-import type { Logger } from 'winston';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 const ANNOTATION_LOAD_BALANCER_ARN = 'amazonaws.com/load-balancer-arn';
 const ANNOTATION_LOAD_BALANCER_DNS_NAME =
@@ -44,30 +38,6 @@ const createElbLink = (region: string, loadBalancerId: string) =>
  * Provides entities from AWS Elastic Load Balancing.
  */
 export class AWSLoadBalancerProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSLoadBalancerProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-load-balancer-provider-${this.providerId ?? 0}`;
   }
@@ -182,7 +152,9 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${lbResources.length} Load Balancer resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

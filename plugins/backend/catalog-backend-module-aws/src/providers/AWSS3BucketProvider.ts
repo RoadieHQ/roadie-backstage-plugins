@@ -14,52 +14,22 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { S3, Tag } from '@aws-sdk/client-s3';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+
+import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
+import { arnToName } from '../utils/arnToName';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS S3 Bucket service.
  */
 export class AWSS3BucketProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSS3BucketProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-s3-bucket-${this.providerId ?? 0}`;
   }
@@ -151,7 +121,9 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${s3Entities.length} S3 bucket resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

@@ -37,7 +37,7 @@ function stripTrailingChar(str: string, chr: string) {
 }
 
 const defaultValueCleaner: LabelValueMapper = value => {
-  const val = value.replaceAll('/', '-').replaceAll(':', '-').substring(0, 63);
+  const val = value.replaceAll(/[^a-zA-Z0-9-_.]/g, '-').substring(0, 63);
   return stripTrailingChar(val, '-');
 };
 
@@ -59,8 +59,8 @@ export const labelsFromTags = (
       )
       .reduce((acc: Record<string, string>, tag) => {
         if (tag.Key && tag.Value) {
-          let key = tag.Key.replaceAll(':', '_')
-            .replaceAll('/', '-')
+          let key = tag.Key.replaceAll('/', '-')
+            .replaceAll(/[^a-zA-Z0-9-_.]/g, '_')
             .substring(0, 63);
           key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
           acc[key] = valueMapper(tag.Value);

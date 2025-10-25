@@ -14,51 +14,21 @@
  * limitations under the License.
  */
 
+import { paginateDescribeDBInstances, RDS } from '@aws-sdk/client-rds';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
-import type { Logger } from 'winston';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+
+import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
-import { LoggerService } from '@backstage/backend-plugin-api';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS Relational Database Service.
  */
 export class AWSRDSProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-      ownerTag?: string;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSRDSProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-rds-provider-${this.providerId ?? 0}`;
   }

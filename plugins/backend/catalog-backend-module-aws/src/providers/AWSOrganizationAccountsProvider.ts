@@ -14,60 +14,29 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
-
 import {
   OrganizationsClient,
   paginateListAccounts,
   paginateListTagsForResource,
 } from '@aws-sdk/client-organizations';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
+import { Entity } from '@backstage/catalog-model';
+
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
-import { arnToName } from '../utils/arnToName';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
+import { arnToName } from '../utils/arnToName';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS Organizations accounts.
  */
 export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSOrganizationAccountsProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-organization-accounts-${this.providerId ?? 0}`;
   }
@@ -178,7 +147,9 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${accountEntities.length} Organization account resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

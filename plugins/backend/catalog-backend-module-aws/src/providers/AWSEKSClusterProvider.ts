@@ -14,32 +14,31 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
 import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  ANNOTATION_AWS_EKS_CLUSTER_ARN,
-  ANNOTATION_AWS_EKS_CLUSTER_VERSION,
-  ANNOTATION_AWS_IAM_ROLE_ARN,
-} from '../annotations';
 import {
   ANNOTATION_KUBERNETES_API_SERVER,
   ANNOTATION_KUBERNETES_API_SERVER_CA,
   ANNOTATION_KUBERNETES_AUTH_PROVIDER,
   ANNOTATION_KUBERNETES_AWS_CLUSTER_ID,
 } from '@backstage/plugin-kubernetes-common';
-import { arnToName } from '../utils/arnToName';
+
 import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+  ANNOTATION_AWS_EKS_CLUSTER_ARN,
+  ANNOTATION_AWS_EKS_CLUSTER_VERSION,
+  ANNOTATION_AWS_IAM_ROLE_ARN,
+} from '../annotations';
+import {
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
+import { arnToName } from '../utils/arnToName';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -49,14 +48,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
   static fromConfig(
     config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {
@@ -66,7 +58,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
-    return new AWSEKSClusterProvider(
+    return new this(
       { accountId, roleName, roleArn, externalId, region },
       options,
     );
@@ -74,14 +66,7 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
   constructor(
     account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {
@@ -214,7 +199,9 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${eksEntities.length} EKS cluster resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

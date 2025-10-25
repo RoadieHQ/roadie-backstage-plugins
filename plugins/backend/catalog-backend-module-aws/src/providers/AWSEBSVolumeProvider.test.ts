@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { EC2, DescribeVolumesCommand } from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+
+import { DescribeVolumesCommand, EC2 } from '@aws-sdk/client-ec2';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import {
   ANNOTATION_EBS_VOLUME_ID,
   AWSEBSVolumeProvider,
 } from './AWSEBSVolumeProvider';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -40,8 +43,14 @@ describe('AWSEBSVolumeProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
     sts.on(GetCallerIdentityCommand).resolves({});
   });
 
@@ -57,9 +66,11 @@ describe('AWSEBSVolumeProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEBSVolumeProvider.fromConfig(config, { logger });
+      const provider = AWSEBSVolumeProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -96,9 +107,11 @@ describe('AWSEBSVolumeProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEBSVolumeProvider.fromConfig(config, { logger });
+      const provider = AWSEBSVolumeProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -142,9 +155,9 @@ describe('AWSEBSVolumeProvider', () => {
       const provider = AWSEBSVolumeProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -209,10 +222,10 @@ describe('AWSEBSVolumeProvider', () => {
       };
       const provider = AWSEBSVolumeProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
