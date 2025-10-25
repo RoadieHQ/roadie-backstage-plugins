@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import {
-  EC2,
-  DescribeSecurityGroupsCommand,
-  DescribeSecurityGroupsCommandOutput,
-} from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
-import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import {
+  DescribeSecurityGroupsCommand,
+  DescribeSecurityGroupsCommandOutput,
+  EC2,
+} from '@aws-sdk/client-ec2';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -42,9 +45,15 @@ describe('AWSSecurityGroupProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there are no security groups', () => {
@@ -60,9 +69,11 @@ describe('AWSSecurityGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSecurityGroupProvider.fromConfig(config, { logger });
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -125,9 +136,9 @@ describe('AWSSecurityGroupProvider', () => {
       const provider = AWSSecurityGroupProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -173,9 +184,11 @@ describe('AWSSecurityGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSecurityGroupProvider.fromConfig(config, { logger });
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -249,9 +262,11 @@ describe('AWSSecurityGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSecurityGroupProvider.fromConfig(config, { logger });
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -273,7 +288,7 @@ describe('AWSSecurityGroupProvider', () => {
                 ingressRules: 'None',
                 egressRules: 'None',
                 labels: {
-                  Name: 'My Custom Security Group',
+                  Name: 'My-Custom-Security-Group',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({
@@ -324,10 +339,10 @@ describe('AWSSecurityGroupProvider', () => {
       };
       const provider = AWSSecurityGroupProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -411,9 +426,11 @@ describe('AWSSecurityGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSecurityGroupProvider.fromConfig(config, { logger });
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

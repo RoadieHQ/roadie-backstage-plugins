@@ -14,55 +14,25 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
+
 import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
   ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
 } from '../annotations';
-import { arnToName } from '../utils/arnToName';
-import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
+import { arnToName } from '../utils/arnToName';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS Lambda Function service.
  */
 export class AWSLambdaFunctionProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSLambdaFunctionProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   getProviderName(): string {
     return `aws-lambda-function-${this.providerId ?? 0}`;
   }
@@ -182,7 +152,9 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${lambdaComponents.length} lambda function resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

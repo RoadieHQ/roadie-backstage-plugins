@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-import { IAM, ListUsersCommand, User } from '@aws-sdk/client-iam';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { AWSIAMUserProvider } from './AWSIAMUserProvider';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import { IAM, ListUsersCommand, User } from '@aws-sdk/client-iam';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSIAMUserProvider } from './AWSIAMUserProvider';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
@@ -38,9 +40,15 @@ describe('AWSIAMUserProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there is no users', () => {
@@ -55,9 +63,11 @@ describe('AWSIAMUserProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSIAMUserProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -89,9 +99,9 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -113,9 +123,11 @@ describe('AWSIAMUserProvider', () => {
         refresh: jest.fn(),
       };
 
-      const provider = AWSIAMUserProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

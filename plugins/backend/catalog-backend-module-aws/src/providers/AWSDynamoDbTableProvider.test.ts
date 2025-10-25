@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import {
-  DynamoDB,
-  ListTablesCommand,
-  DescribeTableCommand,
-  ListTagsOfResourceCommand,
-} from '@aws-sdk/client-dynamodb';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
-import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import {
+  DescribeTableCommand,
+  DynamoDB,
+  ListTablesCommand,
+  ListTagsOfResourceCommand,
+} from '@aws-sdk/client-dynamodb';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import type { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
+
+import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
 
 const eks = mockClient(DynamoDB);
 const sts = mockClient(STS);
@@ -43,9 +47,15 @@ describe('AWSDynamoDbTableProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there is no clusters', () => {
@@ -60,9 +70,11 @@ describe('AWSDynamoDbTableProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSDynamoDbTableProvider.fromConfig(config, { logger });
+      const provider = AWSDynamoDbTableProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -96,9 +108,11 @@ describe('AWSDynamoDbTableProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSDynamoDbTableProvider.fromConfig(config, { logger });
+      const provider = AWSDynamoDbTableProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -136,9 +150,9 @@ describe('AWSDynamoDbTableProvider', () => {
       const provider = AWSDynamoDbTableProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -183,10 +197,10 @@ describe('AWSDynamoDbTableProvider', () => {
       };
       const provider = AWSDynamoDbTableProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

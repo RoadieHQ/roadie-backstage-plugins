@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Entity } from '@backstage/catalog-model';
 import {
   ECRClient,
   ListTagsForResourceCommand,
   paginateDescribeRepositories,
 } from '@aws-sdk/client-ecr';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { Entity } from '@backstage/catalog-model';
+
 import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';
 
@@ -39,40 +38,9 @@ const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';
 export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
   private readonly repoTypeValue: string;
 
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSECRRepositoryEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
   constructor(
     account: AccountConfig,
-    options: {
-      logger: LoggerService;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
+    options: Omit<AWSEntityProviderConfig, 'template'>,
   ) {
     super(account, options);
     this.repoTypeValue = 'ecr-repository';
@@ -179,7 +147,9 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
 
     this.logger.info(
       `Finished providing ${ecrResources.length} ECR repository resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }
