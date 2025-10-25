@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import {
-  EC2,
-  DescribeVpcsCommand,
-  DescribeDhcpOptionsCommand,
-  DescribeVpcsCommandOutput,
-  DescribeDhcpOptionsCommandOutput,
-} from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSVPCProvider } from './AWSVPCProvider';
-import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import {
+  DescribeDhcpOptionsCommand,
+  DescribeDhcpOptionsCommandOutput,
+  DescribeVpcsCommand,
+  DescribeVpcsCommandOutput,
+  EC2,
+} from '@aws-sdk/client-ec2';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSVPCProvider } from './AWSVPCProvider';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -44,9 +47,15 @@ describe('AWSVPCProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there are no VPCs', () => {
@@ -62,9 +71,11 @@ describe('AWSVPCProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSVPCProvider.fromConfig(config, { logger });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -126,9 +137,12 @@ describe('AWSVPCProvider', () => {
       const template = readFileSync(
         join(dirname(__filename), './AWSVPCProvider.example.yaml.njs'),
       ).toString();
-      const provider = AWSVPCProvider.fromConfig(config, { logger, template });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        template,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -163,9 +177,11 @@ describe('AWSVPCProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSVPCProvider.fromConfig(config, { logger });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -262,9 +278,11 @@ describe('AWSVPCProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSVPCProvider.fromConfig(config, { logger });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -286,7 +304,7 @@ describe('AWSVPCProvider', () => {
                 state: 'available',
                 instanceTenancy: 'dedicated',
                 labels: {
-                  Name: 'My Custom VPC',
+                  Name: 'My-Custom-VPC',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({
@@ -333,9 +351,11 @@ describe('AWSVPCProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSVPCProvider.fromConfig(config, { logger });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -408,10 +428,10 @@ describe('AWSVPCProvider', () => {
       };
       const provider = AWSVPCProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -482,9 +502,11 @@ describe('AWSVPCProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSVPCProvider.fromConfig(config, { logger });
+      const provider = AWSVPCProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

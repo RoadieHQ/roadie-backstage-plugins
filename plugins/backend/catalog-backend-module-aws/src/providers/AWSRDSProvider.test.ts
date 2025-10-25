@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { RDS, DescribeDBInstancesCommand } from '@aws-sdk/client-rds';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSRDSProvider } from './AWSRDSProvider';
-import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import { DescribeDBInstancesCommand, RDS } from '@aws-sdk/client-rds';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
+
+import { AWSRDSProvider } from './AWSRDSProvider';
 
 const rds = mockClient(RDS);
 const sts = mockClient(STS);
@@ -38,9 +42,15 @@ describe('AWSRDSProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there are no DB instances', () => {
@@ -55,9 +65,11 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSRDSProvider.fromConfig(config, { logger });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -104,9 +116,12 @@ describe('AWSRDSProvider', () => {
       const template = readFileSync(
         join(dirname(__filename), './AWSRDSProvider.example.yaml.njs'),
       ).toString();
-      const provider = AWSRDSProvider.fromConfig(config, { logger, template });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        template,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -144,9 +159,11 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSRDSProvider.fromConfig(config, { logger });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -233,10 +250,10 @@ describe('AWSRDSProvider', () => {
       };
       const provider = AWSRDSProvider.fromConfig(config, {
         logger,
+        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -325,9 +342,11 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSRDSProvider.fromConfig(config, { logger });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -356,7 +375,7 @@ describe('AWSRDSProvider', () => {
                 storageType: 'gp3',
                 isPerformanceInsightsEnabled: false,
                 labels: {
-                  Name: 'My Production Database',
+                  Name: 'My-Production-Database',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({
@@ -400,9 +419,11 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSRDSProvider.fromConfig(config, { logger });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -469,9 +490,11 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSRDSProvider.fromConfig(config, { logger });
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
       await provider.connect(entityProviderConnection);
-      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],

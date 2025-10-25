@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-import { S3, ListBucketsCommand } from '@aws-sdk/client-s3';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSS3BucketProvider } from './AWSS3BucketProvider';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import { ListBucketsCommand, S3 } from '@aws-sdk/client-s3';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSS3BucketProvider } from './AWSS3BucketProvider';
 
 const s3 = mockClient(S3);
 const sts = mockClient(STS);
@@ -38,9 +40,15 @@ describe('AWSS3BucketProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
+  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
+    taskRunner = {
+      run: async task => {
+        await task.fn({} as any);
+      },
+    };
   });
 
   describe('where there is no buckets', () => {
@@ -55,9 +63,11 @@ describe('AWSS3BucketProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSS3BucketProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -91,9 +101,9 @@ describe('AWSS3BucketProvider', () => {
       const provider = AWSS3BucketProvider.fromConfig(config, {
         logger,
         template,
+        taskRunner,
       });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -126,9 +136,11 @@ describe('AWSS3BucketProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSS3BucketProvider.fromConfig(config, { logger });
-      provider.connect(entityProviderConnection);
-      await provider.run();
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

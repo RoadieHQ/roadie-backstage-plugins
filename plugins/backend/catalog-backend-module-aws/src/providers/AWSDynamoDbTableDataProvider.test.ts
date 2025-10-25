@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
-import { ConfigReader } from '@backstage/config';
-import { createLogger } from 'winston';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
+import { ConfigReader } from '@backstage/config';
+import { createLogger } from 'winston';
+
+import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
 
 const validConfig = {
   accountId: '123456789012',
