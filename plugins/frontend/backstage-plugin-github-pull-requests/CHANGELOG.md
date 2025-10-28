@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.5.3
+
+### Patch Changes
+
+- 3fdba7e: Improve GitHub API calls to better respect rate limits
+
 ## 3.5.2
 
 ### Patch Changes
