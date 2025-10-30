@@ -1,8 +1,4 @@
-import {
-  ApiBlueprint,
-  createApiFactory,
-  discoveryApiRef,
-} from '@backstage/frontend-plugin-api';
+import { ApiBlueprint, discoveryApiRef } from '@backstage/frontend-plugin-api';
 import { ArgoCDApiClient, argoCDApiRef } from '../api';
 import { configApiRef, identityApiRef } from '@backstage/core-plugin-api';
 
@@ -10,8 +6,8 @@ import { configApiRef, identityApiRef } from '@backstage/core-plugin-api';
  * @alpha
  */
 export const argoCDApiExtension = ApiBlueprint.make({
-  params: {
-    factory: createApiFactory({
+  params: paramsFactory =>
+    paramsFactory({
       api: argoCDApiRef,
       deps: {
         discoveryApi: discoveryApiRef,
@@ -32,5 +28,4 @@ export const argoCDApiExtension = ApiBlueprint.make({
           ),
         }),
     }),
-  },
 });

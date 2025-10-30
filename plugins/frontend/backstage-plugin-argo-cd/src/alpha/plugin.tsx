@@ -16,7 +16,7 @@ import { argoCdPage } from './pages';
  * @alpha
  */
 const plugin: FrontendPlugin = createFrontendPlugin({
-  id: 'argocd',
+  pluginId: 'argocd',
   extensions: [
     argoCdPage,
     entityArgoCDOverviewCard,
