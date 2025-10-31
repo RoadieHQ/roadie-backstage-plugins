@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 import { PassThrough } from 'stream';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { createSleepAction } from './sleep';
 
 describe('roadiehq:utils:sleep', () => {
   const mockContext = {
     task: { id: 'task-id' },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
