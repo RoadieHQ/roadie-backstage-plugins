@@ -40,10 +40,6 @@ import {
 } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
-  isGithubActionsAvailable,
-  EntityGithubActionsContent,
-} from '@backstage-community/plugin-github-actions';
-import {
   EntityUserProfileCard,
   EntityGroupProfileCard,
   EntityMembersListCard,
@@ -133,10 +129,6 @@ import {
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
-      <EntitySwitch.Case if={isGithubActionsAvailable}>
-        <EntityGithubActionsContent />
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isTravisciAvailable}>
         <EntityTravisCIContent />
       </EntitySwitch.Case>

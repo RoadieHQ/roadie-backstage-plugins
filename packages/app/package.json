@@ -7,8 +7,6 @@
   },
   "bundled": true,
   "dependencies": {
-    "@backstage-community/plugin-github-actions": "^0.6.16",
-    "@backstage-community/plugin-tech-radar": "^0.7.4",
     "@backstage/app-defaults": "backstage:^",
     "@backstage/catalog-model": "backstage:^",
     "@backstage/cli": "backstage:^",
