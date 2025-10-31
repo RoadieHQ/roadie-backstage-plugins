@@ -1,8 +1,23 @@
 {
   "name": "@roadiehq/backstage-plugin-github-insights",
   "version": "3.3.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./alpha": "./src/alpha.tsx",
+    "./package.json": "./package.json"
+  },
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "typesVersions": {
+    "*": {
+      "alpha": [
+        "src/alpha.tsx"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
+  },
   "license": "Apache-2.0",
   "keywords": [
     "backstage",
@@ -46,8 +61,10 @@
   },
   "dependencies": {
     "@backstage/catalog-model": "backstage:^",
+    "@backstage/core-compat-api": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
+    "@backstage/frontend-plugin-api": "backstage:^",
     "@backstage/integration": "backstage:^",
     "@backstage/integration-react": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",

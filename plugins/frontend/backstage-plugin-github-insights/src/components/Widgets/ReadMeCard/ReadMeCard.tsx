@@ -23,7 +23,7 @@ import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScm
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
-    marginBottom: theme.spacing(3),
+    marginBottom: '10px',
     '& + .MuiAlert-root': {
       marginTop: theme.spacing(3),
     },
