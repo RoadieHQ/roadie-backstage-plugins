@@ -20,9 +20,8 @@ import {
   getPluginId,
 } from './helpers';
 import { HttpOptions } from './types';
-import { getRootLogger } from '@backstage/backend-common';
 import { Writable } from 'stream';
-import * as winston from 'winston';
+import { createLogger, transports } from 'winston';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 
 const mockBaseUrl = 'http://backstage.tests/api';
@@ -51,8 +50,8 @@ logStream._write = (chunk, _encoding, next) => {
   logOutput = logOutput += chunk.toString();
   next();
 };
-const streamTransport = new winston.transports.Stream({ stream: logStream });
-const logger = getRootLogger();
+const streamTransport = new transports.Stream({ stream: logStream });
+const logger = createLogger();
 logger.add(streamTransport);
 
 jest.mock('cross-fetch');
@@ -185,9 +184,7 @@ describe('http', () => {
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+            expect.arrayContaining([expect.stringContaining('bad request')]),
           );
         });
         it('returns response without headers if continueOnBadResponse', async () => {
@@ -210,9 +207,7 @@ describe('http', () => {
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+            expect.arrayContaining([expect.stringContaining('bad request')]),
           );
         });
       });

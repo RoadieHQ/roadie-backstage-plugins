@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 3.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 3.1.0
 
 ### Minor Changes

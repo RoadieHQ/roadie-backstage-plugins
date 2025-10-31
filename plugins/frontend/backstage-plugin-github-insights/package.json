@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-github-insights",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "exports": {
     ".": "./src/index.ts",
     "./alpha": "./src/alpha.tsx",
@@ -74,7 +74,7 @@
     "@material-ui/lab": "4.0.0-alpha.45",
     "@octokit/rest": "^19.0.3",
     "@octokit/types": "^9.0.0",
-    "@roadiehq/github-auth-utils-react": "^1.1.0",
+    "@roadiehq/github-auth-utils-react": "^1.2.0",
     "git-url-parse": "^14.0.0",
     "immer": "9.0.7",
     "react-use": "^17.2.4",

@@ -15,12 +15,13 @@
  */
 
 import { PassThrough } from 'stream';
-import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { createMergeAction, createMergeJSONAction } from './merge';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import YAML, { Scalar } from 'yaml';
 import detectIndent from 'detect-indent';
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ describe('roadiehq:utils:json:merge', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -323,7 +324,7 @@ describe('roadiehq:utils:merge', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
