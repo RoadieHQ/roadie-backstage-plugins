@@ -1,5 +1,16 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.8.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.5.0
+
 ## 1.7.1
 
 ### Patch Changes

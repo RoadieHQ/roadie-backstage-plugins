@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.14.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 2.13.1
 
 ### Patch Changes

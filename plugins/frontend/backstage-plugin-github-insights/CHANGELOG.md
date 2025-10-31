@@ -1,5 +1,16 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/github-auth-utils-react@1.2.0
+
 ## 3.2.0
 
 ### Minor Changes
