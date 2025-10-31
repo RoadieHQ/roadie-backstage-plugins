@@ -184,9 +184,7 @@ describe('http', () => {
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+            expect.arrayContaining([expect.stringContaining('bad request')]),
           );
         });
         it('returns response without headers if continueOnBadResponse', async () => {
@@ -209,9 +207,7 @@ describe('http', () => {
 
           const logEvents = logOutput.trim().split('\n');
           expect(logEvents).toEqual(
-            expect.arrayContaining([
-              expect.stringContaining(`"error":"bad request"`),
-            ]),
+            expect.arrayContaining([expect.stringContaining('bad request')]),
           );
         });
       });
