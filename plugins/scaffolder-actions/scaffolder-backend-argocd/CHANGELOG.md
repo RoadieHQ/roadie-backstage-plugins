@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.8.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
 ## 1.8.0
 
 ### Minor Changes
