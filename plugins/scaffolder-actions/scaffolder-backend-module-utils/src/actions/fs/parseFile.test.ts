@@ -16,7 +16,7 @@
 import { PassThrough } from 'stream';
 import { createParseFileAction } from './parseFile';
 import mock from 'mock-fs';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:fs:parse', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('roadiehq:utils:fs:parse', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

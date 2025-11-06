@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 1.1.0
 
 ### Minor Changes

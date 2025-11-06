@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-travis-ci
 
+## 2.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 2.2.0
 
 ### Minor Changes

@@ -1,5 +1,17 @@
 # @roadiehq/rag-ai-backend-embeddings-openai
 
+## 0.7.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.3.0
+  - @roadiehq/rag-ai-node@0.3.0
+
 ## 0.6.0
 
 ### Minor Changes
