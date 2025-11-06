@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.4.0
+
+### Minor Changes
+
+- 071340a: Added support for the new frontend system
+
 ## 3.3.0
 
 ### Minor Changes
