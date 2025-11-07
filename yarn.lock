@@ -7311,7 +7311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder-common@npm:^1.7.2":
+"@backstage/plugin-scaffolder-common@backstage:^::backstage=1.44.2&npm=1.7.2, @backstage/plugin-scaffolder-common@npm:^1.7.2":
   version: 1.7.2
   resolution: "@backstage/plugin-scaffolder-common@npm:1.7.2"
   dependencies:
@@ -16230,9 +16230,9 @@ __metadata:
   resolution: "@roadiehq/roadie-backstage-entity-validator@workspace:plugins/roadie-backstage-entity-validator"
   dependencies:
     "@actions/core": "npm:^1.10.0"
-    "@backstage/catalog-model": "npm:^1.7.5"
-    "@backstage/cli": "npm:^0.34.4"
-    "@backstage/plugin-scaffolder-common": "npm:^1.7.2"
+    "@backstage/catalog-model": "backstage:^"
+    "@backstage/cli": "backstage:^"
+    "@backstage/plugin-scaffolder-common": "backstage:^"
     "@vercel/ncc": "npm:^0.38.0"
     ajv: "npm:^8.4.0"
     ajv-formats: "npm:^2.1.0"
