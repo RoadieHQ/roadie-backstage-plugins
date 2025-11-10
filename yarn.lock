@@ -15952,9 +15952,11 @@ __metadata:
   dependencies:
     "@backstage/catalog-model": "backstage:^"
     "@backstage/cli": "backstage:^"
+    "@backstage/core-compat-api": "backstage:^"
     "@backstage/core-components": "backstage:^"
     "@backstage/core-plugin-api": "backstage:^"
     "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/plugin-catalog-react": "backstage:^"
     "@emotion/react": "npm:^11.11.3"
     "@emotion/styled": "npm:^11.11.0"
