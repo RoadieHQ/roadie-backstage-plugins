@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 2.3.0
+
+### Minor Changes
+
+- 7be4732: Added new frontend system support
+
 ## 2.2.0
 
 ### Minor Changes
