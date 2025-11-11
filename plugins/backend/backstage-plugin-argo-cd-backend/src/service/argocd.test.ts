@@ -976,7 +976,50 @@ describe('ArgoCD service', () => {
         ],
       ]);
     });
-  });
+
+    it('should correctly match instance configs when syncing with selector', async () => {
+    const service = createService({
+      instanceCredentials: { token: 'token' },
+    });
+
+    fetchMock.mockResponseOnce(
+      JSON.stringify({
+        items: [
+          {
+            metadata: {
+              name: 'testAppName',
+              namespace: 'testNamespace',
+            },
+          },
+        ],
+      }),
+    );
+
+    fetchMock.mockResponseOnce('');
+
+    const resp = await service.resyncAppOnAllArgos({
+      appSelector: 'testApp',
+    });
+
+    expect(resp).toStrictEqual([
+      [
+        {
+          message: 'Re-synced testAppName on argoinstance1',
+          status: 'Success',
+        },
+      ],
+    ]);
+    
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v1/applications/testAppName/sync'),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: 'Bearer token',
+        }),
+      }),
+    );
+    
+    });
 
   describe('deleteAppandProject', () => {
     let deleteAppMock: jest.SpyInstance<ReturnType<ArgoService['deleteApp']>>;
