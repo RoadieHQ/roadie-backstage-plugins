@@ -16,6 +16,7 @@
 
 import { ProfileFieldGroupNamingStrategy } from './ProfileFieldGroupNamingStrategy';
 import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroup } from '../types';
 
 describe('ProfileFiledGroupNamingStrategy', () => {
   it('gets the right field from the group profile', async () => {
@@ -25,9 +26,9 @@ describe('ProfileFiledGroupNamingStrategy', () => {
         name: 'group-1',
         description: 'Group 1',
         org_id: '1234',
-      },
+      } as Group['profile'],
     };
-    expect(provider.nameForGroup(testGroup as Group)).toEqual('1234');
+    expect(provider.nameForGroup(testGroup as OktaGroup)).toEqual('1234');
   });
 
   it('fails if the field is not set', async () => {
@@ -38,7 +39,7 @@ describe('ProfileFiledGroupNamingStrategy', () => {
         description: 'Group 1',
       },
     };
-    expect(() => provider.nameForGroup(testGroup as Group)).toThrow(
+    expect(() => provider.nameForGroup(testGroup as OktaGroup)).toThrow(
       'Profile field org_id does not contain a string',
     );
   });
@@ -50,9 +51,9 @@ describe('ProfileFiledGroupNamingStrategy', () => {
         name: 'group-1',
         description: 'Group 1',
         org_id: ['wrong', 'type'],
-      },
+      } as Group['profile'],
     };
-    expect(() => provider.nameForGroup(testGroup as Group)).toThrow(
+    expect(() => provider.nameForGroup(testGroup as OktaGroup)).toThrow(
       'Profile field org_id does not contain a string',
     );
   });
@@ -64,8 +65,8 @@ describe('ProfileFiledGroupNamingStrategy', () => {
         name: 'group-1',
         description: 'Group 1',
         org_id: 1234,
-      },
+      } as Group['profile'],
     };
-    expect(provider.nameForGroup(testGroup as Group)).toEqual('1234');
+    expect(provider.nameForGroup(testGroup as OktaGroup)).toEqual('1234');
   });
 });

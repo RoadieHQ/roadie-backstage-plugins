@@ -19,7 +19,8 @@ import {
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
 import { AccountConfig } from '../types';
-import { Client, User, Group } from '@okta/okta-sdk-nodejs';
+import { Client } from '@okta/okta-sdk-nodejs';
+import { OktaGroup, OktaUser } from './types';
 
 import {
   ANNOTATION_LOCATION,
@@ -84,12 +85,15 @@ export abstract class OktaEntityProvider implements EntityProvider {
     };
   }
 
-  protected getCustomAnnotations(member: User | Group, allowList: string[]) {
+  protected getCustomAnnotations(
+    member: OktaUser | OktaGroup,
+    allowList: string[],
+  ) {
     const profileAnnotations: Record<string, string> = {};
     if (allowList.length) {
-      for (const [key, value] of new Map(Object.entries(member.profile))) {
-        if (allowList.includes(key)) {
-          profileAnnotations[key] = value.toString();
+      for (const [key, value] of Object.entries(member.profile)) {
+        if (allowList.includes(key) && value !== undefined && value !== null) {
+          profileAnnotations[key] = String(value);
         }
       }
     }

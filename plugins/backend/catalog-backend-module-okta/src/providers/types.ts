@@ -16,11 +16,51 @@
 
 import { GroupEntity, UserEntity } from '@backstage/catalog-model';
 import type {
-  Group as OktaGroup,
-  User as OktaUser,
+  Group,
+  GroupProfile,
+  User,
+  UserProfile,
 } from '@okta/okta-sdk-nodejs';
 import { GroupNamingStrategy } from './groupNamingStrategies';
 import { UserNamingStrategy } from './userNamingStrategies';
+
+/**
+ * Stricter wrapper around the SDK `UserProfile`. The Okta API always returns
+ * an `email` for active users, but the generated SDK types mark it optional.
+ */
+export type OktaUserProfile = UserProfile & { email: string };
+
+/**
+ * Stricter wrapper around the SDK `User`. `id` and `profile.email` are always
+ * present at runtime on results returned by `listUsers` / `listGroupUsers`,
+ * even though the generated SDK types mark them optional.
+ */
+export type OktaUser = User & { id: string; profile: OktaUserProfile };
+
+/**
+ * Stricter wrapper around the SDK `GroupProfile`. The Okta API always returns
+ * a `name`, but the generated SDK types mark it optional.
+ */
+export type OktaGroupProfile = GroupProfile & { name: string };
+
+/**
+ * Stricter wrapper around the SDK `Group`. `id` and `profile.name` are always
+ * present at runtime on results returned by `listGroups`, even though the
+ * generated SDK types mark them optional.
+ */
+export type OktaGroup = Group & { id: string; profile: OktaGroupProfile };
+
+/**
+ * Narrow an SDK `User` to `OktaUser` at the SDK boundary. The cast is safe
+ * for results returned by `listUsers` and `listGroupUsers`.
+ */
+export const asOktaUser = (user: User): OktaUser => user as OktaUser;
+
+/**
+ * Narrow an SDK `Group` to `OktaGroup` at the SDK boundary. The cast is safe
+ * for results returned by `listGroups`.
+ */
+export const asOktaGroup = (group: Group): OktaGroup => group as OktaGroup;
 
 export type OktaGroupEntityTransformer = (
   group: OktaGroup,

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group } from '@okta/okta-sdk-nodejs';
 import get from 'lodash/get';
+import { OktaGroup } from './types';
 
 type GetParentGroupsOptions = {
   parentKey?: string;
-  group: Group;
-  oktaGroups: Record<string, Group>;
+  group: OktaGroup;
+  oktaGroups: Record<string, OktaGroup>;
 };
 
 export const getParentGroup = (opts: GetParentGroupsOptions) => {
   const { parentKey, group, oktaGroups } = opts;
-  let parentGroup: Group | undefined = undefined;
+  let parentGroup: OktaGroup | undefined = undefined;
 
   if (parentKey) {
     const parentId = get(group, parentKey);

@@ -26,7 +26,7 @@ import { AccountConfig } from '../types';
 import { userEntityFromOktaUser as defaultUserEntityFromOktaUser } from './userEntityFromOktaUser';
 import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
-import { OktaUserEntityTransformer } from './types';
+import { OktaUserEntityTransformer, asOktaUser } from './types';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 /**
@@ -88,9 +88,12 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    const allUsers = await client.listUsers({ search: this.userFilter });
+    const allUsers = await client.userApi.listUsers({
+      search: this.userFilter,
+    });
 
-    await allUsers.each(user => {
+    await allUsers.each(rawUser => {
+      const user = asOktaUser(rawUser);
       const profileAnnotations = this.getCustomAnnotations(
         user,
         this.customAttributesToAnnotationAllowlist,

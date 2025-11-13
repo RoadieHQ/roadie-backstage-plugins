@@ -34,7 +34,7 @@ import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
-import { OktaGroupEntityTransformer } from './types';
+import { OktaGroupEntityTransformer, asOktaUser } from './types';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 const DEFAULT_CHUNK_SIZE = 250;
@@ -141,7 +141,11 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         entries.map(async ([_, group]) => {
           const members: string[] = [];
           try {
-            await group.listUsers().each(user => {
+            const groupUsers = await client.groupApi.listGroupUsers({
+              groupId: group.id,
+            });
+            await groupUsers.each(rawUser => {
+              const user = asOktaUser(rawUser);
               try {
                 const userName = this.userNamingStrategy(user);
                 members.push(userName);
@@ -169,12 +173,13 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
           });
           const profileAnnotations: Record<string, string> = {};
           if (this.customAttributesToAnnotationAllowlist.length) {
-            for (const [key, value] of new Map(Object.entries(group.profile))) {
-              const stringKey = key.toString();
+            for (const [key, value] of Object.entries(group.profile)) {
               if (
-                this.customAttributesToAnnotationAllowlist.includes(stringKey)
+                this.customAttributesToAnnotationAllowlist.includes(key) &&
+                value !== undefined &&
+                value !== null
               ) {
-                profileAnnotations[stringKey] = value.toString();
+                profileAnnotations[key] = String(value);
               }
             }
           }
