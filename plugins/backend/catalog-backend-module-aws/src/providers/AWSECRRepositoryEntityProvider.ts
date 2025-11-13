@@ -13,73 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readFileSync } from 'fs';
+
 import { Entity } from '@backstage/catalog-model';
 import {
   ECRClient,
   ListTagsForResourceCommand,
   paginateDescribeRepositories,
+  Repository,
 } from '@aws-sdk/client-ecr';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+import { DynamicAccountConfig } from '../types';
 
 const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSECRRepositoryEntityProvider.default.yaml.njk'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS ECR service.
  */
-export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
-  private readonly repoTypeValue: string;
-
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSECRRepositoryEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
-  constructor(
-    account: AccountConfig,
-    options: {
-      logger: LoggerService;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    super(account, options);
-    this.repoTypeValue = 'ecr-repository';
-  }
-
+export class AWSECRRepositoryEntityProvider extends AWSEntityProvider<Repository> {
   getProviderName(): string {
     return `aws-ecr-repo-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(
+    resource: Repository,
+  ): Record<string, string> {
+    const repositoryArn = resource.repositoryArn ?? '';
+
+    return {
+      [ANNOTATION_AWS_ECR_REPO_ARN]: repositoryArn,
+    };
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
   }
 
   private async getECRClient(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -99,23 +72,28 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
     }
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing ECR repository resources from AWS: ${accountId}`,
     );
-    const ecrResources: Entity[] = [];
+    const ecrResources: Array<Promise<Entity>> = [];
 
     const ecr = await this.getECRClient(dynamicAccountConfig);
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginator = paginateDescribeRepositories({ client: ecr }, {});
     for await (const page of paginator) {
       for (const repo of page.repositories ?? []) {
-        const repositoryName = repo.repositoryName ?? 'unknown';
-        const repositoryArn = repo.repositoryArn ?? '';
+        if (!repo.repositoryName) continue;
 
         const tagsResponse = await ecr.send(
           new ListTagsForResourceCommand({
@@ -128,50 +106,20 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider {
           return acc;
         }, {} as Record<string, string>);
 
-        let entity: Entity | undefined = this.renderEntity(
-          {
+        ecrResources.push(
+          template.render({
             data: repo,
             tags,
-          },
-          { defaultAnnotations },
+          }),
         );
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              name: repositoryName
-                .toLowerCase()
-                .replace(/[^a-zA-Z0-9\-]/g, '-'),
-              title: repositoryName,
-              labels: {
-                'aws-ecr-region': this.region,
-                ...tags,
-              },
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_AWS_ECR_REPO_ARN]: repositoryArn,
-              },
-              uri: repo.repositoryUri ?? '',
-              tagImmutability: repo.imageTagMutability,
-              createdAt: repo.createdAt?.toDateString(),
-              encryption: repo.encryptionConfiguration?.encryptionType ?? '',
-            },
-            spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag()),
-              ...relationshipsFromTags(tags),
-              type: this.repoTypeValue,
-            },
-          };
-        }
-
-        ecrResources.push(entity);
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: ecrResources.map(entity => ({
+      entities: (
+        await Promise.all(ecrResources)
+      ).map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

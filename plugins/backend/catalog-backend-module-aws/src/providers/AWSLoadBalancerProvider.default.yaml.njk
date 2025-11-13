@@ -1,0 +1,26 @@
+{% extends 'AwsEntityProvider.base.yaml.njk' %}
+
+{% set entityName = data.LoadBalancerName or data.LoadBalancerArn | split('/') | last or 'unknown' %}
+{% set entityTitle = tags.Name or data.LoadBalancerName %}
+{% set entityType = "load-balancer" %}
+
+{% block additionalMetadata %}
+  {% if data.DNSName %}
+  dnsName: "{{ data.DNSName }}"
+  {% endif %}
+  {% if data.Scheme %}
+  scheme: "{{ data.Scheme }}"
+  {% endif %}
+  {% if data.VpcId %}
+  vpcId: "{{ data.VpcId }}"
+  {% endif %}
+  {% if data.Type %}
+  type: "{{ data.Type }}"
+  {% endif %}
+  {% if data.State and data.State.Code %}
+  state: "{{ data.State.Code }}"
+  {% endif %}
+  {% if data.AvailabilityZones %}
+  availabilityZones: "{% for az in data.AvailabilityZones %}{{ az.ZoneName }}{% if not loop.last %}, {% endif %}{% endfor %}"
+  {% endif %}
+{% endblock %}

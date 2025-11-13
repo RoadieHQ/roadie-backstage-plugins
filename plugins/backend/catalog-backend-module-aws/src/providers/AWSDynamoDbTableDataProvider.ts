@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
-  Entity,
 } from '@backstage/catalog-model';
 import {
   EntityProvider,
@@ -38,9 +39,7 @@ import {
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
 import { ValueMapping } from '../types';
-import { compile, Environment, Template } from 'nunjucks';
-import crypto from 'crypto';
-import yaml from 'js-yaml';
+import { CloudResourceTemplate } from '../utils/templating/CloudResourceTemplate';
 
 type DdbTableDataConfigOptions = {
   entityKind?: string;
@@ -48,6 +47,11 @@ type DdbTableDataConfigOptions = {
   identifierColumn?: string;
   columnValueMapping?: { [key: string]: ValueMapping };
 };
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSDynamoDbTableDataProvider.default.yaml.njk'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -57,7 +61,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   private readonly roleArn: string;
   private readonly tableDataConfig: DdbTableDataConfigOptions;
   private readonly logger: Logger | LoggerService;
-  private template: Template | undefined;
+  private template!: CloudResourceTemplate<Record<string, any>>;
 
   private connection?: EntityProviderConnection;
 
@@ -85,45 +89,32 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
     this.roleArn = roleArn;
     this.tableDataConfig = options;
     this.logger = logger;
-    if (template) {
-      const env = new Environment();
-      env.addFilter('to_entity_name', input => {
-        return crypto
-          .createHash('sha256')
-          .update(input)
-          .digest('hex')
-          .slice(0, 63);
-      });
-      this.template = compile(template, env);
-    }
+
+    this.template = CloudResourceTemplate.fromConfig({
+      templateString: template || defaultTemplate,
+      accountId: this.accountId,
+      region: 'us-east-1', // Will be overridden by child template in run()
+      getResourceAnnotations: this.getResourceAnnotations.bind(this),
+    });
   }
 
   getProviderName(): string {
     return `aws-dynamo-db-table-${this.accountId}-${this.tableDataConfig.tableName}`;
   }
 
-  async connect(connection: EntityProviderConnection): Promise<void> {
-    this.connection = connection;
+  getResourceAnnotations(
+    _resource: Record<string, any>,
+    context: { accountId: string; region: string },
+  ): Record<string, string> {
+    const tableArn = `arn:aws:dynamodb:${context.region}:${context.accountId}:table/${this.tableDataConfig.tableName}`;
+    return {
+      [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn,
+      'amazon.com/dynamodb-table-name': this.tableDataConfig.tableName,
+    };
   }
 
-  protected renderEntity(
-    context: any,
-    options?: { defaultAnnotations: Record<string, string> },
-  ): Entity | undefined {
-    if (this.template) {
-      const entity = yaml.load(
-        this.template.render({
-          ...context,
-          accountId: this.accountId,
-        }),
-      ) as Entity;
-      entity.metadata.annotations = {
-        ...(options?.defaultAnnotations || {}),
-        ...entity.metadata.annotations,
-      };
-      return entity;
-    }
-    return undefined;
+  async connect(connection: EntityProviderConnection): Promise<void> {
+    this.connection = connection;
   }
 
   async run(): Promise<void> {
@@ -171,51 +162,40 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
           'No identifier column defined. Unable to construct entities.',
         );
       }
-      const tableArn = tableDescription?.Table?.TableArn;
 
-      let entities: Entity[] = [];
+      // Get actual accountId and region from STS
+      const actualAccountId = account.Account || this.accountId;
 
-      if (this.template) {
-        for (const row of tableRows.Items || []) {
-          const entity = this.renderEntity(
-            { data: row },
-            { defaultAnnotations },
-          );
-          if (entity) {
-            entities.push(entity);
+      // Create child template with runtime values
+      const childTemplate = this.template.child({
+        accountId: actualAccountId,
+        defaultAnnotations,
+      });
+
+      // Render entities
+      const entities = await Promise.all(
+        tableRows.Items?.map(async row => {
+          // Render base entity from template
+          const entity = await childTemplate.render({
+            data: row,
+            additionalData: {
+              identifierColumn: idColumn,
+              entityKind: this.tableDataConfig.entityKind,
+            },
+          });
+
+          // Apply column value mapping (post-processing)
+          if (this.tableDataConfig.columnValueMapping) {
+            const mappedColumns = mapColumnsToEntityValues(
+              this.tableDataConfig.columnValueMapping,
+              row,
+            );
+            return merge(entity, mappedColumns);
           }
-        }
-      } else {
-        entities =
-          tableRows.Items?.map(row => {
-            const o = {
-              kind: this.tableDataConfig.entityKind ?? 'Component',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations: {
-                  ...defaultAnnotations,
-                  ...(tableArn
-                    ? { [ANNOTATION_AWS_DDB_TABLE_ARN]: tableArn }
-                    : {}),
-                },
-                name: row[idColumn],
-                title: row[idColumn],
-              },
-              spec: {
-                owner: this.accountId,
-                type: 'dynamo-db-table-data',
-                lifecycle: 'production',
-              },
-            };
-            const mappedColumns = this.tableDataConfig.columnValueMapping
-              ? mapColumnsToEntityValues(
-                  this.tableDataConfig.columnValueMapping,
-                  row,
-                )
-              : {};
-            return merge(o, mappedColumns);
-          }) ?? [];
-      }
+
+          return entity;
+        }) ?? [],
+      );
 
       await this.connection.applyMutation({
         type: 'full',

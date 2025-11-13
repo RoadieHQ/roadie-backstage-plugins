@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSOrganizationAccountsProvider where there is an account creates account 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-arn": "arn:aws:organizations::123456789012:account/o-example123456/123456789012",
+                "amazon.com/account-id": "123456789012",
+                "backstage.io/managed-by-location": "aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "joinedMethod": "INVITED",
+              "joinedTimestamp": "2023-01-01T00:00:00.000Z",
+              "labels": {
+                "Environment": "production--staging",
+                "owner": "team-platform",
+              },
+              "name": "72a89a383bdeda977e32df505b006b3ffb692ca31e0ec208620480c92376375",
+              "status": "ACTIVE",
+              "title": "Test Account",
+            },
+            "spec": {
+              "owner": "team-platform",
+              "type": "aws-account",
+            },
+          },
+          "locationKey": "aws-organization-accounts-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSOrganizationAccountsProvider where there is an account creates account with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-arn": "arn:aws:organizations::123456789012:account/o-example123456/123456789012",
+                "amazon.com/account-id": "123456789012",
+                "backstage.io/managed-by-location": "aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "joinedMethod": "INVITED",
+              "name": "72a89a383bdeda977e32df505b006b3ffb692ca31e0ec208620480c92376375",
+              "status": "ACTIVE",
+              "title": "Test Account",
+            },
+            "spec": {
+              "type": "aws-account",
+            },
+          },
+          "locationKey": "aws-organization-accounts-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

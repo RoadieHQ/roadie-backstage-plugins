@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { LoggerService } from '@backstage/backend-plugin-api';
+import type { CatalogApi } from '@backstage/catalog-client';
+import type { Logger } from 'winston';
+import type { LabelValueMapper } from './utils/tags';
 
 export type ValueMapping = {
   entityPath: string;
@@ -77,6 +81,16 @@ export interface AWSAccountProviderConfig {
    * Configuration object for DynamoDB table data provider
    */
   dynamodbTableData?: DynamoDbTableDataConfig;
+}
+
+export interface AWSEntityProviderConfig {
+  logger: Logger | LoggerService;
+  template?: string;
+  catalogApi?: CatalogApi;
+  providerId?: string;
+  ownerTag?: string;
+  useTemporaryCredentials?: boolean;
+  labelValueMapper?: LabelValueMapper;
 }
 
 export type AccountConfig = {

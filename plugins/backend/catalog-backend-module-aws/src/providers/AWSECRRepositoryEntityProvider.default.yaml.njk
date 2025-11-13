@@ -1,0 +1,22 @@
+{% extends 'AwsEntityProvider.base.yaml.njk' %}
+
+{% set entityName = data.repositoryName %}
+{% set entityTitle = data.repositoryName %}
+{% set entityType = 'ecr-repository' %}
+
+{% block additionalMetadata %}
+  {% if data.repositoryUri %}
+  uri: "{{ data.repositoryUri }}"
+  {% endif %}
+  {% if data.imageTagMutability %}
+  tagImmutability: {{ data.imageTagMutability }}
+  {% endif %}
+  {% if data.createdAt %}
+  createdAt: "{{ data.createdAt.toDateString() }}"
+  {% endif %}
+  encryption: {{ data.encryptionConfiguration.encryptionType or "" }}
+{% endblock %}
+
+{% block additionalLabels %}
+    aws-ecr-region: {{ region }}
+{% endblock %}

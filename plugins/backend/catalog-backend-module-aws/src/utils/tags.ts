@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
+import { type Entity, stringifyEntityRef } from '@backstage/catalog-model';
 
 export type Tag = {
   Key?: string;
@@ -32,18 +32,25 @@ const TAG_DOMAIN = 'domain';
 const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
 const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
 
-function stripTrailingChar(str: string, chr: string) {
-  return str.endsWith(chr) ? str.slice(0, -1) : str;
+function stripBoundingSpecials(str: string): string {
+  return str.replaceAll(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
 }
 
-const defaultValueCleaner: LabelValueMapper = value => {
-  const val = value.replaceAll('/', '-').replaceAll(':', '-').substring(0, 63);
-  return stripTrailingChar(val, '-');
+/**
+ * From the Backstage Documentation:
+ *
+ * The name part must be sequences of [a-zA-Z0-9] separated by any of [-_.], at most 63 characters in total.
+ * ...
+ * Values are strings that follow the same restrictions as name above.
+ */
+const defaultNameCleaner: LabelValueMapper = value => {
+  const val = value.replaceAll(/[^a-zA-Z0-9-_.]/g, '-');
+  return stripBoundingSpecials(val).substring(0, 63);
 };
 
 export const labelsFromTags = (
   tags?: Tag[] | Record<string, string>,
-  valueMapper: LabelValueMapper = defaultValueCleaner,
+  valueMapper: LabelValueMapper = defaultNameCleaner,
 ) => {
   if (!tags) {
     return {};
@@ -59,10 +66,10 @@ export const labelsFromTags = (
       )
       .reduce((acc: Record<string, string>, tag) => {
         if (tag.Key && tag.Value) {
-          let key = tag.Key.replaceAll(':', '_')
-            .replaceAll('/', '-')
+          let key = tag.Key.replaceAll('/', '-')
+            .replaceAll(/[^a-zA-Z0-9-_.]/g, '_')
             .substring(0, 63);
-          key = stripTrailingChar(stripTrailingChar(key, '-'), '_');
+          key = stripBoundingSpecials(key);
           acc[key] = valueMapper(tag.Value);
         }
         return acc;
@@ -78,7 +85,7 @@ export const labelsFromTags = (
     .reduce((acc: Record<string, string>, [key, value]) => {
       if (key && value) {
         let k = key.replaceAll(':', '_').replaceAll('/', '-');
-        k = stripTrailingChar(stripTrailingChar(k, '-'), '_');
+        k = stripBoundingSpecials(k);
         acc[k] = valueMapper(value);
       }
       return acc;
@@ -128,26 +135,36 @@ export const relationshipsFromTags = (
     return {};
   }
 
-  const specPartial: Record<string, string | string[]> = {};
+  let tagMap: Record<string, string | string[]> = {};
   if (Array.isArray(tags)) {
-    dependencyTags.forEach(tagKey => {
-      const tagValue = tags?.find(
-        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
-      );
-      if (tagValue && tagValue.Value) {
-        specPartial[tagKey] = [tagValue.Value.split(',')].flat();
+    tags.forEach(tag => {
+      if (tag.Key && tag.Value) {
+        tagMap[tag.Key] = tag.Value;
       }
     });
-
-    relationshipTags.forEach(tagKey => {
-      const tagValue = tags?.find(
-        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
-      );
-      if (tagValue && tagValue.Value) {
-        specPartial[tagKey] = tagValue.Value;
-      }
-    });
+  } else {
+    tagMap = tags;
   }
+
+  const tagNames = Object.keys(tagMap);
+
+  const specPartial: Record<string, string[]> = {};
+  dependencyTags.forEach(tagKey => {
+    const tagName = tagNames.find(
+      tn => tn.toLowerCase() === tagKey.toLowerCase(),
+    );
+    const tagValue = tagMap[tagName!];
+    if (typeof tagValue === 'string') {
+      specPartial[tagKey] = [tagValue.split(',')].flat();
+    }
+  });
+
+  relationshipTags.forEach(tagKey => {
+    const tagValue = tagMap[tagKey];
+    if (typeof tagValue === 'string') {
+      specPartial[tagKey] = [tagValue];
+    }
+  });
 
   return specPartial;
 };

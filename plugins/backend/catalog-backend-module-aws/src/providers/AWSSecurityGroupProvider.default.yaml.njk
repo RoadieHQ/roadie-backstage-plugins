@@ -1,0 +1,23 @@
+{% extends 'AwsEntityProvider.base.yaml.njk' %}
+
+{% set entityName = data.GroupId %}
+{% set entityTitle = tags.Name or data.GroupName or data.GroupId %}
+{% set entityType = "security-group" %}
+
+{% block additionalMetadata %}
+  {% if data.Description %}
+  description: "{{ data.Description }}"
+  {% endif %}
+  {% if data.VpcId %}
+  vpcId: "{{ data.VpcId }}"
+  {% endif %}
+  {% if data.GroupName %}
+  groupName: "{{ data.GroupName }}"
+  {% endif %}
+  {% if data.IpPermissions %}
+  ingressRules: "{{ data.IpPermissions | format_ingress_rules }}"
+  {% endif %}
+  {% if data.IpPermissionsEgress %}
+  egressRules: "{{ data.IpPermissionsEgress | format_egress_rules }}"
+  {% endif %}
+{% endblock %}

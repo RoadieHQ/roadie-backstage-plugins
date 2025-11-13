@@ -14,69 +14,52 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { Entity } from '@backstage/catalog-model';
-import { OpenSearch } from '@aws-sdk/client-opensearch';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
 import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+  DomainStatus,
+  ListTagsCommandOutput,
+  OpenSearch,
+} from '@aws-sdk/client-opensearch';
+import { AWSEntityProvider } from './AWSEntityProvider';
+import { Tag } from '../utils/tags';
+import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+import { Environment } from 'nunjucks';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSOpenSearchEntityProvider.default.yaml.njk'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS OpenSearch service.
  */
-export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
-  private readonly opensearchTypeValue: string;
-
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSOpenSearchEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+export class AWSOpenSearchEntityProvider extends AWSEntityProvider<DomainStatus> {
+  protected addCustomFilters(env: Environment): void {
+    env.addFilter('get_storage_type', (data: DomainStatus) => {
+      if (data.EBSOptions && data.EBSOptions.EBSEnabled) {
+        return `EBS-${data.EBSOptions.VolumeType}`;
+      }
+      return 'Instance Storage';
+    });
   }
-
-  constructor(
-    account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-    },
-  ) {
-    super(account, options);
-    this.opensearchTypeValue = 'opensearch-domain';
-  }
-
   getProviderName(): string {
     return `aws-opensearch-domain-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: DomainStatus,
+  ): Record<string, string> {
+    return {
+      [ANNOTATION_AWS_OPEN_SEARCH_ARN]: resource.ARN ?? '',
+    };
   }
 
   private async getOpenSearchClient(
@@ -97,22 +80,26 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
     }
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing OpenSearch domain resources from AWS: ${accountId}`,
     );
-    const opensearchEntities: Entity[] = [];
+    const opensearchResources: Array<Promise<Entity>> = [];
 
     const openSearchClient = await this.getOpenSearchClient(
       dynamicAccountConfig,
     );
 
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
-    // Fetch all OpenSearch domains
     const domainList = await openSearchClient.listDomainNames();
 
     if (domainList.DomainNames) {
@@ -124,60 +111,32 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider {
         });
         const domainStatus = domain.DomainStatus;
         const domainArn = domainStatus?.ARN;
-        const tags = domainArn
+        const tagsResponse = domainArn
           ? await openSearchClient.listTags({ ARN: domainArn })
-          : undefined;
+          : ({ TagList: [] as Tag[] } as ListTagsCommandOutput);
+        const tags = tagsResponse.TagList ?? [];
 
-        const endpoint = domainStatus?.Endpoint || '';
-        const engineVersion = domainStatus?.EngineVersion || '';
-        const storageType = domainStatus?.EBSOptions?.EBSEnabled
-          ? `EBS-${domainStatus.EBSOptions.VolumeType}`
-          : 'Instance Storage';
-
-        let entity = this.renderEntity(
-          { data: domainStatus },
-          { defaultAnnotations },
+        opensearchResources.push(
+          template.render({
+            data: domainStatus,
+            tags,
+          }),
         );
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              name: domainName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-              title: domainName,
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_AWS_OPEN_SEARCH_ARN]: domainArn ?? '',
-              },
-              labels: {
-                'aws-opensearch-region': this.region,
-              },
-              endpoint,
-              engineVersion,
-              storageType,
-            },
-            spec: {
-              owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
-              ...relationshipsFromTags(tags?.TagList || []),
-              type: this.opensearchTypeValue,
-            },
-          };
-        }
-
-        opensearchEntities.push(entity);
       }
     }
 
+    const entities = await Promise.all(opensearchResources);
+
     await this.connection.applyMutation({
       type: 'full',
-      entities: opensearchEntities.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${opensearchEntities.length} OpenSearch domain resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} OpenSearch domain resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

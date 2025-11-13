@@ -84,7 +84,7 @@ describe('AWSIAMUserProvider', () => {
         refresh: jest.fn(),
       };
       const template = readFileSync(
-        join(dirname(__filename), './AWSIAMUserProvider.example.yaml.njs'),
+        join(dirname(__filename), './AWSIAMUserProvider.example.yaml.njk'),
       ).toString();
       const provider = AWSIAMUserProvider.fromConfig(config, {
         logger,
@@ -92,19 +92,9 @@ describe('AWSIAMUserProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws users', async () => {
@@ -116,19 +106,9 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 });

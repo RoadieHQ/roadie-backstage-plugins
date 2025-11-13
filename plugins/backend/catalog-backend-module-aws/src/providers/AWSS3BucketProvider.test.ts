@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { S3, ListBucketsCommand } from '@aws-sdk/client-s3';
+import {
+  S3,
+  ListBucketsCommand,
+  GetBucketTaggingCommand,
+} from '@aws-sdk/client-s3';
 import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 
 import { mockClient } from 'aws-sdk-client-mock';
@@ -75,6 +79,14 @@ describe('AWSS3BucketProvider', () => {
           },
         ],
       });
+      s3.on(GetBucketTaggingCommand).resolves({
+        TagSet: [
+          {
+            Key: 'owner',
+            Value: 'team-storage',
+          },
+        ],
+      });
       sts.on(GetCallerIdentityCommand).resolves({
         Account: '123456789012',
       });
@@ -86,7 +98,7 @@ describe('AWSS3BucketProvider', () => {
         refresh: jest.fn(),
       };
       const template = readFileSync(
-        join(dirname(__filename), './AWSS3BucketProvider.example.yaml.njs'),
+        join(dirname(__filename), './AWSS3BucketProvider.example.yaml.njk'),
       ).toString();
       const provider = AWSS3BucketProvider.fromConfig(config, {
         logger,
@@ -94,31 +106,9 @@ describe('AWSS3BucketProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              spec: {
-                type: 's3-bucket',
-                owner: 'unknown',
-              },
-              metadata: expect.objectContaining({
-                title: 'my-bucket',
-                annotations: expect.objectContaining({
-                  'amazon.com/account-id': '123456789012',
-                  'amazonaws.com/s3-bucket-arn': 'arn:aws:s3:::my-bucket',
-                  'backstage.io/managed-by-location':
-                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws buckets', async () => {
@@ -129,27 +119,9 @@ describe('AWSS3BucketProvider', () => {
       const provider = AWSS3BucketProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                title: 'my-bucket',
-                annotations: expect.objectContaining({
-                  'amazon.com/account-id': '123456789012',
-                  'amazon.com/s3-bucket-arn': 'arn:aws:s3:::my-bucket',
-                  'backstage.io/managed-by-location':
-                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 });
