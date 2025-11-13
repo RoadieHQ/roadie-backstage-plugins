@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import crypto from 'crypto';
-
 import { STS } from '@aws-sdk/client-sts';
 import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import type { AwsCredentialIdentityProvider } from '@aws-sdk/types';
+import type {
+  AwsCredentialIdentityProvider,
+  RuntimeConfigAwsCredentialIdentityProvider,
+} from '@aws-sdk/types';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import {
   LoggerService,
@@ -28,7 +28,6 @@ import { CatalogApi } from '@backstage/catalog-client';
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
-  Entity,
 } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { ConfigReader } from '@backstage/config';
@@ -37,8 +36,7 @@ import {
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
-import yaml from 'js-yaml';
-import { compile, Environment, Template } from 'nunjucks';
+import { Environment } from 'nunjucks';
 import type { Logger } from 'winston';
 
 import { ANNOTATION_ACCOUNT_ID } from '../annotations';
@@ -48,8 +46,11 @@ import {
   DynamicAccountConfig,
 } from '../types';
 import { labelsFromTags, LabelValueMapper, Tag } from '../utils/tags';
+import { CloudResourceTemplate } from '../utils/templating/CloudResourceTemplate';
 
-export abstract class AWSEntityProvider implements EntityProvider {
+export abstract class AWSEntityProvider<CloudResource>
+  implements EntityProvider
+{
   protected readonly useTemporaryCredentials: boolean;
   protected readonly providerId?: string;
   protected readonly logger: Logger | LoggerService;
@@ -60,12 +61,18 @@ export abstract class AWSEntityProvider implements EntityProvider {
   private account: AccountConfig;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
   protected readonly taskRunner?: SchedulerServiceTaskRunner;
-  private template: Template | undefined;
+  protected template: CloudResourceTemplate;
 
   public abstract getProviderName(): string;
   public abstract run(
     dynamicAccountConfig?: DynamicAccountConfig,
   ): Promise<void>;
+  protected abstract getDefaultTemplate(): string;
+  protected abstract getResourceAnnotations(
+    resource: CloudResource,
+    context: { accountId: string; region: string },
+  ): Record<string, string>;
+  protected addCustomFilters?(env: Environment): void;
 
   protected constructor(
     account: AccountConfig,
@@ -82,20 +89,16 @@ export abstract class AWSEntityProvider implements EntityProvider {
       new ConfigReader({ aws: { accounts: [account] } }),
     );
     this.labelValueMapper = options.labelValueMapper;
-    if (options.template) {
-      const env = new Environment();
-      env.addFilter('to_entity_name', input => {
-        return crypto
-          .createHash('sha256')
-          .update(input)
-          .digest('hex')
-          .slice(0, 63);
-      });
-      env.addFilter('split', function splitFilter(str, delimiter) {
-        return str.split(delimiter);
-      });
-      this.template = compile(options.template, env);
-    }
+
+    this.template = CloudResourceTemplate.fromConfig({
+      templateString: options.template ?? this.getDefaultTemplate(),
+      accountId: this.account.accountId,
+      region: this.account.region,
+      ownerTagKey: this.ownerTag,
+      labelValueMapper: this.labelValueMapper,
+      getResourceAnnotations: this.getResourceAnnotations.bind(this),
+      addCustomFilters: this.addCustomFilters?.bind(this),
+    });
   }
 
   static fromConfig(config: Config, options: AWSEntityProviderConfig) {
@@ -115,30 +118,6 @@ export abstract class AWSEntityProvider implements EntityProvider {
       { accountId, roleName, roleArn, externalId, region },
       options,
     );
-  }
-
-  protected renderEntity(
-    context: {
-      data: any;
-      tags?: Record<string, string>;
-    },
-    options?: { defaultAnnotations: Record<string, string> },
-  ): Entity | undefined {
-    if (this.template) {
-      const entity = yaml.load(
-        this.template.render({
-          ...context,
-          accountId: this.accountId,
-          region: this.region,
-        }),
-      ) as Entity;
-      entity.metadata.annotations = {
-        ...(options?.defaultAnnotations || {}),
-        ...entity.metadata.annotations,
-      };
-      return entity;
-    }
-    return undefined;
   }
 
   get accountId() {

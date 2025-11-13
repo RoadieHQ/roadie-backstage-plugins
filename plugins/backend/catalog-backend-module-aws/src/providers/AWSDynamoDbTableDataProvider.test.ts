@@ -15,15 +15,21 @@
  */
 
 import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
+
+import { DescribeTableCommand, DynamoDB } from '@aws-sdk/client-dynamodb';
 import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { ConfigReader } from '@backstage/config';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+
 import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 
+const dynamodb = mockClient(DynamoDB);
+const dynamodbDoc = mockClient(DynamoDBDocumentClient);
 const sts = mockClient(STS);
 
 const logger = createLogger({
@@ -52,7 +58,12 @@ const invalidConfig = {
 
 describe('AWSDynamoDbTableDataProvider', () => {
   beforeEach(() => {
-    sts.on(GetCallerIdentityCommand).resolves({});
+    dynamodb.reset();
+    dynamodbDoc.reset();
+    sts.reset();
+    sts.on(GetCallerIdentityCommand).resolves({
+      Account: '123456789012',
+    });
   });
 
   it('should support the new backend system', async () => {
@@ -140,5 +151,122 @@ describe('AWSDynamoDbTableDataProvider', () => {
       });
     };
     expect(testWrapper).not.toThrow();
+  });
+
+  describe('where there are table rows with template', () => {
+    beforeEach(() => {
+      dynamodb.on(DescribeTableCommand).resolves({
+        Table: {
+          TableName: 'CustomTableName',
+          TableArn:
+            'arn:aws:dynamodb:us-west-2:999888777666:table/CustomTableName',
+          KeySchema: [
+            {
+              AttributeName: 'id',
+              KeyType: 'HASH',
+            },
+          ],
+        },
+      });
+      dynamodbDoc.on(ScanCommand).resolves({
+        Items: [
+          {
+            id: 'custom-id-1',
+            TableName: 'CustomTableName',
+            TableArn:
+              'arn:aws:dynamodb:us-west-2:999888777666:table/CustomTableName',
+          },
+        ],
+      });
+    });
+
+    it('creates entities from table rows using custom template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const config = ConfigReader.fromConfigs([
+        {
+          context: 'unit-test',
+          data: {
+            accountId: '999888777666',
+            roleName: 'arn:aws:sts::999888777666:role/custom-role',
+            region: 'us-west-2',
+            dynamodbTableData: {
+              tableName: 'CustomTableName',
+            },
+          },
+        },
+      ]);
+      const template = readFileSync(
+        join(
+          dirname(__filename),
+          './AWSDynamoDbTableDataProvider.example.yaml.njs',
+        ),
+      ).toString();
+      const provider = AWSDynamoDbTableDataProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+  });
+
+  describe('where there are table rows', () => {
+    beforeEach(() => {
+      dynamodb.on(DescribeTableCommand).resolves({
+        Table: {
+          TableName: 'TenantManagerState',
+          TableArn:
+            'arn:aws:dynamodb:eu-west-1:123456789012:table/TenantManagerState',
+          KeySchema: [
+            {
+              AttributeName: 'tenantId',
+              KeyType: 'HASH',
+            },
+          ],
+        },
+      });
+      dynamodbDoc.on(ScanCommand).resolves({
+        Items: [
+          {
+            tenantId: 'tenant-123',
+            url: 'https://example.com',
+            status: 'active',
+          },
+          {
+            tenantId: 'tenant-456',
+            url: 'https://example2.com',
+            status: 'inactive',
+          },
+        ],
+      });
+    });
+
+    it('creates entities from table rows', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const config = ConfigReader.fromConfigs([
+        {
+          context: 'unit-test',
+          data: validConfig,
+        },
+      ]);
+      const provider = AWSDynamoDbTableDataProvider.fromConfig(config, {
+        logger,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run();
+
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
   });
 });

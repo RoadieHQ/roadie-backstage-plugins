@@ -14,21 +14,42 @@
  * limitations under the License.
  */
 
-import { DynamoDB, paginateListTables } from '@aws-sdk/client-dynamodb';
+import { readFileSync } from 'fs';
+
+import {
+  DynamoDB,
+  paginateListTables,
+  TableDescription,
+} from '@aws-sdk/client-dynamodb';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { Entity } from '@backstage/catalog-model';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSDynamoDbTableProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS DynamoDB service.
  */
-export class AWSDynamoDbTableProvider extends AWSEntityProvider {
+export class AWSDynamoDbTableProvider extends AWSEntityProvider<TableDescription> {
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
   getProviderName(): string {
     return `aws-dynamo-db-table-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(
+    resource: TableDescription,
+  ): Record<string, string> {
+    return {
+      [ANNOTATION_AWS_DDB_TABLE_ARN]: resource.TableArn!,
+    };
   }
 
   private async getDdb(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -46,14 +67,20 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
-    const ddb = await this.getDdb(dynamicAccountConfig);
     this.logger.info(`Retrieving all DynamoDB tables for account ${accountId}`);
+
+    const ddb = await this.getDdb(dynamicAccountConfig);
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: ddb,
@@ -79,49 +106,19 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider {
             });
             const tags = tagsResponse.Tags ?? [];
             const table = tableDescriptionResult.Table;
-            const tagMap = tags.reduce((acc, tag) => {
-              if (tag.Key && tag.Value) {
-                acc[tag.Key] = tag.Value;
-              }
-              return acc;
-            }, {} as Record<string, string>);
 
             if (table && table.TableName && table.TableArn) {
-              let entity: Entity | undefined = this.renderEntity(
-                {
-                  tags: tagMap,
-                  data: table,
-                },
-                { defaultAnnotations },
-              );
-
-              if (!entity) {
-                entity = {
-                  kind: 'Resource',
-                  apiVersion: 'backstage.io/v1beta1',
-                  metadata: {
-                    annotations: {
-                      ...defaultAnnotations,
-                      [ANNOTATION_AWS_DDB_TABLE_ARN]: table.TableArn,
-                    },
-                    name: arnToName(table.TableArn),
-                    title: table.TableName,
-                    labels: this.labelsFromTags(tags),
-                  },
-                  spec: {
-                    owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-                    ...relationshipsFromTags(tags),
-                    type: 'dynamo-db-table',
-                  },
-                };
-              }
+              const entity: Entity = await template.render({
+                data: table,
+                tags,
+              });
               return entity;
             }
             return null;
           }),
         )
       )
-        .filter(it => it)
+        .filter(Boolean)
         .map(it => it!);
       ddbComponents = ddbComponents.concat(...newComponents);
     }

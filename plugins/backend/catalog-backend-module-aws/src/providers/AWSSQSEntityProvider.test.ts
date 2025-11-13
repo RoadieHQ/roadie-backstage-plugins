@@ -100,6 +100,7 @@ describe('AWSSQSEntityProvider', () => {
         Tags: {
           Environment: 'production//staging',
           Team: 'backend-team',
+          owner: 'team-queue',
         },
       } as ListQueueTagsCommandOutput);
     });
@@ -118,38 +119,9 @@ describe('AWSSQSEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-sqs-queue-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'sqs-queue',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-standard-queue',
-                title: 'my-standard-queue',
-                labels: {
-                  'aws-sqs-region': 'eu-west-1',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_SQS_QUEUE_ARN]:
-                    'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                  'backstage.io/managed-by-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                queueArn:
-                  'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates queue', async () => {
@@ -160,44 +132,9 @@ describe('AWSSQSEntityProvider', () => {
       const provider = AWSSQSEntityProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-sqs-queue-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'sqs-queue',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-standard-queue',
-                title: 'my-standard-queue',
-                labels: {
-                  'aws-sqs-region': 'eu-west-1',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_SQS_QUEUE_ARN]:
-                    'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                  'backstage.io/managed-by-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                queueArn:
-                  'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                visibilityTimeout: '30',
-                delaySeconds: '0',
-                maximumMessageSize: '262144',
-                retentionPeriod: '1209600',
-                approximateNumberOfMessages: '5',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {

@@ -14,23 +14,96 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { EC2 } from '@aws-sdk/client-ec2';
+import { EC2, IpPermission, SecurityGroup } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { ARN } from 'link2aws';
 import { duration } from '../utils/timer';
 import { DescribeSecurityGroupsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSecurityGroupsCommand';
+import { Environment } from 'nunjucks';
 
 const ANNOTATION_SECURITY_GROUP_ID = 'amazonaws.com/security-group-id';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSSecurityGroupProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS Security Groups.
  */
-export class AWSSecurityGroupProvider extends AWSEntityProvider {
+export class AWSSecurityGroupProvider extends AWSEntityProvider<SecurityGroup> {
+  protected addCustomFilters(env: Environment): void {
+    env.addFilter('format_ingress_rules', (permissions: IpPermission[]) => {
+      if (!permissions || permissions.length === 0) {
+        return 'None';
+      }
+
+      return permissions
+        .map(perm => {
+          const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
+          const portRange =
+            perm.FromPort === perm.ToPort
+              ? perm.FromPort?.toString() || 'All'
+              : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
+
+          const sources = [
+            ...(perm.IpRanges?.map(r => r.CidrIp) || []),
+            ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
+          ].join(', ');
+
+          return `${protocol}:${portRange} from ${sources || 'None'}`;
+        })
+        .join('; ');
+    });
+
+    env.addFilter('format_egress_rules', (permissions: IpPermission[]) => {
+      if (!permissions || permissions.length === 0) {
+        return 'None';
+      }
+
+      return permissions
+        .map(perm => {
+          const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
+          const portRange =
+            perm.FromPort === perm.ToPort
+              ? perm.FromPort?.toString() || 'All'
+              : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
+
+          const destinations = [
+            ...(perm.IpRanges?.map(r => r.CidrIp) || []),
+            ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
+          ].join(', ');
+
+          return `${protocol}:${portRange} to ${destinations || 'None'}`;
+        })
+        .join('; ');
+    });
+  }
+
   getProviderName(): string {
     return `aws-security-group-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: SecurityGroup,
+    context: { region: string; accountId: string },
+  ): Record<string, string> {
+    const { region, accountId } = context;
+    const securityGroupId = resource.GroupId;
+    const arn = `arn:aws:ec2:${region}:${accountId}:security-group/${securityGroupId}`;
+    const consoleLink = new ARN(arn).consoleLink;
+    return {
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+      [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId!,
+    };
   }
 
   private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -49,18 +122,23 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing security group resources from aws: ${accountId}`,
     );
-    const entities: Entity[] = [];
+    const sgResources: Array<Promise<Entity>> = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     let nextToken: string | undefined = undefined;
     let pageCount = 0;
@@ -81,78 +159,20 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider {
         const securityGroupId = sg.GroupId;
         if (!securityGroupId) continue;
 
-        const arn = `arn:aws:ec2:${region}:${accountId}:security-group/${securityGroupId}`;
-        const consoleLink = new ARN(arn).consoleLink;
+        const tags = sg.Tags ?? [];
 
-        // Format the rules for better readability
-        const ingressRules =
-          sg.IpPermissions?.map(perm => {
-            const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
-            const portRange =
-              perm.FromPort === perm.ToPort
-                ? perm.FromPort?.toString() || 'All'
-                : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
-
-            const sources = [
-              ...(perm.IpRanges?.map(r => r.CidrIp) || []),
-              ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
-            ].join(', ');
-
-            return `${protocol}:${portRange} from ${sources || 'None'}`;
-          }).join('; ') || 'None';
-
-        const egressRules =
-          sg.IpPermissionsEgress?.map(perm => {
-            const protocol = perm.IpProtocol === '-1' ? 'All' : perm.IpProtocol;
-            const portRange =
-              perm.FromPort === perm.ToPort
-                ? perm.FromPort?.toString() || 'All'
-                : `${perm.FromPort || 'All'}-${perm.ToPort || 'All'}`;
-
-            const destinations = [
-              ...(perm.IpRanges?.map(r => r.CidrIp) || []),
-              ...(perm.UserIdGroupPairs?.map(g => g.GroupId) || []),
-            ].join(', ');
-
-            return `${protocol}:${portRange} to ${destinations || 'None'}`;
-          }).join('; ') || 'None';
-
-        let entity = this.renderEntity({ data: sg }, { defaultAnnotations });
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_SECURITY_GROUP_ID]: securityGroupId,
-              },
-              labels: this.labelsFromTags(sg.Tags),
-              name: securityGroupId,
-              title:
-                sg.Tags?.find(tag => tag.Key === 'Name')?.Value ||
-                sg.GroupName ||
-                securityGroupId,
-              description: sg.Description,
-              vpcId: sg.VpcId,
-              groupName: sg.GroupName,
-              ingressRules: ingressRules,
-              egressRules: egressRules,
-            },
-            spec: {
-              owner: ownerFromTags(sg.Tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(sg.Tags),
-              type: 'security-group',
-            },
-          };
-        }
-
-        entities.push(entity);
+        sgResources.push(
+          template.render({
+            data: sg,
+            tags,
+          }),
+        );
       }
 
       nextToken = securityGroups.NextToken;
     } while (nextToken);
+
+    const entities = await Promise.all(sgResources);
 
     await this.connection.applyMutation({
       type: 'full',

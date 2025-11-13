@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSIAMRoleProvider where there are is a user creates aws users 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1alpha1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/iam-role-arn": "arn:aws:iam::123456789012:role/asdf",
+                "backstage.io/managed-by-location": "aws-iam-role-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-iam-role-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/iam/home?#/roles/asdf",
+              },
+              "labels": {
+                "owner": "team-a",
+              },
+              "name": "6b523abeffcaf2ecaddbe09615342ef3cba9cb6f4f62456e93549628d5dd2c5",
+              "title": "adsf",
+            },
+            "spec": {
+              "owner": "team-a",
+              "type": "aws-role",
+            },
+          },
+          "locationKey": "aws-iam-role-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSIAMRoleProvider where there are is a user creates aws users with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/iam-role-arn": "arn:aws:iam::123456789012:role/asdf",
+                "backstage.io/managed-by-location": "aws-iam-role-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-iam-role-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/iam/home?#/roles/asdf",
+              },
+              "labels": {
+                "owner": "team-a",
+              },
+              "name": "91c9c3ff310a53f8d179461d9af55371c78b67c38ab030bf9c026693ca49539",
+              "title": "adsf",
+            },
+            "spec": {
+              "owner": "123456789012",
+              "type": "aws-role",
+            },
+          },
+          "locationKey": "aws-iam-role-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

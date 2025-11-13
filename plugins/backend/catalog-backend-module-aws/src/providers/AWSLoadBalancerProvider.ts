@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import {
   ElasticLoadBalancingV2Client,
   DescribeLoadBalancersCommand,
   DescribeTagsCommand,
+  LoadBalancer,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
 import { DynamicAccountConfig } from '../types';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSLoadBalancerProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 const ANNOTATION_LOAD_BALANCER_ARN = 'amazonaws.com/load-balancer-arn';
 const ANNOTATION_LOAD_BALANCER_DNS_NAME =
@@ -35,9 +42,30 @@ const createElbLink = (region: string, loadBalancerId: string) =>
 /**
  * Provides entities from AWS Elastic Load Balancing.
  */
-export class AWSLoadBalancerProvider extends AWSEntityProvider {
+export class AWSLoadBalancerProvider extends AWSEntityProvider<LoadBalancer> {
   getProviderName(): string {
     return `aws-load-balancer-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: LoadBalancer,
+  ): Record<string, string> {
+    const loadBalancerArn = resource.LoadBalancerArn!;
+    const arnParts = loadBalancerArn.split(':');
+    const region = arnParts[3];
+    const resourceParts = arnParts[5].split('/');
+    const loadBalancerId = resourceParts[3];
+
+    const consoleLink = createElbLink(region, loadBalancerId);
+    return {
+      [ANNOTATION_VIEW_URL]: consoleLink,
+      [ANNOTATION_LOAD_BALANCER_ARN]: loadBalancerArn,
+      [ANNOTATION_LOAD_BALANCER_DNS_NAME]: resource.DNSName || 'unknown',
+    };
   }
 
   private async getElbv2Client(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -56,18 +84,22 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
-
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
     this.logger.info(
       `Providing load balancer resources from aws: ${accountId}`,
     );
-    const lbResources: Entity[] = [];
+    const lbResources: Array<Promise<Entity>> = [];
 
     const elbv2 = await this.getElbv2Client(dynamicAccountConfig);
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     // Get all load balancers (both ALB and NLB)
     const loadBalancers = await elbv2.send(
@@ -86,71 +118,30 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider {
       );
 
       const tags = tagResponse.TagDescriptions?.[0]?.Tags || [];
-      const tagMap = tags.reduce((acc, tag) => {
-        if (tag.Key && tag.Value) {
-          acc[tag.Key] = tag.Value;
-        }
-        return acc;
-      }, {} as Record<string, string>);
 
-      const arnParts = loadBalancerArn.split(':');
-      const region = arnParts[3];
-      const resourceParts = arnParts[5].split('/');
-      const loadBalancerId = resourceParts[3];
-
-      const consoleLink = createElbLink(region, loadBalancerId);
-      let entity: Entity | undefined = this.renderEntity(
-        { data: lb, tags: tagMap },
-        { defaultAnnotations },
+      lbResources.push(
+        template.render({
+          data: lb,
+          tags,
+        }),
       );
-      if (!entity) {
-        entity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_VIEW_URL]: consoleLink,
-              [ANNOTATION_LOAD_BALANCER_ARN]: loadBalancerArn,
-              [ANNOTATION_LOAD_BALANCER_DNS_NAME]: lb.DNSName || 'unknown',
-            },
-            labels: this.labelsFromTags(tags),
-            name:
-              lb.LoadBalancerName ||
-              loadBalancerArn.split('/').pop() ||
-              'unknown',
-            title: tagMap.Name || lb.LoadBalancerName,
-            dnsName: lb.DNSName,
-            scheme: lb.Scheme,
-            vpcId: lb.VpcId,
-            type: lb.Type,
-            state: lb.State?.Code,
-            availabilityZones: lb.AvailabilityZones?.map(
-              az => az.ZoneName,
-            ).join(', '),
-          },
-          spec: {
-            owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-            ...relationshipsFromTags(tags),
-            type: 'load-balancer',
-          },
-        };
-      }
-
-      lbResources.push(entity);
     }
+
+    const entities = await Promise.all(lbResources);
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: lbResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${lbResources.length} Load Balancer resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      `Finished providing ${entities.length} Load Balancer resources from AWS: ${accountId}`,
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

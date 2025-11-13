@@ -135,26 +135,36 @@ export const relationshipsFromTags = (
     return {};
   }
 
-  const specPartial: Record<string, string | string[]> = {};
+  let tagMap: Record<string, string | string[]> = {};
   if (Array.isArray(tags)) {
-    dependencyTags.forEach(tagKey => {
-      const tagValue = tags?.find(
-        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
-      );
-      if (tagValue && tagValue.Value) {
-        specPartial[tagKey] = [tagValue.Value.split(',')].flat();
+    tags.forEach(tag => {
+      if (tag.Key && tag.Value) {
+        tagMap[tag.Key] = tag.Value;
       }
     });
-
-    relationshipTags.forEach(tagKey => {
-      const tagValue = tags?.find(
-        tag => tag.Key?.toLowerCase() === tagKey?.toLowerCase(),
-      );
-      if (tagValue && tagValue.Value) {
-        specPartial[tagKey] = tagValue.Value;
-      }
-    });
+  } else {
+    tagMap = tags;
   }
+
+  const tagNames = Object.keys(tagMap);
+
+  const specPartial: Record<string, string[]> = {};
+  dependencyTags.forEach(tagKey => {
+    const tagName = tagNames.find(
+      tn => tn.toLowerCase() === tagKey.toLowerCase(),
+    );
+    const tagValue = tagMap[tagName!];
+    if (typeof tagValue === 'string') {
+      specPartial[tagKey] = [tagValue.split(',')].flat();
+    }
+  });
+
+  relationshipTags.forEach(tagKey => {
+    const tagValue = tagMap[tagKey];
+    if (typeof tagValue === 'string') {
+      specPartial[tagKey] = [tagValue];
+    }
+  });
 
   return specPartial;
 };

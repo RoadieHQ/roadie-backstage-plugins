@@ -85,7 +85,12 @@ describe('AWSSNSTopicProvider', () => {
         ],
       });
       sns.on(ListTagsForResourceCommand).resolves({
-        Tags: [],
+        Tags: [
+          {
+            Key: 'owner',
+            Value: 'team-messaging',
+          },
+        ],
       });
     });
 
@@ -103,24 +108,9 @@ describe('AWSSNSTopicProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                name: 'example-topic',
-                title: 'example-topic',
-                annotations: expect.objectContaining({
-                  'backstage.io/view-url':
-                    'https://console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topic/arn:aws:sns:eu-west-1:123456789012:example-topic',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates SNS topic entities', async () => {
@@ -131,24 +121,9 @@ describe('AWSSNSTopicProvider', () => {
       const provider = AWSSNSTopicProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                name: 'example-topic',
-                title: 'example-topic',
-                annotations: expect.objectContaining({
-                  'backstage.io/view-url':
-                    'https://console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topic/arn:aws:sns:eu-west-1:123456789012:example-topic',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {

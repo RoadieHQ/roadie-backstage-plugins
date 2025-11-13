@@ -14,21 +14,45 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
+import {
+  DBInstance,
+  RDS,
+  paginateDescribeDBInstances,
+} from '@aws-sdk/client-rds';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSRDSProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS Relational Database Service.
  */
-export class AWSRDSProvider extends AWSEntityProvider {
+export class AWSRDSProvider extends AWSEntityProvider<DBInstance> {
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
   getProviderName(): string {
     return `aws-rds-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(
+    resource: DBInstance,
+  ): Record<string, string> {
+    const instanceArn = resource.DBInstanceArn!;
+    return {
+      [ANNOTATION_VIEW_URL]: new ARN(instanceArn).consoleLink,
+      [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
+    };
   }
 
   private async getRdsClient(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -46,16 +70,20 @@ export class AWSRDSProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
-    const groups = await this.getGroups();
     this.logger.info(`Providing RDS resources from AWS: ${accountId}`);
-    const rdsEntities: Entity[] = [];
+    const rdsEntities: Array<Promise<Entity>> = [];
 
     const rdsClient = await this.getRdsClient(dynamicAccountConfig);
-
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: rdsClient,
@@ -67,62 +95,22 @@ export class AWSRDSProvider extends AWSEntityProvider {
     for await (const instances of dbInstancePages) {
       for (const dbInstance of instances.DBInstances || []) {
         if (dbInstance.DBInstanceIdentifier && dbInstance.DBInstanceArn) {
-          const instanceId = dbInstance.DBInstanceIdentifier;
-          const instanceArn = dbInstance.DBInstanceArn;
-          const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
-          let entity = this.renderEntity(
-            { data: dbInstance },
-            { defaultAnnotations: await defaultAnnotations },
+          const tags = dbInstance.TagList || [];
+          rdsEntities.push(
+            template.render({
+              data: dbInstance,
+              tags,
+            }),
           );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_VIEW_URL]: consoleLink,
-                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
-                },
-                labels: this.labelsFromTags(dbInstance.TagList),
-                name: instanceId.substring(0, 62),
-                title: instanceId,
-                dbInstanceClass: dbInstance.DBInstanceClass,
-                dbEngine: dbInstance.Engine,
-                dbEngineVersion: dbInstance.EngineVersion,
-                allocatedStorage: dbInstance.AllocatedStorage,
-                preferredMaintenanceWindow:
-                  dbInstance.PreferredMaintenanceWindow,
-                preferredBackupWindow: dbInstance.PreferredBackupWindow,
-                backupRetentionPeriod: dbInstance.BackupRetentionPeriod,
-                isMultiAz: dbInstance.MultiAZ,
-                automaticMinorVersionUpgrade:
-                  dbInstance.AutoMinorVersionUpgrade,
-                isPubliclyAccessible: dbInstance.PubliclyAccessible,
-                storageType: dbInstance.StorageType,
-                isPerformanceInsightsEnabled:
-                  dbInstance.PerformanceInsightsEnabled,
-              },
-              spec: {
-                owner: ownerFromTags(
-                  dbInstance.TagList,
-                  this.getOwnerTag(),
-                  groups,
-                ),
-                ...relationshipsFromTags(dbInstance.TagList),
-                type: 'rds-instance',
-              },
-            };
-          }
-
-          rdsEntities.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: rdsEntities.map(entity => ({
+      entities: (
+        await Promise.all(rdsEntities)
+      ).map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

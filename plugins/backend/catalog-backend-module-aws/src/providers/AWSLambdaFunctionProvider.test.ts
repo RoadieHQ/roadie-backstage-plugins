@@ -144,30 +144,9 @@ describe('AWSLambdaFunctionProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                annotations: {
-                  'amazon.com/lambda-function-arn':
-                    'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
-                  'backstage.io/managed-by-location':
-                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
-                },
-                title: 'my-function',
-                name: 'bc6fa48d05a0a464c5e2a5214985bd957578cd50314fc6076cef1845fadb3c8',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws functions', async () => {
@@ -179,38 +158,9 @@ describe('AWSLambdaFunctionProvider', () => {
       const provider = AWSLambdaFunctionProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                annotations: {
-                  'amazon.com/iam-role-arn':
-                    'arn:aws:iam::123456789012:role/lambdaRole',
-                  'amazon.com/lambda-function-arn':
-                    'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
-                  'backstage.io/managed-by-location':
-                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-lambda-function-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/my-function',
-                },
-                title: 'my-function',
-                architectures: ['x86_64'],
-                description: '',
-                ephemeralStorage: 512,
-                memorySize: 1024,
-                name: 'bc6fa48d05a0a464c5e2a5214985bd957578cd50314fc6076cef1845fadb3c8',
-                runtime: 'nodejs14.x',
-                timeout: 30,
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('maps owner from custom tag mapping', async () => {
