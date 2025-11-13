@@ -5,3 +5,5 @@ metadata:
   annotations:
     backstage.io/view-url: "https://console.aws.amazon.com/sns/v3/home?region={{ region }}#/topic/{{ data.TopicArn }}"
   title: {{ data.TopicArn | split(":") | last }}
+spec:
+  owner: hardcoded-unknown

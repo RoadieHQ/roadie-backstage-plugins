@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSElastiCacheEntityProvider where there is a Redis cluster creates cluster 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/elasticache-cluster-arn": "arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster",
+                "backstage.io/managed-by-location": "aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "endpoint": "my-redis-cluster.abc123.cache.amazonaws.com:6379",
+              "engine": "redis",
+              "engineVersion": "7.0.7",
+              "labels": {
+                "aws-elasticache-region": "eu-west-1",
+              },
+              "name": "my-redis-cluster",
+              "nodeType": "cache.t3.micro",
+              "status": "available",
+              "title": "my-redis-cluster",
+            },
+            "spec": {
+              "owner": "unknown",
+              "type": "elasticache-cluster",
+            },
+          },
+          "locationKey": "aws-elasticache-cluster-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSElastiCacheEntityProvider where there is a Redis cluster creates cluster with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/elasticache-cluster-arn": "arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster",
+                "backstage.io/managed-by-location": "aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "engine": "redis",
+              "engineVersion": "7.0.7",
+              "name": "my-redis-cluster",
+              "title": "my-redis-cluster",
+            },
+            "spec": {
+              "type": "elasticache-cluster",
+            },
+          },
+          "locationKey": "aws-elasticache-cluster-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

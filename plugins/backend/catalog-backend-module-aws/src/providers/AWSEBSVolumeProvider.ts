@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { EC2 } from '@aws-sdk/client-ec2';
+import { EC2, Volume } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
+import { Tag } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 import { DescribeVolumesCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeVolumesCommand';
+import { Environment } from 'nunjucks';
 
 export const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSEBSVolumeProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 const createEbsVolumeConsoleLink = (region: string, volumeId: string): string =>
   `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#VolumeDetails:volumeId=${volumeId}`;
@@ -30,9 +38,48 @@ const createEbsVolumeConsoleLink = (region: string, volumeId: string): string =>
 /**
  * Provides entities from AWS Elastic Block Store volumes.
  */
-export class AWSEBSVolumeProvider extends AWSEntityProvider {
+export class AWSEBSVolumeProvider extends AWSEntityProvider<Volume> {
   getProviderName(): string {
     return `aws-ebs-volume-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: Volume,
+    context: { accountId: string; region: string },
+  ): Record<string, string> {
+    const volumeId = resource.VolumeId!;
+    const region = context.region ?? this.region;
+    const consoleLink = createEbsVolumeConsoleLink(region, volumeId);
+    return {
+      [ANNOTATION_VIEW_URL]: consoleLink,
+      [ANNOTATION_EBS_VOLUME_ID]: volumeId,
+    };
+  }
+
+  protected addCustomFilters(env: Environment): void {
+    // Filter: find_name_tag - Extract Name tag from tags array or return fallback
+    env.addFilter(
+      'find_name_tag',
+      (tags: Tag[] | undefined, fallback: string) => {
+        if (!tags || !Array.isArray(tags)) {
+          return fallback;
+        }
+        const nameTag = tags.find(tag => tag.Key === 'Name');
+        return nameTag?.Value || fallback;
+      },
+    );
+
+    // Filter: instance_ids - Extract instance IDs from Attachments array
+    env.addFilter('instance_ids', (attachments: Volume['Attachments']) => {
+      if (!attachments || !Array.isArray(attachments)) {
+        return '';
+      }
+      return attachments.map(a => a.InstanceId).join(', ');
+    });
   }
 
   private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -51,16 +98,21 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing EBS volume resources from aws: ${accountId}`);
-    const ebsResources: Entity[] = [];
+    const ebsResources: Array<Promise<Entity>> = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     let nextToken: string | undefined = undefined;
     do {
@@ -71,46 +123,12 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
         const volumeId = volume.VolumeId;
         if (!volumeId) continue;
 
-        const consoleLink = createEbsVolumeConsoleLink(region, volumeId);
-        let entity: Entity | undefined = this.renderEntity(
-          {
+        ebsResources.push(
+          template.render({
             data: volume,
-          },
-          { defaultAnnotations },
+            tags: volume.Tags,
+          }),
         );
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_EBS_VOLUME_ID]: volumeId,
-              },
-              labels: this.labelsFromTags(volume.Tags),
-              name: volumeId,
-              title:
-                volume.Tags?.find(tag => tag.Key === 'Name')?.Value || volumeId,
-              size: volume.Size,
-              volumeType: volume.VolumeType,
-              availabilityZone: volume.AvailabilityZone,
-              state: volume.State,
-              encrypted: volume.Encrypted ? 'Yes' : 'No',
-              attachedInstanceIds: volume.Attachments?.map(
-                a => a.InstanceId,
-              ).join(', '),
-              createTime: volume.CreateTime?.toISOString(),
-            },
-            spec: {
-              owner: ownerFromTags(volume.Tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(volume.Tags),
-              type: 'ebs-volume',
-            },
-          };
-        }
-
-        ebsResources.push(entity);
       }
 
       nextToken = volumes.NextToken;
@@ -118,7 +136,9 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider {
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: ebsResources.map(entity => ({
+      entities: (
+        await Promise.all(ebsResources)
+      ).map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

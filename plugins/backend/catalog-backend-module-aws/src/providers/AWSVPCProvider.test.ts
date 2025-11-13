@@ -93,6 +93,10 @@ describe('AWSVPCProvider', () => {
                 Key: 'Environment',
                 Value: 'production//staging',
               },
+              {
+                Key: 'owner',
+                Value: 'team-infrastructure',
+              },
             ],
           },
         ],
@@ -130,33 +134,9 @@ describe('AWSVPCProvider', () => {
       const provider = AWSVPCProvider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-vpc-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'vpc',
-              },
-              metadata: expect.objectContaining({
-                name: 'vpc-12345678',
-                title: 'vpc-12345678',
-                state: 'available',
-                annotations: expect.objectContaining({
-                  'amazonaws.com/vpc-id': 'vpc-12345678',
-                  'backstage.io/managed-by-location':
-                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates VPC', async () => {
@@ -167,45 +147,9 @@ describe('AWSVPCProvider', () => {
       const provider = AWSVPCProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-vpc-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'vpc',
-              },
-              metadata: expect.objectContaining({
-                name: 'vpc-12345678',
-                title: 'vpc-12345678',
-                cidrBlocks: '10.0.0.0/16',
-                dhcpOptions:
-                  'domain-name: eu-west-1.compute.internal; domain-name-servers: AmazonProvidedDNS',
-                isDefault: 'No',
-                state: 'available',
-                instanceTenancy: 'default',
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_VIEW_URL]: expect.stringContaining(
-                    'console.aws.amazon.com',
-                  ),
-                  'amazonaws.com/vpc-id': 'vpc-12345678',
-                  'backstage.io/managed-by-location':
-                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {

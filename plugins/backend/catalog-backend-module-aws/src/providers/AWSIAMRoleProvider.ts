@@ -14,22 +14,39 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { IAM, paginateListRoles } from '@aws-sdk/client-iam';
+import { IAM, paginateListRoles, Role } from '@aws-sdk/client-iam';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSIAMRoleProvider.default.yaml.njs'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS IAM Role service.
  */
-export class AWSIAMRoleProvider extends AWSEntityProvider {
+export class AWSIAMRoleProvider extends AWSEntityProvider<Role> {
   getProviderName(): string {
     return `aws-iam-role-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(resource: Role): Record<string, string> {
+    const consoleLink = new ARN(resource.Arn!).consoleLink;
+    return {
+      [ANNOTATION_AWS_IAM_ROLE_ARN]: resource.Arn!,
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+    };
   }
 
   private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -47,15 +64,18 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing IAM role resources from AWS: ${accountId}`);
-    const roleResources: Entity[] = [];
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const iam = await this.getIam(dynamicAccountConfig);
 
@@ -66,52 +86,30 @@ export class AWSIAMRoleProvider extends AWSEntityProvider {
 
     const rolePages = paginateListRoles(paginatorConfig, {});
 
+    const resources: Array<Promise<Entity>> = [];
     for await (const rolePage of rolePages) {
       for (const role of rolePage.Roles || []) {
         if (role.RoleName && role.Arn && role.RoleId) {
-          const consoleLink = new ARN(role.Arn).consoleLink;
-          let entity: Entity | undefined = this.renderEntity(
-            { data: role },
-            { defaultAnnotations: await defaultAnnotations },
-          );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1alpha1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_AWS_IAM_ROLE_ARN]: role.Arn,
-                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
-                },
-                name: arnToName(role.Arn),
-                title: role.RoleName,
-                labels: this.labelsFromTags(role.Tags),
-              },
-              spec: {
-                type: 'aws-role',
-                owner: ownerFromTags(role.Tags, this.getOwnerTag(), groups),
-                ...relationshipsFromTags(role.Tags),
-              },
-            };
-          }
-
-          roleResources.push(entity);
+          resources.push(template.render({ data: role, tags: role.Tags }));
         }
       }
     }
 
+    const entities = await Promise.all(resources);
+
     await this.connection.applyMutation({
       type: 'full',
-      entities: roleResources.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${roleResources.length} IAM role resources from AWS: ${accountId}`,
-      { run_duration: duration(startTimestamp) },
+      `Finished providing ${entities.length} IAM role resources from AWS: ${accountId}`,
+      {
+        run_duration: duration(startTimestamp),
+      },
     );
   }
 }

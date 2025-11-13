@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSIAMUserProvider where there are is a user creates aws users 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1alpha1",
+            "kind": "User",
+            "metadata": {
+              "annotations": {
+                "amazon.com/iam-user-arn": "arn:aws:iam::123456789012:user/asdf",
+                "backstage.io/managed-by-location": "aws-iam-user-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-iam-user-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/iam/home?#/users/asdf",
+              },
+              "labels": {},
+              "name": "c7c6955feecc4f2a90d4f026f34828143008473879c6d83b04fc36609fbbbfe",
+              "title": "adsf",
+            },
+            "spec": {
+              "memberOf": [],
+              "profile": {
+                "displayName": "arn:aws:iam::123456789012:user/asdf",
+                "email": "adsf",
+              },
+            },
+          },
+          "locationKey": "aws-iam-user-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSIAMUserProvider where there are is a user creates aws users with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "User",
+            "metadata": {
+              "annotations": {
+                "amazon.com/eks-cluster-arn": "arn:aws:iam::123456789012:user/asdf",
+                "amazon.com/iam-user-arn": "arn:aws:iam::123456789012:user/asdf",
+                "backstage.io/managed-by-location": "aws-iam-user-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-iam-user-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/iam/home?#/users/asdf",
+                "kubernetes.io/auth-provider": "aws",
+                "kubernetes.io/x-k8s-aws-id": "adsf",
+              },
+              "name": "d203b23ccad9d7ebbc31fdf0ca4ceea02c5cc77dddbea30ce9981b41587f9e7",
+              "title": "adsf",
+            },
+          },
+          "locationKey": "aws-iam-user-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

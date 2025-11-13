@@ -44,7 +44,7 @@ describe('AWSEC2Provider', () => {
     sts.on(GetCallerIdentityCommand).resolves({});
   });
 
-  describe('where there is no instances', () => {
+  describe('where there is instances', () => {
     beforeEach(() => {
       ec2.on(DescribeInstancesCommand).resolves({
         Reservations: [],
@@ -75,7 +75,31 @@ describe('AWSEC2Provider', () => {
             Instances: [
               {
                 InstanceId: 'asdf',
+                Platform: 'Windows',
+                InstanceType: 't3.large',
+                Monitoring: {
+                  State: 'enabled',
+                },
+                Placement: {
+                  AvailabilityZone: 'us-east-1a',
+                },
+                BlockDeviceMappings: [
+                  { DeviceName: '/dev/sda1' },
+                  { DeviceName: '/dev/sdb' },
+                ],
+                CpuOptions: {
+                  CoreCount: 4,
+                  ThreadsPerCore: 2,
+                },
                 Tags: [
+                  {
+                    Key: 'Name',
+                    Value: 'test-instance',
+                  },
+                  {
+                    Key: 'owner',
+                    Value: 'team-platform',
+                  },
                   {
                     Key: 'something',
                     Value: 'something//something',
@@ -88,6 +112,7 @@ describe('AWSEC2Provider', () => {
       });
     });
 
+    // This test ensures backward compatibility and basic functionality
     it('creates table', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
@@ -96,37 +121,9 @@ describe('AWSEC2Provider', () => {
       const provider = AWSEC2Provider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-ec2-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'ec2-instance',
-              },
-              metadata: expect.objectContaining({
-                labels: {
-                  something: 'something--something',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_EC2_INSTANCE_ID]: 'asdf',
-                  'backstage.io/managed-by-location':
-                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
-
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/ec2/v2/home',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {
@@ -164,33 +161,9 @@ describe('AWSEC2Provider', () => {
       const provider = AWSEC2Provider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-ec2-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'ec2-instance',
-              },
-              metadata: expect.objectContaining({
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_EC2_INSTANCE_ID]: 'asdf',
-                  'backstage.io/managed-by-location':
-                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-ec2-provider-0:arn:aws:iam::123456789012:role/role1',
-
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/ec2/v2/home',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 
@@ -204,6 +177,10 @@ describe('AWSEC2Provider', () => {
               {
                 InstanceId: 'asdf',
                 Tags: [
+                  {
+                    Key: 'owner',
+                    Value: 'team-infrastructure',
+                  },
                   {
                     Key: 'something',
                     Value: 'something//something',
@@ -238,11 +215,12 @@ describe('AWSEC2Provider', () => {
               kind: 'Resource',
               apiVersion: 'backstage.io/v1beta1',
               spec: {
-                owner: 'unknown',
+                owner: 'team-infrastructure',
                 type: 'ec2-instance',
               },
               metadata: expect.objectContaining({
                 labels: {
+                  owner: 'team-infrastructure',
                   something: 'something//something',
                 },
                 annotations: expect.objectContaining({
@@ -254,6 +232,74 @@ describe('AWSEC2Provider', () => {
 
                   'backstage.io/view-url':
                     'https://eu-west-1.console.aws.amazon.com/ec2/v2/home',
+                }),
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+  });
+
+  describe('where there is an instance with dynamic account config', () => {
+    beforeEach(() => {
+      ec2.on(DescribeInstancesCommand).resolves({
+        Reservations: [
+          {
+            ReservationId: 'reservation-dynamic',
+            Instances: [
+              {
+                InstanceId: 'i-dynamic-123',
+              },
+            ],
+          },
+        ],
+      });
+
+      // Mock STS to return dynamic account
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '999888777666',
+      });
+    });
+
+    it('creates instance with different region and accountId from dynamic config', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      const dynamicRoleArn = 'arn:aws:iam::999888777666:role/dynamic-role';
+      const dynamicRegion = 'us-east-1';
+      const dynamicAccountId = '999888777666';
+
+      const provider = AWSEC2Provider.fromConfig(config, {
+        logger,
+        useTemporaryCredentials: true,
+      });
+
+      await provider.connect(entityProviderConnection);
+      await provider.run({
+        roleArn: dynamicRoleArn,
+        region: dynamicRegion,
+        accountId: dynamicAccountId,
+      });
+
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              metadata: expect.objectContaining({
+                name: 'i-dynamic-123',
+                annotations: expect.objectContaining({
+                  // Validates roleArn from dynamic config is used
+                  'backstage.io/managed-by-location': `aws-ec2-provider-0:${dynamicRoleArn}`,
+                  'backstage.io/managed-by-origin-location': `aws-ec2-provider-0:${dynamicRoleArn}`,
+                  // Validates accountId (derived from roleArn) from dynamic config is used
+                  'amazon.com/account-id': dynamicAccountId,
+                  // Validates region from dynamic config is used
+                  'backstage.io/view-url':
+                    expect.stringContaining(dynamicRegion),
                 }),
               }),
             }),

@@ -10,4 +10,4 @@ metadata:
     accountId: {{ accountId }}
 spec:
   type: s3-bucket
-  owner: unknown
+  owner: hardcoded-unknown

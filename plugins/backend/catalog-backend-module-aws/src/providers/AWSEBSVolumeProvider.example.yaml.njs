@@ -1,7 +1,7 @@
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
-  name: {{ data.VolumeId | to_entity_name }}
+  name: {{ data.VolumeId | sanitize_name }}
   annotations:
     amazonaws.com/ebs-volume-id: {{ data.VolumeId }}
     backstage.io/view-url: https://eu-west-1.console.aws.amazon.com/ec2/home?region=eu-west-1#VolumeDetails:volumeId={{ data.VolumeId }}
@@ -11,5 +11,5 @@ metadata:
     {{ tag.Key }}: {{ tag.Value | replace(":", "-") | replace("/", "-") }}
     {% endfor %}
 spec:
-  owner: unknown
+  owner: hardcoded-unknown
   type: ebs-volume

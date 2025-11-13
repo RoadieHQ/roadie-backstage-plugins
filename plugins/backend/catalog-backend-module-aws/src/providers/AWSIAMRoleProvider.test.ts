@@ -74,6 +74,7 @@ describe('AWSIAMRoleProvider', () => {
             RoleId: 'asdfewfwef',
             RoleName: 'adsf',
             Arn: 'arn:aws:iam::123456789012:role/asdf',
+            Tags: [{ Key: 'owner', Value: 'team-a' }],
           } as Partial<Role> as any,
         ],
       });
@@ -91,21 +92,11 @@ describe('AWSIAMRoleProvider', () => {
         logger,
         template,
       });
-      provider.connect(entityProviderConnection);
+      await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws users', async () => {
@@ -116,19 +107,9 @@ describe('AWSIAMRoleProvider', () => {
       const provider = AWSIAMRoleProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {
@@ -153,6 +134,66 @@ describe('AWSIAMRoleProvider', () => {
         }),
       );
       expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
+  });
+
+  describe('where there is a role with dynamic account config', () => {
+    beforeEach(() => {
+      iam.on(ListRolesCommand).resolves({
+        Roles: [
+          {
+            RoleId: 'AIDACKCEVSQ6C2EXAMPLE',
+            RoleName: 'dynamic-test-role',
+            Arn: 'arn:aws:iam::999888777666:role/dynamic-test-role',
+            Tags: [{ Key: 'owner', Value: 'team-platform' }],
+          } as Partial<Role> as any,
+        ],
+      });
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '999888777666',
+      });
+    });
+
+    it('creates role with different accountId and roleArn from dynamic config', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      const dynamicRoleArn =
+        'arn:aws:iam::999888777666:role/dynamic-execution-role';
+      const dynamicRegion = 'us-west-2';
+      const dynamicAccountId = '999888777666';
+
+      const provider = AWSIAMRoleProvider.fromConfig(config, {
+        logger,
+        useTemporaryCredentials: true,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run({
+        roleArn: dynamicRoleArn,
+        region: dynamicRegion,
+      });
+
+      const mutation = (entityProviderConnection.applyMutation as jest.Mock)
+        .mock.calls[0][0];
+      expect(mutation.type).toBe('full');
+      expect(mutation.entities).toHaveLength(1);
+
+      const { entity } = mutation.entities[0];
+
+      expect(entity.metadata.title).toBe('dynamic-test-role');
+
+      expect(
+        entity.metadata.annotations['backstage.io/managed-by-location'],
+      ).toBe(`aws-iam-role-0:${dynamicRoleArn}`);
+      expect(
+        entity.metadata.annotations['backstage.io/managed-by-origin-location'],
+      ).toBe(`aws-iam-role-0:${dynamicRoleArn}`);
+
+      expect(entity.metadata.annotations['amazon.com/account-id']).toBe(
+        dynamicAccountId,
+      );
     });
   });
 });

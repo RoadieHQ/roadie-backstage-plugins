@@ -117,19 +117,9 @@ describe('AWSIAMUserProvider', () => {
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws users', async () => {
@@ -141,19 +131,9 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 });

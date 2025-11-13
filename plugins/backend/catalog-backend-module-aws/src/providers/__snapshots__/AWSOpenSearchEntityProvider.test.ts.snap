@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSOpenSearchEntityProvider where there is an OpenSearch domain creates domain 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/open-search-domain-arn": "arn:aws:es:eu-west-1:123456789012:domain/my-search-domain",
+                "backstage.io/managed-by-location": "aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "endpoint": "search-my-search-domain-abc123.eu-west-1.es.amazonaws.com",
+              "engineVersion": "OpenSearch_2.3",
+              "labels": {
+                "aws-opensearch-region": "eu-west-1",
+              },
+              "name": "my-search-domain",
+              "storageType": "EBS-gp3",
+              "title": "my-search-domain",
+            },
+            "spec": {
+              "owner": "team-search",
+              "type": "opensearch-domain",
+            },
+          },
+          "locationKey": "aws-opensearch-domain-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSOpenSearchEntityProvider where there is an OpenSearch domain creates domain with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/open-search-domain-arn": "arn:aws:es:eu-west-1:123456789012:domain/my-search-domain",
+                "backstage.io/managed-by-location": "aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-opensearch-domain-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "endpoint": "search-my-search-domain-abc123.eu-west-1.es.amazonaws.com",
+              "engineVersion": "OpenSearch_2.3",
+              "name": "my-search-domain",
+              "storageType": "EBS-gp3",
+              "title": "my-search-domain",
+            },
+            "spec": {
+              "type": "opensearch-domain",
+            },
+          },
+          "locationKey": "aws-opensearch-domain-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

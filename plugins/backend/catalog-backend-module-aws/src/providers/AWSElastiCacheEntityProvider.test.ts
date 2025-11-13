@@ -127,35 +127,9 @@ describe('AWSElastiCacheEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-elasticache-cluster-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'elasticache-cluster',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-redis-cluster',
-                title: 'my-redis-cluster',
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]:
-                    'arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster',
-                  'backstage.io/managed-by-location':
-                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                engine: 'redis',
-                engineVersion: '7.0.7',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates cluster', async () => {
@@ -168,42 +142,9 @@ describe('AWSElastiCacheEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-elasticache-cluster-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'elasticache-cluster',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-redis-cluster',
-                title: 'my-redis-cluster',
-                labels: {
-                  'aws-elasticache-region': 'eu-west-1',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]:
-                    'arn:aws:elasticache:eu-west-1:123456789012:cluster:my-redis-cluster',
-                  'backstage.io/managed-by-location':
-                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-elasticache-cluster-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                status: 'available',
-                engine: 'redis',
-                engineVersion: '7.0.7',
-                nodeType: 'cache.t3.micro',
-                endpoint: 'my-redis-cluster.abc123.cache.amazonaws.com:6379',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('should support the new backend system', async () => {
@@ -448,6 +389,92 @@ describe('AWSElastiCacheEntityProvider', () => {
                 engineVersion: '7.0.7',
                 nodeType: 'cache.t3.micro',
                 endpoint: '',
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+  });
+
+  describe('where there is a cluster with dynamic account config', () => {
+    beforeEach(() => {
+      // @ts-ignore
+      elasticache.on(DescribeCacheClustersCommand).resolves({
+        CacheClusters: [
+          {
+            CacheClusterId: 'dynamic-cluster',
+            ARN: 'arn:aws:elasticache:us-west-2:888777666555:cluster:dynamic-cluster',
+            CacheClusterStatus: 'available',
+            Engine: 'redis',
+            EngineVersion: '7.0.7',
+            CacheNodeType: 'cache.t3.micro',
+            CacheNodes: [
+              {
+                Endpoint: {
+                  Address: 'dynamic-cluster.xyz789.cache.amazonaws.com',
+                  Port: 6379,
+                },
+              },
+            ],
+          },
+        ],
+      } as DescribeCacheClustersCommandOutput);
+      // @ts-ignore
+      elasticache.on(ListTagsForResourceCommand).resolves({
+        TagList: [],
+      } as ListTagsForResourceCommandOutput);
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '888777666555',
+      });
+    });
+
+    it('creates cluster with different region and accountId from dynamic config', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      const dynamicRoleArn = 'arn:aws:iam::888777666555:role/dynamic-role';
+      const dynamicRegion = 'us-west-2';
+      const dynamicAccountId = '888777666555';
+
+      const provider = AWSElastiCacheEntityProvider.fromConfig(config, {
+        logger,
+        useTemporaryCredentials: true,
+      });
+      await provider.connect(entityProviderConnection);
+      await provider.run({
+        roleArn: dynamicRoleArn,
+        region: dynamicRegion,
+      });
+
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            locationKey: 'aws-elasticache-cluster-0',
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              apiVersion: 'backstage.io/v1beta1',
+              spec: {
+                owner: 'unknown',
+                type: 'elasticache-cluster',
+              },
+              metadata: expect.objectContaining({
+                labels: {
+                  'aws-elasticache-region': dynamicRegion,
+                },
+                annotations: expect.objectContaining({
+                  [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]:
+                    'arn:aws:elasticache:us-west-2:888777666555:cluster:dynamic-cluster',
+                  // Validates roleArn from dynamic config is used
+                  'backstage.io/managed-by-location': `aws-elasticache-cluster-0:${dynamicRoleArn}`,
+                  'backstage.io/managed-by-origin-location': `aws-elasticache-cluster-0:${dynamicRoleArn}`,
+                  // Validates accountId (derived from roleArn) from dynamic config is used
+                  'amazon.com/account-id': dynamicAccountId,
+                }),
+                name: 'dynamic-cluster',
               }),
             }),
           }),

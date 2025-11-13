@@ -13,31 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readFileSync } from 'fs';
+
 import { Entity } from '@backstage/catalog-model';
-import { SQS, paginateListQueues } from '@aws-sdk/client-sqs';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import {
-  AccountConfig,
-  AWSEntityProviderConfig,
-  DynamicAccountConfig,
-} from '../types';
+  GetQueueAttributesCommandOutput,
+  SQS,
+  paginateListQueues,
+} from '@aws-sdk/client-sqs';
+import { AWSEntityProvider } from './AWSEntityProvider';
+import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSSQSEntityProvider.default.yaml.njs'),
+  'utf-8',
+);
+
+type QueueAttributes = GetQueueAttributesCommandOutput['Attributes'];
 
 /**
  * Provides entities from AWS SQS service.
  */
-export class AWSSQSEntityProvider extends AWSEntityProvider {
-  private readonly queueTypeValue: string;
-
-  constructor(account: AccountConfig, options: AWSEntityProviderConfig) {
-    super(account, options);
-    this.queueTypeValue = 'sqs-queue';
-  }
-
+export class AWSSQSEntityProvider extends AWSEntityProvider<QueueAttributes> {
   getProviderName(): string {
     return `aws-sqs-queue-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: Record<string, string>,
+  ): Record<string, string> {
+    const queueArn = resource.QueueArn;
+    return {
+      [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn,
+    };
   }
 
   private async getSQSClient(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -56,16 +70,22 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
     }
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing SQS queue resources from AWS: ${accountId}`);
-    const entities: Entity[] = [];
+    const sqsResources: Array<Promise<Entity>> = [];
 
     const sqs = await this.getSQSClient(dynamicAccountConfig);
 
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+    // Create child template
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginator = paginateListQueues({ client: sqs }, {});
     for await (const page of paginator) {
@@ -79,57 +99,17 @@ export class AWSSQSEntityProvider extends AWSEntityProvider {
           const tagsResponse = await sqs.listQueueTags({ QueueUrl: queueUrl });
           const tags = tagsResponse.Tags || {};
 
-          const queueArn = attributes.Attributes?.QueueArn;
-          const queueName = queueArn?.split(':').slice(-1)[0] || 'unknown';
-
-          const visibilityTimeout =
-            attributes.Attributes?.VisibilityTimeout || '';
-          const delaySeconds = attributes.Attributes?.DelaySeconds || '';
-          const maximumMessageSize =
-            attributes.Attributes?.MaximumMessageSize || '';
-          const retentionPeriod =
-            attributes.Attributes?.MessageRetentionPeriod || '';
-          const approximateNumberOfMessages =
-            attributes.Attributes?.ApproximateNumberOfMessages || '';
-
-          let entity = this.renderEntity(
-            { data: attributes.Attributes },
-            { defaultAnnotations },
+          sqsResources.push(
+            template.render({
+              data: attributes.Attributes || {},
+              tags,
+            }),
           );
-
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                name: queueName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-                title: queueName,
-                labels: {
-                  'aws-sqs-region': this.region,
-                },
-                annotations: {
-                  ...defaultAnnotations,
-                  [ANNOTATION_AWS_SQS_QUEUE_ARN]: queueArn ?? '',
-                },
-                queueArn,
-                visibilityTimeout,
-                delaySeconds,
-                maximumMessageSize,
-                retentionPeriod,
-                approximateNumberOfMessages,
-              },
-              spec: {
-                owner: ownerFromTags(tags, this.getOwnerTag()),
-                ...relationshipsFromTags(tags),
-                type: this.queueTypeValue,
-              },
-            };
-          }
-
-          entities.push(entity);
         }
       }
     }
+
+    const entities = await Promise.all(sqsResources);
 
     await this.connection.applyMutation({
       type: 'full',
