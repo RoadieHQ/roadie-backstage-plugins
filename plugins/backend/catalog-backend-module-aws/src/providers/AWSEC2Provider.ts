@@ -19,10 +19,7 @@ import { EC2 } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 

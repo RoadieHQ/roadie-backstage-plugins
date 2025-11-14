@@ -30,11 +30,12 @@ import {
   ANNOTATION_KUBERNETES_AWS_CLUSTER_ID,
 } from '@backstage/plugin-kubernetes-common';
 import { arnToName } from '../utils/arnToName';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
 import { duration } from '../utils/timer';
 
 /**

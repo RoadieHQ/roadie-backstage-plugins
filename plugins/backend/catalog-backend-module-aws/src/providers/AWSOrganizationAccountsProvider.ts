@@ -27,10 +27,7 @@ import {
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';

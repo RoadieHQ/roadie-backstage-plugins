@@ -22,10 +22,7 @@ import {
 } from '@aws-sdk/client-elastic-load-balancing-v2';
 import { DynamicAccountConfig } from '../types';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { duration } from '../utils/timer';
 
 const ANNOTATION_LOAD_BALANCER_ARN = 'amazonaws.com/load-balancer-arn';

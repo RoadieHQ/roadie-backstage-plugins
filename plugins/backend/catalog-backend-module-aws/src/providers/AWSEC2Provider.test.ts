@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-
-import { DescribeInstancesCommand, EC2 } from '@aws-sdk/client-ec2';
-import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+import { EC2, DescribeInstancesCommand } from '@aws-sdk/client-ec2';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-
-import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
-
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSEC2Provider } from './AWSEC2Provider';
+import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -42,15 +39,9 @@ describe('AWSEC2Provider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
-  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
-    taskRunner = {
-      run: async task => {
-        await task.fn({} as any);
-      },
-    };
   });
 
   describe('where there is no instances', () => {
@@ -65,11 +56,9 @@ describe('AWSEC2Provider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEC2Provider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
+      const provider = AWSEC2Provider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -104,11 +93,9 @@ describe('AWSEC2Provider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSEC2Provider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
+      const provider = AWSEC2Provider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -142,6 +129,30 @@ describe('AWSEC2Provider', () => {
       });
     });
 
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSEC2Provider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
+
     it('creates table with a template', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
@@ -150,12 +161,9 @@ describe('AWSEC2Provider', () => {
       const template = readFileSync(
         join(dirname(__filename), './AWSEC2Provider.example.yaml.njs'),
       ).toString();
-      const provider = AWSEC2Provider.fromConfig(config, {
-        logger,
-        template,
-        taskRunner,
-      });
+      const provider = AWSEC2Provider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -216,11 +224,11 @@ describe('AWSEC2Provider', () => {
 
       const provider = AWSEC2Provider.fromConfig(config, {
         logger,
-        taskRunner,
         labelValueMapper: value => value,
       });
 
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

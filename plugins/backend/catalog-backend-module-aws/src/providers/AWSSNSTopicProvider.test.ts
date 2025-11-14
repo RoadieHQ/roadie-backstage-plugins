@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-
 import {
-  ListTagsForResourceCommand,
-  ListTopicsCommand,
   SNS,
+  ListTopicsCommand,
   Topic,
+  ListTagsForResourceCommand,
 } from '@aws-sdk/client-sns';
-import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
+
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-
 import { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const sns = mockClient(SNS);
 const sts = mockClient(STS);
@@ -45,16 +44,10 @@ describe('AWSSNSTopicProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
-  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
     sns.reset(); // Ensure the mock client is reset before each test
-    taskRunner = {
-      run: async task => {
-        await task.fn({} as any);
-      },
-    };
   });
 
   describe('when there are no SNS topics', () => {
@@ -72,11 +65,9 @@ describe('AWSSNSTopicProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSNSTopicProvider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
-      await provider.connect(entityProviderConnection);
+      const provider = AWSSNSTopicProvider.fromConfig(config, { logger });
+      provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -109,9 +100,9 @@ describe('AWSSNSTopicProvider', () => {
       const provider = AWSSNSTopicProvider.fromConfig(config, {
         logger,
         template,
-        taskRunner,
       });
-      await provider.connect(entityProviderConnection);
+      provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -137,11 +128,9 @@ describe('AWSSNSTopicProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSSNSTopicProvider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
-      await provider.connect(entityProviderConnection);
+      const provider = AWSSNSTopicProvider.fromConfig(config, { logger });
+      provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -160,6 +149,30 @@ describe('AWSSNSTopicProvider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSSNSTopicProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 });

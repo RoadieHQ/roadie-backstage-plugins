@@ -19,10 +19,7 @@ import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { ARN } from 'link2aws';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
