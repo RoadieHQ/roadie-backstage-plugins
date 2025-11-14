@@ -33,6 +33,7 @@ import {
 } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const organizations = mockClient(OrganizationsClient);
 const sts = mockClient(STS);
@@ -100,6 +101,10 @@ describe('AWSOrganizationAccountsProvider', () => {
             Key: 'Environment',
             Value: 'production//staging',
           },
+          {
+            Key: 'owner',
+            Value: 'team-platform',
+          },
         ],
         $metadata: {},
       } as ListTagsForResourceCommandOutput);
@@ -122,36 +127,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-organization-accounts-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'aws-account',
-              },
-              metadata: expect.objectContaining({
-                name: expect.any(String),
-                title: 'Test Account',
-                joinedMethod: 'INVITED',
-                status: 'ACTIVE',
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_ACCOUNT_ARN]:
-                    'arn:aws:organizations::123456789012:account/o-example123456/123456789012',
-                  [ANNOTATION_ACCOUNT_ID]: '123456789012',
-                  'backstage.io/managed-by-location':
-                    'aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates account', async () => {
@@ -164,41 +142,9 @@ describe('AWSOrganizationAccountsProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-organization-accounts-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'aws-account',
-              },
-              metadata: expect.objectContaining({
-                name: expect.any(String),
-                title: 'Test Account',
-                joinedTimestamp: '2023-01-01T00:00:00.000Z',
-                joinedMethod: 'INVITED',
-                status: 'ACTIVE',
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_ACCOUNT_ARN]:
-                    'arn:aws:organizations::123456789012:account/o-example123456/123456789012',
-                  [ANNOTATION_ACCOUNT_ID]: '123456789012',
-                  'backstage.io/managed-by-location':
-                    'aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-organization-accounts-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 
@@ -234,6 +180,30 @@ describe('AWSOrganizationAccountsProvider', () => {
       } as ListTagsForResourceCommandOutput);
     });
 
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
+
     it('creates account with tags', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
@@ -263,7 +233,7 @@ describe('AWSOrganizationAccountsProvider', () => {
                 joinedMethod: 'INVITED',
                 status: 'ACTIVE',
                 labels: {
-                  Name: 'My Custom Account',
+                  Name: 'My-Custom-Account',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({

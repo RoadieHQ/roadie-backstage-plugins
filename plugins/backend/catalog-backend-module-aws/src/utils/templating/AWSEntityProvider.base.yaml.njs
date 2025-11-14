@@ -1,0 +1,82 @@
+{#
+// Pretty much always use these
+
+{% extends 'AwsEntityProvider.base.yaml.njs' %}
+
+{% set entityName =  %}
+{% set entityTitle =  %}
+{% set entityType =  %}
+
+// end always
+
+// Maybe use these
+{% set apiVersion =  %}
+{% set entityKind =  %}
+
+// Include these if you want to add properties to the base template
+{% block additionalMetadata %}{% endblock %}
+{% block additionalAnnotations %}{% endblock %}
+{% block additionalLabels %}{% endblock %}
+{% block additionalRelationships %}{% endblock %}
+{% block additionalBlocks %}{% endblock %}
+
+// These are usually just to wrap in conditionals or exclude them entirely
+{% block title %}{% endblock %}
+{% block labels %}{% endblock %}
+{% block owner %}{% endblock %}
+{% block type %}{% endblock %}
+{% block relationships %}{% endblock %}
+{% block additionalSpec %}{% endblock %}
+
+#}
+
+kind: {{ entityKind or 'Resource' }}
+apiVersion: {{ apiVersion or 'backstage.io/v1beta1' }}
+metadata:
+  {% block name %}
+  name: "{{ entityName | sanitize_name | lower }}"
+  {% endblock %}
+  {% block title %}
+  {% if entityTitle %}
+  title: "{{ entityTitle }}"
+  {% endif %}
+  {% endblock %}
+  annotations:
+    {% for key, value in mergedAnnotations %}
+    "{{ key }}": "{{ value }}"
+    {% endfor %}
+    {% block additionalAnnotations %}{% endblock %}
+  {% block labels %}
+  {% if tags | labels_from_tags | length == 0 %}
+  labels: {% block allLabels %}{}{% endblock %}
+  {% else %}
+  labels:
+    {% for key, value in tags | labels_from_tags %}
+    {{ key }}: {{ value }}
+    {% endfor %}
+    {% block additionalLabels %}{% endblock %}
+  {% endif %}
+  {% endblock %}
+  {% block additionalMetadata %}{% endblock %}
+spec:
+  {% block owner %}
+  owner: {{ tags | owner_from_tags }}
+  {% endblock %}
+  {% block relationships %}
+  {% if tags | relationships_from_tags | length > 0 %}
+  {% for relationType, relationRefs in tags | relationships_from_tags %}
+  {{ relationType }}:
+    {% for ref in relationRefs %}
+    - {{ ref }}
+    {% endfor %}
+    {% block additionalRelationships %}{% endblock %}
+  {% endfor %}
+  {% endif %}
+  {% endblock %}
+  {% block type %}
+  {% if entityType %}
+  type: "{{ entityType }}"
+  {% endif %}
+  {% endblock %}
+  {% block additionalSpec %}{% endblock %}
+{% block additionalBlocks %}{% endblock %}

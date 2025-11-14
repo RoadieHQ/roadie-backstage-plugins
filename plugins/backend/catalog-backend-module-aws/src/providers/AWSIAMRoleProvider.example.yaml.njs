@@ -13,4 +13,4 @@ metadata:
     {% endif %}
 spec:
   type: aws-role
-  owner: {{ accountId }}
+  owner: "{{ accountId }}"
