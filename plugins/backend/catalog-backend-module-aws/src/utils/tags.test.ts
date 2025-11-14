@@ -84,18 +84,18 @@ describe('labelsFromTags and ownerFromTags', () => {
       const tags = [
         { Key: 'Tb<Pt t,4%I', Value: '#K]:_W#T9G' },
         { Key: ';aI/Si=5Ex', Value: '{_toD) ]TB5' },
-        { Key: 'FL:<KqW;:K', Value: '43P)MBbfaa' }
+        { Key: 'FL:<KqW;:K', Value: '43P)MBbfaa' },
       ];
       const result = labelsFromTags(tags);
       expect(result).toEqual({
         Tb_Pt_t_4_I: 'K--_W-T9G',
         'aI-Si_5Ex': 'toD---TB5',
-        FL__KqW__K: '43P-MBbfaa'
+        FL__KqW__K: '43P-MBbfaa',
       });
       Object.values(result).forEach(value => {
-        expect(
-          KubernetesValidatorFunctions.isValidLabelValue(value),
-        ).toBe(true);
+        expect(KubernetesValidatorFunctions.isValidLabelValue(value)).toBe(
+          true,
+        );
       });
     });
 

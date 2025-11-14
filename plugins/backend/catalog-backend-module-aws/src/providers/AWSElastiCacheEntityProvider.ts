@@ -16,11 +16,12 @@
 import { Entity } from '@backstage/catalog-model';
 import { ElastiCache } from '@aws-sdk/client-elasticache';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
 import { duration } from '../utils/timer';
 import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
 
