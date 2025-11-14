@@ -29,6 +29,7 @@ import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const eks = mockClient(DynamoDB);
 const sts = mockClient(STS);
@@ -120,6 +121,30 @@ describe('AWSDynamoDbTableProvider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSDynamoDbTableProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
 
     it('creates table with template', async () => {

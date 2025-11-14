@@ -29,6 +29,7 @@ import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);
 const sts = mockClient(STS as any);
@@ -218,6 +219,30 @@ describe('AWSLoadBalancerProvider', () => {
         ],
       });
     });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSLoadBalancerProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
   });
 
   describe('where there is a load balancer and I have a value mapper', () => {
@@ -389,7 +414,7 @@ describe('AWSLoadBalancerProvider', () => {
                 type: 'network',
                 state: 'provisioning',
                 labels: {
-                  Name: 'My Custom Load Balancer',
+                  Name: 'My-Custom-Load-Balancer',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({

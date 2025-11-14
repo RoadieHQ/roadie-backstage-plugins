@@ -30,6 +30,7 @@ import { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
 import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 // @ts-ignore
 const elasticache = mockClient(ElastiCache);
@@ -203,6 +204,30 @@ describe('AWSElastiCacheEntityProvider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSElastiCacheEntityProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 

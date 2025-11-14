@@ -15,10 +15,20 @@
  */
 
 import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
 import { ConfigReader } from '@backstage/config';
-import { createLogger } from 'winston';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+
+const sts = mockClient(STS);
+
+const logger = createLogger({
+  transports: [new transports.Console({ silent: true })],
+});
 
 const validConfig = {
   accountId: '123456789012',
@@ -41,6 +51,44 @@ const invalidConfig = {
 };
 
 describe('AWSDynamoDbTableDataProvider', () => {
+  beforeEach(() => {
+    sts.on(GetCallerIdentityCommand).resolves({});
+  });
+
+  it('should support the new backend system', async () => {
+    const entityProviderConnection: EntityProviderConnection = {
+      applyMutation: jest.fn(),
+      refresh: jest.fn(),
+    };
+    const taskRunner: SchedulerServiceTaskRunner = {
+      run: jest.fn(async task => {
+        await task.fn({} as any);
+      }),
+    };
+    const config = ConfigReader.fromConfigs([
+      {
+        context: 'unit-test',
+        data: validConfig,
+      },
+    ]);
+
+    const provider = AWSDynamoDbTableDataProvider.fromConfig(config, {
+      logger,
+      taskRunner,
+    });
+
+    jest.spyOn(provider, 'run');
+
+    await provider.connect(entityProviderConnection);
+    expect(taskRunner.run).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: provider.getProviderName(),
+        fn: expect.any(Function),
+      }),
+    );
+    expect(provider.run).toHaveBeenCalled();
+  });
+
   it('should blow up on incorrect configs', () => {
     const config = ConfigReader.fromConfigs([
       {
@@ -50,7 +98,7 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: createLogger(),
+        logger,
       });
     };
     expect(testWrapper).toThrow(
@@ -66,7 +114,7 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ]);
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: createLogger(),
+        logger,
       });
     };
     expect(testWrapper).not.toThrow();
@@ -87,7 +135,7 @@ describe('AWSDynamoDbTableDataProvider', () => {
     ).toString();
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
-        logger: createLogger(),
+        logger,
         template,
       });
     };
