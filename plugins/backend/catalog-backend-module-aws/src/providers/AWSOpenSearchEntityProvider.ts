@@ -17,11 +17,12 @@
 import { Entity } from '@backstage/catalog-model';
 import { OpenSearch } from '@aws-sdk/client-opensearch';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
 import { duration } from '../utils/timer';
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
 

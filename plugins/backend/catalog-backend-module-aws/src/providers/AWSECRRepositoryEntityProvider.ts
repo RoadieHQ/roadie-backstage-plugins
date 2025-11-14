@@ -20,11 +20,12 @@ import {
   paginateDescribeRepositories,
 } from '@aws-sdk/client-ecr';
 import { AWSEntityProvider } from './AWSEntityProvider';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { AccountConfig, AWSEntityProviderConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
 import { duration } from '../utils/timer';
 
 const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';

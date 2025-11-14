@@ -44,7 +44,7 @@ function stripBoundingSpecials(str: string): string {
  * Values are strings that follow the same restrictions as name above.
  */
 const defaultNameCleaner: LabelValueMapper = value => {
-  const val = value.replaceAll(/[^a-zA-Z0-9-_.]/g, '-')
+  const val = value.replaceAll(/[^a-zA-Z0-9-_.]/g, '-');
   return stripBoundingSpecials(val).substring(0, 63);
 };
 

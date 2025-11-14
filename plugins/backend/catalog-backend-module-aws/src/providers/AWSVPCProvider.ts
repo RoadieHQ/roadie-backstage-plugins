@@ -17,10 +17,7 @@
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2 } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { ARN } from 'link2aws';
 import { duration } from '../utils/timer';

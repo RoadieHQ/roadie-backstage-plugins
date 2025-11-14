@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-
+import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  DescribeLoadBalancersCommand,
-  DescribeLoadBalancersCommandOutput,
-  DescribeTagsCommand,
-  DescribeTagsCommandOutput,
   ElasticLoadBalancingV2Client,
+  DescribeLoadBalancersCommand,
+  DescribeTagsCommand,
+  DescribeLoadBalancersCommandOutput,
+  DescribeTagsCommandOutput,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
-import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);
 const sts = mockClient(STS as any);
@@ -46,15 +44,9 @@ describe('AWSLoadBalancerProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
-  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand as any).resolves({});
-    taskRunner = {
-      run: async task => {
-        await task.fn({} as any);
-      },
-    };
   });
 
   describe('where there are no load balancers', () => {
@@ -70,11 +62,9 @@ describe('AWSLoadBalancerProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLoadBalancerProvider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
+      const provider = AWSLoadBalancerProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -138,9 +128,9 @@ describe('AWSLoadBalancerProvider', () => {
       const provider = AWSLoadBalancerProvider.fromConfig(config, {
         logger,
         template,
-        taskRunner,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -183,11 +173,9 @@ describe('AWSLoadBalancerProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLoadBalancerProvider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
+      const provider = AWSLoadBalancerProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -230,6 +218,30 @@ describe('AWSLoadBalancerProvider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSLoadBalancerProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 
@@ -282,10 +294,10 @@ describe('AWSLoadBalancerProvider', () => {
       };
       const provider = AWSLoadBalancerProvider.fromConfig(config, {
         logger,
-        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -377,11 +389,9 @@ describe('AWSLoadBalancerProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const provider = AWSLoadBalancerProvider.fromConfig(config, {
-        logger,
-        taskRunner,
-      });
+      const provider = AWSLoadBalancerProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

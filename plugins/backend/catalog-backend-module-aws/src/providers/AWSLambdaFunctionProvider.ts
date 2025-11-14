@@ -23,10 +23,7 @@ import {
 } from '../annotations';
 import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import {
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
+import { ownerFromTags, relationshipsFromTags } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 

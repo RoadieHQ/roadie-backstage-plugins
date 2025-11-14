@@ -92,7 +92,8 @@ export interface AWSEntityProviderConfig {
   catalogApi?: CatalogApi;
   providerId?: string;
   ownerTag?: string;
-  taskRunner: SchedulerServiceTaskRunner;
+  // This is required for the new backend
+  taskRunner?: SchedulerServiceTaskRunner;
   useTemporaryCredentials?: boolean;
   labelValueMapper?: LabelValueMapper;
 }

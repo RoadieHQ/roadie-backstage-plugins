@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-
+import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  DescribeRepositoriesCommand,
-  DescribeRepositoriesCommandOutput,
   ECRClient,
+  DescribeRepositoriesCommand,
   ListTagsForResourceCommand,
+  DescribeRepositoriesCommandOutput,
   ListTagsForResourceCommandOutput,
 } from '@aws-sdk/client-ecr';
-import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { AWSECRRepositoryEntityProvider } from './AWSECRRepositoryEntityProvider';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 // @ts-ignore
 const ecr = mockClient(ECRClient);
@@ -47,15 +45,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
-  let taskRunner: SchedulerServiceTaskRunner;
 
   beforeEach(() => {
     sts.on(GetCallerIdentityCommand).resolves({});
-    taskRunner = {
-      run: async task => {
-        await task.fn({} as any);
-      },
-    };
   });
 
   describe('where there are no repositories', () => {
@@ -73,9 +65,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       };
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
         logger,
-        taskRunner,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [],
@@ -127,9 +119,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
         logger,
         template,
-        taskRunner,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -163,6 +155,30 @@ describe('AWSECRRepositoryEntityProvider', () => {
       });
     });
 
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
+
     it('creates repository', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
@@ -170,9 +186,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       };
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
         logger,
-        taskRunner,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -249,10 +265,10 @@ describe('AWSECRRepositoryEntityProvider', () => {
       };
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
         logger,
-        taskRunner,
         labelValueMapper: value => value,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
@@ -319,9 +335,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       };
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
         logger,
-        taskRunner,
       });
       await provider.connect(entityProviderConnection);
+      await provider.run();
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [

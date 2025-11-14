@@ -59,7 +59,7 @@ export abstract class AWSEntityProvider implements EntityProvider {
   private credentialsManager: DefaultAwsCredentialsManager;
   private account: AccountConfig;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
-  protected readonly taskRunner: SchedulerServiceTaskRunner;
+  protected readonly taskRunner?: SchedulerServiceTaskRunner;
   private template: Template | undefined;
 
   public abstract getProviderName(): string;
@@ -98,21 +98,19 @@ export abstract class AWSEntityProvider implements EntityProvider {
     }
   }
 
-  /**
-   * Note: The generic here is a work-around to allow `new this()` in static methods on an abstract class.
-   * See: https://stackoverflow.com/a/49566763/652728
-   */
-  static fromConfig<T = AWSEntityProvider>(
-    this: { new (account: AccountConfig, options: AWSEntityProviderConfig): T },
-    config: Config,
-    options: AWSEntityProviderConfig,
-  ) {
+  static fromConfig(config: Config, options: AWSEntityProviderConfig) {
     const accountId = config.getString('accountId');
     const roleName = config.getString('roleName');
     const roleArn = config.getOptionalString('roleArn');
     const externalId = config.getOptionalString('externalId');
     const region = config.getString('region');
 
+    /**
+     * Typescript complains on `new this()` in abstract classes, but it works at runtime, when `this` is the concrete
+     * subclass. Using this, it allows us to have a common `fromConfig` method on all subclasses without each needing to
+     * implement it (it was identical in virtually all of them).
+     */
+    // @ts-expect-error
     return new this(
       { accountId, roleName, roleArn, externalId, region },
       options,
@@ -212,12 +210,14 @@ export abstract class AWSEntityProvider implements EntityProvider {
 
   public async connect(connection: EntityProviderConnection): Promise<void> {
     this.connection = connection;
-    await this.taskRunner.run({
-      id: this.getProviderName(),
-      fn: async (dynamicAccountConfig?: DynamicAccountConfig) => {
-        await this.run(dynamicAccountConfig);
-      },
-    });
+    if (this.taskRunner?.run) {
+      await this.taskRunner.run({
+        id: this.getProviderName(),
+        fn: async (dynamicAccountConfig?: DynamicAccountConfig) => {
+          await this.run(dynamicAccountConfig);
+        },
+      });
+    }
   }
 
   protected async buildDefaultAnnotations(
