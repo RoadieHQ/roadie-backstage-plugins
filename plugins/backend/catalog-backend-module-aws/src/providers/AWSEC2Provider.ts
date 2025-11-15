@@ -14,53 +14,64 @@
  * limitations under the License.
  */
 
+import { readFileSync } from 'fs';
+
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { EC2 } from '@aws-sdk/client-ec2';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
+import { EC2, Instance } from '@aws-sdk/client-ec2';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+import { Tag } from '../utils/tags';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+import { Environment } from 'nunjucks';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSEC2Provider.default.yaml.njk'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
  */
-export class AWSEC2Provider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSEC2Provider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSEC2Provider extends AWSEntityProvider<Instance> {
   getProviderName(): string {
     return `aws-ec2-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(
+    resource: Instance,
+    context: { accountId: string; region: string },
+  ): Record<string, string> {
+    const instanceId = resource.InstanceId!;
+    const region = context.region ?? this.region;
+    const accountId = context.accountId ?? this.accountId;
+
+    // Build ARN using context values for dynamic region/account support
+    const arn = `arn:aws:ec2:${region}:${accountId}:instance/${instanceId}`;
+    const consoleLink = new ARN(arn).consoleLink;
+
+    return {
+      [ANNOTATION_VIEW_URL]: consoleLink,
+      [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
+    };
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected addCustomFilters(env: Environment): void {
+    // Filter: find_name_tag - Extract Name or name tag from tags array or return undefined
+    env.addFilter('find_name_tag', (tags: Tag[] | undefined) => {
+      if (!tags || !Array.isArray(tags)) {
+        return undefined;
+      }
+      const nameTag = tags.find(
+        tag => tag.Key === 'Name' || tag.Key === 'name',
+      );
+      return nameTag?.Value;
+    });
   }
 
   private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -79,78 +90,55 @@ export class AWSEC2Provider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing ec2 resources from aws: ${accountId}`);
-    const ec2Resources: Entity[] = [];
+    const ec2Resources: Array<Promise<Entity>> = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const instances = await ec2.describeInstances({
       Filters: [{ Name: 'instance-state-name', Values: ['running'] }],
     });
 
-    for (const reservation of instances.Reservations || []) {
-      if (reservation.Instances) {
-        for (const instance of reservation.Instances) {
+    for (const {
+      Instances: reservationInstances,
+      ...reservation
+    } of instances.Reservations || []) {
+      if (reservationInstances) {
+        for (const instance of reservationInstances) {
           const instanceId = instance.InstanceId;
-          const arn = `arn:aws:ec2:${region}:${accountId}:instance/${instanceId}`;
-          const consoleLink = new ARN(arn).consoleLink;
+          if (!instanceId) continue;
 
-          let entity: Entity | undefined = this.renderEntity(
-            {
+          // Render entity using template with reservation data as additionalData
+          // Excluding Instances to avoid circular references and keep data clean
+          ec2Resources.push(
+            template.render({
               data: instance,
-            },
-            { defaultAnnotations: await defaultAnnotations },
+              tags: instance.Tags,
+              additionalData: {
+                reservation,
+              },
+            }),
           );
-
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_VIEW_URL]: consoleLink,
-                  [ANNOTATION_AWS_EC2_INSTANCE_ID]: instanceId ?? 'unknown',
-                },
-                labels: this.labelsFromTags(instance.Tags),
-                name:
-                  instanceId ??
-                  `${reservation.ReservationId}-instance-${instance.InstanceId}`,
-                title:
-                  instance?.Tags?.find(
-                    tag => tag.Key === 'Name' || tag.Key === 'name',
-                  )?.Value ?? undefined,
-                instancePlatform: instance.Platform,
-                instanceType: instance.InstanceType,
-                monitoringState: instance.Monitoring?.State,
-                instancePlacement: instance.Placement?.AvailabilityZone,
-                amountOfBlockDevices: instance.BlockDeviceMappings?.length ?? 0,
-                instanceCpuCores: instance.CpuOptions?.CoreCount,
-                instanceCpuThreadsPerCode: instance.CpuOptions?.ThreadsPerCore,
-                reservationId: reservation.ReservationId,
-              },
-              spec: {
-                owner: ownerFromTags(instance.Tags, this.getOwnerTag(), groups),
-                ...relationshipsFromTags(instance.Tags),
-                type: 'ec2-instance',
-              },
-            };
-          }
-
-          ec2Resources.push(entity);
         }
       }
     }
 
     await this.connection.applyMutation({
       type: 'full',
-      entities: ec2Resources.map(entity => ({
+      entities: (
+        await Promise.all(ec2Resources)
+      ).map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),

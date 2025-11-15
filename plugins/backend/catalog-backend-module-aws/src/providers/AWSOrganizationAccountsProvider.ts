@@ -14,62 +14,46 @@
  * limitations under the License.
  */
 
-import { Entity } from '@backstage/catalog-model';
+import { readFileSync } from 'fs';
 
 import {
+  Account,
   OrganizationsClient,
   paginateListAccounts,
   paginateListTagsForResource,
+  Tag,
 } from '@aws-sdk/client-organizations';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
+import { Entity } from '@backstage/catalog-model';
 import { AWSEntityProvider } from './AWSEntityProvider';
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
-import { arnToName } from '../utils/arnToName';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { Tag } from '@aws-sdk/client-organizations/dist-types/models/models_0';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+const defaultTemplate = readFileSync(
+  require.resolve('./AWSOrganizationAccountsProvider.default.yaml.njk'),
+  'utf-8',
+);
 
 /**
  * Provides entities from AWS Organizations accounts.
  */
-export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSOrganizationAccountsProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSOrganizationAccountsProvider extends AWSEntityProvider<Account> {
   getProviderName(): string {
     return `aws-organization-accounts-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(resource: Account): Record<string, string> {
+    return {
+      [ANNOTATION_AWS_ACCOUNT_ARN]: resource.Arn ?? '',
+      [ANNOTATION_ACCOUNT_ID]: resource.Id ?? '',
+    };
   }
 
   private async getOrganizationsClient(
@@ -92,21 +76,25 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing Organization account resources from AWS: ${accountId}`,
     );
-    const accountEntities: Entity[] = [];
+    const accountResources: Array<Promise<Entity>> = [];
 
     const organizationsClient = await this.getOrganizationsClient(
       dynamicAccountConfig,
     );
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: organizationsClient,
@@ -118,9 +106,6 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
     for await (const accountsPageResponse of accounts) {
       for (const account of accountsPageResponse.Accounts || []) {
         if (account) {
-          const annotations: { [name: string]: string } = {
-            ...(await defaultAnnotations),
-          };
           const tagsResponse = paginateListTagsForResource(paginatorConfig, {
             ResourceId: account.Id,
           });
@@ -129,55 +114,28 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider {
             tags = tags.concat(listTagsForResourceCommandOutput.Tags ?? []);
           }
 
-          const tagMap = tags?.reduce((acc, tag) => {
-            if (tag.Key && tag.Value) {
-              acc[tag.Key] = tag.Value;
-            }
-            return acc;
-          }, {} as Record<string, string>);
-          annotations[ANNOTATION_AWS_ACCOUNT_ARN] = account.Arn ?? '';
-          annotations[ANNOTATION_ACCOUNT_ID] = account.Id ?? '';
-
-          let entity = this.renderEntity(
-            { data: account, tags: tagMap },
-            { defaultAnnotations: annotations },
+          accountResources.push(
+            template.render({
+              data: account,
+              tags,
+            }),
           );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations,
-                name: arnToName(account.Arn!),
-                title: account.Name,
-                joinedTimestamp: account.JoinedTimestamp?.toISOString() ?? '',
-                joinedMethod: account.JoinedMethod ?? 'UNKNOWN',
-                status: account.Status ?? 'UNKNOWN',
-                labels: this.labelsFromTags(tags),
-              },
-              spec: {
-                owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-                ...relationshipsFromTags(tags),
-                type: 'aws-account',
-              },
-            };
-          }
-
-          accountEntities.push(entity);
         }
       }
     }
 
+    const entities = await Promise.all(accountResources);
+
     await this.connection.applyMutation({
       type: 'full',
-      entities: accountEntities.map(entity => ({
+      entities: entities.map(entity => ({
         entity,
         locationKey: this.getProviderName(),
       })),
     });
 
     this.logger.info(
-      `Finished providing ${accountEntities.length} Organization account resources from AWS: ${accountId}`,
+      `Finished providing ${entities.length} Organization account resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }
