@@ -16014,7 +16014,7 @@ __metadata:
     "@types/link2aws": "npm:^1.0.0"
     "@types/lodash": "npm:^4.14.151"
     aws-sdk-client-mock: "npm:^4.1.0"
-    js-yaml: "npm:^4.1.0"
+    js-yaml: "npm:^4.1.1"
     link2aws: "npm:^1.0.18"
     lodash: "npm:^4.17.21"
     nunjucks: "npm:^3.2.4"
@@ -16239,7 +16239,7 @@ __metadata:
     ajv: "npm:^8.4.0"
     ajv-formats: "npm:^2.1.0"
     glob: "npm:^7.1.7"
-    js-yaml: "npm:^4.1.0"
+    js-yaml: "npm:^4.1.1"
     memfs: "npm:^4.7.7"
     minimist: "npm:^1.2.5"
     typescript: "npm:^5.5.4"
@@ -31156,6 +31156,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 10/9e22d80b4d0105b9899135365f746d47466ed53ef4223c529b3c0f7a39907743fdbd3c4379f94f1106f02755b5e90b2faaf84801a891135544e1ea475d1a1379
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "js-yaml@npm:4.1.1"
+  dependencies:
+    argparse: "npm:^2.0.1"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 10/a52d0519f0f4ef5b4adc1cde466cb54c50d56e2b4a983b9d5c9c0f2f99462047007a6274d7e95617a21d3c91fde3ee6115536ed70991cd645ba8521058b78f77
   languageName: node
   linkType: hard
 
