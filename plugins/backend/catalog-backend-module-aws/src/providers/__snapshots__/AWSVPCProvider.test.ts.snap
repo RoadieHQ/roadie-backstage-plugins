@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSVPCProvider where there is a VPC creates VPC 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/vpc-id": "vpc-12345678",
+                "backstage.io/managed-by-location": "aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1#VpcDetails:VpcId=vpc-12345678",
+              },
+              "cidrBlocks": "10.0.0.0/16",
+              "dhcpOptions": "domain-name: eu-west-1.compute.internal; domain-name-servers: AmazonProvidedDNS",
+              "instanceTenancy": "default",
+              "isDefault": "No",
+              "labels": {
+                "Environment": "production--staging",
+                "owner": "team-infrastructure",
+              },
+              "name": "vpc-12345678",
+              "state": "available",
+              "title": "vpc-12345678",
+            },
+            "spec": {
+              "owner": "team-infrastructure",
+              "type": "vpc",
+            },
+          },
+          "locationKey": "aws-vpc-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSVPCProvider where there is a VPC creates VPC with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/vpc-id": "vpc-12345678",
+                "backstage.io/managed-by-location": "aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-vpc-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1#VpcDetails:VpcId=vpc-12345678",
+              },
+              "name": "vpc-12345678",
+              "state": "available",
+              "title": "vpc-12345678",
+            },
+            "spec": {
+              "type": "vpc",
+            },
+          },
+          "locationKey": "aws-vpc-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

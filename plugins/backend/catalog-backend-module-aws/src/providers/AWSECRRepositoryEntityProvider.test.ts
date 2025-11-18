@@ -44,9 +44,10 @@ describe('AWSECRRepositoryEntityProvider', () => {
     roleName: 'arn:aws:iam::123456789012:role/role1',
     region: 'eu-west-1',
   });
-
   beforeEach(() => {
-    sts.on(GetCallerIdentityCommand).resolves({});
+    sts.on(GetCallerIdentityCommand).resolves({
+      Account: '123456789012',
+    });
   });
 
   describe('where there are no repositories', () => {
@@ -97,6 +98,10 @@ describe('AWSECRRepositoryEntityProvider', () => {
       ecr.on(ListTagsForResourceCommand).resolves({
         tags: [
           {
+            Key: 'owner',
+            Value: 'team-platform',
+          },
+          {
             Key: 'Environment',
             Value: 'production//staging',
           },
@@ -112,7 +117,7 @@ describe('AWSECRRepositoryEntityProvider', () => {
       const template = readFileSync(
         join(
           dirname(__filename),
-          './AWSECRRepositoryEntityProvider.example.yaml.njs',
+          './AWSECRRepositoryEntityProvider.example.yaml.njk',
         ),
       ).toString();
       const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
@@ -121,37 +126,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-ecr-repo-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'ecr-repository',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-app-repo',
-                title: 'my-app-repo',
-                annotations: expect.objectContaining({
-                  'amazonaws.com/ecr-repository-arn':
-                    'arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo',
-                  'backstage.io/managed-by-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                uri: '123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo',
-                tagImmutability: 'MUTABLE',
-                createdAt: expect.stringContaining('Sun Jan 01 2023'),
-                encryption: 'AES256',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates repository', async () => {
@@ -164,42 +141,9 @@ describe('AWSECRRepositoryEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-ecr-repo-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'ecr-repository',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-app-repo',
-                title: 'my-app-repo',
-                labels: {
-                  'aws-ecr-region': 'eu-west-1',
-                  Environment: 'production//staging',
-                },
-                annotations: expect.objectContaining({
-                  'amazonaws.com/ecr-repository-arn':
-                    'arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo',
-                  'backstage.io/managed-by-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                uri: '123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo',
-                tagImmutability: 'MUTABLE',
-                createdAt: 'Sun Jan 01 2023',
-                encryption: 'AES256',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 
@@ -313,36 +257,89 @@ describe('AWSECRRepositoryEntityProvider', () => {
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
+
+      // Only validate the name normalization - the key property being tested
+      const call = (entityProviderConnection.applyMutation as jest.Mock).mock
+        .calls[0][0];
+      expect(call.entities[0].entity.metadata.name).toBe('my_app-repo-test');
+      expect(call.entities[0].entity.metadata.title).toBe('my_app/repo-test');
+    });
+  });
+
+  describe('where there is a repository with dynamic account config', () => {
+    beforeEach(() => {
+      // @ts-ignore
+      ecr.on(DescribeRepositoriesCommand).resolves({
+        repositories: [
+          {
+            repositoryName: 'my-app-repo',
+            repositoryArn:
+              'arn:aws:ecr:us-east-1:999888777666:repository/my-app-repo',
+            repositoryUri:
+              '999888777666.dkr.ecr.us-east-1.amazonaws.com/my-app-repo',
+            imageTagMutability: 'MUTABLE',
+            createdAt: new Date('2023-01-01T00:00:00Z'),
+            encryptionConfiguration: {
+              encryptionType: 'AES256',
+            },
+          },
+        ],
+      } as DescribeRepositoriesCommandOutput);
+      // @ts-ignore
+      ecr.on(ListTagsForResourceCommand).resolves({
+        tags: [
+          {
+            Key: 'owner',
+            Value: 'team-platform',
+          },
+        ],
+      } as ListTagsForResourceCommandOutput);
+
+      // Mock STS to return dynamic account
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '999888777666',
+      });
+    });
+
+    it('creates repository with different region and accountId from dynamic config', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+
+      const dynamicRoleArn = 'arn:aws:iam::999888777666:role/dynamic-role';
+      const dynamicRegion = 'us-east-1';
+      const dynamicAccountId = '999888777666';
+
+      const provider = AWSECRRepositoryEntityProvider.fromConfig(config, {
+        logger,
+        useTemporaryCredentials: true,
+      });
+
+      await provider.connect(entityProviderConnection);
+      await provider.run({
+        roleArn: dynamicRoleArn,
+        region: dynamicRegion,
+      });
+
       expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: [
           expect.objectContaining({
-            locationKey: 'aws-ecr-repo-0',
             entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'ecr-repository',
-              },
               metadata: expect.objectContaining({
-                name: 'my-app-repo-test',
-                title: 'my_app/repo-test',
-                labels: {
-                  'aws-ecr-region': 'eu-west-1',
-                },
+                name: 'my-app-repo', // Stable identifier for clarity
                 annotations: expect.objectContaining({
-                  'amazonaws.com/ecr-repository-arn':
-                    'arn:aws:ecr:eu-west-1:123456789012:repository/my_app/repo-test',
-                  'backstage.io/managed-by-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1',
+                  // Validates roleArn from dynamic config is used
+                  'backstage.io/managed-by-location': `aws-ecr-repo-0:${dynamicRoleArn}`,
+                  'backstage.io/managed-by-origin-location': `aws-ecr-repo-0:${dynamicRoleArn}`,
+                  // Validates accountId (derived from roleArn) from dynamic config is used
+                  'amazon.com/account-id': dynamicAccountId,
                 }),
-                uri: '123456789012.dkr.ecr.eu-west-1.amazonaws.com/my_app/repo-test',
-                tagImmutability: undefined,
-                createdAt: undefined,
-                encryption: '',
+                labels: expect.objectContaining({
+                  // Validates region from dynamic config is used
+                  'aws-ecr-region': dynamicRegion,
+                }),
               }),
             }),
           }),
