@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-import { AnyApiRef, FetchApi, fetchApiRef } from '@backstage/core-plugin-api';
-import {
-  wrapInTestApp,
-  TestApiProvider,
-  mockApis,
-  MockFetchApi,
-} from '@backstage/test-utils';
-import { render, screen, cleanup } from '@testing-library/react';
+import { FetchApi, fetchApiRef } from '@backstage/core-plugin-api';
+import { TestApiProvider, wrapInTestApp } from '@backstage/test-utils';
+import { cleanup, render, screen } from '@testing-library/react';
 import { Content } from './Content';
 
 const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
