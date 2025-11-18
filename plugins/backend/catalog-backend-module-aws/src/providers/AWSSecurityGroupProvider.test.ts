@@ -28,6 +28,7 @@ import { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
 import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -215,6 +216,30 @@ describe('AWSSecurityGroupProvider', () => {
         ],
       });
     });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSSecurityGroupProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
   });
 
   describe('where there is a security group with Name tag', () => {
@@ -273,7 +298,7 @@ describe('AWSSecurityGroupProvider', () => {
                 ingressRules: 'None',
                 egressRules: 'None',
                 labels: {
-                  Name: 'My Custom Security Group',
+                  Name: 'My-Custom-Security-Group',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({

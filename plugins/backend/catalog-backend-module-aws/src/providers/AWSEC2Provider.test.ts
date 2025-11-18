@@ -24,6 +24,7 @@ import { AWSEC2Provider } from './AWSEC2Provider';
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
 import { readFileSync } from 'fs';
 import { dirname, join } from 'path';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -126,6 +127,30 @@ describe('AWSEC2Provider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSEC2Provider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
 
     it('creates table with a template', async () => {

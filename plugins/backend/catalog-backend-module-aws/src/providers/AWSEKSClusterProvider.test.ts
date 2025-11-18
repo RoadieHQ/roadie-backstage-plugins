@@ -31,6 +31,7 @@ import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 
 const eks = mockClient(EKS);
 const sts = mockClient(STS);
@@ -122,6 +123,30 @@ describe('AWSEKSClusterProvider', () => {
           }),
         ],
       });
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSEKSClusterProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
 
     it('creates eks cluster using template', async () => {
