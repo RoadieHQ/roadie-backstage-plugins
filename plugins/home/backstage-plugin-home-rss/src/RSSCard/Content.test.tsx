@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { AnyApiRef } from '@backstage/core-plugin-api';
-import { wrapInTestApp, TestApiProvider } from '@backstage/test-utils';
-import { render, screen, cleanup } from '@testing-library/react';
+import { FetchApi, fetchApiRef } from '@backstage/core-plugin-api';
+import { TestApiProvider, wrapInTestApp } from '@backstage/test-utils';
+import { cleanup, render, screen } from '@testing-library/react';
 import { Content } from './Content';
 
 const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -42,34 +42,28 @@ const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
 </rss>
 `;
 
-window.fetch = jest.fn(async (url: string) => {
-  if (url.endsWith('test-feed')) {
-    return {
-      text: () => rssFeed,
-      status: 200,
-      headers: {
-        'Content-Type': 'application/rss+xml',
-      },
-    };
-  } else if (url.endsWith('not-found')) {
-    return {
-      data: 'Not Found',
-      status: 404,
-      headers: {
-        'Content-Type': 'plain/text',
-      },
-    };
-  }
-  throw new Error('Unexpected Error');
-}) as jest.Mock;
-
 // RSSContent uses rect-RSS which throws a type error in the tests so we are mocking it checking the plain text in the components.
 jest.mock('@backstage/core-components', () => ({
   ...jest.requireActual('@backstage/core-components'),
   RSSContent: ({ content }: { content: string }) => <span>{content}</span>,
 }));
 
-const apis: [AnyApiRef, Partial<unknown>][] = [];
+const fetchApi = {
+  fetch: jest.fn(async (url: string): Promise<Partial<Response>> => {
+    if (url.endsWith('test-feed')) {
+      return {
+        text: async () => rssFeed,
+        status: 200,
+      };
+    } else if (url.endsWith('not-found')) {
+      return {
+        text: async () => 'Not Found',
+        status: 404,
+      };
+    }
+    throw new Error('Unexpected Error');
+  }),
+} as Partial<FetchApi>;
 
 describe('<RSSContent>', () => {
   afterEach(() => {
@@ -79,7 +73,7 @@ describe('<RSSContent>', () => {
   it('should render RSS card', async () => {
     render(
       wrapInTestApp(
-        <TestApiProvider apis={apis}>
+        <TestApiProvider apis={[[fetchApiRef, fetchApi]]}>
           <Content feedURL="https://example.com/test-feed" />
         </TestApiProvider>,
       ),
