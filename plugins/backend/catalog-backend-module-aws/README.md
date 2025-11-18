@@ -7,6 +7,70 @@ You will need to configure the providers in your catalog.ts file in your backsta
 
 ```typescript
 import {
+  AWSEC2Provider,
+  AWSIAMUserProvider,
+  AWSLambdaFunctionProvider,
+  AWSS3BucketProvider,
+} from '@roadiehq/catalog-backend-module-aws';
+
+const AWSProviders = [
+  AWSEC2Provider,
+  AWSIAMUserProvider,
+  AWSLambdaFunctionProvider,
+  AWSS3BucketProvider,
+];
+
+export default createBackendModule({
+  moduleId: 'catalog-aws',
+  pluginId: 'catalog',
+  register(env) {
+    env.registerInit({
+      deps: {
+        catalog: catalogProcessingExtensionPoint,
+        rootConfig: coreServices.rootConfig,
+        logger: coreServices.logger,
+        scheduler: coreServices.scheduler,
+      },
+      async init({ catalog, rootConfig, logger, scheduler }) {
+        const config = rootConfig.getConfigArray('catalog.providers.aws');
+        for (const accountConfig of config) {
+          catalog.addEntityProvider(
+            AWSEC2Provider.fromConfig(accountConfig, {
+              logger,
+              scheduler,
+            }),
+          );
+          catalog.addEntityProvider(
+            AWSIAMUserProvider.fromConfig(accountConfig, {
+              logger,
+              scheduler,
+            }),
+          );
+          catalog.addEntityProvider(
+            AWSLambdaFunctionProvider.fromConfig(accountConfig, {
+              logger,
+              scheduler,
+            }),
+          );
+          catalog.addEntityProvider(
+            AWSS3BucketProvider.fromConfig(accountConfig, {
+              logger,
+              scheduler,
+            }),
+          );
+        }
+      },
+    });
+  },
+});
+```
+
+## Legacy Backend
+
+If you are using the legacy backend, you can register the providers like this:
+
+```typescript
+import {
   AWSLambdaFunctionProvider,
   AWSS3BucketProvider,
   AWSIAMUserProvider,

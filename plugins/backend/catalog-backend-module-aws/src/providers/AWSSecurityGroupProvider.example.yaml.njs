@@ -14,5 +14,5 @@ metadata:
     amazonaws.com/security-group-id: {{ data.GroupId }}
     backstage.io/view-url: https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#SecurityGroup:groupId={{ data.GroupId }}
 spec:
-  owner: unknown
+  owner: hardcoded-unknown
   type: security-group

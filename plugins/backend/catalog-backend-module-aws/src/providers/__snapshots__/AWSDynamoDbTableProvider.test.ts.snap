@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSDynamoDbTableProvider where there are is a table creates table 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/dynamo-db-table-arn": "arn:aws:dynamodb::123456789012:table/table1",
+                "backstage.io/managed-by-location": "aws-dynamo-db-table-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-dynamo-db-table-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "labels": {
+                "something": "something--something",
+              },
+              "name": "789400bd545150a5e718539098e053ad2242a887ffe74c390197aed9dceb621",
+              "title": "table1",
+            },
+            "spec": {
+              "owner": "unknown",
+              "type": "dynamo-db-table",
+            },
+          },
+          "locationKey": "aws-dynamo-db-table-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSDynamoDbTableProvider where there are is a table creates table with template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/dynamo-db-table-arn": "arn:aws:dynamodb::123456789012:table/table1",
+                "backstage.io/managed-by-location": "aws-dynamo-db-table-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-dynamo-db-table-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "labels": {
+                "something": "something--something",
+              },
+              "name": "789400bd545150a5e718539098e053ad2242a887ffe74c390197aed9dceb621",
+              "title": "table1",
+            },
+            "spec": {
+              "type": "dynamo-db-table",
+            },
+          },
+          "locationKey": "aws-dynamo-db-table-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

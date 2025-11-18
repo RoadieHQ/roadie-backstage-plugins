@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSS3BucketProvider where there is a bucket creates aws buckets 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/s3-bucket-arn": "arn:aws:s3:::my-bucket",
+                "backstage.io/managed-by-location": "aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://s3.console.aws.amazon.com/s3/buckets/my-bucket",
+              },
+              "labels": {
+                "owner": "team-storage",
+              },
+              "name": "921a72e33486437a36c4290e4d105563b4691a410164c49609b1b0174cb3fba",
+              "title": "my-bucket",
+            },
+            "spec": {
+              "owner": "team-storage",
+              "type": "s3-bucket",
+            },
+          },
+          "locationKey": "aws-s3-bucket-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSS3BucketProvider where there is a bucket creates aws buckets with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/s3-bucket-arn": "arn:aws:s3:::my-bucket",
+                "amazonaws.com/s3-bucket-arn": "arn:aws:s3:::my-bucket",
+                "backstage.io/managed-by-location": "aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-s3-bucket-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://s3.console.aws.amazon.com/s3/buckets/my-bucket",
+              },
+              "labels": {
+                "accountId": 123456789012,
+                "region": "eu-west-1",
+              },
+              "name": "a483e74c6d1d86558b8e99bb8b8247e2a169d85f8c8b7c29d789e4b2949e5de",
+              "title": "my-bucket",
+            },
+            "spec": {
+              "owner": "hardcoded-unknown",
+              "type": "s3-bucket",
+            },
+          },
+          "locationKey": "aws-s3-bucket-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

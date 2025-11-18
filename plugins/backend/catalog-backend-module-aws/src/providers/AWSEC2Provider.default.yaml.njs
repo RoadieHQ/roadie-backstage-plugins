@@ -1,0 +1,30 @@
+{% extends 'AwsEntityProvider.base.yaml.njs' %}
+
+{% set entityName = data.InstanceId %}
+{% set entityTitle = data.Tags | find_name_tag %}
+{% set entityType = 'ec2-instance' %}
+
+{% block additionalMetadata %}
+  {% if data.Platform %}
+  instancePlatform: "{{ data.Platform }}"
+  {% endif %}
+  {% if data.InstanceType %}
+  instanceType: "{{ data.InstanceType }}"
+  {% endif %}
+  {% if data.Monitoring.State %}
+  monitoringState: "{{ data.Monitoring.State }}"
+  {% endif %}
+  {% if data.Placement.AvailabilityZone %}
+  instancePlacement: "{{ data.Placement.AvailabilityZone }}"
+  {% endif %}
+  amountOfBlockDevices: {{ data.BlockDeviceMappings | length if data.BlockDeviceMappings else 0 }}
+  {% if data.CpuOptions.CoreCount %}
+  instanceCpuCores: {{ data.CpuOptions.CoreCount }}
+  {% endif %}
+  {% if data.CpuOptions.ThreadsPerCore %}
+  instanceCpuThreadsPerCode: {{ data.CpuOptions.ThreadsPerCore }}
+  {% endif %}
+  {% if additionalData.reservation.ReservationId %}
+  reservationId: "{{ additionalData.reservation.ReservationId }}"
+  {% endif %}
+{% endblock %}
