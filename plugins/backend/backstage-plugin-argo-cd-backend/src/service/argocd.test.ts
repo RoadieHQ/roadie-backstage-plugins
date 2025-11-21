@@ -829,12 +829,6 @@ describe('ArgoCD service', () => {
           ],
         }),
       );
-      // token
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          token: 'testToken',
-        }),
-      );
       // sync
       fetchMock.mockResponseOnce(
         JSON.stringify({
@@ -911,12 +905,6 @@ describe('ArgoCD service', () => {
               },
             },
           ],
-        }),
-      );
-      // token
-      fetchMock.mockResponseOnce(
-        JSON.stringify({
-          token: 'testToken',
         }),
       );
       // terminateOperation
