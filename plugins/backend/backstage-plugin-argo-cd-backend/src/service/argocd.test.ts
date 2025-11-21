@@ -1018,7 +1018,6 @@ describe('ArgoCD service', () => {
           }),
         }),
       );
-
     });
 
     describe('deleteAppandProject', () => {
@@ -1361,7 +1360,9 @@ describe('ArgoCD service', () => {
         );
       });
       it('terminates operation when terminate set to true', async () => {
-        terminateArgoAppOperationMock.mockResolvedValueOnce({ statusCode: 200 });
+        terminateArgoAppOperationMock.mockResolvedValueOnce({
+          statusCode: 200,
+        });
 
         deleteAppMock.mockResolvedValueOnce({ statusCode: 200 });
 
@@ -1574,9 +1575,9 @@ describe('ArgoCD service', () => {
 
       it('should return an empty array even when the request fails', async () => {
         fetchMock.mockRejectOnce(new Error());
-        expect(await argoService.findArgoApp({ name: 'test-app' })).toStrictEqual(
-          [],
-        );
+        expect(
+          await argoService.findArgoApp({ name: 'test-app' }),
+        ).toStrictEqual([]);
       });
 
       it('should return the argo instances using the app selector', async () => {
@@ -1729,7 +1730,9 @@ describe('ArgoCD service', () => {
 
         await argoService.updateArgoProjectAndApp(data);
 
-        const fetchBody = JSON.parse(fetchMock.mock.calls[2][1]?.body as string);
+        const fetchBody = JSON.parse(
+          fetchMock.mock.calls[2][1]?.body as string,
+        );
 
         expect(fetchBody).toStrictEqual(
           expect.objectContaining({
@@ -1802,9 +1805,9 @@ describe('ArgoCD service', () => {
           status: 500,
         });
 
-        await expect(argoService.getArgoProject(argoProjectReq)).rejects.toThrow(
-          'Failed to get argo project: ERROR',
-        );
+        await expect(
+          argoService.getArgoProject(argoProjectReq),
+        ).rejects.toThrow('Failed to get argo project: ERROR');
       });
     });
 
@@ -2235,7 +2238,9 @@ describe('ArgoCD service', () => {
       });
 
       it('uses instance level token when upper level username and password provided', async () => {
-        const argoConfig = getConfig({ instanceCredentials: { token: 'token' } });
+        const argoConfig = getConfig({
+          instanceCredentials: { token: 'token' },
+        });
         const argoCdService = new ArgoService(
           'upper-level-username',
           'upper-level-password',
@@ -2272,7 +2277,10 @@ describe('ArgoCD service', () => {
         expect(fetchMock).toHaveBeenCalledWith(
           `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
           expect.objectContaining({
-            body: JSON.stringify({ username: 'username', password: 'password' }),
+            body: JSON.stringify({
+              username: 'username',
+              password: 'password',
+            }),
           }),
         );
         expect(token).toEqual('token');
@@ -2423,7 +2431,10 @@ describe('ArgoCD service', () => {
         expect(fetchMock).toHaveBeenCalledWith(
           `${argoCdService.instanceConfigs[0].url}/api/v1/session`,
           expect.objectContaining({
-            body: JSON.stringify({ username: 'username', password: 'password' }),
+            body: JSON.stringify({
+              username: 'username',
+              password: 'password',
+            }),
           }),
         );
         expect(token).toEqual('token');

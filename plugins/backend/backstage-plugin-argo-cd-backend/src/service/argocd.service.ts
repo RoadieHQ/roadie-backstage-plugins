@@ -588,10 +588,12 @@ export class ArgoService implements ArgoServiceApi {
               this.logger.error(
                 `Could not find instance config for ${argoInstance.name}`,
               );
-              return [{ 
-                status: 'Failure', 
-                message: `Could not find instance config for ${argoInstance.name}` 
-              }];
+              return [
+                {
+                  status: 'Failure',
+                  message: `Could not find instance config for ${argoInstance.name}`,
+                },
+              ];
             }
 
             const token = await this.getArgoToken(matchedInstance);
