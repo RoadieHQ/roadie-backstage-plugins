@@ -64,7 +64,7 @@
     "@backstage/plugin-catalog-backend": "backstage:^",
     "@backstage/plugin-catalog-node": "backstage:^",
     "@backstage/plugin-kubernetes-common": "backstage:^",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "link2aws": "^1.0.18",
     "lodash": "^4.17.21",
     "nunjucks": "^3.2.4"
