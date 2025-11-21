@@ -1,5 +1,22 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.6.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/github-auth-utils-react@1.2.0
+
+## 3.5.3
+
+### Patch Changes
+
+- 3fdba7e: Improve GitHub API calls to better respect rate limits
+
 ## 3.5.2
 
 ### Patch Changes

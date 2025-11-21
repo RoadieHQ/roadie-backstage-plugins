@@ -1,5 +1,17 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 2.3.0
+
+### Minor Changes
+
+- 7be4732: Added new frontend system support
+
+## 2.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 2.1.0
 
 ### Minor Changes

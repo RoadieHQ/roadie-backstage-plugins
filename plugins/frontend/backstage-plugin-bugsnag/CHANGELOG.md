@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-bugsnag
 
+## 2.4.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 2.3.0
 
 ### Minor Changes

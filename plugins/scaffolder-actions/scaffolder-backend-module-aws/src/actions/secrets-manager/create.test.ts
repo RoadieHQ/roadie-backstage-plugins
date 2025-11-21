@@ -17,7 +17,7 @@ import { PassThrough } from 'stream';
 import { createAwsSecretsManagerCreateAction as createAwsSecretsManagerCreateAction } from './create';
 import { mockClient } from 'aws-sdk-client-mock';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 // @ts-ignore
 const secretsManagerClient = mockClient(SecretsManagerClient);
@@ -28,7 +28,7 @@ describe('create', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

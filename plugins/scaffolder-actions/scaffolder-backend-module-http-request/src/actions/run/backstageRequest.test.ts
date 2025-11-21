@@ -15,7 +15,7 @@
  */
 import { createHttpBackstageAction } from './backstageRequest';
 import os from 'os'; // eslint-disable-line
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -28,7 +28,7 @@ jest.mock('./helpers', () => ({
 describe('http:backstage:request', () => {
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
-  const logger = getVoidLogger();
+  const logger = mockServices.logger.mock();
   const loggerSpy = jest.spyOn(logger, 'info');
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 

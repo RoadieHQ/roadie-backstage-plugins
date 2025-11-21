@@ -16,7 +16,7 @@
 import { PassThrough } from 'stream';
 import { createAwsS3CpAction } from './cp';
 import mockFs from 'mock-fs';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 const mockS3Client = {
   send: jest.fn().mockReturnThis(),
@@ -41,7 +41,7 @@ describe('roadiehq:aws:s3:cp', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

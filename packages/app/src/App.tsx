@@ -28,7 +28,6 @@ import {
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
 import { SearchPage } from '@backstage/plugin-search';
-import { TechRadarPage } from '@backstage-community/plugin-tech-radar';
 import { TechdocsPage } from '@backstage/plugin-techdocs';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import { apis } from './apis';
@@ -92,10 +91,6 @@ const routes = (
       </ScaffolderFieldExtensions>
     </Route>
     <Route path="/api-docs" element={<ApiExplorerPage />} />
-    <Route
-      path="/tech-radar"
-      element={<TechRadarPage width={1500} height={800} />}
-    />
     <Route
       path="/i-frame"
       element={

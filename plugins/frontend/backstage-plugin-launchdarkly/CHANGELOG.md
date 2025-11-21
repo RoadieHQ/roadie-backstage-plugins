@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.4.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 1.3.0
 
 ### Minor Changes

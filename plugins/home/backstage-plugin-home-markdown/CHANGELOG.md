@@ -1,5 +1,11 @@
 ## 1.1.0
 
+## 2.7.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 2.6.0
 
 ### Minor Changes
