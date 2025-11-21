@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/scaffolder-backend-module-aws",
-  "version": "2.7.1",
+  "version": "2.8.1",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -35,7 +35,6 @@
     "@aws-sdk/client-s3": "^3.76.0",
     "@aws-sdk/client-secrets-manager": "^3.241.0",
     "@aws-sdk/types": "^3.53.0",
-    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
     "@backstage/errors": "backstage:^",
@@ -46,6 +45,7 @@
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.76.0",
+    "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",

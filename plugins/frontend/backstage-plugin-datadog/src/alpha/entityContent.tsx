@@ -11,8 +11,8 @@ import { entityContentRouteRef, isDatadogDashboardAvailable } from '../plugin';
 export const entityDatadogContent = EntityContentBlueprint.make({
   name: 'entity',
   params: {
-    defaultPath: '/datadog',
-    defaultTitle: 'Datadog',
+    path: '/datadog',
+    title: 'Datadog',
     filter: isDatadogDashboardAvailable,
     routeRef: convertLegacyRouteRef(entityContentRouteRef),
     loader: () => import('../Router').then(m => compatWrapper(<m.Router />)),

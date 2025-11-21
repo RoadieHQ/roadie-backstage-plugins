@@ -11,8 +11,8 @@ import { entityContentRouteRef } from '../plugin';
 export const argoCdPage = EntityContentBlueprint.make({
   name: 'ArgoCdPage',
   params: {
-    defaultPath: '/argocd',
-    defaultTitle: 'ArgoCD',
+    path: '/argocd',
+    title: 'ArgoCD',
     // you can reuse the existing routeRef
     // by wrapping into the convertLegacyRouteRef.
     routeRef: convertLegacyRouteRef(entityContentRouteRef),

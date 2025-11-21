@@ -1,5 +1,16 @@
 # @roadiehq/rag-ai-backend
 
+## 2.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/rag-ai-node@0.3.0
+
 ## 2.1.0
 
 ### Minor Changes

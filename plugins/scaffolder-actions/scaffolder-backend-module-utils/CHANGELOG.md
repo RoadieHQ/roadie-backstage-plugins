@@ -1,5 +1,17 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.1.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
+## 4.1.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
 ## 4.0.4
 
 ### Patch Changes

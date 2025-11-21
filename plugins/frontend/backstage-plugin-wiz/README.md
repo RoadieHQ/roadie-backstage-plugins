@@ -107,3 +107,44 @@ metadata:
   annotations:
     wiz.io/project-id: <your-project-id>
 ```
+
+## New Frontend System
+
+Install the plugin in your Backstage app:
+
+```bash
+# From your Backstage root directory
+yarn --cwd packages/app add @roadiehq/backstage-plugin-wiz
+```
+
+If you're using [feature discovery](https://backstage.io/docs/frontend-system/architecture/app/#feature-discovery), the plugin should be automatically discovered and enabled. Otherwise, you can manually enable the plugin by adding it to your app:
+
+```tsx
+// packages/app/src/App.tsx
+import wizPlugin from '@roadiehq/backstage-plugin-wiz/alpha';
+
+const app = createApp({
+  features: [wizPlugin],
+});
+```
+
+You can tailor the registered entity content and cards via configuration:
+
+```yaml
+# app-config.yaml
+app:
+  extensions:
+    - entity-content:wiz/issues:
+        config:
+          filter:
+            kind: component
+    - entity-card:wiz/issues-widget:
+        config:
+          type: info
+    - entity-card:wiz/issues-chart:
+        config:
+          type: content
+    - entity-card:wiz/severity-chart:
+        config:
+          type: content
+```

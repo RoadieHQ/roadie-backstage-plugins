@@ -137,6 +137,45 @@ import { EntityGithubInsightsEnvironmentsCard } from '@roadiehq/backstage-plugin
 
 ![a preview of the releases widget](docs/environments-widget.png)
 
+## New Frontend System
+
+1. First, install the plugin into your app:
+
+```bash
+# From your Backstage root directory
+yarn --cwd packages/app add @roadiehq/backstage-plugin-github-insights
+```
+
+2. If [feature discovery](https://backstage.io/docs/frontend-system/architecture/app/#feature-discovery) is enabled in your app, the plugin will be automatically discovered and added to the entity page. If not, you can manually add the plugin to your app:
+
+```tsx
+// packages/app/src/App.tsx
+// ...
+import githubInsightsPlugin from '@roadiehq/backstage-plugin-github-insights/alpha';
+
+const app = createApp({
+  features: [
+    // ...
+    githubInsightsPlugin,
+  ],
+});
+```
+
+3. If necessary, you can also customize the plugin:
+
+```yaml
+# app-config.yaml
+app:
+  # ...
+  extensions:
+    # ...
+    - entity-card:github-insights/compliance:
+        config:
+          filter:
+            kind: component
+# ...
+```
+
 ## Links
 
 - [Backstage](https://backstage.io)
