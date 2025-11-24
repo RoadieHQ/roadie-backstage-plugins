@@ -576,7 +576,27 @@ export class ArgoService implements ArgoServiceApi {
       const parallelSyncCalls = argoAppResp.map(
         async (argoInstance: any): Promise<SyncResponse[]> => {
           try {
-            const token = await this.getArgoToken(argoInstance);
+            let matchedInstance: InstanceConfig | undefined;
+            for (const config of this.instanceConfigs) {
+              if (config.name === argoInstance.name) {
+                matchedInstance = config;
+                break;
+              }
+            }
+
+            if (!matchedInstance) {
+              this.logger.error(
+                `Could not find instance config for ${argoInstance.name}`,
+              );
+              return [
+                {
+                  status: 'Failure',
+                  message: `Could not find instance config for ${argoInstance.name}`,
+                },
+              ];
+            }
+
+            const token = await this.getArgoToken(matchedInstance);
             try {
               if (terminateOperation) {
                 const terminateResp = argoInstance.appName.map(
