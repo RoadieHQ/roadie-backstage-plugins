@@ -22,7 +22,7 @@ import { Config } from '@backstage/config';
 const configKey = 'glean';
 export const defaults = {
   schedule: {
-    frequency: { minutes: 10 },
+    frequency: { hours: 1 },
     timeout: { minutes: 15 },
     initialDelay: { seconds: 3 },
   },
