@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-glean-backend
 
+## 1.2.0
+
+### Minor Changes
+
+- ac9ce37: Increase glean frequency to 1 hour.
+
 ## 1.1.0
 
 ### Minor Changes
