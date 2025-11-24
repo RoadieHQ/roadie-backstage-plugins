@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.5.1
+
+### Patch Changes
+
+- 7cda430: Match the instance name from findArgoApp results with the actual configured instance from this.instanceConfigs before calling getArgoToken():
+
 ## 4.5.0
 
 ### Minor Changes
