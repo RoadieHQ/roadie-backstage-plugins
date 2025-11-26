@@ -109,7 +109,7 @@ export class GleanIndexClient {
     return {
       ...partialDocument,
       body: {
-        mimeType: 'HTML',
+        mimeType: 'text/html',
         textContent: this.parseMainContent(rawHtml ?? ''),
       },
     };

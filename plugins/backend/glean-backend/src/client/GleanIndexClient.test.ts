@@ -152,7 +152,7 @@ describe('GleanIndexClient', () => {
         viewURL:
           'http://localhost/docs/default/component/some-handbook-with-url-ref/foo',
         body: {
-          mimeType: 'HTML',
+          mimeType: 'text/html',
           textContent: expect.stringContaining(
             "Welcome to Company's Engineering Handbook!",
           ),
@@ -171,7 +171,7 @@ describe('GleanIndexClient', () => {
       datasource: 'I-am-a-datasource',
       viewURL: 'http://backstage.w10e.com',
       body: {
-        mimeType: 'HTML',
+        mimeType: 'text/html',
         textContent: 'I am some text content',
       },
       updatedAt: 1652818028,
