@@ -1,5 +1,11 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.10.1
+
+### Patch Changes
+
+- 591c0f6: Add support for templated tags into provided AWS Lambdas
+
 ## 5.10.0
 
 ### Minor Changes
