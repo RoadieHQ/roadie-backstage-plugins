@@ -44,7 +44,7 @@
     "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^0.2.27",
+    "@langchain/core": "^1.1.0",
     "@roadiehq/rag-ai-node": "^0.3.0",
     "@types/express": "*",
     "express": "^4.17.1",
