@@ -262,4 +262,86 @@ describe('AWSLambdaFunctionProvider', () => {
       });
     });
   });
+
+  describe('where template uses tags', () => {
+    const owner = 'engineering';
+    beforeEach(() => {
+      lambda.on(ListFunctionsCommand).resolves({
+        Functions: [
+          {
+            FunctionName: 'my-function',
+            FunctionArn:
+              'arn:aws:lambda:eu-west-1:123456789012:function:my-function',
+            Runtime: 'nodejs14.x',
+            Role: 'arn:aws:iam::123456789012:role/lambdaRole',
+            Handler: 'src/functions/filename.handler',
+            CodeSize: 45096642,
+            Description: '',
+            Timeout: 30,
+            MemorySize: 1024,
+            PackageType: 'Zip',
+            Architectures: ['x86_64'],
+            EphemeralStorage: {
+              Size: 512,
+            },
+          },
+        ],
+      });
+      lambda.on(ListTagsCommand).resolves({
+        Tags: {
+          [ownerTag]: owner,
+          environment: 'production',
+          team: 'platform',
+        },
+      });
+    });
+
+    it('passes tags to template rendering', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const template = `
+kind: Resource
+apiVersion: backstage.io/v1beta1
+metadata:
+  name: {{ data.FunctionName }}
+  title: {{ data.FunctionName }}
+  annotations:
+    amazon.com/lambda-function-arn: {{ data.FunctionArn }}
+  labels:
+    environment: {{ data.tags.environment }}
+    team: {{ data.tags.team }}
+spec:
+  type: lambda-function
+  owner: {{ data.tags['${ownerTag}'] }}
+          `.trim();
+      const provider = AWSLambdaFunctionProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
+        type: 'full',
+        entities: [
+          expect.objectContaining({
+            entity: expect.objectContaining({
+              kind: 'Resource',
+              metadata: expect.objectContaining({
+                name: 'my-function',
+                labels: {
+                  environment: 'production',
+                  team: 'platform',
+                },
+              }),
+              spec: expect.objectContaining({
+                owner: owner,
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+  });
 });
