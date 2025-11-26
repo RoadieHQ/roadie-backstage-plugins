@@ -139,7 +139,8 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
 
           const entity: Entity | undefined = this.renderEntity(
             {
-              data: { ...lambdaFunction, tags },
+              data: lambdaFunction,
+              tags,
             },
             { defaultAnnotations: await defaultAnnotations },
           );

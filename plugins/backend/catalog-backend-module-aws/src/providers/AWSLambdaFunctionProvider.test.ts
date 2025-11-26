@@ -310,11 +310,11 @@ metadata:
   annotations:
     amazon.com/lambda-function-arn: {{ data.FunctionArn }}
   labels:
-    environment: {{ data.tags.environment }}
-    team: {{ data.tags.team }}
+    environment: {{ tags.environment }}
+    team: {{ tags.team }}
 spec:
   type: lambda-function
-  owner: {{ data.tags['${ownerTag}'] }}
+  owner: {{ tags['${ownerTag}'] }}
           `.trim();
       const provider = AWSLambdaFunctionProvider.fromConfig(config, {
         logger,
