@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-glean-backend
 
+## 1.2.1
+
+### Patch Changes
+
+- 870976d: Modify mime type when indexing documents
+
 ## 1.2.0
 
 ### Minor Changes
