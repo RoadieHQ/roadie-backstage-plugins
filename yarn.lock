@@ -15860,7 +15860,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-embeddings-aws@npm:^1.3.0, @roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
+"@roadiehq/rag-ai-backend-embeddings-aws@npm:^2.0.0, @roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws"
   dependencies:
@@ -15873,14 +15873,14 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@langchain/aws": "npm:^1.0.3"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-backend": "npm:^2.2.0"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^1.3.0"
-    "@roadiehq/rag-ai-node": "npm:^0.3.0"
+    "@roadiehq/rag-ai-backend": "npm:^3.0.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
+    "@roadiehq/rag-ai-node": "npm:^0.4.0"
     winston: "npm:^3.11.0"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-embeddings-openai@npm:^0.7.0, @roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
+"@roadiehq/rag-ai-backend-embeddings-openai@npm:^0.8.0, @roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai"
   dependencies:
@@ -15890,13 +15890,13 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/openai": "npm:^1.1.3"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^1.3.0"
-    "@roadiehq/rag-ai-node": "npm:^0.3.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
+    "@roadiehq/rag-ai-node": "npm:^0.4.0"
     winston: "npm:^3.11.0"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-retrieval-augmenter@npm:^1.3.0, @roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
+"@roadiehq/rag-ai-backend-retrieval-augmenter@npm:^2.0.0, @roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter"
   dependencies:
@@ -15908,13 +15908,13 @@ __metadata:
     "@backstage/errors": "backstage:^"
     "@backstage/plugin-search-common": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-node": "npm:^0.3.0"
+    "@roadiehq/rag-ai-node": "npm:^0.4.0"
     langchain: "npm:^0.1.21"
     p-limit: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend@npm:^2.2.0, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
+"@roadiehq/rag-ai-backend@npm:^3.0.0, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend"
   dependencies:
@@ -15923,7 +15923,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-node": "npm:^0.3.0"
+    "@roadiehq/rag-ai-node": "npm:^0.4.0"
     "@types/compression": "npm:^1.7.5"
     "@types/express": "npm:*"
     express: "npm:^4.17.1"
@@ -15933,7 +15933,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-node@npm:^0.3.0, @roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node":
+"@roadiehq/rag-ai-node@npm:^0.4.0, @roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node"
   dependencies:
@@ -15943,7 +15943,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-storage-pgvector@npm:^2.2.0, @roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector":
+"@roadiehq/rag-ai-storage-pgvector@npm:^3.0.0, @roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector"
   dependencies:
@@ -15951,7 +15951,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-node": "npm:^0.3.0"
+    "@roadiehq/rag-ai-node": "npm:^0.4.0"
     knex: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
@@ -22492,11 +22492,11 @@ __metadata:
     "@roadiehq/catalog-backend-module-gravatar": "npm:^1.2.0"
     "@roadiehq/catalog-backend-module-okta": "npm:^1.3.0"
     "@roadiehq/plugin-wiz-backend": "npm:^2.2.0"
-    "@roadiehq/rag-ai-backend": "npm:^2.2.0"
-    "@roadiehq/rag-ai-backend-embeddings-aws": "npm:^1.3.0"
-    "@roadiehq/rag-ai-backend-embeddings-openai": "npm:^0.7.0"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^1.3.0"
-    "@roadiehq/rag-ai-storage-pgvector": "npm:^2.2.0"
+    "@roadiehq/rag-ai-backend": "npm:^3.0.0"
+    "@roadiehq/rag-ai-backend-embeddings-aws": "npm:^2.0.0"
+    "@roadiehq/rag-ai-backend-embeddings-openai": "npm:^0.8.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
+    "@roadiehq/rag-ai-storage-pgvector": "npm:^3.0.0"
     "@roadiehq/scaffolder-backend-module-aws": "npm:^2.8.0"
     "@roadiehq/scaffolder-backend-module-http-request": "npm:^5.5.0"
     "@roadiehq/scaffolder-backend-module-utils": "npm:^4.1.0"

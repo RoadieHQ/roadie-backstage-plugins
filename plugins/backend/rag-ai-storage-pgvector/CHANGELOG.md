@@ -1,5 +1,18 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 3.0.0
+
+### Major Changes
+
+- 8ed88c3: **BREAKING** LangChain dependencies have been upgraded to their latest versions.
+
+  Since their API is not backwards compatible, you need to upgrade the dependencies in your project as well.
+
+### Patch Changes
+
+- Updated dependencies [8ed88c3]
+  - @roadiehq/rag-ai-node@0.4.0
+
 ## 2.2.0
 
 ### Minor Changes
