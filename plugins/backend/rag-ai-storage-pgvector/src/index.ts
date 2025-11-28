@@ -15,7 +15,4 @@
  */
 
 export * from './service';
-export {
-  RoadiePgVectorStore,
-  type RoadiePgVectorStoreConfig,
-} from './service/RoadiePgVectorStore';
+export * from './service/RoadiePgVectorStore';
