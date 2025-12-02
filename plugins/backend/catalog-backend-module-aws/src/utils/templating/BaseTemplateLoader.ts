@@ -13,15 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
-
 import { ILoader, Loader } from 'nunjucks';
 
-const baseTemplateUrl = new URL(
-  `./AwsEntityProvider.base.yaml.njs`,
-  import.meta.url,
-);
-const baseTemplateContent = readFileSync(baseTemplateUrl, 'utf-8');
+import baseTemplateContent from '../../providers/AWSEntityProvider.base.yaml.njk';
 
 /**
  * This template loader is only used so that the base template can be
@@ -29,7 +23,7 @@ const baseTemplateContent = readFileSync(baseTemplateUrl, 'utf-8');
  */
 export class BaseTemplateLoader extends Loader implements ILoader {
   getSource(name: string) {
-    if (name !== 'AwsEntityProvider.base.yaml.njs') {
+    if (name !== 'AWSEntityProvider.base.yaml') {
       throw new Error(`Template not found: ${name}`);
     }
     return { src: baseTemplateContent, path: name, noCache: true };

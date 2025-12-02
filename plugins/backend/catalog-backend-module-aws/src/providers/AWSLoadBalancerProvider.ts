@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import {
-  ElasticLoadBalancingV2Client,
   DescribeLoadBalancersCommand,
   DescribeTagsCommand,
+  ElasticLoadBalancingV2Client,
   LoadBalancer,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+
 import { DynamicAccountConfig } from '../types';
-import { AWSEntityProvider } from './AWSEntityProvider';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSLoadBalancerProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSLoadBalancerProvider.default.yaml.njk';
 
 const ANNOTATION_LOAD_BALANCER_ARN = 'amazonaws.com/load-balancer-arn';
 const ANNOTATION_LOAD_BALANCER_DNS_NAME =
@@ -127,21 +123,11 @@ export class AWSLoadBalancerProvider extends AWSEntityProvider<LoadBalancer> {
       );
     }
 
-    const entities = await Promise.all(lbResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(lbResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} Load Balancer resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      `Finished providing ${lbResources.length} Load Balancer resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
     );
   }
 }

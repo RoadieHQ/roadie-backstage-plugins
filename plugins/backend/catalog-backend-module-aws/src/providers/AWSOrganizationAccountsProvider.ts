@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
 import {
   Account,
   OrganizationsClient,
@@ -24,7 +22,7 @@ import {
   Tag,
 } from '@aws-sdk/client-organizations';
 import { Entity } from '@backstage/catalog-model';
-import { AWSEntityProvider } from './AWSEntityProvider';
+
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_ACCOUNT_ARN,
@@ -32,10 +30,8 @@ import {
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSOrganizationAccountsProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSOrganizationAccountsProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS Organizations accounts.
@@ -124,18 +120,10 @@ export class AWSOrganizationAccountsProvider extends AWSEntityProvider<Account> 
       }
     }
 
-    const entities = await Promise.all(accountResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(accountResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} Organization account resources from AWS: ${accountId}`,
+      `Finished providing ${accountResources.length} Organization account resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

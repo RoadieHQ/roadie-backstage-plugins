@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2, Instance } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
-import { Tag } from '../utils/tags';
-import { DynamicAccountConfig } from '../types';
-import { duration } from '../utils/timer';
 import { Environment } from 'nunjucks';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSEC2Provider.default.yaml.njs'),
-  'utf-8',
-);
+import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
+import { DynamicAccountConfig } from '../types';
+import { Tag } from '../utils/tags';
+import { duration } from '../utils/timer';
+
+import defaultTemplate from './AWSEC2Provider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS Elastic Compute Cloud.
@@ -134,15 +130,7 @@ export class AWSEC2Provider extends AWSEntityProvider<Instance> {
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(ec2Resources)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(ec2Resources);
 
     this.logger.info(
       `Finished providing ${ec2Resources.length} EC2 resources from AWS: ${accountId}`,

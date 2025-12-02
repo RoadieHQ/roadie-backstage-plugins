@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  OpenSearch,
-  ListDomainNamesCommand,
   DescribeDomainCommand,
-  ListTagsCommand,
-  ListDomainNamesCommandOutput,
   DescribeDomainCommandOutput,
+  ListDomainNamesCommand,
+  ListDomainNamesCommandOutput,
+  ListTagsCommand,
   ListTagsCommandOutput,
+  OpenSearch,
 } from '@aws-sdk/client-opensearch';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
+import template from './AWSOpenSearchEntityProvider.example.yaml.njk';
 
 // @ts-ignore
 const opensearch = mockClient(OpenSearch);
@@ -152,12 +152,6 @@ describe('AWSOpenSearchEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSOpenSearchEntityProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSOpenSearchEntityProvider.fromConfig(config, {
         logger,
         template,

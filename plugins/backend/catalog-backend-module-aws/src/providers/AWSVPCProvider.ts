@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { DhcpOptions, EC2, Vpc } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { DynamicAccountConfig } from '../types';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
-import { duration } from '../utils/timer';
 import { Environment } from 'nunjucks';
 
-const ANNOTATION_VPC_ID = 'amazonaws.com/vpc-id';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSVPCProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSVPCProvider.default.yaml.njk';
+
+const ANNOTATION_VPC_ID = 'amazonaws.com/vpc-id';
 
 /**
  * Provides entities from AWS Virtual Private Clouds.
@@ -39,7 +35,7 @@ export class AWSVPCProvider extends AWSEntityProvider<Vpc> {
     env.addFilter(
       'get_dhcp_options',
       (vpc: Vpc, { dhcpOption }: { dhcpOption?: DhcpOptions }) => {
-        if (!dhcpOption || !dhcpOption.DhcpConfigurations) {
+        if (!dhcpOption?.DhcpConfigurations) {
           return vpc.DhcpOptionsId ?? 'None';
         }
 
@@ -137,18 +133,10 @@ export class AWSVPCProvider extends AWSEntityProvider<Vpc> {
       );
     }
 
-    const entities = await Promise.all(vpcResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(vpcResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} VPC resources from AWS: ${accountId}`,
+      `Finished providing ${vpcResources.length} VPC resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

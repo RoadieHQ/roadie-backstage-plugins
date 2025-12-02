@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import {
   DBInstance,
-  RDS,
   paginateDescribeDBInstances,
+  RDS,
 } from '@aws-sdk/client-rds';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
+
+import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSRDSProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSRDSProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS Relational Database Service.
@@ -106,15 +102,7 @@ export class AWSRDSProvider extends AWSEntityProvider<DBInstance> {
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(rdsEntities)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(rdsEntities);
 
     this.logger.info(
       `Finished providing ${rdsEntities.length} RDS resources from AWS: ${accountId}`,

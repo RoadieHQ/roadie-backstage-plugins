@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { ownerFromTags, labelsFromTags, relationshipsFromTags } from './tags';
 import { Entity, KubernetesValidatorFunctions } from '@backstage/catalog-model';
+
+import { labelsFromTags, ownerFromTags, relationshipsFromTags } from './tags';
 
 describe('labelsFromTags and ownerFromTags', () => {
   describe('labelsFromTags', () => {

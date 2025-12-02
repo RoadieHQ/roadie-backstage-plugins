@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2, Subnet } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { DynamicAccountConfig } from '../types';
-import { ARN } from 'link2aws';
-import { duration } from '../utils/timer';
 import { DescribeSubnetsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSubnetsCommand';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
+
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSubnetProvider.default.yaml.njk';
 
 const ANNOTATION_SUBNET_ID = 'amazonaws.com/subnet-id';
-
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSSubnetProvider.default.yaml.njs'),
-  'utf-8',
-);
 
 /**
  * Provides entities from AWS Subnets.
@@ -118,13 +114,7 @@ export class AWSSubnetProvider extends AWSEntityProvider<Subnet> {
 
     const entities = await Promise.all(subnetResources);
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(entities);
 
     this.logger.info(
       `Finished providing ${entities.length} Subnet resources from AWS: ${accountId}`,

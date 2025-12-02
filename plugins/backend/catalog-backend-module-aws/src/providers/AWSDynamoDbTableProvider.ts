@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { readFileSync } from 'fs';
-
 import {
   DynamoDB,
   paginateListTables,
   TableDescription,
 } from '@aws-sdk/client-dynamodb';
-import { AWSEntityProvider } from './AWSEntityProvider';
 import { Entity } from '@backstage/catalog-model';
+
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSDynamoDbTableProvider.default.yaml.njs'),
-  'utf-8',
-);
+import defaultTemplate from './AWSDynamoDbTableProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -107,7 +102,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider<TableDescription
             const tags = tagsResponse.Tags ?? [];
             const table = tableDescriptionResult.Table;
 
-            if (table && table.TableName && table.TableArn) {
+            if (table?.TableName && table?.TableArn) {
               const entity: Entity = await template.render({
                 data: table,
                 tags,
@@ -123,13 +118,7 @@ export class AWSDynamoDbTableProvider extends AWSEntityProvider<TableDescription
       ddbComponents = ddbComponents.concat(...newComponents);
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: ddbComponents.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(ddbComponents);
 
     this.logger.info(
       `Finished providing ${ddbComponents.length} DynamoDB tables for account ${accountId}`,

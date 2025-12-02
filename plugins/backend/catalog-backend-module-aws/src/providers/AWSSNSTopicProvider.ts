@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
+import { paginateListTopics, SNS, Topic } from '@aws-sdk/client-sns';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { SNS, Topic, paginateListTopics } from '@aws-sdk/client-sns';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
 import { ARN } from 'link2aws';
+
+import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSSNSTopicProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSNSTopicProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS SNS Topics.
@@ -105,18 +101,10 @@ export class AWSSNSTopicProvider extends AWSEntityProvider<Topic> {
       }
     }
 
-    const entities = await Promise.all(snsResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(snsResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} SNS topic resources from AWS: ${accountId}`,
+      `Finished providing ${snsResources.length} SNS topic resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

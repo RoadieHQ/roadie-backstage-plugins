@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
+  DescribeTableCommand,
   DynamoDB,
   ListTablesCommand,
-  DescribeTableCommand,
   ListTagsOfResourceCommand,
 } from '@aws-sdk/client-dynamodb';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_DDB_TABLE_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSDynamoDbTableProvider } from './AWSDynamoDbTableProvider';
+import template from './AWSDynamoDbTableProvider.example.yaml.njk';
 
 const eks = mockClient(DynamoDB);
 const sts = mockClient(STS);
@@ -71,7 +71,7 @@ describe('AWSDynamoDbTableProvider', () => {
     });
   });
 
-  describe('where there are is a table', () => {
+  describe('where there is a table', () => {
     beforeEach(() => {
       eks.on(ListTablesCommand).resolves({
         TableNames: ['table1'],
@@ -134,12 +134,6 @@ describe('AWSDynamoDbTableProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSDynamoDbTableProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSDynamoDbTableProvider.fromConfig(config, {
         logger,
         template,
@@ -152,7 +146,7 @@ describe('AWSDynamoDbTableProvider', () => {
     });
   });
 
-  describe('where there are is a table and I have a value mapper', () => {
+  describe('where there is a table and I have a value mapper', () => {
     beforeEach(() => {
       eks.on(ListTablesCommand).resolves({
         TableNames: ['table1'],

@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
-  S3,
-  ListBucketsCommand,
   GetBucketTaggingCommand,
+  ListBucketsCommand,
+  S3,
 } from '@aws-sdk/client-s3';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { AWSS3BucketProvider } from './AWSS3BucketProvider';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+import template from './AWSS3BucketProvider.example.yaml.njk';
 
 const s3 = mockClient(S3);
 const sts = mockClient(STS);
@@ -97,9 +95,6 @@ describe('AWSS3BucketProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSS3BucketProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSS3BucketProvider.fromConfig(config, {
         logger,
         template,

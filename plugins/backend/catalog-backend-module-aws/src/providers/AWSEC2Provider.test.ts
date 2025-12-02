@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { EC2, DescribeInstancesCommand } from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { DescribeInstancesCommand, EC2 } from '@aws-sdk/client-ec2';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSEC2Provider } from './AWSEC2Provider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_EC2_INSTANCE_ID } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSEC2Provider } from './AWSEC2Provider';
+import template from './AWSEC2Provider.example.yaml.njk';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -155,9 +155,6 @@ describe('AWSEC2Provider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSEC2Provider.example.yaml.njs'),
-      ).toString();
       const provider = AWSEC2Provider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
       await provider.run();

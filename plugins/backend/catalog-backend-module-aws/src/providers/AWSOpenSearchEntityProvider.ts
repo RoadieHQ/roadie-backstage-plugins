@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { Entity } from '@backstage/catalog-model';
 import {
   DomainStatus,
   ListTagsCommandOutput,
   OpenSearch,
 } from '@aws-sdk/client-opensearch';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { Tag } from '../utils/tags';
-import { DynamicAccountConfig } from '../types';
-import { duration } from '../utils/timer';
-import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+import { Entity } from '@backstage/catalog-model';
 import { Environment } from 'nunjucks';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSOpenSearchEntityProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { ANNOTATION_AWS_OPEN_SEARCH_ARN } from '../annotations';
+import { DynamicAccountConfig } from '../types';
+import { Tag } from '../utils/tags';
+import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSOpenSearchEntityProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS OpenSearch service.
@@ -40,7 +36,7 @@ const defaultTemplate = readFileSync(
 export class AWSOpenSearchEntityProvider extends AWSEntityProvider<DomainStatus> {
   protected addCustomFilters(env: Environment): void {
     env.addFilter('get_storage_type', (data: DomainStatus) => {
-      if (data.EBSOptions && data.EBSOptions.EBSEnabled) {
+      if (data.EBSOptions?.EBSEnabled) {
         return `EBS-${data.EBSOptions.VolumeType}`;
       }
       return 'Instance Storage';
@@ -125,18 +121,10 @@ export class AWSOpenSearchEntityProvider extends AWSEntityProvider<DomainStatus>
       }
     }
 
-    const entities = await Promise.all(opensearchResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(opensearchResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} OpenSearch domain resources from AWS: ${accountId}`,
+      `Finished providing ${opensearchResources.length} OpenSearch domain resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

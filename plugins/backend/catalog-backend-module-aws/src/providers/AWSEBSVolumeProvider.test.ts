@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { EC2, DescribeVolumesCommand } from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { DescribeVolumesCommand, EC2 } from '@aws-sdk/client-ec2';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import {
   ANNOTATION_EBS_VOLUME_ID,
   AWSEBSVolumeProvider,
 } from './AWSEBSVolumeProvider';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import template from './AWSEBSVolumeProvider.example.yaml.njk';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -134,9 +133,6 @@ describe('AWSEBSVolumeProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSEBSVolumeProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSEBSVolumeProvider.fromConfig(config, {
         logger,
         template,

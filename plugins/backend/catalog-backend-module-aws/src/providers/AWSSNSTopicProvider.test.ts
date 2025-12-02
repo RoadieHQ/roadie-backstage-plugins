@@ -15,21 +15,20 @@
  */
 
 import {
-  SNS,
-  ListTopicsCommand,
-  Topic,
   ListTagsForResourceCommand,
+  ListTopicsCommand,
+  SNS,
+  Topic,
 } from '@aws-sdk/client-sns';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
+import template from './AWSSNSTopicProvider.example.yaml.njk';
 
 const sns = mockClient(SNS);
 const sts = mockClient(STS);
@@ -99,9 +98,6 @@ describe('AWSSNSTopicProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSSNSTopicProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSSNSTopicProvider.fromConfig(config, {
         logger,
         template,

@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  ElastiCache,
   DescribeCacheClustersCommand,
-  ListTagsForResourceCommand,
   DescribeCacheClustersCommandOutput,
+  ElastiCache,
+  ListTagsForResourceCommand,
   ListTagsForResourceCommandOutput,
 } from '@aws-sdk/client-elasticache';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
+import template from './AWSElastiCacheEntityProvider.example.yaml.njk';
 
 // @ts-ignore
 const elasticache = mockClient(ElastiCache);
@@ -115,12 +115,6 @@ describe('AWSElastiCacheEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSElastiCacheEntityProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSElastiCacheEntityProvider.fromConfig(config, {
         logger,
         template,

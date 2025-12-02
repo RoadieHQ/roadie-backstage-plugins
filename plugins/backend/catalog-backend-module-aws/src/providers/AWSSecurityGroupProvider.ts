@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2, IpPermission, SecurityGroup } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { DynamicAccountConfig } from '../types';
-import { ARN } from 'link2aws';
-import { duration } from '../utils/timer';
 import { DescribeSecurityGroupsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSecurityGroupsCommand';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
 import { Environment } from 'nunjucks';
 
-const ANNOTATION_SECURITY_GROUP_ID = 'amazonaws.com/security-group-id';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSSecurityGroupProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSecurityGroupProvider.default.yaml.njk';
+
+const ANNOTATION_SECURITY_GROUP_ID = 'amazonaws.com/security-group-id';
 
 /**
  * Provides entities from AWS Security Groups.
@@ -172,21 +168,11 @@ export class AWSSecurityGroupProvider extends AWSEntityProvider<SecurityGroup> {
       nextToken = securityGroups.NextToken;
     } while (nextToken);
 
-    const entities = await Promise.all(sgResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(sgResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} Security Group resources from AWS: ${accountId} (processed ${pageCount} pages)`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      `Finished providing ${sgResources.length} Security Group resources from AWS: ${accountId} (processed ${pageCount} pages)`,
+      { run_duration: duration(startTimestamp) },
     );
   }
 }

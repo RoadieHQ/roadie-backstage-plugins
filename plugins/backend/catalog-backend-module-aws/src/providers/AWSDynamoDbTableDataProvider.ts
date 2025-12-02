@@ -13,36 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { readFileSync } from 'fs';
-
-import {
-  ANNOTATION_LOCATION,
-  ANNOTATION_ORIGIN_LOCATION,
-} from '@backstage/catalog-model';
-import {
-  EntityProvider,
-  EntityProviderConnection,
-} from '@backstage/plugin-catalog-node';
-import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
-import { STS } from '@aws-sdk/client-sts';
-import { Config } from '@backstage/config';
-
 import { DynamoDB, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { STS } from '@aws-sdk/client-sts';
+import { fromTemporaryCredentials } from '@aws-sdk/credential-providers';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
-import { merge } from 'lodash';
-import { mapColumnsToEntityValues } from '../utils/columnMapper';
-import type { Logger } from 'winston';
 import {
   LoggerService,
   SchedulerServiceTaskRunner,
 } from '@backstage/backend-plugin-api';
 import {
+  ANNOTATION_LOCATION,
+  ANNOTATION_ORIGIN_LOCATION,
+} from '@backstage/catalog-model';
+import { Config } from '@backstage/config';
+import {
+  EntityProvider,
+  EntityProviderConnection,
+} from '@backstage/plugin-catalog-node';
+import { merge } from 'lodash';
+import type { Logger } from 'winston';
+
+import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_DDB_TABLE_ARN,
 } from '../annotations';
 import { AWSEntityProviderConfig, ValueMapping } from '../types';
-import { CloudResourceTemplate } from '../utils/templating/CloudResourceTemplate';
+import { mapColumnsToEntityValues } from '../utils/columnMapper';
+import { CloudResourceTemplate } from '../utils/templating';
 
 type DdbTableDataConfigOptions = {
   entityKind?: string;
@@ -51,10 +48,7 @@ type DdbTableDataConfigOptions = {
   columnValueMapping?: { [key: string]: ValueMapping };
 };
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSDynamoDbTableDataProvider.default.yaml.njs'),
-  'utf-8',
-);
+import defaultTemplate from './AWSDynamoDbTableDataProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS DynamoDB service.
@@ -65,7 +59,7 @@ export class AWSDynamoDbTableDataProvider implements EntityProvider {
   private readonly tableDataConfig: DdbTableDataConfigOptions;
   private readonly logger: Logger | LoggerService;
   private readonly taskRunner?: SchedulerServiceTaskRunner;
-  private template!: CloudResourceTemplate<Record<string, any>>;
+  private readonly template!: CloudResourceTemplate<Record<string, any>>;
 
   private connection?: EntityProviderConnection;
 

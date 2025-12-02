@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
 
-import { Entity } from '@backstage/catalog-model';
 import { CacheCluster, ElastiCache } from '@aws-sdk/client-elasticache';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { Entity } from '@backstage/catalog-model';
+
+import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
-import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSElastiCacheEntityProvider.default.yaml.njs'),
-  'utf-8',
-);
+import defaultTemplate from './AWSElastiCacheEntityProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS ElastiCache  service.
@@ -105,21 +102,11 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider<CacheCluster
       }
     }
 
-    const entities = await Promise.all(elasticacheResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(elasticacheResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} ElastiCache cluster resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      `Finished providing ${elasticacheResources.length} ElastiCache cluster resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
     );
   }
 }

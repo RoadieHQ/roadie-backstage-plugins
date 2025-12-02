@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { IAM, paginateListRoles, Role } from '@aws-sdk/client-iam';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
+
+import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSIAMRoleProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSIAMRoleProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS IAM Role service.
@@ -95,21 +91,11 @@ export class AWSIAMRoleProvider extends AWSEntityProvider<Role> {
       }
     }
 
-    const entities = await Promise.all(resources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(resources);
 
     this.logger.info(
-      `Finished providing ${entities.length} IAM role resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      `Finished providing ${resources.length} IAM role resources from AWS: ${accountId}`,
+      { run_duration: duration(startTimestamp) },
     );
   }
 }

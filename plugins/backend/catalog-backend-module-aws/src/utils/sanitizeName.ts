@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { stripBoundingSpecials } from './stripBoundingSpecials';
+
 export function sanitizeName(value: string) {
   const val = value.replaceAll(/[^a-zA-Z0-9-_.]/g, '-');
-  return val.replaceAll(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').substring(0, 63);
+  return stripBoundingSpecials(val).substring(0, 63);
 }
 
 export function sanitizeNameDashesOnly(value: string) {
   const val = value.replaceAll(/[^a-zA-Z0-9-]/g, '-');
-  return val.replaceAll(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '').substring(0, 63);
+  return stripBoundingSpecials(val).substring(0, 63);
+}
+
+export function sanitizeNameAsRef(value: string): string {
+  const val = value.replaceAll(/^[^a-zA-Z0-9-_./:]/g, '-');
+  return stripBoundingSpecials(val);
 }

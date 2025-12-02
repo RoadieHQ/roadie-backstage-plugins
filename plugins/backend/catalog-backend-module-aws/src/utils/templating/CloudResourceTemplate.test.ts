@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
-import path from 'path';
-
 import {
   Entity,
   isResourceEntity,
@@ -23,11 +20,7 @@ import {
 } from '@backstage/catalog-model';
 
 import { CloudResourceTemplate } from './CloudResourceTemplate';
-
-const templateString = readFileSync(
-  path.resolve(__dirname, './CloudResourceTemplate.example.yaml.njs'),
-  'utf-8',
-);
+import templateString from './CloudResourceTemplate.example.yaml.njk';
 
 const awsConfig = {
   accountId: '123456789012',

@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
-
-import { Entity } from '@backstage/catalog-model';
 import {
   GetQueueAttributesCommandOutput,
-  SQS,
   paginateListQueues,
+  SQS,
 } from '@aws-sdk/client-sqs';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { Entity } from '@backstage/catalog-model';
+
+import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
-import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSSQSEntityProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSQSEntityProvider.default.yaml.njk';
 
 type QueueAttributes = GetQueueAttributesCommandOutput['Attributes'];
 
@@ -109,18 +105,10 @@ export class AWSSQSEntityProvider extends AWSEntityProvider<QueueAttributes> {
       }
     }
 
-    const entities = await Promise.all(sqsResources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(sqsResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} SQS queue resources from AWS: ${accountId}`,
+      `Finished providing ${sqsResources.length} SQS queue resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

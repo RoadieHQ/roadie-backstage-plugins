@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
-
 import { DescribeTableCommand, DynamoDB } from '@aws-sdk/client-dynamodb';
 import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
 import { DynamoDBDocumentClient, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
 
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { AWSDynamoDbTableDataProvider } from './AWSDynamoDbTableDataProvider';
+import template from './AWSDynamoDbTableDataProvider.example.yaml.njk';
 
 const dynamodb = mockClient(DynamoDB);
 const dynamodbDoc = mockClient(DynamoDBDocumentClient);
@@ -138,12 +135,6 @@ describe('AWSDynamoDbTableDataProvider', () => {
         data: validConfig,
       },
     ]);
-    const template = readFileSync(
-      join(
-        dirname(__filename),
-        './AWSDynamoDbTableDataProvider.example.yaml.njs',
-      ),
-    ).toString();
     const testWrapper = () => {
       AWSDynamoDbTableDataProvider.fromConfig(config, {
         logger,
@@ -198,12 +189,6 @@ describe('AWSDynamoDbTableDataProvider', () => {
           },
         },
       ]);
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSDynamoDbTableDataProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSDynamoDbTableDataProvider.fromConfig(config, {
         logger,
         template,

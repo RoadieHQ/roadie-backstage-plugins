@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  SQS,
-  ListQueuesCommand,
   GetQueueAttributesCommand,
-  ListQueueTagsCommand,
-  ListQueuesCommandOutput,
   GetQueueAttributesCommandOutput,
+  ListQueuesCommand,
+  ListQueuesCommandOutput,
+  ListQueueTagsCommand,
   ListQueueTagsCommandOutput,
+  SQS,
 } from '@aws-sdk/client-sqs';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+import template from './AWSSQSEntityProvider.example.yaml.njk';
 
 // @ts-ignore
 const sqs = mockClient(SQS);
@@ -110,9 +110,6 @@ describe('AWSSQSEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSSQSEntityProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSSQSEntityProvider.fromConfig(config, {
         logger,
         template,

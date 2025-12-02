@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 import type {
+  AuthService,
   LoggerService,
   SchedulerServiceTaskRunner,
 } from '@backstage/backend-plugin-api';
-import type { CatalogApi } from '@backstage/catalog-client';
+import { CatalogService } from '@backstage/plugin-catalog-node';
 import type { Logger } from 'winston';
+
 import type { LabelValueMapper } from './utils/tags';
 
 export type ValueMapping = {
@@ -87,15 +89,16 @@ export interface AWSAccountProviderConfig {
 }
 
 export interface AWSEntityProviderConfig {
+  authService?: AuthService;
+  catalogService?: CatalogService;
+  labelValueMapper?: LabelValueMapper;
   logger: Logger | LoggerService;
-  template?: string;
-  catalogApi?: CatalogApi;
-  providerId?: string;
   ownerTag?: string;
+  providerId?: string;
   // This is required for the new backend
   taskRunner?: SchedulerServiceTaskRunner;
+  template?: string;
   useTemporaryCredentials?: boolean;
-  labelValueMapper?: LabelValueMapper;
 }
 
 export type AccountConfig = {

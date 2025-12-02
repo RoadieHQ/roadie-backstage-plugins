@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { EC2, Volume } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { Tag } from '../utils/tags';
-import { DynamicAccountConfig } from '../types';
-import { duration } from '../utils/timer';
 import { DescribeVolumesCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeVolumesCommand';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { Environment } from 'nunjucks';
 
-export const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
+import { DynamicAccountConfig } from '../types';
+import { Tag } from '../utils/tags';
+import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSEBSVolumeProvider.default.yaml.njs'),
-  'utf-8',
-);
+import defaultTemplate from './AWSEBSVolumeProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
+
+export const ANNOTATION_EBS_VOLUME_ID = 'amazonaws.com/ebs-volume-id';
 
 const createEbsVolumeConsoleLink = (region: string, volumeId: string): string =>
   `https://${region}.console.aws.amazon.com/ec2/home?region=${region}#VolumeDetails:volumeId=${volumeId}`;
@@ -134,15 +129,7 @@ export class AWSEBSVolumeProvider extends AWSEntityProvider<Volume> {
       nextToken = volumes.NextToken;
     } while (nextToken);
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(ebsResources)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(ebsResources);
 
     this.logger.info(
       `Finished providing ${ebsResources.length} EBS volume resources from AWS: ${accountId}`,

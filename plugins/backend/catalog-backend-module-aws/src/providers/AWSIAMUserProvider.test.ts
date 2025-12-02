@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { IAM, ListUsersCommand, User } from '@aws-sdk/client-iam';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { AWSIAMUserProvider } from './AWSIAMUserProvider';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSIAMUserProvider } from './AWSIAMUserProvider';
+import template from './AWSIAMUserProvider.example.yaml.njk';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
@@ -108,9 +106,6 @@ describe('AWSIAMUserProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSIAMUserProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSIAMUserProvider.fromConfig(config, {
         logger,
         template,

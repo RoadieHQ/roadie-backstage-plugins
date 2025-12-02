@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2025 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,81 +19,20 @@ import { compile, Environment, type Template } from 'nunjucks';
 
 import { arnToName } from '../arnToName';
 import { dateToIso } from '../dateToIso';
-import { sanitizeName, sanitizeNameDashesOnly } from '../sanitizeName';
+import {
+  sanitizeName,
+  sanitizeNameAsRef,
+  sanitizeNameDashesOnly,
+} from '../sanitizeName';
 import {
   labelsFromTags,
-  type LabelValueMapper,
   ownerFromTags,
   relationshipsFromTags,
   type Tag,
 } from '../tags';
 
 import { BaseTemplateLoader } from './BaseTemplateLoader';
-
-/**
- * Configuration for CloudResourceTemplate.
- *
- * This "template class" will be initialized on a per-cloud-resource-type basis, e.g. one for Lambda functions, one
- * for DynamoDB tables, etc. On a regular interval, the consumer of this class will fetch a new batch of resources and
- * `render` will be called for each resource.
- */
-export interface CloudResourceTemplateConfig<CloudResource = any> {
-  /** The Nunjucks template string that will be compiled */
-  templateString: string;
-
-  /** AWS Account ID to be available in template context */
-  accountId: string;
-
-  /** AWS Region to be available in template context */
-  region: string;
-
-  /** AWS Role ARN to be available in template context */
-  roleArn?: string;
-
-  /** List of Backstage Group entities for owner validation */
-  groups?: Entity[];
-
-  /** Tag key to use for extracting owner (default: 'owner') */
-  ownerTagKey?: string;
-
-  /** Custom mapper function for label values */
-  labelValueMapper?: LabelValueMapper;
-
-  /** Default annotations to be merged with resource-specific annotations */
-  defaultAnnotations?: Record<string, string>;
-
-  /** Function to get resource-specific annotations from the cloud resource */
-  getResourceAnnotations?: (
-    resource: CloudResource,
-    context: { accountId: string; region: string },
-  ) => Record<string, string> | Promise<Record<string, string>>;
-
-  /** Function to add custom Nunjucks filters to the template environment */
-  addCustomFilters?: (env: Environment) => void;
-}
-
-/**
- * Context for rendering a cloud resource into a Backstage entity.
- *
- * @template CloudResource - The AWS SDK resource type (e.g., DBInstance, FunctionConfiguration)
- * @template AdditionalData - Optional additional data structure for template context (e.g., parent resource data)
- */
-export interface RenderContext<
-  CloudResource = any,
-  AdditionalData = Record<string, any>,
-> {
-  /** The raw cloud resource data from AWS SDK */
-  data: CloudResource;
-
-  /** Tags associated with the resource (array or object format) */
-  tags?: Tag[] | Record<string, string>;
-
-  /** Resource-specific annotations to be merged with default annotations */
-  resourceAnnotations?: Record<string, string>;
-
-  /** Optional additional data to be made available in the template context */
-  additionalData?: AdditionalData;
-}
+import { CloudResourceTemplateConfig, RenderContext } from './types';
 
 /**
  * Wrapper to hold instance reference for late-binding in filters
@@ -107,16 +46,19 @@ class InstanceRef<T> {
  *
  * @template CloudResource - The AWS SDK resource type (e.g., DBInstance, FunctionConfiguration)
  */
-export class CloudResourceTemplate<CloudResource = any> {
+export class CloudResourceTemplate<
+  CloudResource = any,
+  Config extends CloudResourceTemplateConfig<CloudResource> = CloudResourceTemplateConfig<CloudResource>,
+> {
   private readonly template: Template;
-  private readonly config: CloudResourceTemplateConfig<CloudResource>;
+  private readonly config: Config;
   private readonly instanceRef: InstanceRef<CloudResource>;
 
   /**
    * Private constructor. Use `fromConfig` to create instances.
    */
   private constructor(
-    config: CloudResourceTemplateConfig<CloudResource>,
+    config: Config,
     precompiledTemplate?: Template,
     instanceRef?: InstanceRef<CloudResource>,
   ) {
@@ -152,7 +94,7 @@ export class CloudResourceTemplate<CloudResource = any> {
    */
   child(
     config: Omit<
-      Partial<CloudResourceTemplateConfig<CloudResource>>,
+      Partial<Config>,
       'ownerTagKey' | 'labelValueMapper' | 'getResourceAnnotations'
     >,
   ): CloudResourceTemplate<CloudResource> {
@@ -197,8 +139,8 @@ export class CloudResourceTemplate<CloudResource = any> {
 
       // Pre-merge annotations with precedence: config > context > default
       const mergedAnnotations = {
-        ...(this.config.defaultAnnotations || {}),
-        ...(renderContext.resourceAnnotations || {}),
+        ...this.config.defaultAnnotations,
+        ...renderContext.resourceAnnotations,
         ...configResourceAnnotations,
       };
 
@@ -261,7 +203,7 @@ export class CloudResourceTemplate<CloudResource = any> {
   /**
    * Compile the Nunjucks template with custom filters.
    */
-  private compileTemplate(config: CloudResourceTemplateConfig): Template {
+  private compileTemplate(config: Config): Template {
     const env = new Environment(new BaseTemplateLoader(), {
       autoescape: false,
       throwOnUndefined: false,
@@ -283,6 +225,9 @@ export class CloudResourceTemplate<CloudResource = any> {
 
     // Filter: sanitize_name_dashes_only - Convert string to valid Backstage name, replacing all invalid chars with dashes
     env.addFilter('sanitize_name_dashes_only', sanitizeNameDashesOnly);
+
+    // Filter: sanitize_name_as_ref - Convert string to valid Backstage ref format
+    env.addFilter('sanitize_name_as_ref', sanitizeNameAsRef);
 
     // Filter: labels_from_tags - Convert tags to Backstage labels
     // Reads config from instance ref for late-binding (allows child overrides)
@@ -317,9 +262,12 @@ export class CloudResourceTemplate<CloudResource = any> {
     );
 
     // Filter: relationships_from_tags - Extract relationships from tags
-    env.addFilter('relationships_from_tags', (tags: Record<string, string>) => {
-      return relationshipsFromTags(tags);
-    });
+    env.addFilter(
+      'relationships_from_tags',
+      (tags: Record<string, string | string[]>) => {
+        return relationshipsFromTags(tags as Record<string, string>);
+      },
+    );
 
     // Filter: split - Split a string by a delimiter into an array (why isn't this built in?)
     env.addFilter('split', function splitFilter(str, delimiter) {

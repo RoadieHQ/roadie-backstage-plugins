@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
 
-import { Entity } from '@backstage/catalog-model';
 import {
   ECRClient,
   ListTagsForResourceCommand,
   paginateDescribeRepositories,
   Repository,
 } from '@aws-sdk/client-ecr';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { duration } from '../utils/timer';
+import { Entity } from '@backstage/catalog-model';
+
 import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
+
+import defaultTemplate from './AWSECRRepositoryEntityProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 const ANNOTATION_AWS_ECR_REPO_ARN = 'amazonaws.com/ecr-repository-arn';
-
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSECRRepositoryEntityProvider.default.yaml.njs'),
-  'utf-8',
-);
 
 /**
  * Provides entities from AWS ECR service.
@@ -115,15 +112,7 @@ export class AWSECRRepositoryEntityProvider extends AWSEntityProvider<Repository
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(ecrResources)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(ecrResources);
 
     this.logger.info(
       `Finished providing ${ecrResources.length} ECR repository resources from AWS: ${accountId}`,

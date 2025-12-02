@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AWSDynamoDbTableProvider where there are is a table creates table 1`] = `
+exports[`AWSDynamoDbTableProvider where there is a table creates table 1`] = `
 [
   [
     {
@@ -35,7 +35,7 @@ exports[`AWSDynamoDbTableProvider where there are is a table creates table 1`] =
 ]
 `;
 
-exports[`AWSDynamoDbTableProvider where there are is a table creates table with template 1`] = `
+exports[`AWSDynamoDbTableProvider where there is a table creates table with template 1`] = `
 [
   [
     {

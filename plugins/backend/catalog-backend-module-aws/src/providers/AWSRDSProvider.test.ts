@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { RDS, DescribeDBInstancesCommand } from '@aws-sdk/client-rds';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { DescribeDBInstancesCommand, RDS } from '@aws-sdk/client-rds';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSRDSProvider } from './AWSRDSProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSRDSProvider } from './AWSRDSProvider';
+import template from './AWSRDSProvider.example.yaml.njk';
 
 const rds = mockClient(RDS);
 const sts = mockClient(STS);
@@ -102,9 +102,6 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSRDSProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSRDSProvider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
       await provider.run();

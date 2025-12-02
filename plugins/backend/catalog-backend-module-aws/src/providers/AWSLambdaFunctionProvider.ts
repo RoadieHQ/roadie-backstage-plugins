@@ -13,27 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import {
   FunctionConfiguration,
   Lambda,
   paginateListFunctions,
 } from '@aws-sdk/client-lambda';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
+
 import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
   ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
 } from '../annotations';
-import { ARN } from 'link2aws';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSLambdaFunctionProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSLambdaFunctionProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS Lambda Function service.
@@ -126,15 +122,7 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider<FunctionConfigu
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(lambdaComponents)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(lambdaComponents);
 
     this.logger.info(
       `Finished providing ${lambdaComponents.length} lambda function resources from AWS: ${accountId}`,

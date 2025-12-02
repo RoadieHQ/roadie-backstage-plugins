@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
+  DescribeClusterCommand,
   EKS,
   ListClustersCommand,
-  DescribeClusterCommand,
 } from '@aws-sdk/client-eks';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSEKSClusterProvider } from './AWSEKSClusterProvider';
+import template from './AWSEKSClusterProvider.example.yaml.njk';
 
 const eks = mockClient(EKS);
 const sts = mockClient(STS);
@@ -117,9 +116,6 @@ describe('AWSEKSClusterProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSEKSClusterProvider.example.yaml.njs'),
-      ).toString();
 
       const provider = AWSEKSClusterProvider.fromConfig(config, {
         logger,

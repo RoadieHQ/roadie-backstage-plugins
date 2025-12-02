@@ -21,18 +21,20 @@ import type {
 } from '@aws-sdk/types';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
 import {
+  AuthService,
   LoggerService,
   SchedulerServiceTaskRunner,
 } from '@backstage/backend-plugin-api';
-import { CatalogApi } from '@backstage/catalog-client';
 import {
   ANNOTATION_LOCATION,
   ANNOTATION_ORIGIN_LOCATION,
+  Entity,
 } from '@backstage/catalog-model';
-import { Config } from '@backstage/config';
-import { ConfigReader } from '@backstage/config';
+import { Config, ConfigReader } from '@backstage/config';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import {
+  CatalogService,
+  DeferredEntity,
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';
@@ -46,22 +48,23 @@ import {
   DynamicAccountConfig,
 } from '../types';
 import { labelsFromTags, LabelValueMapper, Tag } from '../utils/tags';
-import { CloudResourceTemplate } from '../utils/templating/CloudResourceTemplate';
+import { CloudResourceTemplate } from '../utils/templating';
 
 export abstract class AWSEntityProvider<CloudResource>
   implements EntityProvider
 {
-  protected readonly useTemporaryCredentials: boolean;
-  protected readonly providerId?: string;
-  protected readonly logger: Logger | LoggerService;
+  private readonly account: AccountConfig;
+  protected readonly authService?: AuthService;
+  private readonly credentialsManager: DefaultAwsCredentialsManager;
   protected connection?: EntityProviderConnection;
-  private readonly ownerTag: string | undefined;
-  protected readonly catalogApi?: CatalogApi;
-  private credentialsManager: DefaultAwsCredentialsManager;
-  private account: AccountConfig;
+  protected readonly catalogService?: CatalogService;
   protected readonly labelValueMapper: LabelValueMapper | undefined;
+  protected readonly logger: Logger | LoggerService;
+  private readonly ownerTag: string | undefined;
+  protected readonly providerId?: string;
   protected readonly taskRunner?: SchedulerServiceTaskRunner;
-  protected template: CloudResourceTemplate;
+  protected readonly template: CloudResourceTemplate;
+  protected readonly useTemporaryCredentials: boolean;
 
   public abstract getProviderName(): string;
   public abstract run(
@@ -73,15 +76,19 @@ export abstract class AWSEntityProvider<CloudResource>
     context: { accountId: string; region: string },
   ): Record<string, string>;
   protected addCustomFilters?(env: Environment): void;
+  protected getAdditionalEntities?(
+    currentEntities: Entity[],
+  ): DeferredEntity[] | Promise<DeferredEntity[]>;
 
   protected constructor(
     account: AccountConfig,
     options: AWSEntityProviderConfig,
   ) {
+    this.authService = options.authService;
     this.logger = options.logger;
     this.providerId = options.providerId;
     this.ownerTag = options.ownerTag;
-    this.catalogApi = options.catalogApi;
+    this.catalogService = options.catalogService;
     this.account = account;
     this.useTemporaryCredentials = !!options.useTemporaryCredentials;
     this.taskRunner = options.taskRunner;
@@ -136,7 +143,9 @@ export abstract class AWSEntityProvider<CloudResource>
     return labelsFromTags(tags, this.labelValueMapper);
   }
 
-  protected getCredentials(dynamicAccountConfig?: DynamicAccountConfig) {
+  protected getCredentials(
+    dynamicAccountConfig?: DynamicAccountConfig,
+  ): RuntimeConfigAwsCredentialIdentityProvider {
     const { roleArn, externalId, region } =
       this.getParsedConfig(dynamicAccountConfig);
     return fromTemporaryCredentials({
@@ -171,14 +180,19 @@ export abstract class AWSEntityProvider<CloudResource>
     return awsCredentialProvider.sdkCredentialProvider;
   }
 
-  protected async getGroups() {
+  protected async getGroups(): Promise<Entity[] | undefined> {
     let groups = undefined;
-    if (this.catalogApi) {
+    if (this.catalogService && this.authService) {
       try {
-        const response = await this.catalogApi.getEntities({
-          filter: { kind: 'Group' },
-          fields: ['metadata.name', 'metadata.namespace', 'kind'],
-        });
+        const response = await this.catalogService.getEntities(
+          {
+            filter: { kind: 'Group' },
+            fields: ['metadata.name', 'metadata.namespace', 'kind'],
+          },
+          {
+            credentials: await this.authService.getOwnServiceCredentials(),
+          },
+        );
         groups = response?.items;
       } catch (e: any) {
         this.logger.error(`Failed to fetch groups due to error: ${e.message}`);
@@ -222,5 +236,21 @@ export abstract class AWSEntityProvider<CloudResource>
     }
 
     return defaultAnnotations;
+  }
+
+  protected async applyMutation(entities: Entity[] | Promise<Entity>[]) {
+    if (!this.connection) {
+      throw new Error('Not initialized');
+    }
+
+    return this.connection.applyMutation({
+      type: 'full',
+      entities: (await Promise.all(entities as Promise<Entity>[])).map(
+        entity => ({
+          entity,
+          locationKey: this.getProviderName(),
+        }),
+      ),
+    });
   }
 }

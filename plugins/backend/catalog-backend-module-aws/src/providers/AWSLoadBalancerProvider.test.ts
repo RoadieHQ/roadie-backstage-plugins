@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  ElasticLoadBalancingV2Client,
   DescribeLoadBalancersCommand,
-  DescribeTagsCommand,
   DescribeLoadBalancersCommandOutput,
+  DescribeTagsCommand,
   DescribeTagsCommandOutput,
+  ElasticLoadBalancingV2Client,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import template from './AWSLoadBalancerProvider.example.yaml.njk';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);
 const sts = mockClient(STS as any);
@@ -126,9 +125,6 @@ describe('AWSLoadBalancerProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSLoadBalancerProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSLoadBalancerProvider.fromConfig(config, {
         logger,
         template,

@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  EC2,
   DescribeSecurityGroupsCommand,
   DescribeSecurityGroupsCommandOutput,
+  EC2,
 } from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
-import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import template from './AWSSecurityGroupProvider.example.yaml.njk';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -121,12 +120,6 @@ describe('AWSSecurityGroupProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSSecurityGroupProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSSecurityGroupProvider.fromConfig(config, {
         logger,
         template,

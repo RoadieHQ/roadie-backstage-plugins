@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  OrganizationsClient,
   ListAccountsCommand,
-  ListTagsForResourceCommand,
   ListAccountsCommandOutput,
+  ListTagsForResourceCommand,
   ListTagsForResourceCommandOutput,
+  OrganizationsClient,
 } from '@aws-sdk/client-organizations';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import {
   ANNOTATION_ACCOUNT_ID,
   ANNOTATION_AWS_ACCOUNT_ARN,
 } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+
+import { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
+import template from './AWSOrganizationAccountsProvider.example.yaml.njk';
 
 const organizations = mockClient(OrganizationsClient);
 const sts = mockClient(STS);
@@ -115,12 +115,6 @@ describe('AWSOrganizationAccountsProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(
-          dirname(__filename),
-          './AWSOrganizationAccountsProvider.example.yaml.njs',
-        ),
-      ).toString();
       const provider = AWSOrganizationAccountsProvider.fromConfig(config, {
         logger,
         template,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
 
 export function arnToName(arn: string) {
   return createHash('sha256').update(arn).digest('hex').slice(0, 63);

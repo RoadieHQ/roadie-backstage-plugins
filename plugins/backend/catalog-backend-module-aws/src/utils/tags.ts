@@ -16,6 +16,8 @@
 
 import { type Entity, stringifyEntityRef } from '@backstage/catalog-model';
 
+import { stripBoundingSpecials } from './stripBoundingSpecials';
+
 export type Tag = {
   Key?: string;
   Value?: string;
@@ -31,10 +33,6 @@ const TAG_DOMAIN = 'domain';
 
 const dependencyTags = [TAG_DEPENDENCY_OF, TAG_DEPENDS_ON];
 const relationshipTags = [TAG_SYSTEM, TAG_DOMAIN];
-
-function stripBoundingSpecials(str: string): string {
-  return str.replaceAll(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
-}
 
 /**
  * From the Backstage Documentation:
@@ -75,7 +73,7 @@ export const labelsFromTags = (
         return acc;
       }, {});
   }
-  return Object.entries(tags as Record<string, string>)
+  return Object.entries(tags)
     ?.filter(
       ([tagKey]) =>
         ![...dependencyTags, ...relationshipTags]
@@ -110,7 +108,7 @@ export const ownerFromTags = (
       ownerString = ownerTag.Value ? ownerTag.Value : undefined;
     }
   } else {
-    ownerString = (tags as Record<string, string>)[ownerTagKey];
+    ownerString = tags[ownerTagKey];
   }
 
   if (ownerString && groups && groups.length > 0) {
@@ -125,7 +123,7 @@ export const ownerFromTags = (
     }
   }
 
-  return ownerString ? ownerString : UNKNOWN_OWNER;
+  return ownerString ?? UNKNOWN_OWNER;
 };
 
 export const relationshipsFromTags = (
@@ -137,11 +135,11 @@ export const relationshipsFromTags = (
 
   let tagMap: Record<string, string | string[]> = {};
   if (Array.isArray(tags)) {
-    tags.forEach(tag => {
+    for (const tag of tags) {
       if (tag.Key && tag.Value) {
         tagMap[tag.Key] = tag.Value;
       }
-    });
+    }
   } else {
     tagMap = tags;
   }
@@ -149,7 +147,7 @@ export const relationshipsFromTags = (
   const tagNames = Object.keys(tagMap);
 
   const specPartial: Record<string, string[]> = {};
-  dependencyTags.forEach(tagKey => {
+  for (const tagKey of dependencyTags) {
     const tagName = tagNames.find(
       tn => tn.toLowerCase() === tagKey.toLowerCase(),
     );
@@ -157,14 +155,14 @@ export const relationshipsFromTags = (
     if (typeof tagValue === 'string') {
       specPartial[tagKey] = [tagValue.split(',')].flat();
     }
-  });
+  }
 
-  relationshipTags.forEach(tagKey => {
+  for (const tagKey of relationshipTags) {
     const tagValue = tagMap[tagKey];
     if (typeof tagValue === 'string') {
       specPartial[tagKey] = [tagValue];
     }
-  });
+  }
 
   return specPartial;
 };

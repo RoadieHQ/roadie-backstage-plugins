@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { Bucket, S3, Tag } from '@aws-sdk/client-s3';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
 import { ARN } from 'link2aws';
+
+import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
 
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSS3BucketProvider.default.yaml.njs'),
-  'utf-8',
-);
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSS3BucketProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS S3 Bucket service.
@@ -106,18 +102,10 @@ export class AWSS3BucketProvider extends AWSEntityProvider<Bucket> {
       }
     }
 
-    const entities = await Promise.all(s3Resources);
-
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(s3Resources);
 
     this.logger.info(
-      `Finished providing ${entities.length} S3 bucket resources from AWS: ${accountId}`,
+      `Finished providing ${s3Resources.length} S3 bucket resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

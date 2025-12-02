@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-import { readFileSync } from 'fs';
-
 import { Cluster, EKS, paginateListClusters } from '@aws-sdk/client-eks';
 import { Entity } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
+import {
+  ANNOTATION_KUBERNETES_API_SERVER,
+  ANNOTATION_KUBERNETES_API_SERVER_CA,
+} from '@backstage/plugin-kubernetes-common';
 
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
@@ -26,22 +28,14 @@ import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import {
-  ANNOTATION_KUBERNETES_API_SERVER,
-  ANNOTATION_KUBERNETES_API_SERVER_CA,
-} from '@backstage/plugin-kubernetes-common';
-import {
   AccountConfig,
   AWSEntityProviderConfig,
   DynamicAccountConfig,
 } from '../types';
 import { duration } from '../utils/timer';
 
+import defaultTemplate from './AWSEKSClusterProvider.default.yaml.njk';
 import { AWSEntityProvider } from './AWSEntityProvider';
-
-const defaultTemplate = readFileSync(
-  require.resolve('./AWSEKSClusterProvider.default.yaml.njs'),
-  'utf-8',
-);
 
 /**
  * Provides entities from AWS EKS Cluster service.
@@ -165,21 +159,11 @@ export class AWSEKSClusterProvider extends AWSEntityProvider<Cluster> {
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: (
-        await Promise.all(eksResources)
-      ).map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(eksResources);
 
     this.logger.info(
       `Finished providing ${eksResources.length} EKS cluster resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      { run_duration: duration(startTimestamp) },
     );
   }
 }
