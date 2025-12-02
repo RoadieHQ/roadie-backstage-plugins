@@ -14,6 +14,36 @@
  * limitations under the License.
  */
 
+/**
+ * // Pretty much always use these
+{% extends 'AWSEntityProvider.base.yaml' %}
+
+{% set entityName =  %}
+{% set entityTitle =  %}
+{% set entityType =  %}
+
+// end always
+
+// Maybe use these
+{% set apiVersion =  %}
+{% set entityKind =  %}
+
+// Include these if you want to add properties to the base template
+{% block additionalMetadata %}{% endblock %}
+{% block additionalAnnotations %}{% endblock %}
+{% block additionalLabels %}{% endblock %}
+{% block additionalRelationships %}{% endblock %}
+{% block additionalBlocks %}{% endblock %}
+
+// These are usually just to wrap in conditionals or exclude them entirely
+{% block title %}{% endblock %}
+{% block labels %}{% endblock %}
+{% block owner %}{% endblock %}
+{% block type %}{% endblock %}
+{% block relationships %}{% endblock %}
+{% block additionalSpec %}{% endblock %}
+ */
+
 export default `
 kind: {{ entityKind or 'Resource' }}
 apiVersion: {{ apiVersion or 'backstage.io/v1beta1' }}
