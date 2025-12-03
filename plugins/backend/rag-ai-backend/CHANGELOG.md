@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend
 
+## 3.0.1
+
+### Patch Changes
+
+- 4288c3c: Added property maxConcurrency to example AWS Bedrock configuration
+
 ## 3.0.0
 
 ### Major Changes
