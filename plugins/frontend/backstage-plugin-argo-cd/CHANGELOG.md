@@ -1,5 +1,15 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.12.2
+
+### Patch Changes
+
+- 6f8d364: Fix Destination Server field to display destination.name when destination.server is not available.
+  ArgoCD allows applications to be configured with either destination.server (Kubernetes API URL)
+  or destination.name (cluster name reference). This change adds fallback logic to show the cluster
+  name when the server URL is not present, ensuring the Destination Server field displays properly
+  for modern ArgoCD configurations.
+
 ## 2.12.1
 
 ### Patch Changes
