@@ -54,7 +54,6 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
     return 'aws-iam-role';
   }
 
-  // `any` used here because SonarQube gets mad that `@backstage/plugin-catalog-node.LocationSpec` is deprecated
   async postProcessEntity(
     entity: Entity,
     _location: LocationSpec,
