@@ -65,7 +65,8 @@ export const DetailsDrawerComponent = (
     repoUrl:
       rowData.spec?.source?.repoURL || rowData.spec?.sources?.[0]?.repoURL,
     repoPath: rowData.spec?.source?.path || rowData.spec?.sources?.[0]?.path,
-    destinationServer: rowData.spec?.destination?.server || rowData.spec?.destination?.name,
+    destinationServer:
+      rowData.spec?.destination?.server || rowData.spec?.destination?.name,
     destinationNamespace: rowData.spec?.destination?.namespace,
     syncStatus: rowData.status?.sync?.status,
     images: rowData.status?.summary?.images,
