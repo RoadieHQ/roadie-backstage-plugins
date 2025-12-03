@@ -1,5 +1,12 @@
 # @roadiehq/rag-ai-storage-pgvector
 
+## 3.0.1
+
+### Patch Changes
+
+- 5345078: Changed class RoadiePgVectorStore to protected
+- 2e4ff45: Added class RoadiePgVectorStore and interface RoadiePgVectorStoreConfig as an export
+
 ## 3.0.0
 
 ### Major Changes
