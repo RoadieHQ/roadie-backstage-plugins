@@ -44,7 +44,7 @@ describe('AWSEC2Provider', () => {
     sts.on(GetCallerIdentityCommand).resolves({});
   });
 
-  describe('where there is instances', () => {
+  describe('where there are no instances', () => {
     beforeEach(() => {
       ec2.on(DescribeInstancesCommand).resolves({
         Reservations: [],
