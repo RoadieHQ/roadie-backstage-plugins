@@ -1,5 +1,16 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 2.1.0
+
+### Minor Changes
+
+- 4288c3c: Added property maxConcurrency to config to limit number of concurrent requests for AWS SDK client (defaults to 100)
+
+### Patch Changes
+
+- Updated dependencies [4288c3c]
+  - @roadiehq/rag-ai-backend@3.0.1
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 2.0.1
+
+### Patch Changes
+
+- 5345078: Added type TechDocsDocument as an export
+
 ## 2.0.0
 
 ### Major Changes

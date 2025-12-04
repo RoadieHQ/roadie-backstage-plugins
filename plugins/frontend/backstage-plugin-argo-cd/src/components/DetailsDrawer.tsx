@@ -62,9 +62,11 @@ export const DetailsDrawerComponent = (
     };
   const tableContent: TableContent = {
     'Argo CD Instance': rowData.metadata?.instance?.name ?? '',
-    repoUrl: rowData.spec?.source?.repoURL,
-    repoPath: rowData.spec?.source?.path,
-    destinationServer: rowData.spec?.destination?.server,
+    repoUrl:
+      rowData.spec?.source?.repoURL || rowData.spec?.sources?.[0]?.repoURL,
+    repoPath: rowData.spec?.source?.path || rowData.spec?.sources?.[0]?.path,
+    destinationServer:
+      rowData.spec?.destination?.server || rowData.spec?.destination?.name,
     destinationNamespace: rowData.spec?.destination?.namespace,
     syncStatus: rowData.status?.sync?.status,
     images: rowData.status?.summary?.images,

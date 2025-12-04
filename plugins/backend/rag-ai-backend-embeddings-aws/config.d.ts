@@ -30,6 +30,10 @@ export interface Config {
          * Maximum number of retries for the AWS SDK client. Defaults to 3
          */
         maxRetries?: string;
+        /**
+         * Maximum number of concurrent requests for the AWS SDK client. Defaults to 100
+         */
+        maxConcurrency?: string;
       };
     };
   };

@@ -15873,7 +15873,7 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@langchain/aws": "npm:^1.0.3"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-backend": "npm:^3.0.0"
+    "@roadiehq/rag-ai-backend": "npm:^3.0.1"
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
     "@roadiehq/rag-ai-node": "npm:^0.4.0"
     winston: "npm:^3.11.0"
@@ -15914,7 +15914,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend@npm:^3.0.0, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
+"@roadiehq/rag-ai-backend@npm:^3.0.0, @roadiehq/rag-ai-backend@npm:^3.0.1, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend"
   dependencies:
