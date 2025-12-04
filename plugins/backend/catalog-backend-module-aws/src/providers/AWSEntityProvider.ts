@@ -70,15 +70,32 @@ export abstract class AWSEntityProvider<CloudResource>
   public abstract run(
     dynamicAccountConfig?: DynamicAccountConfig,
   ): Promise<void>;
+  /**
+   * Get the default template string to use for this provider.
+   *
+   * Overriding this method changes the default, but it still allows for passing in a template for any individual
+   * instance.
+   */
   protected abstract getDefaultTemplate(): string;
+  /**
+   * Get the annotations to apply to the resource entity.
+   *
+   * Annotations are often significantly more complex than are easy to work with in the templates, so this method allows
+   * subclasses to define them programmatically.
+   */
   protected abstract getResourceAnnotations(
     resource: CloudResource,
     context: { accountId: string; region: string },
   ): Record<string, string>;
+  /**
+   * Add your own Nunjucks filters for use in the templates.
+   *
+   * Now that you are adding your own template, you may want to add custom filters to help with complex functionality
+   * that is awkward to do in the templates alone. Additionally, you can overwrite existing filters if you need to
+   * change their by using `env.getFilter` (if you want the original method too) and `env.addFilter` (with the same
+   * name) to replace it.
+   */
   protected addCustomFilters?(env: Environment): void;
-  protected getAdditionalEntities?(
-    currentEntities: Entity[],
-  ): DeferredEntity[] | Promise<DeferredEntity[]>;
 
   protected constructor(
     account: AccountConfig,
@@ -139,6 +156,12 @@ export abstract class AWSEntityProvider<CloudResource>
     return this.ownerTag ?? 'owner';
   }
 
+  /**
+   * Convert AWS tags to Backstage labels.
+   *
+   * If you override this method, be sure to do something to ensure that the values are valid `label` values.
+   * @see ../../src/utils/sanitizeName.ts
+   */
   protected labelsFromTags(tags?: Record<string, string> | Tag[] | undefined) {
     return labelsFromTags(tags, this.labelValueMapper);
   }
@@ -157,6 +180,9 @@ export abstract class AWSEntityProvider<CloudResource>
     });
   }
 
+  /**
+   * Generates a parsed config object for the current account, optionally overridden by a dynamic account config.
+   */
   protected getParsedConfig(dynamicAccountConfig?: DynamicAccountConfig) {
     const { roleArn, externalId, region } = dynamicAccountConfig
       ? dynamicAccountConfig
@@ -180,6 +206,13 @@ export abstract class AWSEntityProvider<CloudResource>
     return awsCredentialProvider.sdkCredentialProvider;
   }
 
+  /**
+   * This should be called for each batch of entities to ensure it's up to date, rather than being called once and
+   * cached.
+   *
+   * FUTURE: If this is going be used super consistently across all providers, we could potentially move the call to it
+   * into CloudResourceTemplate. This could reduce the complexity of the `run` methods in each provider.
+   */
   protected async getGroups(): Promise<Entity[] | undefined> {
     let groups = undefined;
     if (this.catalogService && this.authService) {
@@ -213,6 +246,14 @@ export abstract class AWSEntityProvider<CloudResource>
     }
   }
 
+  /**
+   * Almost every resource has these same default annotations, but they are different by batch when working with dynamic
+   * credentials.
+   *
+   * FUTURE: If this is going be used super consistently across all providers, we could potentially move the call to it
+   * into CloudResourceTemplate and require `dynamicAccountConfig` to be passed into `template.child()`. This could
+   * reduce the complexity of the `run` methods in each provider.
+   */
   protected async buildDefaultAnnotations(
     dynamicAccountConfig?: DynamicAccountConfig,
   ) {
@@ -238,6 +279,9 @@ export abstract class AWSEntityProvider<CloudResource>
     return defaultAnnotations;
   }
 
+  /**
+   * Let's add your new entities to the catalog!
+   */
   protected async applyMutation(entities: Entity[] | Promise<Entity>[]) {
     if (!this.connection) {
       throw new Error('Not initialized');

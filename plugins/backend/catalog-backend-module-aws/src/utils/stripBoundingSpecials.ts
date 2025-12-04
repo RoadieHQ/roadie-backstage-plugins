@@ -13,6 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * Remove any non-alphanumeric characters from the start and end of a string.
+ *
+ * This is most useful for `name` properties, as a valid `name` must start and end with an alphanumeric character.
+ */
 export const stripBoundingSpecials = (str: string): string => {
   return str.replace(/^[^a-zA-Z0-9]+/, '').replace(/[^a-zA-Z0-9]+$/, '');
 };

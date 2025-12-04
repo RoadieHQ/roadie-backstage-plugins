@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/**
+ * This filter converts a Date object, timestamp or date string into an ISO string for consistency.
+ */
 export function dateToIso(date: Date | string | number): string {
   return new Date(date).toISOString();
 }

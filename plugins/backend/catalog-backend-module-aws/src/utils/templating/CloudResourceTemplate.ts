@@ -88,9 +88,6 @@ export class CloudResourceTemplate<
    * The child reuses the parent's compiled template for performance, since
    * only the template string and custom filters are compiled, while config
    * values like groups are read at filter execution time.
-   *
-   * @param config - Partial configuration to merge with parent config
-   * @returns A new CloudResourceTemplate instance with the same generic type
    */
   child(
     config: Omit<
@@ -111,9 +108,9 @@ export class CloudResourceTemplate<
   /**
    * Render a cloud resource into a Backstage entity using the template.
    *
-   * @template AdditionalData - Optional additional data structure for template context
-   * @param renderContext - The render context containing cloud resource data and annotations
-   * @returns Promise resolving to a Backstage Entity
+   * Note: In most cases, only "raw" data from the AWS SDK should be passed in the render context. This allows the
+   * template to be much more extensible and reusable, as implementers can access all properties of the resource rather
+   * than being limited to a pre-defined subset.
    */
   async render<AdditionalData = Record<string, any>>(
     renderContext: RenderContext<CloudResource, AdditionalData>,
