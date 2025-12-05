@@ -141,14 +141,11 @@ metadata:
     backstage.io/view-url: "https://{{ region }}.console.aws.amazon.com/lambda/home?region={{ region }}#/functions/{{ data.FunctionName }}"
   title: {{ data.FunctionName }}
 `;
-const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(
-  accountConfig,
-  {
-    logger,
-    scheduler,
-    template: customLambdaTemplate,
-  },
-);
+const lambdaProvider = AWSLambdaFunctionProvider.fromConfig(accountConfig, {
+  logger,
+  scheduler,
+  template: customLambdaTemplate,
+});
 catalog.addEntityProvider(lambdaProvider);
 ```
 
@@ -226,7 +223,7 @@ const defaultTemplate = `
 
 export class ExtendedAWSLambdaFunctionProvider extends AWSLambdaFunctionProvider {
   protected override getDefaultTemplate(): string {
-    return defaultTemplate
+    return defaultTemplate;
   }
 
   protected override addCustomFilters(env: Environment): void {
@@ -234,25 +231,35 @@ export class ExtendedAWSLambdaFunctionProvider extends AWSLambdaFunctionProvider
       super.addCustomFilters(env);
     }
 
-    env.addFilter('get_deployment_statuses', (resource: FunctionConfiguration, otherData: DeploymentStatusOtherData): DeploymentStatus[] => {
-      const { tags, accountId, region } = otherData;
-      return [
-        {
-          type: 'lambda-function',
-          attributes: {
-            'aws-account-id': accountId,
-            'aws-region': region,
-            'deployed-at': resource.LastModified || 'unknown',
-            'deployed-by': tags.DeployedBy || 'unknown',
-            environment: tags.AccountAlias || tags.Stage || tags.Environment || 'unknown',
-            'revision-id': resource.RevisionId || 'unknown',
-            runtime: resource.Runtime || 'unknown',
-            'package-type': resource.PackageType || 'unknown',
-            version: resource.Version || 'unknown',
+    env.addFilter(
+      'get_deployment_statuses',
+      (
+        resource: FunctionConfiguration,
+        otherData: DeploymentStatusOtherData,
+      ): DeploymentStatus[] => {
+        const { tags, accountId, region } = otherData;
+        return [
+          {
+            type: 'lambda-function',
+            attributes: {
+              'aws-account-id': accountId,
+              'aws-region': region,
+              'deployed-at': resource.LastModified || 'unknown',
+              'deployed-by': tags.DeployedBy || 'unknown',
+              environment:
+                tags.AccountAlias ||
+                tags.Stage ||
+                tags.Environment ||
+                'unknown',
+              'revision-id': resource.RevisionId || 'unknown',
+              runtime: resource.Runtime || 'unknown',
+              'package-type': resource.PackageType || 'unknown',
+              version: resource.Version || 'unknown',
+            },
           },
-        },
-      ];
-    });
+        ];
+      },
+    );
   }
 }
 ```
@@ -264,12 +271,18 @@ One of the difficulties of building your own template is just knowing what is in
 In the `addCustomFilters` method, add the following:
 
 ```typescript
-env.addFilter('debug', (resource: FunctionConfiguration, tags: Record<string, string>): '' => {
-  const name = `${resource.FunctionName ?? 'unknown'}`;
-  const filePath = `./debug/lambda-${name}.json`;
-  writeFileSync(path.resolve(dirname, filePath), JSON.stringify({ resource, tags }, null, 2));
-  return ''; // return empty string to avoid messing up YAML
-});
+env.addFilter(
+  'debug',
+  (resource: FunctionConfiguration, tags: Record<string, string>): '' => {
+    const name = `${resource.FunctionName ?? 'unknown'}`;
+    const filePath = `./debug/lambda-${name}.json`;
+    writeFileSync(
+      path.resolve(dirname, filePath),
+      JSON.stringify({ resource, tags }, null, 2),
+    );
+    return ''; // return empty string to avoid messing up YAML
+  },
+);
 ```
 
 And then in your template, you can add the following, to pass both the data resource and the tags to the filter:

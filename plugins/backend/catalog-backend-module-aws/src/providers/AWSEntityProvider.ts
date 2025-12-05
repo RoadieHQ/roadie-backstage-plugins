@@ -34,7 +34,6 @@ import { Config, ConfigReader } from '@backstage/config';
 import { DefaultAwsCredentialsManager } from '@backstage/integration-aws-node';
 import {
   CatalogService,
-  DeferredEntity,
   EntityProvider,
   EntityProviderConnection,
 } from '@backstage/plugin-catalog-node';

@@ -268,7 +268,7 @@ describe('AWSLambdaFunctionProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = `
+      const templateWithTags = `
 kind: Resource
 apiVersion: backstage.io/v1beta1
 metadata:
@@ -285,7 +285,7 @@ spec:
           `.trim();
       const provider = AWSLambdaFunctionProvider.fromConfig(config, {
         logger,
-        template,
+        template: templateWithTags,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
