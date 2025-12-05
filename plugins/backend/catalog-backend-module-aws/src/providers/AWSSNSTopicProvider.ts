@@ -14,53 +14,37 @@
  * limitations under the License.
  */
 
+import { paginateListTopics, SNS, Topic } from '@aws-sdk/client-sns';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { SNS, paginateListTopics } from '@aws-sdk/client-sns';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
 import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+
+import { ANNOTATION_AWS_SNS_TOPIC_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSNSTopicProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS SNS Topics.
  */
-export class AWSSNSTopicProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSSNSTopicProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSSNSTopicProvider extends AWSEntityProvider<Topic> {
   getProviderName(): string {
     return `aws-sns-topic-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(resource: {
+    TopicArn: string;
+  }): Record<string, string> {
+    const consoleLink = new ARN(resource.TopicArn).consoleLink;
+    return {
+      [ANNOTATION_AWS_SNS_TOPIC_ARN]: resource.TopicArn,
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+    };
   }
 
   private async getSnsClient(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -76,15 +60,19 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing SNS topic resources from AWS: ${accountId}`);
-    const entities: Entity[] = [];
+    const snsResources: Array<Promise<Entity>> = [];
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const sns = await this.getSnsClient(dynamicAccountConfig);
 
@@ -102,49 +90,21 @@ export class AWSSNSTopicProvider extends AWSEntityProvider {
             ResourceArn: topic.TopicArn,
           });
           const tags = tagsResponse.Tags ?? [];
-          const topicName = topic.TopicArn.split(':').pop() || 'unknown-topic';
-          const consoleLink = new ARN(topic.TopicArn).consoleLink;
-          let entity = this.renderEntity(
-            { data: topic },
-            { defaultAnnotations: await defaultAnnotations },
-          );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1alpha1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_AWS_SNS_TOPIC_ARN]: topic.TopicArn,
-                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
-                },
-                name: topicName,
-                title: topicName,
-                labels: this.labelsFromTags(tags),
-              },
-              spec: {
-                type: 'aws-sns-topic',
-                owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-                ...relationshipsFromTags(tags),
-              },
-            };
-          }
 
-          entities.push(entity);
+          snsResources.push(
+            template.render({
+              data: topic,
+              tags,
+            }),
+          );
         }
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(snsResources);
 
     this.logger.info(
-      `Finished providing ${entities.length} SNS topic resources from AWS: ${accountId}`,
+      `Finished providing ${snsResources.length} SNS topic resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

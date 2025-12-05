@@ -14,74 +14,47 @@
  * limitations under the License.
  */
 
+import { Cluster, EKS, paginateListClusters } from '@aws-sdk/client-eks';
 import { Entity } from '@backstage/catalog-model';
-import { EKS, paginateListClusters } from '@aws-sdk/client-eks';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import {
+  ANNOTATION_KUBERNETES_API_SERVER,
+  ANNOTATION_KUBERNETES_API_SERVER_CA,
+} from '@backstage/plugin-kubernetes-common';
+
 import {
   ANNOTATION_AWS_EKS_CLUSTER_ARN,
   ANNOTATION_AWS_EKS_CLUSTER_VERSION,
   ANNOTATION_AWS_IAM_ROLE_ARN,
 } from '../annotations';
 import {
-  ANNOTATION_KUBERNETES_API_SERVER,
-  ANNOTATION_KUBERNETES_API_SERVER_CA,
-  ANNOTATION_KUBERNETES_AUTH_PROVIDER,
-  ANNOTATION_KUBERNETES_AWS_CLUSTER_ID,
-} from '@backstage/plugin-kubernetes-common';
-import { arnToName } from '../utils/arnToName';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
+  AccountConfig,
+  AWSEntityProviderConfig,
+  DynamicAccountConfig,
+} from '../types';
 import { duration } from '../utils/timer';
+
+import defaultTemplate from './AWSEKSClusterProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS EKS Cluster service.
  */
-export class AWSEKSClusterProvider extends AWSEntityProvider {
+export class AWSEKSClusterProvider extends AWSEntityProvider<Cluster> {
   private readonly clusterTypeValue: string;
 
   static fromConfig(
     config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSEKSClusterProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+    return super.fromConfig(config, options) as AWSEKSClusterProvider;
   }
 
   constructor(
     account: AccountConfig,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
+    options: AWSEntityProviderConfig & {
       clusterTypeValue?: string;
     },
   ) {
@@ -91,6 +64,37 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
 
   getProviderName(): string {
     return `aws-eks-cluster-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(resource: Cluster): Record<string, string> {
+    const annotations: Record<string, string> = {};
+
+    if (resource.version) {
+      annotations[ANNOTATION_AWS_EKS_CLUSTER_VERSION] = resource.version;
+    }
+
+    if (resource.arn) {
+      annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = resource.arn;
+    }
+
+    if (resource.roleArn) {
+      annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = resource.roleArn;
+    }
+
+    if (resource.endpoint) {
+      annotations[ANNOTATION_KUBERNETES_API_SERVER] = resource.endpoint;
+    }
+
+    if (resource.certificateAuthority?.data) {
+      annotations[ANNOTATION_KUBERNETES_API_SERVER_CA] =
+        resource.certificateAuthority.data;
+    }
+
+    return annotations;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
   }
 
   private async getEks(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -109,16 +113,25 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
     }
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
     const groups = await this.getGroups();
 
     this.logger.info(`Providing EKS cluster resources from AWS: ${accountId}`);
-    const eksEntities: Entity[] = [];
+    const eksResources: Array<Promise<Entity>> = [];
 
     const eks = await this.getEks(dynamicAccountConfig);
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const defaultAnnotations = await this.buildDefaultAnnotations(
+      dynamicAccountConfig,
+    );
+
+    const template = this.template.child({
+      groups,
+      defaultAnnotations,
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: eks,
@@ -131,89 +144,25 @@ export class AWSEKSClusterProvider extends AWSEntityProvider {
       for (const name of clusterPage.clusters || []) {
         if (name) {
           const cluster = await eks.describeCluster({ name });
-          const clusterName =
-            cluster.cluster?.name
-              ?.trim()
-              ?.toLocaleLowerCase('en-US')
-              ?.replace(/[^a-zA-Z0-9\-]/g, '-') ?? name;
-          const annotations: { [name: string]: string } = {
-            ...(await defaultAnnotations),
-          };
 
-          if (cluster.cluster?.version) {
-            annotations[ANNOTATION_AWS_EKS_CLUSTER_VERSION] =
-              cluster.cluster.version;
-          }
-
-          if (cluster.cluster?.arn) {
-            annotations[ANNOTATION_AWS_EKS_CLUSTER_ARN] = cluster.cluster.arn;
-          }
-
-          if (cluster.cluster?.roleArn) {
-            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = cluster.cluster.roleArn;
-          }
-
-          if (cluster.cluster?.endpoint) {
-            annotations[ANNOTATION_KUBERNETES_API_SERVER] =
-              cluster.cluster.endpoint;
-          }
-
-          if (cluster.cluster?.certificateAuthority?.data) {
-            annotations[ANNOTATION_KUBERNETES_API_SERVER_CA] =
-              cluster.cluster.certificateAuthority.data;
-          }
-
-          if (cluster.cluster?.name) {
-            annotations[ANNOTATION_KUBERNETES_AWS_CLUSTER_ID] = clusterName;
-          }
-
-          annotations[ANNOTATION_KUBERNETES_AUTH_PROVIDER] = 'aws';
-
-          const labels = this.labelsFromTags(cluster.cluster?.tags);
-          let entity: Entity | undefined = this.renderEntity(
-            {
+          eksResources.push(
+            template.render({
               data: cluster.cluster,
-            },
-            { defaultAnnotations: await defaultAnnotations },
+              tags: cluster.cluster?.tags,
+              additionalData: {
+                clusterName: name,
+                clusterTypeValue: this.clusterTypeValue,
+              },
+            }),
           );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations,
-                name: arnToName(name),
-                title: `${accountId}:${this.region}:${clusterName}`,
-                labels,
-              },
-
-              spec: {
-                owner: ownerFromTags(
-                  cluster.cluster?.tags,
-                  this.getOwnerTag(),
-                  groups,
-                ),
-                ...relationshipsFromTags(cluster.cluster?.tags),
-                type: this.clusterTypeValue,
-              },
-            };
-          }
-
-          eksEntities.push(entity);
         }
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: eksEntities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(eksResources);
 
     this.logger.info(
-      `Finished providing ${eksEntities.length} EKS cluster resources from AWS: ${accountId}`,
+      `Finished providing ${eksResources.length} EKS cluster resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }

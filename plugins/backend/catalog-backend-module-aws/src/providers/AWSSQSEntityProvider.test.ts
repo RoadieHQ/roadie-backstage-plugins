@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  SQS,
-  ListQueuesCommand,
   GetQueueAttributesCommand,
-  ListQueueTagsCommand,
-  ListQueuesCommandOutput,
   GetQueueAttributesCommandOutput,
+  ListQueuesCommand,
+  ListQueuesCommandOutput,
+  ListQueueTagsCommand,
   ListQueueTagsCommandOutput,
+  SQS,
 } from '@aws-sdk/client-sqs';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_SQS_QUEUE_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+
+import { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+import template from './AWSSQSEntityProvider.example.yaml.njk';
 
 // @ts-ignore
 const sqs = mockClient(SQS);
@@ -99,6 +100,7 @@ describe('AWSSQSEntityProvider', () => {
         Tags: {
           Environment: 'production//staging',
           Team: 'backend-team',
+          owner: 'team-queue',
         },
       } as ListQueueTagsCommandOutput);
     });
@@ -108,47 +110,15 @@ describe('AWSSQSEntityProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSSQSEntityProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSSQSEntityProvider.fromConfig(config, {
         logger,
         template,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-sqs-queue-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'sqs-queue',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-standard-queue',
-                title: 'my-standard-queue',
-                labels: {
-                  'aws-sqs-region': 'eu-west-1',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_SQS_QUEUE_ARN]:
-                    'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                  'backstage.io/managed-by-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                queueArn:
-                  'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates queue', async () => {
@@ -159,44 +129,33 @@ describe('AWSSQSEntityProvider', () => {
       const provider = AWSSQSEntityProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-sqs-queue-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'sqs-queue',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-standard-queue',
-                title: 'my-standard-queue',
-                labels: {
-                  'aws-sqs-region': 'eu-west-1',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_SQS_QUEUE_ARN]:
-                    'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                  'backstage.io/managed-by-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1',
-                }),
-                queueArn:
-                  'arn:aws:sqs:eu-west-1:123456789012:my-standard-queue',
-                visibilityTimeout: '30',
-                delaySeconds: '0',
-                maximumMessageSize: '262144',
-                retentionPeriod: '1209600',
-                approximateNumberOfMessages: '5',
-              }),
-            }),
-          }),
-        ],
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSSQSEntityProvider.fromConfig(config, {
+        logger,
+        taskRunner,
       });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 

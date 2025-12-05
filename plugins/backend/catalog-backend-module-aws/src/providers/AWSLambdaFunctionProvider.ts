@@ -13,58 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import {
+  FunctionConfiguration,
+  Lambda,
+  paginateListFunctions,
+} from '@aws-sdk/client-lambda';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { Lambda, paginateListFunctions } from '@aws-sdk/client-lambda';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
+import { ARN } from 'link2aws';
+
 import {
   ANNOTATION_AWS_IAM_ROLE_ARN,
   ANNOTATION_AWS_LAMBDA_FUNCTION_ARN,
 } from '../annotations';
-import { arnToName } from '../utils/arnToName';
-import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSLambdaFunctionProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS Lambda Function service.
  */
-export class AWSLambdaFunctionProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSLambdaFunctionProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSLambdaFunctionProvider extends AWSEntityProvider<FunctionConfiguration> {
   getProviderName(): string {
     return `aws-lambda-function-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: FunctionConfiguration,
+  ): Record<string, string> {
+    const annotations: Record<string, string> = {
+      [ANNOTATION_VIEW_URL]: new ARN(resource.FunctionArn!).consoleLink,
+      [ANNOTATION_AWS_LAMBDA_FUNCTION_ARN]: resource.FunctionArn!,
+    };
+    if (resource.Role) {
+      annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = resource.Role;
+    }
+    return annotations;
   }
 
   private async getLambda(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -82,20 +71,22 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing lambda function resources from AWS: ${accountId}`,
     );
-
-    const lambdaComponents: Entity[] = [];
+    const lambdaComponents: Array<Promise<Entity>> = [];
 
     const lambda = await this.getLambda(dynamicAccountConfig);
-
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: lambda,
@@ -107,7 +98,6 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
     for await (const functionPage of functionPages) {
       for (const lambdaFunction of functionPage.Functions || []) {
         if (lambdaFunction.FunctionName && lambdaFunction.FunctionArn) {
-          const consoleLink = new ARN(lambdaFunction.FunctionArn).consoleLink;
           let tags: Record<string, string> = {};
           try {
             const tagsResponse = await lambda.listTags({
@@ -121,65 +111,18 @@ export class AWSLambdaFunctionProvider extends AWSEntityProvider {
             );
           }
 
-          const annotations: { [name: string]: string } = {
-            ...(await defaultAnnotations),
-            [ANNOTATION_VIEW_URL]: consoleLink,
-            [ANNOTATION_AWS_LAMBDA_FUNCTION_ARN]: lambdaFunction.FunctionArn,
-          };
-          if (lambdaFunction.Role) {
-            annotations[ANNOTATION_AWS_IAM_ROLE_ARN] = lambdaFunction.Role;
-          }
-          const owner = ownerFromTags(tags, this.getOwnerTag(), groups);
-          const relationships = relationshipsFromTags(tags);
-          this.logger.debug(
-            `Setting Lambda owner from tags as ${owner} and relationships of ${JSON.stringify(
-              relationships,
-            )}`,
-          );
-
-          const entity: Entity | undefined = this.renderEntity(
-            {
+          // Render entity using template
+          lambdaComponents.push(
+            template.render({
               data: lambdaFunction,
               tags,
-            },
-            { defaultAnnotations: await defaultAnnotations },
+            }),
           );
-          if (entity) {
-            lambdaComponents.push(entity);
-          } else {
-            lambdaComponents.push({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations,
-                name: arnToName(lambdaFunction.FunctionArn),
-                title: lambdaFunction.FunctionName,
-                description: lambdaFunction.Description,
-                runtime: lambdaFunction.Runtime,
-                memorySize: lambdaFunction.MemorySize,
-                ephemeralStorage: lambdaFunction.EphemeralStorage?.Size,
-                timeout: lambdaFunction.Timeout,
-                architectures: lambdaFunction.Architectures,
-                labels: this.labelsFromTags(tags),
-              },
-              spec: {
-                owner: owner,
-                ...relationships,
-                type: 'lambda-function',
-              },
-            });
-          }
         }
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: lambdaComponents.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(lambdaComponents);
 
     this.logger.info(
       `Finished providing ${lambdaComponents.length} lambda function resources from AWS: ${accountId}`,

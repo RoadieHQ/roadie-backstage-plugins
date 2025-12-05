@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type {
+  AuthService,
+  LoggerService,
+  SchedulerServiceTaskRunner,
+} from '@backstage/backend-plugin-api';
+import { CatalogService } from '@backstage/plugin-catalog-node';
+import type { Logger } from 'winston';
+
+import type { LabelValueMapper } from './utils/tags';
 
 export type ValueMapping = {
   entityPath: string;
@@ -77,6 +86,19 @@ export interface AWSAccountProviderConfig {
    * Configuration object for DynamoDB table data provider
    */
   dynamodbTableData?: DynamoDbTableDataConfig;
+}
+
+export interface AWSEntityProviderConfig {
+  authService?: AuthService;
+  catalogService?: CatalogService;
+  labelValueMapper?: LabelValueMapper;
+  logger: Logger | LoggerService;
+  ownerTag?: string;
+  providerId?: string;
+  // This is required for the new backend
+  taskRunner?: SchedulerServiceTaskRunner;
+  template?: string;
+  useTemporaryCredentials?: boolean;
 }
 
 export type AccountConfig = {

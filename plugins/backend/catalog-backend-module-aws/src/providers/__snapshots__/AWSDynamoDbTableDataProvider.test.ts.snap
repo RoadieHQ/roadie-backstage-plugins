@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSDynamoDbTableDataProvider where there are table rows creates entities from table rows 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Component",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/dynamo-db-table-arn": "arn:aws:dynamodb:us-east-1:123456789012:table/TenantManagerState",
+                "amazon.com/dynamodb-table-name": "TenantManagerState",
+                "backstage.io/managed-by-location": "aws-dynamo-db-table-123456789012-TenantManagerState:arn:aws:sts::123456789012:role/tester",
+                "backstage.io/managed-by-origin-location": "aws-dynamo-db-table-123456789012-TenantManagerState:arn:aws:sts::123456789012:role/tester",
+                "test-annotation": "https://example.com",
+              },
+              "name": "tenant-123",
+              "title": "tenant-123",
+            },
+            "spec": {
+              "lifecycle": "production",
+              "owner": "123456789012",
+              "type": "dynamo-db-table-data",
+            },
+          },
+          "locationKey": "aws-dynamo-db-table-123456789012-TenantManagerState",
+        },
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Component",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/dynamo-db-table-arn": "arn:aws:dynamodb:us-east-1:123456789012:table/TenantManagerState",
+                "amazon.com/dynamodb-table-name": "TenantManagerState",
+                "backstage.io/managed-by-location": "aws-dynamo-db-table-123456789012-TenantManagerState:arn:aws:sts::123456789012:role/tester",
+                "backstage.io/managed-by-origin-location": "aws-dynamo-db-table-123456789012-TenantManagerState:arn:aws:sts::123456789012:role/tester",
+                "test-annotation": "https://example2.com",
+              },
+              "name": "tenant-456",
+              "title": "tenant-456",
+            },
+            "spec": {
+              "lifecycle": "production",
+              "owner": "123456789012",
+              "type": "dynamo-db-table-data",
+            },
+          },
+          "locationKey": "aws-dynamo-db-table-123456789012-TenantManagerState",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSDynamoDbTableDataProvider where there are table rows with template creates entities from table rows using custom template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/dynamo-db-table-arn": "arn:aws:dynamodb:us-west-2:999888777666:table/CustomTableName",
+                "amazon.com/dynamodb-table-name": "CustomTableName",
+                "backstage.io/managed-by-location": "aws-dynamo-db-table-999888777666-CustomTableName:arn:aws:sts::999888777666:role/custom-role",
+                "backstage.io/managed-by-origin-location": "aws-dynamo-db-table-999888777666-CustomTableName:arn:aws:sts::999888777666:role/custom-role",
+              },
+              "labels": null,
+              "name": "33f59cff39acf2b8db1a552ec8fa79d1989518a5d50189ee93a94a364fee236",
+              "title": "CustomTableName",
+            },
+            "spec": {
+              "type": "dynamo-db-table",
+            },
+          },
+          "locationKey": "aws-dynamo-db-table-999888777666-CustomTableName",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

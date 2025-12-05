@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+export { AWSEntityProvider } from './AWSEntityProvider';
 export { AWSS3BucketProvider } from './AWSS3BucketProvider';
 export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
 export { AWSIAMUserProvider } from './AWSIAMUserProvider';

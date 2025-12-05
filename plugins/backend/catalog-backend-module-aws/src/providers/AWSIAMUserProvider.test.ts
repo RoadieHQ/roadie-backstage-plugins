@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { IAM, ListUsersCommand, User } from '@aws-sdk/client-iam';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
-import { AWSIAMUserProvider } from './AWSIAMUserProvider';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
+import { AWSIAMUserProvider } from './AWSIAMUserProvider';
+import template from './AWSIAMUserProvider.example.yaml.njk';
 
 const iam = mockClient(IAM);
 const sts = mockClient(STS);
@@ -78,33 +77,44 @@ describe('AWSIAMUserProvider', () => {
       });
     });
 
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSIAMUserProvider.fromConfig(config, {
+        logger,
+        taskRunner,
+      });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
+    });
+
     it('creates aws users with a template', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSIAMUserProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSIAMUserProvider.fromConfig(config, {
         logger,
         template,
       });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates aws users', async () => {
@@ -116,19 +126,9 @@ describe('AWSIAMUserProvider', () => {
       const provider = AWSIAMUserProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'User',
-              metadata: expect.objectContaining({
-                title: 'adsf',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 });
