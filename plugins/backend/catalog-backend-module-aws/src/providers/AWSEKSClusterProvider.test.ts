@@ -129,7 +129,7 @@ describe('AWSEKSClusterProvider', () => {
     });
   });
 
-  describe('where there are is a cluster and I have a value mapper', () => {
+  describe('where there is a cluster and I have a value mapper', () => {
     beforeEach(() => {
       eks.on(ListClustersCommand).resolves({
         clusters: ['cluster1'],
