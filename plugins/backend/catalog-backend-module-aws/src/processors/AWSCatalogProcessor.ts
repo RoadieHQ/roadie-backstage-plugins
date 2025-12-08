@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { CatalogProcessor } from '@backstage/plugin-catalog-node';
-import { CatalogApi } from '@backstage/catalog-client';
-import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { CatalogApi } from '@backstage/catalog-client';
+import { CatalogProcessor } from '@backstage/plugin-catalog-node';
+import type { Logger } from 'winston';
 
 export abstract class AWSCatalogProcessor implements CatalogProcessor {
   protected readonly catalogApi: CatalogApi;

@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSSubnetProvider where there is a subnet creates subnet 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/subnet-id": "subnet-12345678",
+                "backstage.io/managed-by-location": "aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1#SubnetDetails:subnetId=subnet-12345678",
+              },
+              "availabilityZone": "eu-west-1a",
+              "availableIpAddressCount": 251,
+              "cidrBlock": "10.0.1.0/24",
+              "defaultForAz": "No",
+              "labels": {
+                "Environment": "production--staging",
+                "owner": "team-networking",
+              },
+              "mapPublicIpOnLaunch": "Yes",
+              "name": "subnet-12345678",
+              "state": "available",
+              "vpcId": "vpc-12345678",
+            },
+            "spec": {
+              "owner": "team-networking",
+              "type": "subnet",
+            },
+          },
+          "locationKey": "aws-subnet-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSSubnetProvider where there is a subnet creates subnet with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/subnet-id": "subnet-12345678",
+                "backstage.io/managed-by-location": "aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1#SubnetDetails:subnetId=subnet-12345678",
+              },
+              "availabilityZone": "eu-west-1a",
+              "availableIpAddressCount": 251,
+              "cidrBlock": "10.0.1.0/24",
+              "defaultForAz": false,
+              "labels": {
+                "Environment": "production--staging",
+              },
+              "mapPublicIpOnLaunch": true,
+              "name": "subnet-12345678",
+              "state": "available",
+              "vpcId": "vpc-12345678",
+            },
+          },
+          "locationKey": "aws-subnet-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

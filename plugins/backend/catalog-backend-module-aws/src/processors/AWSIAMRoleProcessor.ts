@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-import { AWSCatalogProcessor } from './AWSCatalogProcessor';
+import { DiscoveryService, LoggerService } from '@backstage/backend-plugin-api';
+import { CatalogApi, CatalogClient } from '@backstage/catalog-client';
 import {
   Entity,
-  ResourceEntity,
   getCompoundEntityRef,
-  RELATION_DEPENDS_ON,
   RELATION_DEPENDENCY_OF,
+  RELATION_DEPENDS_ON,
+  ResourceEntity,
 } from '@backstage/catalog-model';
+import { Config } from '@backstage/config';
 import {
   CatalogProcessorEmit,
   LocationSpec,
   processingResult,
 } from '@backstage/plugin-catalog-node';
-import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
-import { Config } from '@backstage/config';
 import type { Logger } from 'winston';
-import { LoggerService, DiscoveryService } from '@backstage/backend-plugin-api';
-import { CatalogClient, CatalogApi } from '@backstage/catalog-client';
+
+import { ANNOTATION_AWS_IAM_ROLE_ARN } from '../annotations';
 import { arnToName } from '../utils/arnToName';
+
+import { AWSCatalogProcessor } from './AWSCatalogProcessor';
 
 export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
   static fromConfig(
@@ -57,7 +59,7 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
     _location: LocationSpec,
     emit: CatalogProcessorEmit,
   ): Promise<Entity> {
-    if (!this.validateEntityKind(entity)) {
+    if (!(await this.validateEntityKind(entity))) {
       return entity;
     }
 
@@ -82,7 +84,7 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
       },
     });
 
-    relatedEntities.items.forEach(relatedEntity => {
+    for (const relatedEntity of relatedEntities.items) {
       const thisEntityRef = getCompoundEntityRef(entity);
       const relatedEntityRef = getCompoundEntityRef(relatedEntity);
 
@@ -102,16 +104,16 @@ export class AWSIAMRoleProcessor extends AWSCatalogProcessor {
           }),
         );
       }
-    });
+    }
     return resource;
   }
 
   async validateEntityKind(entity: Entity): Promise<boolean> {
-    if (!(entity.kind === 'Resource')) {
+    if (entity.kind !== 'Resource') {
       return false;
     }
     const resource = entity as ResourceEntity;
-    if (!(resource.spec.type === 'aws-role')) {
+    if (resource.spec.type !== 'aws-role') {
       return false;
     }
     if (

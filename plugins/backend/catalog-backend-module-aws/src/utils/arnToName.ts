@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
 
+/**
+ * Convert an ARN to a unique, consistent name by hashing it.
+ *
+ * Note: this value will not be human-readable, so while you might use this for a `name` field when resources aren't
+ * guaranteed to have a unique name, you probably wouldn't want to use it for a `title` field.
+ */
 export function arnToName(arn: string) {
   return createHash('sha256').update(arn).digest('hex').slice(0, 63);
 }

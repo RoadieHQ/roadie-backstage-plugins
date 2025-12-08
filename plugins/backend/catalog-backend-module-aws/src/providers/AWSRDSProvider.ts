@@ -14,53 +14,41 @@
  * limitations under the License.
  */
 
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { RDS, paginateDescribeDBInstances } from '@aws-sdk/client-rds';
-import type { Logger } from 'winston';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
-import { ARN } from 'link2aws';
 import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+  DBInstance,
+  paginateDescribeDBInstances,
+  RDS,
+} from '@aws-sdk/client-rds';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
+
+import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
-import { LoggerService } from '@backstage/backend-plugin-api';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSRDSProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS Relational Database Service.
  */
-export class AWSRDSProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-      ownerTag?: string;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSRDSProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
+export class AWSRDSProvider extends AWSEntityProvider<DBInstance> {
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
   }
 
   getProviderName(): string {
     return `aws-rds-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getResourceAnnotations(
+    resource: DBInstance,
+  ): Record<string, string> {
+    const instanceArn = resource.DBInstanceArn!;
+    return {
+      [ANNOTATION_VIEW_URL]: new ARN(instanceArn).consoleLink,
+      [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
+    };
   }
 
   private async getRdsClient(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -78,16 +66,20 @@ export class AWSRDSProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
-    const groups = await this.getGroups();
     this.logger.info(`Providing RDS resources from AWS: ${accountId}`);
-    const rdsEntities: Entity[] = [];
+    const rdsEntities: Array<Promise<Entity>> = [];
 
     const rdsClient = await this.getRdsClient(dynamicAccountConfig);
-
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: rdsClient,
@@ -99,66 +91,18 @@ export class AWSRDSProvider extends AWSEntityProvider {
     for await (const instances of dbInstancePages) {
       for (const dbInstance of instances.DBInstances || []) {
         if (dbInstance.DBInstanceIdentifier && dbInstance.DBInstanceArn) {
-          const instanceId = dbInstance.DBInstanceIdentifier;
-          const instanceArn = dbInstance.DBInstanceArn;
-          const consoleLink = new ARN(dbInstance.DBInstanceArn).consoleLink;
-          let entity = this.renderEntity(
-            { data: dbInstance },
-            { defaultAnnotations: await defaultAnnotations },
+          const tags = dbInstance.TagList || [];
+          rdsEntities.push(
+            template.render({
+              data: dbInstance,
+              tags,
+            }),
           );
-          if (!entity) {
-            entity = {
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_VIEW_URL]: consoleLink,
-                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]: instanceArn,
-                },
-                labels: this.labelsFromTags(dbInstance.TagList),
-                name: instanceId.substring(0, 62),
-                title: instanceId,
-                dbInstanceClass: dbInstance.DBInstanceClass,
-                dbEngine: dbInstance.Engine,
-                dbEngineVersion: dbInstance.EngineVersion,
-                allocatedStorage: dbInstance.AllocatedStorage,
-                preferredMaintenanceWindow:
-                  dbInstance.PreferredMaintenanceWindow,
-                preferredBackupWindow: dbInstance.PreferredBackupWindow,
-                backupRetentionPeriod: dbInstance.BackupRetentionPeriod,
-                isMultiAz: dbInstance.MultiAZ,
-                automaticMinorVersionUpgrade:
-                  dbInstance.AutoMinorVersionUpgrade,
-                isPubliclyAccessible: dbInstance.PubliclyAccessible,
-                storageType: dbInstance.StorageType,
-                isPerformanceInsightsEnabled:
-                  dbInstance.PerformanceInsightsEnabled,
-              },
-              spec: {
-                owner: ownerFromTags(
-                  dbInstance.TagList,
-                  this.getOwnerTag(),
-                  groups,
-                ),
-                ...relationshipsFromTags(dbInstance.TagList),
-                type: 'rds-instance',
-              },
-            };
-          }
-
-          rdsEntities.push(entity);
         }
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: rdsEntities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(rdsEntities);
 
     this.logger.info(
       `Finished providing ${rdsEntities.length} RDS resources from AWS: ${accountId}`,

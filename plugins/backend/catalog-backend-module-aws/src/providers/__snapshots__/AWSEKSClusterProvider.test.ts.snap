@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSEKSClusterProvider where there are is a cluster creates eks cluster 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/eks-cluster-arn": "arn:aws:eks:eu-west-1:123456789012:cluster/cluster1",
+                "amazon.com/eks-cluster-version": "1.28",
+                "amazon.com/iam-role-arn": "arn:aws:iam::123456789012:role/cluster1",
+                "backstage.io/managed-by-location": "aws-eks-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-eks-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "kubernetes.io/api-server": "https://EXAMPLE123.gr7.eu-west-1.eks.amazonaws.com",
+                "kubernetes.io/api-server-certificate-authority": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJZGFHR2dHR0dHR0d3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRBMU1EWXdOekV3TkRCYUZ3MHpOREExTURRd056RTFOREJhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUMrMlA3MFk0bEhxR0hHR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHS",
+                "kubernetes.io/auth-provider": "aws",
+                "kubernetes.io/x-k8s-aws-id": "cluster1",
+              },
+              "labels": {
+                "environment": "production",
+                "owner": "team-platform",
+                "some_url": "https---asdfhwef.com-hello-world",
+              },
+              "name": "a140791d2b20a847f2c74c62c384f93fb83691d871e80385720bce696a0a05f",
+              "title": "123456789012:eu-west-1:cluster1",
+            },
+            "spec": {
+              "owner": "team-platform",
+              "type": "eks-cluster",
+            },
+          },
+          "locationKey": "aws-eks-cluster-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSEKSClusterProvider where there are is a cluster creates eks cluster using template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazon.com/eks-cluster-arn": "arn:aws:eks:eu-west-1:123456789012:cluster/cluster1",
+                "amazon.com/eks-cluster-version": "1.28",
+                "amazon.com/iam-role-arn": "arn:aws:iam::123456789012:role/cluster1",
+                "backstage.io/managed-by-location": "aws-eks-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-eks-cluster-0:arn:aws:iam::123456789012:role/role1",
+                "custom-annotation": "custom-value",
+                "kubernetes.io/api-server": "https://EXAMPLE123.gr7.eu-west-1.eks.amazonaws.com",
+                "kubernetes.io/api-server-certificate-authority": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJZGFHR2dHR0dHR0d3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRBMU1EWXdOekV3TkRCYUZ3MHpOREExTURRd056RTFOREJhTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUMrMlA3MFk0bEhxR0hHR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdIR0hHSEdICkdIR0hHS",
+                "kubernetes.io/auth-provider": "aws",
+                "kubernetes.io/x-k8s-aws-id": "cluster1",
+              },
+              "labels": {
+                "custom-label": "custom-label-value",
+                "eks-cluster": "cluster1",
+                "some_url": "https---asdfhwef.com-hello-world",
+              },
+              "name": "custom-cluster1",
+              "namespace": "custom-namespace",
+              "title": "CUSTOM-123456789012:eu-west-1:cluster1",
+            },
+            "spec": {
+              "owner": "custom-team",
+              "type": "custom-eks-cluster",
+            },
+          },
+          "locationKey": "aws-eks-cluster-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

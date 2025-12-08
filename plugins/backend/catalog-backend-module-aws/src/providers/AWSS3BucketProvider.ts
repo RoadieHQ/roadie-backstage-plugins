@@ -14,54 +14,36 @@
  * limitations under the License.
  */
 
+import { Bucket, S3, Tag } from '@aws-sdk/client-s3';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { S3, Tag } from '@aws-sdk/client-s3';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
+
+import { ANNOTATION_AWS_S3_BUCKET_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSS3BucketProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS S3 Bucket service.
  */
-export class AWSS3BucketProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSS3BucketProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSS3BucketProvider extends AWSEntityProvider<Bucket> {
   getProviderName(): string {
     return `aws-s3-bucket-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(bucket: Bucket): Record<string, string> {
+    const bucketArn = `arn:aws:s3:::${bucket.Name}`;
+    const consoleLink = new ARN(bucketArn).consoleLink;
+    return {
+      [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+    };
   }
 
   private async getS3(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -79,23 +61,26 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
       throw new Error('Not initialized');
     }
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing S3 bucket resources from AWS: ${accountId}`);
-    const s3Entities: Entity[] = [];
+    const s3Resources: Array<Promise<Entity>> = [];
 
     const s3 = await this.getS3(dynamicAccountConfig);
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const buckets = await s3.listBuckets({});
 
     for (const bucket of buckets.Buckets || []) {
       if (bucket.Name) {
-        const bucketArn = `arn:aws:s3:::${bucket.Name}`;
-        const consoleLink = new ARN(bucketArn).consoleLink;
         let tags: Tag[] = [];
         try {
           const tagsResponse = await s3.getBucketTagging({
@@ -107,50 +92,20 @@ export class AWSS3BucketProvider extends AWSEntityProvider {
             bucket: bucket.Name,
           });
         }
-        const annotations: { [name: string]: string } =
-          await defaultAnnotations;
 
-        let entity = this.renderEntity(
-          { data: bucket },
-          { defaultAnnotations: annotations },
+        s3Resources.push(
+          template.render({
+            data: bucket,
+            tags,
+          }),
         );
-
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...(await defaultAnnotations),
-                [ANNOTATION_AWS_S3_BUCKET_ARN]: bucketArn,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-              },
-              name: arnToName(bucketArn),
-              title: bucket.Name,
-              labels: this.labelsFromTags(tags),
-            },
-            spec: {
-              owner: ownerFromTags(tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(tags),
-              type: 's3-bucket',
-            },
-          };
-        }
-
-        s3Entities.push(entity);
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: s3Entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(s3Resources);
 
     this.logger.info(
-      `Finished providing ${s3Entities.length} S3 bucket resources from AWS: ${accountId}`,
+      `Finished providing ${s3Resources.length} S3 bucket resources from AWS: ${accountId}`,
       { run_duration: duration(startTimestamp) },
     );
   }
