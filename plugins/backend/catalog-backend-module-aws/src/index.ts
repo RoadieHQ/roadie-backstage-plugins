@@ -16,3 +16,5 @@
 
 export * from './providers';
 export * from './processors';
+export * from './types';
+export * from './utils/templating';

@@ -1,5 +1,12 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.11.0
+
+### Minor Changes
+
+- 37b0bba: All YAML configurations are now built directly from templates. This has made it more consistent and provides better examples for end-users. A bunch of tests were added prior to migration to ensure that the output was unchanged and backward-compatible.
+- 16dfdd5: Added functionality to support integration with the new Backstage backend module system. See README.md for updated usage instructions.
+
 ## 5.10.1
 
 ### Patch Changes

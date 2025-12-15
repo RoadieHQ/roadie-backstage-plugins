@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSSecurityGroupProvider where there is a security group creates security group 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/security-group-id": "sg-12345678",
+                "backstage.io/managed-by-location": "aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/vpc/home?region=eu-west-1#SecurityGroup:groupId=sg-12345678",
+              },
+              "description": "My test security group",
+              "egressRules": "All:All to 0.0.0.0/0",
+              "groupName": "my-security-group",
+              "ingressRules": "tcp:80 from 0.0.0.0/0; tcp:443 from sg-87654321",
+              "labels": {
+                "Environment": "production--staging",
+                "owner": "team-security",
+              },
+              "name": "sg-12345678",
+              "title": "my-security-group",
+              "vpcId": "vpc-12345678",
+            },
+            "spec": {
+              "owner": "team-security",
+              "type": "security-group",
+            },
+          },
+          "locationKey": "aws-security-group-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSSecurityGroupProvider where there is a security group creates security group with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazonaws.com/security-group-id": "sg-12345678",
+                "backstage.io/managed-by-location": "aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-security-group-provider-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#SecurityGroup:groupId=sg-12345678",
+              },
+              "description": "My test security group",
+              "egressRules": "All:All to 0.0.0.0/0",
+              "groupName": "my-security-group",
+              "ingressRules": "tcp:80 from 0.0.0.0/0; tcp:443 from sg-87654321",
+              "labels": {
+                "Environment": "production--staging",
+              },
+              "name": "sg-12345678",
+              "title": "my-security-group",
+              "vpcId": "vpc-12345678",
+            },
+            "spec": {
+              "owner": "hardcoded-unknown",
+              "type": "security-group",
+            },
+          },
+          "locationKey": "aws-security-group-provider-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

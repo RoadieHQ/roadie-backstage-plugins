@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSSQSEntityProvider where there is a standard queue creates queue 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/sqs-queue-arn": "arn:aws:sqs:eu-west-1:123456789012:my-standard-queue",
+                "backstage.io/managed-by-location": "aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "approximateNumberOfMessages": "5",
+              "delaySeconds": "0",
+              "labels": {
+                "aws-sqs-region": "eu-west-1",
+              },
+              "maximumMessageSize": "262144",
+              "name": "my-standard-queue",
+              "queueArn": "arn:aws:sqs:eu-west-1:123456789012:my-standard-queue",
+              "retentionPeriod": "1209600",
+              "title": "my-standard-queue",
+              "visibilityTimeout": "30",
+            },
+            "spec": {
+              "owner": "team-queue",
+              "type": "sqs-queue",
+            },
+          },
+          "locationKey": "aws-sqs-queue-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSSQSEntityProvider where there is a standard queue creates queue with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/sqs-queue-arn": "arn:aws:sqs:eu-west-1:123456789012:my-standard-queue",
+                "backstage.io/managed-by-location": "aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-sqs-queue-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "labels": {
+                "aws-sqs-region": "eu-west-1",
+              },
+              "name": "my-standard-queue",
+              "queueArn": "arn:aws:sqs:eu-west-1:123456789012:my-standard-queue",
+              "title": "my-standard-queue",
+            },
+            "spec": {
+              "type": "sqs-queue",
+            },
+          },
+          "locationKey": "aws-sqs-queue-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

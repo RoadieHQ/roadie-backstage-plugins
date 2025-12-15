@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSECRRepositoryEntityProvider where there is a repository creates repository 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazonaws.com/ecr-repository-arn": "arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo",
+                "backstage.io/managed-by-location": "aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "createdAt": "Sun Jan 01 2023",
+              "encryption": "AES256",
+              "labels": {
+                "Environment": "production--staging",
+                "aws-ecr-region": "eu-west-1",
+                "owner": "team-platform",
+              },
+              "name": "my-app-repo",
+              "tagImmutability": "MUTABLE",
+              "title": "my-app-repo",
+              "uri": "123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo",
+            },
+            "spec": {
+              "owner": "team-platform",
+              "type": "ecr-repository",
+            },
+          },
+          "locationKey": "aws-ecr-repo-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSECRRepositoryEntityProvider where there is a repository creates repository with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/account-id": "123456789012",
+                "amazonaws.com/ecr-repository-arn": "arn:aws:ecr:eu-west-1:123456789012:repository/my-app-repo",
+                "backstage.io/managed-by-location": "aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-ecr-repo-0:arn:aws:iam::123456789012:role/role1",
+              },
+              "createdAt": "Sun Jan 01 2023 00:00:00 GMT+0000 (Coordinated Universal Time)",
+              "encryption": "AES256",
+              "name": "my-app-repo",
+              "tagImmutability": "MUTABLE",
+              "title": "my-app-repo",
+              "uri": "123456789012.dkr.ecr.eu-west-1.amazonaws.com/my-app-repo",
+            },
+            "spec": {
+              "type": "ecr-repository",
+            },
+          },
+          "locationKey": "aws-ecr-repo-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
