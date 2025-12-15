@@ -153,6 +153,42 @@ describe('ArgoCD service', () => {
         ),
       ).rejects.toThrow();
     });
+
+    it('should preserve base URL path when base URL has a path prefix', async () => {
+      const expectedResp = {
+        author: 'testuser',
+        date: '2023-03-20T18:44:10Z',
+        message: 'Update README.md',
+      };
+
+      fetchMock.mockResponseOnce(JSON.stringify(expectedResp));
+
+      const name = 'testApp';
+      const token = 'testToken';
+      const revisionId = '15db63ac922a920f388bd841912838ae4d126317';
+      const baseUrlWithPath = 'https://argo.example.com/prefix';
+
+      const resp = await argoService.getRevisionData(
+        baseUrlWithPath,
+        { name },
+        token,
+        revisionId,
+      );
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringMatching(
+          `https://argo.example.com/prefix/api/v1/applications/${name}/revisions/${revisionId}/metadata`,
+        ),
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      );
+
+      expect(resp).toStrictEqual(expectedResp);
+    });
   });
 
   describe('getArgoAppData', () => {
@@ -242,6 +278,46 @@ describe('ArgoCD service', () => {
           { name: 'testApp' },
         ),
       ).rejects.toThrow();
+    });
+
+    it('should preserve base URL path when base URL has a path prefix', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          items: [
+            {
+              metadata: {
+                name: 'testAppName',
+                namespace: 'testNamespace',
+              },
+            },
+          ],
+        }),
+      );
+      const baseUrlWithPath = 'https://argo.example.com/prefix';
+      const resp = await argoService.getArgoAppData(
+        baseUrlWithPath,
+        'argoinstance1',
+        'testToken',
+      );
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringMatching('https://argo.example.com/prefix/api/v1/applications'),
+        expect.any(Object),
+      );
+
+      expect(resp).toStrictEqual({
+        items: [
+          {
+            metadata: {
+              name: 'testAppName',
+              namespace: 'testNamespace',
+              instance: {
+                name: 'argoinstance1',
+              },
+            },
+          },
+        ],
+      });
     });
 
     it('should successfully decorate the items when using the app selector', async () => {
@@ -395,6 +471,32 @@ describe('ArgoCD service', () => {
           ),
         }),
       );
+    });
+
+    it('should preserve base URL path when creating project', async () => {
+      fetchMock.mockResponseOnce(
+        JSON.stringify({
+          argocdCreateProjectResp,
+        }),
+      );
+
+      const baseUrlWithPath = 'https://argo.example.com/prefix';
+      const resp = await argoService.createArgoProject({
+        baseUrl: baseUrlWithPath,
+        argoToken: 'testToken',
+        projectName: 'testProject',
+        namespace: 'test-namespace',
+        sourceRepo: 'https://github.com/backstage/backstage',
+      });
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringMatching('https://argo.example.com/prefix/api/v1/projects'),
+        expect.any(Object),
+      );
+
+      expect(resp).toStrictEqual({
+        argocdCreateProjectResp,
+      });
     });
   });
 
@@ -730,6 +832,30 @@ describe('ArgoCD service', () => {
       expect(resp).toStrictEqual({
         message: 'Failed to resync testApp on testApp',
         status: 'Failure',
+      });
+    });
+
+    it('should preserve base URL path when syncing app', async () => {
+      fetchMock.mockResponseOnce('');
+
+      const resp = await argoService.syncArgoApp({
+        argoInstance: {
+          name: 'testApp',
+          url: 'https://argo.example.com/prefix',
+          appName: ['testApp'],
+        },
+        argoToken: 'testToken',
+        appName: 'testApp',
+      });
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringMatching('https://argo.example.com/prefix/api/v1/applications/testApp/sync'),
+        expect.any(Object),
+      );
+
+      expect(resp).toStrictEqual({
+        message: 'Re-synced testApp on testApp',
+        status: 'Success',
       });
     });
 
@@ -2094,7 +2220,7 @@ describe('ArgoCD service', () => {
         expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
         expect(fetchMock).toHaveBeenCalledTimes(1);
         expect(fetchMock).toHaveBeenCalledWith(
-          'https://passedArgoinstance1.com/api/v1/applications/application/operation',
+          expect.stringMatching(/https:\/\/passedargoinstance1\.com\/api\/v1\/applications\/application\/operation/i),
           expect.objectContaining({
             headers: {
               Authorization: 'Bearer passedToken',
