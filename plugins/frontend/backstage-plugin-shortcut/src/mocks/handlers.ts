@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+// `msw` is included as a dev dependency and these mocks are only used in tests.
+// The linter gets a bit confused because this file doesn't look like a test.
+// eslint-disable-next-line @backstage/no-undeclared-imports
 import { rest } from 'msw';
 import { storiesResponseMock, usersResponseMock } from './mocks';
 
