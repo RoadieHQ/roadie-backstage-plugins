@@ -1,0 +1,44 @@
+/*
+ * Copyright 2025 Larder Software Limited
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+export default `
+{% extends 'AWSEntityProvider.base.yaml' %}
+
+{% set entityName = data.VolumeId %}
+{% set entityTitle = data.Tags | find_name_tag(data.VolumeId) %}
+{% set entityType = 'ebs-volume' %}
+
+{% block additionalMetadata %}
+  {% if data.Size %}
+  size: {{ data.Size }}
+  {% endif %}
+  {% if data.VolumeType %}
+  volumeType: {{ data.VolumeType }}
+  {% endif %}
+  {% if data.AvailabilityZone %}
+  availabilityZone: {{ data.AvailabilityZone }}
+  {% endif %}
+  {% if data.State %}
+  state: {{ data.State }}
+  {% endif %}
+  {% if data.Encrypted is defined %}
+  encrypted: {% if data.Encrypted %}'Yes'{% else %}'No'{% endif %}
+  {% endif %}
+  attachedInstanceIds: "{{ data.Attachments | instance_ids }}"
+  {% if data.CreateTime %}
+  createTime: "{{ data.CreateTime.toISOString() }}"
+  {% endif %}
+{% endblock %}
+`;

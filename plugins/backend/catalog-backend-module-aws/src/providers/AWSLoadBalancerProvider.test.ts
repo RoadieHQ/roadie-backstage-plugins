@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  ElasticLoadBalancingV2Client,
   DescribeLoadBalancersCommand,
-  DescribeTagsCommand,
   DescribeLoadBalancersCommandOutput,
+  DescribeTagsCommand,
   DescribeTagsCommandOutput,
+  ElasticLoadBalancingV2Client,
 } from '@aws-sdk/client-elastic-load-balancing-v2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+import template from './AWSLoadBalancerProvider.example.yaml.njk';
 
 const elbv2 = mockClient(ElasticLoadBalancingV2Client as any);
 const sts = mockClient(STS as any);
@@ -109,6 +109,10 @@ describe('AWSLoadBalancerProvider', () => {
                 Key: 'Environment',
                 Value: 'production//staging',
               },
+              {
+                Key: 'owner',
+                Value: 'team-platform',
+              },
             ],
           },
         ],
@@ -121,50 +125,15 @@ describe('AWSLoadBalancerProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSLoadBalancerProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSLoadBalancerProvider.fromConfig(config, {
         logger,
         template,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-load-balancer-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'load-balancer',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-load-balancer',
-                title: 'my-load-balancer',
-                dnsName:
-                  'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
-                scheme: 'internet-facing',
-                vpcId: 'vpc-12345678',
-                type: 'application',
-                state: 'active',
-                annotations: expect.objectContaining({
-                  'amazonaws.com/load-balancer-arn':
-                    'arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188',
-                  'amazonaws.com/load-balancer-dns-name':
-                    'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
-                  'backstage.io/managed-by-location':
-                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates load balancer', async () => {
@@ -175,48 +144,33 @@ describe('AWSLoadBalancerProvider', () => {
       const provider = AWSLoadBalancerProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-load-balancer-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'load-balancer',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-load-balancer',
-                title: 'my-load-balancer',
-                dnsName:
-                  'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
-                scheme: 'internet-facing',
-                vpcId: 'vpc-12345678',
-                type: 'application',
-                state: 'active',
-                availabilityZones: 'eu-west-1a, eu-west-1b',
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  'amazonaws.com/load-balancer-arn':
-                    'arn:aws:elasticloadbalancing:eu-west-1:123456789012:loadbalancer/app/my-load-balancer/50dc6c495c0c9188',
-                  'amazonaws.com/load-balancer-dns-name':
-                    'my-load-balancer-1234567890.eu-west-1.elb.amazonaws.com',
-                  'backstage.io/managed-by-location':
-                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-load-balancer-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://eu-west-1.console.aws.amazon.com/ec2/home?region=eu-west-1#LoadBalancers:loadBalancerId=50dc6c495c0c9188;sort=loadBalancerName',
-                }),
-              }),
-            }),
-          }),
-        ],
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSLoadBalancerProvider.fromConfig(config, {
+        logger,
+        taskRunner,
       });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 
@@ -389,7 +343,7 @@ describe('AWSLoadBalancerProvider', () => {
                 type: 'network',
                 state: 'provisioning',
                 labels: {
-                  Name: 'My Custom Load Balancer',
+                  Name: 'My-Custom-Load-Balancer',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({

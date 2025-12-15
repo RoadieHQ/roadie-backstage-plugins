@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AWSSNSTopicProvider when there are SNS topics creates SNS topic entities 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1alpha1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/sns-topic-arn": "arn:aws:sns:eu-west-1:123456789012:example-topic",
+                "backstage.io/managed-by-location": "aws-sns-topic-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-sns-topic-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topic/arn:aws:sns:eu-west-1:123456789012:example-topic",
+              },
+              "labels": {
+                "owner": "team-messaging",
+              },
+              "name": "example-topic",
+              "title": "example-topic",
+            },
+            "spec": {
+              "owner": "team-messaging",
+              "type": "aws-sns-topic",
+            },
+          },
+          "locationKey": "aws-sns-topic-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;
+
+exports[`AWSSNSTopicProvider when there are SNS topics creates SNS topic entities with a template 1`] = `
+[
+  [
+    {
+      "entities": [
+        {
+          "entity": {
+            "apiVersion": "backstage.io/v1beta1",
+            "kind": "Resource",
+            "metadata": {
+              "annotations": {
+                "amazon.com/sns-topic-arn": "arn:aws:sns:eu-west-1:123456789012:example-topic",
+                "backstage.io/managed-by-location": "aws-sns-topic-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/managed-by-origin-location": "aws-sns-topic-0:arn:aws:iam::123456789012:role/role1",
+                "backstage.io/view-url": "https://console.aws.amazon.com/sns/v3/home?region=eu-west-1#/topic/arn:aws:sns:eu-west-1:123456789012:example-topic",
+              },
+              "name": "example-topic",
+              "title": "example-topic",
+            },
+            "spec": {
+              "owner": "hardcoded-unknown",
+            },
+          },
+          "locationKey": "aws-sns-topic-0",
+        },
+      ],
+      "type": "full",
+    },
+  ],
+]
+`;

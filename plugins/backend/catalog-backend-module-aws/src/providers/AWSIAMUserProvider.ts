@@ -14,50 +14,35 @@
  * limitations under the License.
  */
 
+import { IAM, paginateListUsers, User } from '@aws-sdk/client-iam';
 import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { IAM, paginateListUsers } from '@aws-sdk/client-iam';
-import type { Logger } from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
-import { arnToName } from '../utils/arnToName';
 import { ARN } from 'link2aws';
-import { CatalogApi } from '@backstage/catalog-client';
-import { LabelValueMapper } from '../utils/tags';
+
+import { ANNOTATION_AWS_IAM_USER_ARN } from '../annotations';
 import { DynamicAccountConfig } from '../types';
 import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSIAMUserProvider.default.yaml.njk';
 
 /**
  * Provides entities from AWS IAM User service.
  */
-export class AWSIAMUserProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSIAMUserProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSIAMUserProvider extends AWSEntityProvider<User> {
   getProviderName(): string {
     return `aws-iam-user-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(resource: User): Record<string, string> {
+    const consoleLink = new ARN(resource.Arn!).consoleLink;
+    return {
+      [ANNOTATION_AWS_IAM_USER_ARN]: resource.Arn!,
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+    };
   }
 
   private async getIam(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -76,14 +61,21 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
-    this.logger.info(`Providing IAM user resources from AWS: ${accountId}`);
-    const userResources: Entity[] = [];
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
-    const defaultAnnotations =
-      this.buildDefaultAnnotations(dynamicAccountConfig);
+    this.logger.info(`Providing IAM user resources from AWS: ${accountId}`);
+    const userResources: Array<Promise<Entity>> = [];
 
     const iam = await this.getIam(dynamicAccountConfig);
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const paginatorConfig = {
       client: iam,
@@ -95,53 +87,16 @@ export class AWSIAMUserProvider extends AWSEntityProvider {
     for await (const userPage of userPages) {
       for (const user of userPage.Users || []) {
         if (user.UserName && user.Arn && user.UserId) {
-          const consoleLink = new ARN(user.Arn).consoleLink;
-          let entity: Entity | undefined = this.renderEntity(
-            { data: user },
-            { defaultAnnotations: await defaultAnnotations },
-          );
-          if (!entity) {
-            entity = {
-              kind: 'User',
-              apiVersion: 'backstage.io/v1alpha1',
-              metadata: {
-                annotations: {
-                  ...(await defaultAnnotations),
-                  [ANNOTATION_AWS_IAM_USER_ARN]: user.Arn,
-                  [ANNOTATION_VIEW_URL]: consoleLink.toString(),
-                },
-                name: arnToName(user.Arn),
-                title: user.UserName,
-                labels: this.labelsFromTags(user.Tags),
-              },
-              spec: {
-                profile: {
-                  displayName: user.Arn,
-                  email: user.UserName,
-                },
-                memberOf: [],
-              },
-            };
-          }
-
-          userResources.push(entity);
+          userResources.push(template.render({ data: user, tags: user.Tags }));
         }
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: userResources.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(userResources);
 
     this.logger.info(
       `Finished providing ${userResources.length} IAM user resources from AWS: ${accountId}`,
-      {
-        run_duration: duration(startTimestamp),
-      },
+      { run_duration: duration(startTimestamp) },
     );
   }
 }
