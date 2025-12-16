@@ -1192,7 +1192,10 @@ export class ArgoService implements ArgoServiceApi {
 
     try {
       const response = (await fetch(
-        buildArgoUrl(url, `/api/v1/applications/${argoApplicationName}/operation`),
+        buildArgoUrl(
+          url,
+          `/api/v1/applications/${argoApplicationName}/operation`,
+        ),
         options,
       )) as TerminateArgoAppOperationFetchResponse;
       statusText = response.statusText;

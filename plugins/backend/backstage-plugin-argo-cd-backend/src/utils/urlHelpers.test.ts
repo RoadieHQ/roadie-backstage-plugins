@@ -33,14 +33,18 @@ describe('buildArgoUrl', () => {
     const baseUrl = 'https://argo.example.com/prefix';
     const apiPath = '/api/v1/applications/test-app?appNamespace=argocd';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('https://argo.example.com/prefix/api/v1/applications/test-app?appNamespace=argocd');
+    expect(result).toBe(
+      'https://argo.example.com/prefix/api/v1/applications/test-app?appNamespace=argocd',
+    );
   });
 
   it('preserves base URL query parameters', () => {
     const baseUrl = 'https://argo.example.com/prefix?param=value';
     const apiPath = '/api/v1/applications';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('https://argo.example.com/prefix/api/v1/applications?param=value');
+    expect(result).toBe(
+      'https://argo.example.com/prefix/api/v1/applications?param=value',
+    );
   });
 
   it('handles root path base URL', () => {
@@ -82,14 +86,18 @@ describe('buildArgoUrl', () => {
     const baseUrl = 'https://argo.example.com:8443/prefix';
     const apiPath = '/api/v1/applications';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('https://argo.example.com:8443/prefix/api/v1/applications');
+    expect(result).toBe(
+      'https://argo.example.com:8443/prefix/api/v1/applications',
+    );
   });
 
   it('handles HTTP URLs with port and path prefix', () => {
     const baseUrl = 'http://argo.example.com:8080/prefix';
     const apiPath = '/api/v1/applications';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('http://argo.example.com:8080/prefix/api/v1/applications');
+    expect(result).toBe(
+      'http://argo.example.com:8080/prefix/api/v1/applications',
+    );
   });
 
   it('handles HTTPS URLs with default port (443) - port omitted in output', () => {
@@ -112,14 +120,17 @@ describe('buildArgoUrl', () => {
     const baseUrl = 'http://argo.example.com:8080/prefix?param=value';
     const apiPath = '/api/v1/applications?appNamespace=argocd';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('http://argo.example.com:8080/prefix/api/v1/applications?param=value&appNamespace=argocd');
+    expect(result).toBe(
+      'http://argo.example.com:8080/prefix/api/v1/applications?param=value&appNamespace=argocd',
+    );
   });
 
   it('handles HTTPS URLs with port, path prefix, and query parameters', () => {
     const baseUrl = 'https://argo.example.com:8443/prefix?param=value';
     const apiPath = '/api/v1/applications?appNamespace=argocd';
     const result = buildArgoUrl(baseUrl, apiPath);
-    expect(result).toBe('https://argo.example.com:8443/prefix/api/v1/applications?param=value&appNamespace=argocd');
+    expect(result).toBe(
+      'https://argo.example.com:8443/prefix/api/v1/applications?param=value&appNamespace=argocd',
+    );
   });
 });
-

@@ -301,7 +301,9 @@ describe('ArgoCD service', () => {
       );
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringMatching('https://argo.example.com/prefix/api/v1/applications'),
+        expect.stringMatching(
+          'https://argo.example.com/prefix/api/v1/applications',
+        ),
         expect.any(Object),
       );
 
@@ -490,7 +492,9 @@ describe('ArgoCD service', () => {
       });
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringMatching('https://argo.example.com/prefix/api/v1/projects'),
+        expect.stringMatching(
+          'https://argo.example.com/prefix/api/v1/projects',
+        ),
         expect.any(Object),
       );
 
@@ -849,7 +853,9 @@ describe('ArgoCD service', () => {
       });
 
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringMatching('https://argo.example.com/prefix/api/v1/applications/testApp/sync'),
+        expect.stringMatching(
+          'https://argo.example.com/prefix/api/v1/applications/testApp/sync',
+        ),
         expect.any(Object),
       );
 
@@ -2220,7 +2226,9 @@ describe('ArgoCD service', () => {
         expect(resp).toEqual(expect.objectContaining({ statusCode: 200 }));
         expect(fetchMock).toHaveBeenCalledTimes(1);
         expect(fetchMock).toHaveBeenCalledWith(
-          expect.stringMatching(/https:\/\/passedargoinstance1\.com\/api\/v1\/applications\/application\/operation/i),
+          expect.stringMatching(
+            /https:\/\/passedargoinstance1\.com\/api\/v1\/applications\/application\/operation/i,
+          ),
           expect.objectContaining({
             headers: {
               Authorization: 'Bearer passedToken',
