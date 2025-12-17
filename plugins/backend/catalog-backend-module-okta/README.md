@@ -37,9 +37,16 @@ catalog:
 
 ### OAuth 2.0 Scoped Authentication
 
-[Create an OAuth app](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/#create-an-oauth-2-0-app-in-okta)
-in Okta. You will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum. In the
-following example the `oauth.privateKey` may be passed as either a string encoded PEM or stringified JWK.
+[Create an OAuth service app](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/)
+in Okta.
+
+Please note:
+- the app needs to be of type "API services"
+- you will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum
+- you have to assign a sufficient Admin role to the app, you could use the canned "Read-only Administrator"
+- you have to disable "Demonstrate Proof of Possession (DPoP)"
+
+In the following example the `oauth.privateKey` may be passed as either a string encoded PEM or stringified JWK.
 
 ```yaml
 catalog:
