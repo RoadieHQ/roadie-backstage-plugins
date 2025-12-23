@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
-    "@langchain/core": "^1.1.0"
+    "@langchain/core": "^1.1.8"
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^"
