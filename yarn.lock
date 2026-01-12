@@ -13029,9 +13029,9 @@ __metadata:
     "@roadiehq/github-auth-utils-react": "npm:^1.2.0"
     "@testing-library/jest-dom": "npm:^6.0.0"
     "@testing-library/react": "npm:^14.0.0"
-    "@types/git-url-parse": "npm:^9.0.1"
+    "@types/git-url-parse": "npm:^16.0.2"
     cross-fetch: "npm:^3.1.4"
-    git-url-parse: "npm:^14.0.0"
+    git-url-parse: "npm:^16.1.0"
     immer: "npm:9.0.7"
     msw: "npm:^1.0.1"
     react-test-renderer: "npm:^16.14.0"
@@ -13071,7 +13071,7 @@ __metadata:
     "@testing-library/react": "npm:^14.0.0"
     "@types/luxon": "npm:^3.0.0"
     cross-fetch: "npm:^3.1.4"
-    git-url-parse: "npm:^14.0.0"
+    git-url-parse: "npm:^16.1.0"
     lodash: "npm:^4.17.21"
     luxon: "npm:^3.0.0"
     msw: "npm:^1.0.1"
@@ -13300,7 +13300,7 @@ __metadata:
     "@testing-library/react": "npm:^14.0.0"
     "@types/luxon": "npm:^3.0.0"
     cross-fetch: "npm:^3.1.4"
-    git-url-parse: "npm:^16.0.0"
+    git-url-parse: "npm:^16.1.0"
     luxon: "npm:^3.0.0"
     msw: "npm:^1.0.1"
     react-use: "npm:^17.2.4"
@@ -16546,10 +16546,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/git-url-parse@npm:^9.0.1":
-  version: 9.0.3
-  resolution: "@types/git-url-parse@npm:9.0.3"
-  checksum: 10/ae5389bf4339e0e863d84e92cd8af137ea485ea7141a25998300ae38ba471617af004791f4c6f86431eb5fb0c70ad4dda3558ca9b0a020a3897058e95a91515e
+"@types/git-url-parse@npm:^16.0.2":
+  version: 16.0.2
+  resolution: "@types/git-url-parse@npm:16.0.2"
+  dependencies:
+    git-url-parse: "npm:*"
+  checksum: 10/2f640048f0f0e4d246f1d029cc8d364eb57721272d5550b60996c186faf141aac15648e74bf3681d932ba9f9b156d949723896b5da53c3aa284cd7fcf4a03225
   languageName: node
   linkType: hard
 
@@ -24798,13 +24800,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-up@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "git-up@npm:8.0.0"
+"git-up@npm:^8.1.0":
+  version: 8.1.1
+  resolution: "git-up@npm:8.1.1"
   dependencies:
     is-ssh: "npm:^1.4.0"
     parse-url: "npm:^9.2.0"
-  checksum: 10/c611cb02399c3ceca99861d6774942738fa8a115cf594e1f98fb9ab321e10e7529084139f64fb007dbc967df6946e1a9510bb6686106aff5e799b68a213727a1
+  checksum: 10/475bfb816ee6003c505f25f2d6859148eedf684b2381f59774a8b4baf279d603710b888ecd1c5f5619fd7a582b131c2c52f8d247d59c7cc10bb7f7edffc704f7
+  languageName: node
+  linkType: hard
+
+"git-url-parse@npm:*, git-url-parse@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "git-url-parse@npm:16.1.0"
+  dependencies:
+    git-up: "npm:^8.1.0"
+  checksum: 10/1522e86ce89bb854ac5eaab13e71f9a72e93c4eb9897559d9731e03b700a7e2d38d16a77dddede9f79c8dac6f50633e2e420702bb1677580e797312e9b55379d
   languageName: node
   linkType: hard
 
@@ -24823,15 +24834,6 @@ __metadata:
   dependencies:
     git-up: "npm:^7.0.0"
   checksum: 10/b6e54fc58bb4f4c9bfb1060ec93c3d1462880c6bec76926978e32b2bbfac3535001c87efd1ef0dca9cd9ee0ffdaacba2f50dc4f7032ba09ad92d93e9acc9936b
-  languageName: node
-  linkType: hard
-
-"git-url-parse@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "git-url-parse@npm:16.0.0"
-  dependencies:
-    git-up: "npm:^8.0.0"
-  checksum: 10/fa154d067ae53dff3020c1985237643ab95dd9c6c455150b482df4ba46afec98c258a2eee6001f33e30dd8e18e5d29606689ec41c71bde2b10d4637effcb7fa8
   languageName: node
   linkType: hard
 
