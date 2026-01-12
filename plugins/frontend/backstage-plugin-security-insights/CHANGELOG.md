@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 3.3.1
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
 ## 3.3.0
 
 ### Minor Changes
