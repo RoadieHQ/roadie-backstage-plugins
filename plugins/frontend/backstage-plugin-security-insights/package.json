@@ -56,7 +56,6 @@
     "@octokit/rest": "^19.0.3",
     "@roadiehq/github-auth-utils-react": "^1.2.0",
     "cross-fetch": "^3.1.4",
-    "git-url-parse": "^16.0.0",
     "luxon": "^3.0.0",
     "react-use": "^17.2.4"
   },
