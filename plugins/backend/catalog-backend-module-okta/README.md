@@ -41,6 +41,7 @@ catalog:
 in Okta.
 
 Please note:
+
 - the app needs to be of type "API services"
 - you will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum
 - you have to assign a sufficient Admin role to the app, you could use the canned "Read-only Administrator"

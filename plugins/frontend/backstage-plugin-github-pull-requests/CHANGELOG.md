@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.6.2
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
 ## 3.6.1
 
 ### Patch Changes
