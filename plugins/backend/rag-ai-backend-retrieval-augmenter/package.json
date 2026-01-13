@@ -49,7 +49,7 @@
     "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "^1.1.0",
     "@roadiehq/rag-ai-node": "^0.4.0",
-    "langchain": "^0.1.21",
+    "langchain": "^0.3.37",
     "p-limit": "^3.0.2"
   },
   "devDependencies": {
