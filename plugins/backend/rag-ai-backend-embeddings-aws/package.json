@@ -48,7 +48,7 @@
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
     "@langchain/aws": "^1.0.3",
-    "@langchain/core": "^1.1.0",
+    "@langchain/core": "^1.1.8",
     "@roadiehq/rag-ai-backend": "^3.0.1",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^2.0.0",
     "@roadiehq/rag-ai-node": "^0.4.0",

@@ -42,7 +42,7 @@
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/core": "^1.1.0",
+    "@langchain/core": "^1.1.8",
     "@roadiehq/rag-ai-node": "^0.4.0",
     "knex": "^3.0.0"
   },
