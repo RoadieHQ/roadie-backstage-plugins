@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.6.0
+
+### Minor Changes
+
+- a1dcd5a: Support prefixes for argoCD instances on backstage-plugin-argo-cd-backend
+
 ## 4.5.1
 
 ### Patch Changes
