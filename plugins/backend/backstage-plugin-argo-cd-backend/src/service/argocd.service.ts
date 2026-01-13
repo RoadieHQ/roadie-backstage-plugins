@@ -36,6 +36,7 @@ import {
   OIDCConfig,
 } from './types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
+import { buildArgoUrl } from '../utils/urlHelpers';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 const DEFAULT_PASSWORD = 'argocdPassword';
@@ -122,10 +123,8 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
 
-    const urlBuilder = new URL(
-      `/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`,
-      baseUrl,
-    );
+    const apiPath = `/api/v1/applications/${options.name}/revisions/${revisionID}/metadata`;
+    const urlBuilder = new URL(buildArgoUrl(baseUrl, apiPath));
 
     if (options.namespace) {
       urlBuilder.searchParams.set(APP_NAMESPACE_QUERY_PARAM, options.namespace);
@@ -212,7 +211,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      new URL(`/api/v1/projects/${projectName}`, baseUrl).toString(),
+      buildArgoUrl(baseUrl, `/api/v1/projects/${projectName}`),
       requestOptions,
     );
     const data = await resp.json();
@@ -234,7 +233,7 @@ export class ArgoService implements ArgoServiceApi {
     if (token) return token;
 
     if ((username && password) || (this.username && this.password)) {
-      const resp = await fetch(new URL('/api/v1/session', url).toString(), {
+      const resp = await fetch(buildArgoUrl(url, '/api/v1/session'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -325,7 +324,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      new URL(`/api/v1/applications${urlSuffix}`, baseUrl).toString(),
+      buildArgoUrl(baseUrl, `/api/v1/applications${urlSuffix}`),
       requestOptions,
     );
 
@@ -415,7 +414,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      new URL('/api/v1/projects', baseUrl).toString(),
+      buildArgoUrl(baseUrl, '/api/v1/projects'),
       options,
     );
     const responseData = await resp.json();
@@ -461,7 +460,7 @@ export class ArgoService implements ArgoServiceApi {
       body: JSON.stringify(data),
     };
     const resp = await fetch(
-      new URL(`/api/v1/projects/${projectName}`, baseUrl).toString(),
+      buildArgoUrl(baseUrl, `/api/v1/projects/${projectName}`),
       options,
     );
     const responseData = await resp.json();
@@ -555,7 +554,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      new URL('/api/v1/applications', baseUrl).toString(),
+      buildArgoUrl(baseUrl, '/api/v1/applications'),
       options,
     );
     const respData = await resp.json();
@@ -659,7 +658,7 @@ export class ArgoService implements ArgoServiceApi {
       },
     };
     const resp = await fetch(
-      `${argoInstance.url}/api/v1/applications/${appName}/sync`,
+      buildArgoUrl(argoInstance.url, `/api/v1/applications/${appName}/sync`),
       options,
     );
     if (resp.ok) {
@@ -707,7 +706,7 @@ export class ArgoService implements ArgoServiceApi {
     };
 
     const resp = await fetch(
-      new URL(`/api/v1/applications/${appName}`, baseUrl).toString(),
+      buildArgoUrl(baseUrl, `/api/v1/applications/${appName}`),
       options,
     );
     const respData = await resp.json();
@@ -736,13 +735,12 @@ export class ArgoService implements ArgoServiceApi {
     };
     let statusText: string = '';
     try {
+      const urlBuilder = new URL(
+        buildArgoUrl(baseUrl, `/api/v1/applications/${argoApplicationName}`),
+      );
+      urlBuilder.searchParams.set('cascade', 'true');
       const response = (await fetch(
-        new URL(
-          `/api/v1/applications/${argoApplicationName}?${new URLSearchParams({
-            cascade: 'true',
-          })}`,
-          baseUrl,
-        ).toString(),
+        urlBuilder.toString(),
         options,
       )) as DeleteArgoAppFetchResponse;
       statusText = response.statusText;
@@ -777,7 +775,7 @@ export class ArgoService implements ArgoServiceApi {
     let statusText: string = '';
     try {
       const response = (await fetch(
-        `${baseUrl}/api/v1/projects/${argoProjectName}`,
+        buildArgoUrl(baseUrl, `/api/v1/projects/${argoProjectName}`),
         options,
       )) as DeleteArgoProjectFetchResponse;
 
@@ -887,7 +885,8 @@ export class ArgoService implements ArgoServiceApi {
         });
         deleteAppDetails.argoResponse = applicationInfo;
         if (
-          applicationInfo.statusCode !== (404 || 200) &&
+          applicationInfo.statusCode !== 404 &&
+          applicationInfo.statusCode !== 200 &&
           'message' in applicationInfo
         ) {
           deleteAppDetails.status = 'failed';
@@ -1131,7 +1130,7 @@ export class ArgoService implements ArgoServiceApi {
     let statusText: string = '';
     try {
       const response: GetArgoApplicationFetchResponse = (await fetch(
-        `${url}/api/v1/applications/${argoApplicationName}`,
+        buildArgoUrl(url, `/api/v1/applications/${argoApplicationName}`),
         options,
       )) as GetArgoApplicationFetchResponse;
 
@@ -1193,7 +1192,10 @@ export class ArgoService implements ArgoServiceApi {
 
     try {
       const response = (await fetch(
-        `${url}/api/v1/applications/${argoApplicationName}/operation`,
+        buildArgoUrl(
+          url,
+          `/api/v1/applications/${argoApplicationName}/operation`,
+        ),
         options,
       )) as TerminateArgoAppOperationFetchResponse;
       statusText = response.statusText;
