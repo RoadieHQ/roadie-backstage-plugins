@@ -42,7 +42,6 @@
     "@backstage/plugin-scaffolder-common": "^1.7.2",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
-    "glob": "^13.0.0",
     "js-yaml": "^4.1.1",
     "memfs": "^4.7.7",
     "minimist": "^1.2.5"
