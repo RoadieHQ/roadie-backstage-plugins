@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.8.1
+
+### Patch Changes
+
+- f59ceee: Update glob dependency.
+
 ## 2.8.0
 
 ### Minor Changes
