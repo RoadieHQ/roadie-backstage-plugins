@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.8.2
+
+### Patch Changes
+
+- f59ceee: Update glob dependency.
+
 ## 2.8.1
 
 ### Patch Changes
