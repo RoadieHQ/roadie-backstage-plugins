@@ -41,14 +41,14 @@
     "@backstage/plugin-scaffolder-node": "backstage:^",
     "@backstage/types": "backstage:^",
     "fs-extra": "^10.0.0",
-    "glob": "^7.2.0"
+    "glob": "^13.0.0"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.76.0",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
     "@types/fs-extra": "^9.0.13",
-    "@types/glob": "^7.2.0",
+    "@types/glob": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
     "aws-sdk-client-mock": "^0.6.0",
     "mock-fs": "^5.1.2"
