@@ -96,7 +96,7 @@ export class GleanIndexClient {
       .digest('hex')
       .slice(0, 12);
 
-    const partialDocument = {
+    const document: GleanDocument = {
       container: this.techDocsClient.getEntityUri(entity),
       datasource: this.config.getString('glean.datasource'),
       id: `${this.techDocsClient.getEntityUri(
@@ -109,17 +109,14 @@ export class GleanIndexClient {
         this.techDocsClient.parseUpdatedAt(rawHtml ?? '').getTime() / 1000,
       ),
       viewURL: this.techDocsClient.getViewUrl(entity, filePath),
-    };
-
-    this.logger.debug(`Building document: ${JSON.stringify(partialDocument)}`);
-
-    return {
-      ...partialDocument,
       body: {
         mimeType: 'text/html',
         textContent: this.parseMainContent(rawHtml ?? ''),
       },
     };
+
+    this.logger.debug(`Building document: ${JSON.stringify(document)}`);
+    return document;
   }
 
   private async buildDocuments(entity: Entity, filesToBuild: Array<string>) {
