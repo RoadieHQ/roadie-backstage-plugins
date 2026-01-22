@@ -25,7 +25,7 @@ import {
   LoggerService,
 } from '@backstage/backend-plugin-api';
 import { TechDocsClient } from './TechDocsClient';
-import { DocumentId, GleanDocument } from './types';
+import { GleanDocument } from './types';
 import { CatalogApi } from '@backstage/catalog-client';
 import crypto from 'crypto';
 
@@ -99,9 +99,7 @@ export class GleanIndexClient {
     const document: GleanDocument = {
       container: this.techDocsClient.getEntityUri(entity),
       datasource: this.config.getString('glean.datasource'),
-      id: `${this.techDocsClient.getEntityUri(
-        entity,
-      )}/${filePathHash}` as DocumentId,
+      id: `${this.techDocsClient.getEntityUri(entity)}/${filePathHash}`,
       permissions: { allowAnonymousAccess: true },
       title:
         this.techDocsClient.parseTitle(rawHtml ?? '') ?? startCase(filePath),
