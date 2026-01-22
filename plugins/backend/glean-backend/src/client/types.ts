@@ -28,4 +28,4 @@ export type GleanDocument = {
 };
 
 export type EntityUri = `${string & { __brand: 'S+/S+/S+' }}`;
-export type DocumentId = `${EntityUri & { __brand: '/.+' }}`;
+export type DocumentId = `${EntityUri}/${string}`;

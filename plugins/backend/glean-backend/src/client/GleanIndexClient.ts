@@ -25,8 +25,9 @@ import {
   LoggerService,
 } from '@backstage/backend-plugin-api';
 import { TechDocsClient } from './TechDocsClient';
-import { DocumentId, GleanDocument } from './types';
+import { GleanDocument } from './types';
 import { CatalogApi } from '@backstage/catalog-client';
+import crypto from 'crypto';
 
 export class GleanIndexClient {
   private techDocsClient: TechDocsClient;
@@ -88,13 +89,17 @@ export class GleanIndexClient {
         return null;
       });
 
-    const partialDocument = {
+    // Shorten the document id by hashing the filePath so 200 characters limit isn't exceeded
+    const filePathHash = crypto
+      .createHash('sha256')
+      .update(filePath)
+      .digest('hex')
+      .slice(0, 12);
+
+    const document: GleanDocument = {
       container: this.techDocsClient.getEntityUri(entity),
       datasource: this.config.getString('glean.datasource'),
-      id: `${this.techDocsClient.getEntityUri(
-        entity,
-      )}/${filePath}` as DocumentId,
-      // these permissions allow anyone who can sign in to our Glean instance (via Okta SSO) to view the document
+      id: `${this.techDocsClient.getEntityUri(entity)}/${filePathHash}`,
       permissions: { allowAnonymousAccess: true },
       title:
         this.techDocsClient.parseTitle(rawHtml ?? '') ?? startCase(filePath),
@@ -102,17 +107,14 @@ export class GleanIndexClient {
         this.techDocsClient.parseUpdatedAt(rawHtml ?? '').getTime() / 1000,
       ),
       viewURL: this.techDocsClient.getViewUrl(entity, filePath),
-    };
-
-    this.logger.debug(`Building document: ${JSON.stringify(partialDocument)}`);
-
-    return {
-      ...partialDocument,
       body: {
         mimeType: 'text/html',
         textContent: this.parseMainContent(rawHtml ?? ''),
       },
     };
+
+    this.logger.debug(`Building document: ${JSON.stringify(document)}`);
+    return document;
   }
 
   private async buildDocuments(entity: Entity, filesToBuild: Array<string>) {
