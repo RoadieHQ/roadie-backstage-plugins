@@ -59,7 +59,7 @@
     "@octokit/types": "^9.0.0",
     "@roadiehq/github-auth-utils-react": "^1.2.0",
     "git-url-parse": "^16.1.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.0.0",
     "react-use": "^17.2.4"
   },

@@ -38,7 +38,7 @@
     "@backstage/plugin-catalog-node": "backstage:^",
     "@backstage/plugin-techdocs-backend": "backstage:^",
     "@backstage/plugin-techdocs-node": "backstage:^",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "node-fetch": "^2.7.0",
     "node-html-parser": "^6.1.13",
     "uuid": "^9.0.1"
