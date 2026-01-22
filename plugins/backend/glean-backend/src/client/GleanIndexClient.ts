@@ -172,8 +172,9 @@ export class GleanIndexClient {
       const isLastPage = documents
         ? index >= documents.length - batchSize
         : false;
+      const batch = documents.slice(index, index + batchSize);
       const response = await this.indexDocuments(
-        documents,
+        batch,
         isFirstPage,
         isLastPage,
         uploadId,
