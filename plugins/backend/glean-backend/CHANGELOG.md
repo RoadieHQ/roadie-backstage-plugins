@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-glean-backend
 
+## 1.2.2
+
+### Patch Changes
+
+- 83bc72d: Apply correct slicing of documents into batches when indexing
+
 ## 1.2.1
 
 ### Patch Changes
