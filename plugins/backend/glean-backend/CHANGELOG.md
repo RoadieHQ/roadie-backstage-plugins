@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-glean-backend
 
+## 1.2.3
+
+### Patch Changes
+
+- c4b0c03: Shorten id so it doesn't exceed 200 chars limit
+
 ## 1.2.2
 
 ### Patch Changes
