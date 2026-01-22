@@ -37,7 +37,7 @@
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/plugin-catalog-react": "backstage:^",
     "@material-ui/core": "^4.12.4",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.0.0",
     "react-use": "^17.2.4"
   },

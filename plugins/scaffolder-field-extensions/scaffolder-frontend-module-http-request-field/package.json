@@ -39,7 +39,7 @@
     "@backstage/plugin-scaffolder": "backstage:^",
     "@backstage/plugin-scaffolder-react": "backstage:^",
     "@material-ui/core": "^4.12.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "nunjucks": "^3.2.3",
     "react-use": "^17.2.4",
     "zod": "^3.19.1"
