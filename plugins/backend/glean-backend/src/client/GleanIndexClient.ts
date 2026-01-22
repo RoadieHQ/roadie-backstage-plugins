@@ -27,6 +27,7 @@ import {
 import { TechDocsClient } from './TechDocsClient';
 import { DocumentId, GleanDocument } from './types';
 import { CatalogApi } from '@backstage/catalog-client';
+import crypto from 'crypto';
 
 export class GleanIndexClient {
   private techDocsClient: TechDocsClient;
@@ -88,13 +89,19 @@ export class GleanIndexClient {
         return null;
       });
 
+    // Shorten the document id by hashing the filePath so 200 characters limit isn't exceeded
+    const filePathHash = crypto
+      .createHash('sha256')
+      .update(filePath)
+      .digest('hex')
+      .slice(0, 12);
+
     const partialDocument = {
       container: this.techDocsClient.getEntityUri(entity),
       datasource: this.config.getString('glean.datasource'),
       id: `${this.techDocsClient.getEntityUri(
         entity,
-      )}/${filePath}` as DocumentId,
-      // these permissions allow anyone who can sign in to our Glean instance (via Okta SSO) to view the document
+      )}/${filePathHash}` as DocumentId,
       permissions: { allowAnonymousAccess: true },
       title:
         this.techDocsClient.parseTitle(rawHtml ?? '') ?? startCase(filePath),
