@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 20
           - 22
+          - 24
 
     env:
       CI: true
@@ -77,8 +77,8 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 20
           - 22
+          - 24
 
     steps:
       - uses: actions/checkout@v4
