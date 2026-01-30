@@ -15,6 +15,8 @@
  */
 import { BaseLLM } from '@langchain/core/language_models/llms';
 import { BaseChatModel } from '@langchain/core/language_models/chat_models';
+import { AIMessageChunk } from '@langchain/core/messages';
+import { IterableReadableStream } from '@langchain/core/utils/stream';
 import { EmbeddingDoc } from '@roadiehq/rag-ai-node';
 import { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
@@ -45,7 +47,10 @@ export class LlmService {
     this.prompts = createPromptTemplates(configuredPrompts);
   }
 
-  async query(embeddings: EmbeddingDoc[], query: string) {
+  async query(
+    embeddings: EmbeddingDoc[],
+    query: string,
+  ): Promise<IterableReadableStream<string | AIMessageChunk>> {
     this.logger.info('Starting to prompt LLM.');
     const promptEmbeddings = embeddings
       .map(embedding => embedding.content)
