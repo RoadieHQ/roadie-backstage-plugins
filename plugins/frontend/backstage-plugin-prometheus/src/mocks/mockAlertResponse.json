@@ -36,6 +36,25 @@
             "evaluationTime": 0.001013663,
             "lastEvaluation": "2021-09-30T12:33:31.870359967Z",
             "type": "alerting"
+          },
+          {
+            "state": "inactive",
+            "name": "inactive alert",
+            "query": "rate(http_requests[5m]) > 100",
+            "duration": 300,
+            "labels": {
+              "severity": "warning",
+              "service": "api"
+            },
+            "annotations": {
+              "summary": "High request rate",
+              "description": "Request rate exceeds threshold"
+            },
+            "alerts": [],
+            "health": "ok",
+            "evaluationTime": 0.0005,
+            "lastEvaluation": "2026-02-04T12:33:31.870359967Z",
+            "type": "alerting"
           }
         ],
         "interval": 60,

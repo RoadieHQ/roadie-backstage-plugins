@@ -54,6 +54,10 @@ type PrometheusRule = {
   lastEvaluation: string;
   type: string;
   alerts: PrometheusAlert[];
+  labels?: {
+    [key: string]: string;
+  };
+  annotations?: PrometheusAnnotations;
 };
 
 interface PrometheusAnnotations {
