@@ -205,10 +205,7 @@ By default, the plugin only displays alerts that are actively firing or pending.
 Or when using the component directly:
 
 ```typescript
-<PrometheusAlertStatus 
-  alerts="all" 
-  showInactiveAlerts={true}
-/>
+<PrometheusAlertStatus alerts="all" showInactiveAlerts={true} />
 ```
 
 Inactive alerts will be displayed with a green "inactive" status indicator, showing they are configured but not currently triggering. This is useful for viewing all configured alerts for a service, including those that are currently passing.

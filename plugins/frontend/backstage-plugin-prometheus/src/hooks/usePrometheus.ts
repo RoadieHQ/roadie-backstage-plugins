@@ -124,7 +124,10 @@ export function useMetrics({
   };
 }
 
-export function useAlerts(alerts: string[] | 'all', showInactiveAlerts = false) {
+export function useAlerts(
+  alerts: string[] | 'all',
+  showInactiveAlerts = false,
+) {
   const prometheusApi = useApi(prometheusApiRef);
   const { entity } = useEntity();
   const serviceName = getServiceName(entity);
@@ -143,16 +146,22 @@ export function useAlerts(alerts: string[] | 'all', showInactiveAlerts = false) 
       .filter(rule => alerts === 'all' || alerts.includes(rule.name))
       .flatMap(rule => {
         if (rule.alerts.length > 0) {
-          return rule.alerts.map(alert => ({ ...rule, ...alert, id: rule.name }));
-        } else if (showInactiveAlerts && rule.state === 'inactive') {
-          return [{
+          return rule.alerts.map(alert => ({
             ...rule,
+            ...alert,
             id: rule.name,
-            activeAt: '',
-            value: '',
-            labels: { ...rule.labels, alertname: rule.name },
-            annotations: rule.annotations || {},
-          }];
+          }));
+        } else if (showInactiveAlerts && rule.state === 'inactive') {
+          return [
+            {
+              ...rule,
+              id: rule.name,
+              activeAt: '',
+              value: '',
+              labels: { ...rule.labels, alertname: rule.name },
+              annotations: rule.annotations || {},
+            },
+          ];
         }
         return [];
       })
