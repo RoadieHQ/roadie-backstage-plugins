@@ -134,7 +134,7 @@ Produces the following graphs:
 
 #### `prometheus.io/alert`
 
-The 'alert' annotation expects a comma separated list of predefined alert names from the Prometheus server. These are iterated and displayed in a table, displaying state, value, labels, evaluation time and annotations. To display all alerts configured in Prometheus a magic annotation `prometheus.io/alert: all` can be used.
+The 'alert' annotation expects a comma separated list of predefined alert names from the Prometheus server. These are iterated and displayed in a table, displaying state, value, labels, evaluation time and annotations. Each row represents an affected target (labelset), so the same alert name can appear multiple times when multiple pods/instances are affected. To display all alerts configured in Prometheus a magic annotation `prometheus.io/alert: all` can be used.
 
 Example annotation
 `prometheus.io/alert: 'Excessive Memory Usage'` produces the following table.
@@ -172,9 +172,10 @@ Type definition for `PrometheusAlertStatus' props is:
 ```typescript
 {
   alerts: string[] | 'all';
-  extraColumns: TableColumn<PrometheusDisplayableAlert>[];
-  showAnnotations: boolean;
-  showLabels: boolean;
+  extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
+  showAnnotations?: boolean;
+  showLabels?: boolean;
+  showInactiveAlerts?: boolean;
 }
 ```
 
@@ -192,6 +193,22 @@ const extraColumns: TableColumn<PrometheusDisplayableAlert>[] = [
   },
 ];
 ```
+
+### Showing Inactive Alerts
+
+By default, the plugin only displays alerts that are actively firing or pending. To also show configured alerts that are in an inactive state (not currently firing), you can use the `showInactiveAlerts` prop:
+
+```typescript
+<EntityPrometheusAlertCard showInactiveAlerts={true} />
+```
+
+Or when using the component directly:
+
+```typescript
+<PrometheusAlertStatus alerts="all" showInactiveAlerts={true} />
+```
+
+Inactive alerts will be displayed with a green "inactive" status indicator, showing they are configured but not currently triggering. This is useful for viewing all configured alerts for a service, including those that are currently passing.
 
 ## Multiple Prometheus instances
 

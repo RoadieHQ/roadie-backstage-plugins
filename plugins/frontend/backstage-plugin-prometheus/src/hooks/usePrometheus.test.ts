@@ -120,5 +120,32 @@ describe('usePrometheus', () => {
       const { displayableAlerts } = useAlerts('all');
       expect(displayableAlerts).toHaveLength(1);
     });
+
+    describe('inactive alerts', () => {
+      it('should not show inactive alerts by default', () => {
+        (useAsync as any).mockReturnValue({
+          value: require('../mocks/mockAlertResponse.json'),
+          loading: false,
+        });
+        (getLabels as any).mockReturnValue(undefined);
+
+        const { displayableAlerts } = useAlerts('all');
+        expect(displayableAlerts).toHaveLength(1);
+        expect(displayableAlerts[0].name).toBe('test alert name');
+        expect(displayableAlerts[0].state).toBe('firing');
+      });
+
+      it('should show inactive alerts when showInactiveAlerts is true', () => {
+        (useAsync as any).mockReturnValue({
+          value: require('../mocks/mockAlertResponse.json'),
+          loading: false,
+        });
+        (getLabels as any).mockReturnValue(undefined);
+
+        const { displayableAlerts } = useAlerts('all', true);
+        expect(displayableAlerts).toHaveLength(2);
+        expect(displayableAlerts.map(a => a.name)).toContain('inactive alert');
+      });
+    });
   });
 });
