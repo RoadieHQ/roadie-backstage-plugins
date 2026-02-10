@@ -56,7 +56,7 @@ const state = (str: string) => {
     case 'pending':
       return <StatusPending>{str}</StatusPending>;
     case 'inactive':
-      return <StatusAborted>{str}</StatusAborted>;
+      return <StatusOK>{str}</StatusOK>;
     default:
       return <StatusAborted>Unknown ({str})</StatusAborted>;
   }
@@ -89,6 +89,9 @@ const getColumns = (
       field: 'value',
       title: 'Value',
       render: row => {
+        if (!row.value) {
+          return <p>-</p>;
+        }
         const formatter = new Intl.NumberFormat('en', {
           notation: 'compact',
         });
@@ -148,19 +151,39 @@ export const PrometheusAlertStatus = ({
   onRowClick,
   showAnnotations = true,
   showLabels = true,
+  showInactiveAlerts = false,
 }: {
   alerts: string[] | 'all';
   extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
   onRowClick?: OnRowClick;
   showAnnotations?: boolean;
   showLabels?: boolean;
+  showInactiveAlerts?: boolean;
 }) => {
-  const { error, loading, displayableAlerts, uiUrl } = useAlerts(alerts);
+  const { error, loading, displayableAlerts, uiUrl } = useAlerts(
+    alerts,
+    showInactiveAlerts,
+  );
   if (loading) {
     return <Progress />;
   } else if (error) {
     return <Alert severity="error">{error?.message}</Alert>;
   }
+
+  const statePriority: Record<string, number> = {
+    firing: 0,
+    pending: 1,
+    inactive: 2,
+  };
+
+  const sortedAlerts = [...displayableAlerts].sort((a, b) => {
+    const aPriority = statePriority[a.state] ?? 99;
+    const bPriority = statePriority[b.state] ?? 99;
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+    return a.name.localeCompare(b.name);
+  });
 
   const title = (
     <Grid container justifyContent="space-between" alignItems="center">
@@ -183,13 +206,15 @@ export const PrometheusAlertStatus = ({
         <Table
           options={{
             search: false,
-            paging: false,
+            paging: true,
+            pageSize: 5,
+            pageSizeOptions: [5, 10, 20, 50],
             toolbar: false,
           }}
           onRowClick={
             onRowClick ? (_, rowData) => onRowClick(rowData!) : undefined
           }
-          data={displayableAlerts}
+          data={sortedAlerts}
           columns={extraColumns ? columns.concat(extraColumns) : columns}
         />
       </InfoCard>

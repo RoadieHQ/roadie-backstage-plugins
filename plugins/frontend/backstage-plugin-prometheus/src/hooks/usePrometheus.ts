@@ -124,7 +124,10 @@ export function useMetrics({
   };
 }
 
-export function useAlerts(alerts: string[] | 'all') {
+export function useAlerts(
+  alerts: string[] | 'all',
+  showInactiveAlerts = false,
+) {
   const prometheusApi = useApi(prometheusApiRef);
   const { entity } = useEntity();
   const serviceName = getServiceName(entity);
@@ -141,9 +144,27 @@ export function useAlerts(alerts: string[] | 'all') {
       Object.fromEntries(labels.split(',').map(label => label.split(/=(.*)/s)));
     const displayableAlerts: PrometheusDisplayableAlert[] = rules
       .filter(rule => alerts === 'all' || alerts.includes(rule.name))
-      .flatMap(rule =>
-        rule.alerts.map(alert => ({ ...rule, ...alert, id: rule.name })),
-      )
+      .flatMap(rule => {
+        if (rule.alerts.length > 0) {
+          return rule.alerts.map(alert => ({
+            ...rule,
+            ...alert,
+            id: rule.name,
+          }));
+        } else if (showInactiveAlerts && rule.state === 'inactive') {
+          return [
+            {
+              ...rule,
+              id: rule.name,
+              activeAt: '',
+              value: '',
+              labels: { ...rule.labels, alertname: rule.name },
+              annotations: rule.annotations || {},
+            },
+          ];
+        }
+        return [];
+      })
       .filter(
         alert =>
           !parsedLabels ||
