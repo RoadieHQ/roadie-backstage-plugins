@@ -187,8 +187,13 @@ describe('roadiehq:utils:fs:replace', () => {
       } as any,
     });
 
-    expect(fs.existsSync('fake-tmp-dir/nested-directory/fake-file.yaml')).toBe(true);
-    const file1 = fs.readFileSync('fake-tmp-dir/nested-directory/fake-file.yaml', 'utf-8');
+    expect(fs.existsSync('fake-tmp-dir/nested-directory/fake-file.yaml')).toBe(
+      true,
+    );
+    const file1 = fs.readFileSync(
+      'fake-tmp-dir/nested-directory/fake-file.yaml',
+      'utf-8',
+    );
     expect(file1).toEqual('foo1: baz');
   });
 });

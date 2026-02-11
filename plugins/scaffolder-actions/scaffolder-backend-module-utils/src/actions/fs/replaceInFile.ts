@@ -17,7 +17,7 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import fg from 'fast-glob';
 import fs from 'fs-extra';
-import os from 'node:os'
+import os from 'node:os';
 import { InputError } from '@backstage/errors';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 
@@ -71,10 +71,7 @@ export function createReplaceInFileAction() {
           );
         }
 
-        let sourceFilepath = resolveSafeChildPath(
-          ctx.workspacePath,
-          file.file,
-        );
+        let sourceFilepath = resolveSafeChildPath(ctx.workspacePath, file.file);
 
         if (os.platform() === 'win32') {
           sourceFilepath = fg.win32.convertPathToPattern(sourceFilepath);
