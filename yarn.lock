@@ -7738,18 +7738,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/classic@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@langchain/classic@npm:1.0.5"
+"@langchain/classic@npm:1.0.17":
+  version: 1.0.17
+  resolution: "@langchain/classic@npm:1.0.17"
   dependencies:
-    "@langchain/openai": "npm:1.1.3"
+    "@langchain/openai": "npm:1.2.7"
     "@langchain/textsplitters": "npm:1.0.1"
     handlebars: "npm:^4.7.8"
     js-yaml: "npm:^4.1.1"
     jsonpointer: "npm:^5.0.1"
-    langsmith: "npm:^0.3.64"
+    langsmith: "npm:>=0.4.0 <1.0.0"
     openapi-types: "npm:^12.1.3"
-    p-retry: "npm:^7.0.0"
     uuid: "npm:^10.0.0"
     yaml: "npm:^2.2.1"
     zod: "npm:^3.25.76 || ^4"
@@ -7768,16 +7767,16 @@ __metadata:
       optional: true
     typeorm:
       optional: true
-  checksum: 10/4a5e32b233c466711cab670fcffca4cee44e86ba8fb8220fa4bf5c189629569656a1724284d707a511c36a5c4b1289ca9abea42431f8072debe32919744e7b9f
+  checksum: 10/9893f6081de26079441ca2a2a22ac3cccd1babf0c43af736b6b550734354f1c9ca05de0ef1eb5cf653147f90d5242a59fa439dc79b78eb2c59e3362260a40ec1
   languageName: node
   linkType: hard
 
-"@langchain/community@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@langchain/community@npm:1.0.5"
+"@langchain/community@npm:^1.1.14":
+  version: 1.1.14
+  resolution: "@langchain/community@npm:1.1.14"
   dependencies:
-    "@langchain/classic": "npm:1.0.5"
-    "@langchain/openai": "npm:1.1.3"
+    "@langchain/classic": "npm:1.0.17"
+    "@langchain/openai": "npm:1.2.7"
     binary-extensions: "npm:^2.2.0"
     flat: "npm:^5.0.2"
     js-yaml: "npm:^4.1.1"
@@ -7785,16 +7784,16 @@ __metadata:
     uuid: "npm:^10.0.0"
     zod: "npm:^3.25.76 || ^4"
   peerDependencies:
-    "@arcjet/redact": ^v1.0.0-alpha.23
+    "@arcjet/redact": ^v1.1.0
     "@aws-crypto/sha256-js": ^5.0.0
-    "@aws-sdk/client-dynamodb": ^3.749.0
-    "@aws-sdk/client-lambda": ^3.749.0
-    "@aws-sdk/client-s3": ^3.749.0
-    "@aws-sdk/client-sagemaker-runtime": ^3.749.0
-    "@aws-sdk/client-sfn": ^3.749.0
+    "@aws-sdk/client-dynamodb": ^3.985.0
+    "@aws-sdk/client-lambda": ^3.985.0
+    "@aws-sdk/client-s3": ^3.985.0
+    "@aws-sdk/client-sagemaker-runtime": ^3.985.0
+    "@aws-sdk/client-sfn": ^3.985.0
     "@aws-sdk/credential-provider-node": ^3.388.0
-    "@azure/search-documents": ^12.0.0
-    "@azure/storage-blob": ^12.15.0
+    "@azure/search-documents": ^12.2.0
+    "@azure/storage-blob": ^12.30.0
     "@browserbasehq/sdk": "*"
     "@browserbasehq/stagehand": ^1.0.0
     "@clickhouse/client": ^0.2.5
@@ -7803,16 +7802,16 @@ __metadata:
     "@getmetal/metal-sdk": "*"
     "@getzep/zep-cloud": ^1.0.6
     "@getzep/zep-js": ^0.9.0
-    "@gomomento/sdk-core": ^1.51.1
+    "@gomomento/sdk-core": ^1.117.2
     "@google-cloud/storage": ^6.10.1 || ^7.7.0
     "@gradientai/nodejs-sdk": ^1.2.0
-    "@huggingface/inference": ^4.0.5
-    "@huggingface/transformers": ^3.5.2
+    "@huggingface/inference": ^4.13.11
+    "@huggingface/transformers": ^3.8.1
     "@ibm-cloud/watsonx-ai": "*"
     "@lancedb/lancedb": ^0.19.1
-    "@langchain/core": ^1.0.0
+    "@langchain/core": ^1.1.21
     "@layerup/layerup-security": ^1.5.12
-    "@libsql/client": ^0.14.0
+    "@libsql/client": ^0.17.0
     "@mendable/firecrawl-js": ^1.4.3
     "@mlc-ai/web-llm": "*"
     "@mozilla/readability": "*"
@@ -7827,7 +7826,7 @@ __metadata:
     "@smithy/protocol-http": ^3.0.6
     "@smithy/signature-v4": ^2.0.10
     "@smithy/util-utf8": ^2.0.0
-    "@spider-cloud/spider-client": ^0.0.21
+    "@spider-cloud/spider-client": ^0.1.85
     "@supabase/supabase-js": ^2.45.0
     "@tensorflow-models/universal-sentence-encoder": "*"
     "@tensorflow/tfjs-core": "*"
@@ -7839,26 +7838,27 @@ __metadata:
     "@writerai/writer-sdk": ^0.40.2
     "@xata.io/client": ^0.28.0
     "@zilliz/milvus2-sdk-node": ">=2.3.5"
-    apify-client: ^2.7.1
-    assemblyai: ^4.6.0
-    azion: ^1.11.1
+    apify-client: ^2.22.0
+    assemblyai: ^4.23.0
+    azion: ^3.0.0
     better-sqlite3: ">=9.4.0 <12.0.0"
     cassandra-driver: ^4.7.2
-    cborg: ^4.1.1
+    cborg: ^4.5.8
     cheerio: ^1.0.0-rc.12
     chromadb: "*"
     closevector-common: 0.1.3
     closevector-node: 0.1.6
     closevector-web: 0.1.6
     convex: ^1.3.1
+    couchbase: ^4.6.0
     crypto-js: ^4.2.0
     d3-dsv: ^2.0.0
-    discord.js: ^14.14.1
+    discord.js: ^14.25.1
     duck-duck-scrape: ^2.2.5
     epub2: ^3.0.1
     faiss-node: "*"
     fast-xml-parser: "*"
-    firebase-admin: ^11.9.0 || ^12.0.0 || ^13.0.0
+    firebase-admin: ^13.6.1
     google-auth-library: "*"
     googleapis: "*"
     hnswlib-node: ^3.0.0
@@ -7869,13 +7869,13 @@ __metadata:
     ioredis: ^5.3.2
     it-all: ^3.0.4
     jsdom: "*"
-    jsonwebtoken: ^9.0.2
-    lodash: ^4.17.21
+    jsonwebtoken: ^9.0.3
+    lodash: ^4.17.23
     lunary: ^0.7.10
     mammoth: ^1.11.0
     mariadb: ^3.4.0
     mem0ai: ^2.1.8
-    mysql2: ^3.9.8
+    mysql2: ^3.16.3
     neo4j-driver: "*"
     node-llama-cpp: ">=3.0.0"
     notion-to-md: ^3.1.0
@@ -7885,15 +7885,15 @@ __metadata:
     pg: ^8.11.0
     pg-copy-streams: ^6.0.5
     pickleparser: ^0.2.1
-    playwright: ^1.32.1
+    playwright: ^1.58.2
     portkey-ai: ^0.1.11
     puppeteer: "*"
     pyodide: ">=0.24.1 <0.27.0"
     replicate: "*"
     sonix-speech-recognition: ^2.1.1
     srt-parser-2: ^1.2.3
-    typeorm: ^0.3.26
-    typesense: ^1.5.3
+    typeorm: ^0.3.28
+    typesense: ^3.0.1
     usearch: ^1.1.1
     voy-search: 0.6.2
     word-extractor: "*"
@@ -8036,6 +8036,8 @@ __metadata:
       optional: true
     convex:
       optional: true
+    couchbase:
+      optional: true
     crypto-js:
       optional: true
     d3-dsv:
@@ -8134,7 +8136,7 @@ __metadata:
       optional: true
     youtubei.js:
       optional: true
-  checksum: 10/7257adf27802f119a5b155ba7b84efddadf0130726be0ff355b31b22713408a4dd15df094162057f0efba0ae262226df5cd8f5f4f9cb62e32fc34e020d65a5c0
+  checksum: 10/9a6e7fea38433d2f141929f02291f87cc66b0c5d48f619d685f67c21fe147de90310e58dd4e3d2f6c282fb9ca148227f4a117a6f48cbc6d725c326b29b74a0bd
   languageName: node
   linkType: hard
 
@@ -8444,7 +8446,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:1.1.3, @langchain/openai@npm:^1.1.3":
+"@langchain/openai@npm:1.2.7":
+  version: 1.2.7
+  resolution: "@langchain/openai@npm:1.2.7"
+  dependencies:
+    js-tiktoken: "npm:^1.0.12"
+    openai: "npm:^6.18.0"
+    zod: "npm:^3.25.76 || ^4"
+  peerDependencies:
+    "@langchain/core": ^1.0.0
+  checksum: 10/8a40e7cd986e9edaac92352a1790318eda4b921a4bea38f3e567906be7fe8bb1f7de08652c581ce8e576f1117ada059bec97b1971ddcee7603516589ce7fd2ec
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:^1.1.3":
   version: 1.1.3
   resolution: "@langchain/openai@npm:1.1.3"
   dependencies:
@@ -18838,7 +18853,7 @@ __metadata:
     "@backstage/plugin-scaffolder-node": "backstage:^"
     "@backstage/plugin-techdocs-backend": "backstage:^"
     "@gitbeaker/node": "npm:^35.1.0"
-    "@langchain/community": "npm:^1.0.5"
+    "@langchain/community": "npm:^1.1.14"
     "@langchain/core": "npm:^1.1.0"
     "@langchain/openai": "npm:^1.1.3"
     "@octokit/rest": "npm:^19.0.3"
@@ -28736,6 +28751,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"langsmith@npm:>=0.4.0 <1.0.0":
+  version: 0.5.2
+  resolution: "langsmith@npm:0.5.2"
+  dependencies:
+    "@types/uuid": "npm:^10.0.0"
+    chalk: "npm:^4.1.2"
+    console-table-printer: "npm:^2.12.1"
+    p-queue: "npm:^6.6.2"
+    semver: "npm:^7.6.3"
+    uuid: "npm:^10.0.0"
+  peerDependencies:
+    "@opentelemetry/api": "*"
+    "@opentelemetry/exporter-trace-otlp-proto": "*"
+    "@opentelemetry/sdk-trace-base": "*"
+    openai: "*"
+  peerDependenciesMeta:
+    "@opentelemetry/api":
+      optional: true
+    "@opentelemetry/exporter-trace-otlp-proto":
+      optional: true
+    "@opentelemetry/sdk-trace-base":
+      optional: true
+    openai:
+      optional: true
+  checksum: 10/f2fa4775a3c56a0e718e86d7db320508349c49795ca6d5c294c43439a65eeb6d3d0e5b821cf58dbae69effc419f9d34df4035096d532fd2cdbe4efa36aa314f3
+  languageName: node
+  linkType: hard
+
 "langsmith@npm:^0.3.64":
   version: 0.3.81
   resolution: "langsmith@npm:0.3.81"
@@ -31779,6 +31822,23 @@ __metadata:
   bin:
     openai: bin/cli
   checksum: 10/aa56629db58a94e2c27e09a0de72e511f207e4cae5aa15b65eaf9c905105fee8356a631bae88e7737c655b19f2e5bb3ad37ca1c1b33fe3f6932ff961f26b46ca
+  languageName: node
+  linkType: hard
+
+"openai@npm:^6.18.0":
+  version: 6.21.0
+  resolution: "openai@npm:6.21.0"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.25 || ^4.0
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10/a61789db77b9e9f187094fb66c95eef9a4f95383b7281d27dbb927f39ac46e6ab7458e335333d52518d37ecd596e9cf453a7eebd9e57271f5508e9f6cf9362e1
   languageName: node
   linkType: hard
 
