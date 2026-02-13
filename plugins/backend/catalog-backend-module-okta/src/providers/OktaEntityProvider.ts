@@ -69,7 +69,7 @@ export abstract class OktaEntityProvider implements EntityProvider {
       });
     }
     throw new Error(
-      `accountConfig for ${orgUrl} missing api token or oath key`,
+      `accountConfig for ${orgUrl} missing api token or oauth key`,
     );
   }
 
