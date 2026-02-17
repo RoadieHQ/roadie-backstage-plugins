@@ -40,7 +40,7 @@
     "@actions/core": "^1.10.0",
     "@backstage/catalog-model": "^1.7.5",
     "@backstage/plugin-scaffolder-common": "^1.7.2",
-    "ajv": "^8.4.0",
+    "ajv": "^8.18.0",
     "ajv-formats": "^2.1.0",
     "js-yaml": "^4.1.1",
     "memfs": "^4.7.7",
