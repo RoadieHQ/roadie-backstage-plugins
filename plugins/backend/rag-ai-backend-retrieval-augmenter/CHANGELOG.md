@@ -1,5 +1,11 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 2.0.2
+
+### Patch Changes
+
+- 15eb513: Replaced langchain dependency with @langchain/textsplitters
+
 ## 2.0.1
 
 ### Patch Changes
