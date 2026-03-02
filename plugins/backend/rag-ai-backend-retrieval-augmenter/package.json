@@ -48,8 +48,8 @@
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-search-common": "backstage:^",
     "@langchain/core": "^1.1.0",
+    "@langchain/textsplitters": "^1.0.1",
     "@roadiehq/rag-ai-node": "^0.4.0",
-    "langchain": "^0.1.21",
     "p-limit": "^3.0.2"
   },
   "devDependencies": {
