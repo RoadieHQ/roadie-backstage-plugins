@@ -7412,18 +7412,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/classic@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@langchain/classic@npm:1.0.5"
+"@langchain/classic@npm:1.0.21":
+  version: 1.0.21
+  resolution: "@langchain/classic@npm:1.0.21"
   dependencies:
-    "@langchain/openai": "npm:1.1.3"
+    "@langchain/openai": "npm:1.2.11"
     "@langchain/textsplitters": "npm:1.0.1"
     handlebars: "npm:^4.7.8"
     js-yaml: "npm:^4.1.1"
     jsonpointer: "npm:^5.0.1"
-    langsmith: "npm:^0.3.64"
+    langsmith: "npm:>=0.4.0 <1.0.0"
     openapi-types: "npm:^12.1.3"
-    p-retry: "npm:^7.0.0"
     uuid: "npm:^10.0.0"
     yaml: "npm:^2.2.1"
     zod: "npm:^3.25.76 || ^4"
@@ -7442,16 +7441,16 @@ __metadata:
       optional: true
     typeorm:
       optional: true
-  checksum: 10/4a5e32b233c466711cab670fcffca4cee44e86ba8fb8220fa4bf5c189629569656a1724284d707a511c36a5c4b1289ca9abea42431f8072debe32919744e7b9f
+  checksum: 10/e4104470d23941d6ab46a07080fcb9b8963136e0006606ce62dde36f23c46907955505c3b3abd2036e807aff1784c9fdcf396b3068084fb439d94acc42c106f5
   languageName: node
   linkType: hard
 
-"@langchain/community@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@langchain/community@npm:1.0.5"
+"@langchain/community@npm:^1.1.18":
+  version: 1.1.20
+  resolution: "@langchain/community@npm:1.1.20"
   dependencies:
-    "@langchain/classic": "npm:1.0.5"
-    "@langchain/openai": "npm:1.1.3"
+    "@langchain/classic": "npm:1.0.21"
+    "@langchain/openai": "npm:1.2.11"
     binary-extensions: "npm:^2.2.0"
     flat: "npm:^5.0.2"
     js-yaml: "npm:^4.1.1"
@@ -7459,16 +7458,16 @@ __metadata:
     uuid: "npm:^10.0.0"
     zod: "npm:^3.25.76 || ^4"
   peerDependencies:
-    "@arcjet/redact": ^v1.0.0-alpha.23
+    "@arcjet/redact": ^v1.1.0
     "@aws-crypto/sha256-js": ^5.0.0
-    "@aws-sdk/client-dynamodb": ^3.749.0
-    "@aws-sdk/client-lambda": ^3.749.0
-    "@aws-sdk/client-s3": ^3.749.0
-    "@aws-sdk/client-sagemaker-runtime": ^3.749.0
-    "@aws-sdk/client-sfn": ^3.749.0
+    "@aws-sdk/client-dynamodb": ^3.995.0
+    "@aws-sdk/client-lambda": ^3.995.0
+    "@aws-sdk/client-s3": ^3.995.0
+    "@aws-sdk/client-sagemaker-runtime": ^3.995.0
+    "@aws-sdk/client-sfn": ^3.995.0
     "@aws-sdk/credential-provider-node": ^3.388.0
-    "@azure/search-documents": ^12.0.0
-    "@azure/storage-blob": ^12.15.0
+    "@azure/search-documents": ^12.2.0
+    "@azure/storage-blob": ^12.31.0
     "@browserbasehq/sdk": "*"
     "@browserbasehq/stagehand": ^1.0.0
     "@clickhouse/client": ^0.2.5
@@ -7476,32 +7475,32 @@ __metadata:
     "@elastic/elasticsearch": ^8.4.0
     "@getmetal/metal-sdk": "*"
     "@getzep/zep-cloud": ^1.0.6
-    "@getzep/zep-js": ^0.9.0
-    "@gomomento/sdk-core": ^1.51.1
+    "@getzep/zep-js": ^2.0.2
+    "@gomomento/sdk-core": ^1.117.2
     "@google-cloud/storage": ^6.10.1 || ^7.7.0
     "@gradientai/nodejs-sdk": ^1.2.0
-    "@huggingface/inference": ^4.0.5
-    "@huggingface/transformers": ^3.5.2
+    "@huggingface/inference": ^4.13.12
+    "@huggingface/transformers": ^3.8.1
     "@ibm-cloud/watsonx-ai": "*"
     "@lancedb/lancedb": ^0.19.1
-    "@langchain/core": ^1.0.0
+    "@langchain/core": ^1.1.29
     "@layerup/layerup-security": ^1.5.12
-    "@libsql/client": ^0.14.0
-    "@mendable/firecrawl-js": ^1.4.3
+    "@libsql/client": ^0.17.0
+    "@mendable/firecrawl-js": ^4.13.0
     "@mlc-ai/web-llm": "*"
     "@mozilla/readability": "*"
     "@neondatabase/serverless": "*"
-    "@notionhq/client": ^2.2.10
+    "@notionhq/client": ^5.9.0
     "@opensearch-project/opensearch": "*"
     "@planetscale/database": ^1.8.0
     "@premai/prem-sdk": ^0.3.25
     "@raycast/api": ^1.55.2
     "@rockset/client": ^0.9.1
-    "@smithy/eventstream-codec": ^2.0.5
-    "@smithy/protocol-http": ^3.0.6
-    "@smithy/signature-v4": ^2.0.10
-    "@smithy/util-utf8": ^2.0.0
-    "@spider-cloud/spider-client": ^0.0.21
+    "@smithy/eventstream-codec": ^4.2.9
+    "@smithy/protocol-http": ^5.3.9
+    "@smithy/signature-v4": ^5.3.9
+    "@smithy/util-utf8": ^4.2.1
+    "@spider-cloud/spider-client": ^0.1.85
     "@supabase/supabase-js": ^2.45.0
     "@tensorflow-models/universal-sentence-encoder": "*"
     "@tensorflow/tfjs-core": "*"
@@ -7510,64 +7509,65 @@ __metadata:
     "@upstash/vector": ^1.1.1
     "@vercel/kv": "*"
     "@vercel/postgres": "*"
-    "@writerai/writer-sdk": ^0.40.2
+    "@writerai/writer-sdk": ^3.6.0
     "@xata.io/client": ^0.28.0
     "@zilliz/milvus2-sdk-node": ">=2.3.5"
-    apify-client: ^2.7.1
-    assemblyai: ^4.6.0
-    azion: ^1.11.1
+    apify-client: ^2.22.2
+    assemblyai: ^4.23.1
+    azion: ^3.1.1
     better-sqlite3: ">=9.4.0 <12.0.0"
     cassandra-driver: ^4.7.2
-    cborg: ^4.1.1
-    cheerio: ^1.0.0-rc.12
+    cborg: ^4.5.8
+    cheerio: ^1.2.0
     chromadb: "*"
     closevector-common: 0.1.3
     closevector-node: 0.1.6
     closevector-web: 0.1.6
     convex: ^1.3.1
+    couchbase: ^4.6.1
     crypto-js: ^4.2.0
-    d3-dsv: ^2.0.0
-    discord.js: ^14.14.1
+    d3-dsv: ^3.0.1
+    discord.js: ^14.25.1
     duck-duck-scrape: ^2.2.5
     epub2: ^3.0.1
     faiss-node: "*"
     fast-xml-parser: "*"
-    firebase-admin: ^11.9.0 || ^12.0.0 || ^13.0.0
+    firebase-admin: ^13.6.1
     google-auth-library: "*"
     googleapis: "*"
     hnswlib-node: ^3.0.0
     html-to-text: ^9.0.5
     ibm-cloud-sdk-core: "*"
-    ignore: ^5.2.0
-    interface-datastore: ^8.2.11
+    ignore: ^7.0.5
+    interface-datastore: ^9.0.2
     ioredis: ^5.3.2
     it-all: ^3.0.4
     jsdom: "*"
-    jsonwebtoken: ^9.0.2
-    lodash: ^4.17.21
+    jsonwebtoken: ^9.0.3
+    lodash: ^4.17.23
     lunary: ^0.7.10
     mammoth: ^1.11.0
     mariadb: ^3.4.0
     mem0ai: ^2.1.8
-    mysql2: ^3.9.8
+    mysql2: ^3.18.0
     neo4j-driver: "*"
     node-llama-cpp: ">=3.0.0"
     notion-to-md: ^3.1.0
-    officeparser: ^4.0.4
+    officeparser: ^6.0.4
     openai: "*"
-    pdf-parse: 1.1.1
+    pdf-parse: 2.4.5
     pg: ^8.11.0
-    pg-copy-streams: ^6.0.5
+    pg-copy-streams: ^7.0.0
     pickleparser: ^0.2.1
-    playwright: ^1.32.1
-    portkey-ai: ^0.1.11
+    playwright: ^1.58.2
+    portkey-ai: ^3.0.1
     puppeteer: "*"
     pyodide: ">=0.24.1 <0.27.0"
     replicate: "*"
     sonix-speech-recognition: ^2.1.1
     srt-parser-2: ^1.2.3
-    typeorm: ^0.3.26
-    typesense: ^1.5.3
+    typeorm: ^0.3.28
+    typesense: ^3.0.1
     usearch: ^1.1.1
     voy-search: 0.6.2
     word-extractor: "*"
@@ -7710,6 +7710,8 @@ __metadata:
       optional: true
     convex:
       optional: true
+    couchbase:
+      optional: true
     crypto-js:
       optional: true
     d3-dsv:
@@ -7808,7 +7810,7 @@ __metadata:
       optional: true
     youtubei.js:
       optional: true
-  checksum: 10/7257adf27802f119a5b155ba7b84efddadf0130726be0ff355b31b22713408a4dd15df094162057f0efba0ae262226df5cd8f5f4f9cb62e32fc34e020d65a5c0
+  checksum: 10/5d7097b0114b297a4f290b5d04b1085869a9328d497d9a809705941b4679b454bbf1c9b72bfa2d197d3caff08635114a6bf02a34e13a8f5fec66de544635218a
   languageName: node
   linkType: hard
 
@@ -7831,7 +7833,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/openai@npm:1.1.3, @langchain/openai@npm:^1.1.3":
+"@langchain/openai@npm:1.2.11":
+  version: 1.2.11
+  resolution: "@langchain/openai@npm:1.2.11"
+  dependencies:
+    js-tiktoken: "npm:^1.0.12"
+    openai: "npm:^6.24.0"
+    zod: "npm:^3.25.76 || ^4"
+  peerDependencies:
+    "@langchain/core": ^1.1.29
+  checksum: 10/a5dffe5eb90abbfc2cf7ca701e5c45188a7a64ccab34b7e85cf7c8e027f259f65fb0f1a463685e724a442e6779ec7593b1b25c1de3a61e66a30894ff98dbf807
+  languageName: node
+  linkType: hard
+
+"@langchain/openai@npm:^1.1.3":
   version: 1.1.3
   resolution: "@langchain/openai@npm:1.1.3"
   dependencies:
@@ -18176,7 +18191,7 @@ __metadata:
     "@backstage/plugin-scaffolder-node": "backstage:^"
     "@backstage/plugin-techdocs-backend": "backstage:^"
     "@gitbeaker/node": "npm:^35.1.0"
-    "@langchain/community": "npm:^1.0.5"
+    "@langchain/community": "npm:^1.1.18"
     "@langchain/core": "npm:^1.1.0"
     "@langchain/openai": "npm:^1.1.3"
     "@octokit/rest": "npm:^19.0.3"
@@ -19096,6 +19111,13 @@ __metadata:
   version: 5.4.1
   resolution: "chalk@npm:5.4.1"
   checksum: 10/29df3ffcdf25656fed6e95962e2ef86d14dfe03cd50e7074b06bad9ffbbf6089adbb40f75c00744d843685c8d008adaf3aed31476780312553caf07fa86e5bc7
+  languageName: node
+  linkType: hard
+
+"chalk@npm:^5.6.2":
+  version: 5.6.2
+  resolution: "chalk@npm:5.6.2"
+  checksum: 10/1b2f48f6fba1370670d5610f9cd54c391d6ede28f4b7062dd38244ea5768777af72e5be6b74fb6c6d54cb84c4a2dff3f3afa9b7cb5948f7f022cfd3d087989e0
   languageName: node
   linkType: hard
 
@@ -27661,6 +27683,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"langsmith@npm:>=0.4.0 <1.0.0":
+  version: 0.5.7
+  resolution: "langsmith@npm:0.5.7"
+  dependencies:
+    "@types/uuid": "npm:^10.0.0"
+    chalk: "npm:^5.6.2"
+    console-table-printer: "npm:^2.12.1"
+    p-queue: "npm:^6.6.2"
+    semver: "npm:^7.6.3"
+    uuid: "npm:^10.0.0"
+  peerDependencies:
+    "@opentelemetry/api": "*"
+    "@opentelemetry/exporter-trace-otlp-proto": "*"
+    "@opentelemetry/sdk-trace-base": "*"
+    openai: "*"
+  peerDependenciesMeta:
+    "@opentelemetry/api":
+      optional: true
+    "@opentelemetry/exporter-trace-otlp-proto":
+      optional: true
+    "@opentelemetry/sdk-trace-base":
+      optional: true
+    openai:
+      optional: true
+  checksum: 10/362c4d839399abad3bc1cdff81aa0b9d182fd47fc0dddd68b4dc9999f94efa9394f9c7e9c50221d41028920c1d25db2e3ca70b8fbfc8a24f1efae4b6d6bad694
+  languageName: node
+  linkType: hard
+
 "langsmith@npm:^0.3.64":
   version: 0.3.81
   resolution: "langsmith@npm:0.3.81"
@@ -30573,6 +30623,23 @@ __metadata:
     is-docker: "npm:^2.1.1"
     is-wsl: "npm:^2.2.0"
   checksum: 10/acd81a1d19879c818acb3af2d2e8e9d81d17b5367561e623248133deb7dd3aefaed527531df2677d3e6aaf0199f84df57b6b2262babff8bf46ea0029aac536c9
+  languageName: node
+  linkType: hard
+
+"openai@npm:^6.24.0":
+  version: 6.25.0
+  resolution: "openai@npm:6.25.0"
+  peerDependencies:
+    ws: ^8.18.0
+    zod: ^3.25 || ^4.0
+  peerDependenciesMeta:
+    ws:
+      optional: true
+    zod:
+      optional: true
+  bin:
+    openai: bin/cli
+  checksum: 10/c9243b5bb769463c794d7f76e4cd0deee1d3d16e752d0119aad677144f414c5d3f2aaed3f50ab8e8260f7f114140b751563aa48c6d61847c90752f7f39a0cfa2
   languageName: node
   linkType: hard
 
