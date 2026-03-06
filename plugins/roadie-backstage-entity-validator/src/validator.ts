@@ -73,6 +73,7 @@ export const validate = async (
   fileContents: string,
   verbose: boolean = true,
   customAnnotationSchemaLocation: string = '',
+  customAnnotationSchema?: object,
 ) => {
   let validator: ValidateFunction | undefined;
 
@@ -97,17 +98,23 @@ export const validate = async (
 
   const validateAnnotations = (entity: any, idx: number) => {
     if (!validator) {
-      if (customAnnotationSchemaLocation) {
+      if (customAnnotationSchema) {
+        const schemaObj = customAnnotationSchema as any;
+        validator = ajv.getSchema(schemaObj.$id);
+        if (!validator) {
+          validator = ajv.compile(schemaObj);
+        }
+      } else if (customAnnotationSchemaLocation) {
         console.log(
           `Using validation schema from ${customAnnotationSchemaLocation}...`,
         );
-        const customAnnotationSchema = JSON.parse(
+        const schemaFromFile = JSON.parse(
           fs.readFileSync(customAnnotationSchemaLocation, 'utf8'),
         );
-        validator = ajv.getSchema(customAnnotationSchema.$id);
+        validator = ajv.getSchema(schemaFromFile.$id);
 
         if (!validator) {
-          validator = ajv.compile(customAnnotationSchema);
+          validator = ajv.compile(schemaFromFile);
         }
       } else {
         validator = ajv.compile(annotationSchema);
