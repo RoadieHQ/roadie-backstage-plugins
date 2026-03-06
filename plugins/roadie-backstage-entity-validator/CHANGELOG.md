@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.8.2
+
+### Patch Changes
+
+- 8a4aca8: adds a new optional customAnnotationSchema parameter to the validate function, allowing callers to pass a schema object directly in memory
+
 ## 2.8.1
 
 ### Patch Changes
