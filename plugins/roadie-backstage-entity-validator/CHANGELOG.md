@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.8.3
+
+### Patch Changes
+
+- 41bf896: Fix published types location
+
 ## 2.8.2
 
 ### Patch Changes
