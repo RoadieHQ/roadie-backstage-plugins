@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Box, Grid, Link } from '@material-ui/core';
+import { Box, Grid, Link, TablePagination } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { GithubSearchPullRequestsDataItem } from '../../types';
+import React, { useState } from 'react';
 
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -189,6 +190,9 @@ type PullRequestListViewProps = {
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
   const classes = useStyles();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   if (!data || data.length < 1) {
     return (
       <Grid
@@ -207,11 +211,42 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       </Grid>
     );
   }
+
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedData = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
+
   return (
     <Grid container className={classes.container} spacing={1}>
-      {data.map(pr => (
+      {paginatedData.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
+      <Grid item xs={12}>
+        <TablePagination
+          component="div"
+          count={data.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Grid>
     </Grid>
   );
 };
