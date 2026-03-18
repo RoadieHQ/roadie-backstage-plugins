@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.6.3
+
+### Patch Changes
+
+- 7e4a3c4: Add pagination support in PullRequestsListView component
+
 ## 3.6.2
 
 ### Patch Changes
