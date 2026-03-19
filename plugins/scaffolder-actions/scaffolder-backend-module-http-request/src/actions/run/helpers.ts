@@ -15,7 +15,7 @@
  */
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { fetch } from 'cross-fetch';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 import { HttpOptions } from './types';
 
@@ -40,30 +40,28 @@ export const generateBackstageUrl = async (
 };
 
 export const http = async (
-  options: HttpOptions,
+  { url, timeout = DEFAULT_TIMEOUT, ...options }: HttpOptions,
   logger: Logger | LoggerService,
   continueOnBadResponse: boolean = false,
 ): Promise<any> => {
-  let res: any;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
-  const { url, ...other } = options;
-  const httpOptions = { ...other, signal: controller.signal };
+  let res: Response;
 
   try {
-    res = await fetch(url, httpOptions);
-    if (!res) {
+    res = await fetch(url, {
+      ...options,
+      signal: AbortSignal.timeout(timeout),
+    });
+  } catch (e) {
+    // thrown by AbortSignal.timeout
+    // https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static
+    if (e instanceof Error && e.name === 'TimeoutError') {
       throw new HttpError(
-        `Request was aborted as it took longer than ${
-          DEFAULT_TIMEOUT / 1000
-        } seconds`,
+        `Request was aborted as it took longer than ${timeout / 1000} seconds`,
       );
     }
-  } catch (e) {
+
     throw new HttpError(`There was an issue with the request: ${e}`);
   }
-
-  clearTimeout(timeoutId);
 
   const headers: any = {};
   for (const [name, value] of res.headers) {

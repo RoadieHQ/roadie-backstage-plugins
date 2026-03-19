@@ -37,9 +37,17 @@ catalog:
 
 ### OAuth 2.0 Scoped Authentication
 
-[Create an OAuth app](https://developer.okta.com/docs/guides/implement-oauth-for-okta/main/#create-an-oauth-2-0-app-in-okta)
-in Okta. You will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum. In the
-following example the `oauth.privateKey` may be passed as either a string encoded PEM or stringified JWK.
+[Create an OAuth service app](https://developer.okta.com/docs/guides/implement-oauth-for-okta-serviceapp/main/)
+in Okta.
+
+Please note:
+
+- the app needs to be of type "API services"
+- you will need to grant it with the `okta.groups.read` and `okta.users.read` scopes as a bare minimum
+- you have to assign a sufficient Admin role to the app, you could use the canned "Read-only Administrator"
+- you have to disable "Demonstrate Proof of Possession (DPoP)"
+
+In the following example the `oauth.privateKey` may be passed as either a string encoded PEM or stringified JWK.
 
 ```yaml
 catalog:
@@ -190,6 +198,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -344,6 +353,20 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
   });
 ```
 
+#### Membership Resolution Parallelism
+
+By default, Group membership will attempt to be resolved 250 groups at a time. If you would like to increase or decrease this parallelism, provide a new value for `chunkSize`:
+
+```typescript
+const factory: EntityProviderFactory = (oktaConfig: Config) =>
+  OktaOrgEntityProvider.fromConfig(oktaConfig, {
+    logger: logger,
+    userNamingStrategy: 'strip-domain-email',
+    groupNamingStrategy: 'kebab-case-name',
+    chunkSize: 100,
+  });
+```
+
 #### Legacy backend
 
 <details>
@@ -418,6 +441,7 @@ discovered entity's `metadata.name` field. The currently supported strategies ar
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 
@@ -512,6 +536,7 @@ User naming strategies:
 - id (default) | User entities will be named by the user id.
 - kebab-case-email | User entities will be named by their profile email converted to kebab case.
 - strip-domain-email | User entities will be named by their profile email without the domain part.
+- slugify | User entities will be named the profile email with the '@' changed to a '-' and everything converted to lowercase. jhon.doe@example.com -> jhon.doe-example.com
 
 You may also choose to implement a custom naming strategy by providing a function.
 

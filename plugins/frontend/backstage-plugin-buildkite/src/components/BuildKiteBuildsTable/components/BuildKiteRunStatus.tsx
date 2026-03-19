@@ -22,7 +22,6 @@ import {
   StatusAborted,
   StatusError,
 } from '@backstage/core-components';
-import React from 'react';
 
 export const BuildkiteStatus = ({ status }: { status: string | undefined }) => {
   if (status === undefined) return null;

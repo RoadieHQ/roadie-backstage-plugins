@@ -67,5 +67,5 @@ export type GithubRepositoryData = {
 };
 
 export type GithubFirstCommitDate = {
-  firstCommitDate: Date;
+  firstCommitDate: Date | null;
 };

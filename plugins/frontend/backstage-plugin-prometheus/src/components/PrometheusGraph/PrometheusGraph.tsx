@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { DateTime } from 'luxon';
 import { Box, Grid, Typography, useTheme } from '@material-ui/core';
 import {

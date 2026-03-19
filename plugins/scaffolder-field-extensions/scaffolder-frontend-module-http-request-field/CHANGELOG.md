@@ -1,5 +1,47 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 2.2.1
+
+### Patch Changes
+
+- 33ac44d: Add NFS metadata to package.json
+
+## 2.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 2.1.0
+
+### Minor Changes
+
+- c4fe549: Add the ability to set a template string for use as the dropdown item label.
+
+## 2.0.1
+
+### Patch Changes
+
+- 145dde6: Modify display labels to be sorted alphabetically ignoring the case.
+
+## 2.0.0
+
+### Major Changes
+
+- 59c552a: Adds validation of the response code. By default it will ensure its within the 200 range. Otherwise it will fail.
+
+## 1.8.2
+
+### Patch Changes
+
+- dcf952a: Set the value in the http request field if provided in the formData.
+
 ## 1.8.1
 
 ### Patch Changes

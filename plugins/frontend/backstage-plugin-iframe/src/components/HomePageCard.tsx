@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { ErrorComponent } from './ErrorComponent';
 import { IFrameProps } from './types';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';

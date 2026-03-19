@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Button, Grid } from '@material-ui/core';
 import { EmptyState } from '@backstage/core-components';
 import {
@@ -41,10 +40,6 @@ import {
 } from '@backstage/plugin-catalog';
 import { EntityCatalogGraphCard } from '@backstage/plugin-catalog-graph';
 import {
-  isGithubActionsAvailable,
-  EntityGithubActionsContent,
-} from '@backstage-community/plugin-github-actions';
-import {
   EntityUserProfileCard,
   EntityGroupProfileCard,
   EntityMembersListCard,
@@ -61,6 +56,8 @@ import {
   isAWSLambdaAvailable,
   EntityAWSLambdaOverviewCard,
 } from '@roadiehq/backstage-plugin-aws-lambda';
+
+import { EntityLaunchdarklyCard } from '@roadiehq/backstage-plugin-launchdarkly';
 import {
   EntityGithubInsightsContent,
   EntityGithubInsightsContributorsCard,
@@ -132,10 +129,6 @@ import {
 const cicdContent = (
   <Grid container spacing={3} alignItems="stretch">
     <EntitySwitch>
-      <EntitySwitch.Case if={isGithubActionsAvailable}>
-        <EntityGithubActionsContent />
-      </EntitySwitch.Case>
-
       <EntitySwitch.Case if={isTravisciAvailable}>
         <EntityTravisCIContent />
       </EntitySwitch.Case>
@@ -168,6 +161,9 @@ const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
     <Grid item md={6}>
       <EntityAboutCard variant="gridItem" />
+    </Grid>
+    <Grid item md={6}>
+      <EntityLaunchdarklyCard envs={['production', 'test']} />
     </Grid>
     <EntitySwitch>
       <EntitySwitch.Case if={isWizAvailable}>

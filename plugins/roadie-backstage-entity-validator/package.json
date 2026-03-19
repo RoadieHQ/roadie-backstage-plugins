@@ -1,0 +1,60 @@
+{
+  "name": "@roadiehq/roadie-backstage-entity-validator",
+  "version": "2.8.3",
+  "author": "RoadieHQ",
+  "description": "Backstage entity validator library",
+  "main": "src/index.js",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
+    "email": "support@roadie.io"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github:RoadieHQ/roadie-backstage-plugins",
+    "directory": "utils/roadie-backstage-entity-validator"
+  },
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "node-library"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test && node -e \"if (process.env.CI === 'true') require('child_process').execSync('yarn test:build', {stdio: 'inherit'})\"",
+    "diff": "backstage-cli plugin:diff",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack",
+    "tsc": "tsc",
+    "clean": "backstage-cli clean",
+    "test:build": "./test.sh"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@backstage/catalog-model": "^1.7.5",
+    "@backstage/plugin-scaffolder-common": "^1.7.2",
+    "ajv": "^8.4.0",
+    "ajv-formats": "^2.1.0",
+    "js-yaml": "^4.1.1",
+    "memfs": "^4.7.7",
+    "minimist": "^1.2.5"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.34.4",
+    "@vercel/ncc": "^0.38.0",
+    "typescript": "^5.5.4"
+  },
+  "keywords": [
+    "backstage",
+    "validation",
+    "linting",
+    "roadie"
+  ]
+}

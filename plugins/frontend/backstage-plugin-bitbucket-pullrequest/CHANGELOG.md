@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-bitbucket-pullrequest
 
+## 2.2.1
+
+### Patch Changes
+
+- a04a7f6: Move `msw` from production dependencies to dev dependencies.
+
+## 2.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 2.1.1
+
+### Patch Changes
+
+- 4c4f7a1: Deprecate plugin to move to the "backstage/community-plugins" repo
+
+## 2.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.0.7
 
 ### Patch Changes

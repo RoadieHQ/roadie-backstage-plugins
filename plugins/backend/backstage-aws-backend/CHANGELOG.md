@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-aws-backend
 
+## 1.5.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.4.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 1.3.2
+
+### Patch Changes
+
+- 296cca7: Remove deprecated `@backstage/backend-common` from dependencies.
+
 ## 1.3.1
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @roadiehq/catalog-backend-module-gravatar
 
+## 1.2.1
+
+### Patch Changes
+
+- 898fcf9: Make gravatar plugin public
+
+## 1.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.0.6
 
 ### Patch Changes

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import { ReactNode, Children } from 'react';
 import {
   Typography,
   Box,
@@ -84,12 +84,12 @@ const AboutField = ({
   label: string;
   value?: string | JSX.Element;
   gridSizes?: Record<string, number>;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) => {
   const classes = useStyles();
 
   // Content is either children or a string prop `value`
-  const content = React.Children.count(children) ? (
+  const content = Children.count(children) ? (
     children
   ) : (
     <Typography variant="body2" className={classes.value}>

@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-
 import {
   PullRequestsListView,
   SkeletonPullRequestsListView,
@@ -25,13 +23,14 @@ import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 type OpenPullRequestsCardProps = {
   query?: string;
+  hostname?: string;
 };
 
 const defaultPullRequestsQuery = 'is:open is:pr author:@me archived:false';
 
 const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
-  const { query = defaultPullRequestsQuery } = props;
-  const { loading, error, value } = useGithubSearchPullRequest(query);
+  const { query = defaultPullRequestsQuery, hostname } = props;
+  const { loading, error, value } = useGithubSearchPullRequest(query, hostname);
 
   if (loading) return <SkeletonPullRequestsListView />;
   if (error) return <Alert severity="error">{error.message}</Alert>;
@@ -46,7 +45,10 @@ const OpenPullRequestsContent = (props: OpenPullRequestsCardProps) => {
 
 export const Content = (props: OpenPullRequestsCardProps) => {
   return (
-    <GitHubAuthorizationWrapper title="Your Pull Requests">
+    <GitHubAuthorizationWrapper
+      title="Your Pull Requests"
+      hostname={props.hostname}
+    >
       <OpenPullRequestsContent {...props} />
     </GitHubAuthorizationWrapper>
   );

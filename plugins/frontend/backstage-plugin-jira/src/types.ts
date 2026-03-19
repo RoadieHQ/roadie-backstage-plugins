@@ -118,15 +118,9 @@ export type Status = {
   statuses: Array<{ name: string; statusCategory: { name: string } }>;
 };
 
-export type IssuesResponse = {
-  startAt: number;
-  maxResults: number;
-  total: number;
-  issues: Ticket[];
-};
-
 export type Ticket = {
   key: string;
+  id?: string;
   self: string;
   fields?: {
     issuetype: {
@@ -157,8 +151,21 @@ export type Ticket = {
   };
 };
 
+export type PullRequest = {
+  id: string;
+  name: string;
+  url: string;
+  status: string;
+  lastUpdate: string;
+  author?: {
+    name: string;
+    avatar?: string;
+  };
+};
+
 export type TicketSummary = {
   key: string;
+  id?: string; // Issue ID needed for linked PR lookup
   parent?: string;
   summary?: string;
   assignee?: {
@@ -179,6 +186,10 @@ export type TicketSummary = {
   };
   created?: string;
   updated?: string;
+  lastComment?: string;
+  assignedDate?: string;
+  assignedRelativeTime?: string;
+  linkedPullRequests?: PullRequest[];
 };
 
 export type User = {
@@ -190,11 +201,6 @@ export type User = {
   avatarUrls: {
     [key: string]: string;
   };
-};
-
-export type IssuesResult = {
-  next: number | undefined;
-  issues: Ticket[];
 };
 
 export type UserSummary = {

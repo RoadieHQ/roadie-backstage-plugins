@@ -17,7 +17,6 @@ import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 import YAML from 'yaml';
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
 
 const parsers: Record<'yaml' | 'json' | 'multiyaml', (cnt: string) => any> = {
   yaml: (cnt: string) => YAML.parse(cnt),
@@ -26,43 +25,26 @@ const parsers: Record<'yaml' | 'json' | 'multiyaml', (cnt: string) => any> = {
     YAML.parseAllDocuments(cnt).map(doc => doc.toJSON()),
 };
 
-export function createParseFileAction(): TemplateAction<{
-  path: string;
-  parser?: 'yaml' | 'json' | 'multiyaml';
-}> {
-  return createTemplateAction<{
-    path: string;
-    parser?: 'yaml' | 'json' | 'multiyaml';
-  }>({
+export function createParseFileAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:fs:parse',
     description: 'Reads a file from the workspace and optionally parses it',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['path'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Path to the file to read.',
-            type: 'string',
-          },
-          parser: {
-            title: 'Parse',
-            description: 'Optionally parse the content to an object.',
-            type: 'string',
-            enum: ['yaml', 'json', 'multiyaml'],
-          },
-        },
+        path: z => z.string().describe('Path to the file to read.'),
+        parser: z =>
+          z
+            .enum(['yaml', 'json', 'multiyaml'])
+            .optional()
+            .describe('Optionally parse the content to an object.'),
       },
       output: {
-        type: 'object',
-        properties: {
-          content: {
-            title: 'Content of the file',
-            type: ['string', 'object'],
-          },
-        },
+        content: z =>
+          z
+            .union([z.string(), z.object({})])
+            .describe('Content of the file')
+            .optional(),
       },
     },
     async handler(ctx) {

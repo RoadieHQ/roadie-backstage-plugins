@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Entity } from '@backstage/catalog-model';
 import { fireEvent, render } from '@testing-library/react';
 import { dependabotAlertsResponseMock, entityStub } from '../../mocks/mocks';

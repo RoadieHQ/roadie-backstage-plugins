@@ -1,5 +1,138 @@
 # backend
 
+## 2.6.3
+
+### Patch Changes
+
+- Updated dependencies [a1dcd5a]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.6.0
+
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [8ed88c3]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@2.0.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@2.0.0
+  - @roadiehq/rag-ai-storage-pgvector@3.0.0
+  - @roadiehq/rag-ai-backend@3.0.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.8.0
+
+## 2.6.1
+
+### Patch Changes
+
+- Updated dependencies [7cda430]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.5.1
+
+## 2.6.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/scaffolder-backend-module-http-request@5.5.0
+  - @roadiehq/scaffolder-backend-module-utils@4.1.0
+  - @roadiehq/scaffolder-backend-module-aws@2.8.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.3.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.5.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.7.0
+  - @roadiehq/catalog-backend-module-gravatar@1.2.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.3.0
+  - @roadiehq/catalog-backend-module-okta@1.3.0
+  - @roadiehq/catalog-backend-module-aws@5.10.0
+  - @roadiehq/backstage-plugin-aws-auth@0.7.0
+  - @roadiehq/rag-ai-storage-pgvector@2.2.0
+  - @roadiehq/backstage-plugin-aws-backend@1.5.0
+  - @roadiehq/rag-ai-backend@2.2.0
+  - @roadiehq/plugin-wiz-backend@2.2.0
+  - app@1.3.0
+
+## 2.5.3
+
+### Patch Changes
+
+- Updated dependencies [534fbbc]
+- Updated dependencies [4812498]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.4.2
+
+## 2.5.2
+
+### Patch Changes
+
+- Updated dependencies [71a59f7]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.4.1
+
+## 2.5.1
+
+### Patch Changes
+
+- Updated dependencies [f358485]
+  - @roadiehq/scaffolder-backend-module-utils@4.0.0
+
+## 2.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+- Updated dependencies [b0f3d28]
+  - @roadiehq/scaffolder-backend-module-http-request@5.4.0
+  - @roadiehq/scaffolder-backend-module-utils@3.6.0
+  - @roadiehq/scaffolder-backend-module-aws@2.7.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@1.2.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.4.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.6.0
+  - @roadiehq/catalog-backend-module-gravatar@1.1.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@1.2.0
+  - @roadiehq/catalog-backend-module-okta@1.2.0
+  - @roadiehq/catalog-backend-module-aws@5.8.0
+  - @roadiehq/backstage-plugin-aws-auth@0.6.0
+  - @roadiehq/rag-ai-storage-pgvector@2.1.0
+  - @roadiehq/backstage-plugin-aws-backend@1.4.0
+  - @roadiehq/rag-ai-backend@2.1.0
+  - @roadiehq/plugin-wiz-backend@2.1.0
+  - app@1.2.0
+
+## 2.4.11
+
+### Patch Changes
+
+- Updated dependencies [ab88aee]
+  - @roadiehq/plugin-wiz-backend@2.0.0
+  - app@1.1.13
+
+## 2.4.10
+
+### Patch Changes
+
+- Updated dependencies [296cca7]
+- Updated dependencies [5eb9cc2]
+- Updated dependencies [0e70a13]
+- Updated dependencies [faf20d0]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.3.1
+  - @roadiehq/catalog-backend-module-okta@1.1.4
+  - @roadiehq/backstage-plugin-aws-backend@1.3.2
+  - @roadiehq/scaffolder-backend-module-http-request@5.3.2
+  - @roadiehq/backstage-plugin-aws-auth@0.5.2
+  - @roadiehq/catalog-backend-module-aws@5.7.1
+
+## 2.4.9
+
+### Patch Changes
+
+- 207966d: upgraded `better-sqlite3` to support Node `v22`
+- Updated dependencies [eb1a3b7]
+- Updated dependencies [8548407]
+  - @roadiehq/catalog-backend-module-aws@5.6.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.3.0
+
 ## 2.4.8
 
 ### Patch Changes

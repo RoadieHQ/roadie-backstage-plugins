@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-aws-auth
 
+## 0.7.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 0.6.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 0.5.2
+
+### Patch Changes
+
+- 0e70a13: Remove deprecated `@backstage/backend-common` package.
+
 ## 0.5.1
 
 ### Patch Changes

@@ -1,5 +1,72 @@
 # @roadiehq/backstage-plugin-launchdarkly
 
+## 1.4.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.3.0
+
+### Minor Changes
+
+- 0bcd42b: Add a new annotation for more complex LaunchDarkly filtering.
+
+## 1.2.0
+
+### Minor Changes
+
+- e9907b0: Allow retrieval of more than API limit 3 envs for launchdarkly, add option to hide desc or labels
+
+## 1.1.3
+
+### Patch Changes
+
+- 5dbdfea: Add support for filter annotation to LD Card
+
+## 1.1.2
+
+### Patch Changes
+
+- 92443a3: Wrap column configuration in memo to prevent rerenders
+
+## 1.1.1
+
+### Patch Changes
+
+- b42dd5f: Modify details panel to be self-contained to limit unnecessary rerenders
+
+## 1.1.0
+
+### Minor Changes
+
+- 69293fb: Add a new Launchdarkly card displaying environment statuses for each feature flag
+- f215405: Upgrade to 1.40.2
+
+## 1.0.2
+
+### Patch Changes
+
+- 3336220: Modify LD query to include context values again. Fix query filter
+
+## 1.0.1
+
+### Patch Changes
+
+- df9da78: Fix dark theme rendering on Launchdarkly card
+
+## 1.0.0
+
+### Major Changes
+
+- 037c0c2: Improve LaunchDarkly card to display variations, link to the flag, allow an expandable row to display environments and their targeting information.
+
+## 0.0.12
+
+### Patch Changes
+
+- 67628b6: Update Launchdarkly plugin overview table to also render complex values.
+
 ## 0.0.11
 
 ### Patch Changes

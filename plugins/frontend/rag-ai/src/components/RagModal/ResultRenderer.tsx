@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
+import { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Box } from '@material-ui/core';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -50,7 +50,7 @@ const LinkRenderer = ({
   children,
 }: {
   href?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const classes = useStyles();
 

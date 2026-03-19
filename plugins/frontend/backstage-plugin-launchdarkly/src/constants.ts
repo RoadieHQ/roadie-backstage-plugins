@@ -23,3 +23,5 @@ export const LAUNCHDARKLY_FILTER_TAGS_ANNOTATION =
   'launchdarkly.com/filter-tags';
 export const LAUNCHDARKLY_FILTER_QUERY_ANNOTATION =
   'launchdarkly.com/filter-query';
+
+export const LAUNCHDARKLY_FILTER_ANNOTATION = 'launchdarkly.com/filter';

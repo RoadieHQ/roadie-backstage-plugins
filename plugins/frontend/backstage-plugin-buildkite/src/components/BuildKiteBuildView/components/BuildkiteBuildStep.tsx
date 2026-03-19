@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core';

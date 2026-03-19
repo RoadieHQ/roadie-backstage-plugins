@@ -1,0 +1,142 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: backstage-http-request-demo
+  title: Backstage HTTP Request Action Demo
+  description: Demonstrates the http:backstage:request scaffolder action with various API calls
+  tags:
+    - demo
+    - http
+    - api
+    - backstage
+spec:
+  owner: platform-team
+  type: demo
+  
+  parameters:
+    - title: Entity Information
+      required:
+        - entityRef
+      properties:
+        entityRef:
+          title: Entity Reference
+          type: string
+          description: 'Reference to an entity (e.g., component:default/my-service)'
+          default: 'component:default/sample-service'
+        
+    - title: API Demo Options
+      properties:
+        fetchCatalogStats:
+          title: Fetch Catalog Statistics
+          type: boolean
+          description: 'Demonstrate GET request to fetch catalog statistics'
+          default: true
+        
+        createBookmark:
+          title: Create Bookmark Demo
+          type: boolean
+          description: 'Demonstrate POST request (if bookmarks plugin available)'
+          default: false
+        
+        customEndpoint:
+          title: Custom API Endpoint
+          type: string
+          description: 'Custom API path to test (e.g., /api/catalog/entities)'
+          default: '/api/catalog/entities'
+
+  steps:
+    - id: fetch-entity
+      name: Fetch Entity Details
+      action: http:backstage:request
+      input:
+        path: '/catalog/entities/by-name/${{ parameters.entityRef }}'
+        method: GET
+        headers:
+          accept: 'application/json'
+        logRequestPath: true
+        continueOnBadResponse: true
+
+    - id: list-entities
+      name: List Catalog Entities
+      action: http:backstage:request
+      input:
+        path: '/catalog/entities'
+        method: GET
+        params:
+          limit: '10'
+          filter: 'kind=component'
+        headers:
+          accept: 'application/json'
+        timeout: 30000
+        logRequestPath: true
+
+    - id: fetch-catalog-stats
+      if: ${{ parameters.fetchCatalogStats }}
+      name: Fetch Catalog Statistics
+      action: http:backstage:request
+      input:
+        path: '/api/catalog/entity-facets'
+        method: GET
+        params:
+          facet: 'kind'
+        headers:
+          accept: 'application/json'
+        continueOnBadResponse: true
+
+    - id: custom-request
+      name: Custom API Request
+      action: http:backstage:request
+      input:
+        path: '${{ parameters.customEndpoint }}'
+        method: GET
+        headers:
+          accept: 'application/json'
+        params:
+          limit: '5'
+        continueOnBadResponse: true
+        logRequestPath: true
+
+    - id: create-bookmark-demo
+      if: ${{ parameters.createBookmark }}
+      name: Create Bookmark (Demo POST)
+      action: http:backstage:request
+      input:
+        path: '/api/bookmarks'
+        method: POST
+        headers:
+          content-type: 'application/json'
+        body:
+          url: 'https://backstage.io'
+          title: 'Backstage Official Site'
+          tags: ['demo', 'scaffolder']
+        continueOnBadResponse: true
+        timeout: 15000
+
+    - id: log-results
+      name: Log API Results
+      action: debug:log
+      input:
+        message: |
+          === Backstage HTTP Request Demo Results ===
+          
+          🔍 Entity Details (Status: ${{ steps['fetch-entity'].output.code }}):
+          Entity: ${{ steps['fetch-entity'].output.body.metadata.name || 'Not found' }}
+          Kind: ${{ steps['fetch-entity'].output.body.kind || 'N/A' }}
+          
+          📋 Entities List (Status: ${{ steps['list-entities'].output.code }}):
+          Found ${{ steps['list-entities'].output.body.length || 0 }} entities
+          
+          📊 Catalog Stats (Status: ${{ steps['fetch-catalog-stats'].output.code || 'Skipped' }}):
+          ${{ steps['fetch-catalog-stats'].output.body.facets.kind | dump || 'No stats available' }}
+          
+          🔧 Custom Request (Status: ${{ steps['custom-request'].output.code }}):
+          Response headers: ${{ steps['custom-request'].output.headers | dump }}
+          
+          💾 Bookmark Creation (Status: ${{ steps['create-bookmark-demo'].output.code || 'Skipped' }}):
+          ${{ steps['create-bookmark-demo'].output.body.message || 'No bookmark created' }}
+
+  output:
+    entityDetails: '${{ steps["fetch-entity"].output.body }}'
+    entitiesList: '${{ steps["list-entities"].output.body }}'
+    catalogStats: '${{ steps["fetch-catalog-stats"].output.body }}'
+    customResponse: '${{ steps["custom-request"].output.body }}' 

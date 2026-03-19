@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render } from '@testing-library/react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';

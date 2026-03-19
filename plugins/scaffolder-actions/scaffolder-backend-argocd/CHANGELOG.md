@@ -1,5 +1,45 @@
 # @roadiehq/scaffolder-backend-argocd
 
+## 1.8.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
+## 1.8.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.5.0
+
+## 1.7.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
+## 1.7.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.4.0
+
+## 1.6.0
+
+### Minor Changes
+
+- a3b71c6: Remove deprecated loggerToWinstonLogger and getVoidLogger from scaffolderBackendArgoCD
+
 ## 1.5.2
 
 ### Patch Changes

@@ -20,4 +20,5 @@ export type UserNamingStrategies =
   | 'id'
   | 'kebab-case-email'
   | 'strip-domain-email'
+  | 'slugify-email'
   | undefined;

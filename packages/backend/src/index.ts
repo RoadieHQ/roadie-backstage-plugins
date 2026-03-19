@@ -20,109 +20,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Router from 'express-promise-router';
-import {
-  CacheManager,
-  createServiceBuilder,
-  getRootLogger,
-  loadBackendConfig,
-  notFoundHandler,
-  DatabaseManager,
-  SingleHostDiscovery,
-  useHotMemoize,
-  ServerTokenManager,
-} from '@backstage/backend-common';
-import { Config } from '@backstage/config';
-import { TaskScheduler } from '@backstage/backend-tasks';
-import app from './plugins/app';
-import auth from './plugins/auth';
-import catalog from './plugins/catalog';
-import scaffolder from './plugins/scaffolder';
-import proxy from './plugins/proxy';
-import techdocs from './plugins/techdocs';
-import aws from './plugins/aws';
-import argocd from './plugins/argocd';
-import wiz from './plugins/wiz';
-import { PluginEnvironment } from './types';
-import { ServerPermissionClient } from '@backstage/plugin-permission-node';
-import { UrlReaders } from '@backstage/backend-defaults/urlReader';
 
-function makeCreateEnv(config: Config) {
-  const root = getRootLogger();
-  const reader = UrlReaders.default({ logger: root, config });
-  const discovery = SingleHostDiscovery.fromConfig(config);
-  const taskScheduler = TaskScheduler.fromConfig(config);
+import { createBackend } from '@backstage/backend-defaults';
 
-  root.info(`Created UrlReader ${reader}`);
+const backend = createBackend();
 
-  const databaseManager = DatabaseManager.fromConfig(config);
-  const cacheManager = CacheManager.fromConfig(config);
-  const tokenManager = ServerTokenManager.fromConfig(config, { logger: root });
-  const permissions = ServerPermissionClient.fromConfig(config, {
-    discovery,
-    tokenManager,
-  });
+backend.add(import('@backstage/plugin-auth-backend'));
+backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
+backend.add(
+  import('@backstage/plugin-catalog-backend-module-scaffolder-entity-model'),
+);
 
-  return (plugin: string): PluginEnvironment => {
-    const logger = root.child({ type: 'plugin', plugin });
-    const database = databaseManager.forPlugin(plugin);
-    const cache = cacheManager.forPlugin(plugin);
-    const scheduler = taskScheduler.forPlugin(plugin);
-    return {
-      logger,
-      cache,
-      database,
-      config,
-      reader,
-      discovery,
-      tokenManager,
-      permissions,
-      scheduler,
-    };
-  };
-}
+backend.add(import('@backstage/plugin-permission-backend'));
+backend.add(
+  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+);
 
-async function main() {
-  const config = await loadBackendConfig({
-    argv: process.argv,
-    logger: getRootLogger(),
-  });
-  const createEnv = makeCreateEnv(config);
+backend.add(import('@backstage/plugin-catalog-backend'));
+backend.add(import('@backstage/plugin-techdocs-backend'));
+backend.add(import('@backstage/plugin-app-backend'));
+backend.add(import('@backstage/plugin-proxy-backend'));
+backend.add(import('@backstage/plugin-scaffolder-backend'));
+backend.add(import('@backstage/plugin-scaffolder-backend-module-github'));
 
-  const catalogEnv = useHotMemoize(module, () => createEnv('catalog'));
-  const scaffolderEnv = useHotMemoize(module, () => createEnv('scaffolder'));
-  const authEnv = useHotMemoize(module, () => createEnv('auth'));
-  const proxyEnv = useHotMemoize(module, () => createEnv('proxy'));
-  const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
-  const appEnv = useHotMemoize(module, () => createEnv('app'));
-  const awsEnv = useHotMemoize(module, () => createEnv('aws'));
-  const argocdEnv = useHotMemoize(module, () => createEnv('argocd'));
-  const wizEnv = useHotMemoize(module, () => createEnv('wiz'));
+backend.add(import('@roadiehq/scaffolder-backend-module-utils'));
+backend.add(import('@roadiehq/scaffolder-backend-module-http-request'));
+backend.add(import('@roadiehq/scaffolder-backend-module-aws'));
+backend.add(import('@roadiehq/plugin-wiz-backend'));
+backend.add(import('@roadiehq/backstage-plugin-aws-backend'));
+backend.add(import('@roadiehq/backstage-plugin-argo-cd-backend'));
+backend.add(import('./plugins/roadiehq-local-catalog'));
 
-  const apiRouter = Router();
-  apiRouter.use('/catalog', await catalog(catalogEnv));
-  apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv));
-  apiRouter.use('/auth', await auth(authEnv));
-  apiRouter.use('/techdocs', await techdocs(techdocsEnv));
-  apiRouter.use('/proxy', await proxy(proxyEnv));
-  apiRouter.use('/aws', await aws(awsEnv));
-  apiRouter.use('/argocd', await argocd(argocdEnv));
-  apiRouter.use('/wiz-backend', await wiz(wizEnv));
-  apiRouter.use(notFoundHandler());
-
-  const service = createServiceBuilder(module)
-    .loadConfig(config)
-    .addRouter('/api', apiRouter)
-    .addRouter('', await app(appEnv));
-
-  await service.start().catch(err => {
-    console.log(err);
-    process.exit(1);
-  });
-}
-
-module.hot?.accept();
-main().catch(error => {
-  console.error(`Backend failed to start up, ${error}`);
-  process.exit(1);
-});
+backend.start();

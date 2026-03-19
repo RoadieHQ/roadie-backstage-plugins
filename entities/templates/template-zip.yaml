@@ -1,0 +1,178 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: zip-demo
+  title: Zip Action Demo
+  description: Demonstrates the roadiehq:utils:zip action for file compression
+  tags:
+    - demo
+    - utils
+    - zip
+    - compression
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: Zip Configuration
+      required:
+        - contentType
+      properties:
+        contentType:
+          title: Content to Zip
+          type: string
+          description: Choose what type of content to create and zip
+          enum:
+            - single-file
+            - multiple-files
+            - directory-structure
+          enumNames:
+            - 'Single File'
+            - 'Multiple Files'
+            - 'Directory Structure'
+          default: directory-structure
+        zipName:
+          title: Zip File Name
+          type: string
+          description: Name for the output zip file
+          default: demo-archive.zip
+
+  steps:
+    - id: create-single-file
+      name: Create Single File
+      if: ${{ parameters.contentType === 'single-file' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: README.md
+        content: |
+          # Demo Documentation
+
+          This is a single file that will be zipped.
+
+          ## Features
+          - Comprehensive documentation
+          - Example configurations
+          - Getting started guide
+
+          Created at: ${{ '' | now }}
+
+    - id: create-multiple-files
+      name: Create Multiple Files
+      if: ${{ parameters.contentType === 'multiple-files' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: config.json
+        content: |
+          {
+            "name": "demo-app",
+            "version": "1.0.0",
+            "description": "Demo application configuration"
+          }
+
+    - id: create-env-file
+      name: Create Environment File
+      if: ${{ parameters.contentType === 'multiple-files' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: .env.example
+        content: |
+          API_KEY=your-api-key-here
+          DATABASE_URL=postgresql://localhost:5432/demo
+          PORT=3000
+
+    - id: create-directory-structure
+      name: Create Directory Structure
+      if: ${{ parameters.contentType === 'directory-structure' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: src/index.js
+        content: |
+          console.log('Hello from the demo application!');
+          module.exports = { message: 'Demo app loaded successfully' };
+
+    - id: create-package-json
+      name: Create Package JSON
+      if: ${{ parameters.contentType === 'directory-structure' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: package.json
+        content: |
+          {
+            "name": "demo-project",
+            "version": "1.0.0",
+            "description": "Demo project for zip action",
+            "main": "src/index.js",
+            "scripts": {
+              "start": "node src/index.js"
+            }
+          }
+
+    - id: create-docs
+      name: Create Documentation
+      if: ${{ parameters.contentType === 'directory-structure' }}
+      action: roadiehq:utils:fs:write
+      input:
+        path: docs/README.md
+        content: |
+          # Project Documentation
+
+          This directory structure demonstrates:
+          - Source code organization
+          - Documentation structure
+          - Configuration files
+          - Build artifacts
+
+    - id: zip-single-file
+      name: Zip Single File
+      if: ${{ parameters.contentType === 'single-file' }}
+      action: roadiehq:utils:zip
+      input:
+        path: README.md
+        outputPath: ${{ parameters.zipName }}
+
+    - id: zip-workspace
+      name: Zip Entire Workspace
+      if: ${{ parameters.contentType !== 'single-file' }}
+      action: roadiehq:utils:zip
+      input:
+        path: .
+        outputPath: ${{ parameters.zipName }}
+
+    - id: create-summary
+      name: Create Archive Summary
+      action: roadiehq:utils:fs:write
+      input:
+        path: archive-info.txt
+        content: |
+          Archive Information
+          ==================
+
+          Zip File: ${{ parameters.zipName }}
+          Content Type: ${{ parameters.contentType }}
+          Created: ${{ '' | now }}
+
+          Archive contains:
+          ${{ parameters.contentType === 'single-file' && '- README.md (single documentation file)' || parameters.contentType === 'multiple-files' && '- config.json\n- .env.example\n- Multiple configuration files' || '- src/ (source code)\n- docs/ (documentation)\n- package.json (project configuration)\n- Complete directory structure' }}
+
+          Use Cases:
+          - Backup and archival
+          - Distribution packages
+          - Template downloads
+          - Build artifact packaging
+
+  output:
+    text:
+      - title: Zip Archive Created
+        content: |
+          Successfully created zip archive: **${{ steps['zip-single-file'].output.outputPath || steps['zip-workspace'].output.outputPath }}**
+
+          **Content Type:** ${{ parameters.contentType }}
+
+          **Archive contains:**
+          ${{ parameters.contentType === 'single-file' && '- Single README.md file' || parameters.contentType === 'multiple-files' && '- Configuration files (config.json, .env.example)' || '- Complete project structure with source code and docs' }}
+
+          Features demonstrated:
+          - Single file compression
+          - Directory compression
+          - Workspace archival
+          - Build artifact packaging

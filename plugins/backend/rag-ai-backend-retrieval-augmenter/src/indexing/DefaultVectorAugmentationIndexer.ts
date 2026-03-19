@@ -21,7 +21,7 @@ import {
 import { CATALOG_FILTER_EXISTS, CatalogApi } from '@backstage/catalog-client';
 import { SearchIndex, AugmentationOptions, TechDocsDocument } from './types';
 import { Embeddings } from '@langchain/core/embeddings';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { Entity, stringifyEntityRef } from '@backstage/catalog-model';
 import {
   AugmentationIndexer,

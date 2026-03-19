@@ -1,5 +1,35 @@
 # @roadiehq/scaffolder-backend-module-aws
 
+## 2.8.2
+
+### Patch Changes
+
+- f59ceee: Update glob dependency.
+
+## 2.8.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
+## 2.8.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 2.7.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
+## 2.7.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 2.6.1
 
 ### Patch Changes

@@ -1,5 +1,73 @@
 # @backstage/plugin-catalog-backend-module-aws
 
+## 5.11.0
+
+### Minor Changes
+
+- 37b0bba: All YAML configurations are now built directly from templates. This has made it more consistent and provides better examples for end-users. A bunch of tests were added prior to migration to ensure that the output was unchanged and backward-compatible.
+- 16dfdd5: Added functionality to support integration with the new Backstage backend module system. See README.md for updated usage instructions.
+
+## 5.10.1
+
+### Patch Changes
+
+- 591c0f6: Add support for templated tags into provided AWS Lambdas
+
+## 5.10.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 5.9.0
+
+### Minor Changes
+
+- 079596d: Use default annotations for entity in the S3 bucket entity provider.
+
+## 5.8.3
+
+### Patch Changes
+
+- a1075c2: Add count of entities for IAM and RDS providers.
+
+## 5.8.2
+
+### Patch Changes
+
+- c3a96f6: Add default annotations to the eks cluster resource.
+
+## 5.8.1
+
+### Patch Changes
+
+- 6b542e1: Fix how the openseach domain template variable is provided.
+
+## 5.8.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+- b0f3d28: Adds ability to template entity from AWS entity providers.
+
+## 5.7.1
+
+### Patch Changes
+
+- faf20d0: Remove deprecated `@backstage/backend-common` package.
+
+## 5.7.0
+
+### Minor Changes
+
+- ce66df6: Add 5 more resources to the AWS entity provider. Include VPCs, subnets, EBS volumes, Load Balancers and security groups
+
+## 5.6.0
+
+### Minor Changes
+
+- eb1a3b7: Add AWSECRRepositoryEntityProvider to ingest aws ecr repos
+
 ## 5.5.1
 
 ### Patch Changes

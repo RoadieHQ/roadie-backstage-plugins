@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import {
   Avatar,
   Box,
@@ -120,7 +121,7 @@ export const JiraOverviewCard = (
     changeType,
   } = useEmptyIssueTypeFilter(issues);
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 

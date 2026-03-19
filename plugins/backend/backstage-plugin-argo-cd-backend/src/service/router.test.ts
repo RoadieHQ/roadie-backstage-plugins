@@ -1,8 +1,9 @@
+import { mockServices } from '@backstage/backend-test-utils';
+
 import { createRouter } from './router';
 import express, { Express } from 'express';
 import { ConfigReader } from '@backstage/config';
 import request from 'supertest';
-import { getVoidLogger } from '@backstage/backend-common';
 import fetchMock from 'jest-fetch-mock';
 import { timer } from './timer.services';
 import { mocked } from 'jest-mock';
@@ -36,7 +37,7 @@ const ArgoService = {
 };
 jest.mock('./timer.services');
 
-const logger = getVoidLogger();
+const logger = mockServices.logger.mock();
 const config = ConfigReader.fromConfigs([
   {
     context: '',

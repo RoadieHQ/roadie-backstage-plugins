@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Route } from 'react-router';
 import { apiDocsPlugin, ApiExplorerPage } from '@backstage/plugin-api-docs';
 import {
@@ -29,14 +28,17 @@ import {
 import { ScaffolderPage, scaffolderPlugin } from '@backstage/plugin-scaffolder';
 import { orgPlugin } from '@backstage/plugin-org';
 import { SearchPage } from '@backstage/plugin-search';
-import { TechRadarPage } from '@backstage-community/plugin-tech-radar';
 import { TechdocsPage } from '@backstage/plugin-techdocs';
 import { UserSettingsPage } from '@backstage/plugin-user-settings';
 import { apis } from './apis';
 import { entityPage } from './components/catalog/EntityPage';
 import { Root } from './components/Root';
 
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  SignInPage,
+} from '@backstage/core-components';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { createApp } from '@backstage/app-defaults';
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
@@ -44,7 +46,6 @@ import { HomePage } from './components/home/HomePage';
 import { SelectFieldFromApiExtension } from '@roadiehq/plugin-scaffolder-frontend-module-http-request-field';
 import { IFramePage } from '@roadiehq/backstage-plugin-iframe';
 import { ScaffolderFieldExtensions } from '@backstage/plugin-scaffolder-react';
-import { RagModal } from '@roadiehq/rag-ai';
 
 const app = createApp({
   apis,
@@ -61,6 +62,9 @@ const app = createApp({
     bind(orgPlugin.externalRoutes, {
       catalogIndex: catalogPlugin.routes.catalogIndex,
     });
+  },
+  components: {
+    SignInPage: props => <SignInPage {...props} auto providers={['guest']} />,
   },
 });
 
@@ -88,10 +92,6 @@ const routes = (
     </Route>
     <Route path="/api-docs" element={<ApiExplorerPage />} />
     <Route
-      path="/tech-radar"
-      element={<TechRadarPage width={1500} height={800} />}
-    />
-    <Route
       path="/i-frame"
       element={
         <IFramePage
@@ -112,7 +112,6 @@ const App = () => (
     <AlertDisplay />
     <OAuthRequestDialog />
     <AppRouter>
-      <RagModal />
       <Root>{routes}</Root>
     </AppRouter>
   </AppProvider>

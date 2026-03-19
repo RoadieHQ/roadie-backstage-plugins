@@ -15,12 +15,13 @@
  */
 
 import { PassThrough } from 'stream';
-import { getVoidLogger, resolveSafeChildPath } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { createMergeAction, createMergeJSONAction } from './merge';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 import YAML, { Scalar } from 'yaml';
 import detectIndent from 'detect-indent';
+import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 
 describe('roadiehq:utils:json:merge', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ describe('roadiehq:utils:json:merge', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -152,6 +153,39 @@ describe('roadiehq:utils:json:merge', () => {
         lsltrh: 'ls -ltrh',
       },
       array: ['first item', 'second item'],
+    });
+  });
+
+  it('should merge and replace arrays if configured', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.json':
+          '{ "scripts": { "lsltr": "ls -ltr" }, "array": ["first item", "second item"] }',
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.json',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+          array: ['third item'],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.json')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.json', 'utf-8');
+    expect(JSON.parse(file)).toEqual({
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+      array: ['third item'],
     });
   });
 
@@ -290,7 +324,7 @@ describe('roadiehq:utils:merge', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -770,5 +804,145 @@ name: Document 3
     ).rejects.toThrow(
       'Multiple documents found in the input content. Please provide a key and value to use to find the document to merge into.',
     );
+  });
+
+  it('should handle merging into existing empty arrays with comment preservation', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `# Kustomization file
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Empty patches array
+patches: []
+resources:
+  - deployment.yaml
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        mergeArrays: true,
+        preserveYamlComments: true,
+        content: {
+          patches: [
+            {
+              patch: [
+                {
+                  op: 'replace',
+                  path: '/apiVersion',
+                  value: 'autoscaling/v2beta2',
+                },
+              ],
+              target: {
+                name: 'test-app',
+                kind: 'HorizontalPodAutoscaler',
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    const parsed = YAML.parse(file);
+    expect(parsed.patches).toHaveLength(1);
+    expect(parsed.patches[0].target.name).toBe('test-app');
+  });
+
+  it('should not break if the yaml file has a block comment at the top', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+#
+# A block comment
+#
+scripts:
+  lsltr: ls -ltr
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: {
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain(`#
+# A block comment
+#`);
+    expect(YAML.parse(file)).toEqual({
+      scripts: { lsltr: 'ls -ltr', lsltrh: 'ls -ltrh' },
+    });
+  });
+
+  it('should not break if the yaml file has a block comment at the top of a document in a multi-document file', async () => {
+    mock({
+      'fake-tmp-dir': {
+        'fake-file.yaml': `
+---
+id: 1
+name: Document 1
+---
+#
+# A block comment
+#
+id: 2
+scripts:
+  lsltr: ls -ltr
+`,
+      },
+    });
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        path: 'fake-file.yaml',
+        content: YAML.stringify({
+          scripts: {
+            lsltrh: 'ls -ltrh',
+          },
+        }),
+        useDocumentIncludingField: {
+          key: 'id',
+          value: '2',
+        },
+        preserveYamlComments: true,
+      },
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/fake-file.yaml')).toBe(true);
+    const file = fs.readFileSync('fake-tmp-dir/fake-file.yaml', 'utf-8');
+    expect(file).toContain(`#
+# A block comment
+#`);
+    const documents = YAML.parseAllDocuments(file);
+    expect(documents[0].toJSON()).toEqual({
+      id: 1,
+      name: 'Document 1',
+    });
+    expect(documents[1].toJSON()).toEqual({
+      id: 2,
+      scripts: {
+        lsltr: 'ls -ltr',
+        lsltrh: 'ls -ltrh',
+      },
+    });
   });
 });

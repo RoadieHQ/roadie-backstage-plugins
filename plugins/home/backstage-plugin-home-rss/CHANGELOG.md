@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-home-rss
 
+## 1.5.1
+
+### Patch Changes
+
+- 32cb9b2: rss plugin now uses proper fetch which is compatible with the new backend system
+
+## 1.5.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.4.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.3.16
 
 ### Patch Changes

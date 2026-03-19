@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { Grid } from '@material-ui/core';
 import Contributor from '../Contributor';
 import { ContributorData } from '../../../../types';

@@ -129,6 +129,9 @@ If the request requires a body, it can be specified using the body parameter. Th
 1. `content-type: application/json` header is specified. Everything under `body` hash will be converted into JSON string
 2. `content-type: application/json` header is not specified. `body` treated as a plain string
 
+> [!IMPORTANT]
+> For `application/json`, the header must be set in the template as shown. Setting the header in the proxy configuration will result in the body not being transformed to a JSON string.
+
 ```yaml
 steps:
   - id: backstage_request

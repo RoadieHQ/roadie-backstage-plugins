@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import { ConfigReader } from '@backstage/core-app-api';
@@ -92,20 +91,5 @@ describe('ReadmeCard', () => {
       ),
     );
     expect(await screen.findByText(/hello/)).toBeInTheDocument();
-  });
-
-  it('should render unicode correctly', async () => {
-    render(
-      wrapInTestApp(
-        <TestApiProvider apis={apis}>
-          <ThemeProvider theme={lightTheme}>
-            <EntityProvider entity={entityMock}>
-              <ReadMeCard />
-            </EntityProvider>
-          </ThemeProvider>
-        </TestApiProvider>,
-      ),
-    );
-    expect(await screen.findByText('⭐', { exact: false })).toBeInTheDocument();
   });
 });

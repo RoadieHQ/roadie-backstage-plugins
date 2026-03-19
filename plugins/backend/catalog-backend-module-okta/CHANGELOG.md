@@ -1,5 +1,53 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.3.1
+
+### Patch Changes
+
+- 4e2c77a: Updated docs on OAuth 2.0 Scoped Authentication
+
+## 1.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.2.2
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
+## 1.2.1
+
+### Patch Changes
+
+- 4c8ae83: Fixes the publish config to release an actual version
+
+## 1.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 1.1.4
+
+### Patch Changes
+
+- 296cca7: Remove deprecated `@backstage/backend-common` from dependencies.
+
+## 1.1.3
+
+### Patch Changes
+
+- eb31089: Add new user naming strategy `slugify`. This will allow to use the whole username as a user entity. jhon.doe@example.com -> jhon.doe-example.com
+
+## 1.1.2
+
+### Patch Changes
+
+- 98ff2bf: Apply chunking of membership resolution to OktaGroupEntityProvider
+
 ## 1.1.1
 
 ### Patch Changes

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { AnyApiRef, ConfigApi, configApiRef } from '@backstage/core-plugin-api';
 import {
   setupRequestMockHandlers,
@@ -39,7 +38,12 @@ const mockScmAuth = {
 
 const config = {
   getOptionalConfigArray(_: string) {
-    return [{ getOptionalString: (_s: string) => undefined }];
+    return [
+      {
+        getOptionalString: (_s: string) => undefined,
+        getOptionalConfigArray: (_s: string) => undefined,
+      },
+    ];
   },
 } as ConfigApi;
 

@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { S3, ListBucketsCommand } from '@aws-sdk/client-s3';
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-
+import {
+  GetBucketTaggingCommand,
+  ListBucketsCommand,
+  S3,
+} from '@aws-sdk/client-s3';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { ConfigReader } from '@backstage/config';
+import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { mockClient } from 'aws-sdk-client-mock';
 import { createLogger, transports } from 'winston';
-import { ConfigReader } from '@backstage/config';
-import { EntityProviderConnection } from '@backstage/plugin-catalog-backend';
+
 import { AWSS3BucketProvider } from './AWSS3BucketProvider';
+import template from './AWSS3BucketProvider.example.yaml.njk';
 
 const s3 = mockClient(S3);
 const sts = mockClient(STS);
@@ -63,7 +67,7 @@ describe('AWSS3BucketProvider', () => {
     });
   });
 
-  describe('where there are is a function', () => {
+  describe('where there is a bucket', () => {
     beforeEach(() => {
       s3.on(ListBucketsCommand).resolves({
         Buckets: [
@@ -73,9 +77,36 @@ describe('AWSS3BucketProvider', () => {
           },
         ],
       });
+      s3.on(GetBucketTaggingCommand).resolves({
+        TagSet: [
+          {
+            Key: 'owner',
+            Value: 'team-storage',
+          },
+        ],
+      });
+      sts.on(GetCallerIdentityCommand).resolves({
+        Account: '123456789012',
+      });
     });
 
-    it('creates aws functions', async () => {
+    it('creates aws buckets with a template', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = AWSS3BucketProvider.fromConfig(config, {
+        logger,
+        template,
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+
+    it('creates aws buckets', async () => {
       const entityProviderConnection: EntityProviderConnection = {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
@@ -83,19 +114,9 @@ describe('AWSS3BucketProvider', () => {
       const provider = AWSS3BucketProvider.fromConfig(config, { logger });
       provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              metadata: expect.objectContaining({
-                title: 'my-bucket',
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
   });
 });

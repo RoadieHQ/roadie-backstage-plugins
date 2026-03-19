@@ -16,7 +16,7 @@
 import { PassThrough } from 'stream';
 import { createJsonJSONataTransformAction } from './json';
 import mock from 'mock-fs';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:jsonata:json:transform', () => {
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('roadiehq:utils:jsonata:json:transform', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

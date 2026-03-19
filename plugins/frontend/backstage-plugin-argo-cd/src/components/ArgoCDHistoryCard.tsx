@@ -22,7 +22,7 @@ import {
   useEntity,
 } from '@backstage/plugin-catalog-react';
 import { LinearProgress } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isArgocdAvailable } from '../conditions';
 import {
   ArgoCDAppDetails,
@@ -56,6 +56,10 @@ const withRevisionDetails = async (
   url: string,
   row: any,
 ): Promise<ArgoCDHistoryTableRow> => {
+  if (row.sources) {
+    row.source = row.sources[0];
+    row.revision = row.revisions[0];
+  }
   if (isHelmChart(row)) {
     row.revisionDetails = { author: 'n/a', message: 'n/a', date: 'n/a' };
     return row;

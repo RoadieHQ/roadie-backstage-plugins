@@ -1,5 +1,60 @@
 # @roadiehq/rag-ai-backend-retrieval-augmenter
 
+## 2.0.2
+
+### Patch Changes
+
+- 15eb513: Replaced langchain dependency with @langchain/textsplitters
+
+## 2.0.1
+
+### Patch Changes
+
+- 5345078: Added type TechDocsDocument as an export
+
+## 2.0.0
+
+### Major Changes
+
+- 8ed88c3: **BREAKING** LangChain dependencies have been upgraded to their latest versions.
+
+  Since their API is not backwards compatible, you need to upgrade the dependencies in your project as well.
+
+### Patch Changes
+
+- Updated dependencies [8ed88c3]
+  - @roadiehq/rag-ai-node@0.4.0
+
+## 1.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/rag-ai-node@0.3.0
+
+## 1.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/rag-ai-node@0.2.0
+
+## 1.1.5
+
+### Patch Changes
+
+- 27d5559: The `rag-ai` plugins are no longer being actively maintained.
+- Updated dependencies [27d5559]
+  - @roadiehq/rag-ai-node@0.1.11
+
 ## 1.1.4
 
 ### Patch Changes

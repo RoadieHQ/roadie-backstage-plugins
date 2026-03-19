@@ -14,60 +14,33 @@
  * limitations under the License.
  */
 
-import {
-  createTemplateAction,
-  TemplateAction,
-} from '@backstage/plugin-scaffolder-node';
+import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import {
   generateBackstageUrl,
   http,
   getObjFieldCaseInsensitively,
   getPluginId,
 } from './helpers';
-import { HttpOptions, Headers, Params, Methods, Body } from './types';
+import { HttpOptions, Headers, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { AuthService } from '@backstage/backend-plugin-api';
-import { JsonObject } from '@backstage/config/index';
 
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
   auth?: AuthService;
-}): TemplateAction<
-  {
-    path: string;
-    method: Methods;
-    headers?: Headers;
-    params?: Params;
-    body?: any;
-    logRequestPath?: boolean;
-    continueOnBadResponse?: boolean;
-  },
-  JsonObject
-> {
+}) {
   const { discovery, auth } = options;
-  return createTemplateAction<{
-    path: string;
-    method: Methods;
-    headers?: Headers;
-    params?: Params;
-    body?: any;
-    logRequestPath?: boolean;
-    continueOnBadResponse?: boolean;
-  }>({
+  return createTemplateAction({
     id: 'http:backstage:request',
     description:
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['path', 'method'],
-        properties: {
-          method: {
-            title: 'Method',
-            type: 'string',
-            description: 'The method type of the request',
-            enum: [
+        path: z => z.string().describe('The url path you want to query'),
+        method: z =>
+          z
+            .enum([
               'GET',
               'HEAD',
               'OPTIONS',
@@ -76,60 +49,50 @@ export function createHttpBackstageAction(options: {
               'DELETE',
               'PUT',
               'PATCH',
-            ],
-          },
-          path: {
-            title: 'Request path',
-            description: 'The url path you want to query',
-            type: 'string',
-          },
-          headers: {
-            title: 'Request headers',
-            description: 'The headers you would like to pass to your request',
-            type: 'object',
-          },
-          params: {
-            title: 'Request query params',
-            description:
+            ])
+            .describe('The method type of the request'),
+        headers: z =>
+          z
+            .record(z.any())
+            .optional()
+            .describe('The headers you would like to pass to your request'),
+        params: z =>
+          z
+            .record(z.any())
+            .optional()
+            .describe(
               'The query parameters you would like to pass to your request',
-            type: 'object',
-          },
-          body: {
-            title: 'Request body',
-            description: 'The body you would like to pass to your request',
-            type: ['object', 'string', 'array'],
-          },
-          logRequestPath: {
-            title: 'Request path logging',
-            description:
-              'Option to turn request path logging off. On by default',
-            type: 'boolean',
-          },
-          continueOnBadResponse: {
-            title: 'Continue on error',
-            description:
+            ),
+        body: z =>
+          z
+            .any()
+            .optional()
+            .describe('The body you would like to pass to your request'),
+        logRequestPath: z =>
+          z
+            .boolean()
+            .optional()
+            .describe('Option to turn request path logging off. On by default'),
+        continueOnBadResponse: z =>
+          z
+            .boolean()
+            .optional()
+            .describe(
               'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
-            type: 'boolean',
-            default: 'false',
-          },
-        },
+            ),
+        timeout: z =>
+          z
+            .number()
+            .optional()
+            .describe('Timeout for the request (milliseconds)')
+            .default(60000),
       },
       output: {
-        type: 'object',
-        properties: {
-          code: {
-            title: 'Response Code',
-            type: 'string',
-          },
-          headers: {
-            title: 'Response Headers',
-            type: 'object',
-          },
-          body: {
-            title: 'Response Body',
-            type: 'object',
-          },
-        },
+        code: z =>
+          z.string().describe('The response code of the request').optional(),
+        headers: z =>
+          z.record(z.any()).describe('The headers of the response').optional(),
+        body: z => z.any().describe('The body of the response').optional(),
       },
     },
 
@@ -160,12 +123,17 @@ export function createHttpBackstageAction(options: {
 
       let inputBody: Body = undefined;
 
+      const inputHeaders: [string, any][] | undefined =
+        input.headers && Object.entries(input.headers);
       if (
         input.body &&
         typeof input.body !== 'string' &&
-        input.headers &&
-        input.headers['content-type'] &&
-        input.headers['content-type'].includes('application/json')
+        inputHeaders &&
+        inputHeaders.find(
+          kv =>
+            kv[0].toLowerCase() === 'content-type' &&
+            kv[1].toLowerCase().includes('json'),
+        )
       ) {
         inputBody = JSON.stringify(input.body);
       } else {
@@ -174,6 +142,7 @@ export function createHttpBackstageAction(options: {
 
       const httpOptions: HttpOptions = {
         method: input.method,
+        timeout: input.timeout,
         url: queryParams !== '' ? `${url}?${queryParams}` : url,
         headers: input.headers ? (input.headers as Headers) : {},
         body: inputBody,

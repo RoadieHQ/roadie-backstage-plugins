@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.6.1
+
+### Patch Changes
+
+- a04a7f6: Move `msw` from production dependencies to dev dependencies.
+
+## 1.6.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.4.4
 
 ### Patch Changes

@@ -1,5 +1,5 @@
 import { Config } from '@backstage/config';
-import { Logger } from 'winston';
+import type { Logger } from 'winston';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
 export type getRevisionDataResp = {
@@ -134,11 +134,10 @@ export interface ResyncProps {
 export interface ArgoServiceApi {
   getArgoInstanceArray: () => InstanceConfig[];
   getAppArray: () => Config[];
-  getArgoToken: (appConfig: {
-    url: string;
-    username?: string;
-    password?: string;
-  }) => Promise<string>;
+  getArgoToken: (
+    appConfig: InstanceConfig,
+    azureCredentials?: AzureConfig,
+  ) => Promise<string>;
   getArgoAppData: (
     baseUrl: string,
     argoInstanceName: string,
@@ -189,12 +188,24 @@ export interface ArgoServiceApi {
   ) => Promise<getRevisionDataResp>;
 }
 
+export type OIDCConfig = {
+  provider: 'azure';
+  providerConfigKey: string;
+};
+
 export type InstanceConfig = {
   name: string;
   password?: string;
   token?: string;
   url: string;
   username?: string;
+};
+
+export type AzureConfig = {
+  tenantId: string;
+  clientId: string;
+  clientSecret: string;
+  loginUrl: string;
 };
 
 export type BuildArgoProjectArgs = {

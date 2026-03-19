@@ -29,9 +29,11 @@ export const selectFieldFromApiConfigSchema = z.object({
   arraySelector: z.string().or(z.array(z.string())).optional(),
   valueSelector: z.string().or(z.array(z.string())).optional(),
   labelSelector: z.string().or(z.array(z.string())).optional(),
+  labelTemplate: z.string().optional(),
   title: z.string().optional(),
   placeholder: z.string().optional(),
   description: z.string().optional(),
+  successStatusCode: z.number().optional(),
   oauth: z
     .object({
       provider: z.enum(['microsoft', 'github', 'bitbucket', 'google']),

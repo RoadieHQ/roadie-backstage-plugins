@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { Table, TableColumn, Link, Progress } from '@backstage/core-components';
 import { Alert } from '@material-ui/lab';

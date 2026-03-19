@@ -1,5 +1,31 @@
 # @roadiehq/rag-ai-node
 
+## 0.4.0
+
+### Minor Changes
+
+- 8ed88c3: **BREAKING** LangChain dependencies have been upgraded to their latest versions.
+
+  Since their API is not backwards compatible, you need to upgrade the dependencies in your project as well.
+
+## 0.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 0.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 0.1.11
+
+### Patch Changes
+
+- 27d5559: The `rag-ai` plugins are no longer being actively maintained.
+
 ## 0.1.10
 
 ### Patch Changes

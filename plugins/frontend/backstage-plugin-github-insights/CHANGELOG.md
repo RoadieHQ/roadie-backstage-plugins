@@ -1,5 +1,39 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.4.1
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
+## 3.4.0
+
+### Minor Changes
+
+- 071340a: Added support for the new frontend system
+
+## 3.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/github-auth-utils-react@1.2.0
+
+## 3.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/github-auth-utils-react@1.1.0
+
 ## 3.1.4
 
 ### Patch Changes

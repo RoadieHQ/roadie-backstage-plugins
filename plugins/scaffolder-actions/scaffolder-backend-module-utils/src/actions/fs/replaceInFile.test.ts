@@ -16,13 +16,15 @@
 import { PassThrough } from 'stream';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
+import os from 'node:os';
 import { createReplaceInFileAction } from './replaceInFile';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:fs:replace', () => {
+  beforeEach(() => jest.resetAllMocks());
   afterEach(() => mock.restore());
   const mockContext = {
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -160,5 +162,38 @@ describe('roadiehq:utils:fs:replace', () => {
     expect(fs.existsSync('fake-tmp-dir/fake-file-2.yaml')).toBe(true);
     const file2 = fs.readFileSync('fake-tmp-dir/fake-file-2.yaml', 'utf-8');
     expect(file2).toEqual('foo2: baz');
+  });
+
+  it('should handle Windows file separators', async () => {
+    mock({
+      'fake-tmp-dir/nested-directory': {
+        'fake-file.yaml': 'foo1: bar',
+      },
+    });
+
+    jest.spyOn(os, 'platform').mockReturnValue('win32');
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        files: [
+          {
+            file: '.\\nested-directory\\*.yaml',
+            find: 'bar',
+            replaceWith: 'baz',
+          },
+        ],
+      } as any,
+    });
+
+    expect(fs.existsSync('fake-tmp-dir/nested-directory/fake-file.yaml')).toBe(
+      true,
+    );
+    const file1 = fs.readFileSync(
+      'fake-tmp-dir/nested-directory/fake-file.yaml',
+      'utf-8',
+    );
+    expect(file1).toEqual('foo1: baz');
   });
 });

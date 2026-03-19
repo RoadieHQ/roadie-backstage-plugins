@@ -17,7 +17,9 @@ export {
   launchdarklyPlugin,
   EntityLaunchdarklyOverviewCard,
   EntityLaunchdarklyContextOverviewCard,
+  EntityLaunchdarklyCard,
   isLaunchdarklyAvailable,
   EntityLaunchdarklyProjectOverviewContent,
   isLaunchdarklyContextAvailable,
+  isLaunchdarklyProjectAvailable,
 } from './plugin';

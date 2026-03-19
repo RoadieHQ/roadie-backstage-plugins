@@ -17,12 +17,12 @@ import { PassThrough } from 'stream';
 import { createYamlJSONataTransformAction } from './yaml';
 import mock from 'mock-fs';
 import YAML from 'yaml';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { Scalar } from 'yaml';
 
 describe('roadiehq:utils:jsonata:yaml:transform', () => {
   const mockContext = {
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     task: {
       id: 'task-id',
     },

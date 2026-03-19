@@ -18,69 +18,44 @@ import jsonata from 'jsonata';
 import { resolveSafeChildPath } from '@backstage/backend-plugin-api';
 import fs from 'fs-extra';
 import YAML from 'yaml';
-import { stringifyOptions, yamlOptionsSchema } from '../../types';
+import { yamlOptionsSchema } from '../../types';
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createYamlJSONataTransformAction(): TemplateAction<{
-  path: string;
-  expression: string;
-  options?: stringifyOptions;
-  loadAll?: boolean;
-  as?: 'string' | 'object';
-}> {
-  return createTemplateAction<{
-    path: string;
-    expression: string;
-    options?: stringifyOptions;
-    loadAll?: boolean;
-    as?: 'string' | 'object';
-  }>({
+export function createYamlJSONataTransformAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:jsonata:yaml:transform',
     description:
       'Allows performing JSONata operations and transformations on a YAML file in the workspace. The result can be read from the `result` step output.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['path', 'expression'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Input path to read yaml file',
-            type: 'string',
-          },
-          expression: {
-            title: 'Expression',
-            description: 'JSONata expression to perform on the input',
-            type: 'string',
-          },
-          loadAll: {
-            title: 'Load All',
-            description:
+        path: z => z.string().describe('Input path to read yaml file'),
+        expression: z =>
+          z.string().describe('JSONata expression to perform on the input'),
+        options: yamlOptionsSchema,
+        loadAll: z =>
+          z
+            .boolean()
+            .describe(
               'Use this if the yaml source file contains multiple yaml objects',
-            type: 'boolean',
-          },
-          as: {
-            title: 'Desired Result Type',
-            description:
-              'Permitted values are: "string" (default) and "object"',
-            type: 'string',
-            enum: ['string', 'object'],
-          },
-          options: yamlOptionsSchema,
-        },
+            )
+            .optional(),
+        as: z =>
+          z
+            .enum(['string', 'object'])
+            .describe(
+              'Desired Result Type. Permitted values are: "string" (default) and "object"',
+            )
+            .default('string')
+            .optional(),
       },
       output: {
-        type: 'object',
-        properties: {
-          result: {
-            title: 'Output result from JSONata',
-            type: 'object | string',
-          },
-        },
+        result: z =>
+          z
+            .record(z.union([z.string(), z.record(z.any())]))
+            .describe('Output result from JSONata'),
       },
     },
+
     async handler(ctx) {
       let resultHandler: (rz: any) => any;
 

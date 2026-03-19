@@ -27,7 +27,7 @@ export const styles = makeStyles<BackstageTheme>(theme => ({
     justifyContent: 'space-between',
   },
   infoCard: {
-    marginBottom: theme.spacing(3),
+    marginBottom: '10px',
     '& + .MuiAlert-root': {
       marginTop: theme.spacing(3),
     },

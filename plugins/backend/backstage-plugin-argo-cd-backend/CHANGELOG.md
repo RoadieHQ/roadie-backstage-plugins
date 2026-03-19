@@ -1,5 +1,123 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.6.0
+
+### Minor Changes
+
+- a1dcd5a: Support prefixes for argoCD instances on backstage-plugin-argo-cd-backend
+
+## 4.5.1
+
+### Patch Changes
+
+- 7cda430: Match the instance name from findArgoApp results with the actual configured instance from this.instanceConfigs before calling getArgoToken():
+
+## 4.5.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 4.4.2
+
+### Patch Changes
+
+- 534fbbc: Use test-utils from backstage bundle.
+- 4812498: Fixed the error that occurred when the provided Argo CD URL contained trailing slash
+
+## 4.4.1
+
+### Patch Changes
+
+- 71a59f7: added `fromConfig` static constructor method
+
+## 4.4.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 4.3.1
+
+### Patch Changes
+
+- 296cca7: Remove deprecated `@backstage/backend-common` from dependencies.
+
+## 4.3.0
+
+### Minor Changes
+
+- 8548407: ## 🚀 New Feature:
+
+  You can now use azure active directory (Microsoft Entra ID) to authentication to Argo CD instances!
+
+  **Login Priorities** (We will prioritize logins as follows):
+
+  1. Instance Level Tokens
+
+     ```yml
+     argocd:
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+               token: ${ARGOCD_AUTH_TOKEN} # Instance Level Token
+     ```
+
+  2. Instance Level Username and Password
+
+     ```yml
+     argocd:
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+               # Instance Level Username and Password
+               username: ${ARGOCD_USERNAME_INSTANCE_2}
+               password: ${ARGOCD_PASSWORD_INSTANCE_2}
+     ```
+
+  3. Upper Level Username and Password
+
+     ```yml
+     argocd:
+       # Upper Level Username and Password
+       username: ${ARGOCD_USERNAME}
+       password: ${ARGOCD_PASSWORD}
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+     ```
+
+  4. Azure Credentials using azure login url
+
+  ```yml
+  argocd:
+    # Upper Level Argo OIDC Config using Azure signals to use azure for logging in purposes, if no other login options available.
+    oidcConfig:
+      provider: azure # currently only the term azure is supported
+      providerConfigKey: <anyConfigKey> # this is where your azure config is found. You may provide any key here so long as it's found in your config.
+    appLocatorMethods:
+      - type: config
+        instances:
+          - name: argoInstance1
+            url: https://argoInstance1.com
+  ```
+
+  ```yml
+  azure: # azure config must have these fields below (key for where the config is found can vary).
+    tenantId: ${AZURE_TENANT_ID}
+    clientId: ${AZURE_CLIENT_ID}
+    clientSecret: ${AZURE_CLIENT_SECRET}
+    loginUrl: https://login.microsoftonline.com
+  ```
+
+  For more information on how to configure your argo cd instances to recieve login requests using Azure Active Directory (Microsoft Entra ID), please read the plugin's read me.
+
 ## 4.2.0
 
 ### Minor Changes

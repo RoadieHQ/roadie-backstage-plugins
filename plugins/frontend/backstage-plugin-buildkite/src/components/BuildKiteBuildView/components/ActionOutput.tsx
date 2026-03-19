@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, Suspense, useEffect } from 'react';
+import { FC, Suspense, useEffect } from 'react';
 import {
   Accordion,
   AccordionDetails,

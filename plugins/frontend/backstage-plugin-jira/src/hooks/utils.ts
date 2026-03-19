@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-import { AxiosError } from 'axios';
+type ErrorWithResponse = Error & {
+  response?: Response & {
+    data?: {
+      errorMessages?: string[];
+    };
+  };
+  message?: string;
+  request?: any;
+};
 
-export const handleError = (error: AxiosError<{ errorMessages: string[] }>) =>
+export const handleError = (error: ErrorWithResponse) =>
   Promise.reject({
     message:
       (error?.response?.data?.errorMessages &&

@@ -18,13 +18,13 @@ import { createRouter } from './router';
 import express, { Express } from 'express';
 import { ConfigReader } from '@backstage/config';
 import request from 'supertest';
-import { getVoidLogger } from '@backstage/backend-common';
 import { CloudControl, GetResourceCommand } from '@aws-sdk/client-cloudcontrol';
 import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger } from 'winston';
 
 const cloudControl = mockClient(CloudControl as any);
 
-const logger = getVoidLogger();
+const logger = createLogger();
 const config = ConfigReader.fromConfigs([
   {
     context: '',

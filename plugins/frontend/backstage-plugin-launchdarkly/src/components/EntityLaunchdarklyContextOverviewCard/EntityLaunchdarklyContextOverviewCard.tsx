@@ -13,38 +13,117 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
 import {
-  useEntity,
   MissingAnnotationEmptyState,
+  useEntity,
 } from '@backstage/plugin-catalog-react';
 import {
-  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
-  LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
   LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
 } from '../../constants';
 import difference from 'lodash/difference';
 import {
+  ErrorBoundary,
   ErrorPanel,
+  Link,
   Progress,
   Table,
   TableColumn,
 } from '@backstage/core-components';
-import { useLaunchdarklyContextFlags } from '../../hooks/useLaunchdarklyContextFlags';
+
+import {
+  ContextFlag,
+  useLaunchdarklyContextFlags,
+} from '../../hooks/useLaunchdarklyContextFlags';
+import { FlagDetailsPanel } from './FlagDetailsPanel';
+import { ValueRenderer } from './FlagVariationValueRenderer';
 
 export type EntityLaunchdarklyOverviewCardProps = {
   title?: string;
   enableSearch?: boolean;
 };
 
-const columns: Array<TableColumn> = [
+const columns: Array<TableColumn<ContextFlag>> = [
   {
     title: 'Name',
     field: 'name',
+    render: row => (
+      <Link to={row.link} target="_blank">
+        {row.name}
+      </Link>
+    ),
   },
   {
-    title: 'Value',
-    field: '_value',
+    title: 'Key',
+    field: 'key',
+  },
+  {
+    title: 'Description',
+    field: 'description',
+    render: row => (
+      <span style={{ fontSize: '0.875rem' }}>
+        {row.description || 'No description'}
+      </span>
+    ),
+  },
+  {
+    title: 'Status',
+    field: 'status',
+    render: row => {
+      const statuses = Array.isArray(row.status) ? row.status : [row.status];
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {statuses.map((status, index) => {
+            let color = 'gray';
+            if (status.includes('Enabled')) {
+              color = 'green';
+            } else if (status.includes('Disabled')) {
+              color = 'red';
+            }
+            return (
+              <span key={index} style={{ color, fontSize: '0.875rem' }}>
+                {status}
+              </span>
+            );
+          })}
+        </div>
+      );
+    },
+  },
+  {
+    title: 'Tags',
+    field: 'tags',
+    render: row => {
+      if (!row.tags || row.tags.length === 0) {
+        return (
+          <span style={{ color: 'gray', fontSize: '0.875rem' }}>None</span>
+        );
+      }
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+          {row.tags.map((tag, index) => (
+            <span
+              key={index}
+              style={{
+                fontSize: '0.75rem',
+                padding: '2px 6px',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '4px',
+                color: '#616161',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
+    title: 'Variations',
+    render: row =>
+      row.variations ? <ValueRenderer value={row.variations} /> : 'N/A',
   },
 ];
 
@@ -53,10 +132,10 @@ export const EntityLaunchdarklyContextOverviewCard = (
 ) => {
   const { title, enableSearch = false } = props;
   const { entity } = useEntity();
+
   const unsetAnnotations = difference(
     [
       LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
-      LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
       LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
     ],
     Object.keys(entity.metadata?.annotations || {}),
@@ -85,7 +164,12 @@ export const EntityLaunchdarklyContextOverviewCard = (
     <Table
       title={title || 'Feature flags from LaunchDarkly'}
       columns={columns}
-      data={value}
+      data={value ?? []}
+      detailPanel={({ rowData }) => (
+        <ErrorBoundary>
+          <FlagDetailsPanel flag={rowData} />
+        </ErrorBoundary>
+      )}
       options={{
         paging: true,
         search: enableSearch,

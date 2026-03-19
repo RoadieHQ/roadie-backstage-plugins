@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { useState } from 'react';
+import { useState } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import {
   BackstageUserIdentity,
@@ -75,7 +75,7 @@ const SelectFieldFromApiComponent = (
   const discoveryApi = useApi(discoveryApiRef);
   const fetchApi = useApi(fetchApiRef);
   const [dropDownData, setDropDownData] = useState<SelectItem[] | undefined>();
-  const { formContext, uiSchema, identity } = props;
+  const { formContext, uiSchema, identity, formData } = props;
   const isArrayField = props?.schema?.type === 'array';
 
   const optionsParsingState = selectFieldFromApiConfigSchema.safeParse(
@@ -114,6 +114,17 @@ const SelectFieldFromApiComponent = (
       })}?${params}`,
       { headers },
     );
+    if (options.successStatusCode) {
+      if (response.status !== options.successStatusCode) {
+        throw new Error(
+          `Failed to retrieve data from API: ${response.statusText}`,
+        );
+      }
+    } else if (!response.ok) {
+      throw new Error(
+        `Failed to retrieve data from API: ${response.statusText}`,
+      );
+    }
     const body = await response.json();
     const array = options.arraySelector
       ? get(
@@ -123,7 +134,7 @@ const SelectFieldFromApiComponent = (
           }),
         )
       : body;
-    const constructedData = array.map((item: unknown) => {
+    const constructedData = array.map((item: Record<string, any>) => {
       let value: string | undefined;
       let label: string | undefined;
 
@@ -134,14 +145,21 @@ const SelectFieldFromApiComponent = (
             parameters: formContext.formData,
           }),
         );
-        label = options.labelSelector
-          ? get(
-              item,
-              renderOption(options.labelSelector, {
-                parameters: formContext.formData,
-              }),
-            )
-          : value;
+
+        if (options.labelTemplate) {
+          const renderedLabel = renderString(options.labelTemplate, { item });
+          label = renderedLabel || value;
+        } else {
+          label = options.labelSelector
+            ? get(
+                item,
+                renderOption(options.labelSelector, {
+                  parameters: formContext.formData,
+                  item,
+                }),
+              )
+            : value;
+        }
       } else {
         if (!(typeof item === 'string')) {
           throw new Error(
@@ -161,7 +179,9 @@ const SelectFieldFromApiComponent = (
         label: label || value,
       };
     });
-    setDropDownData(sortBy(constructedData, 'label'));
+    setDropDownData(
+      sortBy(constructedData, item => item.label?.toLowerCase() ?? ''),
+    );
   });
 
   const {
@@ -180,10 +200,11 @@ const SelectFieldFromApiComponent = (
     <FormControl
       margin="normal"
       required={props.required}
-      error={(props?.rawErrors?.length || 0) > 0 && !props.formData}
+      error={(props?.rawErrors?.length || 0) > 0 && !formData}
     >
       <Select
         items={dropDownData}
+        selected={formData}
         placeholder={placeholder}
         label={title}
         multiple={isArrayField}

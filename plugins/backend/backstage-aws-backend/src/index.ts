@@ -15,3 +15,4 @@
  */
 
 export * from './service/router';
+export { awsBackendPlugin as default } from './plugin';

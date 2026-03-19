@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-shortcut
 
+## 1.4.1
+
+### Patch Changes
+
+- a04a7f6: Move `msw` from production dependencies to dev dependencies.
+
+## 1.4.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.3.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.2.5
 
 ### Patch Changes

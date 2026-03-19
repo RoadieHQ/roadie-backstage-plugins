@@ -15,7 +15,7 @@
  */
 import { createHttpBackstageAction } from './backstageRequest';
 import os from 'os'; // eslint-disable-line
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { PassThrough } from 'stream'; // eslint-disable-line
 import { http } from './helpers';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
@@ -28,7 +28,7 @@ jest.mock('./helpers', () => ({
 describe('http:backstage:request', () => {
   let action: any;
   const mockBaseUrl = 'http://backstage.tests';
-  const logger = getVoidLogger();
+  const logger = mockServices.logger.mock();
   const loggerSpy = jest.spyOn(logger, 'info');
   const discovery = UrlPatternDiscovery.compile(`${mockBaseUrl}/{{pluginId}}`);
 
@@ -227,6 +227,40 @@ describe('http:backstage:request', () => {
             method: 'POST',
             headers: {
               'content-type': 'application/json',
+            },
+            body: '[{"name":"test"}]',
+          },
+          logger,
+          false,
+        );
+      });
+      it('should create a request and pass body parameter regardless of the header casing', async () => {
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await action.handler({
+          ...mockContext,
+          input: {
+            path: '/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([
+              {
+                name: 'test',
+              },
+            ]),
+          },
+        });
+        expect(http).toHaveBeenCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
             body: '[{"name":"test"}]',
           },

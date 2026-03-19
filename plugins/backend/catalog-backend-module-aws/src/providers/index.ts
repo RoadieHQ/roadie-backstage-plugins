@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+export { AWSEntityProvider } from './AWSEntityProvider';
 export { AWSS3BucketProvider } from './AWSS3BucketProvider';
 export { AWSLambdaFunctionProvider } from './AWSLambdaFunctionProvider';
 export { AWSIAMUserProvider } from './AWSIAMUserProvider';
@@ -25,6 +26,12 @@ export { AWSEC2Provider } from './AWSEC2Provider';
 export { AWSRDSProvider } from './AWSRDSProvider';
 export { AWSOrganizationAccountsProvider } from './AWSOrganizationAccountsProvider';
 export { AWSSNSTopicProvider } from './AWSSNSTopicProvider';
-export { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+export { AWSECRRepositoryEntityProvider } from './AWSECRRepositoryEntityProvider';
 export { AWSElastiCacheEntityProvider } from './AWSElastiCacheEntityProvider';
 export { AWSOpenSearchEntityProvider } from './AWSOpenSearchEntityProvider';
+export { AWSSQSEntityProvider } from './AWSSQSEntityProvider';
+export { AWSEBSVolumeProvider } from './AWSEBSVolumeProvider';
+export { AWSLoadBalancerProvider } from './AWSLoadBalancerProvider';
+export { AWSSecurityGroupProvider } from './AWSSecurityGroupProvider';
+export { AWSSubnetProvider } from './AWSSubnetProvider';
+export { AWSVPCProvider } from './AWSVPCProvider';

@@ -1,5 +1,17 @@
 # @roadiehq/github-auth-utils-react
 
+## 1.2.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 1.1.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
 ## 1.0.2
 
 ### Patch Changes

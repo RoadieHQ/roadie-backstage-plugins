@@ -1,5 +1,71 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.1.2
+
+### Patch Changes
+
+- 1993e9e: Fixed bug in roadiehq:utils:fs:replace where no files were found when running on Windows
+
+## 4.1.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
+## 4.1.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 4.0.4
+
+### Patch Changes
+
+- 3ff52f3: Add null check to ignore block comments in yaml merges
+
+## 4.0.3
+
+### Patch Changes
+
+- 2704797: Revert role back to "backend-plugin-module"
+
+## 4.0.2
+
+### Patch Changes
+
+- d8cedb1: Fix utils:merge action bug on merging empty arrays with preserveComments
+
+## 4.0.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
+## 4.0.0
+
+### Major Changes
+
+- f358485: Fix merge to replace entire array when mergeArrays is false or undefined
+
+## 3.6.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 3.5.0
+
+### Minor Changes
+
+- 1577b80: Add configuration option to fsreplace action to allow optionally to include dotfiles when globbing for files
+
+## 3.4.2
+
+### Patch Changes
+
+- e7e0b71: Upgraded `mock-fs` to latest version which supports Node `v20`+
+
 ## 3.4.1
 
 ### Patch Changes

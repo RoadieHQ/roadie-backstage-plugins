@@ -23,7 +23,11 @@ import {
 import { rootRouteRef } from './routes';
 import { Entity } from '@backstage/catalog-model';
 import difference from 'lodash/difference';
-import { LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION } from './constants';
+import {
+  LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
+  LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
+  LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+} from './constants';
 
 export const entityContentRouteRef = createRouteRef({
   id: 'launch-darkly-project',
@@ -49,6 +53,18 @@ export const EntityLaunchdarklyContextOverviewCard = launchdarklyPlugin.provide(
   }),
 );
 
+export const EntityLaunchdarklyCard = launchdarklyPlugin.provide(
+  createComponentExtension({
+    name: 'EntityLaunchdarklyCard',
+    component: {
+      lazy: () =>
+        import('./components/EntityLaunchdarklyCard').then(
+          m => m.EntityLaunchdarklyCard,
+        ),
+    },
+  }),
+);
+
 export const EntityLaunchdarklyProjectOverviewContent =
   launchdarklyPlugin.provide(
     createRoutableExtension({
@@ -64,6 +80,17 @@ export const EntityLaunchdarklyProjectOverviewContent =
 export const isLaunchdarklyContextAvailable = (entity: Entity) => {
   const diff = difference(
     [LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION],
+    Object.keys(entity.metadata?.annotations || {}),
+  );
+  return diff.length === 0;
+};
+
+export const isLaunchdarklyProjectAvailable = (entity: Entity) => {
+  const diff = difference(
+    [
+      LAUNCHDARKLY_PROJECT_KEY_ANNOTATION,
+      LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,
+    ],
     Object.keys(entity.metadata?.annotations || {}),
   );
   return diff.length === 0;

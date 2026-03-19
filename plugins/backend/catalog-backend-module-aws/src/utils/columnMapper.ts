@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { set, template, trim } from 'lodash';
+
 import { ValueMapping } from '../types';
 
 /**
@@ -55,7 +56,7 @@ export function mapColumnsToEntityValues(
   row: { [key: string]: any },
 ) {
   const o = {};
-  Object.entries(valueMappings).forEach(([columnName, mapping]) => {
+  for (const [columnName, mapping] of Object.entries(valueMappings)) {
     if (row[columnName]) {
       const templateSettings = { interpolate: /{{([\s\S]+?)}}/g };
       const value = mapping.template
@@ -68,6 +69,6 @@ export function mapColumnsToEntityValues(
         : row[columnName];
       set(o, splitExceptWithin(mapping.entityPath, '.', '"'), value);
     }
-  });
+  }
   return o;
 }

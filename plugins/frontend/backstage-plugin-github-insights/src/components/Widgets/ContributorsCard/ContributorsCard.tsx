@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Alert from '@material-ui/lab/Alert';
 import {
@@ -36,7 +35,7 @@ import { GitHubAuthorizationWrapper } from '@roadiehq/github-auth-utils-react';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
-    marginBottom: theme.spacing(3),
+    marginBottom: '10px',
     '& + .MuiAlert-root': {
       marginTop: theme.spacing(3),
     },

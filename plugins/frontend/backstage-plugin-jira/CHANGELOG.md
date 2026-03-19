@@ -1,5 +1,47 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.14.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 2.13.1
+
+### Patch Changes
+
+- 6676787: Remove axios from dependencies.
+
+## 2.13.0
+
+### Minor Changes
+
+- 6e0f627: use global date format
+
+## 2.12.0
+
+### Minor Changes
+
+- 84c3ecc: revamp the jira plugin home page card
+
+## 2.11.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 2.10.0
+
+### Minor Changes
+
+- 3e8bc34: Improved support for Data Center by using a separate search endpoint
+
+## 2.9.0
+
+### Minor Changes
+
+- 50ed11f: #1892 switch to search jql api
+
 ## 2.8.3
 
 ### Patch Changes

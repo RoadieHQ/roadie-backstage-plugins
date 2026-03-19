@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { ErrorPanel, Link, Table } from '@backstage/core-components';
 import { DataItem, RSSContentProps } from './types';
 import { useAsync } from 'react-use';
 import { Typography, makeStyles } from '@material-ui/core';
+import { fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { DateTime } from 'luxon';
 import { Skeleton } from '@material-ui/lab';
 
@@ -58,6 +58,7 @@ const skeletonData = Array(6).fill(skeletonDataItem);
  * @public
  */
 export const Content = (props: RSSContentProps) => {
+  const { fetch } = useApi(fetchApiRef);
   const parser = new DOMParser();
   const classes = useStyles();
   const { feedURL, paging = true, rowRenderer } = props;

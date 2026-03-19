@@ -10,7 +10,6 @@ import {
 } from './entityCards';
 import { ArgoCDApiClient, argoCDApiRef } from '../api';
 import { getEntityStub } from '../mocks/mocks';
-import React from 'react';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 
 describe('Entity cards extensions', () => {

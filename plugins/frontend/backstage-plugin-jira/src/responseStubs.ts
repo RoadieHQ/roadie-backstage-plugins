@@ -149,7 +149,6 @@ export const projectResponseStub = {
 };
 
 export const searchResponseStub = {
-  startAt: 0,
   maxResults: 50,
   total: 1,
   issues: [

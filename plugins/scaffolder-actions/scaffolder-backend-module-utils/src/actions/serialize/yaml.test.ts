@@ -16,14 +16,14 @@
 import { PassThrough } from 'stream';
 import { createSerializeYamlAction } from './yaml';
 import YAML from 'yaml';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:serialize:yaml', () => {
   const mockContext = {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),
@@ -96,6 +96,54 @@ describe('roadiehq:utils:serialize:yaml', () => {
     expect(mockContext.output).toHaveBeenCalledWith(
       'serialized',
       YAML.stringify({ hello3: 'world3' }, opts),
+    );
+  });
+
+  it('should serialize complex nested objects', async () => {
+    const complexData = {
+      metadata: {
+        name: 'my-service',
+        labels: {
+          app: 'backend',
+          version: 'v1.0.0',
+        },
+      },
+      spec: {
+        replicas: 3,
+        ports: [8080, 9090],
+        env: {
+          NODE_ENV: 'production',
+          DEBUG: false,
+        },
+      },
+    };
+
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: complexData,
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      YAML.stringify(complexData),
+    );
+  });
+
+  it('should work with minimal input (no options)', async () => {
+    await action.handler({
+      ...mockContext,
+      workspacePath: 'fake-tmp-dir',
+      input: {
+        data: { simple: 'yaml-test', number: 42 },
+      },
+    });
+
+    expect(mockContext.output).toHaveBeenCalledWith(
+      'serialized',
+      YAML.stringify({ simple: 'yaml-test', number: 42 }),
     );
   });
 });

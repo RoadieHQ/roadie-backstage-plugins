@@ -13,67 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ResourceEntity } from '@backstage/catalog-model';
-import { ElastiCache } from '@aws-sdk/client-elasticache';
-import * as winston from 'winston';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import { Config } from '@backstage/config';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { CatalogApi } from '@backstage/catalog-client';
-import { AccountConfig, DynamicAccountConfig } from '../types';
-import { duration } from '../utils/timer';
+
+import { CacheCluster, ElastiCache } from '@aws-sdk/client-elasticache';
+import { Entity } from '@backstage/catalog-model';
+
 import { ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN } from '../annotations';
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
+
+import defaultTemplate from './AWSElastiCacheEntityProvider.default.yaml.njk';
+import { AWSEntityProvider } from './AWSEntityProvider';
 
 /**
  * Provides entities from AWS ElastiCache  service.
  */
-export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
-  private readonly elasticacheTypeValue: string;
-
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: winston.Logger | LoggerService;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSElastiCacheEntityProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
-  constructor(
-    account: AccountConfig,
-    options: {
-      logger: winston.Logger | LoggerService;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-    },
-  ) {
-    super(account, options);
-    this.elasticacheTypeValue = 'elasticache-cluster';
-  }
-
+export class AWSElastiCacheEntityProvider extends AWSEntityProvider<CacheCluster> {
   getProviderName(): string {
     return `aws-elasticache-cluster-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: CacheCluster,
+  ): Record<string, string> {
+    const clusterArn = resource.ARN || '';
+    return {
+      [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]: clusterArn,
+    };
   }
 
   private async getElastiCacheClient(
@@ -94,18 +63,24 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
     }
 
     const startTimestamp = process.hrtime();
-    const { accountId } = this.getParsedConfig(dynamicAccountConfig);
+
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(
       `Providing ElastiCache cluster resources from AWS: ${accountId}`,
     );
-    const elasticacheResources: ResourceEntity[] = [];
+    const elasticacheResources: Array<Promise<Entity>> = [];
 
     const elastiCache = await this.getElastiCacheClient(dynamicAccountConfig);
 
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     const clusters = await elastiCache.describeCacheClusters({
       ShowCacheNodeInfo: true,
@@ -114,58 +89,20 @@ export class AWSElastiCacheEntityProvider extends AWSEntityProvider {
     if (clusters.CacheClusters) {
       for (const cluster of clusters.CacheClusters) {
         const clusterArn = cluster.ARN || '';
-        const clusterName = cluster.CacheClusterId || 'unknown';
         const tags = clusterArn
           ? await elastiCache.listTagsForResource({ ResourceName: clusterArn })
           : undefined;
 
-        // Additional metadata properties
-        const clusterStatus = cluster.CacheClusterStatus || '';
-        const engine = cluster.Engine || ''; // Redis or Memcached
-        const engineVersion = cluster.EngineVersion || '';
-        const nodeType = cluster.CacheNodeType || '';
-        const endpoint =
-          cluster.CacheNodes && cluster.CacheNodes[0]?.Endpoint
-            ? `${cluster.CacheNodes[0].Endpoint.Address}:${cluster.CacheNodes[0].Endpoint.Port}`
-            : '';
-
-        const resource: ResourceEntity = {
-          kind: 'Resource',
-          apiVersion: 'backstage.io/v1beta1',
-          metadata: {
-            name: clusterName.toLowerCase().replace(/[^a-zA-Z0-9\-]/g, '-'),
-            title: clusterName,
-            labels: {
-              'aws-elasticache-region': this.region,
-            },
-            annotations: {
-              ...defaultAnnotations,
-              [ANNOTATION_AWS_ELASTICACHE_CLUSTER_ARN]: clusterArn ?? '',
-            },
-            status: clusterStatus,
-            engine,
-            engineVersion,
-            nodeType,
-            endpoint,
-          },
-          spec: {
-            owner: ownerFromTags(tags?.TagList || [], this.getOwnerTag()),
-            ...relationshipsFromTags(tags?.TagList || []),
-            type: this.elasticacheTypeValue,
-          },
-        };
-
-        elasticacheResources.push(resource);
+        elasticacheResources.push(
+          template.render({
+            data: cluster,
+            tags: tags?.TagList,
+          }),
+        );
       }
     }
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: elasticacheResources.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    await this.applyMutation(elasticacheResources);
 
     this.logger.info(
       `Finished providing ${elasticacheResources.length} ElastiCache cluster resources from AWS: ${accountId}`,

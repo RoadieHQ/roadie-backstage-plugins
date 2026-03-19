@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC } from 'react';
+import { FC } from 'react';
 import Alert from '@material-ui/lab/Alert';
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';

@@ -1,5 +1,53 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.5.1
+
+### Patch Changes
+
+- 73ec5b0: Replaces use of logger from `@backstage/backend-common` in tests with new `mockServices`.
+
+## 5.5.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+## 5.4.2
+
+### Patch Changes
+
+- 7df343e: Fix casing bug in automatic json serialisation
+
+## 5.4.1
+
+### Patch Changes
+
+- eab471e: Updated the `backstage.pluginId` to match the `pluginId` set in the `createBackendModule`
+
+## 5.4.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+## 5.3.4
+
+### Patch Changes
+
+- ddeddb7: Updated timeout to use native functionality
+
+## 5.3.3
+
+### Patch Changes
+
+- b7f31ad: Added timeout for the http request as input parameter
+
+## 5.3.2
+
+### Patch Changes
+
+- 5eb9cc2: Move some `dependencies` into `devDependencies`.
+
 ## 5.3.1
 
 ### Patch Changes

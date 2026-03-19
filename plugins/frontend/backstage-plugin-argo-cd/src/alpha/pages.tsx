@@ -1,6 +1,4 @@
-import React from 'react'; // Add this line to import React
-
-import { PageBlueprint } from '@backstage/frontend-plugin-api';
+import { EntityContentBlueprint } from '@backstage/plugin-catalog-react/alpha'; // Add this line to import React
 import {
   compatWrapper,
   convertLegacyRouteRef,
@@ -10,10 +8,11 @@ import { entityContentRouteRef } from '../plugin';
 /**
  * @alpha
  */
-export const argoCdPage = PageBlueprint.make({
+export const argoCdPage = EntityContentBlueprint.make({
   name: 'ArgoCdPage',
   params: {
-    defaultPath: '/',
+    path: '/argocd',
+    title: 'ArgoCD',
     // you can reuse the existing routeRef
     // by wrapping into the convertLegacyRouteRef.
     routeRef: convertLegacyRouteRef(entityContentRouteRef),

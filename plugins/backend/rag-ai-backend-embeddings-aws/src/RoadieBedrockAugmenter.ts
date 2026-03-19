@@ -24,6 +24,7 @@ import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
 export type BedrockConfig = {
   modelName: string;
   maxRetries?: number;
+  maxConcurrency?: number;
 };
 
 export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
@@ -45,10 +46,12 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
       ? new BedrockCohereEmbeddings({
           ...embeddingsConfig,
           maxRetries: config.bedrockConfig.maxRetries ?? 3,
+          maxConcurrency: config.bedrockConfig.maxConcurrency ?? 100,
         })
       : new BedrockEmbeddings({
           ...embeddingsConfig,
           maxRetries: config.bedrockConfig.maxRetries ?? 3,
+          maxConcurrency: config.bedrockConfig.maxConcurrency ?? 100,
         });
 
     super({ ...config, embeddings });

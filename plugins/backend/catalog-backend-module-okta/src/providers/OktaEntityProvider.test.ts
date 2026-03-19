@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { getVoidLogger } from '@backstage/backend-common';
+import { createLogger } from 'winston';
 import { OktaEntityProvider, OktaScope } from './OktaEntityProvider';
 import { AccountConfig } from '../types';
 import { Client } from '@okta/okta-sdk-nodejs';
@@ -25,7 +25,7 @@ class ConcreteEntityProvider extends OktaEntityProvider {
   }
   constructor(accountConfig: AccountConfig) {
     super(accountConfig, {
-      logger: getVoidLogger(),
+      logger: createLogger(),
     });
   }
 

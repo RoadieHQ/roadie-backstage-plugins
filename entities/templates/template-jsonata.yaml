@@ -1,0 +1,164 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: jsonata-demo
+  title: JSONata Transformation Demo
+  description: Demonstrates the roadiehq:utils:jsonata action for data transformation
+  tags:
+    - demo
+    - jsonata
+    - transformation
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: JSONata Configuration
+      required:
+        - transformationType
+      properties:
+        transformationType:
+          title: Transformation Type
+          type: string
+          description: Choose a JSONata transformation example
+          enum:
+            - extract
+            - transform
+            - aggregate
+            - filter
+          enumNames:
+            - 'Extract Fields'
+            - 'Transform Structure'
+            - 'Aggregate Data'
+            - 'Filter Arrays'
+          default: extract
+        customExpression:
+          title: Custom JSONata Expression
+          type: string
+          description: Custom JSONata expression to apply
+          ui:widget: textarea
+          default: '{ "name": name, "version": version }'
+
+  steps:
+    - id: create-sample-data
+      name: Create Sample Data
+      action: roadiehq:utils:fs:write
+      input:
+        path: sample-data.json
+        content: |
+          {
+            "service": {
+              "name": "demo-api",
+              "version": "2.1.0",
+              "description": "Demo API service",
+              "endpoints": [
+                {"path": "/users", "method": "GET", "auth": true},
+                {"path": "/users", "method": "POST", "auth": true},
+                {"path": "/health", "method": "GET", "auth": false}
+              ],
+              "config": {
+                "port": 8080,
+                "timeout": 30000,
+                "retries": 3
+              },
+              "team": {
+                "name": "platform",
+                "members": ["alice", "bob", "charlie"]
+              }
+            }
+          }
+
+    - id: extract-transform
+      name: Extract Basic Fields
+      if: ${{ parameters.transformationType === 'extract' }}
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          service:
+            name: 'demo-api'
+            version: '2.1.0'
+            description: 'Demo API service'
+            config:
+              port: 8080
+              timeout: 30000
+        expression: '{ "name": service.name, "version": service.version, "port": service.config.port }'
+
+    - id: structure-transform
+      name: Transform Structure
+      if: ${{ parameters.transformationType === 'transform' }}
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          service:
+            name: 'demo-api'
+            endpoints:
+              [
+                { 'path': '/users', 'method': 'GET' },
+                { 'path': '/health', 'method': 'GET' },
+              ]
+        expression: '{ "api": { "serviceName": service.name, "routes": service.endpoints.path } }'
+
+    - id: aggregate-transform
+      name: Aggregate Data
+      if: ${{ parameters.transformationType === 'aggregate' }}
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          service:
+            endpoints:
+              [{ 'method': 'GET' }, { 'method': 'POST' }, { 'method': 'GET' }]
+            team: { 'members': ['alice', 'bob', 'charlie'] }
+        expression: '{ "totalEndpoints": $count(service.endpoints), "teamSize": $count(service.team.members), "methods": $distinct(service.endpoints.method) }'
+
+    - id: filter-transform
+      name: Filter Arrays
+      if: ${{ parameters.transformationType === 'filter' }}
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          service:
+            endpoints:
+              [
+                { 'path': '/users', 'method': 'GET', 'auth': true },
+                { 'path': '/health', 'method': 'GET', 'auth': false },
+                { 'path': '/admin', 'method': 'POST', 'auth': true },
+              ]
+        expression: '{ "publicEndpoints": service.endpoints[auth=false], "secureEndpoints": service.endpoints[auth=true] }'
+
+    - id: custom-transform
+      name: Custom JSONata Transform
+      action: roadiehq:utils:jsonata
+      input:
+        data:
+          name: 'custom-service'
+          version: '1.0.0'
+          features: ['auth', 'logging', 'metrics']
+        expression: ${{ parameters.customExpression }}
+
+    - id: write-results
+      name: Write Transformation Results
+      action: roadiehq:utils:fs:write
+      input:
+        path: transformed-results.json
+        content: ${{ steps['extract-transform'].output.result || steps['structure-transform'].output.result || steps['aggregate-transform'].output.result || steps['filter-transform'].output.result || steps['custom-transform'].output.result | dump }}
+    - id:
+      name: log
+      action: debug:log
+      input:
+        message: ${{ steps['extract-transform'].output.result || steps['structure-transform'].output.result || steps['aggregate-transform'].output.result || steps['filter-transform'].output.result || steps['custom-transform'].output.result | dump }}
+
+  output:
+    text:
+      - title: JSONata Transformation Complete
+        content: |
+          Successfully applied JSONata transformation!
+
+          **Type:** ${{ parameters.transformationType }}
+          **Result written to:** transformed-results.json
+
+          JSONata capabilities demonstrated:
+          - Field extraction and selection
+          - Structure transformation
+          - Array filtering and aggregation
+          - Custom expression evaluation
+          - Complex data manipulation

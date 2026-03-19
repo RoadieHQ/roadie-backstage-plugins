@@ -1,4 +1,3 @@
-import React from 'react';
 import { EntityCardBlueprint } from '@backstage/plugin-catalog-react/alpha';
 import { isDatadogGraphAvailable } from '../plugin';
 

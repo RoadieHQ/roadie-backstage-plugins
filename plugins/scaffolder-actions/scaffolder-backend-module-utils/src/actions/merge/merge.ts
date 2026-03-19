@@ -21,7 +21,7 @@ import { extname } from 'path';
 import { isArray, isNull, mergeWith } from 'lodash';
 import YAML, { Document } from 'yaml';
 import YAWN from 'yawn-yaml';
-import { stringifyOptions, yamlOptionsSchema } from '../../types';
+import { yamlOptionsSchema } from '../../types';
 import detectIndent from 'detect-indent';
 
 function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
@@ -31,9 +31,16 @@ function mergeArrayCustomiser(objValue: string | any[], srcValue: any) {
   return undefined;
 }
 
+function replaceArrayCustomiser(objValue: string | any[], srcValue: any) {
+  if (isArray(objValue) && !isNull(objValue)) {
+    return srcValue;
+  }
+  return undefined;
+}
+
 const existPathInObject = (object: any, path: string, value: string) => {
   const keys = path.split('.');
-  if (typeof object !== 'object') {
+  if (object === null || typeof object !== 'object') {
     return false;
   }
 
@@ -48,67 +55,37 @@ const existPathInObject = (object: any, path: string, value: string) => {
   return current?.toString() === value;
 };
 
-import { TemplateAction } from '@backstage/plugin-scaffolder-node';
-
-export function createMergeJSONAction({
-  actionId,
-}: {
-  actionId?: string;
-}): TemplateAction<{
-  path: string;
-  content: any;
-  mergeArrays?: boolean;
-  matchFileIndent?: boolean;
-}> {
-  return createTemplateAction<{
-    path: string;
-    content: any;
-    mergeArrays?: boolean;
-    matchFileIndent?: boolean;
-  }>({
+export function createMergeJSONAction({ actionId }: { actionId?: string }) {
+  return createTemplateAction({
     id: actionId || 'roadiehq:utils:json:merge',
     description: 'Merge new data into an existing JSON file.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['content', 'path'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Path to existing file to append.',
-            type: 'string',
-          },
-          content: {
-            description:
+        path: z => z.string().describe('Path to existing file to append.'),
+        content: z =>
+          z
+            .union([z.string(), z.record(z.any())])
+            .describe(
               'This will be merged into to the file. Can be either an object or a string.',
-            title: 'Content',
-            type: ['string', 'object'],
-          },
-          mergeArrays: {
-            type: 'boolean',
-            default: false,
-            title: 'Merge Arrays?',
-            description:
-              'Where a value is an array the merge function should concatenate the provided array value with the target array',
-          },
-          matchFileIndent: {
-            type: 'boolean',
-            default: false,
-            title: 'Match file indent?',
-            description:
+            ),
+        mergeArrays: z =>
+          z
+            .boolean()
+            .describe(
+              'When true, arrays will be concatenated. When false or undefined, arrays will be replaced entirely.',
+            )
+            .optional(),
+        matchFileIndent: z =>
+          z
+            .boolean()
+            .describe(
               'Make the output file indentation match that of the specified input file.',
-          },
-        },
+            )
+            .optional(),
       },
       output: {
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Path to the file that was written'),
       },
     },
     async handler(ctx) {
@@ -152,7 +129,9 @@ export function createMergeJSONAction({
           mergeWith(
             existingContent,
             content,
-            ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+            ctx.input.mergeArrays
+              ? mergeArrayCustomiser
+              : replaceArrayCustomiser,
           ),
           null,
           fileIndent,
@@ -163,90 +142,56 @@ export function createMergeJSONAction({
   });
 }
 
-export function createMergeAction(): TemplateAction<{
-  path: string;
-  content: any;
-  useDocumentIncludingField?: { key: string; value: string };
-  mergeArrays?: boolean;
-  preserveYamlComments?: boolean;
-  options?: stringifyOptions;
-}> {
-  return createTemplateAction<{
-    path: string;
-    content: any;
-    useDocumentIncludingField?: { key: string; value: string };
-    mergeArrays?: boolean;
-    preserveYamlComments?: boolean;
-    options?: stringifyOptions;
-  }>({
+export function createMergeAction() {
+  return createTemplateAction({
     id: 'roadiehq:utils:merge',
     description: 'Merges data into an existing structured file.',
     supportsDryRun: true,
     schema: {
       input: {
-        type: 'object',
-        required: ['content', 'path'],
-        properties: {
-          path: {
-            title: 'Path',
-            description: 'Path to existing file to append.',
-            type: 'string',
-          },
-          content: {
-            description:
+        path: z => z.string().describe('Path to existing file to append.'),
+        content: z =>
+          z
+            .union([z.string(), z.record(z.any())])
+            .describe(
               'This will be merged into to the file. Can be either an object or a string.',
-            title: 'Content',
-            type: ['string', 'object'],
-          },
-          mergeArrays: {
-            type: 'boolean',
-            default: false,
-            title: 'Merge Arrays?',
-            description:
-              'Where a value is an array the merge function should concatenate the provided array value with the target array',
-          },
-          preserveYamlComments: {
-            type: 'boolean',
-            default: false,
-            title: 'Preserve Comments?',
-            description:
+            ),
+        mergeArrays: z =>
+          z
+            .boolean()
+            .describe(
+              'When true, arrays will be concatenated. When false or undefined, arrays will be replaced entirely.',
+            )
+            .optional(),
+        preserveYamlComments: z =>
+          z
+            .boolean()
+            .describe(
               'Will preserve standalone and inline comments in YAML files',
-          },
-          useDocumentIncludingField: {
-            type: 'object',
-            title: 'Use Document Including Field',
-            default: undefined,
-            description:
-              'This option is only applicable to YAML files. It allows you to specify a field to use as a key to find the document to merge into.',
-            properties: {
-              key: {
-                title: 'Key',
-                description:
+            )
+            .optional(),
+        useDocumentIncludingField: z =>
+          z
+            .object({
+              key: z
+                .string()
+                .describe(
                   'The key of the field to use to find the document to merge into.',
-                type: 'string',
-              },
-              value: {
-                title: 'Value',
-                description:
+                ),
+              value: z
+                .string()
+                .describe(
                   'The value of the field to use to find the document to merge into.',
-                type: 'string',
-              },
-            },
-          },
-          options: {
-            ...yamlOptionsSchema,
-            description: `${yamlOptionsSchema.description}  (for YAML output only)`,
-          },
-        },
+                ),
+            })
+            .describe(
+              'This option is only applicable to YAML files. It allows you to specify a field to use as a key to find the document to merge into.',
+            )
+            .optional(),
+        options: yamlOptionsSchema,
       },
       output: {
-        type: 'object',
-        properties: {
-          path: {
-            title: 'Path',
-            type: 'string',
-          },
-        },
+        path: z => z.string().describe('Path to the file that was written'),
       },
     },
     async handler(ctx) {
@@ -272,7 +217,9 @@ export function createMergeAction(): TemplateAction<{
             mergeWith(
               YAML.parse(originalContent),
               newContent,
-              ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+              ctx.input.mergeArrays
+                ? mergeArrayCustomiser
+                : replaceArrayCustomiser,
             ),
             null,
             2,
@@ -287,13 +234,26 @@ export function createMergeAction(): TemplateAction<{
                 ? YAML.parse(ctx.input.content)
                 : ctx.input.content; // This supports the case where dynamic keys are required
             if (ctx.input.preserveYamlComments) {
-              mergedContent = mergeContentPreserveComments(
-                originalContent,
-                newContent,
-                ctx,
-              )
-                .map(doc => YAML.stringify(doc, ctx.input.options))
-                .join('---\n');
+              try {
+                mergedContent = mergeContentPreserveComments(
+                  originalContent,
+                  newContent,
+                  ctx,
+                )
+                  .map(doc => YAML.stringify(doc, ctx.input.options))
+                  .join('---\n');
+              } catch (error: any) {
+                ctx.logger.warn(
+                  `Failed to preserve YAML comments due to parsing error: ${error.message}. Falling back to merge without comment preservation.`,
+                );
+                mergedContent = mergeDocumentsRemovingComments(
+                  originalContent,
+                  newContent,
+                  ctx,
+                )
+                  .map(doc => YAML.stringify(doc, ctx.input.options))
+                  .join('---\n');
+              }
             } else {
               mergedContent = mergeDocumentsRemovingComments(
                 originalContent,
@@ -329,7 +289,7 @@ function mergeDocumentsRemovingComments(
       mergeWith(
         documents[0].toJSON(),
         newContent,
-        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
       ),
     ];
   }
@@ -352,7 +312,7 @@ function mergeDocumentsRemovingComments(
       return mergeWith(
         document.toJSON(),
         newContent,
-        ctx.input.mergeArrays ? mergeArrayCustomiser : undefined,
+        ctx.input.mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
       );
     }
     return document.toJSON();
@@ -417,7 +377,7 @@ function mergeYawn(
   yawn.json = mergeWith(
     parsedOriginal,
     newContent,
-    mergeArrays ? mergeArrayCustomiser : undefined,
+    mergeArrays ? mergeArrayCustomiser : replaceArrayCustomiser,
   );
   return yawn;
 }

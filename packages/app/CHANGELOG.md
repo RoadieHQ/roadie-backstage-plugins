@@ -1,5 +1,91 @@
 # app
 
+## 1.3.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.3.0
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.2.0
+  - @roadiehq/backstage-plugin-github-pull-requests@3.6.0
+  - @roadiehq/backstage-plugin-security-insights@3.3.0
+  - @roadiehq/backstage-plugin-github-insights@3.3.0
+  - @roadiehq/backstage-plugin-launchdarkly@1.4.0
+  - @roadiehq/backstage-plugin-aws-lambda@2.4.0
+  - @roadiehq/backstage-plugin-cloudsmith@1.3.0
+  - @roadiehq/backstage-plugin-prometheus@3.2.0
+  - @roadiehq/backstage-plugin-buildkite@2.5.0
+  - @roadiehq/backstage-plugin-travis-ci@2.3.0
+  - @roadiehq/backstage-plugin-home-markdown@2.7.0
+  - @roadiehq/backstage-plugin-shortcut@1.4.0
+  - @roadiehq/backstage-plugin-argo-cd@2.12.0
+  - @roadiehq/backstage-plugin-bugsnag@2.4.0
+  - @roadiehq/backstage-plugin-datadog@2.6.0
+  - @roadiehq/backstage-plugin-iframe@1.6.0
+  - @roadiehq/backstage-plugin-jira@2.14.0
+  - @roadiehq/backstage-plugin-home-rss@1.5.0
+  - @roadiehq/backstage-plugin-aws@1.3.0
+  - @roadiehq/backstage-plugin-wiz@2.2.0
+  - @roadiehq/rag-ai@1.3.0
+
+## 1.2.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [69293fb]
+- Updated dependencies [f215405]
+  - @roadiehq/backstage-plugin-launchdarkly@1.1.0
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.2.0
+  - @roadiehq/backstage-plugin-bitbucket-pullrequest@2.1.0
+  - @roadiehq/backstage-plugin-github-pull-requests@3.5.0
+  - @roadiehq/backstage-plugin-security-insights@3.2.0
+  - @roadiehq/backstage-plugin-github-insights@3.2.0
+  - @roadiehq/backstage-plugin-aws-lambda@2.3.0
+  - @roadiehq/backstage-plugin-cloudsmith@1.2.0
+  - @roadiehq/backstage-plugin-prometheus@3.1.0
+  - @roadiehq/backstage-plugin-buildkite@2.4.0
+  - @roadiehq/backstage-plugin-travis-ci@2.2.0
+  - @roadiehq/backstage-plugin-home-markdown@2.6.0
+  - @roadiehq/backstage-plugin-shortcut@1.3.0
+  - @roadiehq/backstage-plugin-argo-cd@2.10.0
+  - @roadiehq/backstage-plugin-bugsnag@2.3.0
+  - @roadiehq/backstage-plugin-datadog@2.5.0
+  - @roadiehq/backstage-plugin-iframe@1.5.0
+  - @roadiehq/backstage-plugin-jira@2.11.0
+  - @roadiehq/backstage-plugin-home-rss@1.4.0
+  - @roadiehq/backstage-plugin-aws@1.2.0
+  - @roadiehq/backstage-plugin-wiz@2.1.0
+  - @roadiehq/rag-ai@1.2.0
+
+## 1.1.13
+
+### Patch Changes
+
+- Updated dependencies [ab88aee]
+  - @roadiehq/backstage-plugin-wiz@2.0.0
+
+## 1.1.12
+
+### Patch Changes
+
+- Updated dependencies [037c0c2]
+  - @roadiehq/backstage-plugin-launchdarkly@1.0.0
+
+## 1.1.11
+
+### Patch Changes
+
+- Updated dependencies [59c552a]
+  - @roadiehq/plugin-scaffolder-frontend-module-http-request-field@2.0.0
+
 ## 1.1.10
 
 ### Patch Changes

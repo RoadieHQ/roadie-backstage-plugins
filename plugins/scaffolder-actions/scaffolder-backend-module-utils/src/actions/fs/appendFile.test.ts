@@ -17,7 +17,7 @@ import { PassThrough } from 'stream';
 import { createAppendFileAction } from './appendFile';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 
 describe('roadiehq:utils:fs:append', () => {
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('roadiehq:utils:fs:append', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

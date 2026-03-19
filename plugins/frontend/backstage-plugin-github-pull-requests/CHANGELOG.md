@@ -1,5 +1,70 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.6.3
+
+### Patch Changes
+
+- 7e4a3c4: Add pagination support in PullRequestsListView component
+
+## 3.6.2
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
+## 3.6.1
+
+### Patch Changes
+
+- a04a7f6: Move `msw` from production dependencies to dev dependencies.
+
+## 3.6.0
+
+### Minor Changes
+
+- c2274f9: Upgrade backstage version to `1.44.2`.
+
+### Patch Changes
+
+- Updated dependencies [c2274f9]
+  - @roadiehq/github-auth-utils-react@1.2.0
+
+## 3.5.3
+
+### Patch Changes
+
+- 3fdba7e: Improve GitHub API calls to better respect rate limits
+
+## 3.5.2
+
+### Patch Changes
+
+- cc02e21: - Fix an issue that the GitHub Pull Requests Statistics ignores internal issues and shows undefined instead of an error message to the user.
+  - Fix an issue that the GitHub Pull Requests Statistics card shows undefined (or an error) if a Pull Request without commits is consumed.
+
+## 3.5.1
+
+### Patch Changes
+
+- c21c5f6: Remove use of API to retrieve slug of the repository url.
+
+## 3.5.0
+
+### Minor Changes
+
+- f215405: Upgrade to 1.40.2
+
+### Patch Changes
+
+- Updated dependencies [f215405]
+  - @roadiehq/github-auth-utils-react@1.1.0
+
+## 3.4.2
+
+### Patch Changes
+
+- 462c922: Allow to pass the `hostname` props on `HomePageRequestedReviewsCard` and `HomePageYourOpenPullRequestsCard` when using GitHub Enterprise instances.
+
 ## 3.4.1
 
 ### Patch Changes

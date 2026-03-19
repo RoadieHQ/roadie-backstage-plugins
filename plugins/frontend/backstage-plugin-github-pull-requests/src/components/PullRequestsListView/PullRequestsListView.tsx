@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React from 'react';
-
-import { Box, Grid, Link } from '@material-ui/core';
+import { Box, Grid, Link, TablePagination } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { getStatusIconType, CommentIcon } from '../Icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { useGithubRepositoryData } from '../useGithubRepositoryData';
-import {
-  GithubSearchPullRequestsDataItem,
-  GithubRepositoryData,
-} from '../../types';
-import Alert from '@material-ui/lab/Alert';
+import { GithubSearchPullRequestsDataItem } from '../../types';
+import React, { useState } from 'react';
 
 import Skeleton from '@material-ui/lab/Skeleton';
 
@@ -113,18 +107,6 @@ type PullRequestItemProps = {
 const PullRequestItem = (props: PullRequestItemProps) => {
   const { pr } = props;
   const classes = useStyles();
-  const {
-    value: repoData,
-    error,
-    loading,
-  }: {
-    value?: GithubRepositoryData;
-    error?: Error;
-    loading: boolean;
-  } = useGithubRepositoryData(pr.repositoryUrl);
-
-  if (loading) return <SkeletonPullRequestItem />;
-  if (error) return <Alert severity="error">{error.message}</Alert>;
 
   return (
     <Grid container item spacing={0} className={classes.pullRequestRow} xs={12}>
@@ -133,34 +115,30 @@ const PullRequestItem = (props: PullRequestItemProps) => {
       </Grid>
       <Grid item xs={10} className={classes.middleColumn}>
         <Typography variant="body1" noWrap className={classes.title}>
-          {loading ? (
-            <Skeleton variant="text" />
-          ) : (
-            <>
-              {repoData ? (
-                <Link
-                  className={`${classes.secondaryText} ${classes.link}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  underline="none"
-                  href={repoData.htmlUrl}
-                >
-                  {repoData.fullName}
-                </Link>
-              ) : (
-                <></>
-              )}
-              <Link
-                className={classes.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="none"
-                href={pr.pullRequest.htmlUrl}
-              >
-                {pr.title}
-              </Link>
-            </>
-          )}
+          <>
+            <Link
+              className={`${classes.secondaryText} ${classes.link}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={pr.htmlUrl}
+            >
+              {new URL(pr.repositoryUrl).pathname
+                .split('/')
+                .filter(Boolean)
+                .slice(1, 3)
+                .join('/')}
+            </Link>
+            <Link
+              className={classes.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="none"
+              href={pr.pullRequest.htmlUrl}
+            >
+              {pr.title}
+            </Link>
+          </>
         </Typography>
         <Typography variant="caption" className={classes.secondaryText}>
           #{pr.number} opened by{' '}
@@ -212,6 +190,9 @@ type PullRequestListViewProps = {
 export const PullRequestsListView = (props: PullRequestListViewProps) => {
   const { data, emptyStateText } = props;
   const classes = useStyles();
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   if (!data || data.length < 1) {
     return (
       <Grid
@@ -230,11 +211,42 @@ export const PullRequestsListView = (props: PullRequestListViewProps) => {
       </Grid>
     );
   }
+
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedData = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
+
   return (
     <Grid container className={classes.container} spacing={1}>
-      {data.map(pr => (
+      {paginatedData.map(pr => (
         <PullRequestItem pr={pr} key={pr.id} />
       ))}
+      <Grid item xs={12}>
+        <TablePagination
+          component="div"
+          count={data.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Grid>
     </Grid>
   );
 };

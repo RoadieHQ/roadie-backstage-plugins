@@ -44,7 +44,7 @@ export type PullRequestStatsCount = {
 };
 export type PullRequestStatsData = {
   createdAt: string;
-  firstCommitAt: string;
+  firstCommitAt: string | null;
   closedAt: string | null;
   pullRequest: {
     mergedAt: string | null;
@@ -60,10 +60,13 @@ function calculateStatistics(pullRequestsData: PullRequestStatsData[]) {
         ? new Date(curr.pullRequest.mergedAt).getTime() -
           new Date(curr.createdAt).getTime()
         : 0;
-      const avgCodingTime =
-        new Date(curr.createdAt).getTime() -
-        new Date(curr.firstCommitAt).getTime();
-      acc.avgCodingTime += avgCodingTime > 0 ? avgCodingTime : 0;
+      // Ignore PRs without any commit
+      if (curr.firstCommitAt) {
+        const avgCodingTime =
+          new Date(curr.createdAt).getTime() -
+          new Date(curr.firstCommitAt).getTime();
+        acc.avgCodingTime += avgCodingTime > 0 ? avgCodingTime : 0;
+      }
       acc.mergedCount += curr.pullRequest.mergedAt ? 1 : 0;
       acc.closedCount += curr.closedAt ? 1 : 0;
       acc.additions += curr.pullRequest.additions;
@@ -169,7 +172,7 @@ export function usePullRequestsStatistics({
           return {
             createdAt: pr.created_at,
             closedAt: pr.closed_at,
-            firstCommitAt: commitDate.firstCommitDate.toString(),
+            firstCommitAt: commitDate.firstCommitDate?.toString() ?? null,
             pullRequest: {
               mergedAt: pr.pull_request.merged_at,
               additions: repoData.additions,

@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { useProjectEntity } from '../../../hooks/useProjectEntity';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { MarkdownContent } from '../index';
@@ -24,7 +23,7 @@ import { useEntityGithubScmIntegration } from '../../../hooks/useEntityGithubScm
 
 const useStyles = makeStyles(theme => ({
   infoCard: {
-    marginBottom: theme.spacing(3),
+    marginBottom: '10px',
     '& + .MuiAlert-root': {
       marginTop: theme.spacing(3),
     },

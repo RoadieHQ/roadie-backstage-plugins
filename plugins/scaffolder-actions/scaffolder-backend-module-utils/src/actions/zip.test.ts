@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 import { PassThrough } from 'stream';
-import { getVoidLogger } from '@backstage/backend-common';
+import { mockServices } from '@backstage/backend-test-utils';
 import { createZipAction } from './zip';
 import mock from 'mock-fs';
 import fs from 'fs-extra';
 
-const mockLogger = getVoidLogger();
+const mockLogger = mockServices.logger.mock();
 mockLogger.error = jest.fn();
 
 describe('roadiehq:utils:zip', () => {
@@ -27,7 +27,7 @@ describe('roadiehq:utils:zip', () => {
     task: {
       id: 'task-id',
     },
-    logger: getVoidLogger(),
+    logger: mockServices.logger.mock(),
     logStream: new PassThrough(),
     output: jest.fn(),
     createTemporaryDirectory: jest.fn(),

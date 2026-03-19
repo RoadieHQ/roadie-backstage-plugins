@@ -1,0 +1,143 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: replace-in-file-demo
+  title: Replace In File Action Demo
+  description: Demonstrates the roadiehq:utils:fs:replace action with string and regex replacement
+  tags:
+    - demo
+    - fs
+    - replace
+    - regex
+spec:
+  owner: platform-team
+  type: demo
+
+  parameters:
+    - title: Replacement Configuration
+      required:
+        - replaceType
+        - findText
+        - replaceText
+      properties:
+        replaceType:
+          title: Replacement Type
+          type: string
+          description: Choose between simple string or regex replacement
+          enum:
+            - string
+            - regex
+          enumNames:
+            - 'Simple String Replace'
+            - 'Regex Pattern Replace'
+          default: string
+        findText:
+          title: Text to Find
+          type: string
+          description: Text or regex pattern to find and replace
+          default: placeholder-value
+        replaceText:
+          title: Replace With
+          type: string
+          description: Text to replace the found content with
+          default: actual-value
+
+  steps:
+    - id: create-sample-files
+      name: Create Sample Files
+      action: roadiehq:utils:fs:write
+      input:
+        path: config/app.json
+        content: |
+          {
+            "app": {
+              "name": "placeholder-value",
+              "version": "placeholder-value",
+              "environment": "placeholder-value"
+            }
+          }
+
+    - id: create-env-file
+      name: Create Environment File
+      action: roadiehq:utils:fs:write
+      input:
+        path: .env
+        content: |
+          APP_NAME=placeholder-value
+          APP_VERSION=placeholder-value
+          DATABASE_URL=placeholder-value
+          API_KEY=placeholder-value
+
+    - id: create-readme
+      name: Create README
+      action: roadiehq:utils:fs:write
+      input:
+        path: README.md
+        content: |
+          # placeholder-value Application
+
+          Version: placeholder-value
+
+          ## Configuration
+
+          This app uses placeholder-value for configuration.
+
+    - id: replace-string
+      name: Replace String Values
+      if: ${{ parameters.replaceType === 'string' }}
+      action: roadiehq:utils:fs:replace
+      input:
+        files:
+          - file: '**/*.json'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: false
+            includeDotFiles: false
+          - file: '**/*.env'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: false
+            includeDotFiles: true
+          - file: '**/*.md'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: false
+            includeDotFiles: false
+
+    - id: replace-regex
+      name: Replace with Regex
+      if: ${{ parameters.replaceType === 'regex' }}
+      action: roadiehq:utils:fs:replace
+      input:
+        files:
+          - file: '**/*.json'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: true
+            includeDotFiles: false
+          - file: '**/*.env'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: true
+            includeDotFiles: true
+          - file: '**/*.md'
+            find: ${{ parameters.findText }}
+            replaceWith: ${{ parameters.replaceText }}
+            matchRegex: true
+            includeDotFiles: false
+
+  output:
+    text:
+      - title: Replacement Complete
+        content: |
+          Successfully replaced content using **${{ parameters.replaceType }}** mode!
+
+          **Pattern:** `${{ parameters.findText }}`
+          **Replaced with:** `${{ parameters.replaceText }}`
+
+          Features demonstrated:
+          - Wildcard file matching
+          - String and regex replacement
+          - Include/exclude dotfiles
+          - Bulk file processing
+          - Multi-file operations

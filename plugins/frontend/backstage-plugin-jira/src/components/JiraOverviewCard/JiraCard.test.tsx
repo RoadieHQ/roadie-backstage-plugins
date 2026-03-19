@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import React from 'react';
 import { UrlPatternDiscovery } from '@backstage/core-app-api';
 import { AnyApiRef } from '@backstage/core-plugin-api';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
@@ -60,7 +59,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.json(projectResponseStub)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
@@ -106,7 +105,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.json(projectResponseStub)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.json(searchResponseStub)),
       ),
       rest.get(
@@ -152,7 +151,7 @@ describe('JiraCard', () => {
         (_, res, ctx) => res(ctx.status(403)),
       ),
       rest.post(
-        'http://exampleapi.com/jira/api/rest/api/latest/search',
+        'http://exampleapi.com/jira/api/rest/api/latest/search/jql',
         (_, res, ctx) => res(ctx.status(403)),
       ),
       rest.get(

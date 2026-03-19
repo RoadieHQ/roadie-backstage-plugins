@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import {
   Typography,
   Grid,
