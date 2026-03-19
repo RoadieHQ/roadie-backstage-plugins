@@ -1,3 +1,27 @@
+export const entityWithReferrerPolicyAnnotation = {
+  entity: {
+    metadata: {
+      namespace: 'default',
+      annotations: {
+        'datadoghq.com/dashboard-url':
+          'https://p.datadoghq.eu/sb/0btd7eqqecs1876r-bffe383395de51ae6fe70257da1e547f',
+        'datadoghq.com/referrer-policy': 'strict-origin-when-cross-origin',
+      },
+      name: 'sample-service',
+      uid: 'e8a73cc9-21d4-449e-b97a-5d3ce0b21323',
+      etag: 'ZmJkOGVkYjktMDM1ZS00YWIzLTkxMWQtMjI5MDk3N2I5M2Rm',
+      generation: 1,
+    },
+    apiVersion: 'backstage.io/v1alpha1',
+    kind: 'Component',
+    spec: {
+      type: 'service',
+      owner: 'david@roadie.io',
+      lifecycle: 'experimental',
+    },
+  },
+};
+
 export const entityWithDatadogAnnotations = {
   entity: {
     metadata: {
