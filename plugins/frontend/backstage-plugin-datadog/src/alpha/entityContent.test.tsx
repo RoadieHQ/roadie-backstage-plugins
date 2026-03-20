@@ -7,7 +7,11 @@ import {
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { entityDatadogContent } from './entityContent';
 import { DatadogApi, datadogApiRef } from '../api';
-import { entityWithDatadogAnnotations } from '../mocks/mocks';
+import {
+  entityWithDatadogAnnotations,
+  entityWithReferrerPolicyAnnotation,
+} from '../mocks/mocks';
+import { DatadogDashboardPage } from '../components/DatadogDashboardPage';
 
 describe('Entity content extensions', () => {
   const mockDatadogApi = {
@@ -30,5 +34,20 @@ describe('Entity content extensions', () => {
       },
       { timeout: 5000 },
     );
+  });
+
+  it('should apply referrerPolicy from entity annotation to the iframe', async () => {
+    renderInTestApp(
+      <DatadogDashboardPage
+        entity={entityWithReferrerPolicyAnnotation.entity}
+      />,
+    );
+    await waitFor(() => {
+      const iframe = screen.getByTitle('dashboard');
+      expect(iframe).toHaveAttribute(
+        'referrerpolicy',
+        'strict-origin-when-cross-origin',
+      );
+    });
   });
 });
