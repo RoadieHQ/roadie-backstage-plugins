@@ -21,8 +21,13 @@ import { useDatadogAppData } from './useDatadogAppData';
 import { Resizable } from 're-resizable';
 import ZoomOutMapIcon from '@material-ui/icons/ZoomOutMap';
 
-export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
-  const { dashboardUrl } = useDatadogAppData({ entity });
+export const DatadogDashboardPage = ({
+  entity,
+}: {
+  entity: Entity;
+  referrerPolicy?: ReferrerPolicy;
+}) => {
+  const { dashboardUrl, referrerPolicy } = useDatadogAppData({ entity });
   const allDashboardUrls = dashboardUrl.split(',');
   return (
     <Grid container spacing={3}>
@@ -44,6 +49,7 @@ export const DatadogDashboardPage = ({ entity }: { entity: Entity }) => {
               <iframe
                 title="dashboard"
                 src={`${value}`}
+                referrerPolicy={referrerPolicy}
                 style={{
                   border: 'none',
                   height: '100%',

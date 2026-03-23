@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.7.0
+
+### Minor Changes
+
+- 8df5ef0: Add support for configuring iframe referrerPolicy via entity annotation datadoghq.com/referrer-policy
+
 ## 2.6.0
 
 ### Minor Changes

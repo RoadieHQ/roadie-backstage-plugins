@@ -20,6 +20,8 @@ export const DATADOG_ANNOTATION_DASHBOARD_URL = 'datadoghq.com/dashboard-url';
 export const DATADOG_ANNOTATION_GRAPH_TOKEN = 'datadoghq.com/graph-token';
 export const DATADOG_ANNOTATION_GRAPH_SIZE = 'datadoghq.com/graph-size';
 export const DATADOG_ANNOTATION_SITE = 'datadoghq.com/site';
+export const DATADOG_ANNOTATION_REFERRER_POLICY =
+  'datadoghq.com/referrer-policy';
 
 export type GraphSize = 'small' | 'medium' | 'large' | 'x-large';
 
@@ -35,8 +37,12 @@ export const useDatadogAppData = ({ entity }: { entity: Entity }) => {
   const site: String =
     (entity?.metadata.annotations?.[DATADOG_ANNOTATION_SITE] as String) ??
     'datadoghq.eu';
+  const referrerPolicy: ReferrerPolicy =
+    (entity?.metadata.annotations?.[
+      DATADOG_ANNOTATION_REFERRER_POLICY
+    ] as ReferrerPolicy) ?? 'no-referrer-when-downgrade';
   if (!dashboardUrl && !graphToken) {
     throw new Error("'datadog' annotation is missing");
   }
-  return { dashboardUrl, graphToken, graphSize, site };
+  return { dashboardUrl, graphToken, graphSize, site, referrerPolicy };
 };
