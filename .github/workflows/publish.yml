@@ -108,6 +108,7 @@ jobs:
 
           yarn config set npmAuthToken '${NODE_AUTH_TOKEN}'
           yarn config set npmScopes.roadiehq.npmRegistryServer "https://registry.npmjs.org"
+          yarn config set npmScopes.roadiehq.npmPublishRegistry "https://registry.npmjs.org"
           yarn config set npmScopes.roadiehq.npmAlwaysAuth true
 
           yarn workspaces foreach --all --jobs 1 --parallel --no-private npm publish --tolerate-republish
