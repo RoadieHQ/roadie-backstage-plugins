@@ -99,10 +99,12 @@ export function createHttpBackstageAction(options: {
     async handler(ctx) {
       const { input } = ctx;
       const pluginId = getPluginId(input.path);
-      const { token } = (await auth?.getPluginRequestToken({
-        onBehalfOf: await ctx.getInitiatorCredentials(),
-        targetPluginId: pluginId,
-      })) ?? { token: ctx.secrets?.backstageToken };
+      const { token } = ctx.secrets?.backstageToken
+        ? { token: ctx.secrets.backstageToken }
+        : (await auth?.getPluginRequestToken({
+            onBehalfOf: await ctx.getInitiatorCredentials(),
+            targetPluginId: pluginId,
+          })) ?? {};
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
       const continueOnBadResponse = input.continueOnBadResponse || false;
