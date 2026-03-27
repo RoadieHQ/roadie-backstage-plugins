@@ -517,7 +517,11 @@ export class ArgoService implements ArgoServiceApi {
             },
             limit: 10,
           },
-          syncOptions: ['CreateNamespace=false', 'FailOnSharedResource=true'],
+          syncOptions: [
+            'CreateNamespace=false',
+            'FailOnSharedResource=true',
+            `ServerSideApply=true`,
+          ],
         },
       },
     };
