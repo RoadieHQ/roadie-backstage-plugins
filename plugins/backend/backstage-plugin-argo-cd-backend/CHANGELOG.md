@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.7.1
+
+### Patch Changes
+
+- bc6bf9b: release
+
 ## 4.7.0
 
 ### Minor Changes
