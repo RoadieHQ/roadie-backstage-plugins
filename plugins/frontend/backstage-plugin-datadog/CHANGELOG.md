@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.7.1
+
+### Patch Changes
+
+- bc6bf9b: release
+
 ## 2.7.0
 
 ### Minor Changes
