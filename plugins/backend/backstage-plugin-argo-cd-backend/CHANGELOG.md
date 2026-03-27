@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.7.0
+
+### Minor Changes
+
+- ef550fe: Add server-side apply support to ArgoCD sync options
+
 ## 4.6.0
 
 ### Minor Changes
