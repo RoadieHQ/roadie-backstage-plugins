@@ -169,10 +169,13 @@ app:
   # ...
   extensions:
     # ...
-    - entity-card:github-insights/compliance:
+    - entity-card:code-insights/compliance:
         config:
           filter:
             kind: component
+    - entity-card:code-insights/readme:
+        config:
+          maxHeight: 350
 # ...
 ```
 

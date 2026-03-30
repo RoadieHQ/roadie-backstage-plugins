@@ -75,11 +75,20 @@ const githubInsightsLanguagesEntityCard = EntityCardBlueprint.make({
   },
 });
 
-const githubInsightsReadmeEntityCard = EntityCardBlueprint.make({
+const githubInsightsReadmeEntityCard = EntityCardBlueprint.makeWithOverrides({
   name: 'readme',
-  params: {
-    filter: isGithubInsightsAvailable,
-    loader: () => import('./components/Widgets').then(m => <m.ReadMeCard />),
+  config: {
+    schema: {
+      maxHeight: z => z.number().optional(),
+      title: z => z.string().optional(),
+    },
+  },
+  factory(originalFactory, { config }) {
+    return originalFactory({
+      filter: isGithubInsightsAvailable,
+      loader: async () =>
+        import('./components/Widgets').then(m => <m.ReadMeCard {...config} />),
+    });
   },
 });
 
