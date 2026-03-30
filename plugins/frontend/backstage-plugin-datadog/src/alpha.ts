@@ -1,8 +1,5 @@
 import { convertLegacyRouteRefs } from '@backstage/core-compat-api';
-import {
-  FrontendPlugin,
-  createFrontendPlugin,
-} from '@backstage/frontend-plugin-api';
+import { createFrontendPlugin } from '@backstage/frontend-plugin-api';
 import { entityContentRouteRef } from './plugin';
 import {
   datadogApi,
@@ -13,7 +10,7 @@ import {
 /**
  * @alpha
  */
-const plugin: FrontendPlugin = createFrontendPlugin({
+export default createFrontendPlugin({
   pluginId: 'datadog',
   // bind all the extensions to the plugin
   extensions: [datadogApi, entityDatadogContent, entityDatadogGraphCard],
@@ -22,5 +19,3 @@ const plugin: FrontendPlugin = createFrontendPlugin({
     entityContent: entityContentRouteRef,
   }),
 });
-
-export default plugin;
