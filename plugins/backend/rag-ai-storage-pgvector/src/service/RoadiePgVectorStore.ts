@@ -42,12 +42,12 @@ export interface RoadiePgVectorStoreConfig {
  * A class representing a vector store that uses PostgreSQL as the backend.
  */
 export class RoadiePgVectorStore implements RoadieVectorStore {
-  private readonly tableName: string = 'embeddings';
-  private readonly client: Knex;
-  private readonly chunkSize;
-  private readonly amount;
-  private embeddings?: Embeddings;
-  private readonly logger: LoggerService;
+  protected readonly tableName: string = 'embeddings';
+  protected readonly client: Knex;
+  protected readonly chunkSize;
+  protected readonly amount;
+  protected embeddings?: Embeddings;
+  protected readonly logger: LoggerService;
 
   /**
    * Initializes the RoadiePgVectorStore.
@@ -70,7 +70,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @param {Object} config.logger - The logger object for logging.
    * @param {number} [config.chunkSize=500] - The size of chunks for processing.
    */
-  private constructor(config: RoadiePgVectorStoreConfig) {
+  protected constructor(config: RoadiePgVectorStoreConfig) {
     this.client = config.db;
     this.logger = config.logger;
     this.chunkSize = config.chunkSize ?? 500;
@@ -113,7 +113,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @return {Promise<void>} - A promise that resolves when the vectors are added successfully.
    * @throws {Error} - If there is an error inserting the vectors.
    */
-  private async addVectors(
+  protected async addVectors(
     vectors: number[][],
     documents: EmbeddingDoc[],
   ): Promise<void> {
@@ -143,7 +143,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @param {string[]} ids - The array of ids of the records to be deleted.
    * @returns {Promise<void>} - A promise that resolves when the deletion is complete.
    */
-  private async deleteById(ids: string[]) {
+  protected async deleteById(ids: string[]) {
     await this.table().delete().whereIn('id', ids);
   }
 
@@ -153,7 +153,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @param {EmbeddingDocMetadata} filter - The filter to apply for deletion.
    * @returns {Promise} - A Promise that resolves when the deletion is complete.
    */
-  private async deleteByFilter(filter: EmbeddingDocMetadata) {
+  protected async deleteByFilter(filter: EmbeddingDocMetadata) {
     const queryString = `
       DELETE FROM ${this.tableName}
       WHERE metadata::jsonb @> :filter
@@ -205,7 +205,7 @@ export class RoadiePgVectorStore implements RoadieVectorStore {
    * @returns {Promise<[EmbeddingDoc, number][]>} - An array of document similarity results, where each
    * result is a tuple containing the document and its similarity score.
    */
-  private async similaritySearchVectorWithScore(
+  protected async similaritySearchVectorWithScore(
     query: number[],
     amount: number,
     filter?: EmbeddingDocMetadata,

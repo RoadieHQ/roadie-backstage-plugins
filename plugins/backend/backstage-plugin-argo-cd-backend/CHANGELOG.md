@@ -1,5 +1,29 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.7.1
+
+### Patch Changes
+
+- bc6bf9b: release
+
+## 4.7.0
+
+### Minor Changes
+
+- ef550fe: Add server-side apply support to ArgoCD sync options
+
+## 4.6.0
+
+### Minor Changes
+
+- a1dcd5a: Support prefixes for argoCD instances on backstage-plugin-argo-cd-backend
+
+## 4.5.1
+
+### Patch Changes
+
+- 7cda430: Match the instance name from findArgoApp results with the actual configured instance from this.instanceConfigs before calling getArgoToken():
+
 ## 4.5.0
 
 ### Minor Changes

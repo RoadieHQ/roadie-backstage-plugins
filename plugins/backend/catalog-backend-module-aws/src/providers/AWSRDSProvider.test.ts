@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
-import { RDS, DescribeDBInstancesCommand } from '@aws-sdk/client-rds';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { DescribeDBInstancesCommand, RDS } from '@aws-sdk/client-rds';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { AWSRDSProvider } from './AWSRDSProvider';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { ANNOTATION_AWS_RDS_INSTANCE_ARN } from '../annotations';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+
+import { AWSRDSProvider } from './AWSRDSProvider';
+import template from './AWSRDSProvider.example.yaml.njk';
 
 const rds = mockClient(RDS);
 const sts = mockClient(STS);
@@ -101,42 +102,12 @@ describe('AWSRDSProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSRDSProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSRDSProvider.fromConfig(config, { logger, template });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-rds-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                type: 'rds-instance',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-database-instance',
-                title: 'my-database-instance',
-                dbInstanceClass: 'db.t3.micro',
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]:
-                    'arn:aws:rds:eu-west-1:123456789012:db:my-database-instance',
-                  'backstage.io/managed-by-location':
-                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://console.aws.amazon.com/rds/home?region=eu-west-1#database:id=my-database-instance',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates DB instance', async () => {
@@ -147,51 +118,33 @@ describe('AWSRDSProvider', () => {
       const provider = AWSRDSProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-rds-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'rds-instance',
-              },
-              metadata: expect.objectContaining({
-                name: 'my-database-instance',
-                title: 'my-database-instance',
-                dbInstanceClass: 'db.t3.micro',
-                dbEngine: 'mysql',
-                dbEngineVersion: '8.0.35',
-                allocatedStorage: 20,
-                preferredMaintenanceWindow: 'sun:03:00-sun:04:00',
-                preferredBackupWindow: '02:00-03:00',
-                backupRetentionPeriod: 7,
-                isMultiAz: false,
-                automaticMinorVersionUpgrade: true,
-                isPubliclyAccessible: false,
-                storageType: 'gp2',
-                isPerformanceInsightsEnabled: false,
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_AWS_RDS_INSTANCE_ARN]:
-                    'arn:aws:rds:eu-west-1:123456789012:db:my-database-instance',
-                  'backstage.io/managed-by-location':
-                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-rds-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/view-url':
-                    'https://console.aws.amazon.com/rds/home?region=eu-west-1#database:id=my-database-instance',
-                }),
-              }),
-            }),
-          }),
-        ],
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSRDSProvider.fromConfig(config, {
+        logger,
+        taskRunner,
       });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 
@@ -356,7 +309,7 @@ describe('AWSRDSProvider', () => {
                 storageType: 'gp3',
                 isPerformanceInsightsEnabled: false,
                 labels: {
-                  Name: 'My Production Database',
+                  Name: 'My-Production-Database',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({
@@ -422,15 +375,15 @@ describe('AWSRDSProvider', () => {
                 dbInstanceClass: 'db.t3.micro',
                 dbEngine: 'mysql',
                 dbEngineVersion: '8.0.35',
-                allocatedStorage: undefined,
-                preferredMaintenanceWindow: undefined,
-                preferredBackupWindow: undefined,
-                backupRetentionPeriod: undefined,
-                isMultiAz: undefined,
-                automaticMinorVersionUpgrade: undefined,
-                isPubliclyAccessible: undefined,
-                storageType: undefined,
-                isPerformanceInsightsEnabled: undefined,
+                allocatedStorage: null,
+                preferredMaintenanceWindow: null,
+                preferredBackupWindow: null,
+                backupRetentionPeriod: null,
+                isMultiAz: null,
+                automaticMinorVersionUpgrade: null,
+                isPubliclyAccessible: null,
+                storageType: null,
+                isPerformanceInsightsEnabled: null,
                 labels: {},
                 annotations: expect.objectContaining({
                   [ANNOTATION_AWS_RDS_INSTANCE_ARN]:

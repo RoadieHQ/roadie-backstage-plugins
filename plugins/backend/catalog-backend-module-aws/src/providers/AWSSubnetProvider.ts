@@ -14,55 +14,43 @@
  * limitations under the License.
  */
 
-import { CatalogApi } from '@backstage/catalog-client';
-import { Config } from '@backstage/config';
-import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
-import { LoggerService } from '@backstage/backend-plugin-api';
-import type { Logger } from 'winston';
-import { EC2 } from '@aws-sdk/client-ec2';
-import { AWSEntityProvider } from './AWSEntityProvider';
-import {
-  LabelValueMapper,
-  ownerFromTags,
-  relationshipsFromTags,
-} from '../utils/tags';
-import { DynamicAccountConfig } from '../types';
-import { ARN } from 'link2aws';
-import { duration } from '../utils/timer';
+import { EC2, Subnet } from '@aws-sdk/client-ec2';
 import { DescribeSubnetsCommandOutput } from '@aws-sdk/client-ec2/dist-types/commands/DescribeSubnetsCommand';
+import { ANNOTATION_VIEW_URL, Entity } from '@backstage/catalog-model';
+import { ARN } from 'link2aws';
+
+import { DynamicAccountConfig } from '../types';
+import { duration } from '../utils/timer';
+
+import { AWSEntityProvider } from './AWSEntityProvider';
+import defaultTemplate from './AWSSubnetProvider.default.yaml.njk';
 
 const ANNOTATION_SUBNET_ID = 'amazonaws.com/subnet-id';
 
 /**
  * Provides entities from AWS Subnets.
  */
-export class AWSSubnetProvider extends AWSEntityProvider {
-  static fromConfig(
-    config: Config,
-    options: {
-      logger: Logger | LoggerService;
-      template?: string;
-      catalogApi?: CatalogApi;
-      providerId?: string;
-      ownerTag?: string;
-      useTemporaryCredentials?: boolean;
-      labelValueMapper?: LabelValueMapper;
-    },
-  ) {
-    const accountId = config.getString('accountId');
-    const roleName = config.getString('roleName');
-    const roleArn = config.getOptionalString('roleArn');
-    const externalId = config.getOptionalString('externalId');
-    const region = config.getString('region');
-
-    return new AWSSubnetProvider(
-      { accountId, roleName, roleArn, externalId, region },
-      options,
-    );
-  }
-
+export class AWSSubnetProvider extends AWSEntityProvider<Subnet> {
   getProviderName(): string {
     return `aws-subnet-provider-${this.providerId ?? 0}`;
+  }
+
+  protected getDefaultTemplate(): string {
+    return defaultTemplate;
+  }
+
+  protected getResourceAnnotations(
+    resource: Subnet,
+    context: { region: string; accountId: string },
+  ): Record<string, string> {
+    const { region, accountId } = context;
+    const subnetId = resource.SubnetId;
+    const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
+    const consoleLink = new ARN(arn).consoleLink;
+    return {
+      [ANNOTATION_VIEW_URL]: consoleLink.toString(),
+      [ANNOTATION_SUBNET_ID]: subnetId!,
+    };
   }
 
   private async getEc2(dynamicAccountConfig?: DynamicAccountConfig) {
@@ -81,16 +69,21 @@ export class AWSSubnetProvider extends AWSEntityProvider {
     }
     const startTimestamp = process.hrtime();
 
-    const { region, accountId } = this.getParsedConfig(dynamicAccountConfig);
-    const groups = await this.getGroups();
+    const parsedConfig = this.getParsedConfig(dynamicAccountConfig);
+    const { accountId } = parsedConfig;
 
     this.logger.info(`Providing subnet resources from aws: ${accountId}`);
-    const entities: Entity[] = [];
+    const subnetResources: Array<Promise<Entity>> = [];
 
     const ec2 = await this.getEc2(dynamicAccountConfig);
-    const defaultAnnotations = await this.buildDefaultAnnotations(
-      dynamicAccountConfig,
-    );
+
+    const template = this.template.child({
+      groups: await this.getGroups(),
+      defaultAnnotations: await this.buildDefaultAnnotations(
+        dynamicAccountConfig,
+      ),
+      ...parsedConfig,
+    });
 
     let nextToken: string | undefined = undefined;
     do {
@@ -98,58 +91,30 @@ export class AWSSubnetProvider extends AWSEntityProvider {
         NextToken: nextToken,
       });
 
+      if (!subnets) {
+        break;
+      }
+
       for (const subnet of subnets.Subnets || []) {
         const subnetId = subnet.SubnetId;
         if (!subnetId) continue;
 
-        const arn = `arn:aws:ec2:${region}:${accountId}:subnet/${subnetId}`;
-        const consoleLink = new ARN(arn).consoleLink;
+        const tags = subnet.Tags ?? [];
 
-        let entity = this.renderEntity(
-          { data: subnet },
-          { defaultAnnotations },
+        subnetResources.push(
+          template.render({
+            data: subnet,
+            tags,
+          }),
         );
-        if (!entity) {
-          entity = {
-            kind: 'Resource',
-            apiVersion: 'backstage.io/v1beta1',
-            metadata: {
-              annotations: {
-                ...defaultAnnotations,
-                [ANNOTATION_VIEW_URL]: consoleLink,
-                [ANNOTATION_SUBNET_ID]: subnetId,
-              },
-              labels: this.labelsFromTags(subnet.Tags),
-              name: subnetId,
-              cidrBlock: subnet.CidrBlock,
-              vpcId: subnet.VpcId,
-              availabilityZone: subnet.AvailabilityZone,
-              availableIpAddressCount: subnet.AvailableIpAddressCount,
-              defaultForAz: subnet.DefaultForAz ? 'Yes' : 'No',
-              mapPublicIpOnLaunch: subnet.MapPublicIpOnLaunch ? 'Yes' : 'No',
-              state: subnet.State,
-            },
-            spec: {
-              owner: ownerFromTags(subnet.Tags, this.getOwnerTag(), groups),
-              ...relationshipsFromTags(subnet.Tags),
-              type: 'subnet',
-            },
-          };
-        }
-
-        entities.push(entity);
       }
 
       nextToken = subnets.NextToken;
     } while (nextToken);
 
-    await this.connection.applyMutation({
-      type: 'full',
-      entities: entities.map(entity => ({
-        entity,
-        locationKey: this.getProviderName(),
-      })),
-    });
+    const entities = await Promise.all(subnetResources);
+
+    await this.applyMutation(entities);
 
     this.logger.info(
       `Finished providing ${entities.length} Subnet resources from AWS: ${accountId}`,

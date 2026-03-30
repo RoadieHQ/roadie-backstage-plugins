@@ -1,5 +1,23 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.6.3
+
+### Patch Changes
+
+- 7e4a3c4: Add pagination support in PullRequestsListView component
+
+## 3.6.2
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
+## 3.6.1
+
+### Patch Changes
+
+- a04a7f6: Move `msw` from production dependencies to dev dependencies.
+
 ## 3.6.0
 
 ### Minor Changes

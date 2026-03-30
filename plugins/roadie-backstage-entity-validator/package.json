@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/roadie-backstage-entity-validator",
-  "version": "2.8.0",
+  "version": "2.8.3",
   "author": "RoadieHQ",
   "description": "Backstage entity validator library",
   "main": "src/index.js",
@@ -17,7 +17,7 @@
   "publishConfig": {
     "access": "public",
     "main": "dist/index.cjs.js",
-    "types": "types.d.ts"
+    "types": "dist/index.d.ts"
   },
   "backstage": {
     "role": "node-library"
@@ -42,8 +42,7 @@
     "@backstage/plugin-scaffolder-common": "^1.7.2",
     "ajv": "^8.4.0",
     "ajv-formats": "^2.1.0",
-    "glob": "^7.1.7",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "memfs": "^4.7.7",
     "minimist": "^1.2.5"
   },

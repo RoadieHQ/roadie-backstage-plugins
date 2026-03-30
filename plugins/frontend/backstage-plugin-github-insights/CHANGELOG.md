@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.4.1
+
+### Patch Changes
+
+- e6f6e0e: Update `git-url-parse` in package deps.
+
 ## 3.4.0
 
 ### Minor Changes

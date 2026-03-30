@@ -145,14 +145,14 @@ describe('GleanIndexClient', () => {
           'foo/index.html',
         ),
       ).toEqual({
-        id: 'default/component/some-handbook-with-url-ref/foo/index.html',
+        id: 'default/component/some-handbook-with-url-ref/31749e35d9e7',
         title: 'Engineering Handbook',
         container: 'default/component/some-handbook-with-url-ref',
         datasource: 'I-am-a-datasource',
         viewURL:
           'http://localhost/docs/default/component/some-handbook-with-url-ref/foo',
         body: {
-          mimeType: 'HTML',
+          mimeType: 'text/html',
           textContent: expect.stringContaining(
             "Welcome to Company's Engineering Handbook!",
           ),
@@ -165,13 +165,13 @@ describe('GleanIndexClient', () => {
 
   describe('batchIndexTechDocs', () => {
     const mockDocument: GleanDocument = {
-      id: 'default/component/some-handbook/document-1' as DocumentId,
+      id: 'default/component/some-handbook/123456789abc' as DocumentId,
       title: 'I am a document',
       container: 'default/component/some-handbook' as EntityUri,
       datasource: 'I-am-a-datasource',
       viewURL: 'http://backstage.w10e.com',
       body: {
-        mimeType: 'HTML',
+        mimeType: 'text/html',
         textContent: 'I am some text content',
       },
       updatedAt: 1652818028,

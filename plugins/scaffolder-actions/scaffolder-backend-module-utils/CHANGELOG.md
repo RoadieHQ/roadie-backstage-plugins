@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.1.2
+
+### Patch Changes
+
+- 1993e9e: Fixed bug in roadiehq:utils:fs:replace where no files were found when running on Windows
+
 ## 4.1.1
 
 ### Patch Changes

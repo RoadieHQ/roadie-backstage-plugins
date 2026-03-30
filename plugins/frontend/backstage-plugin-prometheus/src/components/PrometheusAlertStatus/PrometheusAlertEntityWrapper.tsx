@@ -30,11 +30,13 @@ export const PrometheusAlertEntityWrapper = ({
   onRowClick,
   showAnnotations = true,
   showLabels = true,
+  showInactiveAlerts = false,
 }: {
   extraColumns?: TableColumn<PrometheusDisplayableAlert>[];
   onRowClick?: OnRowClick;
   showAnnotations?: boolean;
   showLabels?: boolean;
+  showInactiveAlerts?: boolean;
 }) => {
   const { entity } = useEntity();
   const alertContent = isPrometheusAlertAvailable(entity);
@@ -57,6 +59,7 @@ export const PrometheusAlertEntityWrapper = ({
       extraColumns={extraColumns}
       showAnnotations={showAnnotations}
       showLabels={showLabels}
+      showInactiveAlerts={showInactiveAlerts}
     />
   ) : (
     <PrometheusAlertStatus
@@ -65,6 +68,7 @@ export const PrometheusAlertEntityWrapper = ({
       extraColumns={extraColumns}
       showAnnotations={showAnnotations}
       showLabels={showLabels}
+      showInactiveAlerts={showInactiveAlerts}
     />
   );
 };

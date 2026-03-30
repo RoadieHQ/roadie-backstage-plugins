@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-prometheus
 
+## 3.3.0
+
+### Minor Changes
+
+- c4c0360: Add an option to show inactive alerts and make the alert table paginated
+
 ## 3.2.0
 
 ### Minor Changes

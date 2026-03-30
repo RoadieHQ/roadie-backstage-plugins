@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { STS, GetCallerIdentityCommand } from '@aws-sdk/client-sts';
 import {
-  EC2,
   DescribeSubnetsCommand,
   DescribeSubnetsCommandOutput,
+  EC2,
 } from '@aws-sdk/client-ec2';
-import { mockClient } from 'aws-sdk-client-mock';
-import { createLogger, transports } from 'winston';
+import { GetCallerIdentityCommand, STS } from '@aws-sdk/client-sts';
+import { SchedulerServiceTaskRunner } from '@backstage/backend-plugin-api';
+import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
+import { mockClient } from 'aws-sdk-client-mock';
+import { createLogger, transports } from 'winston';
+
 import { AWSSubnetProvider } from './AWSSubnetProvider';
-import { ANNOTATION_VIEW_URL } from '@backstage/catalog-model';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
+import template from './AWSSubnetProvider.example.yaml.njk';
 
 const ec2 = mockClient(EC2);
 const sts = mockClient(STS);
@@ -88,6 +88,10 @@ describe('AWSSubnetProvider', () => {
                 Key: 'Environment',
                 Value: 'production//staging',
               },
+              {
+                Key: 'owner',
+                Value: 'team-networking',
+              },
             ],
           },
         ],
@@ -100,50 +104,15 @@ describe('AWSSubnetProvider', () => {
         applyMutation: jest.fn(),
         refresh: jest.fn(),
       };
-      const template = readFileSync(
-        join(dirname(__filename), './AWSSubnetProvider.example.yaml.njs'),
-      ).toString();
       const provider = AWSSubnetProvider.fromConfig(config, {
         logger,
         template,
       });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-subnet-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              metadata: expect.objectContaining({
-                name: 'subnet-12345678',
-                cidrBlock: '10.0.1.0/24',
-                vpcId: 'vpc-12345678',
-                availabilityZone: 'eu-west-1a',
-                availableIpAddressCount: 251,
-                defaultForAz: false,
-                mapPublicIpOnLaunch: true,
-                state: 'available',
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_VIEW_URL]: expect.stringContaining(
-                    'console.aws.amazon.com',
-                  ),
-                  'amazonaws.com/subnet-id': 'subnet-12345678',
-                  'backstage.io/managed-by-location':
-                    'aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
-      });
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
     });
 
     it('creates subnet', async () => {
@@ -154,45 +123,33 @@ describe('AWSSubnetProvider', () => {
       const provider = AWSSubnetProvider.fromConfig(config, { logger });
       await provider.connect(entityProviderConnection);
       await provider.run();
-      expect(entityProviderConnection.applyMutation).toHaveBeenCalledWith({
-        type: 'full',
-        entities: [
-          expect.objectContaining({
-            locationKey: 'aws-subnet-provider-0',
-            entity: expect.objectContaining({
-              kind: 'Resource',
-              apiVersion: 'backstage.io/v1beta1',
-              spec: {
-                owner: 'unknown',
-                type: 'subnet',
-              },
-              metadata: expect.objectContaining({
-                name: 'subnet-12345678',
-                cidrBlock: '10.0.1.0/24',
-                vpcId: 'vpc-12345678',
-                availabilityZone: 'eu-west-1a',
-                availableIpAddressCount: 251,
-                defaultForAz: 'No',
-                mapPublicIpOnLaunch: 'Yes',
-                state: 'available',
-                labels: {
-                  Environment: 'production--staging',
-                },
-                annotations: expect.objectContaining({
-                  [ANNOTATION_VIEW_URL]: expect.stringContaining(
-                    'console.aws.amazon.com',
-                  ),
-                  'amazonaws.com/subnet-id': 'subnet-12345678',
-                  'backstage.io/managed-by-location':
-                    'aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1',
-                  'backstage.io/managed-by-origin-location':
-                    'aws-subnet-provider-0:arn:aws:iam::123456789012:role/role1',
-                }),
-              }),
-            }),
-          }),
-        ],
+      expect(
+        (entityProviderConnection.applyMutation as jest.Mock).mock.calls,
+      ).toMatchSnapshot();
+    });
+
+    it('should support the new backend system', async () => {
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const taskRunner: SchedulerServiceTaskRunner = {
+        run: jest.fn(async task => {
+          await task.fn({} as any);
+        }),
+      };
+      const provider = AWSSubnetProvider.fromConfig(config, {
+        logger,
+        taskRunner,
       });
+      await provider.connect(entityProviderConnection);
+      expect(taskRunner.run).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: provider.getProviderName(),
+          fn: expect.any(Function),
+        }),
+      );
+      expect(entityProviderConnection.applyMutation).toHaveBeenCalled();
     });
   });
 
@@ -255,7 +212,7 @@ describe('AWSSubnetProvider', () => {
                 mapPublicIpOnLaunch: 'No',
                 state: 'available',
                 labels: {
-                  Name: 'My Custom Subnet',
+                  Name: 'My-Custom-Subnet',
                   Team: 'backend-team',
                 },
                 annotations: expect.objectContaining({

@@ -1,5 +1,11 @@
 # @roadiehq/catalog-backend-module-okta
 
+## 1.3.1
+
+### Patch Changes
+
+- 4e2c77a: Updated docs on OAuth 2.0 Scoped Authentication
+
 ## 1.3.0
 
 ### Minor Changes

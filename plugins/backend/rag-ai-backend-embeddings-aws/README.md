@@ -51,6 +51,8 @@ ai:
       modelName: 'amazon.titan-embed-text-v1'
       # Maximum number of retries for the AWS SDK client
       maxRetries: 3
+      # Maximum number of concurrent requests for the AWS SDK client
+      maxConcurrency: 100
 ```
 
 ### AWS Credentials Configuration

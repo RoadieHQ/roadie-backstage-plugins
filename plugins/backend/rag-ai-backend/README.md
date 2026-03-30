@@ -78,6 +78,9 @@ ai:
       # (Optional) Maximum number of retries for the AWS SDK client
       maxRetries: 3
 
+      # (Optional) Maximum number of concurrent requests for the AWS SDK client
+      maxConcurrency: 100
+
       ## AWS Bedrock uses integration-aws-node package to configure credentials. See the package README for more info.
 
     # OpenAI Embeddings configuration
