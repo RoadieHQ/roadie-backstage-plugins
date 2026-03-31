@@ -404,7 +404,9 @@ describe('http:backstage:request', () => {
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
+            timeout: 60000,
             headers: { authorization: `Bearer ${BACKSTAGE_TOKEN}` },
+            body: undefined,
           },
           logger,
           false,
@@ -441,7 +443,9 @@ describe('http:backstage:request', () => {
           {
             url: 'http://backstage.tests/api/proxy/foo',
             method: 'GET',
+            timeout: 60000,
             headers: { authorization: 'Bearer plugin-token' },
+            body: undefined,
           },
           logger,
           false,
