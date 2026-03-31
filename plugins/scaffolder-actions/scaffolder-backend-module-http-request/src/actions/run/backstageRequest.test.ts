@@ -372,6 +372,81 @@ describe('http:backstage:request', () => {
       });
     });
 
+    describe('with useBackstageToken: true and auth service defined', () => {
+      it('should use backstageToken from secrets instead of plugin token exchange', async () => {
+        const BACKSTAGE_TOKEN = 'caller-token';
+        const mockAuth = {
+          getPluginRequestToken: jest
+            .fn()
+            .mockResolvedValue({ token: 'plugin-token' }),
+        };
+        const actionWithAuth = createHttpBackstageAction({
+          discovery,
+          auth: mockAuth as any,
+        });
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await actionWithAuth.handler({
+          ...mockContext,
+          secrets: { backstageToken: BACKSTAGE_TOKEN },
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+            useBackstageToken: true,
+          },
+        });
+        expect(mockAuth.getPluginRequestToken).not.toHaveBeenCalled();
+        expect(http).toHaveBeenCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: { authorization: `Bearer ${BACKSTAGE_TOKEN}` },
+          },
+          logger,
+          false,
+        );
+      });
+
+      it('should fall back to plugin token exchange when useBackstageToken is not set', async () => {
+        const mockAuth = {
+          getPluginRequestToken: jest
+            .fn()
+            .mockResolvedValue({ token: 'plugin-token' }),
+        };
+        const actionWithAuth = createHttpBackstageAction({
+          discovery,
+          auth: mockAuth as any,
+        });
+        (http as jest.Mock).mockReturnValue({
+          code: 200,
+          headers: {},
+          body: {},
+        });
+        await actionWithAuth.handler({
+          ...mockContext,
+          getInitiatorCredentials: jest.fn().mockResolvedValue({}),
+          secrets: { backstageToken: 'caller-token' },
+          input: {
+            path: '/api/proxy/foo',
+            method: 'GET',
+          },
+        });
+        expect(mockAuth.getPluginRequestToken).toHaveBeenCalled();
+        expect(http).toHaveBeenCalledWith(
+          {
+            url: 'http://backstage.tests/api/proxy/foo',
+            method: 'GET',
+            headers: { authorization: 'Bearer plugin-token' },
+          },
+          logger,
+          false,
+        );
+      });
+    });
+
     describe('with a token request', () => {
       it('should create a request', async () => {
         (http as jest.Mock).mockReturnValue({
