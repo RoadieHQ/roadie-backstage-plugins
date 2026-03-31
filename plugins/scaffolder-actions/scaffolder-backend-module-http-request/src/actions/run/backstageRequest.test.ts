@@ -395,9 +395,10 @@ describe('http:backstage:request', () => {
           input: {
             path: '/api/proxy/foo',
             method: 'GET',
+            timeout: 60000,
             useBackstageToken: true,
           },
-        });
+        } as any);
         expect(mockAuth.getPluginRequestToken).not.toHaveBeenCalled();
         expect(http).toHaveBeenCalledWith(
           {
@@ -432,8 +433,9 @@ describe('http:backstage:request', () => {
           input: {
             path: '/api/proxy/foo',
             method: 'GET',
+            timeout: 60000,
           },
-        });
+        } as any);
         expect(mockAuth.getPluginRequestToken).toHaveBeenCalled();
         expect(http).toHaveBeenCalledWith(
           {
