@@ -12444,6 +12444,7 @@ __metadata:
     "@backstage/core-components": "backstage:^"
     "@backstage/core-plugin-api": "backstage:^"
     "@backstage/dev-utils": "backstage:^"
+    "@backstage/frontend-plugin-api": "backstage:^"
     "@backstage/integration": "backstage:^"
     "@backstage/integration-react": "backstage:^"
     "@backstage/plugin-catalog-react": "backstage:^"
