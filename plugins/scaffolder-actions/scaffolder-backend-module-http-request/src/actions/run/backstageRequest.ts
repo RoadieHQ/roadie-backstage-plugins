@@ -91,7 +91,7 @@ export function createHttpBackstageAction(options: {
             .boolean()
             .optional()
             .describe(
-              "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly (e.g. proxy routes called from MCP tools).",
+              "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
             ),
       },
       output: {
