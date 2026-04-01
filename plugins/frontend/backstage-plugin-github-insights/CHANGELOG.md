@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.5.0
+
+### Minor Changes
+
+- 4347538: Allow passing maxHeight and title to readme card
+
 ## 3.4.1
 
 ### Patch Changes
