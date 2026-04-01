@@ -166,6 +166,21 @@ Headers
 00000010  62 61 72 22 3a 22 66 6f  6f 22 7d                 |bar":"foo"}|
 ```
 
+### Using `useBackstageToken`
+
+By default the action exchanges the task initiator's credentials for a plugin token. If you need the caller's token forwarded directly as the `Authorization` header instead, set `useBackstageToken: true`. Templates that omit this parameter are unaffected.
+
+```yaml
+steps:
+  - id: backstage_request
+    name: backstage request
+    action: http:backstage:request
+    input:
+      method: 'GET'
+      path: '/proxy/my-service/endpoint'
+      useBackstageToken: true
+```
+
 You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.
 
 ---
