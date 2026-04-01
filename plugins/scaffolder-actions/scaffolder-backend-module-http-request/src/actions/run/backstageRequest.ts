@@ -86,6 +86,13 @@ export function createHttpBackstageAction(options: {
             .optional()
             .describe('Timeout for the request (milliseconds)')
             .default(60000),
+        useBackstageToken: z =>
+          z
+            .boolean()
+            .optional()
+            .describe(
+              "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
+            ),
       },
       output: {
         code: z =>
@@ -99,10 +106,13 @@ export function createHttpBackstageAction(options: {
     async handler(ctx) {
       const { input } = ctx;
       const pluginId = getPluginId(input.path);
-      const { token } = (await auth?.getPluginRequestToken({
-        onBehalfOf: await ctx.getInitiatorCredentials(),
-        targetPluginId: pluginId,
-      })) ?? { token: ctx.secrets?.backstageToken };
+      const { token } =
+        input.useBackstageToken && ctx.secrets?.backstageToken
+          ? { token: ctx.secrets.backstageToken }
+          : (await auth?.getPluginRequestToken({
+              onBehalfOf: await ctx.getInitiatorCredentials(),
+              targetPluginId: pluginId,
+            })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
       const continueOnBadResponse = input.continueOnBadResponse || false;
