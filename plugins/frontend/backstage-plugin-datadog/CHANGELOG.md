@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-datadog
 
+## 2.7.2
+
+### Patch Changes
+
+- d579239: Update export type from FrontendPlugin -> OverridableFrontendPlugin
+
 ## 2.7.1
 
 ### Patch Changes

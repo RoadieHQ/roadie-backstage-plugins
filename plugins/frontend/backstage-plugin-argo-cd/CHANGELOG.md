@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.12.4
+
+### Patch Changes
+
+- d579239: Update export type from FrontendPlugin -> OverridableFrontendPlugin
+
 ## 2.12.3
 
 ### Patch Changes
