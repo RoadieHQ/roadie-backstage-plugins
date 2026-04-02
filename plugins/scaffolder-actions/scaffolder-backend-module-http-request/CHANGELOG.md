@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.6.0
+
+### Minor Changes
+
+- c86946d: Add toggle param to choose which token will be used in http:backstage:request scaffolder action
+
 ## 5.5.1
 
 ### Patch Changes
