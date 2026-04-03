@@ -17,7 +17,7 @@ export const entityArgoCDOverviewCard = EntityCardBlueprint.make({
 /**
  * @alpha
  */
-export const entityArgoCDHistoryCard: any = EntityCardBlueprint.make({
+export const entityArgoCDHistoryCard = EntityCardBlueprint.make({
   name: 'historyCard',
   params: {
     filter: 'kind:component',
