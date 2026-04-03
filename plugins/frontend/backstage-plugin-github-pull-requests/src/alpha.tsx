@@ -1,4 +1,8 @@
-import { ApiBlueprint, configApiRef, createFrontendPlugin } from '@backstage/frontend-plugin-api';
+import {
+  ApiBlueprint,
+  configApiRef,
+  createFrontendPlugin,
+} from '@backstage/frontend-plugin-api';
 import { scmAuthApiRef } from '@backstage/integration-react';
 import { githubPullRequestsApiRef, GithubPullRequestsClient } from './api';
 
@@ -6,11 +10,12 @@ const githubPullRequestsApi = ApiBlueprint.make({
   params: defineParams =>
     defineParams({
       api: githubPullRequestsApiRef,
-      deps: { 
-	    configApi: configApiRef, 
-		scmAuthApi: scmAuthApiRef 
-	  },
-      factory: ({ configApi, scmAuthApi }) => new GithubPullRequestsClient({ configApi, scmAuthApi }),
+      deps: {
+        configApi: configApiRef,
+        scmAuthApi: scmAuthApiRef,
+      },
+      factory: ({ configApi, scmAuthApi }) =>
+        new GithubPullRequestsClient({ configApi, scmAuthApi }),
     }),
 });
 
