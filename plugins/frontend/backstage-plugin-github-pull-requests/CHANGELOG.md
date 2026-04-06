@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.7.0
+
+### Minor Changes
+
+- 1f93f71: Add compatibility with Backstage New Frontend
+
 ## 3.6.3
 
 ### Patch Changes
