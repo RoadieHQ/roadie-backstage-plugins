@@ -30,7 +30,7 @@ cd packages/app
 yarn add @roadiehq/backstage-plugin-github-pull-requests
 ```
 
-## Add plugin API to your Backstage instance:
+## Add plugin API to your Backstage instance (Legacy Frontend):
 
 ```ts
 // packages/app/src/components/catalog/EntityPage.tsx
@@ -53,6 +53,22 @@ const serviceEntityPage = (
     </EntityLayout.Route>
     ...
   </EntityLayout>
+```
+
+## Add plugin API to your Backstage instance (New Frontend):
+
+```ts
+// packages/app/src/App.tsx
+import gitHubPullRequestsApi from '@roadiehq/backstage-plugin-github-pull-requests/alpha';
+...
+
+export default createApp({
+  features: [
+    ...
+	gitHubPullRequestsApi,
+	...
+  ]
+...
 ```
 
 4. Run backstage app with `yarn start` and navigate to services tabs.
