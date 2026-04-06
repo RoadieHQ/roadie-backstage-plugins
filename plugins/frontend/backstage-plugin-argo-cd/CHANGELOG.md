@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.12.5
+
+### Patch Changes
+
+- f64bf9e: Fix type exports for alpha plugin
+
 ## 2.12.4
 
 ### Patch Changes
