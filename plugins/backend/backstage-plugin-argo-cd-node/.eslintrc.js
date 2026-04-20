@@ -14,6 +14,4 @@
  * limitations under the License.
  */
 
-// The canonical argocdServiceRef is defined in @roadiehq/backstage-plugin-argo-cd-node.
-// Re-exported here for internal use within this package.
-export { argocdServiceRef } from '@roadiehq/backstage-plugin-argo-cd-node';
+module.exports = require('@backstage/cli/config/eslint-factory')(__dirname);

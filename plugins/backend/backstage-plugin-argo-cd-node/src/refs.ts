@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
-// The canonical argocdServiceRef is defined in @roadiehq/backstage-plugin-argo-cd-node.
-// Re-exported here for internal use within this package.
-export { argocdServiceRef } from '@roadiehq/backstage-plugin-argo-cd-node';
+import { createServiceRef } from '@backstage/backend-plugin-api';
+import { ArgoServiceApi } from './types';
+
+/**
+ * A service reference for the ArgoCD service, intended to be consumed by
+ * other backend plugins that need to interact with ArgoCD.
+ *
+ * The concrete implementation and default factory are provided by
+ * `@roadiehq/backstage-plugin-argo-cd-backend`. Ensure that plugin is
+ * registered in your backend before declaring a dependency on this ref.
+ *
+ * @public
+ */
+export const argocdServiceRef = createServiceRef<ArgoServiceApi>({
+  id: 'argocd-service-backend',
+  scope: 'plugin',
+});

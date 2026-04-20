@@ -1,0 +1,27 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage-plugin-argo-cd-node
+  description: |
+    Node library for the Argo CD Backstage plugin. Provides the shared ArgoServiceApi
+    interface, service reference, and types for use in other backend plugins.
+  annotations:
+    github.com/project-slug: roadiehq/roadie-backstage-plugins
+    github.com/project-readme-path: plugins/backend/backstage-plugin-argo-cd-node/README.md
+    backstage.io/techdocs-ref: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/backend/backstage-plugin-argo-cd-node
+    backstage.io/view-url: https://github.com/RoadieHQ/roadie-backstage-plugins/blob/main/plugins/backend/backstage-plugin-argo-cd-node/catalog-info.yaml
+    backstage.io/edit-url: https://github.com/RoadieHQ/roadie-backstage-plugins/edit/main/plugins/backend/backstage-plugin-argo-cd-node/catalog-info.yaml
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/backend/backstage-plugin-argo-cd-node
+  tags:
+    - plugin
+    - oss
+    - backend
+    - node-library
+  links:
+    - url: https://www.npmjs.com/package/@roadiehq/backstage-plugin-argo-cd-node
+      title: NPM
+spec:
+  type: library
+  owner: group:open-source
+  lifecycle: production
+

@@ -14,6 +14,5 @@
  * limitations under the License.
  */
 
-// The canonical argocdServiceRef is defined in @roadiehq/backstage-plugin-argo-cd-node.
-// Re-exported here for internal use within this package.
-export { argocdServiceRef } from '@roadiehq/backstage-plugin-argo-cd-node';
+export * from './types';
+export * from './refs';
