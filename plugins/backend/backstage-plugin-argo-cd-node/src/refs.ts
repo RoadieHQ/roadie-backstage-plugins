@@ -21,9 +21,10 @@ import { ArgoServiceApi } from './types';
  * A service reference for the ArgoCD service, intended to be consumed by
  * other backend plugins that need to interact with ArgoCD.
  *
- * The concrete implementation and default factory are provided by
+ * The concrete implementation is provided by
  * `@roadiehq/backstage-plugin-argo-cd-backend`. Ensure that plugin is
- * registered in your backend before declaring a dependency on this ref.
+ * registered in your backend and its `argocdServiceFactory` is added
+ * before declaring a dependency on this ref.
  *
  * @public
  */
