@@ -12122,9 +12122,12 @@ __metadata:
   resolution: "@roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node"
   dependencies:
     "@backstage/backend-plugin-api": "backstage:^"
+    "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     cross-fetch: "npm:^3.1.4"
+    jest-fetch-mock: "npm:^3.0.3"
+    jest-mock: "npm:^29.0.0"
   languageName: unknown
   linkType: soft
 
