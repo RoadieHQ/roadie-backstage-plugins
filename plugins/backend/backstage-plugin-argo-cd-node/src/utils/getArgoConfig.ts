@@ -13,10 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { InstanceConfig } from '../types';
 
-export * from './types';
-export * from './refs';
-export { ArgoService } from './service/argocd.service';
-export { timer } from './service/timer.services';
-export { getArgoConfigByInstanceName } from './utils/getArgoConfig';
-export { buildArgoUrl } from './utils/urlHelpers';
+export const getArgoConfigByInstanceName = ({
+  argoConfigs,
+  argoInstanceName,
+}: {
+  argoConfigs: InstanceConfig[];
+  argoInstanceName: string;
+}) => {
+  const matchedArgoConfig = argoConfigs.find(
+    configs => configs.name === argoInstanceName,
+  );
+  return matchedArgoConfig;
+};

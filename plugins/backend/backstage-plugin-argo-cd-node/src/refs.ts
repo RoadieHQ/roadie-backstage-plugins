@@ -14,21 +14,50 @@
  * limitations under the License.
  */
 
-import { createServiceRef } from '@backstage/backend-plugin-api';
+import {
+  coreServices,
+  createServiceFactory,
+  createServiceRef,
+} from '@backstage/backend-plugin-api';
 import { ArgoServiceApi } from './types';
+import { ArgoService } from './service/argocd.service';
 
 /**
  * A service reference for the ArgoCD service, intended to be consumed by
  * other backend plugins that need to interact with ArgoCD.
  *
- * The concrete implementation is provided by
- * `@roadiehq/backstage-plugin-argo-cd-backend`. Ensure that plugin is
- * registered in your backend and its `argocdServiceFactory` is added
- * before declaring a dependency on this ref.
+ * A default factory is provided inline, so no manual wiring is required.
+ * Install `@roadiehq/backstage-plugin-argo-cd-node` and declare a dependency
+ * on this ref — the ArgoService will be created automatically from config.
  *
  * @public
  */
 export const argocdServiceRef = createServiceRef<ArgoServiceApi>({
   id: 'argocd-service-backend',
   scope: 'plugin',
+  defaultFactory: async service =>
+    createServiceFactory({
+      service,
+      deps: {
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+      },
+      factory: deps => ArgoService.fromConfig(deps),
+    }),
+});
+
+/**
+ * Standalone factory for the ArgoCD service. Use this if you need to register
+ * the factory explicitly (e.g. to override the default implementation).
+ *
+ * @public
+ */
+// eslint-disable-next-line @backstage/no-undeclared-imports
+export const argocdServiceFactory = createServiceFactory({
+  service: argocdServiceRef,
+  deps: {
+    config: coreServices.rootConfig,
+    logger: coreServices.logger,
+  },
+  factory: deps => ArgoService.fromConfig(deps),
 });

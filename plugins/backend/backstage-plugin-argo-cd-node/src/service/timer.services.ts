@@ -13,10 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-export * from './types';
-export * from './refs';
-export { ArgoService } from './service/argocd.service';
-export { timer } from './service/timer.services';
-export { getArgoConfigByInstanceName } from './utils/getArgoConfig';
-export { buildArgoUrl } from './utils/urlHelpers';
+export function timer(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
