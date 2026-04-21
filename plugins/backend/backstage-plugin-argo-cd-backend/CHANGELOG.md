@@ -65,47 +65,47 @@
 
   **Login Priorities** (We will prioritize logins as follows):
 
-    1. Instance Level Tokens
+  1. Instance Level Tokens
 
-       ```yml
-       argocd:
-         appLocatorMethods:
-           - type: config
-             instances:
-               - name: argoInstance1
-                 url: https://argoInstance1.com
-                 token: ${ARGOCD_AUTH_TOKEN} # Instance Level Token
-       ```
+     ```yml
+     argocd:
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+               token: ${ARGOCD_AUTH_TOKEN} # Instance Level Token
+     ```
 
-    2. Instance Level Username and Password
+  2. Instance Level Username and Password
 
-       ```yml
-       argocd:
-         appLocatorMethods:
-           - type: config
-             instances:
-               - name: argoInstance1
-                 url: https://argoInstance1.com
-                 # Instance Level Username and Password
-                 username: ${ARGOCD_USERNAME_INSTANCE_2}
-                 password: ${ARGOCD_PASSWORD_INSTANCE_2}
-       ```
+     ```yml
+     argocd:
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+               # Instance Level Username and Password
+               username: ${ARGOCD_USERNAME_INSTANCE_2}
+               password: ${ARGOCD_PASSWORD_INSTANCE_2}
+     ```
 
-    3. Upper Level Username and Password
+  3. Upper Level Username and Password
 
-       ```yml
-       argocd:
-         # Upper Level Username and Password
-         username: ${ARGOCD_USERNAME}
-         password: ${ARGOCD_PASSWORD}
-         appLocatorMethods:
-           - type: config
-             instances:
-               - name: argoInstance1
-                 url: https://argoInstance1.com
-       ```
+     ```yml
+     argocd:
+       # Upper Level Username and Password
+       username: ${ARGOCD_USERNAME}
+       password: ${ARGOCD_PASSWORD}
+       appLocatorMethods:
+         - type: config
+           instances:
+             - name: argoInstance1
+               url: https://argoInstance1.com
+     ```
 
-    4. Azure Credentials using azure login url
+  4. Azure Credentials using azure login url
 
   ```yml
   argocd:
@@ -270,74 +270,74 @@
 
 - 04b7788: #### New Feature ✨
 
-    - **New Endpoint!**: Terminate Application Operation endpoint is a proxy to the [argocd terminate application operation functionality](https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation).
+  - **New Endpoint!**: Terminate Application Operation endpoint is a proxy to the [argocd terminate application operation functionality](https://cd.apps.argoproj.io/swagger-ui#operation/ApplicationService_TerminateOperation).
 
-      ```
-      DELETE /argoInstance/:argoInstanceName/applications/:argoAppName/operation
-      ```
+    ```
+    DELETE /argoInstance/:argoInstanceName/applications/:argoAppName/operation
+    ```
 
-    - **New query parameter!**: We introduced the ability to terminate your application's current operation prior to deleting the application and project. Argo applications will not delete if there is an operation in progress. We now allow the ability to terminate the current operation so that deleting can happened immediately.
+  - **New query parameter!**: We introduced the ability to terminate your application's current operation prior to deleting the application and project. Argo applications will not delete if there is an operation in progress. We now allow the ability to terminate the current operation so that deleting can happened immediately.
 
-      ```
-      DELETE /argoInstance/:argoInstanceName/applications/:argoAppName?terminateOperation=true
-      ```
+    ```
+    DELETE /argoInstance/:argoInstanceName/applications/:argoAppName?terminateOperation=true
+    ```
 
-    - **Wait Interval configuration flag**: Often deleting the argo application takes time - it is not always immediate. In fact, the request to delete an application is queued in argo. Consequently, an argo project cannot delete if the application is still pending deletion. To combat this, we chose to wait for the deletion of the application to complete, by doing 5 checks and waiting for 5 seconds inbetween each check, totaling for 25 seconds in waiting for the application to be deleted before attempting to delete the project. We **do not** do this anymore. Our default is to **NOT** check more than once, and allow for the wait interval between each check to be configurable. You can now configure the wait interval time (in ms). You can still configure the amount of checks. Please look at plugin's readme for more information and updates.
+  - **Wait Interval configuration flag**: Often deleting the argo application takes time - it is not always immediate. In fact, the request to delete an application is queued in argo. Consequently, an argo project cannot delete if the application is still pending deletion. To combat this, we chose to wait for the deletion of the application to complete, by doing 5 checks and waiting for 5 seconds inbetween each check, totaling for 25 seconds in waiting for the application to be deleted before attempting to delete the project. We **do not** do this anymore. Our default is to **NOT** check more than once, and allow for the wait interval between each check to be configurable. You can now configure the wait interval time (in ms). You can still configure the amount of checks. Please look at plugin's readme for more information and updates.
 
-      ```yml
-      argocd:
-        waitInterval: 1000 # time in ms, optional number, default is 5000ms
-        waitCycles: 2 # number of checks, optional number, default is to check 1 time with no wait time
-      ```
+    ```yml
+    argocd:
+      waitInterval: 1000 # time in ms, optional number, default is 5000ms
+      waitCycles: 2 # number of checks, optional number, default is to check 1 time with no wait time
+    ```
 
   #### BREAKING CHANGES 💥
 
-    - We are no longer waiting for an application to delete prior to attempting to delete a project due to the wait interval, wait cycle, and terminate operation changes. More details on these added features are in the above section. If you would like the same checking effect as before, you may adjust your `waitCycles` configuration value to be 5 (as this was the previous default check count). This affects the `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName` route.
+  - We are no longer waiting for an application to delete prior to attempting to delete a project due to the wait interval, wait cycle, and terminate operation changes. More details on these added features are in the above section. If you would like the same checking effect as before, you may adjust your `waitCycles` configuration value to be 5 (as this was the previous default check count). This affects the `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName` route.
 
-    - Response Change: The route for deleting an argocd application and project response has changed.
+  - Response Change: The route for deleting an argocd application and project response has changed.
 
-      `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName`
+    `DELETE /argoInstance/:argoInstanceName/applications/:argoAppName`
 
-      We introduced a new key (`terminateOperationDetails`) to the object that normally returns from the endpoint above, and changes to the original response names.
+    We introduced a new key (`terminateOperationDetails`) to the object that normally returns from the endpoint above, and changes to the original response names.
 
-      Below is the type for reference. Please look at the commit to determine what the previous response was.
+    Below is the type for reference. Please look at the commit to determine what the previous response was.
 
-      ```typescript
-      type ArgoErrorResponse = {
-        message: string;
-        error: string;
-        code: number;
-      };
-  
-      type DeleteResponse =
-        | (ArgoErrorResponse & { statusCode: Exclude<HttpStatusCodes, 200> })
-        | { statusCode: 200 };
-  
-      type status = 'pending' | 'success' | 'failed';
-  
-      type ResponseSchema<T> = {
-        status: status;
-        message: string;
-        argoResponse: T;
-      };
-  
-      type ResponseSchemaUnknown = {
-        status: Extract<status, 'failed'>;
-        message: string;
-        argoResponse: Record<string, never>;
-      };
-  
-      type DeleteApplicationAndProjectResponse = {
-        terminateOperationDetails?: ResponseSchema<DeleteResponse> | undefined;
-        deleteAppDetails:
-          | ResponseSchema<DeleteResponse | ArgoApplication>
-          | undefined;
-        deleteProjectDetails:
-          | ResponseSchema<DeleteResponse>
-          | ResponseSchemaUnknown
-          | undefined;
-      };
-      ```
+    ```typescript
+    type ArgoErrorResponse = {
+      message: string;
+      error: string;
+      code: number;
+    };
+
+    type DeleteResponse =
+      | (ArgoErrorResponse & { statusCode: Exclude<HttpStatusCodes, 200> })
+      | { statusCode: 200 };
+
+    type status = 'pending' | 'success' | 'failed';
+
+    type ResponseSchema<T> = {
+      status: status;
+      message: string;
+      argoResponse: T;
+    };
+
+    type ResponseSchemaUnknown = {
+      status: Extract<status, 'failed'>;
+      message: string;
+      argoResponse: Record<string, never>;
+    };
+
+    type DeleteApplicationAndProjectResponse = {
+      terminateOperationDetails?: ResponseSchema<DeleteResponse> | undefined;
+      deleteAppDetails:
+        | ResponseSchema<DeleteResponse | ArgoApplication>
+        | undefined;
+      deleteProjectDetails:
+        | ResponseSchema<DeleteResponse>
+        | ResponseSchemaUnknown
+        | undefined;
+    };
+    ```
 
   Please look at plugin's readme and the commit for more information on response type changes.
 
@@ -643,9 +643,9 @@
 ### Minor Changes
 
 - 3ba9cb9: - Add create endpoints
-    - Add delete endpoints
-    - Add sync endpoints
-    - Add scaffolder action for create
+  - Add delete endpoints
+  - Add sync endpoints
+  - Add scaffolder action for create
 
 ## 2.0.0
 
