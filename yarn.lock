@@ -12124,6 +12124,7 @@ __metadata:
     "@backstage/backend-plugin-api": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
+    cross-fetch: "npm:^3.1.4"
   languageName: unknown
   linkType: soft
 
