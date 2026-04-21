@@ -27,7 +27,7 @@ import {
   OIDCConfig,
   ResourceItem,
   UpdateArgoProjectAndAppProps,
-} from './types';
+} from '../types';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services', () => ({
