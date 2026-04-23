@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
-// The canonical argocdServiceRef is defined in @roadiehq/backstage-plugin-argo-cd-node.
-// Re-exported here for internal use within this package.
-export { argocdServiceRef } from '@roadiehq/backstage-plugin-argo-cd-node';
+export * from './types';
+export * from './refs';
+export { ArgoService } from './service/argocd.service';
+export { timer } from './service/timer.services';
+export { getArgoConfigByInstanceName } from './utils/getArgoConfig';
+export { buildArgoUrl } from './utils/urlHelpers';

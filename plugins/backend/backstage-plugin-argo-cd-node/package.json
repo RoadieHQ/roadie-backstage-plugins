@@ -1,6 +1,6 @@
 {
-  "name": "@roadiehq/backstage-plugin-argo-cd-backend",
-  "version": "4.7.1",
+  "name": "@roadiehq/backstage-plugin-argo-cd-node",
+  "version": "1.0.0",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
     "backstage",
     "plugin",
     "argo-cd",
-    "backend"
+    "node"
   ],
   "publishConfig": {
     "access": "public",
@@ -16,17 +16,16 @@
     "types": "dist/index.d.ts"
   },
   "backstage": {
-    "role": "backend-plugin",
-    "pluginId": "argocd",
-    "pluginPackages": [
-      "@roadiehq/backstage-plugin-argo-cd",
-      "@roadiehq/backstage-plugin-argo-cd-backend"
-    ]
+    "role": "node-library"
+  },
+  "bugs": {
+    "url": "https://github.com/RoadieHQ/roadie-backstage-plugins/issues",
+    "email": "support@roadie.io"
   },
   "repository": {
     "type": "git",
     "url": "github:RoadieHQ/roadie-backstage-plugins",
-    "directory": "plugins/backend/backstage-plugin-argo-cd-backend"
+    "directory": "plugins/backend/backstage-plugin-argo-cd-node"
   },
   "exports": {
     ".": "./src/index.ts",
@@ -44,34 +43,22 @@
     "build": "backstage-cli package build",
     "lint": "backstage-cli package lint",
     "test": "backstage-cli package test",
+    "clean": "backstage-cli package clean",
     "prepack": "backstage-cli package prepack",
-    "postpack": "backstage-cli package postpack",
-    "clean": "backstage-cli clean"
+    "postpack": "backstage-cli package postpack"
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@roadiehq/backstage-plugin-argo-cd-node": "^1.0.0",
-    "@types/express": "^4.17.6",
-    "cross-fetch": "^3.1.4",
-    "express-promise-router": "^4.1.0"
-  },
-  "peerDependencies": {
-    "express": "^4.17.1 || ^5.0.0"
+    "cross-fetch": "^3.1.4"
   },
   "devDependencies": {
-    "@backstage/backend-defaults": "backstage:^",
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
-    "@types/supertest": "^2.0.8",
     "jest-fetch-mock": "^3.0.3",
-    "jest-mock": "^29.0.0",
-    "supertest": "^4.0.2",
-    "winston": "^3.2.1"
+    "jest-mock": "^29.0.0"
   },
   "files": [
-    "dist",
-    "config.d.ts"
-  ],
-  "configSchema": "config.d.ts"
+    "dist"
+  ]
 }

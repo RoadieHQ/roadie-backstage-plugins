@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// The canonical argocdServiceRef is defined in @roadiehq/backstage-plugin-argo-cd-node.
-// Re-exported here for internal use within this package.
-export { argocdServiceRef } from '@roadiehq/backstage-plugin-argo-cd-node';
+export function timer(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
