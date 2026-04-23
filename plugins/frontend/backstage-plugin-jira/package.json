@@ -61,7 +61,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-use": "^17.2.4",
     "sanitize-html": "^2.3.3",
-    "uuid": "8.3.2",
+    "uuid": "14.0.0",
     "xml-js": "^1.6.11"
   },
   "peerDependencies": {
