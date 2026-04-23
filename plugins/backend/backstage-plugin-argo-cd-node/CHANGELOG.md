@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd-node
 
+## 2.0.0
+
+### Major Changes
+
+- 64afd10: Split ArgocdServiceRef into it's own node package
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,16 @@
 # @roadiehq/backstage-plugin-argo-cd-backend
 
+## 4.8.0
+
+### Minor Changes
+
+- 64afd10: Split ArgocdServiceRef into it's own node package
+
+### Patch Changes
+
+- Updated dependencies [64afd10]
+  - @roadiehq/backstage-plugin-argo-cd-node@2.0.0
+
 ## 4.7.1
 
 ### Patch Changes
