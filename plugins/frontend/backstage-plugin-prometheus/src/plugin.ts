@@ -21,6 +21,7 @@ import {
   createRoutableExtension,
   createRouteRef,
   discoveryApiRef,
+  fetchApiRef,
 } from '@backstage/core-plugin-api';
 import { PrometheusApi, prometheusApiRef } from './api';
 
@@ -33,9 +34,13 @@ export const backstagePluginPrometheusPlugin = createPlugin({
   apis: [
     createApiFactory({
       api: prometheusApiRef,
-      deps: { discoveryApi: discoveryApiRef, configApi: configApiRef },
-      factory: ({ discoveryApi, configApi }) =>
-        new PrometheusApi({ discoveryApi, configApi }),
+      deps: {
+        discoveryApi: discoveryApiRef,
+        configApi: configApiRef,
+        fetchApi: fetchApiRef,
+      },
+      factory: ({ discoveryApi, configApi, fetchApi }) =>
+        new PrometheusApi({ discoveryApi, configApi, fetchApi }),
     }),
   ],
   routes: {
