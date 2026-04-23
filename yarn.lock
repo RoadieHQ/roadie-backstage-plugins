@@ -12094,7 +12094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.7.1, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.5.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
+"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.8.0, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.5.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend"
   dependencies:
@@ -12103,7 +12103,7 @@ __metadata:
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
-    "@roadiehq/backstage-plugin-argo-cd-node": "npm:^1.0.0"
+    "@roadiehq/backstage-plugin-argo-cd-node": "npm:^2.0.0"
     "@types/express": "npm:^4.17.6"
     "@types/supertest": "npm:^2.0.8"
     cross-fetch: "npm:^3.1.4"
@@ -12117,7 +12117,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/backstage-plugin-argo-cd-node@npm:^1.0.0, @roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node":
+"@roadiehq/backstage-plugin-argo-cd-node@npm:^2.0.0, @roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node"
   dependencies:
@@ -18197,7 +18197,7 @@ __metadata:
     "@langchain/core": "npm:^1.1.0"
     "@langchain/openai": "npm:^1.1.3"
     "@octokit/rest": "npm:^19.0.3"
-    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.7.1"
+    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.8.0"
     "@roadiehq/backstage-plugin-aws-auth": "npm:^0.7.0"
     "@roadiehq/backstage-plugin-aws-backend": "npm:^1.5.0"
     "@roadiehq/catalog-backend-module-aws": "npm:^5.10.0"
