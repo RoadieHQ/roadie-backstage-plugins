@@ -41,7 +41,7 @@
     "lodash": "^4.17.21",
     "node-fetch": "^2.7.0",
     "node-html-parser": "^6.1.13",
-    "uuid": "^9.0.1"
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",
