@@ -25,9 +25,19 @@ import { HttpOptions, Headers, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { AuthService } from '@backstage/backend-plugin-api';
 
+/**
+ * Creates a new action that sends an HTTP request to the Backstage API.
+ * 
+ * @param options - Configuration options for the action.
+ * @param options.discovery - The Discovery API to resolve Backstage backend URLs.
+ * @param options.auth - Optional Auth Service to generate tokens.
+ * @param options.config - Optional Config API to enforce Zero-Leak Policy (SSRF mitigation via allowedHosts/allowedMethods).
+ * @returns A Scaffolder Template Action.
+ */
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
   auth?: AuthService;
+  config?: any;
 }) {
   const { discovery, auth } = options;
   return createTemplateAction({
@@ -115,6 +125,22 @@ export function createHttpBackstageAction(options: {
             })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
+
+      // 🛡️ ZERO-LEAK POLICY: SSRF and Confused Deputy Mitigation
+      if (options.config) {
+        const allowedMethods = options.config.getOptionalStringArray('scaffolder.http.allowedMethods') ?? [];
+        if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
+          throw new Error(`SSRF Blocked: HTTP method '${method}' is not permitted by 'scaffolder.http.allowedMethods'.`);
+        }
+
+        const allowedHosts = options.config.getOptionalStringArray('scaffolder.http.allowedHosts') ?? [];
+        if (allowedHosts.length > 0) {
+          const isHostAllowed = allowedHosts.some((host: string) => input.path.includes(host));
+          if (!isHostAllowed) {
+            throw new Error(`SSRF Blocked: The target path '${input.path}' does not match any 'scaffolder.http.allowedHosts'.`);
+          }
+        }
+      }
       const continueOnBadResponse = input.continueOnBadResponse || false;
       const url = await generateBackstageUrl(discovery, input.path);
       if (logRequestPath) {
