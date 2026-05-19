@@ -126,7 +126,6 @@ export function createHttpBackstageAction(options: {
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
 
-      // 🛡️ ZERO-LEAK POLICY: SSRF and Confused Deputy Mitigation
       if (options.config) {
         const allowedMethods = options.config.getOptionalStringArray('scaffolder.http.allowedMethods') ?? [];
         if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
