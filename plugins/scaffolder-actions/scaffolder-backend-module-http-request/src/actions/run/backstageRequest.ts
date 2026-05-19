@@ -120,9 +120,9 @@ export function createHttpBackstageAction(options: {
         input.useBackstageToken && ctx.secrets?.backstageToken
           ? { token: ctx.secrets.backstageToken }
           : (await auth?.getPluginRequestToken({
-              onBehalfOf: await ctx.getInitiatorCredentials(),
-              targetPluginId: pluginId,
-            })) ?? { token: ctx.secrets?.backstageToken };
+            onBehalfOf: await ctx.getInitiatorCredentials(),
+            targetPluginId: pluginId,
+          })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
 
@@ -196,8 +196,7 @@ export function createHttpBackstageAction(options: {
       const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
       if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
         ctx.logger.info(
-          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
-            queryParams !== '' ? `${input.path}?${queryParams}` : input.path
+          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${queryParams !== '' ? `${input.path}?${queryParams}` : input.path
           }`,
         );
         return;
