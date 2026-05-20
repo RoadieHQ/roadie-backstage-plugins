@@ -49,61 +49,69 @@ export function createHttpBackstageAction(options: {
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
     supportsDryRun: true,
     schema: {
-      input: (z) => z.object({
-        path: z.string().describe('The url path you want to query'),
-        method: z
-          .enum([
-            'GET',
-            'HEAD',
-            'OPTIONS',
-            'POST',
-            'UPDATE',
-            'DELETE',
-            'PUT',
-            'PATCH',
-          ])
-          .describe('The method type of the request'),
-        headers: z
-          .record(z.any())
-          .optional()
-          .describe('The headers you would like to pass to your request'),
-        params: z
-          .record(z.any())
-          .optional()
-          .describe(
-            'The query parameters you would like to pass to your request',
-          ),
-        body: z
-          .any()
-          .optional()
-          .describe('The body you would like to pass to your request'),
-        logRequestPath: z
-          .boolean()
-          .optional()
-          .describe('Option to turn request path logging off. On by default'),
-        continueOnBadResponse: z
-          .boolean()
-          .optional()
-          .describe(
-            'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
-          ),
-        timeout: z
-          .number()
-          .optional()
-          .describe('Timeout for the request (milliseconds)')
-          .default(60000),
-        useBackstageToken: z
-          .boolean()
-          .optional()
-          .describe(
-            "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
-          ),
-      }),
-      output: (z) => z.object({
-        code: z.string().describe('The response code of the request').optional(),
-        headers: z.record(z.any()).describe('The headers of the response').optional(),
-        body: z.any().describe('The body of the response').optional(),
-      }),
+      input: z =>
+        z.object({
+          path: z.string().describe('The url path you want to query'),
+          method: z
+            .enum([
+              'GET',
+              'HEAD',
+              'OPTIONS',
+              'POST',
+              'UPDATE',
+              'DELETE',
+              'PUT',
+              'PATCH',
+            ])
+            .describe('The method type of the request'),
+          headers: z
+            .record(z.any())
+            .optional()
+            .describe('The headers you would like to pass to your request'),
+          params: z
+            .record(z.any())
+            .optional()
+            .describe(
+              'The query parameters you would like to pass to your request',
+            ),
+          body: z
+            .any()
+            .optional()
+            .describe('The body you would like to pass to your request'),
+          logRequestPath: z
+            .boolean()
+            .optional()
+            .describe('Option to turn request path logging off. On by default'),
+          continueOnBadResponse: z
+            .boolean()
+            .optional()
+            .describe(
+              'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
+            ),
+          timeout: z
+            .number()
+            .optional()
+            .describe('Timeout for the request (milliseconds)')
+            .default(60000),
+          useBackstageToken: z
+            .boolean()
+            .optional()
+            .describe(
+              "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
+            ),
+        }),
+      output: z =>
+        z.object({
+          code: z
+            .string()
+            .describe('The response code of the request')
+            .optional(),
+          headers: z
+            .record(z.any())
+            .describe('The headers of the response')
+            .optional(),
+          body: z.any().describe('The body of the response').optional(),
+        }),
     },
 
     async handler(ctx) {
