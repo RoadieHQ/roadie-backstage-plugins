@@ -27,7 +27,7 @@ import { AuthService } from '@backstage/backend-plugin-api';
 
 /**
  * Creates a new action that sends an HTTP request to the Backstage API.
- * 
+ *
  * @param options - Configuration options for the action.
  * @param options.discovery - The Discovery API to resolve Backstage backend URLs.
  * @param options.auth - Optional Auth Service to generate tokens.
@@ -120,23 +120,35 @@ export function createHttpBackstageAction(options: {
         input.useBackstageToken && ctx.secrets?.backstageToken
           ? { token: ctx.secrets.backstageToken }
           : (await auth?.getPluginRequestToken({
-            onBehalfOf: await ctx.getInitiatorCredentials(),
-            targetPluginId: pluginId,
-          })) ?? { token: ctx.secrets?.backstageToken };
+              onBehalfOf: await ctx.getInitiatorCredentials(),
+              targetPluginId: pluginId,
+            })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
 
       if (options.config) {
-        const allowedMethods = options.config.getOptionalStringArray('scaffolder.http.allowedMethods') ?? [];
+        const allowedMethods =
+          options.config.getOptionalStringArray(
+            'scaffolder.http.allowedMethods',
+          ) ?? [];
         if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
-          throw new Error(`SSRF Blocked: HTTP method '${method}' is not permitted by 'scaffolder.http.allowedMethods'.`);
+          throw new Error(
+            `SSRF Blocked: HTTP method '${method}' is not permitted by 'scaffolder.http.allowedMethods'.`,
+          );
         }
 
-        const allowedHosts = options.config.getOptionalStringArray('scaffolder.http.allowedHosts') ?? [];
+        const allowedHosts =
+          options.config.getOptionalStringArray(
+            'scaffolder.http.allowedHosts',
+          ) ?? [];
         if (allowedHosts.length > 0) {
-          const isHostAllowed = allowedHosts.some((host: string) => input.path.includes(host));
+          const isHostAllowed = allowedHosts.some((host: string) =>
+            input.path.includes(host),
+          );
           if (!isHostAllowed) {
-            throw new Error(`SSRF Blocked: The target path '${input.path}' does not match any 'scaffolder.http.allowedHosts'.`);
+            throw new Error(
+              `SSRF Blocked: The target path '${input.path}' does not match any 'scaffolder.http.allowedHosts'.`,
+            );
           }
         }
       }
@@ -196,7 +208,8 @@ export function createHttpBackstageAction(options: {
       const dryRunSafeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
       if (ctx.isDryRun === true && !dryRunSafeMethods.has(method)) {
         ctx.logger.info(
-          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${queryParams !== '' ? `${input.path}?${queryParams}` : input.path
+          `Dry run mode. Skipping non dry-run safe method '${method}' request to ${
+            queryParams !== '' ? `${input.path}?${queryParams}` : input.path
           }`,
         );
         return;

@@ -37,7 +37,11 @@ export const scaffolderBackendModuleHttpRequest = createBackendModule({
       },
       async init({ scaffolder, discovery, auth, config }) {
         scaffolder.addActions(
-          backendModuleHttp.createHttpBackstageAction({ discovery, auth, config }),
+          backendModuleHttp.createHttpBackstageAction({
+            discovery,
+            auth,
+            config,
+          }),
         );
       },
     });
