@@ -47,9 +47,11 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/config": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/plugin-scaffolder-node": "backstage:^",
-    "cross-fetch": "^4.0.0"
+    "cross-fetch": "^4.0.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",

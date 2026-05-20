@@ -21,25 +21,38 @@ import {
   getObjFieldCaseInsensitively,
   getPluginId,
 } from './helpers';
-import { HttpOptions, Headers, Body } from './types';
+import { HttpOptions, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { AuthService } from '@backstage/backend-plugin-api';
+import { Config } from '@backstage/config';
 
+/**
+ * Creates a new action that sends an HTTP request to the Backstage API.
+ *
+ * @param options - Configuration options for the action.
+ * @param options.discovery - The Discovery API to resolve Backstage backend URLs.
+ * @param options.auth - Optional Auth Service to generate tokens.
+ * @param options.config - Optional Config API to enforce Zero-Leak Policy (SSRF mitigation via allowedHosts/allowedMethods).
+ * @returns A Scaffolder Template Action.
+ */
 export function createHttpBackstageAction(options: {
   discovery: DiscoveryApi;
   auth?: AuthService;
+  config?: Config;
 }) {
   const { discovery, auth } = options;
+  const actionId = 'http:backstage:request';
+
   return createTemplateAction({
-    id: 'http:backstage:request',
+    id: actionId,
     description:
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
     supportsDryRun: true,
     schema: {
-      input: {
-        path: z => z.string().describe('The url path you want to query'),
-        method: z =>
-          z
+      input: z =>
+        z.object({
+          path: z.string().describe('The url path you want to query'),
+          method: z
             .enum([
               'GET',
               'HEAD',
@@ -51,56 +64,54 @@ export function createHttpBackstageAction(options: {
               'PATCH',
             ])
             .describe('The method type of the request'),
-        headers: z =>
-          z
+          headers: z
             .record(z.any())
             .optional()
             .describe('The headers you would like to pass to your request'),
-        params: z =>
-          z
+          params: z
             .record(z.any())
             .optional()
             .describe(
               'The query parameters you would like to pass to your request',
             ),
-        body: z =>
-          z
+          body: z
             .any()
             .optional()
             .describe('The body you would like to pass to your request'),
-        logRequestPath: z =>
-          z
+          logRequestPath: z
             .boolean()
             .optional()
             .describe('Option to turn request path logging off. On by default'),
-        continueOnBadResponse: z =>
-          z
+          continueOnBadResponse: z
             .boolean()
             .optional()
             .describe(
               'Return response code and body and continue to next scaffolder step if the response status is 4xx or 5xx. By default the step will fail if any status code is returned 400 and above.',
             ),
-        timeout: z =>
-          z
+          timeout: z
             .number()
             .optional()
             .describe('Timeout for the request (milliseconds)')
             .default(60000),
-        useBackstageToken: z =>
-          z
+          useBackstageToken: z
             .boolean()
             .optional()
             .describe(
               "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
             ),
-      },
-      output: {
-        code: z =>
-          z.string().describe('The response code of the request').optional(),
-        headers: z =>
-          z.record(z.any()).describe('The headers of the response').optional(),
-        body: z => z.any().describe('The body of the response').optional(),
-      },
+        }),
+      output: z =>
+        z.object({
+          code: z
+            .string()
+            .describe('The response code of the request')
+            .optional(),
+          headers: z
+            .record(z.any())
+            .describe('The headers of the response')
+            .optional(),
+          body: z.any().describe('The body of the response').optional(),
+        }),
     },
 
     async handler(ctx) {
@@ -115,15 +126,53 @@ export function createHttpBackstageAction(options: {
             })) ?? { token: ctx.secrets?.backstageToken };
       const { method, params } = input;
       const logRequestPath = input.logRequestPath ?? true;
+
+      if (options.config) {
+        const allowedMethods =
+          options.config.getOptionalStringArray(
+            'scaffolder.http.allowedMethods',
+          ) ?? [];
+        if (allowedMethods.length > 0 && !allowedMethods.includes(method)) {
+          throw new Error(
+            `SSRF Blocked: HTTP method '${method}' is not permitted by 'scaffolder.http.allowedMethods'.`,
+          );
+        }
+
+        const allowedHosts =
+          options.config.getOptionalStringArray(
+            'scaffolder.http.allowedHosts',
+          ) ?? [];
+        if (allowedHosts.length > 0) {
+          let hostToMatch: string;
+          try {
+            const parsedUrl = new URL(input.path);
+            hostToMatch = parsedUrl.hostname;
+          } catch (e) {
+            throw new Error(
+              `SSRF Blocked: Invalid URL format in path '${input.path}'.`,
+            );
+          }
+
+          const isHostAllowed = allowedHosts.some(
+            (host: string) =>
+              hostToMatch === host || hostToMatch.endsWith(`.${host}`),
+          );
+          if (!isHostAllowed) {
+            throw new Error(
+              `SSRF Blocked: The target host '${hostToMatch}' does not match any 'scaffolder.http.allowedHosts'.`,
+            );
+          }
+        }
+      }
       const continueOnBadResponse = input.continueOnBadResponse || false;
       const url = await generateBackstageUrl(discovery, input.path);
       if (logRequestPath) {
         ctx.logger.info(
-          `Creating ${method} request with ${this.id} scaffolder action against ${input.path}`,
+          `Creating ${method} request with ${actionId} scaffolder action against ${input.path}`,
         );
       } else {
         ctx.logger.info(
-          `Creating ${method} request with ${this.id} scaffolder action`,
+          `Creating ${method} request with ${actionId} scaffolder action`,
         );
       }
 
@@ -154,7 +203,7 @@ export function createHttpBackstageAction(options: {
         method: input.method,
         timeout: input.timeout,
         url: queryParams !== '' ? `${url}?${queryParams}` : url,
-        headers: input.headers ? (input.headers as Headers) : {},
+        headers: input.headers ? { ...input.headers } : {},
         body: inputBody,
       };
 
