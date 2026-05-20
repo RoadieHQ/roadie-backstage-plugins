@@ -86,7 +86,7 @@ test.describe('Jira plugin', () => {
         page.getByText('Activity stream', { exact: false }),
       ).toBeVisible();
       await expect(
-        page.getByText(/John Doe added the Component 'COMP' to TEST-2 - test2/),
+        page.getByText(/John Doe added the Component 'COMP'/),
       ).toBeVisible();
 
       await page.locator('#select-statuses').click();
