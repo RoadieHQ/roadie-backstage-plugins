@@ -87,7 +87,7 @@ test.describe('Jira plugin', () => {
       ).toBeVisible();
       await expect(
         page.getByText(
-          "John Doe added the Component 'COMP' to TEST-2 - test2 4 years ago",
+          /John Doe added the Component 'COMP' to TEST-2 - test2 \d+ years ago/,
         ),
       ).toBeVisible();
 
