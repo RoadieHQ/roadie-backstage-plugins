@@ -21,11 +21,10 @@ import {
   getObjFieldCaseInsensitively,
   getPluginId,
 } from './helpers';
-import { HttpOptions, Headers, Body } from './types';
+import { HttpOptions, Body } from './types';
 import { DiscoveryApi } from '@backstage/core-plugin-api';
 import { AuthService } from '@backstage/backend-plugin-api';
 import { Config } from '@backstage/config';
-import { z } from 'zod';
 
 /**
  * Creates a new action that sends an HTTP request to the Backstage API.
@@ -50,7 +49,7 @@ export function createHttpBackstageAction(options: {
       'Sends a HTTP request to the Backstage API. It uses the token of the user who triggers the task to authenticate requests.',
     supportsDryRun: true,
     schema: {
-      input: z.object({
+      input: (z) => z.object({
         path: z.string().describe('The url path you want to query'),
         method: z
           .enum([
@@ -100,7 +99,7 @@ export function createHttpBackstageAction(options: {
             "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
           ),
       }),
-      output: z.object({
+      output: (z) => z.object({
         code: z.string().describe('The response code of the request').optional(),
         headers: z.record(z.any()).describe('The headers of the response').optional(),
         body: z.any().describe('The body of the response').optional(),
