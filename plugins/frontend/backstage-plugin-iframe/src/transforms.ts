@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import type { Config } from '@backstage/config';
 import type { IFrameSrcTransform } from './components/types';
 
 /**
@@ -62,3 +63,58 @@ export const intoTemplate =
   (template: string): IFrameSrcTransform =>
   value =>
     template.replace(/\$\{value\}/g, value);
+
+/**
+ * Factory variant of {@link wrapAnnotation} that reads the prefix (and an
+ * optional fixed suffix) from a frontend-visible configuration value at the
+ * time the factory is called.
+ *
+ * Use this when the URL should differ between environments (dev, staging,
+ * prod) without recompiling the app: put the host in `app-config.yaml` under
+ * a key marked `@visibility: frontend`, then call the factory from a
+ * component that has access to `configApiRef`.
+ *
+ * @example app-config.yaml — the key must be frontend-visible to reach the browser
+ * ```yaml
+ * iframe:
+ *   grafana:
+ *     baseUrl: https://grafana.example.com/d/   # @visibility: frontend
+ * ```
+ *
+ * @example component code — `useMemo` keeps the transform identity stable
+ * ```tsx
+ * import { configApiRef, useApi } from '@backstage/core-plugin-api';
+ * import {
+ *   EntityIFrameCard,
+ *   wrapAnnotationFromConfig,
+ * } from '@roadiehq/backstage-plugin-iframe';
+ * import { useMemo } from 'react';
+ *
+ * export const GrafanaDashboardCard = () => {
+ *   const config = useApi(configApiRef);
+ *   const transform = useMemo(
+ *     () => wrapAnnotationFromConfig(config, 'iframe.grafana.baseUrl'),
+ *     [config],
+ *   );
+ *   return (
+ *     <EntityIFrameCard
+ *       srcFromAnnotation="grafana/dashboard-id"
+ *       transform={transform}
+ *     />
+ *   );
+ * };
+ * ```
+ *
+ * Reads the key with `config.getString`, so a missing or non-string value
+ * fails fast at factory-call time rather than rendering a broken iframe.
+ *
+ * @public
+ */
+export const wrapAnnotationFromConfig = (
+  config: Config,
+  configKey: string,
+  suffix: string = '',
+): IFrameSrcTransform => {
+  const prefix = config.getString(configKey);
+  return value => `${prefix}${value}${suffix}`;
+};

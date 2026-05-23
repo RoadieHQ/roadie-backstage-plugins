@@ -22,6 +22,7 @@ import {
   HomePageIFrameCard,
   wrapAnnotation,
   intoTemplate,
+  wrapAnnotationFromConfig,
 } from '../src';
 import {
   IFrameContentProps,
@@ -30,6 +31,14 @@ import {
 } from '../src/components/types';
 import { Entity } from '@backstage/catalog-model';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { ConfigReader } from '@backstage/config';
+
+// In a real app the `Config` instance comes from `useApi(configApiRef)` — see
+// the README for that usage. The sandbox stubs one with `ConfigReader` so the
+// factory pattern works without touching the dev `app-config.yaml`.
+const sandboxConfig = new ConfigReader({
+  iframe: { grafana: { baseUrl: 'https://example.com/d/' } },
+});
 
 const mockEntity: Entity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -111,6 +120,22 @@ createDevApp()
     ),
     title: 'Annotation transform: intoTemplate',
     path: 'iframe-page-into-template',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={wrapAnnotationFromConfig(
+            sandboxConfig,
+            'iframe.grafana.baseUrl',
+          )}
+          title="Annotation transform (factory + config-driven prefix)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: wrapAnnotationFromConfig',
+    path: 'iframe-page-wrap-annotation-from-config',
   })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,

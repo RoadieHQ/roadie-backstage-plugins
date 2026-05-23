@@ -6,4 +6,8 @@ export {
   HomePageIFrameCard,
 } from './plugin';
 export type { IFrameSrcTransform } from './components/types';
-export { wrapAnnotation, intoTemplate } from './transforms';
+export {
+  wrapAnnotation,
+  intoTemplate,
+  wrapAnnotationFromConfig,
+} from './transforms';

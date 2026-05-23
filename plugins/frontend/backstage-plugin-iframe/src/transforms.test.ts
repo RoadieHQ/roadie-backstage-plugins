@@ -15,7 +15,12 @@
  */
 
 import type { Entity } from '@backstage/catalog-model';
-import { intoTemplate, wrapAnnotation } from './transforms';
+import { ConfigReader } from '@backstage/config';
+import {
+  intoTemplate,
+  wrapAnnotation,
+  wrapAnnotationFromConfig,
+} from './transforms';
 
 const stubEntity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -36,6 +41,39 @@ describe('wrapAnnotation', () => {
     expect(t('abc-123', stubEntity)).toBe(
       'https://example.com/foo/abc-123/extra',
     );
+  });
+});
+
+describe('wrapAnnotationFromConfig', () => {
+  it('reads the prefix from the configured key', () => {
+    const config = new ConfigReader({
+      iframe: { grafana: { baseUrl: 'https://grafana.example.com/d/' } },
+    });
+    const t = wrapAnnotationFromConfig(config, 'iframe.grafana.baseUrl');
+    expect(t('abc-123', stubEntity)).toBe(
+      'https://grafana.example.com/d/abc-123',
+    );
+  });
+
+  it('appends an optional suffix', () => {
+    const config = new ConfigReader({
+      iframe: { grafana: { baseUrl: 'https://grafana.example.com/d/' } },
+    });
+    const t = wrapAnnotationFromConfig(
+      config,
+      'iframe.grafana.baseUrl',
+      '?kiosk=tv',
+    );
+    expect(t('abc-123', stubEntity)).toBe(
+      'https://grafana.example.com/d/abc-123?kiosk=tv',
+    );
+  });
+
+  it('fails fast when the configured key is missing', () => {
+    const config = new ConfigReader({});
+    expect(() =>
+      wrapAnnotationFromConfig(config, 'iframe.grafana.baseUrl'),
+    ).toThrow(/iframe\.grafana\.baseUrl/);
   });
 });
 

@@ -130,6 +130,81 @@ The transformed URL is still subject to the `iframe.allowList` check and
 the https-only protocol check, so the host you produce must be allowlisted
 just like a literal `src`.
 
+### Reading the prefix from frontend-visible config
+
+When the base URL should differ between environments (dev / staging / prod),
+hard-coding it in `EntityPage.tsx` is awkward. The factory helper
+`wrapAnnotationFromConfig` reads the prefix from `app-config.yaml` instead.
+The key must be marked `@visibility: frontend` (declare it in your plugin's
+or app's `config.d.ts`) or its value will be stripped before reaching the
+browser.
+
+```yaml
+# app-config.yaml
+iframe:
+  grafana:
+    baseUrl: https://grafana.example.com/d/ # @visibility: frontend
+```
+
+```tsx
+// packages/app/src/components/catalog/EntityPage.tsx
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
+import {
+  EntityIFrameCard,
+  wrapAnnotationFromConfig,
+} from '@roadiehq/backstage-plugin-iframe';
+import { useMemo } from 'react';
+
+export const GrafanaDashboardCard = () => {
+  const config = useApi(configApiRef);
+  // Memoize so the transform identity is stable across re-renders.
+  const transform = useMemo(
+    () => wrapAnnotationFromConfig(config, 'iframe.grafana.baseUrl'),
+    [config],
+  );
+  return (
+    <EntityIFrameCard
+      srcFromAnnotation="grafana/dashboard-id"
+      transform={transform}
+    />
+  );
+};
+```
+
+For anything more involved than a fixed prefix — appending query parameters,
+choosing between hosts, combining multiple annotations — write your own
+factory with the same shape:
+
+```tsx
+import type { Config } from '@backstage/config';
+import type { IFrameSrcTransform } from '@roadiehq/backstage-plugin-iframe';
+
+// Custom factory: reads both a base URL and a theme name from config, and
+// embeds them alongside the entity's namespace in the final URL.
+const grafanaDashboardTransform = (config: Config): IFrameSrcTransform => {
+  const baseUrl = config.getString('iframe.grafana.baseUrl');
+  const theme = config.getOptionalString('iframe.grafana.theme') ?? 'light';
+  return (dashboardId, entity) => {
+    const params = new URLSearchParams({
+      theme,
+      'var-namespace': entity.metadata.namespace ?? 'default',
+    });
+    return `${baseUrl}${dashboardId}?${params.toString()}`;
+  };
+};
+
+const GrafanaDashboardCard = () => {
+  const config = useApi(configApiRef);
+  const transform = useMemo(() => grafanaDashboardTransform(config), [config]);
+  return (
+    <EntityIFrameCard
+      srcFromAnnotation="grafana/dashboard-id"
+      transform={transform}
+    />
+  );
+};
+```
+
 ## Allowlisting
 
 This particular plugin supports allowlisting. What this means is you can add a domain to the plugin's configuration that will be verified during the creation of the plugins components.

@@ -45,8 +45,8 @@ export type IFrameComponentProps = {
   /**
    * Optional transform applied to the annotation value (when `srcFromAnnotation`
    * is set) to build the final iframe `src`. Ignored otherwise. See
-   * {@link IFrameSrcTransform} and the `wrapAnnotation` / `intoTemplate`
-   * helpers exported from the package root.
+   * {@link IFrameSrcTransform} and the `wrapAnnotation`, `intoTemplate`, and
+   * `wrapAnnotationFromConfig` helpers exported from the package root.
    */
   transform?: IFrameSrcTransform;
 };
@@ -60,8 +60,8 @@ export type IFrameFromAnnotationProps = {
   /**
    * Optional transform applied to the annotation value (when `srcFromAnnotation`
    * is set) to build the final iframe `src`. Ignored otherwise. See
-   * {@link IFrameSrcTransform} and the `wrapAnnotation` / `intoTemplate`
-   * helpers exported from the package root.
+   * {@link IFrameSrcTransform} and the `wrapAnnotation`, `intoTemplate`, and
+   * `wrapAnnotationFromConfig` helpers exported from the package root.
    */
   transform?: IFrameSrcTransform;
 };
