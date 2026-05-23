@@ -20,6 +20,8 @@ import {
   EntityIFrameCard,
   EntityIFrameContent,
   HomePageIFrameCard,
+  wrapAnnotation,
+  intoTemplate,
 } from '../src';
 import {
   IFrameContentProps,
@@ -37,6 +39,7 @@ const mockEntity: Entity = {
     description: 'backstage.io',
     annotations: {
       'roadie.io/example_domain': 'com',
+      'grafana/dashboard-id': 'abc-123',
     },
   },
   spec: {
@@ -82,6 +85,32 @@ createDevApp()
     ),
     title: 'Templated Iframe',
     path: 'iframe-page-templated',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={wrapAnnotation('https://example.com/d/', '/view')}
+          title="Annotation transform (prefix + suffix)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: wrapAnnotation',
+    path: 'iframe-page-wrap-annotation',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={intoTemplate('https://example.com/foo/${value}/extra')}
+          title="Annotation transform (embedded substring)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: intoTemplate',
+    path: 'iframe-page-into-template',
   })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,

@@ -45,7 +45,7 @@ const IFrameComponentContent = (props: IFrameComponentContentProps) => {
 };
 
 const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
-  const { srcFromAnnotation, height, width } = props;
+  const { srcFromAnnotation, height, width, transform } = props;
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
@@ -53,15 +53,17 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
   const { entity } = useEntity();
   let errorMessage = '';
 
-  const src = entity.metadata.annotations?.[srcFromAnnotation];
+  const annotationValue = entity.metadata.annotations?.[srcFromAnnotation];
 
-  if (!src) {
+  if (!annotationValue) {
     return (
       <ErrorComponent
         errorMessage={`Failed to get url src from the entity annotation ${srcFromAnnotation}`}
       />
     );
   }
+
+  const src = transform ? transform(annotationValue, entity) : annotationValue;
 
   errorMessage = determineError(src, allowList);
 
@@ -141,7 +143,15 @@ const IFrameFromSrc = (props: IFrameProps) => {
  * @public
  */
 export const IFrameCard = (props: IFrameComponentProps) => {
-  const { src, srcFromAnnotation, templatedSrc, height, width, title } = props;
+  const {
+    src,
+    srcFromAnnotation,
+    templatedSrc,
+    height,
+    width,
+    title,
+    transform,
+  } = props;
   if (src) {
     return (
       <IFrameFromSrc
@@ -174,6 +184,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
         height={height}
         width={width}
         title={title}
+        transform={transform}
       />
     );
   }

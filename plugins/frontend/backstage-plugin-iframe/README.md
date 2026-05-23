@@ -77,6 +77,59 @@ export const HomePage = () => {
 };
 ```
 
+## Building the src from an entity annotation
+
+`EntityIFrameCard` can read the `src` directly out of an entity annotation
+via `srcFromAnnotation`. By default the annotation value is used verbatim,
+which means each entity has to store the full URL.
+
+If you'd rather store only an identifier (a dashboard id, a project slug,
+etc.) and have the iframe assemble the URL, pass a `transform` function. It
+receives the raw annotation value and the entity, and returns the final
+`src`. Two helpers are exported for the common cases:
+
+```tsx
+// packages/app/src/components/catalog/EntityPage.tsx
+import {
+  EntityIFrameCard,
+  wrapAnnotation,
+  intoTemplate,
+} from '@roadiehq/backstage-plugin-iframe';
+
+// 1) Prefix only — https://host/prefix/${annotation_value}
+//    annotation "abc-123" => https://grafana.example.com/d/abc-123
+<EntityIFrameCard
+  srcFromAnnotation="grafana/dashboard-id"
+  transform={wrapAnnotation('https://grafana.example.com/d/')}
+/>
+
+// 2) Prefix + suffix — https://host/foo/${annotation_value}/extra
+<EntityIFrameCard
+  srcFromAnnotation="my-org/widget-id"
+  transform={wrapAnnotation('https://example.com/foo/', '/extra')}
+/>
+
+// 3) Free-form template — embed the value anywhere in the URL.
+//    Use single quotes so ${value} is not a JS template literal.
+<EntityIFrameCard
+  srcFromAnnotation="my-org/widget-id"
+  transform={intoTemplate('https://example.com/foo/${value}/extra')}
+/>
+
+// 4) Custom transform — the entity is the second argument, so you can mix
+//    the annotation value with other entity context.
+<EntityIFrameCard
+  srcFromAnnotation="grafana/dashboard-id"
+  transform={(value, entity) =>
+    `https://grafana.example.com/d/${value}?var-service=${entity.metadata.name}`
+  }
+/>
+```
+
+The transformed URL is still subject to the `iframe.allowList` check and
+the https-only protocol check, so the host you produce must be allowlisted
+just like a literal `src`.
+
 ## Allowlisting
 
 This particular plugin supports allowlisting. What this means is you can add a domain to the plugin's configuration that will be verified during the creation of the plugins components.
