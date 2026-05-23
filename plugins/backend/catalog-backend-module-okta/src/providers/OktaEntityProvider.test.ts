@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { createLogger } from 'winston';
 import { OktaEntityProvider, OktaScope } from './OktaEntityProvider';
 import { AccountConfig } from '../types';
 import { Client } from '@okta/okta-sdk-nodejs';
+import { createSilentLogger } from '../__testUtils__';
 
 class ConcreteEntityProvider extends OktaEntityProvider {
   public getProviderName(): string {
@@ -25,7 +25,7 @@ class ConcreteEntityProvider extends OktaEntityProvider {
   }
   constructor(accountConfig: AccountConfig) {
     super(accountConfig, {
-      logger: createLogger(),
+      logger: createSilentLogger(),
     });
   }
 

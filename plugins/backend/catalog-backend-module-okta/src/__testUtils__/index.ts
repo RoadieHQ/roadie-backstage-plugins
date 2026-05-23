@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import { createLogger } from 'winston';
+
 export class MockOktaCollection {
   private items: Array<any>;
 
@@ -25,3 +27,5 @@ export class MockOktaCollection {
     return this.items.forEach(callback);
   }
 }
+
+export const createSilentLogger = () => createLogger({ silent: true });
