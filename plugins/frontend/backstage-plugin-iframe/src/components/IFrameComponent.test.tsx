@@ -27,6 +27,7 @@ import {
 import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { IFrameCard } from './IFrameComponent';
 import { IFrameComponentProps } from './types';
+import { wrapAnnotation, intoTemplate } from '../transforms';
 
 const entityMock = {
   metadata: {
@@ -192,6 +193,104 @@ describe('IFrameCard', () => {
       expect(
         await rendered.findByText(
           'Src https://example-annotation.com for Iframe is not included in the allowlist hello.com.',
+        ),
+      ).toBeTruthy();
+    });
+  });
+
+  describe('when transform is provided with srcFromAnnotation', () => {
+    it('applies the transform to build the final src (prefix only)', async () => {
+      mockConfig.mockImplementation(() => ['grafana.example.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard
+              srcFromAnnotation="iframeSrc"
+              transform={wrapAnnotation('https://grafana.example.com/d/')}
+              title="transformed title"
+            />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const iframe = rendered.container.querySelector('iframe');
+      expect(iframe?.getAttribute('src')).toBe(
+        'https://grafana.example.com/d/https://example-annotation.com',
+      );
+      expect(await rendered.findByText('transformed title')).toBeTruthy();
+    });
+
+    it('applies the transform to embed the value as a substring', async () => {
+      const entityWithId = {
+        ...entityMock,
+        metadata: {
+          ...entityMock.metadata,
+          annotations: { 'grafana/dashboard-id': 'abc-123' },
+        },
+      };
+      mockConfig.mockImplementation(() => ['example.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityWithId}>
+            <IFrameCard
+              srcFromAnnotation="grafana/dashboard-id"
+              transform={intoTemplate('https://example.com/foo/${value}/extra')}
+              title="embedded title"
+            />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const iframe = rendered.container.querySelector('iframe');
+      expect(iframe?.getAttribute('src')).toBe(
+        'https://example.com/foo/abc-123/extra',
+      );
+      expect(await rendered.findByText('embedded title')).toBeTruthy();
+    });
+
+    it('passes the entity to the transform', async () => {
+      const entityWithId = {
+        ...entityMock,
+        metadata: {
+          ...entityMock.metadata,
+          name: 'svc-42',
+          annotations: { 'grafana/dashboard-id': 'abc-123' },
+        },
+      };
+      mockConfig.mockImplementation(() => ['example.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityWithId}>
+            <IFrameCard
+              srcFromAnnotation="grafana/dashboard-id"
+              transform={(value, entity) =>
+                `https://example.com/${entity.metadata.name}/${value}`
+              }
+              title="entity-aware title"
+            />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const iframe = rendered.container.querySelector('iframe');
+      expect(iframe?.getAttribute('src')).toBe(
+        'https://example.com/svc-42/abc-123',
+      );
+    });
+
+    it('rejects a transformed url that violates the allowlist', async () => {
+      mockConfig.mockImplementation(() => ['some-other-host.com']);
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard
+              srcFromAnnotation="iframeSrc"
+              transform={wrapAnnotation('https://grafana.example.com/d/')}
+              title="rejected title"
+            />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      expect(
+        await rendered.findByText(
+          /is not included in the allowlist some-other-host.com/,
         ),
       ).toBeTruthy();
     });

@@ -5,3 +5,9 @@ export {
   EntityIFrameContent,
   HomePageIFrameCard,
 } from './plugin';
+export type { IFrameSrcTransform } from './components/types';
+export {
+  wrapAnnotation,
+  intoTemplate,
+  wrapAnnotationFromConfig,
+} from './transforms';

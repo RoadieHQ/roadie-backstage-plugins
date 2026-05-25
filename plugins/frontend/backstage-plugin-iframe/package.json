@@ -47,6 +47,7 @@
     "react-dom": "^16.13.1 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
+    "@backstage/config": "backstage:^",
     "@backstage/core-components": "backstage:^",
     "@backstage/core-plugin-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",

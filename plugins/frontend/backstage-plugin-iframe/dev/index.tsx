@@ -20,6 +20,9 @@ import {
   EntityIFrameCard,
   EntityIFrameContent,
   HomePageIFrameCard,
+  wrapAnnotation,
+  intoTemplate,
+  wrapAnnotationFromConfig,
 } from '../src';
 import {
   IFrameContentProps,
@@ -28,6 +31,14 @@ import {
 } from '../src/components/types';
 import { Entity } from '@backstage/catalog-model';
 import { EntityProvider } from '@backstage/plugin-catalog-react';
+import { ConfigReader } from '@backstage/config';
+
+// In a real app the `Config` instance comes from `useApi(configApiRef)` — see
+// the README for that usage. The sandbox stubs one with `ConfigReader` so the
+// factory pattern works without touching the dev `app-config.yaml`.
+const sandboxConfig = new ConfigReader({
+  iframe: { grafana: { baseUrl: 'https://example.com/d/' } },
+});
 
 const mockEntity: Entity = {
   apiVersion: 'backstage.io/v1alpha1',
@@ -37,6 +48,7 @@ const mockEntity: Entity = {
     description: 'backstage.io',
     annotations: {
       'roadie.io/example_domain': 'com',
+      'grafana/dashboard-id': 'abc-123',
     },
   },
   spec: {
@@ -82,6 +94,48 @@ createDevApp()
     ),
     title: 'Templated Iframe',
     path: 'iframe-page-templated',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={wrapAnnotation('https://example.com/d/', '/view')}
+          title="Annotation transform (prefix + suffix)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: wrapAnnotation',
+    path: 'iframe-page-wrap-annotation',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={intoTemplate('https://example.com/foo/${value}/extra')}
+          title="Annotation transform (embedded substring)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: intoTemplate',
+    path: 'iframe-page-into-template',
+  })
+  .addPage({
+    element: (
+      <EntityProvider entity={mockEntity}>
+        <EntityIFrameCard
+          srcFromAnnotation="grafana/dashboard-id"
+          transform={wrapAnnotationFromConfig(
+            sandboxConfig,
+            'iframe.grafana.baseUrl',
+          )}
+          title="Annotation transform (factory + config-driven prefix)"
+        />
+      </EntityProvider>
+    ),
+    title: 'Annotation transform: wrapAnnotationFromConfig',
+    path: 'iframe-page-wrap-annotation-from-config',
   })
   .addPage({
     element: <HomePageIFrameCard {...{ ...props, title: '1234' }} />,
