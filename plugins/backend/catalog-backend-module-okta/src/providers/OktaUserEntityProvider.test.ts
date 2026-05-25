@@ -17,8 +17,7 @@
 import { OktaUserEntityProvider } from './OktaUserEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
-import { MockOktaCollection } from '../test-utls';
-import { createLogger } from 'winston';
+import { MockOktaCollection, createSilentLogger } from '../__testUtils__';
 
 let listUsers: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -33,7 +32,7 @@ jest.mock('@okta/okta-sdk-nodejs', () => {
   };
 });
 
-const logger = createLogger();
+const logger = createSilentLogger();
 
 describe('OktaUserEntityProvider', () => {
   const config = new ConfigReader({
