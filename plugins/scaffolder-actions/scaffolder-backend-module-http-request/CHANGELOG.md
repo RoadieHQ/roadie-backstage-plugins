@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-http-request
 
+## 5.7.0
+
+### Minor Changes
+
+- 4855f99: Add Zero-Leak Policy (SSRF mitigation) to http:backstage:request action.
+
 ## 5.6.0
 
 ### Minor Changes
