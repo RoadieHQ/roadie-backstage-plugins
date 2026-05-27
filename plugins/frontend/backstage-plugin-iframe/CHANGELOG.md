@@ -1,5 +1,26 @@
 # @roadiehq/backstage-plugin-iframe
 
+## 1.7.0
+
+### Minor Changes
+
+- f1b9239: Add the `wrapAnnotationFromConfig(config, configKey, suffix?)` helper — a
+  factory variant of `wrapAnnotation` that reads the URL prefix from a
+  frontend-visible config key at call time. Useful when the iframe host
+  should vary per environment (dev/staging/prod) without recompiling. Call
+  it from a component that has `useApi(configApiRef)` available and pass
+  the resulting transform to `EntityIFrameCard`. The configured key must be
+  declared with `@visibility: frontend` in `config.d.ts` so the value
+  reaches the browser bundle.
+- 21ec753: Add an optional `transform` prop for `EntityIFrameCard` / `IFrameCard` when
+  using `srcFromAnnotation`. The function receives the raw annotation value
+  plus the entity and returns the final iframe `src`, so annotations can
+  store a bare identifier (e.g. a dashboard id) instead of a full URL. Two
+  helper builders are exported: `wrapAnnotation(prefix, suffix?)` for
+  prefix/suffix wrapping and `intoTemplate('https://host/foo/${value}/extra')`
+  for embedding the value as a substring. The transformed URL still goes
+  through the existing https-only and `iframe.allowList` checks.
+
 ## 1.6.1
 
 ### Patch Changes
