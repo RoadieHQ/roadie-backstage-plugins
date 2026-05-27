@@ -20,6 +20,10 @@ export { OktaOrgEntityProvider } from './OktaOrgEntityProvider';
 export * from './groupNamingStrategies';
 export * from './userNamingStrategies';
 export type {
+  OktaGroup,
   OktaGroupEntityTransformer,
+  OktaGroupProfile,
+  OktaUser,
   OktaUserEntityTransformer,
+  OktaUserProfile,
 } from './types';

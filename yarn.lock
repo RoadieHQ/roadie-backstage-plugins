@@ -9462,22 +9462,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@okta/okta-sdk-nodejs@npm:^6.6.0":
-  version: 6.6.0
-  resolution: "@okta/okta-sdk-nodejs@npm:6.6.0"
+"@okta/okta-sdk-nodejs@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "@okta/okta-sdk-nodejs@npm:8.1.0"
   dependencies:
+    "@types/node-forge": "npm:^1.3.2"
     deep-copy: "npm:^1.4.2"
     eckles: "npm:^1.4.1"
-    form-data: "npm:^4.0.0"
+    form-data: "npm:^4.0.4"
     https-proxy-agent: "npm:^5.0.0"
     js-yaml: "npm:^4.1.0"
-    lodash: "npm:^4.17.20"
-    njwt: "npm:^1.0.0"
+    lodash: "npm:^4.17.23"
+    njwt: "npm:^2.0.1"
     node-fetch: "npm:^2.6.7"
+    node-jose: "npm:^2.2.0"
     parse-link-header: "npm:^2.0.0"
     rasha: "npm:^1.2.5"
     safe-flat: "npm:^2.0.2"
-  checksum: 10/464181f819f508004a741a3437438123f618da937611d4c8d1653be8a1f296a250f093ce3ca5d8b7af0292c15a785013348fb65ccb0f25c84ed59eb2f7fbccdd
+    url-parse: "npm:^1.5.10"
+    uuid: "npm:^11.1.0"
+  checksum: 10/8900300e395f96cb83f4918c334ce75e420d48f5835f09a12c6a25f429aa2d155e626e70710ac6d525dd9e1686c7d5ec97733c34aa2154c6679ab597af2fea48
   languageName: node
   linkType: hard
 
@@ -12879,7 +12883,7 @@ __metadata:
     "@backstage/errors": "backstage:^"
     "@backstage/plugin-catalog-backend": "backstage:^"
     "@backstage/plugin-catalog-node": "backstage:^"
-    "@okta/okta-sdk-nodejs": "npm:^6.6.0"
+    "@okta/okta-sdk-nodejs": "npm:^8.1.0"
     "@types/lodash": "npm:^4.14.151"
     lodash: "npm:^4.17.21"
     slugify: "npm:^1.6.6"
@@ -16244,6 +16248,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-forge@npm:^1.3.2":
+  version: 1.3.14
+  resolution: "@types/node-forge@npm:1.3.14"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10/500ce72435285fca145837da079b49a09a5bdf8391b0effc3eb2455783dd81ab129e574a36e1a0374a4823d889d5328177ebfd6fe45b432c0c43d48d790fe39c
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:>=13.7.0, @types/node@npm:^22.0.0":
   version: 22.9.1
   resolution: "@types/node@npm:22.9.1"
@@ -18346,7 +18359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64url@npm:3.x.x":
+"base64url@npm:3.x.x, base64url@npm:^3.0.1":
   version: 3.0.1
   resolution: "base64url@npm:3.0.1"
   checksum: 10/a77b2a3a526b3343e25be424de3ae0aa937d78f6af7c813ef9020ef98001c0f4e2323afcd7d8b2d2978996bf8c42445c3e9f60c218c622593e5fdfd54a3d6e18
@@ -22109,6 +22122,13 @@ __metadata:
   version: 4.1.1
   resolution: "es6-error@npm:4.1.1"
   checksum: 10/48483c25701dc5a6376f39bbe2eaf5da0b505607ec5a98cd3ade472c1939242156660636e2e508b33211e48e88b132d245341595c067bd4a95ac79fa7134da06
+  languageName: node
+  linkType: hard
+
+"es6-promise@npm:^4.2.8":
+  version: 4.2.8
+  resolution: "es6-promise@npm:4.2.8"
+  checksum: 10/b250c55523c496c43c9216c2646e58ec182b819e036fe5eb8d83fa16f044ecc6b8dcefc88ace2097be3d3c4d02b6aa8eeae1a66deeaf13e7bee905ebabb350a3
   languageName: node
   linkType: hard
 
@@ -28142,6 +28162,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.23":
+  version: 4.18.1
+  resolution: "lodash@npm:4.18.1"
+  checksum: 10/306fea53dfd39dad1f03d45ba654a2405aebd35797b673077f401edb7df2543623dc44b9effbb98f69b32152295fff725a4cec99c684098947430600c6af0c3f
+  languageName: node
+  linkType: hard
+
 "log-symbols@npm:^4.1.0":
   version: 4.1.0
   resolution: "log-symbols@npm:4.1.0"
@@ -28203,6 +28230,13 @@ __metadata:
   version: 5.2.3
   resolution: "long@npm:5.2.3"
   checksum: 10/9167ec6947a825b827c30da169a7384eec6c0c9ec2f0b9c74da2e93d81159bbe39fb09c3f13dae9721d4b807ccfa09797a7dd1012f5d478e3e33ca3c78b608e6
+  languageName: node
+  linkType: hard
+
+"long@npm:^5.2.0":
+  version: 5.3.2
+  resolution: "long@npm:5.3.2"
+  checksum: 10/b6b55ddae56fcce2864d37119d6b02fe28f6dd6d9e44fd22705f86a9254b9321bd69e9ffe35263b4846d54aba197c64882adcb8c543f2383c1e41284b321ea64
   languageName: node
   linkType: hard
 
@@ -29952,14 +29986,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"njwt@npm:^1.0.0":
-  version: 1.2.0
-  resolution: "njwt@npm:1.2.0"
+"njwt@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "njwt@npm:2.0.1"
   dependencies:
     "@types/node": "npm:^15.0.1"
     ecdsa-sig-formatter: "npm:^1.0.5"
     uuid: "npm:^8.3.2"
-  checksum: 10/dd0dc82a2ed0e95c0d9ae5a035cb47e7c7be0ae0bc7d4b1b5b25573f02e9801b7f05e069b8a854ecd239f4fce1064f604f4475e75d6035493c8ab629d0b64168
+  checksum: 10/55e5aee498f308c4b922e62ff764e28ce3650d41d01d30e436cbdb7ae98822208c000333341bc4aec839f22082f3388104638d2a77eceb906688882ae679abaa
   languageName: node
   linkType: hard
 
@@ -30122,6 +30156,23 @@ __metadata:
   version: 0.4.0
   resolution: "node-int64@npm:0.4.0"
   checksum: 10/b7afc2b65e56f7035b1a2eec57ae0fbdee7d742b1cdcd0f4387562b6527a011ab1cbe9f64cc8b3cca61e3297c9637c8bf61cec2e6b8d3a711d4b5267dfafbe02
+  languageName: node
+  linkType: hard
+
+"node-jose@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "node-jose@npm:2.2.0"
+  dependencies:
+    base64url: "npm:^3.0.1"
+    buffer: "npm:^6.0.3"
+    es6-promise: "npm:^4.2.8"
+    lodash: "npm:^4.17.21"
+    long: "npm:^5.2.0"
+    node-forge: "npm:^1.2.1"
+    pako: "npm:^2.0.4"
+    process: "npm:^0.11.10"
+    uuid: "npm:^9.0.0"
+  checksum: 10/699f025ccc2f51370d3520af0e6268e9b8f103781e100f64efac82d14c33ab7c15907295bae7edc98d1e8a3d3e0f977f47aea03942a5b3d564185ac2213fb69f
   languageName: node
   linkType: hard
 
@@ -31006,6 +31057,13 @@ __metadata:
   version: 1.0.11
   resolution: "pako@npm:1.0.11"
   checksum: 10/1ad07210e894472685564c4d39a08717e84c2a68a70d3c1d9e657d32394ef1670e22972a433cbfe48976cb98b154ba06855dcd3fcfba77f60f1777634bec48c0
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.0.4":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 10/38a04991d0ec4f4b92794a68b8c92bf7340692c5d980255c92148da96eb3e550df7a86a7128b5ac0c65ecddfe5ef3bbe9c6dab13e1bc315086e759b18f7c1401
   languageName: node
   linkType: hard
 
@@ -37809,7 +37867,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.0.0, uuid@npm:^11.0.2":
+"uuid@npm:^11.0.0, uuid@npm:^11.0.2, uuid@npm:^11.1.0":
   version: 11.1.0
   resolution: "uuid@npm:11.1.0"
   bin:

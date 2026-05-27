@@ -17,7 +17,7 @@
 import { createLogger } from 'winston';
 
 export class MockOktaCollection {
-  private items: Array<any>;
+  readonly items: Array<any>;
 
   constructor(items: Array<any>) {
     this.items = items;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroup } from '../types';
 import { GroupNamingStrategy } from './types';
 
 export class ProfileFieldGroupNamingStrategy {
@@ -22,13 +22,15 @@ export class ProfileFieldGroupNamingStrategy {
     this.fieldName = fieldName;
   }
 
-  nameForGroup: GroupNamingStrategy = (group: Group) => {
-    const groupName = group.profile[this.fieldName];
+  nameForGroup: GroupNamingStrategy = (group: OktaGroup) => {
+    const groupName = (group.profile as unknown as Record<string, unknown>)[
+      this.fieldName
+    ];
     if (!['number', 'string'].includes(typeof groupName)) {
       throw new Error(
         `Profile field ${this.fieldName} does not contain a string/number for ${group.profile.name}`,
       );
     }
-    return groupName.toString();
+    return (groupName as string | number).toString();
   };
 }

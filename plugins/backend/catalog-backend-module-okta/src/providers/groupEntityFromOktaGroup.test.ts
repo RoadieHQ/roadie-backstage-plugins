@@ -16,6 +16,7 @@
 
 import { groupEntityFromOktaGroup } from './groupEntityFromOktaGroup';
 import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroup } from './types';
 import { ProfileFieldGroupNamingStrategy } from './groupNamingStrategies';
 
 describe('groupEntityFromOktaGroup', () => {
@@ -26,7 +27,7 @@ describe('groupEntityFromOktaGroup', () => {
         description: 'Group 1',
         parent_org_id: '',
         org_id: '1',
-      },
+      } as Group['profile'],
     };
     const parentGroup = undefined;
     const options = {
@@ -35,7 +36,7 @@ describe('groupEntityFromOktaGroup', () => {
     };
     expect(
       groupEntityFromOktaGroup(
-        group as Group,
+        group as OktaGroup,
         new ProfileFieldGroupNamingStrategy('org_id').nameForGroup,
         options,
         parentGroup,
@@ -60,14 +61,14 @@ describe('groupEntityFromOktaGroup', () => {
         description: 'Group 2',
         parent_org_id: '1',
         org_id: '2',
-      },
+      } as Group['profile'],
     };
     const parentGroup: Partial<Group> = {
       profile: {
         name: 'group-1',
         description: 'Group 1',
         org_id: '1',
-      },
+      } as Group['profile'],
     };
     const options = {
       annotations: {},
@@ -75,10 +76,10 @@ describe('groupEntityFromOktaGroup', () => {
     };
     expect(
       groupEntityFromOktaGroup(
-        group as Group,
+        group as OktaGroup,
         new ProfileFieldGroupNamingStrategy('org_id').nameForGroup,
         options,
-        parentGroup as Group,
+        parentGroup as OktaGroup,
       ),
     ).toEqual({
       apiVersion: 'backstage.io/v1alpha1',

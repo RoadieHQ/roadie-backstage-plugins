@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroup } from '../types';
 
-export type GroupNamingStrategy = (group: Group) => string;
+export type GroupNamingStrategy = (group: OktaGroup) => string;
 export type GroupNamingStrategies =
   | 'id'
   | 'kebab-case-name'

@@ -15,9 +15,10 @@
  */
 import get from 'lodash/get';
 import { isError } from '@backstage/errors';
-import { Group, Client } from '@okta/okta-sdk-nodejs';
+import { Client } from '@okta/okta-sdk-nodejs';
 import { GroupNamingStrategy } from './groupNamingStrategies';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { OktaGroup, asOktaGroup } from './types';
 
 type GetOktaGroupsOptions = {
   client: Client;
@@ -30,9 +31,11 @@ type GetOktaGroupsOptions = {
 export const getOktaGroups = async (opts: GetOktaGroupsOptions) => {
   const { client, groupFilter, key, groupNamingStrategy, logger } = opts;
 
-  const oktaGroups: Record<string, Group> = {};
+  const oktaGroups: Record<string, OktaGroup> = {};
 
-  await client.listGroups({ search: groupFilter }).each(group => {
+  const groups = await client.groupApi.listGroups({ search: groupFilter });
+  await groups.each(rawGroup => {
+    const group = asOktaGroup(rawGroup);
     if (key) {
       const id = get(group, key);
       if (typeof id === 'string') {

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { User } from '@okta/okta-sdk-nodejs';
+import { OktaUser } from '../types';
 
-export type UserNamingStrategy = (user: User) => string;
+export type UserNamingStrategy = (user: OktaUser) => string;
 export type UserNamingStrategies =
   | 'id'
   | 'kebab-case-email'

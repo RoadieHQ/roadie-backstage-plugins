@@ -204,7 +204,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-  user.profile.customField;
+  user?.profile?.customField || 'fallBack';
 ```
 
 #### Group naming strategies
@@ -219,7 +219,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customGroupNamingStrategy: GroupNamingStrategy = group =>
-  group.profile.customField;
+  group?.profile?.customField || 'fallBack';
 ```
 
 #### Hierarchy config
@@ -272,9 +272,9 @@ export const myGroupTransformer: OktaGroupEntityTransformer = function (
         ...options.annotations,
       },
       name: namingStrategy(group),
-      title: group.profile.name,
-      title: group.profile.description || group.profile.name,
-      description: group.profile.description || '',
+      title: group?.profile?.name || 'fallBack',
+      title: group?.profile?.description || group?.profile?.name || 'fallBack',
+      description: group?.profile?.description || '',
     },
     spec: {
       members: options.members,
@@ -447,7 +447,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-  user.profile.customField;
+  user?.profile?.customField || 'fallBack';
 ```
 
 In case you want to customize the emitted entities, the provider allows to pass custom transformer by providing
@@ -473,12 +473,12 @@ export const myUserTransformer: OktaUserEntityTransformer = function (
     metadata: {
       annotations: { ...options.annotations },
       name: namingStrategy(user),
-      title: user.profile.email,
+      title: user?.profile?.email || 'fallBack',
     },
     spec: {
       profile: {
-        displayName: user.profile.displayName,
-        email: user.profile.email,
+        displayName: user?.profile?.displayName || 'fallBack',
+        email: user?.profile?.email || 'fallBack',
       },
       memberOf: [],
     },
@@ -542,7 +542,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customUserNamingStrategy: UserNamingStrategy = user =>
-  user.profile.customField;
+  user?.profile?.customField || 'fallBack';
 ```
 
 Group naming strategies:
@@ -557,7 +557,7 @@ You may also choose to implement a custom naming strategy by providing a functio
 
 ```typescript jsx
 export const customGroupNamingStrategy: GroupNamingStrategy = group =>
-  group.profile.customField;
+  group?.profile?.customField || 'fallBack';
 ```
 
 Make sure you use the OktaUserEntityProvider's naming strategy for the OktaGroupEntityProvider's user naming strategy.
@@ -594,9 +594,9 @@ export const myGroupTransformer: OktaGroupEntityTransformer = function (
         ...options.annotations,
       },
       name: namingStrategy(group),
-      title: group.profile.name,
-      title: group.profile.description || group.profile.name,
-      description: group.profile.description || '',
+      title: group?.profile?.name || 'fallBack',
+      title: group?.profile?.description || group?.profile?.name || 'fallBack',
+      description: group?.profile?.description || '',
     },
     spec: {
       members: options.members,

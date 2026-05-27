@@ -35,7 +35,11 @@ import { isError } from '@backstage/errors';
 import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
-import { OktaGroupEntityTransformer, OktaUserEntityTransformer } from './types';
+import {
+  OktaGroupEntityTransformer,
+  OktaUserEntityTransformer,
+  asOktaUser,
+} from './types';
 import chunk from 'lodash/chunk';
 import { LoggerService } from '@backstage/backend-plugin-api';
 
@@ -144,7 +148,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
 
     const defaultAnnotations = await this.buildDefaultAnnotations();
 
-    await client.listUsers({ search: this.account.userFilter }).each(user => {
+    const allUsers = await client.userApi.listUsers({
+      search: this.account.userFilter,
+    });
+    await allUsers.each(rawUser => {
+      const user = asOktaUser(rawUser);
       try {
         const userName = this.userNamingStrategy(user);
         userResources[userName] = this.userEntityFromOktaUser(
@@ -178,7 +186,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       const promiseResults = await Promise.allSettled(
         chunkOfGroups.map(async group => {
           const members: string[] = [];
-          await group.listUsers().each(user => {
+          const groupUsers = await client.groupApi.listGroupUsers({
+            groupId: group.id,
+          });
+          await groupUsers.each(rawUser => {
+            const user = asOktaUser(rawUser);
             try {
               const userName = this.userNamingStrategy(user);
               if (userResources[userName]) {

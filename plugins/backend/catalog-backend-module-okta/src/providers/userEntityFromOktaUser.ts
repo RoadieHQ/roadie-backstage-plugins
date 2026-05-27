@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { UserEntity } from '@backstage/catalog-model';
-import { User } from '@okta/okta-sdk-nodejs';
+import { OktaUser } from './types';
 import { UserNamingStrategy } from './userNamingStrategies';
 
 export const userEntityFromOktaUser = (
-  user: User,
+  user: OktaUser,
   namingStrategy: UserNamingStrategy,
   options: { annotations: Record<string, string> },
 ): UserEntity => {
@@ -32,7 +32,7 @@ export const userEntityFromOktaUser = (
     },
     spec: {
       profile: {
-        displayName: user.profile.displayName,
+        displayName: user.profile.displayName ?? undefined,
         email: user.profile.email,
       },
       memberOf: [],

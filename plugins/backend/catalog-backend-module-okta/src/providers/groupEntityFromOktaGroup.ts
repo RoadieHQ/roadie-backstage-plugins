@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 import { GroupEntity } from '@backstage/catalog-model';
-import { Group } from '@okta/okta-sdk-nodejs';
+import { OktaGroup } from './types';
 import { GroupNamingStrategy } from './groupNamingStrategies';
 
 export const groupEntityFromOktaGroup = (
-  group: Group,
+  group: OktaGroup,
   namingStrategy: GroupNamingStrategy,
   options: {
     annotations: Record<string, string>;
     members: string[];
   },
-  parentGroup?: Group,
+  parentGroup?: OktaGroup,
 ): GroupEntity => {
   const groupEntity: GroupEntity = {
     kind: 'Group',
