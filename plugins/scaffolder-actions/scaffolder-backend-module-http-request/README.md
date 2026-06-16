@@ -166,6 +166,32 @@ Headers
 00000010  62 61 72 22 3a 22 66 6f  6f 22 7d                 |bar":"foo"}|
 ```
 
+### Idempotency and task recovery (experimental)
+
+When a template enables [experimental task recovery](https://backstage.io/docs/features/software-templates/experimental/#retries-and-recovery) (`spec.EXPERIMENTAL_recovery.EXPERIMENTAL_strategy: startOver`), a task that is interrupted (e.g. by a `scaffolder-backend` redeploy) is restarted from the beginning. By default that would re-send every `http:backstage:request` — duplicating non-idempotent side effects such as creating Jira tickets or other resources.
+
+To make a request safe under recovery, set an `idempotencyKey`. The request is then wrapped in a [checkpoint](https://backstage.io/docs/features/software-templates/writing-custom-actions/#using-checkpoints-in-custom-actions-experimental): it is executed at most once per task, and on a restart the cached response is returned instead of sending the request again. The key must be stable and unique within the template.
+
+```yaml
+steps:
+  - id: create_jira_ticket
+    name: Create Jira ticket
+    action: http:backstage:request
+    input:
+      method: 'POST'
+      path: '/proxy/jira/api/rest/api/latest/issue'
+      idempotencyKey: 'jira.create.parent'
+      headers:
+        content-type: 'application/json'
+      body:
+        fields:
+          project: { key: 'PROJ' }
+          summary: 'Created from Backstage'
+          issuetype: { name: 'Task' }
+```
+
+When `idempotencyKey` is omitted, or when the scaffolder does not provide a checkpoint API, behaviour is unchanged and the request is sent on every run.
+
 You can also visit the `/create/actions` route in your Backstage application to find out more about the parameters this action accepts when it's installed to configure how you like.
 
 ---
