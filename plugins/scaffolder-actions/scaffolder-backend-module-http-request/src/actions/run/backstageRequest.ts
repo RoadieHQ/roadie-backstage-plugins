@@ -99,6 +99,12 @@ export function createHttpBackstageAction(options: {
             .describe(
               "When true, use the backstageToken from task secrets as the Authorization header instead of exchanging initiator credentials for a plugin token. Useful when the request needs to carry the caller's token directly.",
             ),
+          idempotencyKey: z
+            .string()
+            .optional()
+            .describe(
+              "When set and the scaffolder supports checkpoints (experimental task recovery), the request is wrapped in a checkpoint with this key. The HTTP request is then executed at most once per task: on a task restart/recovery the cached response is returned instead of sending the request again. Use a key that is stable and unique within the template (e.g. 'jira.create.parent'). This makes non-idempotent requests (creating tickets, issues, etc.) safe to use with recoverable templates. When omitted, behaviour is unchanged and the request is sent on every run.",
+            ),
         }),
       output: z =>
         z.object({
@@ -227,11 +233,21 @@ export function createHttpBackstageAction(options: {
         return;
       }
 
-      const { code, headers, body } = await http(
-        httpOptions,
-        ctx.logger,
-        continueOnBadResponse,
-      );
+      const sendRequest = () =>
+        http(httpOptions, ctx.logger, continueOnBadResponse);
+
+      // When an idempotencyKey is provided and the scaffolder supports
+      // checkpoints (experimental task recovery), wrap the request so it is
+      // executed at most once per task: on recovery the stored response is
+      // returned instead of re-sending the request. Otherwise behave exactly
+      // as before and send the request on every run.
+      const { code, headers, body } =
+        input.idempotencyKey && ctx.checkpoint
+          ? await ctx.checkpoint({
+              key: input.idempotencyKey,
+              fn: sendRequest,
+            })
+          : await sendRequest();
 
       ctx.output('code', code);
       ctx.output('headers', headers);

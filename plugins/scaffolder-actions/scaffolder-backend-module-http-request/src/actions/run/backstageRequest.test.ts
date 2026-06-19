@@ -603,4 +603,72 @@ describe('http:backstage:request', () => {
       });
     });
   });
+
+  describe('with idempotencyKey (checkpoint / task recovery)', () => {
+    const makeCheckpointContext = () => {
+      const checkpoint = jest.fn(
+        async ({ fn }: { key: string; fn: () => Promise<any> }) => fn(),
+      );
+      return { ...mockContext, checkpoint };
+    };
+
+    it('wraps the request in ctx.checkpoint when idempotencyKey is set and checkpoint is available', async () => {
+      (http as jest.Mock).mockResolvedValue({
+        code: 201,
+        headers: {},
+        body: { id: 'PROJ-1' },
+      });
+      const ctx: any = makeCheckpointContext();
+      await action.handler({
+        ...ctx,
+        input: {
+          path: '/api/proxy/jira/issue',
+          method: 'POST',
+          idempotencyKey: 'jira.create.parent',
+        },
+      });
+      expect(ctx.checkpoint).toHaveBeenCalledWith({
+        key: 'jira.create.parent',
+        fn: expect.any(Function),
+      });
+      expect(http).toHaveBeenCalledTimes(1);
+      expect(ctx.output).toHaveBeenCalledWith('code', 201);
+      expect(ctx.output).toHaveBeenCalledWith('body', { id: 'PROJ-1' });
+    });
+
+    it('falls back to sending the request directly when idempotencyKey is set but checkpoint is unavailable', async () => {
+      (http as jest.Mock).mockResolvedValue({
+        code: 200,
+        headers: {},
+        body: {},
+      });
+      await action.handler({
+        ...mockContext,
+        input: {
+          path: '/api/proxy/jira/issue',
+          method: 'POST',
+          idempotencyKey: 'jira.create.parent',
+        },
+      });
+      expect(http).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not use checkpoint when idempotencyKey is not provided', async () => {
+      (http as jest.Mock).mockResolvedValue({
+        code: 200,
+        headers: {},
+        body: {},
+      });
+      const ctx: any = makeCheckpointContext();
+      await action.handler({
+        ...ctx,
+        input: {
+          path: '/api/proxy/foo',
+          method: 'POST',
+        },
+      });
+      expect(ctx.checkpoint).not.toHaveBeenCalled();
+      expect(http).toHaveBeenCalledTimes(1);
+    });
+  });
 });
