@@ -54,7 +54,7 @@
     "detect-indent": "^6.1.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^10.0.0",
-    "jsonata": "^2.0.4",
+    "jsonata": "^2.2.0",
     "lodash": "^4.17.21",
     "yaml": "^2.6.1",
     "yawn-yaml": "^2.3.0",

@@ -13158,7 +13158,7 @@ __metadata:
     detect-indent: "npm:^6.1.0"
     fast-glob: "npm:^3.3.3"
     fs-extra: "npm:^10.0.0"
-    jsonata: "npm:^2.0.4"
+    jsonata: "npm:^2.2.0"
     lodash: "npm:^4.17.21"
     mock-fs: "npm:^5.5.0"
     yaml: "npm:^2.6.1"
@@ -27213,10 +27213,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonata@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "jsonata@npm:2.0.4"
-  checksum: 10/eb613eee1cb139f56b411891184df0612a049ca2174592ce18fab4423ce77ed8024b952ccec5d7b84a605f9a9f1c251416d8ad8055bef75bb022378b1961cb68
+"jsonata@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "jsonata@npm:2.2.0"
+  checksum: 10/311660108e3cbd7e5a215900be48c3c3b15f0a41ba791046c478bb3bd127f07741e1e71cf95825c6aa8e5362a5eb8eaf969385e3f435271ad356a65333610ac1
   languageName: node
   linkType: hard
 
