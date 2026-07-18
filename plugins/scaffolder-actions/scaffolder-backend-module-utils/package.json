@@ -50,7 +50,7 @@
     "@backstage/config": "backstage:^",
     "@backstage/errors": "backstage:^",
     "@backstage/plugin-scaffolder-node": "backstage:^",
-    "adm-zip": "^0.5.9",
+    "adm-zip": "^0.6.0",
     "detect-indent": "^6.1.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^10.0.0",
