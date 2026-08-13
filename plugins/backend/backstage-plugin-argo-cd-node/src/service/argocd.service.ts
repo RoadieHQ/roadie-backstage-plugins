@@ -52,6 +52,7 @@ import {
 } from '../types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 import { buildArgoUrl } from '../utils/urlHelpers';
+import { logIfHtmlResponse } from '../utils/logIfHtmlResponse';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 const DEFAULT_PASSWORD = 'argocdPassword';
@@ -152,7 +153,6 @@ export class ArgoService implements ArgoServiceApi {
     const url = urlBuilder.toString();
 
     const resp = await fetch(url, requestOptions);
-
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} Error`);
     }
@@ -258,6 +258,7 @@ export class ArgoService implements ArgoServiceApi {
           password: password || this.password,
         }),
       });
+      await logIfHtmlResponse(resp, this.logger);
       if (!resp.ok) {
         this.logger.error(`failed to get argo token: ${url}`);
       }
@@ -342,7 +343,6 @@ export class ArgoService implements ArgoServiceApi {
       buildArgoUrl(baseUrl, `/api/v1/applications${urlSuffix}`),
       requestOptions,
     );
-
     if (!resp.ok) {
       throw new Error(`Request failed with ${resp.status} Error`);
     }
@@ -729,6 +729,7 @@ export class ArgoService implements ArgoServiceApi {
       options,
     );
     const respData = await resp.json();
+
     if (resp.status !== 200) {
       this.logger.error(
         `Error updating argo app ${appName}: ${respData.message}`,
@@ -762,6 +763,7 @@ export class ArgoService implements ArgoServiceApi {
         urlBuilder.toString(),
         options,
       )) as DeleteArgoAppFetchResponse;
+
       statusText = response.statusText;
       if (response.status === 200) {
         return { ...(await response.json()), statusCode: response.status };
@@ -1217,6 +1219,7 @@ export class ArgoService implements ArgoServiceApi {
         ),
         options,
       )) as TerminateArgoAppOperationFetchResponse;
+
       statusText = response.statusText;
 
       if (response.status === 200) {
