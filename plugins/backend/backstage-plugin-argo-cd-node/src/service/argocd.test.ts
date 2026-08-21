@@ -712,7 +712,7 @@ describe('ArgoCD service', () => {
           argoProjectName: 'testApp',
           argoToken: 'testToken',
         }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/invalid json/i);
 
       expect(logger.error).toHaveBeenCalledWith(
         expect.stringMatching(/more detailed error/i),
@@ -2317,7 +2317,7 @@ describe('ArgoCD service', () => {
           argoAppName: 'application',
           argoInstanceName: 'argoinstance1',
         }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/invalid json/i);
     });
   });
 
