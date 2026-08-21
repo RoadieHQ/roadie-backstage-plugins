@@ -2030,7 +2030,7 @@ describe('ArgoCD service', () => {
           argoApplicationName: 'application',
           argoInstanceName: 'argoinstance1',
         }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/invalid json/i);
     });
 
     it('gets application information when provided base url and token', async () => {
