@@ -52,7 +52,6 @@ import {
 } from '../types';
 import { getArgoConfigByInstanceName } from '../utils/getArgoConfig';
 import { buildArgoUrl } from '../utils/urlHelpers';
-import { logIfHtmlResponse } from '../utils/logIfHtmlResponse';
 
 const APP_NAMESPACE_QUERY_PARAM = 'appNamespace';
 const DEFAULT_PASSWORD = 'argocdPassword';
@@ -97,6 +96,20 @@ export class ArgoService implements ArgoServiceApi {
       config.getOptionalString('argocd.password') ?? DEFAULT_PASSWORD;
 
     return new ArgoService(argoUserName, argoPassword, config, logger);
+  }
+
+  private async parseJson(response: Response, url: string) {
+    const contentType = response.headers.get('content-type');
+    if (
+      contentType?.includes('text/html') &&
+      !contentType?.includes('application/json')
+    ) {
+      this.logger.debug(await response.clone().text());
+      throw new Error(
+        `Received unexpected HTML response from ${url}. Enable debug logs to see full html response.`,
+      );
+    }
+    return await response.json();
   }
 
   getArgoInstanceArray(): InstanceConfig[] {
@@ -248,7 +261,8 @@ export class ArgoService implements ArgoServiceApi {
     if (token) return token;
 
     if ((username && password) || (this.username && this.password)) {
-      const resp = await fetch(buildArgoUrl(url, '/api/v1/session'), {
+      const sessionTokenUrl = buildArgoUrl(url, '/api/v1/session');
+      const resp = await fetch(sessionTokenUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -258,14 +272,14 @@ export class ArgoService implements ArgoServiceApi {
           password: password || this.password,
         }),
       });
-      await logIfHtmlResponse(resp, this.logger);
+
       if (!resp.ok) {
         this.logger.error(`failed to get argo token: ${url}`);
       }
       if (resp.status === 401) {
         throw new Error(`Getting unauthorized for Argo CD instance ${url}`);
       }
-      const data = await resp.json();
+      const data = await this.parseJson(resp, sessionTokenUrl);
       return data.token;
     }
 

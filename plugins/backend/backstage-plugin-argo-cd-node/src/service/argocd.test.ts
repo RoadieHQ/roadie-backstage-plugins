@@ -28,16 +28,11 @@ import {
   ResourceItem,
   UpdateArgoProjectAndAppProps,
 } from '../types';
-import { logIfHtmlResponse } from '../utils/logIfHtmlResponse';
 
 fetchMock.enableMocks();
 jest.mock('./timer.services', () => ({
   timer: jest.fn(),
 }));
-jest.mock('../utils/logIfHtmlResponse', () => ({
-  logIfHtmlResponse: jest.fn(),
-}));
-
 type GetConfigOptions = {
   clusterResourceBlacklist?: ResourceItem[];
   clusterResourceWhitelist?: ResourceItem[];
@@ -2683,15 +2678,13 @@ describe('ArgoCD service', () => {
       expect(getSpy).toHaveBeenCalledWith(providerConfigKey);
     });
 
-    it('logs html response when get argo token returns html instead of json', async () => {
-      mocked(logIfHtmlResponse).mockResolvedValue(undefined);
-
+    it('throws when getting token returns an unexpected html response instead of json', async () => {
       const argoCdService = createService({
         instanceCredentials: { username: 'username', password: 'password' },
       });
 
       fetchMock.mockResponseOnce('<html>error page</html>', {
-        status: 500,
+        status: 1,
         headers: {
           'content-type': 'text/html',
         },
@@ -2699,19 +2692,111 @@ describe('ArgoCD service', () => {
 
       await expect(
         argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
-      ).rejects.toThrow(/invalid json/i);
+      ).rejects.toThrow(/unexpected HTML response/i);
+    });
+  });
 
-      expect(logIfHtmlResponse).toHaveBeenCalledTimes(1);
-      expect(logIfHtmlResponse).toHaveBeenCalledWith(
-        expect.objectContaining({
-          status: 500,
-          headers: expect.any(Headers),
-        }),
-        logger,
-      );
+  describe('parseJson', () => {
+    // private function tested indirectly through getArgoToken
+    it('throws when getting token returns an unexpected html response instead of json', async () => {
+      const argoCdService = createService({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
 
-      const [responseArg] = mocked(logIfHtmlResponse).mock.calls[0];
-      expect(responseArg.headers.get('content-type')).toBe('text/html');
+      fetchMock.mockResponseOnce('<html>error page</html>', {
+        status: 1,
+        headers: {
+          'content-type': 'text/html',
+        },
+      });
+
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow(/unexpected HTML response/i);
+    });
+
+    it('includes url in thrown message when getting token returns an unexpected html response instead of json', async () => {
+      const argoCdService = createService({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+
+      fetchMock.mockResponseOnce('<html>error page</html>', {
+        status: 1,
+        headers: {
+          'content-type': 'text/html',
+        },
+      });
+
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow(/\/api\/v1\/session/i);
+    });
+
+    it('logs html body when getting token returns an unexpected html response instead of json', async () => {
+      const argoCdService = createService({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+
+      fetchMock.mockResponseOnce('<html>error page</html>', {
+        status: 1,
+        headers: {
+          'content-type': 'text/html',
+        },
+      });
+
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow();
+
+      expect(logger.debug).toHaveBeenCalledWith('<html>error page</html>');
+    });
+
+    it('does not log when response content type includes application json to prevent sensitive data logs', async () => {
+      const argoCdService = createService({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+
+      fetchMock.mockResponseOnce('<html>error page</html>', {
+        status: 1,
+        headers: {
+          'content-type': 'text/html; application/json',
+        },
+      });
+
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow();
+
+      expect(logger.debug).not.toHaveBeenCalled();
+    });
+
+    it('reads the response body safely without consuming the original response', async () => {
+      const argoCdService = createService({
+        instanceCredentials: { username: 'username', password: 'password' },
+      });
+
+      const response = new Response('<html>error page</html>', {
+        status: 1,
+        headers: { 'content-type': 'text/html' },
+      });
+      const textMock = jest.fn().mockResolvedValue('<html>error page</html>');
+      const cloneMock = jest.fn().mockReturnValue({
+        text: textMock,
+      });
+
+      Object.defineProperty(response, 'clone', {
+        value: cloneMock,
+        configurable: true,
+      });
+
+      fetchMock.mockResolvedValueOnce(response);
+
+      await expect(
+        argoCdService.getArgoToken(argoCdService.instanceConfigs[0]),
+      ).rejects.toThrow(/unexpected HTML response/i);
+
+      expect(cloneMock).toHaveBeenCalledTimes(1);
+      expect(textMock).toHaveBeenCalledTimes(1);
     });
   });
 });

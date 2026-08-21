@@ -2,7 +2,10 @@
 '@roadiehq/backstage-plugin-argo-cd-node': minor
 ---
 
-New feature: Added warning logs when the Argo Session API returns an unexpected HTML response.
+New features:
+
+- Added debug logs when the Argo Session API returns an unexpected HTML response.
+- Purposefully throwing error when response contains html instead of the error thrown when attempting to parse a non json response.
 
 Reasoning: Depending on the deployment environment, traffic to the Argo API may pass through edge security, web application firewall (WAF), or content delivery network (CDN) services such as Akamai, F5, or Cloudflare. When routing failures occur, these services may return an HTML response instead of the expected API response.
 
