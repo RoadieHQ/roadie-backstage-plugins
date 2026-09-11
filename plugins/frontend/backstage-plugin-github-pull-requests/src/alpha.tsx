@@ -54,8 +54,7 @@ export const entityGithubPullRequestsContent = EntityContentBlueprint.make({
     path: '/pull-requests',
     title: 'Pull/Merge Requests',
     filter: isGithubPullRequestsAvailable,
-    loader: () =>
-      import('./components/Router').then(m => <m.Router />),
+    loader: () => import('./components/Router').then(m => <m.Router />),
   },
 });
 
@@ -67,9 +66,9 @@ export const entityGithubPullRequestsOverviewCard = EntityCardBlueprint.make({
   params: {
     filter: isGithubPullRequestsAvailable,
     loader: () =>
-      import('./components/PullRequestsStatsCard').then(
-        m => <m.PullRequestsStatsCard />,
-      ),
+      import('./components/PullRequestsStatsCard').then(m => (
+        <m.PullRequestsStatsCard />
+      )),
   },
 });
 
@@ -81,7 +80,9 @@ export const entityGithubPullRequestsTable = EntityCardBlueprint.make({
   params: {
     filter: isGithubPullRequestsAvailable,
     loader: () =>
-      import('./components/PullRequestsTable').then(m => <m.PullRequestsTable />),
+      import('./components/PullRequestsTable').then(m => (
+        <m.PullRequestsTable />
+      )),
   },
 });
 
@@ -93,9 +94,7 @@ export const entityGithubGroupPullRequestsCard = EntityCardBlueprint.make({
   params: {
     filter: isGithubTeamPullRequestsAvailable,
     loader: () =>
-      import('./components/GroupPullRequestsCard').then(
-        m => <m.Content />,
-      ),
+      import('./components/GroupPullRequestsCard').then(m => <m.Content />),
   },
 });
 
