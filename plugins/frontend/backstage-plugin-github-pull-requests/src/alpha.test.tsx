@@ -35,7 +35,11 @@ import {
   entityGithubPullRequestsTable,
   entityGithubGroupPullRequestsCard,
 } from './alpha';
-import { entityMock, groupEntityMockWithSlug, openPullsRequestMock } from './mocks/mocks';
+import {
+  entityMock,
+  groupEntityMockWithSlug,
+  openPullsRequestMock,
+} from './mocks/mocks';
 import { Entity } from '@backstage/catalog-model';
 
 const configApi = new ConfigReader({});
@@ -73,14 +77,12 @@ describe('GitHub Pull Requests alpha extensions', () => {
     jest.resetAllMocks();
     worker.use(
       // Mock GitHub API calls
-      rest.get(
-        'https://api.github.com/search/issues',
-        (_, res, ctx) => res(ctx.json(openPullsRequestMock)),
+      rest.get('https://api.github.com/search/issues', (_, res, ctx) =>
+        res(ctx.json(openPullsRequestMock)),
       ),
       // Mock the SCM auth refresh endpoint to avoid warnings
-      rest.get(
-        'http://localhost:7007/api/auth/github/refresh',
-        (_, res, ctx) => res(ctx.json({ token: 'mock-token' })),
+      rest.get('http://localhost:7007/api/auth/github/refresh', (_, res, ctx) =>
+        res(ctx.json({ token: 'mock-token' })),
       ),
     );
   });
@@ -91,7 +93,9 @@ describe('GitHub Pull Requests alpha extensions', () => {
 
       await waitFor(
         () => {
-          expect(rendered.getByText('GitHub Pull Requests')).toBeInTheDocument();
+          expect(
+            rendered.getByText('GitHub Pull Requests'),
+          ).toBeInTheDocument();
         },
         { timeout: 10000 },
       );
@@ -122,7 +126,9 @@ describe('GitHub Pull Requests alpha extensions', () => {
 
   describe('entityGithubPullRequestsOverviewCard', () => {
     it('renders the overview card with PR statistics', async () => {
-      const rendered = await renderExtension(entityGithubPullRequestsOverviewCard);
+      const rendered = await renderExtension(
+        entityGithubPullRequestsOverviewCard,
+      );
 
       // Wait for the card to load - check for the title
       await waitFor(
@@ -148,7 +154,7 @@ describe('GitHub Pull Requests alpha extensions', () => {
         },
         { timeout: 10000 },
       );
-      
+
       // Verify other key column headers are present
       expect(rendered.getByText('Creator')).toBeInTheDocument();
       expect(rendered.getByText('Created')).toBeInTheDocument();
@@ -167,7 +173,9 @@ describe('GitHub Pull Requests alpha extensions', () => {
       await waitFor(
         () => {
           // Verify that Missing Annotation is NOT displayed (i.e., auth wrapper loaded)
-          expect(rendered.queryByText('Missing Annotation')).not.toBeInTheDocument();
+          expect(
+            rendered.queryByText('Missing Annotation'),
+          ).not.toBeInTheDocument();
         },
         { timeout: 10000 },
       );
