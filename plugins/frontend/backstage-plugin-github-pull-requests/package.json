@@ -86,8 +86,10 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
+    "@backstage/config": "backstage:^",
     "@backstage/core-app-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
+    "@backstage/frontend-test-utils": "backstage:^",
     "@backstage/test-utils": "backstage:^",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
