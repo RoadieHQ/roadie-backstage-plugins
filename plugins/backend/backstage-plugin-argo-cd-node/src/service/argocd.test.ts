@@ -879,6 +879,9 @@ describe('ArgoCD service', () => {
       });
     });
 
+    // Force sync is intentionally omitted because Argo CD
+    // does not support force with server-side apply.
+    // https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#force-sync
     it('should not force the sync via hook strategy payload', async () => {
       fetchMock.mockResponseOnce('');
 
