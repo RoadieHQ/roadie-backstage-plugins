@@ -879,6 +879,31 @@ describe('ArgoCD service', () => {
       });
     });
 
+    it('should not force the sync via hook strategy payload', async () => {
+      fetchMock.mockResponseOnce('');
+
+      await argoService.syncArgoApp({
+        argoInstance: {
+          name: 'testApp',
+          url: 'https://argoinstance1.com',
+          appName: ['testApp'],
+        },
+        argoToken: 'testToken',
+        appName: 'testApp',
+      });
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      const [, requestOptions] = fetchMock.mock.calls[0];
+      expect(JSON.parse(requestOptions?.body as string)).toStrictEqual({
+        prune: false,
+        dryRun: false,
+        resources: null,
+      });
+      expect(JSON.parse(requestOptions?.body as string)).not.toHaveProperty(
+        'strategy',
+      );
+    });
+
     it('should fail to sync all apps when bad permissions', async () => {
       fetchMock.mockResponseOnce('', { status: 403 });
 
