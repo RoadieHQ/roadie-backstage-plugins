@@ -674,11 +674,6 @@ export class ArgoService implements ArgoServiceApi {
     const data = {
       prune: false,
       dryRun: false,
-      strategy: {
-        hook: {
-          force: true,
-        },
-      },
       resources: null,
     };
 
