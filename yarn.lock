@@ -13158,7 +13158,7 @@ __metadata:
     "@types/adm-zip": "npm:^0.4.34"
     "@types/fs-extra": "npm:^9.0.13"
     "@types/mock-fs": "npm:^4.13.1"
-    adm-zip: "npm:^0.5.9"
+    adm-zip: "npm:^0.6.1"
     detect-indent: "npm:^6.1.0"
     fast-glob: "npm:^3.3.3"
     fs-extra: "npm:^10.0.0"
@@ -17199,10 +17199,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:^0.5.10, adm-zip@npm:^0.5.9":
+"adm-zip@npm:^0.5.10":
   version: 0.5.15
   resolution: "adm-zip@npm:0.5.15"
   checksum: 10/279463faa4037be020b3d2bef3852efbee364f3a37378ccc14806cd73e53bd9c45532e6d0ac557606cea3f8c329c5abfd0e1d197471a6aeb4e4ea7c7ad9c03b5
+  languageName: node
+  linkType: hard
+
+"adm-zip@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "adm-zip@npm:0.6.1"
+  checksum: 10/072af04891b33a68aba6b6979d6eec56cbe8d5bca9a349c2e78f86cc64e872e75faf56341e20541c6ffd7bcfb931187157c24f141b97ad1f18ebd8bfacbcf437
   languageName: node
   linkType: hard
 
