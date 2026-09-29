@@ -1,5 +1,11 @@
 # @roadiehq/roadie-backstage-entity-validator
 
+## 2.9.1
+
+### Patch Changes
+
+- 00e51dc: Remove unused `@actions/core` dependency, which pulled in a vulnerable version of `undici`.
+
 ## 2.9.0
 
 ### Minor Changes
