@@ -12580,6 +12580,7 @@ __metadata:
     jsonata: "npm:^2.0.4"
     lodash: "npm:^4.17.21"
     mock-fs: "npm:^5.5.0"
+    nunjitsu: "npm:^0.6.1"
     yaml: "npm:^2.6.1"
     yawn-yaml: "npm:^2.3.0"
     zod: "npm:^3.25.76 || ^4.0.0"

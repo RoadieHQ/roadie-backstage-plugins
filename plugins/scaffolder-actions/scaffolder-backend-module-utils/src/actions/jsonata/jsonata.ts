@@ -16,6 +16,25 @@
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
 import jsonata from 'jsonata';
 
+// JSONata returns "sequences": arrays tagged with hidden own properties such as
+// `sequence` and `keepSingleton`. The scaffolder template context rejects arrays
+// with custom properties, so copy the result into plain arrays and objects.
+function toPlainValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(toPlainValue);
+  }
+  if (
+    value !== null &&
+    typeof value === 'object' &&
+    Object.getPrototypeOf(value) === Object.prototype
+  ) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, toPlainValue(item)]),
+    );
+  }
+  return value;
+}
+
 export function createJSONataAction() {
   return createTemplateAction({
     id: 'roadiehq:utils:jsonata',
@@ -38,7 +57,7 @@ export function createJSONataAction() {
         const expression = jsonata(ctx.input.expression);
         const result = await expression.evaluate(ctx.input.data);
 
-        ctx.output('result', result);
+        ctx.output('result', toPlainValue(result));
       } catch (e: any) {
         const message = e.hasOwnProperty('message')
           ? e.message
