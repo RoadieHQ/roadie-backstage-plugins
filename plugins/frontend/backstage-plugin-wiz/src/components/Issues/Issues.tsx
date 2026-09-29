@@ -155,8 +155,8 @@ export const Issues = () => {
         }) => {
           const issueId = row.original.id;
           const issueLink = wizBaseUrl.startsWith('http')
-            ? `${wizBaseUrl}/issues/${issueId}`
-            : `https://${wizBaseUrl}/issues/${issueId}`;
+            ? `${wizBaseUrl}/issues#~(issue~'${issueId})`
+            : `https://${wizBaseUrl}/issues#~(issue~'${issueId})`;
 
           return (
             <Link href={issueLink} target="_blank" rel="noopener noreferrer">
