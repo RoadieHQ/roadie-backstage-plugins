@@ -100,7 +100,7 @@ describe('ContributorsCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/contributors',
-        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+        (_, res, ctx) => res(ctx.status(304)),
       ),
     );
 

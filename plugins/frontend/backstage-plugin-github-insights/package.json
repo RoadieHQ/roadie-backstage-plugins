@@ -78,6 +78,7 @@
     "git-url-parse": "^16.1.0",
     "immer": "9.0.7",
     "react-use": "^17.2.4",
+    "zod": "^4.0.0",
     "zustand": "3.6.9"
   },
   "peerDependencies": {
@@ -90,8 +91,9 @@
     "@backstage/core-app-api": "backstage:^",
     "@backstage/dev-utils": "backstage:^",
     "@backstage/test-utils": "backstage:^",
+    "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^16.3.0",
     "@types/git-url-parse": "^16.0.2",
     "cross-fetch": "^3.1.4",
     "msw": "^1.0.1",

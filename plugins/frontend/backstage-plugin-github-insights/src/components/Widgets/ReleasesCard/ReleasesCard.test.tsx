@@ -99,7 +99,7 @@ describe('ReleasesCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/releases',
-        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+        (_, res, ctx) => res(ctx.status(304)),
       ),
     );
 

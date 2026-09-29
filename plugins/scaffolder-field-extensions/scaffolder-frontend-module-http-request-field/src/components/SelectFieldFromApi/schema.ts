@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { makeFieldSchemaFromZod } from '@backstage/plugin-scaffolder';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 /**
  * @public

@@ -44,12 +44,12 @@ import {
   coreServices,
   createBackendModule,
 } from '@backstage/backend-plugin-api';
+import { catalogModelExtensionPoint } from '@backstage/plugin-catalog-node/alpha';
 import {
-  catalogProcessingExtensionPoint,
-  catalogModelExtensionPoint,
   catalogAnalysisExtensionPoint,
-} from '@backstage/plugin-catalog-node/alpha';
-import { EntityProvider } from '@backstage/plugin-catalog-node';
+  catalogProcessingExtensionPoint,
+  EntityProvider,
+} from '@backstage/plugin-catalog-node';
 import { Config } from '@backstage/config';
 
 type RunnableProvider = EntityProvider & {
