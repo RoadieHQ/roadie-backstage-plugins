@@ -1,5 +1,19 @@
 # @roadiehq/backstage-plugin-security-insights
 
+## 3.4.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
+### Patch Changes
+
+- 01b0847: Fix dismissing a code scanning alert from the severity status modal, which always sent the request to the `RoadieHQ/backstage` repository instead of the entity's own repository.
+- Updated dependencies [01b0847]
+  - @roadiehq/github-auth-utils-react@1.3.0
+
 ## 3.3.1
 
 ### Patch Changes

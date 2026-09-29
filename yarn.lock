@@ -11520,7 +11520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.8.0, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.5.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
+"@roadiehq/backstage-plugin-argo-cd-backend@npm:4.9.0, @roadiehq/backstage-plugin-argo-cd-backend@npm:^4.9.0, @roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-argo-cd-backend@workspace:plugins/backend/backstage-plugin-argo-cd-backend"
   dependencies:
@@ -11529,7 +11529,7 @@ __metadata:
     "@backstage/backend-test-utils": "backstage:^"
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
-    "@roadiehq/backstage-plugin-argo-cd-node": "npm:^2.0.0"
+    "@roadiehq/backstage-plugin-argo-cd-node": "npm:^2.2.0"
     "@types/express": "npm:^4.17.6"
     "@types/supertest": "npm:^2.0.8"
     cross-fetch: "npm:^3.1.4"
@@ -11543,7 +11543,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/backstage-plugin-argo-cd-node@npm:^2.0.0, @roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node":
+"@roadiehq/backstage-plugin-argo-cd-node@npm:^2.2.0, @roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-argo-cd-node@workspace:plugins/backend/backstage-plugin-argo-cd-node"
   dependencies:
@@ -11598,7 +11598,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/backstage-plugin-aws-auth@npm:^0.7.0, @roadiehq/backstage-plugin-aws-auth@workspace:plugins/backend/backstage-plugin-aws-auth":
+"@roadiehq/backstage-plugin-aws-auth@npm:^0.8.0, @roadiehq/backstage-plugin-aws-auth@workspace:plugins/backend/backstage-plugin-aws-auth":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-aws-auth@workspace:plugins/backend/backstage-plugin-aws-auth"
   dependencies:
@@ -11614,7 +11614,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/backstage-plugin-aws-backend@npm:^1.5.0, @roadiehq/backstage-plugin-aws-backend@workspace:plugins/backend/backstage-aws-backend":
+"@roadiehq/backstage-plugin-aws-backend@npm:^1.6.0, @roadiehq/backstage-plugin-aws-backend@workspace:plugins/backend/backstage-aws-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/backstage-plugin-aws-backend@workspace:plugins/backend/backstage-aws-backend"
   dependencies:
@@ -11866,7 +11866,7 @@ __metadata:
     "@material-ui/lab": "npm:4.0.0-alpha.45"
     "@octokit/rest": "npm:^19.0.3"
     "@octokit/types": "npm:^9.0.0"
-    "@roadiehq/github-auth-utils-react": "npm:^1.2.0"
+    "@roadiehq/github-auth-utils-react": "npm:^1.3.0"
     "@testing-library/dom": "npm:^10.0.0"
     "@testing-library/jest-dom": "npm:^6.0.0"
     "@testing-library/react": "npm:^16.3.0"
@@ -11909,7 +11909,7 @@ __metadata:
     "@material-ui/lab": "npm:^4.0.0-alpha.60"
     "@octokit/rest": "npm:^19.0.3"
     "@octokit/types": "npm:^9.0.0"
-    "@roadiehq/github-auth-utils-react": "npm:^1.2.0"
+    "@roadiehq/github-auth-utils-react": "npm:^1.3.0"
     "@rollup/plugin-commonjs": "npm:^24.0.1"
     "@rollup/plugin-node-resolve": "npm:^15.0.1"
     "@testing-library/dom": "npm:^10.0.0"
@@ -12148,7 +12148,7 @@ __metadata:
     "@material-ui/lab": "npm:^4.0.0-alpha.45"
     "@octokit/graphql": "npm:^5.0.0"
     "@octokit/rest": "npm:^19.0.3"
-    "@roadiehq/github-auth-utils-react": "npm:^1.2.0"
+    "@roadiehq/github-auth-utils-react": "npm:^1.3.0"
     "@rollup/plugin-commonjs": "npm:^24.0.1"
     "@rollup/plugin-node-resolve": "npm:^15.0.1"
     "@testing-library/dom": "npm:^10.0.0"
@@ -12263,7 +12263,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/catalog-backend-module-aws@npm:^5.10.0, @roadiehq/catalog-backend-module-aws@workspace:plugins/backend/catalog-backend-module-aws":
+"@roadiehq/catalog-backend-module-aws@npm:^5.12.0, @roadiehq/catalog-backend-module-aws@workspace:plugins/backend/catalog-backend-module-aws":
   version: 0.0.0-use.local
   resolution: "@roadiehq/catalog-backend-module-aws@workspace:plugins/backend/catalog-backend-module-aws"
   dependencies:
@@ -12308,7 +12308,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/catalog-backend-module-gravatar@npm:^1.2.0, @roadiehq/catalog-backend-module-gravatar@workspace:plugins/backend/catalog-backend-module-gravatar":
+"@roadiehq/catalog-backend-module-gravatar@npm:^1.3.0, @roadiehq/catalog-backend-module-gravatar@workspace:plugins/backend/catalog-backend-module-gravatar":
   version: 0.0.0-use.local
   resolution: "@roadiehq/catalog-backend-module-gravatar@workspace:plugins/backend/catalog-backend-module-gravatar"
   dependencies:
@@ -12318,7 +12318,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/catalog-backend-module-okta@npm:^1.3.0, @roadiehq/catalog-backend-module-okta@workspace:plugins/backend/catalog-backend-module-okta":
+"@roadiehq/catalog-backend-module-okta@npm:^1.5.0, @roadiehq/catalog-backend-module-okta@workspace:plugins/backend/catalog-backend-module-okta":
   version: 0.0.0-use.local
   resolution: "@roadiehq/catalog-backend-module-okta@workspace:plugins/backend/catalog-backend-module-okta"
   dependencies:
@@ -12337,7 +12337,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/github-auth-utils-react@npm:^1.2.0, @roadiehq/github-auth-utils-react@workspace:plugins/frontend/github-auth-utils-react":
+"@roadiehq/github-auth-utils-react@npm:^1.3.0, @roadiehq/github-auth-utils-react@workspace:plugins/frontend/github-auth-utils-react":
   version: 0.0.0-use.local
   resolution: "@roadiehq/github-auth-utils-react@workspace:plugins/frontend/github-auth-utils-react"
   dependencies:
@@ -12379,7 +12379,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/plugin-wiz-backend@npm:^2.2.0, @roadiehq/plugin-wiz-backend@workspace:plugins/backend/wiz-backend":
+"@roadiehq/plugin-wiz-backend@npm:^2.3.0, @roadiehq/plugin-wiz-backend@workspace:plugins/backend/wiz-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/plugin-wiz-backend@workspace:plugins/backend/wiz-backend"
   dependencies:
@@ -12393,7 +12393,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-embeddings-aws@npm:^2.0.0, @roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
+"@roadiehq/rag-ai-backend-embeddings-aws@npm:^2.2.0, @roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-embeddings-aws@workspace:plugins/backend/rag-ai-backend-embeddings-aws"
   dependencies:
@@ -12406,14 +12406,14 @@ __metadata:
     "@backstage/config": "backstage:^"
     "@langchain/aws": "npm:^1.0.3"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-backend": "npm:^3.0.1"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
-    "@roadiehq/rag-ai-node": "npm:^0.4.0"
+    "@roadiehq/rag-ai-backend": "npm:^3.1.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.1.0"
+    "@roadiehq/rag-ai-node": "npm:^0.5.0"
     winston: "npm:^3.11.0"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-embeddings-openai@npm:^0.8.0, @roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
+"@roadiehq/rag-ai-backend-embeddings-openai@npm:^0.9.0, @roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-embeddings-openai@workspace:plugins/backend/rag-ai-backend-embeddings-openai"
   dependencies:
@@ -12423,13 +12423,13 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/openai": "npm:^1.1.3"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
-    "@roadiehq/rag-ai-node": "npm:^0.4.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.1.0"
+    "@roadiehq/rag-ai-node": "npm:^0.5.0"
     winston: "npm:^3.11.0"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend-retrieval-augmenter@npm:^2.0.0, @roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
+"@roadiehq/rag-ai-backend-retrieval-augmenter@npm:^2.1.0, @roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend-retrieval-augmenter@workspace:plugins/backend/rag-ai-backend-retrieval-augmenter"
   dependencies:
@@ -12442,12 +12442,12 @@ __metadata:
     "@backstage/plugin-search-common": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
     "@langchain/textsplitters": "npm:^1.0.1"
-    "@roadiehq/rag-ai-node": "npm:^0.4.0"
+    "@roadiehq/rag-ai-node": "npm:^0.5.0"
     p-limit: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-backend@npm:^3.0.0, @roadiehq/rag-ai-backend@npm:^3.0.1, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
+"@roadiehq/rag-ai-backend@npm:^3.1.0, @roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-backend@workspace:plugins/backend/rag-ai-backend"
   dependencies:
@@ -12456,7 +12456,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-node": "npm:^0.4.0"
+    "@roadiehq/rag-ai-node": "npm:^0.5.0"
     "@types/compression": "npm:^1.7.5"
     "@types/express": "npm:*"
     express: "npm:^4.17.1"
@@ -12466,7 +12466,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-node@npm:^0.4.0, @roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node":
+"@roadiehq/rag-ai-node@npm:^0.5.0, @roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-node@workspace:plugins/backend/rag-ai-node"
   dependencies:
@@ -12476,7 +12476,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/rag-ai-storage-pgvector@npm:^3.0.0, @roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector":
+"@roadiehq/rag-ai-storage-pgvector@npm:^3.1.0, @roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector":
   version: 0.0.0-use.local
   resolution: "@roadiehq/rag-ai-storage-pgvector@workspace:plugins/backend/rag-ai-storage-pgvector"
   dependencies:
@@ -12484,7 +12484,7 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@langchain/core": "npm:^1.1.0"
-    "@roadiehq/rag-ai-node": "npm:^0.4.0"
+    "@roadiehq/rag-ai-node": "npm:^0.5.0"
     knex: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
@@ -12540,12 +12540,12 @@ __metadata:
     "@backstage/cli": "backstage:^"
     "@backstage/config": "backstage:^"
     "@backstage/plugin-scaffolder-node": "backstage:^"
-    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:^4.5.0"
+    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:^4.9.0"
     winston: "npm:^3.2.1"
   languageName: unknown
   linkType: soft
 
-"@roadiehq/scaffolder-backend-module-aws@npm:^2.8.0, @roadiehq/scaffolder-backend-module-aws@workspace:plugins/scaffolder-actions/scaffolder-backend-module-aws":
+"@roadiehq/scaffolder-backend-module-aws@npm:^2.9.0, @roadiehq/scaffolder-backend-module-aws@workspace:plugins/scaffolder-actions/scaffolder-backend-module-aws":
   version: 0.0.0-use.local
   resolution: "@roadiehq/scaffolder-backend-module-aws@workspace:plugins/scaffolder-actions/scaffolder-backend-module-aws"
   dependencies:
@@ -12570,7 +12570,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/scaffolder-backend-module-http-request@npm:^5.5.0, @roadiehq/scaffolder-backend-module-http-request@workspace:plugins/scaffolder-actions/scaffolder-backend-module-http-request":
+"@roadiehq/scaffolder-backend-module-http-request@npm:^5.9.0, @roadiehq/scaffolder-backend-module-http-request@workspace:plugins/scaffolder-actions/scaffolder-backend-module-http-request":
   version: 0.0.0-use.local
   resolution: "@roadiehq/scaffolder-backend-module-http-request@workspace:plugins/scaffolder-actions/scaffolder-backend-module-http-request"
   dependencies:
@@ -12587,7 +12587,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@roadiehq/scaffolder-backend-module-utils@npm:^4.1.0, @roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils":
+"@roadiehq/scaffolder-backend-module-utils@npm:^4.2.0, @roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils":
   version: 0.0.0-use.local
   resolution: "@roadiehq/scaffolder-backend-module-utils@workspace:plugins/scaffolder-actions/scaffolder-backend-module-utils"
   dependencies:
@@ -18908,21 +18908,21 @@ __metadata:
     "@langchain/core": "npm:^1.1.0"
     "@langchain/openai": "npm:^1.1.3"
     "@octokit/rest": "npm:^19.0.3"
-    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.8.0"
-    "@roadiehq/backstage-plugin-aws-auth": "npm:^0.7.0"
-    "@roadiehq/backstage-plugin-aws-backend": "npm:^1.5.0"
-    "@roadiehq/catalog-backend-module-aws": "npm:^5.10.0"
-    "@roadiehq/catalog-backend-module-gravatar": "npm:^1.2.0"
-    "@roadiehq/catalog-backend-module-okta": "npm:^1.3.0"
-    "@roadiehq/plugin-wiz-backend": "npm:^2.2.0"
-    "@roadiehq/rag-ai-backend": "npm:^3.0.0"
-    "@roadiehq/rag-ai-backend-embeddings-aws": "npm:^2.0.0"
-    "@roadiehq/rag-ai-backend-embeddings-openai": "npm:^0.8.0"
-    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.0.0"
-    "@roadiehq/rag-ai-storage-pgvector": "npm:^3.0.0"
-    "@roadiehq/scaffolder-backend-module-aws": "npm:^2.8.0"
-    "@roadiehq/scaffolder-backend-module-http-request": "npm:^5.5.0"
-    "@roadiehq/scaffolder-backend-module-utils": "npm:^4.1.0"
+    "@roadiehq/backstage-plugin-argo-cd-backend": "npm:4.9.0"
+    "@roadiehq/backstage-plugin-aws-auth": "npm:^0.8.0"
+    "@roadiehq/backstage-plugin-aws-backend": "npm:^1.6.0"
+    "@roadiehq/catalog-backend-module-aws": "npm:^5.12.0"
+    "@roadiehq/catalog-backend-module-gravatar": "npm:^1.3.0"
+    "@roadiehq/catalog-backend-module-okta": "npm:^1.5.0"
+    "@roadiehq/plugin-wiz-backend": "npm:^2.3.0"
+    "@roadiehq/rag-ai-backend": "npm:^3.1.0"
+    "@roadiehq/rag-ai-backend-embeddings-aws": "npm:^2.2.0"
+    "@roadiehq/rag-ai-backend-embeddings-openai": "npm:^0.9.0"
+    "@roadiehq/rag-ai-backend-retrieval-augmenter": "npm:^2.1.0"
+    "@roadiehq/rag-ai-storage-pgvector": "npm:^3.1.0"
+    "@roadiehq/scaffolder-backend-module-aws": "npm:^2.9.0"
+    "@roadiehq/scaffolder-backend-module-http-request": "npm:^5.9.0"
+    "@roadiehq/scaffolder-backend-module-utils": "npm:^4.2.0"
     "@types/dockerode": "npm:^3.3.0"
     "@types/express": "npm:^4.17.6"
     "@types/express-serve-static-core": "npm:^4.17.5"

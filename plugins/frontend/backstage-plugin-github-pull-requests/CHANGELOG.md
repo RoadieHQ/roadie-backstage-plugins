@@ -1,5 +1,18 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.9.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
+### Patch Changes
+
+- Updated dependencies [01b0847]
+  - @roadiehq/github-auth-utils-react@1.3.0
+
 ## 3.8.0
 
 ### Minor Changes

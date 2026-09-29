@@ -1,5 +1,13 @@
 ## 1.1.0
 
+## 2.8.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
 ## 2.7.0
 
 ### Minor Changes

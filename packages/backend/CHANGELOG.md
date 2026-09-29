@@ -1,5 +1,27 @@
 # backend
 
+## 2.6.7
+
+### Patch Changes
+
+- Updated dependencies [01b0847]
+- Updated dependencies [01b0847]
+  - @roadiehq/scaffolder-backend-module-utils@4.2.0
+  - @roadiehq/backstage-plugin-aws-backend@1.6.0
+  - @roadiehq/backstage-plugin-argo-cd-backend@4.9.0
+  - @roadiehq/backstage-plugin-aws-auth@0.8.0
+  - @roadiehq/catalog-backend-module-aws@5.12.0
+  - @roadiehq/catalog-backend-module-gravatar@1.3.0
+  - @roadiehq/catalog-backend-module-okta@1.5.0
+  - @roadiehq/rag-ai-backend@3.1.0
+  - @roadiehq/rag-ai-backend-embeddings-aws@2.2.0
+  - @roadiehq/rag-ai-backend-embeddings-openai@0.9.0
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@2.1.0
+  - @roadiehq/rag-ai-storage-pgvector@3.1.0
+  - @roadiehq/plugin-wiz-backend@2.3.0
+  - @roadiehq/scaffolder-backend-module-aws@2.9.0
+  - @roadiehq/scaffolder-backend-module-http-request@5.9.0
+
 ## 2.6.6
 
 ### Patch Changes

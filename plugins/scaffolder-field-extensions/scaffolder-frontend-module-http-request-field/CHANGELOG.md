@@ -1,5 +1,17 @@
 # @roadiehq/plugin-scaffolder-frontend-module-http-request-field
 
+## 2.4.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
+### Patch Changes
+
+- 01b0847: Updated dependency `zod` to `^3.25.76 || ^4.0.0` and migrated to the `zod/v3` import, matching the scaffolder packages in Backstage 1.55.
+
 ## 2.3.0
 
 ### Minor Changes
