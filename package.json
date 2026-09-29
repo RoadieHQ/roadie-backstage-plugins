@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "18 || 20 || 22"
+    "node": "22 || 24"
   },
   "scripts": {
     "dev": "concurrently \"yarn start\" \"yarn start-backend\"",
@@ -13,7 +13,6 @@
     "start-backend:ci": "yarn workspace backend backstage-cli package build && node packages/backend",
     "start:ci": "concurrently \"yarn start\" \"yarn start-backend:ci\"",
     "build": "backstage-cli repo build --all",
-    "build-image": "yarn workspace backend build-image",
     "tsc": "tsc",
     "tsc:full": "tsc --skipLibCheck false --incremental false",
     "clean": "backstage-cli clean",
@@ -23,11 +22,12 @@
     "new": "backstage-cli new --scope roadiehq --no-private",
     "remove-plugin": "backstage-cli remove-plugin",
     "release": "changeset version && yarn prettier --write '{packages,plugins}/*/{package.json,CHANGELOG.md}' && yarn install --no-immutable",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "resolutions": {
     "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react-dom": "^18",
+    "@yarnpkg/core": "4.9.1"
   },
   "workspaces": {
     "packages": [
@@ -38,16 +38,21 @@
   },
   "devDependencies": {
     "@backstage/cli": "backstage:^",
+    "@backstage/cli-defaults": "backstage:^",
     "@changesets/cli": "^2.14.0",
+    "@jest/environment-jsdom-abstract": "~30.2.0",
+    "@types/jest": "^30.0.0",
     "concurrently": "^7.0.0",
     "eslint-plugin-jest": "^29.0.1",
     "eslint-plugin-notice": "^1.0.0",
     "http-server": "^14.1.1",
     "husky": "^8.0.1",
+    "jest": "~30.2.0",
+    "jsdom": "^27.1.0",
     "lint-staged": "^15.0.0",
     "node-gyp": "^10.0.0",
     "prettier": "^2.3.2",
-    "typescript": "^5.5.4"
+    "typescript": "~5.8.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs}": [

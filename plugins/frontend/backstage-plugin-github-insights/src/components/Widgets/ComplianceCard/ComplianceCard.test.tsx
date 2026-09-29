@@ -108,11 +108,11 @@ describe('ComplianceCard', () => {
     worker.use(
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/contents/LICENSE',
-        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+        (_, res, ctx) => res(ctx.status(304)),
       ),
       rest.get(
         'https://api.github.com/repos/mcalus3/backstage/branches',
-        (_, res, ctx) => res(ctx.status(304), ctx.json({})),
+        (_, res, ctx) => res(ctx.status(304)),
       ),
     );
 

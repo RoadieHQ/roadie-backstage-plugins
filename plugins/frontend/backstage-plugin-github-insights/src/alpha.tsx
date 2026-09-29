@@ -26,6 +26,7 @@ import {
   EntityContentBlueprint,
 } from '@backstage/plugin-catalog-react/alpha';
 import { isGithubInsightsAvailable } from './components/utils/isGithubInsightsAvailable';
+import { z } from 'zod';
 
 const githubApi = ApiBlueprint.make({
   params: defineParams =>
@@ -77,11 +78,9 @@ const githubInsightsLanguagesEntityCard = EntityCardBlueprint.make({
 
 const githubInsightsReadmeEntityCard = EntityCardBlueprint.makeWithOverrides({
   name: 'readme',
-  config: {
-    schema: {
-      maxHeight: z => z.number().optional(),
-      title: z => z.string().optional(),
-    },
+  configSchema: {
+    maxHeight: z.number().optional(),
+    title: z.string().optional(),
   },
   factory(originalFactory, { config }) {
     return originalFactory({

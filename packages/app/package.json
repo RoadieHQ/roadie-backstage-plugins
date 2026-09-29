@@ -56,14 +56,15 @@
     "history": "^5.0.0",
     "react": "^18.0.2",
     "react-dom": "^18.0.2",
-    "react-router": "^6.26.1",
-    "react-router-dom": "^6.26.1",
+    "react-router": "^6.30.3",
+    "react-router-dom": "^6.30.3",
     "react-use": "^15.3.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
+    "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.0.0",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.0.0",
     "@types/node": "^14.14.32",
     "@types/react": "*",

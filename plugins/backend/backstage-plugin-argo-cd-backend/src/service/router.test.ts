@@ -399,18 +399,16 @@ describe('router', () => {
         appSelector: 'backstage-name:application',
       });
 
-      expect(resp.body).toEqual(
-        expect.objectContaining([
-          {
-            status: 'Success',
-            message: 'Re-synced application on argoInstance',
-          },
-          {
-            status: 'Success',
-            message: 'Re-synced application on argoInstance',
-          },
-        ]),
-      );
+      expect(resp.body).toEqual([
+        {
+          status: 'Success',
+          message: 'Re-synced application on argoInstance',
+        },
+        {
+          status: 'Success',
+          message: 'Re-synced application on argoInstance',
+        },
+      ]);
       expect(resp.status).toBe(200);
     });
   });

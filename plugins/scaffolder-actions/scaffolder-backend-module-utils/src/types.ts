@@ -15,7 +15,7 @@
  */
 
 import { ToStringOptions } from 'yaml';
-import { z as zz } from 'zod';
+import { z as zz } from 'zod/v3';
 
 export type stringifyOptions = Omit<ToStringOptions, 'commentString'>;
 
