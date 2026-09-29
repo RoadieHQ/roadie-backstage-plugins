@@ -27,7 +27,8 @@
   "resolutions": {
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@yarnpkg/core": "4.9.1"
+    "@yarnpkg/core": "4.9.1",
+    "@module-federation/dts-plugin/undici": "7.29.1"
   },
   "workspaces": {
     "packages": [
