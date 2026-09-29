@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 2.4.1
+
+### Patch Changes
+
+- f16a4b5: Fix Wiz issue links to use the `issues#~(issue~'<issue-id>)` format so they open the issue in Wiz.
+
 ## 2.4.0
 
 ### Minor Changes
