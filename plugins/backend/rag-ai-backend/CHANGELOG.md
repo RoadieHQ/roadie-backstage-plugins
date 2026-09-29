@@ -1,5 +1,18 @@
 # @roadiehq/rag-ai-backend
 
+## 3.1.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
+### Patch Changes
+
+- Updated dependencies [01b0847]
+  - @roadiehq/rag-ai-node@0.5.0
+
 ## 3.0.1
 
 ### Patch Changes

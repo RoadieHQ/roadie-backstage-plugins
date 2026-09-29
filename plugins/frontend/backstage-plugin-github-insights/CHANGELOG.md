@@ -1,5 +1,19 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.6.0
+
+### Minor Changes
+
+- 01b0847: Upgrade to Backstage 1.55.2
+
+  Backstage now supports Node.js 22 and 24 only (since Backstage 1.46), and packages are compiled with an ES2023 target.
+
+### Patch Changes
+
+- 01b0847: Move the `entity-card:github-insights/readme` extension config to the `configSchema` option using Zod v4, since the deprecated `config.schema` option was removed in `@backstage/frontend-plugin-api`. The supported config (`maxHeight`, `title`) is unchanged.
+- Updated dependencies [01b0847]
+  - @roadiehq/github-auth-utils-react@1.3.0
+
 ## 3.5.0
 
 ### Minor Changes
