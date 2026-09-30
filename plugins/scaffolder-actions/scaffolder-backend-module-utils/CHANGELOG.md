@@ -1,5 +1,11 @@
 # @roadiehq/scaffolder-backend-module-utils
 
+## 4.2.1
+
+### Patch Changes
+
+- b153503: Fix `roadiehq:utils:jsonata` failing with "Template arrays cannot have custom properties" on Backstage 1.54+ by returning plain arrays instead of JSONata sequences.
+
 ## 4.2.0
 
 ### Minor Changes
