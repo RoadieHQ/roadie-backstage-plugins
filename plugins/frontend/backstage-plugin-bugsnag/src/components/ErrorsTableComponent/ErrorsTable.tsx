@@ -19,7 +19,7 @@ import { Table, TableColumn, Link, Progress } from '@backstage/core-components';
 import { Alert } from '@material-ui/lab';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import { makeStyles } from '@material-ui/core';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { bugsnagApiRef } from '../../api';
 import { BugsnagError, Project } from '../../api/types';
 import { DateTime } from 'luxon';

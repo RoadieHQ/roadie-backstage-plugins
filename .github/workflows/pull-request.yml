@@ -106,6 +106,10 @@ jobs:
       - name: Run tsc
         run: yarn tsc
 
+      # Also type-check dependency declarations, which `yarn tsc` skips via skipLibCheck
+      - name: Run tsc (full)
+        run: yarn tsc:full
+
       - name: Run build
         run: yarn build
 

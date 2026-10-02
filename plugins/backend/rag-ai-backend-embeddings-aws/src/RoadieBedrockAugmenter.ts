@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { BedrockEmbeddings } from '@langchain/aws';
 import { AwsCredentialIdentity, Provider } from '@aws-sdk/types';
 import {
   DefaultVectorAugmentationIndexer,
   RoadieEmbeddingsConfig,
 } from '@roadiehq/rag-ai-backend-retrieval-augmenter';
 import { BedrockCohereEmbeddings } from './BedrockCohereEmbeddings';
+import { BedrockTitanEmbeddings } from './BedrockTitanEmbeddings';
 
 export type BedrockConfig = {
   modelName: string;
@@ -48,7 +48,7 @@ export class RoadieBedrockAugmenter extends DefaultVectorAugmentationIndexer {
           maxRetries: config.bedrockConfig.maxRetries ?? 3,
           maxConcurrency: config.bedrockConfig.maxConcurrency ?? 100,
         })
-      : new BedrockEmbeddings({
+      : new BedrockTitanEmbeddings({
           ...embeddingsConfig,
           maxRetries: config.bedrockConfig.maxRetries ?? 3,
           maxConcurrency: config.bedrockConfig.maxConcurrency ?? 100,

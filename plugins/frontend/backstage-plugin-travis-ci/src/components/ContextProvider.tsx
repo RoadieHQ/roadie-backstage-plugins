@@ -16,7 +16,7 @@
 
 import { Dispatch, FC, createContext, useEffect } from 'react';
 import { travisCIApiRef } from '../api';
-import { useLocalStorage } from 'react-use';
+import useLocalStorage from 'react-use/esm/useLocalStorage';
 import { Entity } from '@backstage/catalog-model';
 
 export type Settings = {

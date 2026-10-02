@@ -31,7 +31,7 @@ import {
   fetchApiRef,
   useApi,
 } from '@backstage/core-plugin-api';
-import { useAsyncFn } from 'react-use';
+import useAsyncFn from 'react-use/esm/useAsyncFn';
 import { ErrorPanel, Table, InfoCard } from '@backstage/core-components';
 import {
   TextField,

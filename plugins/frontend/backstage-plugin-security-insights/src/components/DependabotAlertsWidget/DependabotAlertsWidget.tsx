@@ -19,7 +19,7 @@ import Alert from '@material-ui/lab/Alert';
 import { Box, Grid, makeStyles, Theme, Typography } from '@material-ui/core';
 import { graphql } from '@octokit/graphql';
 import { configApiRef, useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';
 import { useEntity } from '@backstage/plugin-catalog-react';

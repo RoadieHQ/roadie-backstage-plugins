@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { errorHandler } from '@backstage/backend-common';
 import express, { NextFunction, Request, Response } from 'express';
 import Router from 'express-promise-router';
 import { Logger } from 'winston';
@@ -119,6 +118,5 @@ export async function createRouter(
     .route('/query/:source')
     .post(sourceValidatorMiddleware, bodyQueryValidator, controller.query);
 
-  router.use(errorHandler());
   return router;
 }

@@ -1,6 +1,6 @@
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useCallback } from 'react';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { travisCIApiRef } from '../api';
 import { useAsyncPolling } from './useAsyncPolling';
 

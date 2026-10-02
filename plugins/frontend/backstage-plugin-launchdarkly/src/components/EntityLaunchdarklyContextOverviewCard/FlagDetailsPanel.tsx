@@ -18,7 +18,7 @@ import { Progress } from '@backstage/core-components';
 import { LAUNCHDARKLY_PROJECT_KEY_ANNOTATION } from '../../constants';
 import { ContextFlag } from '../../hooks/useLaunchdarklyContextFlags';
 import { discoveryApiRef, useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   Box,
   Card,

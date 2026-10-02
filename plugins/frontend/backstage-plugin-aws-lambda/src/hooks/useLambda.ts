@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { useAsync, useAsyncRetry } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import {
   useApi,
   errorApiRef,

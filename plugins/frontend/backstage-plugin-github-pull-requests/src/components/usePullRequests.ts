@@ -15,7 +15,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { githubPullRequestsApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
 import { SearchPullRequestsResponseData } from '../types';

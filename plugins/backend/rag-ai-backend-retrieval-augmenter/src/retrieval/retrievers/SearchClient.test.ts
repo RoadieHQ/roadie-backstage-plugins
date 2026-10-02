@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 import { SearchClient, SearchClientQuery } from './SearchClient';
-import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
+import { AuthService, DiscoveryService } from '@backstage/backend-plugin-api';
 import { EmbeddingsSource } from '@roadiehq/rag-ai-node';
 
 describe('SearchClient', () => {
-  let mockDiscoveryApi: PluginEndpointDiscovery;
-  let mockTokenManager: TokenManager;
+  let mockDiscoveryApi: DiscoveryService;
+  let mockAuth: jest.Mocked<AuthService>;
   let mockLogger: any;
   let searchClient: SearchClient;
 
@@ -31,17 +28,21 @@ describe('SearchClient', () => {
       getBaseUrl: jest.fn().mockResolvedValue('http://mock-search-url'),
       getExternalBaseUrl: jest.fn(),
     };
-    mockTokenManager = {
-      getToken: jest.fn().mockResolvedValue({ token: 'mock-token' }),
-      authenticate: jest.fn(),
-    };
+    mockAuth = {
+      getOwnServiceCredentials: jest
+        .fn()
+        .mockResolvedValue({ $$type: '@backstage/BackstageCredentials' }),
+      getPluginRequestToken: jest
+        .fn()
+        .mockResolvedValue({ token: 'mock-token' }),
+    } as unknown as jest.Mocked<AuthService>;
     mockLogger = {
       warn: jest.fn(),
     };
 
     searchClient = new SearchClient({
       discoveryApi: mockDiscoveryApi,
-      tokenManager: mockTokenManager,
+      auth: mockAuth,
       logger: mockLogger,
     });
   });
@@ -69,7 +70,9 @@ describe('SearchClient', () => {
     await searchClient.query(query);
 
     expect(mockDiscoveryApi.getBaseUrl).toHaveBeenCalled();
-    expect(mockTokenManager.getToken).toHaveBeenCalled();
+    expect(mockAuth.getPluginRequestToken).toHaveBeenCalledWith(
+      expect.objectContaining({ targetPluginId: 'search' }),
+    );
     expect(mockFetch).toHaveBeenCalledWith(
       'http://mock-search-url/query?term=catalog&types[0]=software-catalog',
       {

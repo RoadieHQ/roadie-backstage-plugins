@@ -16,7 +16,7 @@
 
 import { ErrorPanel, Link, Table } from '@backstage/core-components';
 import { DataItem, RSSContentProps } from './types';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { Typography, makeStyles } from '@material-ui/core';
 import { fetchApiRef, useApi } from '@backstage/core-plugin-api';
 import { DateTime } from 'luxon';

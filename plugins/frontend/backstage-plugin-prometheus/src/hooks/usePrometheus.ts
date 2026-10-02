@@ -15,7 +15,8 @@
  */
 
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
-import { useAsync, useAsyncFn } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
+import useAsyncFn from 'react-use/esm/useAsyncFn';
 import { prometheusApiRef } from '../api';
 import {
   PrometheusDisplayableAlert,

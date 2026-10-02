@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useLocalStorage } from 'react-use';
+import useLocalStorage from 'react-use/esm/useLocalStorage';
 import { IssuesCounter } from '../types';
 
 export type IssuetypeType = 'non-empty' | 'all';

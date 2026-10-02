@@ -1,6 +1,6 @@
 import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useCallback, useEffect, useState } from 'react';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { travisCIApiRef, TravisCIBuildResponse } from '../api';
 import { useTravisRepoData } from './useTravisRepoData';
 

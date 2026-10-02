@@ -1,5 +1,5 @@
 import { Entity } from '@backstage/catalog-model';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   LAUNCHDARKLY_FILTER_ANNOTATION,
   LAUNCHDARKLY_FILTER_QUERY_ANNOTATION,

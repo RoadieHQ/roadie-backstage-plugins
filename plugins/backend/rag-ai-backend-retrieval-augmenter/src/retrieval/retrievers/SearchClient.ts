@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 import {
-  createLegacyAuthAdapters,
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 import { ResponseError } from '@backstage/errors';
 import { EmbeddingDoc, EmbeddingsSource } from '@roadiehq/rag-ai-node';
 import { SearchResultSet } from '@backstage/plugin-search-common';
@@ -40,22 +39,18 @@ const embeddingsSourceToBackstageSearchType = (source: EmbeddingsSource) => {
 };
 
 export class SearchClient {
-  private readonly discoveryApi: PluginEndpointDiscovery;
+  private readonly discoveryApi: DiscoveryService;
   private readonly logger: LoggerService;
   private readonly auth: AuthService;
 
   constructor(options: {
-    discoveryApi: PluginEndpointDiscovery;
+    discoveryApi: DiscoveryService;
     logger: LoggerService;
-    auth?: AuthService;
-    tokenManager?: TokenManager;
+    auth: AuthService;
   }) {
     this.discoveryApi = options.discoveryApi;
     this.logger = options.logger;
-    this.auth = createLegacyAuthAdapters({
-      ...options,
-      discovery: options.discoveryApi,
-    }).auth;
+    this.auth = options.auth;
   }
 
   async query(query: SearchClientQuery): Promise<EmbeddingDoc[]> {
