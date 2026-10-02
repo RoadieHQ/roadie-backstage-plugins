@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.13.1
+
+### Patch Changes
+
+- 495f12e: Import `react-use` hooks from their individual modules (e.g. `react-use/esm/useAsync`) instead of the package root. This lets bundlers tree-shake unused hooks and avoids pulling in `react-use`'s broken type declarations for hooks these plugins don't use.
+
 ## 2.13.0
 
 ### Minor Changes

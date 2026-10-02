@@ -1,5 +1,11 @@
 # @roadiehq/backstage-plugin-github-pull-requests
 
+## 3.9.1
+
+### Patch Changes
+
+- 495f12e: Import `react-use` hooks from their individual modules (e.g. `react-use/esm/useAsync`) instead of the package root. This lets bundlers tree-shake unused hooks and avoids pulling in `react-use`'s broken type declarations for hooks these plugins don't use.
+
 ## 3.9.0
 
 ### Minor Changes

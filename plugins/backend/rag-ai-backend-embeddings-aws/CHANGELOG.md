@@ -1,5 +1,32 @@
 # @roadiehq/rag-ai-backend-embeddings-aws
 
+## 3.0.0
+
+### Major Changes
+
+- 495f12e: Remove the dependency on the deprecated `@backstage/backend-common` package.
+
+  **BREAKING**: The `tokenManager` option has been removed and `auth` (`AuthService`) is now required. `discovery` is now typed as `DiscoveryService` from `@backstage/backend-plugin-api`. This affects `createDefaultRetrievalPipeline`, `SearchRetriever`, `RoadieEmbeddingsConfig`, `DefaultVectorAugmentationIndexer`, `initializeBedrockEmbeddings` and `initializeOpenAiEmbeddings`. Pass `coreServices.auth` and `coreServices.discovery` from the new backend system:
+
+  ```diff
+   createDefaultRetrievalPipeline({
+     discovery,
+     logger,
+     vectorStore: augmentationIndexer.vectorStore,
+  -  tokenManager,
+  +  auth,
+   });
+  ```
+
+  `@roadiehq/rag-ai-backend` no longer wraps its logger in a Winston adapter or registers its own error handler, as the new backend system's root HTTP router already handles errors.
+
+### Patch Changes
+
+- 495f12e: Replace `@langchain/aws`'s `BedrockEmbeddings` with a built-in `BedrockTitanEmbeddings` implementation that calls Bedrock directly through `@aws-sdk/client-bedrock-runtime`, matching the existing `BedrockCohereEmbeddings`. Behaviour is unchanged for Titan models, and the `@langchain/aws` dependency has been removed.
+- Updated dependencies [495f12e]
+  - @roadiehq/rag-ai-backend-retrieval-augmenter@3.0.0
+  - @roadiehq/rag-ai-backend@3.1.1
+
 ## 2.2.0
 
 ### Minor Changes

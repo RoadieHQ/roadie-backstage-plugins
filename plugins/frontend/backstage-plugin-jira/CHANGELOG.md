@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-jira
 
+## 2.16.1
+
+### Patch Changes
+
+- 495f12e: Upgrade `html-react-parser` from `^0.14.1` to `^6.1.8`. The `DomElement` type was removed upstream, so the activity stream's link handling now uses `DOMNode`/`Element`.
+- 495f12e: Import `react-use` hooks from their individual modules (e.g. `react-use/esm/useAsync`) instead of the package root. This lets bundlers tree-shake unused hooks and avoids pulling in `react-use`'s broken type declarations for hooks these plugins don't use.
+
 ## 2.16.0
 
 ### Minor Changes

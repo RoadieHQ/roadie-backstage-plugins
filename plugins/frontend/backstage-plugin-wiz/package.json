@@ -1,6 +1,6 @@
 {
   "name": "@roadiehq/backstage-plugin-wiz",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "exports": {
     ".": "./src/index.ts",
     "./alpha": "./src/alpha.tsx",
