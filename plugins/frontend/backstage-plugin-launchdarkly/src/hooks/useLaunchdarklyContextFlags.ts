@@ -1,5 +1,5 @@
 import { Entity } from '@backstage/catalog-model';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   LAUNCHDARKLY_CONTEXT_PROPERTIES_ANNOTATION,
   LAUNCHDARKLY_ENVIRONMENT_KEY_ANNOTATION,

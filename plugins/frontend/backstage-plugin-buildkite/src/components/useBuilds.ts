@@ -16,7 +16,7 @@
 
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
 import { useState } from 'react';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { buildKiteApiRef } from '../api';
 import { BuildkiteBuildInfo } from './types';
 import { generateRequestUrl } from './utils';

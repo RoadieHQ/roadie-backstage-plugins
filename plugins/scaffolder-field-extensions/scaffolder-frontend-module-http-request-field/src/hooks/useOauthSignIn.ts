@@ -21,7 +21,7 @@ import {
   useApi,
 } from '@backstage/core-plugin-api';
 import { useCallback, useState } from 'react';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { OAuthConfig } from '../types';
 
 const oauthApiRefMap = {

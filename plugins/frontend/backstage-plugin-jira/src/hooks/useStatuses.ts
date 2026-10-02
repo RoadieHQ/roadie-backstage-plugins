@@ -16,7 +16,7 @@
 
 import { useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { handleError } from './utils';
 import { jiraApiRef } from '../api';
 

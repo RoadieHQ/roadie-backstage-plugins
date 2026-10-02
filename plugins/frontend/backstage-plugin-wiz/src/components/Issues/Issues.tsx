@@ -30,7 +30,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { useApi, configApiRef } from '@backstage/core-plugin-api';
 import { wizApiRef } from '../../api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   Content,
   ContentHeader,

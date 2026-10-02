@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { Octokit } from '@octokit/rest';
 import { useApi } from '@backstage/core-plugin-api';
 import { useEntityGithubScmIntegration } from './useEntityGithubScmIntegration';

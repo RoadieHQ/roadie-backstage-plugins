@@ -30,7 +30,9 @@ import { Progress } from '@backstage/core-components';
 import parse, {
   domToReact,
   attributesToProps,
-  DomElement,
+  DOMNode,
+  Element,
+  HTMLReactParserOptions,
 } from 'html-react-parser';
 import sanitizeHtml from 'sanitize-html';
 import { useActivityStream } from '../../hooks';
@@ -98,18 +100,17 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const options = {
-  replace: (node: DomElement) => {
-    if (!node) return null;
-
-    if (node.name === 'a') {
+const options: HTMLReactParserOptions = {
+  replace: (node: DOMNode) => {
+    // Check the node type rather than `instanceof Element`, which fails when
+    // html-dom-parser and html-react-parser resolve different domhandler copies.
+    if (node.type === 'tag' && (node as Element).name === 'a') {
       // Add target blank to all urls
-      const props = attributesToProps(
-        node.attribs as { [key: string]: string },
-      );
+      const element = node as Element;
+      const props = attributesToProps(element.attribs);
       return (
         <a {...props} target="_blank" rel="noopener noreferrer">
-          {node.children && domToReact(node.children)}
+          {domToReact(element.children as DOMNode[])}
         </a>
       );
     }

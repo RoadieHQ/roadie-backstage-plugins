@@ -18,7 +18,7 @@ import { WIZ_PROJECT_ANNOTATION } from './constants';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { useApi } from '@backstage/core-plugin-api';
 import { wizApiRef } from '../api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { WizIssue } from './Issues/types';
 
 interface IssuesContextType {

@@ -28,7 +28,7 @@ import { useEntity } from '@backstage/plugin-catalog-react';
 import { awsApiRef } from '../../api/AwsApi';
 import { IAM_ROLE_ARN_ANNOTATION } from '../../constants';
 import { parse as parseArn } from '@aws-sdk/util-arn-parser';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 
 const useStyles = makeStyles(theme => ({
   infoCard: {

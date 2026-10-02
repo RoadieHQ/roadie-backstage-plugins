@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { loggerToWinstonLogger } from '@backstage/backend-common';
 import {
   createBackendPlugin,
   coreServices,
@@ -77,14 +76,12 @@ export const ragAiPlugin = createBackendPlugin({
         httpRouter: coreServices.httpRouter,
       },
       async init({ logger, config, httpRouter }) {
-        const winstonLogger = loggerToWinstonLogger(logger);
-
         if (!(augmentationIndexer && model && retrievalPipeline)) {
           throw new Error('augmentationIndexer must be registered');
         }
         httpRouter.use(
           await createRouter({
-            logger: winstonLogger,
+            logger,
             config,
             augmentationIndexer,
             retrievalPipeline,

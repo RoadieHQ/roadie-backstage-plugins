@@ -23,7 +23,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Story } from '../../api/types';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   discoveryApiRef,
   identityApiRef,

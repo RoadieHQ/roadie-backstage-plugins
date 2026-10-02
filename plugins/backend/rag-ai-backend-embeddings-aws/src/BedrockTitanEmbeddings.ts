@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Larder Software Limited
+ * Copyright 2026 Larder Software Limited
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
   BedrockRuntimeClient,
   InvokeModelCommand,
@@ -21,7 +20,7 @@ import {
 import { Embeddings } from '@langchain/core/embeddings';
 import { BedrockEmbeddingsParams } from './types';
 
-export class BedrockCohereEmbeddings
+export class BedrockTitanEmbeddings
   extends Embeddings
   implements BedrockEmbeddingsParams
 {
@@ -29,12 +28,10 @@ export class BedrockCohereEmbeddings
 
   client: BedrockRuntimeClient;
 
-  batchSize = 512;
-
   constructor(fields?: BedrockEmbeddingsParams) {
     super(fields ?? {});
 
-    this.model = fields?.model ?? 'cohere.embed-english-v3';
+    this.model = fields?.model ?? 'amazon.titan-embed-text-v1';
 
     this.client =
       fields?.client ??
@@ -45,46 +42,28 @@ export class BedrockCohereEmbeddings
   }
 
   /**
-   * Embeds an array of documents using the Bedrock model.
-   * @param documents The array of documents to be embedded.
-   * @param inputType The input type for the embedding process.
-   * @returns A promise that resolves to a 2D array of embeddings.
-   * @throws If an error occurs while embedding documents with Bedrock.
+   * Embeds a single text using the Bedrock model.
+   * Titan embedding models accept one input text per request.
+   * @param text The text to be embedded.
+   * @returns A promise that resolves to the embedding.
+   * @throws If an error occurs while embedding the text with Bedrock.
    */
-  protected async embed(
-    documents: string[],
-    inputType: string,
-  ): Promise<number[][]> {
+  protected async embed(text: string): Promise<number[]> {
     return this.caller.call(async () => {
-      const batchSize = 66; // Max 66 documents per batch
-      const batches = [];
-
-      for (let i = 0; i < documents.length; i += batchSize) {
-        batches.push(documents.slice(i, i + batchSize));
-      }
-
-      const results: number[][] = [];
-
       try {
-        for (const batch of batches) {
-          const res = await this.client.send(
-            new InvokeModelCommand({
-              modelId: this.model,
-              body: JSON.stringify({
-                texts: batch.map(doc => doc.replace(/\n+/g, ' ')),
-                input_type: inputType,
-              }),
-              contentType: 'application/json',
-              accept: 'application/json',
+        const res = await this.client.send(
+          new InvokeModelCommand({
+            modelId: this.model,
+            body: JSON.stringify({
+              inputText: text.replace(/\n/g, ' '),
             }),
-          );
+            contentType: 'application/json',
+            accept: 'application/json',
+          }),
+        );
 
-          const body = new TextDecoder().decode(res.body);
-          const embeddings = JSON.parse(body).embeddings;
-          results.push(...embeddings);
-        }
-
-        return results;
+        const body = new TextDecoder().decode(res.body);
+        return JSON.parse(body).embedding;
       } catch (e) {
         console.error({
           error: e,
@@ -103,12 +82,10 @@ export class BedrockCohereEmbeddings
   }
 
   async embedQuery(document: string): Promise<number[]> {
-    return this.embed([document], 'search_query').then(
-      embeddings => embeddings[0],
-    );
+    return this.embed(document);
   }
 
   async embedDocuments(documents: string[]): Promise<number[][]> {
-    return this.embed(documents, 'search_document');
+    return Promise.all(documents.map(document => this.embed(document)));
   }
 }

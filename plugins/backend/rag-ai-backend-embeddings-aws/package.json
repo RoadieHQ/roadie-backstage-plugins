@@ -43,11 +43,9 @@
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.940.0",
     "@aws-sdk/types": "^3.468.0",
-    "@backstage/backend-common": "^0.25.0",
     "@backstage/backend-plugin-api": "backstage:^",
     "@backstage/catalog-client": "backstage:^",
     "@backstage/config": "backstage:^",
-    "@langchain/aws": "^1.0.3",
     "@langchain/core": "^1.1.0",
     "@roadiehq/rag-ai-backend": "^3.1.0",
     "@roadiehq/rag-ai-backend-retrieval-augmenter": "^2.1.0",

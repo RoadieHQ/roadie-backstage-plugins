@@ -23,7 +23,7 @@ import {
   StructuredMetadataTable,
 } from '@backstage/core-components';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { Octokit } from '@octokit/rest';
 import { useProjectEntity } from '../useProjectEntity';
 import { useUrl } from '../useUrl';

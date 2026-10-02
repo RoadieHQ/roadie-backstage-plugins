@@ -17,7 +17,7 @@
 import { identityApiRef, useApi } from '@backstage/core-plugin-api';
 import { jiraApiRef } from '../../api';
 import { useTemplateParser } from '../../hooks/useTemplateParser';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { ErrorPanel, WarningPanel } from '@backstage/core-components';
 import { LinearProgress } from '@material-ui/core';
 import { IssuesTable, IssuesTableProps } from '../IssuesTable';

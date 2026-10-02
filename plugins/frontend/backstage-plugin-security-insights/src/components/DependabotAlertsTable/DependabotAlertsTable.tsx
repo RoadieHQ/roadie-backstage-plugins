@@ -15,7 +15,7 @@
  */
 
 import { FC, useMemo, useState } from 'react';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import {
   Box,
   Button,

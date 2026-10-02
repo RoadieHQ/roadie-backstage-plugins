@@ -15,7 +15,7 @@
  */
 
 import { errorApiRef, useApi } from '@backstage/core-plugin-api';
-import { useAsyncFn } from 'react-use';
+import useAsyncFn from 'react-use/esm/useAsyncFn';
 import { buildKiteApiRef } from '../api';
 
 export const useSingleBuild = ({

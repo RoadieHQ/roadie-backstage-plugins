@@ -15,7 +15,7 @@
  */
 
 import { configApiRef, errorApiRef, useApi } from '@backstage/core-plugin-api';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { argoCDApiRef } from '../api';
 
 export const useAppDetails = ({

@@ -16,7 +16,7 @@
 
 import { useEffect, useCallback } from 'react';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsyncFn } from 'react-use';
+import useAsyncFn from 'react-use/esm/useAsyncFn';
 import { handleError } from './utils';
 import { jiraApiRef } from '../api';
 

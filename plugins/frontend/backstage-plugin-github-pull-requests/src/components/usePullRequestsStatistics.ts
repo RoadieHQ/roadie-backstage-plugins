@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { githubPullRequestsApiRef } from '../api';
 import { useApi } from '@backstage/core-plugin-api';
 import { PullRequestState, SearchPullRequestsResponseData } from '../types';

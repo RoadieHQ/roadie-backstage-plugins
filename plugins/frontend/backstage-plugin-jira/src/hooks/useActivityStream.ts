@@ -19,7 +19,7 @@ import convert from 'xml-js';
 import { DateTime } from 'luxon';
 import { v4 as uuidv4 } from 'uuid';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsyncFn } from 'react-use';
+import useAsyncFn from 'react-use/esm/useAsyncFn';
 import { handleError } from './utils';
 import {
   ActivityStreamEntry,

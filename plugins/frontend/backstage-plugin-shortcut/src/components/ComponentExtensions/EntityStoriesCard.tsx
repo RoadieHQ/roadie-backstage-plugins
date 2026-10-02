@@ -23,7 +23,7 @@ import {
 import SyncIcon from '@material-ui/icons/Sync';
 import { shortcutApiRef } from '../../api';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsyncRetry } from 'react-use';
+import useAsyncRetry from 'react-use/esm/useAsyncRetry';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { SHORTCUT_QUERY_ANNOTATION } from '../../constants';
 import { Story, User } from '../../api/types';

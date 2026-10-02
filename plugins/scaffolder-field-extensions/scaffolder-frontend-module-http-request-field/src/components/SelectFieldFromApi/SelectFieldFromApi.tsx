@@ -28,7 +28,7 @@ import {
   Select,
   SelectItem,
 } from '@backstage/core-components';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import get from 'lodash/get';
 import sortBy from 'lodash/sortBy';
 import { OAuthConfig, selectFieldFromApiConfigSchema } from '../../types';

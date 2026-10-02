@@ -16,12 +16,13 @@
 
 import { resultToGraphData, useAlerts } from './usePrometheus';
 import { useApi } from '@backstage/core-plugin-api';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { useEntity } from '@backstage/plugin-catalog-react';
 import { getLabels } from '../components/util';
 
 jest.mock('@backstage/core-plugin-api');
-jest.mock('react-use');
+jest.mock('react-use/esm/useAsync');
+jest.mock('react-use/esm/useAsyncFn');
 jest.mock('@backstage/plugin-catalog-react');
 jest.mock('../components/util');
 

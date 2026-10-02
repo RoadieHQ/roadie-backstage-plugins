@@ -372,13 +372,16 @@ The endpoint expects a supported source type and a POST request body containing 
 You can also periodically schedule embeddings creation endpoint to be called. It might be beneficial to compare the existing already created embeddings or possible do some additional diff checking before periodically creating embeddings for the whole catalog. In a lot of cases the information within the catalog does not change that often and uselessly calling paid 3rd party APIs may become expensive if done periodically without guardrails.
 
 ```typescript
-import { PluginTaskScheduler } from '@backstage/backend-tasks';
-import { Knex } from 'knex';
+import {
+  DiscoveryService,
+  LoggerService,
+  SchedulerService,
+} from '@backstage/backend-plugin-api';
 
 export const configureEmbeddingsCreation = async (opts: {
-  discovery: PluginEndpointDiscovery;
-  scheduler: PluginTaskScheduler;
-  logger: Logger;
+  discovery: DiscoveryService;
+  scheduler: SchedulerService;
+  logger: LoggerService;
 }) => {
   const { logger, discovery, scheduler } = opts;
 

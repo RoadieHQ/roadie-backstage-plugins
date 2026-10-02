@@ -21,7 +21,7 @@ import { useApi } from '@backstage/core-plugin-api';
 import { Progress, Table, TableColumn } from '@backstage/core-components';
 import Alert from '@material-ui/lab/Alert';
 import { Octokit } from '@octokit/rest';
-import { useAsync } from 'react-use';
+import useAsync from 'react-use/esm/useAsync';
 import { DateTime } from 'luxon';
 import { useProjectName } from '../useProjectName';
 import { useProjectEntity } from '../useProjectEntity';

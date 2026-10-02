@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import { CatalogApi } from '@backstage/catalog-client';
-import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
 import {
-  PluginEndpointDiscovery,
-  TokenManager,
-} from '@backstage/backend-common';
+  AuthService,
+  DiscoveryService,
+  LoggerService,
+} from '@backstage/backend-plugin-api';
 import { RoadieVectorStore } from '@roadiehq/rag-ai-node';
 import { Entity } from '@backstage/catalog-model';
 
@@ -30,11 +30,10 @@ export type AugmentationOptions = {
 
 export interface RoadieEmbeddingsConfig {
   logger: LoggerService;
-  tokenManager?: TokenManager;
-  auth?: AuthService;
+  auth: AuthService;
   vectorStore: RoadieVectorStore;
   catalogApi: CatalogApi;
-  discovery: PluginEndpointDiscovery;
+  discovery: DiscoveryService;
   augmentationOptions?: AugmentationOptions;
 }
 
