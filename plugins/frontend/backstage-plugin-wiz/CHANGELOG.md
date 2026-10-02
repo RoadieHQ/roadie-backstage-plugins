@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-wiz
 
+## 2.4.2
+
+### Patch Changes
+
+- 495f12e: Import `react-use` hooks from their individual modules (e.g. `react-use/esm/useAsync`) instead of the package root. This lets bundlers tree-shake unused hooks and avoids pulling in `react-use`'s broken type declarations for hooks these plugins don't use.
+- 495f12e: Bump `@nivo/bar`, `@nivo/core` and `@nivo/line` from `^0.80.0` to `^0.83.0`. This fixes type errors in nivo's bundled declarations (missing `@types/d3-*` packages and unconstrained band/point scale generics).
+
 ## 2.4.1
 
 ### Patch Changes
