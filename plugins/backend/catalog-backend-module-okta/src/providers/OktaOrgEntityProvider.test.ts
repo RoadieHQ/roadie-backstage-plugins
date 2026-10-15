@@ -927,7 +927,6 @@ describe('OktaOrgEntityProvider', () => {
             name: 'Everyone@the-company',
             description: 'Everyone in the company',
           },
-          // SDK 8.x deserializes lastMembershipUpdated as a Date
           lastMembershipUpdated: new Date(TS),
           listUsers: () => {
             return new MockOktaCollection([
@@ -980,8 +979,6 @@ describe('OktaOrgEntityProvider', () => {
     });
 
     afterEach(() => {
-      // the counting wrapper reads this block's scoped `groups`; restore the
-      // default so later describes (if any) keep working
       listGroupUsers = defaultListGroupUsers;
     });
 
