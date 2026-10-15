@@ -68,6 +68,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
   private readonly customAttributesToAnnotationAllowlist: string[];
   private readonly chunkSize: number;
   // set iff skipUnchangedGroups is enabled
+  private readonly skipUnchangedGroups: boolean;
   private readonly catalogAccess:
     | { catalogClient: CatalogService; auth: AuthService }
     | undefined;
@@ -161,6 +162,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
     this.chunkSize = options.chunkSize || DEFAULT_CHUNK_SIZE;
+    this.skipUnchangedGroups = options.skipUnchangedGroups ?? false;
     if (options.skipUnchangedGroups) {
       if (!options.catalogClient || !options.auth) {
         throw new Error('skipUnchangedGroups requires catalogClient and auth');
@@ -239,10 +241,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     )) {
       const promiseResults = await Promise.allSettled(
         chunkOfGroups.map(async group => {
-          // computed only with skipUnchangedGroups, so the default path stays
-          // as upstream; anything but a valid Date means the members are fetched
+          // compute only with SkipUnchangedGroups, so all group members are fetched by default
           const updated = group.lastMembershipUpdated;
           const timestamp =
+            this.skipUnchangedGroups &&
             this.catalogAccess &&
             updated instanceof Date &&
             !Number.isNaN(updated.getTime())
