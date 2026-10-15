@@ -869,7 +869,7 @@ describe('OktaOrgEntityProvider', () => {
     } as unknown as AuthService;
 
     let groups: MockGroup[];
-    let counts: Record<string, number>;
+    let groupMemberCounts: Record<string, number>;
     let streamEntities: jest.Mock;
     let catalogClient: CatalogService;
 
@@ -966,9 +966,9 @@ describe('OktaOrgEntityProvider', () => {
       ];
       listGroups = () => new MockOktaCollection(groups);
       listUsers = () => new MockOktaCollection(allUsers);
-      counts = {};
+      groupMemberCounts = {};
       listGroupUsers = ({ groupId }: { groupId: string }) => {
-        counts[groupId] = (counts[groupId] ?? 0) + 1;
+        groupMemberCounts[groupId] = (groupMemberCounts[groupId] ?? 0) + 1;
         const group = groups.find(g => g.id === groupId);
         return group?.listUsers?.() ?? new MockOktaCollection([]);
       };
@@ -987,7 +987,7 @@ describe('OktaOrgEntityProvider', () => {
       const applyMutation = await connect(provider);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
       expect(applyMutation).toHaveBeenCalledWith({
         type: 'full',
         entities: expect.arrayContaining([
@@ -1038,7 +1038,7 @@ describe('OktaOrgEntityProvider', () => {
         },
         { credentials },
       );
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
       // reused groups keep their timestamp so the run after can skip again
       expect(groupAnnotations(applyMutation)).toEqual([
         expect.objectContaining({ [LAST_MEMBERSHIP_UPDATED]: TS }),
@@ -1096,7 +1096,7 @@ describe('OktaOrgEntityProvider', () => {
       };
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 2, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 1 });
       const groupOne = emitted(applyMutation).find(
         e => e.entity.metadata.name === 'group-1',
       );
@@ -1114,7 +1114,7 @@ describe('OktaOrgEntityProvider', () => {
       catalogReturnsLastRun(applyMutation);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 2, 'group-2': 2 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 2 });
       expect(streamEntities).not.toHaveBeenCalled();
       for (const annotations of groupAnnotations(applyMutation)) {
         expect(annotations).not.toHaveProperty([LAST_MEMBERSHIP_UPDATED]);
@@ -1131,7 +1131,7 @@ describe('OktaOrgEntityProvider', () => {
       catalogReturnsLastRun(applyMutation);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 2, 'group-2': 2 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 2 });
       for (const annotations of groupAnnotations(applyMutation)) {
         expect(annotations).not.toHaveProperty([LAST_MEMBERSHIP_UPDATED]);
       }
@@ -1152,7 +1152,7 @@ describe('OktaOrgEntityProvider', () => {
         catalogReturnsLastRun(applyMutation);
         await provider.run();
 
-        expect(counts).toEqual({ 'group-1': 2, 'group-2': 2 });
+        expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 2 });
         const annotations = groupAnnotations(applyMutation);
         expect(annotations).toHaveLength(2);
         for (const groupAnnotation of annotations) {
@@ -1183,7 +1183,7 @@ describe('OktaOrgEntityProvider', () => {
       const enabledMutation = await connect(enabled);
       await enabled.run();
 
-      expect(counts).toEqual({ 'group-1': 2, 'group-2': 2 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 2 });
       expect(groupAnnotations(enabledMutation)).toEqual([
         expect.objectContaining({ [LAST_MEMBERSHIP_UPDATED]: TS }),
         expect.objectContaining({ [LAST_MEMBERSHIP_UPDATED]: TS }),
@@ -1198,7 +1198,7 @@ describe('OktaOrgEntityProvider', () => {
       catalogReturnsLastRun(applyMutation);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
       for (const annotations of groupAnnotations(applyMutation)) {
         expect(annotations).toEqual(expect.objectContaining({ [key]: TS }));
         expect(annotations).not.toHaveProperty([LAST_MEMBERSHIP_UPDATED]);
@@ -1241,7 +1241,7 @@ describe('OktaOrgEntityProvider', () => {
       };
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
       const groupOne = emitted(applyMutation).find(
         e => e.entity.metadata.name === 'group-1',
       );
@@ -1253,7 +1253,7 @@ describe('OktaOrgEntityProvider', () => {
       const applyMutation = await connect(provider);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
 
       // second run: the catalog query returns entities but NONE of them is a
       // previously emitted group of this provider (e.g. only users) — the
@@ -1265,7 +1265,7 @@ describe('OktaOrgEntityProvider', () => {
       );
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 2, 'group-2': 2 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 2, 'group-2': 2 });
     });
 
     it('fetches all groups and still applies a full mutation when the catalog query fails', async () => {
@@ -1281,7 +1281,7 @@ describe('OktaOrgEntityProvider', () => {
       const applyMutation = await connect(provider);
       await provider.run();
 
-      expect(counts).toEqual({ 'group-1': 1, 'group-2': 1 });
+      expect(groupMemberCounts).toEqual({ 'group-1': 1, 'group-2': 1 });
       expect(applyMutation).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'full' }),
       );
