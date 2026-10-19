@@ -230,7 +230,6 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       groupNamingStrategy: this.groupNamingStrategy,
       logger: this.logger,
     });
-
     const previousGroups = this.catalogAccess
       ? await this.loadPreviousGroups(this.catalogAccess)
       : new Map<string, GroupEntity>();
@@ -258,6 +257,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
             ? reusable.filter(userName => userResources[userName])
             : [];
           if (!reusable) {
+            this.logger.info(
+              `${group.id} changed, fetching updated member list`,
+            );
             const groupUsers = await client.groupApi.listGroupUsers({
               groupId: group.id,
             });
@@ -319,6 +321,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
           }
         }),
       );
+
       for (const promise of promiseResults) {
         if (promise.status === 'fulfilled') {
           groupResources.push(promise.value);
@@ -351,7 +354,8 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     });
 
     this.logger.info(
-      `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta${
+      `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta 
+      ${
         this.catalogAccess
           ? ` (${reusedGroupIds.size} groups reused unchanged membership)`
           : ''
@@ -383,6 +387,11 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       );
       for await (const page of pages) {
         for (const entity of page) {
+          this.logger.info(
+            `retrieved group ${
+              entity.metadata.name
+            } with annotations ${JSON.stringify(entity.metadata.annotations)}`,
+          );
           previousGroups.set(entity.metadata.name, entity as GroupEntity);
         }
       }

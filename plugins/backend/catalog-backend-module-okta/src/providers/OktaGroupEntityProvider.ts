@@ -41,6 +41,7 @@ const DEFAULT_CHUNK_SIZE = 250;
 
 /**
  * Provides entities from Okta Group service.
+ * TODO: need to do the incremental update here as well
  */
 export class OktaGroupEntityProvider extends OktaEntityProvider {
   private readonly namingStrategy: GroupNamingStrategy;
