@@ -18,6 +18,7 @@ import { OktaUserEntityProvider } from './OktaUserEntityProvider';
 import { ConfigReader } from '@backstage/config';
 import { EntityProviderConnection } from '@backstage/plugin-catalog-node';
 import { MockOktaCollection, createSilentLogger } from '../__testUtils__';
+import { Client, RequestExecutor } from '@okta/okta-sdk-nodejs';
 
 let listUsers: () => MockOktaCollection = () => {
   return new MockOktaCollection([]);
@@ -293,6 +294,24 @@ describe('OktaUserEntityProvider', () => {
           }),
         ],
       });
+    });
+  });
+  describe('when okta-sdk-client configuration is provided', () => {
+    it('uses custom requestExecutor', async () => {
+      const requestExecutor = {} as unknown as RequestExecutor;
+      const entityProviderConnection: EntityProviderConnection = {
+        applyMutation: jest.fn(),
+        refresh: jest.fn(),
+      };
+      const provider = OktaUserEntityProvider.fromConfig(config, {
+        logger,
+        clientConfig: { requestExecutor },
+      });
+      provider.connect(entityProviderConnection);
+      await provider.run();
+      expect(Client).toHaveBeenCalledWith(
+        expect.objectContaining({ requestExecutor }),
+      );
     });
   });
 });

@@ -36,6 +36,8 @@ import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { OktaGroupEntityTransformer, asOktaUser } from './types';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { RequestExecutor } from '@okta/okta-sdk-nodejs';
+import { V2Configuration } from '@okta/okta-sdk-nodejs/src/types/configuration';
 
 const DEFAULT_CHUNK_SIZE = 250;
 
@@ -69,6 +71,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
         key?: string;
       };
       chunkSize?: number;
+      clientConfig?: V2Configuration;
     },
   ) {
     const accountConfig = getAccountConfig(config);
@@ -95,6 +98,7 @@ export class OktaGroupEntityProvider extends OktaEntityProvider {
       };
       groupTransformer?: OktaGroupEntityTransformer;
       chunkSize?: number;
+      requestExecutor?: RequestExecutor;
     },
   ) {
     super(accountConfig, options);

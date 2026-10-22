@@ -42,6 +42,7 @@ import {
 } from './types';
 import chunk from 'lodash/chunk';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { V2Configuration } from '@okta/okta-sdk-nodejs/src/types/configuration';
 
 const DEFAULT_CHUNK_SIZE = 250;
 
@@ -79,6 +80,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       };
       customAttributesToAnnotationAllowlist?: string[];
       chunkSize?: number;
+      clientConfig?: V2Configuration;
     },
   ) {
     const oktaConfig = getAccountConfig(config);
@@ -106,6 +108,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       };
       customAttributesToAnnotationAllowlist?: string[];
       chunkSize?: number;
+      clientConfig?: V2Configuration;
     },
   ) {
     super(accountConfig, options);

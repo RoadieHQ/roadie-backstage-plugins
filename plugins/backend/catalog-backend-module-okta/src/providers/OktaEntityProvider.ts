@@ -27,6 +27,7 @@ import {
   ANNOTATION_ORIGIN_LOCATION,
 } from '@backstage/catalog-model';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { V2Configuration } from '@okta/okta-sdk-nodejs/src/types/configuration';
 
 (GroupProfile as unknown as { isExtensible?: boolean }).isExtensible = true;
 
@@ -36,15 +37,17 @@ export abstract class OktaEntityProvider implements EntityProvider {
   protected readonly account: AccountConfig;
   protected readonly logger: LoggerService;
   protected connection?: EntityProviderConnection;
+  clientConfig?: V2Configuration;
 
   public abstract getProviderName(): string;
 
   protected constructor(
     account: AccountConfig,
-    options: { logger: LoggerService },
+    options: { logger: LoggerService; clientConfig?: V2Configuration },
   ) {
     this.account = account;
     this.logger = options.logger;
+    this.clientConfig = options.clientConfig;
   }
 
   protected getClient(
@@ -56,20 +59,24 @@ export abstract class OktaEntityProvider implements EntityProvider {
     if (account.oauth && oauthScopes) {
       // use OAuth authentication strategy
       const { clientId, privateKey, keyId } = account.oauth;
-      return new Client({
+      const client = new Client({
         orgUrl,
         authorizationMode: 'PrivateKey',
         clientId,
         scopes: oauthScopes,
         privateKey,
         keyId,
+        ...this.clientConfig,
       });
+      return client;
     } else if (account.token) {
       // use api token authentication strategy
-      return new Client({
+      const client = new Client({
         orgUrl,
         token: account.token,
+        ...this.clientConfig,
       });
+      return client;
     }
     throw new Error(
       `accountConfig for ${orgUrl} missing api token or oath key`,

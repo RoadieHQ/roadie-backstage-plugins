@@ -16,16 +16,23 @@
 
 import { OktaEntityProvider, OktaScope } from './OktaEntityProvider';
 import { AccountConfig } from '../types';
-import { Client } from '@okta/okta-sdk-nodejs';
+import { Client, RequestExecutor } from '@okta/okta-sdk-nodejs';
 import { createSilentLogger } from '../__testUtils__';
+import { V2Configuration } from '@okta/okta-sdk-nodejs/src/types/configuration';
 
 class ConcreteEntityProvider extends OktaEntityProvider {
   public getProviderName(): string {
     throw new Error('Method not implemented.');
   }
-  constructor(accountConfig: AccountConfig) {
+  constructor(
+    accountConfig: AccountConfig,
+    options?: {
+      clientConfig?: V2Configuration;
+    },
+  ) {
     super(accountConfig, {
       logger: createSilentLogger(),
+      clientConfig: options?.clientConfig,
     });
   }
 
@@ -65,6 +72,25 @@ describe('OktaEntityProvider', () => {
         orgUrl: 'http://someorg',
         token: 'secret',
       });
+    });
+  });
+
+  describe('when a custom requestExecutor is provided', () => {
+    it('uses custom requestExecutor', async () => {
+      const requestExecutor = {} as unknown as RequestExecutor;
+      const provider = new ConcreteEntityProvider(
+        {
+          orgUrl: 'http://someorg',
+          token: 'secret',
+        },
+        {
+          clientConfig: { requestExecutor: requestExecutor },
+        },
+      );
+      provider.getClient('http://someorg', ['okta.users.read']);
+      expect(Client).toHaveBeenCalledWith(
+        expect.objectContaining({ requestExecutor }),
+      );
     });
   });
 

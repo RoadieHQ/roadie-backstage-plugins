@@ -28,6 +28,7 @@ import { getAccountConfig } from './accountConfig';
 import { isError } from '@backstage/errors';
 import { OktaUserEntityTransformer, asOktaUser } from './types';
 import { LoggerService } from '@backstage/backend-plugin-api';
+import { V2Configuration } from '@okta/okta-sdk-nodejs/src/types/configuration';
 
 /**
  * Provides entities from Okta User service.
@@ -46,6 +47,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
+      clientConfig?: V2Configuration;
     },
   ) {
     const accountConfig = getAccountConfig(config);
@@ -60,6 +62,7 @@ export class OktaUserEntityProvider extends OktaEntityProvider {
       customAttributesToAnnotationAllowlist?: string[];
       namingStrategy?: UserNamingStrategies | UserNamingStrategy;
       userTransformer?: OktaUserEntityTransformer;
+      clientConfig?: V2Configuration;
     },
   ) {
     super(accountConfig, options);
