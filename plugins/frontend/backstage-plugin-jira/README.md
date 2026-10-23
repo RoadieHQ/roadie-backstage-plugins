@@ -85,6 +85,10 @@ jira:
   apiVersion: latest
   # Defaults to `cloud`, but also supports `datacenter`
   product: cloud
+  # Optional. Links such as "Open in Jira" are built from the `self` URL returned by the API.
+  # Set this when the API is reached through another host, e.g. the Atlassian gateway
+  # (https://api.atlassian.com/ex/jira/<cloudId>) used by scoped API tokens and service accounts
+  siteUrl: https://example.atlassian.net
 ```
 
 3. Set img-src in Content Security Policy
