@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { GroupEntity, UserEntity } from '@backstage/catalog-model';
+import {
+  ANNOTATION_LOCATION,
+  GroupEntity,
+  UserEntity,
+} from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { OktaEntityProvider } from './OktaEntityProvider';
 import {
@@ -36,14 +40,18 @@ import { getOktaGroups } from './getOktaGroups';
 import { getParentGroup } from './getParentGroup';
 import { GroupTree } from './GroupTree';
 import {
+  OktaGroup,
   OktaGroupEntityTransformer,
   OktaUserEntityTransformer,
   asOktaUser,
 } from './types';
 import chunk from 'lodash/chunk';
-import { LoggerService } from '@backstage/backend-plugin-api';
+import { AuthService, LoggerService } from '@backstage/backend-plugin-api';
+import { CatalogService } from '@backstage/plugin-catalog-node';
 
 const DEFAULT_CHUNK_SIZE = 250;
+const DEFAULT_MEMBERSHIP_TIMESTAMP_ANNOTATION =
+  'okta.roadie.io/last-membership-updated';
 
 /**
  * Provides entities from Okta Org service.
@@ -59,6 +67,12 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     | undefined;
   private readonly customAttributesToAnnotationAllowlist: string[];
   private readonly chunkSize: number;
+  // set iff skipUnchangedGroups is enabled
+  private readonly skipUnchangedGroups: boolean;
+  private readonly catalogAccess:
+    | { catalogClient: CatalogService; auth: AuthService }
+    | undefined;
+  private readonly membershipTimestampAnnotation: string;
 
   static fromConfig(
     config: Config,
@@ -79,6 +93,26 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       };
       customAttributesToAnnotationAllowlist?: string[];
       chunkSize?: number;
+      /**
+       * Skip `listGroupUsers` for groups whose Okta `lastMembershipUpdated`
+       * matches the timestamp annotation on the group's existing catalog
+       * entity, reusing that entity's `spec.members`. Requires
+       * `catalogClient` and `auth`. Defaults to false.
+       *
+       * A custom `groupTransformer` must emit `members` unchanged, since the
+       * cached members are matched against user entity names. A user whose
+       * entity name changes (e.g. an email change with an email-based user
+       * naming strategy) is missing from unchanged groups until Okta updates
+       * that group's membership.
+       */
+      skipUnchangedGroups?: boolean;
+      catalogClient?: CatalogService;
+      auth?: AuthService;
+      /**
+       * Annotation storing the group's `lastMembershipUpdated`.
+       * Defaults to `okta.roadie.io/last-membership-updated`.
+       */
+      membershipTimestampAnnotation?: string;
     },
   ) {
     const oktaConfig = getAccountConfig(config);
@@ -106,6 +140,10 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       };
       customAttributesToAnnotationAllowlist?: string[];
       chunkSize?: number;
+      skipUnchangedGroups?: boolean;
+      catalogClient?: CatalogService;
+      auth?: AuthService;
+      membershipTimestampAnnotation?: string;
     },
   ) {
     super(accountConfig, options);
@@ -124,6 +162,19 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     this.customAttributesToAnnotationAllowlist =
       options.customAttributesToAnnotationAllowlist || [];
     this.chunkSize = options.chunkSize || DEFAULT_CHUNK_SIZE;
+    this.skipUnchangedGroups = options.skipUnchangedGroups ?? false;
+    if (options.skipUnchangedGroups) {
+      if (!options.catalogClient || !options.auth) {
+        throw new Error('skipUnchangedGroups requires catalogClient and auth');
+      }
+      this.catalogAccess = {
+        catalogClient: options.catalogClient,
+        auth: options.auth,
+      };
+    }
+    this.membershipTimestampAnnotation =
+      options.membershipTimestampAnnotation ||
+      DEFAULT_MEMBERSHIP_TIMESTAMP_ANNOTATION;
   }
 
   getProviderName(): string {
@@ -140,6 +191,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     const userResources: Record<string, UserEntity> = {};
     let providedUserCount = 0;
     let providedGroupCount = 0;
+    const reusedGroupIds = new Set<string>();
 
     const client = this.getClient(this.account.orgUrl, [
       'okta.groups.read',
@@ -178,6 +230,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
       groupNamingStrategy: this.groupNamingStrategy,
       logger: this.logger,
     });
+    const previousGroups = this.catalogAccess
+      ? await this.loadPreviousGroups(this.catalogAccess)
+      : new Map<string, GroupEntity>();
 
     for (const chunkOfGroups of chunk(
       Object.values(oktaGroups),
@@ -185,25 +240,45 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     )) {
       const promiseResults = await Promise.allSettled(
         chunkOfGroups.map(async group => {
-          const members: string[] = [];
-          const groupUsers = await client.groupApi.listGroupUsers({
-            groupId: group.id,
-          });
-          await groupUsers.each(rawUser => {
-            const user = asOktaUser(rawUser);
-            try {
-              const userName = this.userNamingStrategy(user);
-              if (userResources[userName]) {
-                members.push(userName);
+          // compute only with SkipUnchangedGroups, so all group members are fetched by default
+          const updated = group.lastMembershipUpdated;
+          const timestamp =
+            this.skipUnchangedGroups &&
+            this.catalogAccess &&
+            updated instanceof Date &&
+            !Number.isNaN(updated.getTime())
+              ? updated.toISOString()
+              : undefined;
+          const reusable = timestamp
+            ? this.reusableMembers(group, timestamp, previousGroups)
+            : undefined;
+          // same rule as fetched members: only users emitted in this run
+          const members: string[] = reusable
+            ? reusable.filter(userName => userResources[userName])
+            : [];
+          if (!reusable) {
+            this.logger.info(
+              `${group.id} changed, fetching updated member list`,
+            );
+            const groupUsers = await client.groupApi.listGroupUsers({
+              groupId: group.id,
+            });
+            await groupUsers.each(rawUser => {
+              const user = asOktaUser(rawUser);
+              try {
+                const userName = this.userNamingStrategy(user);
+                if (userResources[userName]) {
+                  members.push(userName);
+                }
+              } catch (e: unknown) {
+                this.logger.warn(
+                  `failed to add user to group: ${
+                    isError(e) ? e.message : 'unknown error'
+                  }`,
+                );
               }
-            } catch (e: unknown) {
-              this.logger.warn(
-                `failed to add user to group: ${
-                  isError(e) ? e.message : 'unknown error'
-                }`,
-              );
-            }
-          });
+            });
+          }
 
           const parentGroup = getParentGroup({
             parentKey: this.hierarchyConfig?.parentKey,
@@ -216,10 +291,13 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
             this.customAttributesToAnnotationAllowlist,
           );
 
-          const annotations = {
+          const annotations: Record<string, string> = {
             ...defaultAnnotations,
             ...profileAnnotations,
           };
+          if (timestamp) {
+            annotations[this.membershipTimestampAnnotation] = timestamp;
+          }
           try {
             const groupEntity = this.groupEntityFromOktaGroup(
               group,
@@ -230,6 +308,9 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
               },
               parentGroup,
             );
+            if (reusable) {
+              reusedGroupIds.add(group.id);
+            }
             return groupEntity;
           } catch (e: unknown) {
             throw new Error(
@@ -240,6 +321,7 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
           }
         }),
       );
+
       for (const promise of promiseResults) {
         if (promise.status === 'fulfilled') {
           groupResources.push(promise.value);
@@ -272,7 +354,73 @@ export class OktaOrgEntityProvider extends OktaEntityProvider {
     });
 
     this.logger.info(
-      `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta`,
+      `Finished providing ${providedUserCount} user and ${providedGroupCount} group resources from okta 
+      ${
+        this.catalogAccess
+          ? ` (${reusedGroupIds.size} groups reused unchanged membership)`
+          : ''
+      }`,
     );
+  }
+
+  /**
+   * This provider's previously emitted groups, keyed by entity name. Empty on
+   * catalog failure, so every group's members are fetched from Okta.
+   */
+  private async loadPreviousGroups(catalogAccess: {
+    catalogClient: CatalogService;
+    auth: AuthService;
+  }): Promise<Map<string, GroupEntity>> {
+    const previousGroups = new Map<string, GroupEntity>();
+    try {
+      const credentials = await catalogAccess.auth.getOwnServiceCredentials();
+      const pages = catalogAccess.catalogClient.streamEntities(
+        {
+          filter: {
+            kind: 'Group',
+            [`metadata.annotations.${ANNOTATION_LOCATION}`]:
+              this.getProviderName(),
+          },
+          fields: ['metadata.name', 'metadata.annotations', 'spec.members'],
+        },
+        { credentials },
+      );
+      for await (const page of pages) {
+        for (const entity of page) {
+          this.logger.info(
+            `retrieved group ${
+              entity.metadata.name
+            } with annotations ${JSON.stringify(entity.metadata.annotations)}`,
+          );
+          previousGroups.set(entity.metadata.name, entity as GroupEntity);
+        }
+      }
+    } catch (e: unknown) {
+      this.logger.warn(
+        `Failed to read previous groups from the catalog, fetching all group members: ${
+          isError(e) ? e.message : 'unknown error'
+        }`,
+      );
+    }
+    return previousGroups;
+  }
+
+  /**
+   * Cached members of the group's previous entity when Okta reports the same
+   * `lastMembershipUpdated`; undefined when the members must be fetched.
+   */
+  private reusableMembers(
+    group: OktaGroup,
+    timestamp: string,
+    previousGroups: Map<string, GroupEntity>,
+  ): string[] | undefined {
+    const previous = previousGroups.get(this.groupNamingStrategy(group));
+    if (
+      previous?.metadata.annotations?.[this.membershipTimestampAnnotation] !==
+      timestamp
+    ) {
+      return undefined;
+    }
+    return previous.spec?.members ?? [];
   }
 }
