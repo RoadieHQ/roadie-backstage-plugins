@@ -56,6 +56,7 @@ export class JiraAPI {
   private readonly apiVersion: string;
   private readonly strategy: JiraProductStrategy;
   private readonly confluenceActivityFilter: string | undefined;
+  private readonly siteUrl: string | undefined;
   private readonly fetchApi: FetchApi;
   private readonly errorApi?: ErrorApi;
 
@@ -78,6 +79,10 @@ export class JiraAPI {
       'jira.confluenceActivityFilter',
     );
 
+    this.siteUrl = options.configApi
+      .getOptionalString('jira.siteUrl')
+      ?.replace(/\/+$/, '');
+
     this.fetchApi = options.fetchApi;
     this.errorApi = options.errorApi;
   }
@@ -91,13 +96,17 @@ export class JiraAPI {
   }
 
   private getDomainFromApiUrl(apiUrl: string): string {
+    if (this.siteUrl) {
+      return this.siteUrl;
+    }
     const url = new URL(apiUrl);
     return url.origin;
   }
 
   private generateProjectUrl = (url: string) =>
+    this.siteUrl ??
     new URL(url).origin +
-    new URL(url).pathname.replace(/\/rest\/api\/.*$/g, '');
+      new URL(url).pathname.replace(/\/rest\/api\/.*$/g, '');
 
   private async getUrls() {
     const proxyUrl = await this.discoveryApi.getBaseUrl('proxy');

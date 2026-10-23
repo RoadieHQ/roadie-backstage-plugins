@@ -107,6 +107,38 @@ describe('JiraAPI', () => {
     expect(strategyFactorySpy).toHaveBeenCalledWith('datacenter', options);
   });
 
+  describe('siteUrl', () => {
+    const createApi = (jira: Record<string, string> = {}) =>
+      new JiraAPI({
+        discoveryApi,
+        configApi: mockApis.config({ data: { jira } }),
+        fetchApi,
+      }) as any;
+
+    const gatewaySelf =
+      'https://api.atlassian.com/ex/jira/abc/rest/api/3/project/10000';
+
+    it('derives links from the API self url by default', () => {
+      const jiraApi = createApi();
+      expect(jiraApi.generateProjectUrl(gatewaySelf)).toBe(
+        'https://api.atlassian.com/ex/jira/abc',
+      );
+      expect(jiraApi.getDomainFromApiUrl(gatewaySelf)).toBe(
+        'https://api.atlassian.com',
+      );
+    });
+
+    it('uses jira.siteUrl for links when configured', () => {
+      const jiraApi = createApi({ siteUrl: 'https://example.atlassian.net/' });
+      expect(jiraApi.generateProjectUrl(gatewaySelf)).toBe(
+        'https://example.atlassian.net',
+      );
+      expect(jiraApi.getDomainFromApiUrl(gatewaySelf)).toBe(
+        'https://example.atlassian.net',
+      );
+    });
+  });
+
   describe('jqlQuery', () => {
     const jiraApi = new JiraAPI({
       discoveryApi,
