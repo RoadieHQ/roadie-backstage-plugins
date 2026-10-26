@@ -45,5 +45,17 @@ export interface Config {
      * @visibility frontend
      */
     product?: 'cloud' | 'datacenter';
+
+    /**
+     * The URL users open in their browser, e.g. `https://example.atlassian.net`.
+     * Links such as "Open in Jira" are normally derived from the `self` URL
+     * returned by the Jira API. When the API is reached through a different
+     * host, for example the Atlassian gateway
+     * (`https://api.atlassian.com/ex/jira/{cloudId}`) used by scoped API tokens
+     * and service accounts, `self` does not point at the Jira UI. Set this to
+     * build the links from the site URL instead.
+     * @visibility frontend
+     */
+    siteUrl?: string;
   };
 }
