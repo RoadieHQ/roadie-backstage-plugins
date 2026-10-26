@@ -367,6 +367,39 @@ const factory: EntityProviderFactory = (oktaConfig: Config) =>
   });
 ```
 
+#### Skipping Unchanged Group Memberships
+
+Resolving membership calls `listGroupUsers` once per group on every run, which can exhaust Okta rate limits in large organizations. With `skipUnchangedGroups`, the provider reads its previously emitted groups from the catalog and reuses a group's members when Okta reports the same `lastMembershipUpdated` as the timestamp stored in an annotation on that group's entity. Groups without a stored timestamp, or whose timestamp changed, are fetched as before. If the catalog cannot be read, every group is fetched.
+
+```typescript
+env.registerInit({
+  deps: {
+    provider: oktaCatalogBackendEntityProviderFactoryExtensionPoint,
+    logger: coreServices.logger,
+    auth: coreServices.auth,
+    catalog: catalogServiceRef,
+  },
+  async init({ provider, logger, auth, catalog }) {
+    const factory: EntityProviderFactory = (oktaConfig: Config) =>
+      OktaOrgEntityProvider.fromConfig(oktaConfig, {
+        logger,
+        skipUnchangedGroups: true,
+        catalogClient: catalog,
+        auth,
+        // optional, defaults to okta.roadie.io/last-membership-updated
+        membershipTimestampAnnotation:
+          'example.com/okta-last-membership-updated',
+      });
+    provider.setEntityProviderFactory(factory);
+  },
+});
+```
+
+Caveats:
+
+- A custom `groupTransformer` must emit `members` unchanged, since reused members are matched against user entity names.
+- A user whose entity name changes (for example an email change with an email-based user naming strategy) is missing from unchanged groups until Okta updates that group's membership.
+
 #### Legacy backend
 
 <details>

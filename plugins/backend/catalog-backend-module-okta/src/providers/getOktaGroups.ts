@@ -33,7 +33,9 @@ export const getOktaGroups = async (opts: GetOktaGroupsOptions) => {
 
   const oktaGroups: Record<string, OktaGroup> = {};
 
-  const groups = await client.groupApi.listGroups({ search: groupFilter });
+  const groups = await client.groupApi.listGroups({
+    search: groupFilter,
+  });
   await groups.each(rawGroup => {
     const group = asOktaGroup(rawGroup);
     if (key) {
