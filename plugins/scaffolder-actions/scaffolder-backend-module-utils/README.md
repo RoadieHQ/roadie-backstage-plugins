@@ -804,3 +804,23 @@ steps:
 ---
 
 Roadie gives you a hassle-free, fully customisable SaaS Backstage. Find out more here: [https://roadie.io](https://roadie.io).
+
+## Additional actions
+
+These actions keep their original, un-namespaced IDs. Inputs, outputs and examples for each are also shown on the scaffolder's `/create/actions` page.
+
+| Action                              | Description                                                                                                                                                                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `fs:read`                           | Reads a file from the workspace and outputs its `content` as a string. Input: `path`.                                                                                                                              |
+| `fs:exists`                         | Checks whether a file exists in the workspace and outputs `exists`. Input: `file`.                                                                                                                                 |
+| `fs:append`                         | Appends `text` to `file` in the workspace. Unlike `roadiehq:utils:fs:append`, it logs failures instead of failing the step.                                                                                        |
+| `workspace:template`                | Like `fetch:template`, but templates a directory that is already in the workspace (`sourcePath`) into `targetPath`.                                                                                                |
+| `workspace:template:file`           | Like `fetch:template:file`, but for a single file that is already in the workspace.                                                                                                                                |
+| `fetch:template:plus`               | Runs several `fetch:template` entries in one step. Takes `templates` (a list of entries) and `commonParams` (merged into every entry; per-entry fields win). Each entry also supports `skipIf` and `ignoreErrors`. |
+| `fetch:template:debug`              | Same inputs as `fetch:template`. Before fetching, it runs network diagnostics (DNS, TCP, HTTPS, auth probe) against the template host and logs every URL reader call. Retries the fetch up to 3 times.             |
+| `catalog:register-multiple`         | Like `catalog:register`, but outputs `entityRefs` for every entity in the registered location as well as the primary `entityRef`.                                                                                  |
+| `gitlab:repo:commit`                | Creates a commit through the GitLab Commits API, so GitLab records the token owner as author and committer. Works against an empty repository.                                                                     |
+| `gitlab:repo:protect`               | Protects a branch through the GitLab Protected Branches API, e.g. after `gitlab:repo:commit`.                                                                                                                      |
+| `publish:github:pull-request:debug` | Same as `publish:github:pull-request`, with verbose logging of inputs (token redacted), the files being committed and each API step.                                                                               |
+
+When registered through the module, the GitHub debug action uses `DefaultGithubCredentialsProvider` built from your `integrations` config. The templating actions use only the default filters (`parseRepoUrl`, `parseEntityRef`, `pick`, `projectSlug`), not filters added through `scaffolderTemplatingExtensionPoint`.

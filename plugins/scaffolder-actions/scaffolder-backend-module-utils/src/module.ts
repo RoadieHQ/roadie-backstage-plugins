@@ -13,8 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createBackendModule } from '@backstage/backend-plugin-api';
+import {
+  coreServices,
+  createBackendModule,
+} from '@backstage/backend-plugin-api';
 import { scaffolderActionsExtensionPoint } from '@backstage/plugin-scaffolder-node';
+import { catalogServiceRef } from '@backstage/plugin-catalog-node';
+import {
+  DefaultGithubCredentialsProvider,
+  ScmIntegrations,
+} from '@backstage/integration';
 import * as backendModuleUtils from './actions';
 
 /**
@@ -28,8 +36,16 @@ export const scaffolderBackendModuleUtils = createBackendModule({
     registerInit({
       deps: {
         scaffolder: scaffolderActionsExtensionPoint,
+        config: coreServices.rootConfig,
+        logger: coreServices.logger,
+        reader: coreServices.urlReader,
+        catalog: catalogServiceRef,
       },
-      async init({ scaffolder }) {
+      async init({ scaffolder, config, logger, reader, catalog }) {
+        const integrations = ScmIntegrations.fromConfig(config);
+        const githubCredentialsProvider =
+          DefaultGithubCredentialsProvider.fromIntegrations(integrations);
+
         scaffolder.addActions(
           backendModuleUtils.createAppendFileAction(),
           backendModuleUtils.createJSONataAction(),
@@ -44,6 +60,33 @@ export const scaffolderBackendModuleUtils = createBackendModule({
           backendModuleUtils.createWriteFileAction(),
           backendModuleUtils.createYamlJSONataTransformAction(),
           backendModuleUtils.createZipAction(),
+          backendModuleUtils.createFilesystemAppendAction(),
+          backendModuleUtils.createFilesystemExistsAction(),
+          backendModuleUtils.createReadFileAction(),
+          backendModuleUtils.createWorkspaceTemplateAction({ integrations }),
+          backendModuleUtils.createWorkspaceTemplateFileAction({
+            integrations,
+          }),
+          backendModuleUtils.createFetchTemplateDebugAction({
+            reader,
+            integrations,
+          }),
+          backendModuleUtils.createFetchTemplatePlusAction({
+            reader,
+            integrations,
+          }),
+          backendModuleUtils.createCatalogRegisterMultipleAction({
+            catalog,
+            integrations,
+          }),
+          backendModuleUtils.createGitlabRepoCommitAction({ integrations }),
+          backendModuleUtils.createGitlabRepoProtectAction({ integrations }),
+          backendModuleUtils.createPublishGithubPullRequestDebugAction({
+            integrations,
+            githubCredentialsProvider,
+            config,
+            logger,
+          }),
         );
       },
     });
