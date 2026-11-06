@@ -19,3 +19,7 @@ export * from './merge';
 export * from './sleep';
 export * from './jsonata';
 export * from './serialize';
+export * from './fetch';
+export * from './catalog';
+export * from './gitlab';
+export * from './github';

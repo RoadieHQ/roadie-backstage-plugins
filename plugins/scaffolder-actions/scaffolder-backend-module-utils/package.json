@@ -47,15 +47,24 @@
   },
   "dependencies": {
     "@backstage/backend-plugin-api": "backstage:^",
+    "@backstage/catalog-model": "backstage:^",
     "@backstage/config": "backstage:^",
     "@backstage/errors": "backstage:^",
+    "@backstage/integration": "backstage:^",
+    "@backstage/plugin-catalog-node": "backstage:^",
     "@backstage/plugin-scaffolder-node": "backstage:^",
+    "@backstage/types": "backstage:^",
     "adm-zip": "^0.6.1",
     "detect-indent": "^6.1.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^10.0.0",
+    "globby": "^11.1.0",
+    "isbinaryfile": "^5.0.0",
     "jsonata": "^2.0.4",
     "lodash": "^4.17.21",
+    "nunjitsu": "^0.6.1",
+    "octokit": "^3.0.0",
+    "octokit-plugin-create-pull-request": "^5.0.0",
     "yaml": "^2.6.1",
     "yawn-yaml": "^2.3.0",
     "zod": "^3.25.76 || ^4.0.0"
@@ -63,12 +72,12 @@
   "devDependencies": {
     "@backstage/backend-test-utils": "backstage:^",
     "@backstage/cli": "backstage:^",
+    "@backstage/plugin-scaffolder-node-test-utils": "backstage:^",
     "@testing-library/jest-dom": "^6.0.0",
     "@types/adm-zip": "^0.4.34",
     "@types/fs-extra": "^9.0.13",
     "@types/mock-fs": "^4.13.1",
-    "mock-fs": "^5.5.0",
-    "nunjitsu": "^0.6.1"
+    "mock-fs": "^5.5.0"
   },
   "files": [
     "dist"

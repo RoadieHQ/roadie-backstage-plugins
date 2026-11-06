@@ -17,3 +17,6 @@ export { createWriteFileAction } from './writeFile';
 export { createAppendFileAction } from './appendFile';
 export { createParseFileAction } from './parseFile';
 export { createReplaceInFileAction } from './replaceInFile';
+export { createFilesystemAppendAction } from './fsAppend';
+export { createFilesystemExistsAction } from './fsExists';
+export { createReadFileAction } from './fsRead';
