@@ -78,7 +78,7 @@
     "git-url-parse": "^16.1.0",
     "immer": "9.0.7",
     "react-use": "^17.2.4",
-    "zod": "^4.0.0",
+    "zod": "^4.6.6",
     "zustand": "3.6.9"
   },
   "peerDependencies": {
