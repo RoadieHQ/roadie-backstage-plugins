@@ -41,7 +41,7 @@
     "@backstage/plugin-scaffolder-node": "backstage:^",
     "@backstage/types": "backstage:^",
     "fs-extra": "^10.0.0",
-    "glob": "^13.0.0"
+    "glob": "^14.0.2"
   },
   "devDependencies": {
     "@aws-sdk/types": "^3.76.0",
