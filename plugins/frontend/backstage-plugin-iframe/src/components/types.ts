@@ -24,6 +24,7 @@ export type IFrameProps = {
   height?: string;
   width?: string;
   classes?: string;
+  allowFullScreen?: boolean;
 };
 
 export type IFrameComponentContentProps = {
@@ -32,6 +33,7 @@ export type IFrameComponentContentProps = {
   title: string;
   height?: string;
   width?: string;
+  allowFullScreen?: boolean;
 };
 
 export type IFrameComponentProps = {
@@ -42,6 +44,7 @@ export type IFrameComponentProps = {
   height?: string;
   width?: string;
   classes?: string;
+  allowFullScreen?: boolean;
   /**
    * Optional transform applied to the annotation value (when `srcFromAnnotation`
    * is set) to build the final iframe `src`. Ignored otherwise. See
@@ -57,6 +60,7 @@ export type IFrameFromAnnotationProps = {
   height?: string;
   width?: string;
   classes?: string;
+  allowFullScreen?: boolean;
   /**
    * Optional transform applied to the annotation value (when `srcFromAnnotation`
    * is set) to build the final iframe `src`. Ignored otherwise. See
@@ -72,6 +76,7 @@ export type IframeFromTemplatedSrcProps = {
   height?: string;
   width?: string;
   classes?: string;
+  allowFullScreen?: boolean;
 };
 
 export type IFrameContentProps = {

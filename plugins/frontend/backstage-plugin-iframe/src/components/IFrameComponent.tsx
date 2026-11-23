@@ -28,7 +28,7 @@ import { determineError } from './utils/helpers';
 import { useEntity } from '@backstage/plugin-catalog-react';
 
 const IFrameComponentContent = (props: IFrameComponentContentProps) => {
-  const { classes, height, src, title, width } = props;
+  const { classes, height, src, title, width, allowFullScreen } = props;
 
   return (
     <Content>
@@ -39,13 +39,16 @@ const IFrameComponentContent = (props: IFrameComponentContentProps) => {
         height={height || '100%'}
         width={width || '100%'}
         title={title}
+        allow={allowFullScreen ? 'fullscreen' : undefined}
+        allowFullScreen={allowFullScreen}
       />
     </Content>
   );
 };
 
 const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
-  const { srcFromAnnotation, height, width, transform } = props;
+  const { srcFromAnnotation, height, width, transform, allowFullScreen } =
+    props;
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
@@ -78,12 +81,13 @@ const IFrameFromAnnotation = (props: IFrameFromAnnotationProps) => {
       title={title}
       height={height}
       width={width}
+      allowFullScreen={allowFullScreen}
     />
   );
 };
 
 const IframeFromTemplatedSrc = (props: IframeFromTemplatedSrcProps) => {
-  const { templatedSrc, height, width } = props;
+  const { templatedSrc, height, width, allowFullScreen } = props;
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
@@ -110,12 +114,13 @@ const IframeFromTemplatedSrc = (props: IframeFromTemplatedSrcProps) => {
       title={title}
       height={height}
       width={width}
+      allowFullScreen={allowFullScreen}
     />
   );
 };
 
 const IFrameFromSrc = (props: IFrameProps) => {
-  const { src, height, width } = props;
+  const { src, height, width, allowFullScreen } = props;
   const title =
     props.title || 'Backstage IFrame (Note you can modify this with the props)';
   const configApi = useApi(configApiRef);
@@ -133,6 +138,7 @@ const IFrameFromSrc = (props: IFrameProps) => {
       title={title}
       height={height}
       width={width}
+      allowFullScreen={allowFullScreen}
     />
   );
 };
@@ -151,6 +157,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
     width,
     title,
     transform,
+    allowFullScreen,
   } = props;
   if (src) {
     return (
@@ -160,6 +167,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
         height={height}
         width={width}
         title={title}
+        allowFullScreen={allowFullScreen}
       />
     );
   }
@@ -172,6 +180,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
         height={height}
         width={width}
         title={title}
+        allowFullScreen={allowFullScreen}
       />
     );
   }
@@ -185,6 +194,7 @@ export const IFrameCard = (props: IFrameComponentProps) => {
         width={width}
         title={title}
         transform={transform}
+        allowFullScreen={allowFullScreen}
       />
     );
   }
