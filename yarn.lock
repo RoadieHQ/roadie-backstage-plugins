@@ -22363,15 +22363,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dompurify@npm:*, dompurify@npm:^3.1.7":
-  version: 3.3.0
-  resolution: "dompurify@npm:3.3.0"
+"dompurify@npm:*, dompurify@npm:^3.1.7, dompurify@npm:^3.4.12":
+  version: 3.5.0
+  resolution: "dompurify@npm:3.5.0"
   dependencies:
     "@types/trusted-types": "npm:^2.0.7"
   dependenciesMeta:
     "@types/trusted-types":
       optional: true
-  checksum: 10/d8782b10a0454344476936c91038d06c9450b3e3ada2ceb8f722525e6b54e64d847939b9f35bf385facd4139f0a2eaf7f5553efce351f8e9295620570875f002
+  checksum: 10/958811c76d518c10683b78c06701552f3dd5fbc3b2de0070de5ebaa14bfd7587e1e6953e8c60852b87e02ae8e84174666f165849f6940b48efc913379e856423
   languageName: node
   linkType: hard
 
@@ -22384,18 +22384,6 @@ __metadata:
     "@types/trusted-types":
       optional: true
   checksum: 10/b91631ed0e4d17fae950ef53613cc009ed7e73adc43ac94a41dd52f35483f7538d13caebdafa7626e0da145fc8184e7ac7935f14f25b7e841b32fda777e40447
-  languageName: node
-  linkType: hard
-
-"dompurify@npm:^3.4.12":
-  version: 3.4.16
-  resolution: "dompurify@npm:3.4.16"
-  dependencies:
-    "@types/trusted-types": "npm:^2.0.7"
-  dependenciesMeta:
-    "@types/trusted-types":
-      optional: true
-  checksum: 10/a571d0e2bede4f739666afd640398a86854abd27c71ce0724910249e2fd2ca7ddb8098a9ab579d3a5b39058419af694421f8fe859a81fd6d8acda16019a8ab9d
   languageName: node
   linkType: hard
 
