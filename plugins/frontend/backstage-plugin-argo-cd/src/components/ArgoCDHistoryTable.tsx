@@ -104,8 +104,8 @@ export const ArgoCDHistoryTable = ({
           </ListItem>
           <ListItem style={{ paddingLeft: '0px' }}>
             {row.deployedAt && row.deployStartedAt
-              ? `Took ${DateTime.fromISO(row.deployStartedAt)
-                  .diff(DateTime.fromISO(row.deployedAt))
+              ? `Took ${DateTime.fromISO(row.deployedAt)
+                  .diff(DateTime.fromISO(row.deployStartedAt))
                   .toFormat('hh:mm:ss')}`
               : null}
           </ListItem>
