@@ -1,5 +1,13 @@
 # @roadiehq/backstage-plugin-github-insights
 
+## 3.6.2
+
+### Patch Changes
+
+- 5ad8259: Declare `@backstage/filter-predicates` as a dependency, `@types/react` as an optional peer dependency and `react-router-dom` as a peer dependency. The published types import the first two, and the Backstage packages this plugin uses need `react-router-dom` from the app, so they failed to resolve with strict package managers such as pnpm.
+- Updated dependencies [5ad8259]
+  - @roadiehq/github-auth-utils-react@1.3.1
+
 ## 3.6.1
 
 ### Patch Changes
