@@ -12666,7 +12666,7 @@ __metadata:
     fs-extra: "npm:^10.0.0"
     globby: "npm:^11.1.0"
     isbinaryfile: "npm:^5.0.0"
-    jsonata: "npm:^2.0.4"
+    jsonata: "npm:^2.2.1"
     lodash: "npm:^4.17.21"
     mock-fs: "npm:^5.5.0"
     nunjitsu: "npm:^0.6.1"
@@ -28262,10 +28262,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonata@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "jsonata@npm:2.0.4"
-  checksum: 10/eb613eee1cb139f56b411891184df0612a049ca2174592ce18fab4423ce77ed8024b952ccec5d7b84a605f9a9f1c251416d8ad8055bef75bb022378b1961cb68
+"jsonata@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "jsonata@npm:2.2.1"
+  checksum: 10/cc1d5efdad2280459617c9671ec1d8071a6b3ac5899a354945f1458fc0e61b290f1da9a86edd7e238adf0974219ba349bdceabe8cfc565b9d4f38ffb4e573a30
   languageName: node
   linkType: hard
 
