@@ -1,5 +1,12 @@
 # @roadiehq/backstage-plugin-argo-cd
 
+## 2.13.2
+
+### Patch Changes
+
+- 5ad8259: Declare `@backstage/filter-predicates` as a dependency and `@types/react` as an optional peer dependency. The published types import both, so they failed to resolve with strict package managers such as pnpm.
+- 5329896: Fix the "Took" duration in the ArgoCD history table. It subtracted the end time from the start time, so a deployment that took 1 minute 32 seconds showed as `Took 00:-01:-32`. It now shows `Took 00:01:32`.
+
 ## 2.13.1
 
 ### Patch Changes
