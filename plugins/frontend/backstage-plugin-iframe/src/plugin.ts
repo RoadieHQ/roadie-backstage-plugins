@@ -58,6 +58,7 @@ export const HomePageIFrameCard = homePlugin.provide(
     height?: string;
     width?: string;
     classes?: string;
+    allowFullScreen?: boolean;
   }>({
     name: 'HomePageIFrameCard',
     title: 'IFrame Card',

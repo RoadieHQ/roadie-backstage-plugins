@@ -82,6 +82,19 @@ describe('IFrameCard', () => {
       );
       expect(await rendered.findByText('some title')).toBeTruthy();
     });
+
+    it('should allow fullscreen when enabled', async () => {
+      const rendered = render(
+        <TestApiProvider apis={apis}>
+          <EntityProvider entity={entityMock}>
+            <IFrameCard {...props} allowFullScreen />
+          </EntityProvider>
+        </TestApiProvider>,
+      );
+      const iframe = await rendered.findByTitle('some title');
+      expect(iframe.getAttribute('allow')).toBe('fullscreen');
+      expect(iframe.hasAttribute('allowfullscreen')).toBe(true);
+    });
   });
 
   describe('when src is not set', () => {

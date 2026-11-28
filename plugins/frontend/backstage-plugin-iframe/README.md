@@ -45,7 +45,8 @@ const serviceEntityPage = (
 );
 
 const iframeProps = {
-  src: "https://example.com"
+  src: "https://example.com",
+  allowFullScreen: true
 }
 
 const overviewContent = (

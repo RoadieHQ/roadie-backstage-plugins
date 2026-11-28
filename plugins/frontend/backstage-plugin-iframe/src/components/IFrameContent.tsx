@@ -33,6 +33,8 @@ export const IFrameContent = (props: IFrameContentProps) => {
         height={iframe.height || '100%'}
         width={iframe.width || '100%'}
         title={iframe.title}
+        allow={iframe.allowFullScreen ? 'fullscreen' : undefined}
+        allowFullScreen={iframe.allowFullScreen}
       />
     </Content>
   );
